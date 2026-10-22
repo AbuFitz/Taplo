@@ -52,3 +52,34 @@ export function initialsOf(name: string): string {
   const last = parts.length > 1 ? (parts[parts.length - 1]![0] ?? "") : "";
   return (first + last).toUpperCase();
 }
+
+/** True only for http(s) URLs. Used at render time so stored values can never become javascript: links. */
+export function isHttpUrl(v: string | undefined | null): v is string {
+  if (!v) return false;
+  try {
+    const u = new URL(v);
+    return u.protocol === "https:" || u.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+/** YouTube/Vimeo only. Returns an embeddable URL or null. Nothing else is ever iframed. */
+export function videoEmbed(v: string | undefined | null): { provider: "youtube" | "vimeo"; embedUrl: string; } | null {
+  if (!isHttpUrl(v)) return null;
+  const u = new URL(v);
+  const host = u.hostname.replace(/^www\./, "");
+  if (host === "youtu.be") {
+    const id = u.pathname.slice(1);
+    return /^[\w-]{6,15}$/.test(id) ? { provider: "youtube", embedUrl: `https://www.youtube-nocookie.com/embed/${id}?autoplay=1` } : null;
+  }
+  if (host === "youtube.com" || host === "m.youtube.com") {
+    const id = u.searchParams.get("v") ?? (u.pathname.startsWith("/embed/") ? u.pathname.split("/")[2] : null);
+    return id && /^[\w-]{6,15}$/.test(id) ? { provider: "youtube", embedUrl: `https://www.youtube-nocookie.com/embed/${id}?autoplay=1` } : null;
+  }
+  if (host === "vimeo.com") {
+    const id = u.pathname.split("/").filter(Boolean)[0];
+    return id && /^\d{5,12}$/.test(id) ? { provider: "vimeo", embedUrl: `https://player.vimeo.com/video/${id}?autoplay=1` } : null;
+  }
+  return null;
+}

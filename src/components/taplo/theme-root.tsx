@@ -13,11 +13,14 @@ export function ThemeRoot({
   family,
   cssVars,
   className,
+  attrs,
   children,
 }: {
   family: string
   cssVars: Record<string, string>
   className?: string
+  /** Finite data-* attributes used by CSS attribute selectors. */
+  attrs?: Record<string, string>
   children: React.ReactNode
 }) {
   const [el, setEl] = React.useState<HTMLElement | null>(null)
@@ -26,6 +29,8 @@ export function ThemeRoot({
       <div
         ref={setEl}
         data-taplo-theme=""
+        data-taplo-page=""
+        {...attrs}
         data-family={family}
         style={cssVars as React.CSSProperties}
         className={cn("relative min-h-screen", className)}

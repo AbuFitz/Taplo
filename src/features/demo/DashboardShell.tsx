@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { BarChart3, CalendarDays, LayoutDashboard, Menu, Package, Settings, Star, UserCircle, Users, Wrench } from "lucide-react"
+import { BarChart3, CalendarDays, LayoutDashboard, Menu, Package, Paintbrush, Settings, Star, Users, Wrench } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
@@ -13,8 +13,8 @@ import { useDemo } from "./store"
 import { DemoNotice } from "./ui"
 
 const NAV = [
+  { href: "/dashboard/page", label: "My page", icon: Paintbrush, primary: true },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/dashboard/profile", label: "Profile", icon: UserCircle },
   { href: "/dashboard/services", label: "Services", icon: Wrench },
   { href: "/dashboard/bookings", label: "Bookings", icon: CalendarDays },
   { href: "/dashboard/reviews", label: "Reviews", icon: Star },
@@ -22,17 +22,17 @@ const NAV = [
   { href: "/dashboard/products", label: "Products", icon: Package },
   { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
-] as const
+] as { href: string; label: string; icon: typeof Paintbrush; primary?: boolean }[]
 
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
   const path = usePathname()
   return (
     <nav aria-label="Dashboard" className="grid gap-1">
-      {NAV.map(({ href, label, icon: Icon }) => {
+      {NAV.map(({ href, label, icon: Icon, primary }) => {
         const active = href === "/dashboard" ? path === href : path.startsWith(href)
         return (
           <Link key={href} href={href} onClick={onNavigate} aria-current={active ? "page" : undefined}
-            className={cn("flex min-h-11 items-center gap-3 rounded-md px-3 text-sm hover:bg-muted", active && "bg-muted font-semibold")}>
+            className={cn("flex min-h-11 items-center gap-3 rounded-md px-3 text-sm hover:bg-muted", active && "bg-muted font-semibold", primary && !active && "bg-primary/10 font-semibold text-primary hover:bg-primary/15", primary && active && "bg-primary text-primary-foreground")}>
             <Icon className="size-4" aria-hidden="true" /> {label}
           </Link>
         )
@@ -82,7 +82,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <p className="mb-2 mt-8 text-sm font-medium">Or explore a sample</p>
               <div className="flex flex-wrap gap-2">
                 {INDUSTRY_FIXTURE_KEYS.map((k) => (
-                  <Button key={k} size="sm" variant="outline" onClick={() => { update((x) => loadSample(x, k)); router.refresh() }}>{getFixture(k)!.label}</Button>
+                  <Button key={k} size="sm" variant="outline" onClick={() => { update((x) => loadSample(x, k), { resetHistory: true }); router.push("/dashboard/page") }}>{getFixture(k)!.label}</Button>
                 ))}
               </div>
             </div>

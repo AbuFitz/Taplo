@@ -2,27 +2,27 @@
 
 import { useMemo } from "react"
 import Link from "next/link"
-import { ProfileRenderer, buildPublicProfileViewModel } from "@/features/themes/renderer"
+import { PageRenderer, buildPageViewModel } from "@/features/page/renderer"
 import { parseContent, useDemo } from "./store"
 
 /**
  * Renders the draft ("preview") or the frozen published copy through the SAME
- * ProfileRenderer/view-model the real public route uses.
+ * PageRenderer/view-model the real public route and fixture routes use.
  */
 export function DemoProfile({ mode, slug }: { mode: "draft" | "published"; slug?: string }) {
   const { ready, state } = useDemo()
   const source = useMemo(() => {
     if (!state) return null
-    if (mode === "draft") return { content: state.content, config: state.config, plan: state.plan }
+    if (mode === "draft") return { content: state.content, page: state.page, plan: state.plan }
     const p = state.published
-    return p && p.content.identity.slug === slug ? { content: p.content, config: p.config, plan: p.plan } : null
+    return p && p.content.identity.slug === slug ? { content: p.content, page: p.page, plan: p.plan } : null
   }, [state, mode, slug])
 
   const vm = useMemo(() => {
     if (!source) return null
     const parsed = parseContent(source.content)
     if (!parsed.success || !parsed.data.identity.name) return null
-    return buildPublicProfileViewModel(parsed.data, { config: source.config, plan: source.plan })
+    return buildPageViewModel(parsed.data, source.page, { plan: source.plan })
   }, [source])
 
   if (!ready) return <Message title="Loading…" />
@@ -32,19 +32,19 @@ export function DemoProfile({ mode, slug }: { mode: "draft" | "published"; slug?
     ) : (
       <Message
         title="Nothing published at this address"
-        body="Demo pages live only in the browser that created them. Publish from the dashboard, then open the link in the same browser."
-        action={<Link className="underline" href="/dashboard">Go to dashboard</Link>}
+        body="Pages you publish in demo mode live only in the browser that created them. For an example anyone can open, see the sample profiles."
+        action={<span className="flex gap-4"><Link className="underline" href="/dashboard/page">My page</Link><Link className="underline" href="/demo/profiles">Sample profiles</Link></span>}
       />
     )
   }
   return (
     <>
       {mode === "published" ? (
-        <div role="note" className="bg-amber-300 px-4 py-2 text-center text-sm font-medium text-black">
+        <div role="note" className="relative z-10 bg-amber-300 px-4 py-2 text-center text-sm font-medium text-black">
           Demo page — stored in this browser only, not a public website.
         </div>
       ) : null}
-      <ProfileRenderer vm={vm} />
+      <PageRenderer vm={vm} />
     </>
   )
 }

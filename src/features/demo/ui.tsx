@@ -7,10 +7,22 @@ import { TaploInput } from "@/components/taplo/taplo-input"
 import { normalizePhone } from "@/lib/validation"
 import { cn } from "@/lib/utils"
 
-/** Holds what the user is typing; only valid (or empty) values are committed to the draft. */
-export function PhoneField({ label, value, onCommit, hint }: { label: string; value?: string; onCommit: (v: string | undefined) => void; hint?: string }) {
+/** Local text that re-syncs when the stored value changes from elsewhere (undo/redo, loading a sample). */
+function useSyncedText(value: string | undefined) {
   const [text, setText] = React.useState(value ?? "")
   const [error, setError] = React.useState<string>()
+  const [committed, setCommitted] = React.useState(value)
+  if (value !== committed) {
+    setCommitted(value)
+    setText(value ?? "")
+    setError(undefined)
+  }
+  return { text, setText, error, setError, commit: setCommitted }
+}
+
+/** Holds what the user is typing; only valid (or empty) values are committed to the draft. */
+export function PhoneField({ label, value, onCommit, hint }: { label: string; value?: string; onCommit: (v: string | undefined) => void; hint?: string }) {
+  const { text, setText, error, setError, commit } = useSyncedText(value)
   return (
     <TaploInput
       label={label}
@@ -25,11 +37,13 @@ export function PhoneField({ label, value, onCommit, hint }: { label: string; va
         setText(v)
         if (!v.trim()) {
           setError(undefined)
+          commit(undefined)
           onCommit(undefined)
         } else {
           const n = normalizePhone(v)
           if (n) {
             setError(undefined)
+            commit(n)
             onCommit(n)
           } else setError("Enter a valid phone number (7–15 digits).")
         }
@@ -41,8 +55,7 @@ export function PhoneField({ label, value, onCommit, hint }: { label: string; va
 const emailSchema = z.string().trim().email().max(254)
 
 export function EmailField({ value, onCommit }: { value?: string; onCommit: (v: string | undefined) => void }) {
-  const [text, setText] = React.useState(value ?? "")
-  const [error, setError] = React.useState<string>()
+  const { text, setText, error, setError, commit } = useSyncedText(value)
   return (
     <TaploInput
       label="Email"
@@ -55,9 +68,11 @@ export function EmailField({ value, onCommit }: { value?: string; onCommit: (v: 
         setText(v)
         if (!v.trim()) {
           setError(undefined)
+          commit(undefined)
           onCommit(undefined)
         } else if (emailSchema.safeParse(v).success) {
           setError(undefined)
+          commit(v.trim())
           onCommit(v.trim())
         } else setError("Enter a valid email address.")
       }}
@@ -65,14 +80,14 @@ export function EmailField({ value, onCommit }: { value?: string; onCommit: (v: 
   )
 }
 
-export function UrlField({ label, value, onCommit }: { label: string; value?: string; onCommit: (v: string | undefined) => void }) {
-  const [text, setText] = React.useState(value ?? "")
-  const [error, setError] = React.useState<string>()
+export function UrlField({ label, value, onCommit, validate, help }: { label: string; value?: string; onCommit: (v: string | undefined) => void; validate?: (v: string) => boolean; help?: string }) {
+  const { text, setText, error, setError, commit } = useSyncedText(value)
   return (
     <TaploInput
       label={label}
       type="url"
       placeholder="https://"
+      hint={help}
       error={error}
       value={text}
       onChange={(e) => {
@@ -80,6 +95,7 @@ export function UrlField({ label, value, onCommit }: { label: string; value?: st
         setText(v)
         if (!v.trim()) {
           setError(undefined)
+          commit(undefined)
           onCommit(undefined)
           return
         }
@@ -88,10 +104,12 @@ export function UrlField({ label, value, onCommit }: { label: string; value?: st
           const u = new URL(v.trim())
           ok = u.protocol === "https:" || u.protocol === "http:"
         } catch {}
+        if (ok && validate && !validate(v.trim())) ok = false
         if (ok) {
           setError(undefined)
+          commit(v.trim())
           onCommit(v.trim())
-        } else setError("Enter a full web address starting with https://")
+        } else setError(validate ? "That address isn’t supported here." : "Enter a full web address starting with https://")
       }}
     />
   )
@@ -133,8 +151,8 @@ export function PreviewFrame({ className, height = 640 }: { className?: string; 
         </div>
         <a className="text-sm underline underline-offset-4" href="/demo/preview" target="_blank" rel="noreferrer">Open full preview</a>
       </div>
-      <div ref={box} className="overflow-hidden rounded-lg border bg-muted" style={{ height: height * scale + 2 }}>
-        <div className={cn(device === "mobile" && scale < 1 ? "mx-auto" : "")} style={{ width: frameWidth * scale, height: height * scale }}>
+      <div ref={box} className="overflow-hidden rounded-2xl border bg-muted/60 shadow-sm" style={{ height: height * scale + 2 }}>
+        <div className={cn(device === "mobile" ? "mx-auto" : "")} style={{ width: frameWidth * scale, height: height * scale }}>
           <iframe
             title="Live preview of your page"
             src="/demo/preview"

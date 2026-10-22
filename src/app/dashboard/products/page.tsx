@@ -1,5 +1,5 @@
-import { ProductsPage } from "@/features/demo/dashboard/Placeholders"
+import { Products } from "@/features/demo/dashboard/Products"
 
 export default function Page() {
-  return <ProductsPage />
+  return <Products />
 }

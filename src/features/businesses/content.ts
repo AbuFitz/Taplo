@@ -10,12 +10,27 @@ import { phoneSchema, safeUrl } from "@/lib/validation";
 const text = (max: number) => z.string().trim().min(1).max(max);
 const optText = (max: number) => z.string().trim().max(max).optional();
 
+/**
+ * An image is a stored asset reference. `src` is a relative path or http(s) URL
+ * (published storage URL on a connected environment) OR, in demo mode only, a small
+ * downscaled data: image (jpeg/png/webp, never svg) produced by the in-browser uploader.
+ */
+const DATA_IMAGE = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
+export const imageSrcSchema = z
+  .string()
+  .min(1)
+  .max(700_000)
+  .refine((v) => (v.startsWith("data:") ? DATA_IMAGE.test(v) : v.length <= 2048 && (v.startsWith("/") || /^https?:\/\//.test(v))), "Use an uploaded image or a web address starting with https://");
+
+/** Focal point as percentages of the image; drives object-position so crops keep the subject. */
+export const focalSchema = z.object({ x: z.number().min(0).max(100), y: z.number().min(0).max(100) });
+
 export const imageSchema = z.object({
-  /** Public URL of an approved, published asset. */
-  src: z.string().min(1).max(2048),
+  src: imageSrcSchema,
   alt: text(240),
   width: z.number().int().positive().optional(),
   height: z.number().int().positive().optional(),
+  focal: focalSchema.optional(),
 });
 export type ImageRef = z.infer<typeof imageSchema>;
 
@@ -103,6 +118,31 @@ export const hoursSchema = z.object({
   closes: z.string().regex(/^\d{2}:\d{2}$/).optional(),
 });
 
+export const productSchema = z.object({
+  id: text(64),
+  name: text(120),
+  description: optText(800),
+  priceMinor: z.number().int().nonnegative().optional(),
+  currency: z.string().length(3).default("GBP"),
+  image: imageSchema.optional(),
+  /** "enquire": customer contacts the business. "link": opens the owner's own shop/payment link. No checkout is built. */
+  mode: z.enum(["enquire", "link"]).default("enquire"),
+  linkUrl: safeUrl.optional(),
+  archived: z.boolean().default(false),
+});
+export type ProductContent = z.infer<typeof productSchema>;
+
+export const offerSchema = z.object({
+  id: text(64),
+  title: text(120),
+  description: optText(600),
+  /** Shown as text only; Taplo does not validate or redeem codes. */
+  code: optText(40),
+  endsAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  archived: z.boolean().default(false),
+});
+export type OfferContent = z.infer<typeof offerSchema>;
+
 export const LOCATION_MODES = ["premises", "service_area", "online"] as const;
 
 export const businessContentSchema = z.object({
@@ -145,6 +185,8 @@ export const businessContentSchema = z.object({
   rating: ratingSchema.optional(),
   faqs: z.array(faqSchema).default([]),
   caseStudies: z.array(caseStudySchema).default([]),
+  products: z.array(productSchema).default([]),
+  offers: z.array(offerSchema).default([]),
   booking: z.object({
     mode: z.enum(["contact", "request", "instant"]),
     /** Set only once an operator has real availability configured. */

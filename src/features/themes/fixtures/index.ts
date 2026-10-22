@@ -1,5 +1,7 @@
 import type { BusinessContentInput } from "@/features/businesses/content";
 import type { PlanId } from "@/features/subscriptions/plans";
+import type { PageDoc } from "@/features/page/contracts/page";
+import { newPage, newWidget, type StoredWidget } from "@/features/page/starter";
 
 /**
  * SYNTHETIC fixtures for development and visual QA only.
@@ -16,6 +18,8 @@ export interface Fixture {
   label: string;
   plan: PlanId;
   content: BusinessContentInput;
+  /** Page arrangement + look. Deliberately NOT always the industry's suggested theme. */
+  page: PageDoc;
 }
 
 function svc(
@@ -30,7 +34,7 @@ function svc(
   return { id, name, priceMode, priceMinor, durationMinutes, description, currency: "GBP", delivery: [], bookingMode: "request" as const, sortOrder: 0, ...extra };
 }
 
-const mechanic: Fixture = {
+const mechanic: Omit<Fixture, "page"> = {
   key: "mechanic",
   label: "Mechanic",
   plan: "business",
@@ -73,7 +77,7 @@ const mechanic: Fixture = {
   },
 };
 
-const detailer: Fixture = {
+const detailer: Omit<Fixture, "page"> = {
   key: "detailer",
   label: "Car detailer",
   plan: "business",
@@ -104,7 +108,7 @@ const detailer: Fixture = {
   },
 };
 
-const barber: Fixture = {
+const barber: Omit<Fixture, "page"> = {
   key: "barber",
   label: "Barber",
   plan: "business",
@@ -135,7 +139,7 @@ const barber: Fixture = {
   },
 };
 
-const tutor: Fixture = {
+const tutor: Omit<Fixture, "page"> = {
   key: "tutor",
   label: "Tutor",
   plan: "business",
@@ -171,7 +175,7 @@ const tutor: Fixture = {
   },
 };
 
-const consultant: Fixture = {
+const consultant: Omit<Fixture, "page"> = {
   key: "consultant",
   label: "Consultant",
   plan: "business",
@@ -200,7 +204,7 @@ const consultant: Fixture = {
   },
 };
 
-const unlisted: Fixture = {
+const unlisted: Omit<Fixture, "page"> = {
   key: "unlisted",
   label: "Unlisted industry (dog groomer)",
   plan: "core",
@@ -227,7 +231,7 @@ const unlisted: Fixture = {
 };
 
 /** Edge-case datasets for the theme acceptance gate (spec 5.8). */
-const minimal: Fixture = {
+const minimal: Omit<Fixture, "page"> = {
   key: "minimal",
   label: "Edge: bare minimum (no logo/photos/reviews, one service, phone only)",
   plan: "free",
@@ -243,7 +247,7 @@ const minimal: Fixture = {
   },
 };
 
-const noContacts: Fixture = {
+const noContacts: Omit<Fixture, "page"> = {
   key: "no-contacts",
   label: "Edge: no contact channels",
   plan: "free",
@@ -261,7 +265,7 @@ const noContacts: Fixture = {
 };
 
 const long = "Extraordinarily Long-Named Professional Services and Specialist Consultancy Partnership";
-const stress: Fixture = {
+const stress: Omit<Fixture, "page"> = {
   key: "stress",
   label: "Edge: long names, long descriptions, many services",
   plan: "business",
@@ -286,10 +290,99 @@ const stress: Fixture = {
   },
 };
 
-export const FIXTURES: Fixture[] = [mechanic, detailer, barber, tutor, consultant, unlisted, minimal, noContacts, stress];
-export const INDUSTRY_FIXTURE_KEYS = ["mechanic", "detailer", "barber", "tutor", "consultant", "unlisted"];
+
+const HOURS = (open: string, close: string, days: string[]) => days.map((day) => ({ day: day as "mon", opens: open, closes: close }));
+
+const cafe: Omit<Fixture, "page"> = {
+  key: "cafe",
+  label: "Café",
+  plan: "business",
+  content: {
+    identity: { name: "Fern & Flour Café", slug: "demo-cafe", tagline: "Small-batch coffee, bakes made before sunrise and a quiet corner to stay in.", heroImage: img(4, SAMPLE), industryKey: "hospitality", industryLabel: "Café" },
+    location: { mode: "premises", locality: "Hitchin", addressLine: "8 Example Row, Hitchin SG0 0AA", directionsUrl: "https://example.com/directions", timezone: "Europe/London" },
+    contacts: { phone: "01632 960555", email: "hello@example.com", social: [{ platform: "instagram", url: "https://example.com/instagram" }, { platform: "facebook", url: "https://example.com/facebook" }] },
+    about: "Family-run and open every day but Sunday. Dogs welcome, laptops tolerated. Sample copy for layout testing.",
+    credentials: [],
+    hours: [...HOURS("07:30", "16:00", ["mon", "tue", "wed", "thu", "fri"]), { day: "sat", opens: "08:00", closes: "17:00" }, { day: "sun" }],
+    services: [
+      svc("m1", "Flat white", "fixed", 340, undefined, "Double shot, silky milk.", { group: "Coffee", bookingMode: "contact" }),
+      svc("m2", "Filter coffee", "fixed", 280, undefined, undefined, { group: "Coffee", bookingMode: "contact" }),
+      svc("m3", "Hot chocolate", "fixed", 380, undefined, "Dark, thick, a little bit too good.", { group: "Coffee", bookingMode: "contact" }),
+      svc("m4", "Eggs on toast", "fixed", 750, undefined, "Sourdough, any style.", { group: "Breakfast", bookingMode: "contact" }),
+      svc("m5", "Granola bowl", "fixed", 620, undefined, "Yoghurt, seasonal fruit.", { group: "Breakfast", bookingMode: "contact" }),
+      svc("m6", "Cinnamon bun", "fixed", 330, undefined, undefined, { group: "Bakes", bookingMode: "contact" }),
+      svc("m7", "Seeded loaf", "fixed", 450, undefined, "Baked daily; sells out.", { group: "Bakes", bookingMode: "contact" }),
+    ].map((x, i) => ({ ...x, sortOrder: i })),
+    staff: [],
+    gallery: [4, 5, 2, 7, 1, 3].map((n, i) => ({ id: `g${i}`, image: img(n, SAMPLE), caption: i === 0 ? "Morning bakes (sample)" : undefined })),
+    testimonials: [{ id: "r1", quote: "Synthetic quote for layout testing: a short sample about the coffee.", author: "Sample Regular", source: "owner_supplied", permissionConfirmed: true }],
+    reviewLinks: [{ platform: "google", url: "https://example.com/google-review" }],
+    faqs: [{ id: "f1", question: "Are dogs allowed?", answer: "Yes, in the front half of the café." }, { id: "f2", question: "Do you do gluten-free?", answer: "Some bakes. Ask at the counter." }],
+    caseStudies: [],
+    products: [
+      { id: "p1", name: "House coffee beans 250g", description: "Roasted nearby, whole bean.", priceMinor: 850, currency: "GBP", image: img(5, SAMPLE), mode: "enquire", archived: false },
+      { id: "p2", name: "Café gift card", description: "Any amount. Collect in store.", currency: "GBP", image: img(6, SAMPLE), mode: "enquire", archived: false },
+    ],
+    offers: [{ id: "o1", title: "Weekday breakfast deal", description: "Any breakfast plus a filter coffee. Sample offer.", code: "EARLYBIRD", archived: false }],
+    booking: { mode: "contact", onlineBookingReady: false },
+  },
+};
+
+/** Fixtures only advertise a booking flow that exists. Online booking is built in a later phase. */
+const noOnline = <T extends Omit<Fixture, "page">>(f: T): T => ({ ...f, content: { ...f.content, booking: { ...f.content.booking, onlineBookingReady: false } } });
+
+function buildPage(f: Omit<Fixture, "page">, themeId: string, tweak: (widgets: StoredWidget[]) => StoredWidget[] = (w) => w): PageDoc {
+  const page = newPage(f.content.identity.industryKey);
+  return { ...page, themeId, widgets: tweak(page.widgets) };
+}
+const find = (w: StoredWidget[], type: string) => w.find((x) => x.type === type);
+
+const withPage = (f: Omit<Fixture, "page">, themeId: string, tweak?: (w: StoredWidget[]) => StoredWidget[]): Fixture => {
+  const base = noOnline(f);
+  return { ...base, page: buildPage(base, themeId, tweak) };
+};
+
+export const FIXTURES: Fixture[] = [
+  // Soft light theme for a mechanic: theme is independent of industry.
+  withPage(mechanic, "studio", (w) => {
+    const featured = newWidget("featuredService", { serviceId: "s1", headline: "Most booked" });
+    featured.appearance = { emphasis: "featured" };
+    const notice = newWidget("announcement", { text: "Open Saturdays 9–1 this month (sample notice).", tone: "promo" });
+    notice.appearance = { surface: "accent" };
+    const pay = newWidget("payment", { label: "Pay a diagnostics deposit", kind: "deposit", serviceId: "s3" });
+    return [notice, newWidget("call", { subtitle: "Talk to a mechanic" }), ...w.slice(0, 1), featured, ...w.slice(1), pay];
+  }),
+  withPage(detailer, "ocean", (w) => [...w.filter((x) => x.type !== "serviceArea"), newWidget("serviceArea"), newWidget("whatsapp", { label: "Send photos of your car on WhatsApp", variant: "card" })]),
+  // Hard-edged yellow theme for a barber.
+  withPage(barber, "workshop", (w) => {
+    const hrs = w.find((x) => x.type === "hours");
+    if (hrs) hrs.settings = { ...hrs.settings, variant: "compact" };
+    return w;
+  }),
+  // Dark, bold theme for a tutor.
+  withPage(tutor, "midnight", (w) => {
+    const video = newWidget("video", { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", title: "How a first lesson works (sample link)" });
+    const intro = newWidget("link", { label: "Free 15-minute introductory call", url: "https://example.com/intro", subtitle: "No obligation", variant: "card" });
+    intro.appearance = { emphasis: "featured" };
+    return [intro, ...w, video];
+  }),
+  withPage(cafe, "candy", (w) => {
+    const offers = newWidget("offers", { title: "Today’s offer" });
+    const products = newWidget("products", { title: "Take some home", variant: "grid" });
+    const doc = newWidget("document", { title: "Download the full menu", url: "https://example.com/menu.pdf", description: "PDF, updated weekly (sample)" });
+    return [offers, ...w.filter((x) => x.type !== "document"), products, doc, newWidget("directions", { label: "Walk in: get directions" })];
+  }),
+  withPage(consultant, "editorial"),
+  withPage(unlisted, "garden", (w) => [...w, newWidget("whatsapp", { label: "WhatsApp a photo of your dog", variant: "card" })]),
+  withPage(minimal, "classroom"),
+  withPage(noContacts, "studio"),
+  withPage(stress, "workshop"),
+];
+
+export const INDUSTRY_FIXTURE_KEYS = ["mechanic", "barber", "tutor", "cafe", "consultant", "unlisted"];
 
 const byKey = new Map(FIXTURES.map((f) => [f.key, f]));
 const bySlug = new Map(FIXTURES.map((f) => [f.content.identity.slug, f]));
 export const getFixture = (key: string) => byKey.get(key);
 export const getFixtureBySlug = (slug: string) => bySlug.get(slug);
+void find;

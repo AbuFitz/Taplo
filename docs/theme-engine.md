@@ -1,28 +1,40 @@
-# Theme engine
+# Theme and composition engine (v2)
 
-Four separate concepts (spec §5.1): **industry preset** (vocabulary, suggested services, default layout) · **layout preset** (ordered block instances + variants) · **visual tokens** · **capabilities/business data**.
+Four concepts, deliberately separate:
+
+| Concept | Lives in | Chosen by |
+|---|---|---|
+| **Industry preset** | `features/themes/presets/industries` (data) | owner, in onboarding. Supplies terminology, suggested services, suggested booking mode, *suggested* theme and *starter widgets*. Restricts nothing. |
+| **Visual theme** | `features/page/themes/catalogue.ts` (8 themes) | owner (gallery). A complete `StyleSpec` of defaults: colours, fonts, header, background, buttons, cards, layout, decoration. |
+| **Composition** | `PageDoc.widgets` + `StyleSpec.header/layout` | owner. Ordered widget instances, header arrangement, width, density, desktop arrangement. |
+| **Widget** | `features/page/widgets` | owner. Settings + appearance overrides bound to business records. |
+
+Business records (`BusinessContent`) are separate from the page document and are never copied into it.
 
 ## Pipeline
-`BusinessContent (Zod)` → industry defaults → versioned layout (alias/fallback + warnings) → token preset + validated overrides (contrast-checked) → entitlements → drop blocks with no meaningful content → `PublicProfileViewModel` → `ProfileRenderer` → block registry.
+`BusinessContent (zod)` + `PageDoc (any version)` → `migratePage` → `resolveStyle(theme, overrides)` (readability guarantees, notices, CSS variables) → entitlements → per-widget `status` (ready / empty with reason / locked with reason) → `PageViewModel` (`widgets` = everything for the editor, `visible` = what visitors see) → `PageRenderer`.
 
-`buildPublicProfileViewModel` is the single projection for preview and live; callers differ only in *which data* they pass (draft for authorised preview, published snapshot for public). `src/features/themes/renderer/view-model.ts`.
+The editor preview iframe, the demo published page, the sample profiles and the real public route all call `buildPageViewModel` + `PageRenderer`; only the *data passed in* differs (draft vs frozen published copy).
 
 ## Files
-- `contracts/` blocks (discriminated union per block type + variants), tokens, layout/profile config, industry preset schemas.
-- `presets/industries` (data), `presets/layouts` (data + `resolveLayout` with alias/fallback), `tokens/` (presets, contrast, resolver, `tokensToCssVars`).
-- `blocks/` one file per block type; each exports a variant switch. `registry.tsx` is the only place stored references become components.
-- `fixtures/` synthetic datasets (mechanic, detailer, barber, tutor, consultant, unlisted + edge cases).
+- `contracts/` — `style.ts` (StyleSpec, StyleOverrides, WidgetAppearance), `widgets.ts` (27 settings schemas, instance type), `page.ts` (PageDoc).
+- `themes/` — `catalogue.ts`, `resolve.ts` (`resolveStyle`, `widgetStyle`, `deriveButton`), `color.ts`, `fonts.ts`.
+- `widgets/` — `registry.ts` (definitions), `renderers.tsx` (the only place a stored type becomes a component), `client.tsx` (booking/enquiry dialog, simulated payment, click-to-load video), `types.ts`, `icons.ts`.
+- `renderer/` — `view-model.ts`, `PageRenderer.tsx`, `Header.tsx`, `Background.tsx`, `page.css`.
+- `editor/` — `MyPage.tsx` (workspace), `ContentTab.tsx`, `DesignTab.tsx`, `SettingsTab.tsx`, `WidgetList.tsx` (dnd-kit), `WidgetEditor.tsx` (field generator + per-widget appearance), `Dialogs.tsx`, `controls.tsx`, `ThemePicker.tsx`, `useEditor.ts`, `image.ts`.
+- `starter.ts` (starter planning), `migrate.ts` (legacy + repair).
 
-## Tokens and scoping
-Tokens are `--tp-*` custom properties set inline on `[data-taplo-theme]` by `ThemeRoot`. `globals.css` bridges them to Tailwind utilities (`bg-tp-surface`, `font-tp-heading`, …) and re-maps shadcn's semantic variables inside the root so owned primitives pick up the profile theme. Overlay primitives (`dialog`, `sheet`, `select`, `popover`, `tooltip`, `dropdown-menu`) portal into the root through `PortalContainerProvider`, so booking dialogs stay themed. Dashboard/marketing never set `--tp-*`.
+## Safety model
+Only enums, numbers in range and `#rrggbb` colours are stored; there is no owner CSS/HTML/JS. Colours become CSS custom properties; finite choices become `data-*` attributes matched by static CSS. Text/surface/button/overlay contrast is enforced at resolve time with plain-language notices (never silently unreadable). Links must be http(s); video is YouTube/Vimeo only, loaded only after a tap; stored images are relative/https URLs or small jpeg/png/webp data URLs (never svg).
 
-Variant classes are literal strings in static maps; no database value is interpolated into class names. Colours are `#rrggbb`, fonts come from `FONT_KEYS`, and overrides must keep ≥4.5:1 text contrast or are dropped with an owner-visible warning.
+## Theme switching
+`setTheme(id)` changes only `themeId`. Widgets, business records and owner overrides are untouched; the Design tab shows how many custom settings sit on top and offers reset (per control, per section, or everything). Free plan keeps the industry's suggested theme (a plan boundary, not an industry restriction).
 
-## Adding an industry
-Add one entry to `presets/industries/index.ts` (key, label, keywords, default layout, terminology, suggested services). No page or block changes. Verified by `themes.test.ts` ("every industry preset points at an existing layout").
+## Adding things
+- **Industry:** one data entry (suggestions only).
+- **Theme:** one `ThemeDefinition` in the catalogue; it appears in onboarding, the gallery and `/demo/themes` automatically.
+- **Widget:** settings schema + registry definition + renderer case (+ icon). The editor form is generated from `fields`.
+- **Schema change:** bump a widget's `version` and add `migrate`; stored pages upgrade on load with a note.
 
-## Adding/changing a layout
-New `LayoutPreset` object with a new id, or bump `version` and add an alias in `LAYOUT_ALIASES`; stored profiles keep working and show a warning.
-
-## Extension points (not built)
-Section reordering/hiding (`config.sections` already honoured), owner palette/font/radius overrides (validated), premium themes (extra token presets + layouts in the registry). No marketplace infrastructure.
+## Not built (extension points only)
+Per-widget responsive arrangements beyond the three desktop modes, true video backgrounds (a drifting gradient exists, reduced-motion aware), file uploads to Storage, analytics events on clicks (`data-event` attributes are in place), live Stripe/booking behind the booking/payment widgets, premium/marketplace themes.

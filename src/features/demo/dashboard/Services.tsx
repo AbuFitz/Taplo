@@ -9,6 +9,7 @@ import type { ServiceContent } from "@/features/businesses/content"
 import { blankService, normService } from "../actions"
 import { useDraft } from "../hooks"
 import { ServiceForm, serviceErrors } from "../ServiceForm"
+import { Offers } from "./Offers"
 import { PageHeader } from "./Panel"
 
 export function Services() {
@@ -91,6 +92,8 @@ export function Services() {
           </ul>
         </section>
       ) : null}
+
+      <Offers />
 
       <Dialog open={editing !== null} onOpenChange={(o) => { if (!o) { setEditing(null); setShowErrors(false) } }}>
         <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-xl">

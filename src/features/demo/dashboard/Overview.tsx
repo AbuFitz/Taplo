@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Check, Copy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { canPublish, publish, readiness, unpublish } from "../actions"
+import { canPublish, hasUnpublishedChanges, publish, readiness, unpublish } from "../actions"
 import { useDraft } from "../hooks"
 import { PreviewFrame } from "../ui"
 import { Panel, PageHeader } from "./Panel"
@@ -21,11 +21,11 @@ export function Overview() {
   const requiredTotal = checks.filter((c) => c.required).length
   const liveSlug = s.published?.content.identity.slug
   const url = liveSlug ? `${window.location.origin}/demo/p/${liveSlug}` : null
-  const draftDiffers = s.published && JSON.stringify([s.published.content, s.published.config]) !== JSON.stringify([s.content, s.config])
+  const draftDiffers = hasUnpublishedChanges(s)
 
   return (
     <>
-      <PageHeader title="Dashboard" description="Where your page stands and what to do next." />
+      <PageHeader title="Dashboard" description="Where your page stands and what to do next." actions={<Button asChild size="lg"><Link href="/dashboard/page">Edit my page</Link></Button>} />
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="grid min-w-0 gap-6">
           <Panel title="Publish status">

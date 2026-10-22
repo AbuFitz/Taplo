@@ -12,17 +12,6 @@ export function BookingsPage() {
   )
 }
 
-export function ProductsPage() {
-  return (
-    <>
-      <PageHeader title="Products" description="Optional NFC cards, stickers, keyrings and wristbands." />
-      <NotBuilt title="NFC products" phase="Phase 9">
-        <p>Not built yet: catalogue, orders, fulfilment and tag activation. NFC is optional merchandise and never required to use Taplo.</p>
-      </NotBuilt>
-    </>
-  )
-}
-
 export function AnalyticsPage() {
   return (
     <>

@@ -1,53 +1,56 @@
 # Implementation status
 
-Legend: ✅ done and verified as stated · 🟡 partial · ⬜ not started. "Verified" names the evidence.
+Legend: ✅ done and verified as stated · 🟡 partial · ⬜ not started. "Verified" names the evidence. Direction change 2 (`spec-direction-2.md`) supersedes the earlier layout-template approach; this file reflects the current state only.
 
-## Milestone 1b — Demo mode (review aid, NOT the real product flow)
+## Direction 2 — theme, widgets and "My page" editor
 
-Demo mode (**on by default**, `TAPLO_DEMO_MODE=0` turns it off) opens onboarding and the dashboard **without authentication**, storing everything in the visitor's own browser (`localStorage`). It exists so the product can be reviewed before Supabase/auth are configured. When turned off, `/onboarding` and `/dashboard` show a clear "not available" gate and `/demo/*`, `/dev/*` and sample pages 404 (checked with the flag set off in a production build).
+### Stage 1 — audit and editor decision ✅
+`audit-and-editor-decision.md`: what existed (five fused layout families, two exposed controls, order/hide with no UI, two installed-but-unused libraries), research from official docs/registry metadata, decision (custom editor on stable dnd-kit; Puck rejected for stated, partly-unverified reasons; Craft.js/GrapesJS rejected). `react-hook-form` and `@supabase/ssr` removed (zero imports).
 
-What is genuinely usable in demo mode (6 Playwright journeys passing):
-- ✅ Onboarding wizard (industry search + Other with own label → name/address with reserved/invalid-slug rejection → contacts with phone/email validation → first service with real price rules → preview & publish). Resumable after reload; live preview iframe updates as you type.
-- ✅ "Publish" freezes a copy; the page renders at `/demo/p/<slug>` through the same view-model/renderer as the real route; later draft edits don't change it until republished; unpublish.
-- ✅ Dashboard: Overview (real set-up progress, publish status, copy link, metrics shown as "—" not invented), Profile (details, location, contacts, social links, About, credentials, FAQ, layout switcher with "what shows / what is kept", accent colour + heading font with contrast rejection), Services (add/edit/validate/reorder/archive/restore, plan limit visibly applied), Reviews (review links + labelled testimonials with permission checkbox), Team (public bios, reserved staff-slug guard), Settings (plan simulator showing every entitlement; reset).
-- ✅ Plan gating is real: Free cannot switch layouts/colours, hides services beyond 3 without deleting them, no gallery/social/review links; Pro+ shows team pages.
-- ✅ Sample businesses (mechanic, detailer, barber, tutor, consultant, unlisted) can be loaded to explore with content in place.
+### Stage 2 — contracts, themes, widgets, renderer ✅
+- Separate concepts: industry preset / visual theme / composition / widget (`theme-engine.md`).
+- 8 themes; 27 widget types in a typed registry; one renderer for preview, published, samples and the public route.
+- Business records separate from presentation; products and offers added as real records; images gain focal point and safe local upload.
+- Migration: legacy v1 config and v1 demo drafts upgrade with a visible note; unknown widgets removed from view with a note; invalid settings fall back to defaults.
+- Verified by unit tests (see log).
 
-Explicitly **not** real, and labelled as such in the UI: Bookings (Phase 6), Analytics (Phase 5), Products/NFC (Phase 9), Stripe billing/Connect, email, custom domains, team invitations/logins/permissions, image/logo/gallery uploads (need Storage), web-address *availability* (needs the database; reserved/invalid are checked locally), `/review/{slug}` page, `/{slug}/book`, staff profile pages. Demo pages are visible only in the browser that created them. Demo mode must never be enabled next to real customer data.
+### Stage 3 — My page editor ✅ (demo-mode data)
+Content (add / edit / duplicate / hide / remove-from-page / reorder by drag handle, **accessible move up/down**, empty states, undo/redo, starter suggestions with preview) · Design (theme gallery, header, background, text, buttons, cards, layout, readability check, per-control and per-section reset) · Page settings (publish/unpublish/discard, address, sharing, search visibility, honest domain state). Persistent live preview on desktop; Preview sheet on phones.
 
-## Milestone 1 — Foundation + theme engine core
+### Stage 4 — public profile + starter themes ✅
+Compact header + widgets, three desktop arrangements, six synthetic businesses with deliberately cross-paired themes, edge-case fixtures.
 
-### Phase 1 — Foundation
-- ✅ Next.js 16.4 + TypeScript + Tailwind 4 scaffold; Radix-based shadcn (`radix-nova`) initialised once; required components added (`form` is not offered by the current shadcn registry; React Hook Form installed for later forms).
-- ✅ Taplo component layer: TaploButton, Card, Input, Modal, Badge, Avatar, ServiceCard, ReviewCard, BookingCard.
-- ✅ Industry catalogue (45 presets) + "Other"; searchable; unknown keys fall back to General. Unit tests.
-- ✅ Slug rules (normalise, reserved, impersonation guard) in TS **and** SQL. Unit tests + DB tests.
-- ✅ Migration: businesses, slugs+history, memberships, locations, drafts/versions, subscriptions, audit; RLS; public projection RPC. **Verified on a clean Postgres 16** (15 integration tests incl. cross-tenant denial, anon denial, staff isolation, 12-way slug race, concurrent publish, rename redirect, unpublish).
-- 🟡 Public route `/{slug}` renders published snapshots via `get_public_profile`; the Supabase call path is **not verified against a live Supabase project** (no credentials). Dev fixtures verified.
-- ⬜ Auth (sign up/in), onboarding wizard + resumable draft, dashboard shell, Storage/assets, rate limiting.
-- Gate "two users cannot access each other's data": ✅ at database level; ⬜ end-to-end through the app (no auth yet).
-- Gate "any industry can create a business and resolve draft/publication state": ✅ in SQL (`create_business` with `other`); ⬜ through UI.
+### Stage 5 — onboarding, stable demos, verification ✅
+Claim → identity → look → widgets → publish, resumable, page visible as it forms. `/demo/profiles`, `/demo/themes`, `/<slug>?theme=` are server-rendered and need no localStorage.
 
-### Phase 2 — Theme engine
-- ✅ Block registry, 5 families, 5 token presets, shared renderer/view-model, empty-content behaviour, fixtures (6 industries + minimal / no-contacts / stress), dev showcase `/dev/themes`, versioned layout fallback + warnings, entitlement-aware rendering.
-- ✅ §5.8 checks automated in Playwright (50 tests passing against a production build): every fixture × family at 360/390/640(≈200% zoom)/820/1280 → no horizontal overflow, no console errors, no broken images, one `h1`, no dead links; themed dialog + select portals inherit tokens; focus trap/restore; token isolation from marketing; reduced-motion; reserved paths 404; fixtures noindex + labelled.
-- ✅ Theme switching leaves business content identical (unit test); free plan cannot switch tokens; unplaced content reported.
-- 🟡 Draft vs published **persistence** exists in SQL; no UI to edit/publish yet. "Preview of what appears after switching" is available as `visibleBlockTypes` and shown in the showcase, not yet in a dashboard.
-- 🟡 Visual QA: screenshots reviewed by me (not by a designer) for desktop (5 families) and mobile (4); no axe scan, no manual screen-reader pass, 200% zoom only by proxy.
-- ⬜ Reference-site design observations (see `design-direction.md`).
+## What was tested (commands actually run)
+See `## Verification log`.
 
-### Phases 3–9
-⬜ Services CRUD · ⬜ Reviews destination page `/review/{slug}` · ⬜ Analytics · ⬜ Bookings/holds/outbox · ⬜ Stripe Billing + Connect + webhooks · ⬜ Team/staff pages, domains · ⬜ NFC store.
-Dashboard menu, booking state machine and payment architecture docs are intentionally **not** written yet; nothing in this milestone implements them.
+## Known limitations / not built
+- **All owner data is demo-only** (browser localStorage; no auth, no server persistence). The Supabase RPC path for published pages is unchanged from the earlier milestone and still not exercised against a live project.
+- No real file storage: uploads are downscaled to small data URLs (≈≤380 KB each); browser storage is ~5 MB, and the editor warns if saving fails.
+- Reorder by **touch** is verified with synthetic touch events (Chromium DevTools), not a physical phone. Pointer and keyboard are verified directly.
+- Payments are **simulated** (labelled); bookings (`/{slug}/book`), analytics, NFC, staff pages, custom domains, email, team invitations are not built.
+- No true video background (a slowly drifting gradient exists and respects reduced motion). No per-widget responsive arrangements beyond the three desktop modes.
+- Undo history is per tab and resets on reload (the draft persists).
+- Design references (Linktree et al.) were **not inspected**; see `design-direction.md`.
+- 200% zoom is verified by a 640px-wide proxy, not a real browser zoom. No screen-reader (NVDA/VoiceOver) pass; automated axe only.
+- Visual review was by me, not a designer.
+- DB integration tests (15) were last run before this direction change; SQL is unchanged and they were not re-run here (no Postgres in this session).
 
-## Verification log (commands actually run)
-- `npx tsc --noEmit` ✅ · `npx eslint .` ✅ · `npm run build` ✅
-- `vitest run` — 28 unit + 15 DB integration = 43 ✅ (DB tests need `TAPLO_TEST_DATABASE_URL`; skipped otherwise)
-- `playwright test` — 56 ✅ (50 theme/render + 6 demo journeys; against `next start` with `TAPLO_ENABLE_DEV_TOOLS=1 TAPLO_DEMO_MODE=1`)
-- DB integration tests (15) last run green before the demo work; no database changes since, and they were skipped in the final run (no Postgres available then).
+## Earlier milestone items still true
+Foundation migration + RLS + public projection (15 DB tests), slug rules, entitlement resolver (plans/prices locked), demo mode on by default (`TAPLO_DEMO_MODE=0` closes it), unbuilt dashboard areas labelled honestly. Phases 3–9 of the original plan (services/profile content CRUD beyond demo, reviews page, analytics, bookings, payments, team/domains, NFC) remain unstarted as production features.
 
 ## External setup still required
-Supabase project (URL, anon key, service key; apply migrations; Auth providers) · Stripe (test keys, Price IDs, webhooks) · Resend (key, verified domain) · Vercel project + domain API token · `taplo.co` DNS. None configured; nothing here claims they are.
+Supabase project, Stripe, Resend, Vercel domain integration, `taplo.co` DNS. None configured; nothing claims otherwise.
 
-## Open questions for the founder
-See the Assumptions table in `product-decisions.md` (testimonial/review-link packaging, Pro payment scope, one-profile limit enforcement).
+## Verification log
+Run on a clean production build (`rm -rf .next && npm run build`), Chromium 1194, Node 22.
+- `tsc --noEmit` ✅ · `eslint .` ✅ (0 errors, 0 warnings) · `next build` ✅
+- `vitest run` — **49 unit tests** ✅: registry completeness (27 types, schema/defaults/field keys), 8 themes distinct + WCAG AA, style overrides + reset + corrective readability + corrupt-override rejection, migration (legacy config, unknown widget, repair), starter planning (add never removes, replace names removals), view-model (theme switch preserves records and arrangement for 6 businesses × 8 themes, empty/hidden/locked statuses, unsafe links, expiry, corrupt settings), fixtures (independent theme/industry pairing), image/URL safety. (+ 15 DB integration tests skipped: no Postgres in this session.)
+- `playwright test` — **66 browser tests** ✅ in 3.6 min:
+  - **editor (11):** add/edit/duplicate/hide/remove-from-page (records survive; undo restores); reorder by move buttons, **keyboard drag**, **mouse drag**, **touch drag** (CDP touch events) with preview following editor order; 8-theme switch with unchanged content/arrangement/records; custom values, per-section and global reset; per-widget overrides + reset (other widgets untouched); undo/redo by buttons and Ctrl/Cmd+Z (typing = one step) and persistence after refresh; publish → published-page parity (widgets, order, theme), later edits private until republish, discard, unpublish; starter preview/cancel/apply/undo; image upload, focal sliders, bad-file rejection, initials fallback; unreadable colour corrected and explained; long names / 14 services / no images / no contacts / empty page.
+  - **profiles (29):** stable sample index; fresh browser sees identical page; `?theme=` changes only the look; theme gallery; noindex + reserved paths; all 9 fixtures × 5 widths (360/390/640/820/1280); 6 businesses × 8 themes × phone+desktop — each: no horizontal overflow, console error, broken image, dead link, sub-40px tap target, exactly one `h1`; booking dialog + select portal inherit the theme (4 themes); keyboard-only focus ring, focus trap and restore; reduced motion stops the drifting background; video loads nothing third-party until tap; payment is plainly simulated; header never duplicates a channel widget.
+  - **journeys (14):** onboarding wording and full flow with live preview, resume after reload, 390px; legacy draft migration with note; products/offers records → widgets → archive/expiry; services → every service widget; Free/Pro gating with content kept; page settings; My page first in navigation; phone editing at 360 and 390 (+ 640px ≈ 200% zoom); upload → published.
+  - **accessibility (12):** axe WCAG 2.1 A/AA + best practice, zero serious/critical: every theme (café + tutor), six businesses × phone/desktop, four themed dialogs, editor Content/Design/Settings, onboarding, add-widget dialog.
+- Defects found by these runs and fixed: stale unreadable muted text token (axe), social icon labels not matching visible text (axe), video button name mismatch (axe), subtitle contrast lost to opacity (axe), editor horizontal overflow on phones, a text-only header that never drew a chosen picture, no `<main>` landmark in onboarding, silent legacy migration, "Undo" able to revert a freshly loaded sample to blank, cover banner oversized on desktop, centred alignment leaking into list content, "Page colour" override ignored on plain-colour themes.

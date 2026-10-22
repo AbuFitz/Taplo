@@ -2,9 +2,11 @@ import { notFound, permanentRedirect } from "next/navigation"
 import type { Metadata } from "next"
 import { getPublishedProfile } from "@/features/businesses/public-profile"
 import { isReservedSlug, normalizeSlug } from "@/features/businesses/slug"
-import { ProfileRenderer, buildPublicProfileViewModel } from "@/features/themes/renderer"
+import { PageRenderer, buildPageViewModel } from "@/features/page/renderer"
+import { getTheme } from "@/features/page/themes/catalogue"
 
 type Params = Promise<{ businessSlug: string }>
+type Search = Promise<{ theme?: string }>
 
 async function load(params: Params) {
   const { businessSlug } = await params
@@ -35,18 +37,24 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   }
 }
 
-export default async function BusinessProfilePage({ params }: { params: Params }) {
+export default async function BusinessProfilePage({ params, searchParams }: { params: Params; searchParams: Search }) {
   const p = await loadFound(params)
   if (!p) notFound()
-  const vm = buildPublicProfileViewModel(p.content, { config: p.config, plan: p.plan, subscriptionStatus: p.subscriptionStatus })
+  const { theme } = await searchParams
+  const vm = buildPageViewModel(p.content, p.page, {
+    plan: p.plan,
+    subscriptionStatus: p.subscriptionStatus,
+    // Trying other themes is only offered on synthetic demo profiles, never on real pages.
+    themeOverride: p.synthetic && theme && getTheme(theme) ? theme : undefined,
+  })
   return (
     <>
       {p.synthetic ? (
-        <div role="note" className="bg-amber-300 px-4 py-2 text-center text-sm font-medium text-black">
-          Synthetic development fixture — not a real business.
+        <div role="note" className="relative z-10 bg-amber-300 px-4 py-2 text-center text-sm font-medium text-black">
+          Synthetic demo profile — not a real business. Try another look with <code>?theme=midnight</code>, <code>candy</code>, <code>workshop</code>…
         </div>
       ) : null}
-      <ProfileRenderer vm={vm} />
+      <PageRenderer vm={vm} />
     </>
   )
 }

@@ -28,3 +28,14 @@ Locked decisions come from the founder spec (v1.0, 22 Oct 2026). Everything unde
 | Dev tooling | `/dev/*` and synthetic fixtures only when `NODE_ENV!=production` or `TAPLO_ENABLE_DEV_TOOLS=1` | `lib/env.ts` |
 | Demo mode | On by default (`TAPLO_DEMO_MODE=0` closes it): opens onboarding/dashboard without auth, data in browser localStorage, labelled everywhere; implies dev tools/fixtures. For review deployments only | `lib/env.ts`, `features/demo` |
 | Service archive | Services gain `archived` (hidden publicly, kept for history) instead of deletion | `content.ts` |
+| Editor toolkit | Custom editor on stable `@dnd-kit/core` + `sortable` (not Puck, not `@dnd-kit/react` 0.5 pre-1.0). See `audit-and-editor-decision.md` | `features/page/editor` |
+| Theme vs plan | Industry never restricts themes. Plan boundary kept from the original spec: Free keeps the industry-suggested theme; Core+ switches themes. All other customisation is open on every plan | `view-model.ts` |
+| Starter composition | Separate, previewable, undoable action; "add what's missing" never removes; "rearrange" lists what leaves the page; never touches theme/colours/records | `starter.ts`, `Dialogs.tsx` |
+| Header vs widgets | Header shows Call/WhatsApp/Email; a channel the owner adds as a widget is not repeated in the header | `Header.tsx` |
+| Products / offers | Real business records referenced by widgets; no checkout. Product opens an enquiry or the owner's own link | `content.ts` |
+| Payment widget | Simulated and labelled as such until Stripe is connected | `client.tsx` |
+| Images (demo) | Uploaded in the browser, downscaled to a small JPEG data URL in localStorage; focal point + alt text. Connected environments upload to Storage; the stored ImageRef shape is the same | `editor/image.ts` |
+| Video | YouTube/Vimeo only; nothing third-party loads until tap | `client.tsx` |
+| Page meta | `searchVisible`, share title/description stored in the page document | `contracts/page.ts` |
+| Contrast | Owner colours are accepted but corrected at render if unreadable, with an explanation in Design → Readability check | `themes/resolve.ts` |
+| Undo history | In memory per tab; loading a sample or resetting clears it; the draft itself persists | `demo/store.ts` |

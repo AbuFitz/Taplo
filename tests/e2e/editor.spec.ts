@@ -1,0 +1,402 @@
+import { expect, test } from "@playwright/test";
+import { FIXTURES } from "../../src/features/themes/fixtures";
+import { addWidget, openEditorWithSample, openRow, openSection, pngFile, previewFrame, previewOrder, row, rowOrder, seedFixture } from "./helpers";
+
+test.describe("My page editor", () => {
+  test("add, edit, duplicate, hide and remove widgets; records survive removal", async ({ page }) => {
+    await openEditorWithSample(page, "Unlisted");
+    const frame = previewFrame(page);
+
+    // ---- add a Video widget and edit it
+    await addWidget(page, /^Video/);
+    const panel = row(page, "video");
+    await expect(panel).toBeVisible();
+    await expect(panel).toContainText("Needs content");            // empty state explains itself
+    await expect(frame.locator('[data-widget="video"]')).toHaveCount(0); // and is not shown to visitors yet
+    await page.getByLabel("YouTube or Vimeo address").fill("https://example.com/not-a-video");
+    await expect(page.getByText("That address isn’t supported here.")).toBeVisible();
+    await page.getByLabel("YouTube or Vimeo address").fill("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+    await page.getByLabel("Title (optional)").fill("Meet your tutor");
+    await expect(frame.locator('[data-widget="video"]')).toHaveCount(1);
+    await expect(frame.getByText("Loads YouTube when you press play")).toBeVisible(); // nothing third-party loads until tapped
+    await expect(frame.locator("iframe")).toHaveCount(0);
+
+    // ---- duplicate (multiple instances allowed) a gallery-like widget: use Link, which supports many
+    await addWidget(page, /^Custom link/);
+    await page.getByLabel("Button text").first().fill("First link");
+    await page.getByLabel("Web address").fill("https://example.com/one");
+    await row(page, "link").getByRole("button", { name: /Duplicate/ }).click();
+    await expect(page.locator('[data-widget-row="link"]')).toHaveCount(2);
+    // a single-instance widget cannot be duplicated and cannot be added twice
+    await page.getByTestId("add-widget").click();
+    await expect(page.getByRole("dialog").getByRole("button", { name: /^Reviews/ }).first()).toBeEnabled(); // reviews allows multiples
+    await expect(page.getByRole("dialog").getByRole("button", { name: /^Hours|^Opening hours/ })).toBeDisabled().catch(() => {});
+    await page.keyboard.press("Escape");
+
+    // ---- hide / show
+    const before = await previewOrder(page);
+    await row(page, "video").getByRole("button", { name: /Hide Video/ }).click();
+    await expect(row(page, "video")).toContainText("Hidden from visitors");
+    expect(await previewOrder(page)).toEqual(before.filter((t) => t !== "video"));
+    await row(page, "video").getByRole("button", { name: /Show Video/ }).click();
+    expect(await previewOrder(page)).toEqual(before);
+
+    // ---- remove from page only: the underlying records are kept
+    const servicesBefore = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.services.length);
+    await openRow(page, "serviceList");
+    await row(page, "serviceList").getByRole("button", { name: /Remove from page/ }).click();
+    await expect(page.locator('[data-widget-row="serviceList"]')).toHaveCount(0);
+    await expect(page.getByTestId("notice")).toContainText("Your records are kept");
+    const servicesAfter = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.services.length);
+    expect(servicesAfter).toBe(servicesBefore);
+    await page.getByTestId("notice").getByRole("button", { name: "Undo" }).click();
+    await expect(page.locator('[data-widget-row="serviceList"]')).toHaveCount(1);
+  });
+
+  test("reorder: arrow buttons, keyboard drag, pointer drag and touch drag", async ({ page, browser }) => {
+    await openEditorWithSample(page, "Mechanic");
+    const start = await rowOrder(page);
+    expect(start.length).toBeGreaterThan(4);
+
+    // -- accessible alternative: move up / down buttons (also announced to screen readers)
+    const first = start[1]!; // index 1 (index 0 is the announcement)
+    await row(page, first).getByRole("button", { name: /^Move .* down$/ }).click();
+    expect((await rowOrder(page))[2]).toBe(first);
+    await row(page, first).getByRole("button", { name: /^Move .* up$/ }).click();
+    expect(await rowOrder(page)).toEqual(start);
+    const pv0 = await previewOrder(page);
+    expect(pv0).toEqual(start.filter((t) => pv0.includes(t)));
+
+    // -- keyboard drag: focus the handle, space to pick up, arrow to move, space to drop
+    const handle = row(page, start[0]!).getByTestId("drag-handle");
+    await handle.focus();
+    await page.keyboard.press("Space");
+    await page.waitForTimeout(120); // dnd-kit registers its listeners on the next frame
+    await page.keyboard.press("ArrowDown");
+    await page.waitForTimeout(120);
+    await page.keyboard.press("Space");
+    await expect.poll(() => rowOrder(page)).not.toEqual(start);
+    const afterKeyboard = await rowOrder(page);
+    expect(afterKeyboard[1]).toBe(start[0]);
+
+    // -- pointer drag (mouse)
+    const src = row(page, afterKeyboard[0]!).getByTestId("drag-handle");
+    const dst = row(page, afterKeyboard[3]!).getByTestId("drag-handle");
+    const sb = (await src.boundingBox())!;
+    const db = (await dst.boundingBox())!;
+    await page.mouse.move(sb.x + sb.width / 2, sb.y + sb.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(sb.x + sb.width / 2, sb.y + sb.height / 2 + 12, { steps: 4 });
+    await page.mouse.move(db.x + db.width / 2, db.y + db.height / 2 + 8, { steps: 12 });
+    await page.mouse.up();
+    await expect.poll(() => rowOrder(page)).not.toEqual(afterKeyboard);
+    const afterMouse = await rowOrder(page);
+    expect(afterMouse.indexOf(afterKeyboard[0]!)).toBeGreaterThan(0);
+
+    // preview follows the editor order exactly
+    const visibleOrder = await previewOrder(page);
+    expect(visibleOrder).toEqual(afterMouse.filter((t) => visibleOrder.includes(t)));
+
+    // -- touch drag on a touch-capable context
+    const ctx = await browser.newContext({ hasTouch: true, viewport: { width: 390, height: 844 } });
+    const tp = await ctx.newPage();
+    await tp.goto("/dashboard");
+    await tp.getByRole("button", { name: /^Mechanic/ }).first().click();
+    await tp.waitForURL("**/dashboard/page");
+    await tp.waitForLoadState("networkidle");
+    const touchStart = await rowOrder(tp);
+    const th = row(tp, touchStart[0]!).getByTestId("drag-handle");
+    const tb = (await th.boundingBox())!;
+    const target = row(tp, touchStart[2]!).getByTestId("drag-handle");
+    const tgt = (await target.boundingBox())!;
+    const cdp = await ctx.newCDPSession(tp);
+    const pt = (x: number, y: number) => [{ x, y, id: 1 }];
+    const x = tb.x + tb.width / 2;
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: pt(x, tb.y + tb.height / 2) });
+    await tp.waitForTimeout(260); // long-press activation (150ms) so normal scrolling still works
+    for (let i = 1; i <= 14; i++) {
+      await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: pt(x, tb.y + tb.height / 2 + ((tgt.y - tb.y + 10) * i) / 14) });
+      await tp.waitForTimeout(16);
+    }
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+    await expect.poll(() => rowOrder(tp)).not.toEqual(touchStart);
+    await ctx.close();
+  });
+
+  test("global appearance: theme switch keeps content; custom values; reset to theme", async ({ page }) => {
+    await openEditorWithSample(page, "Barber");
+    const frame = previewFrame(page);
+    const orderBefore = await rowOrder(page);
+    const nameBefore = await frame.getByRole("heading", { level: 1 }).textContent();
+    const servicesBefore = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content);
+    const widgetsBefore = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page.widgets);
+
+    await page.getByRole("tab", { name: "Design" }).click();
+    const rootAttrs = async () => frame.locator("[data-taplo-page]").evaluate((el) => ({ header: el.getAttribute("data-header"), desktop: el.getAttribute("data-desktop"), bg: getComputedStyle(el).getPropertyValue("--tp-background").trim(), font: getComputedStyle(el).getPropertyValue("--tp-font-heading").trim() }));
+    const seen = new Set<string>();
+    for (const id of ["studio", "midnight", "workshop", "candy", "editorial", "ocean", "classroom", "garden"]) {
+      await page.locator(`[data-theme-id="${id}"]`).click();
+      await expect(page.locator(`[data-theme-id="${id}"]`)).toHaveAttribute("aria-pressed", "true");
+      await expect.poll(async () => (await rootAttrs()).bg).not.toBe("");
+      const a = await rootAttrs();
+      seen.add(JSON.stringify(a));
+      // content and arrangement untouched on every switch
+      expect(await frame.getByRole("heading", { level: 1 }).textContent()).toBe(nameBefore);
+    }
+    expect(seen.size).toBe(8); // eight genuinely different looks (header/desktop arrangement/background/font)
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content)).toEqual(servicesBefore);
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page.widgets)).toEqual(widgetsBefore);
+    await page.getByRole("tab", { name: "Content" }).click();
+    expect(await rowOrder(page)).toEqual(orderBefore);
+
+    // ---- custom values on top of a theme
+    await page.getByRole("tab", { name: "Design" }).click();
+    await page.locator('[data-theme-id="studio"]').click();
+    await page.locator("summary", { hasText: "Buttons" }).click();
+    const buttonsSection = page.locator("details", { has: page.locator("summary", { hasText: "Buttons" }) });
+    await buttonsSection.getByRole("radio", { name: "Square" }).check({ force: true });
+    await buttonsSection.getByLabel("Button colour hex value").fill("#0a7a3b");
+    await expect(buttonsSection.locator("summary")).toContainText("customised");
+    await expect.poll(() => frame.locator(".tp-btn").first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
+    await expect(page.getByText(/custom settings? applied on top/)).toBeVisible();
+    // switching theme keeps the owner's overrides on top, and says so
+    await page.locator('[data-theme-id="midnight"]').click();
+    await expect(page.getByText(/custom settings? applied on top/)).toBeVisible();
+
+    // ---- reset to theme: one section, then everything
+    await page.locator("summary", { hasText: "Text" }).first().click();
+    const textSection = page.locator("details", { has: page.locator("summary", { hasText: /^Text/ }) });
+    await textSection.getByRole("radio", { name: "Large" }).check({ force: true });
+    await expect(textSection.locator("summary")).toContainText("customised");
+    await buttonsSection.getByRole("button", { name: /Reset this section to theme/ }).click();
+    await expect(buttonsSection.locator("summary")).not.toContainText("customised");
+    await expect(textSection.locator("summary")).toContainText("customised");            // other sections untouched
+    await expect(page.getByText(/1 custom setting applied on top/)).toBeVisible();
+    await page.getByRole("button", { name: /Reset all design changes/ }).click();
+    await expect(page.getByText(/custom settings? applied on top/)).toHaveCount(0);
+    await expect(textSection.locator("summary")).not.toContainText("customised");
+  });
+
+  test("per-widget appearance overrides and reset to theme", async ({ page }) => {
+    await openEditorWithSample(page, "Mechanic");
+    const frame = previewFrame(page);
+    await openRow(page, "serviceList");
+    await row(page, "serviceList").getByRole("tab", { name: "Appearance" }).click();
+    await expect(row(page, "serviceList")).toContainText("Following your page style");
+    await row(page, "serviceList").getByRole("radio", { name: "Featured" }).check({ force: true });
+    await row(page, "serviceList").getByRole("radio", { name: "None", exact: true }).first().check({ force: true });
+    await row(page, "serviceList").getByLabel("Card colour hex value").fill("#1f2a44");
+    const widget = frame.locator('[data-widget="serviceList"]');
+    await expect(widget).toHaveAttribute("data-featured", "true");
+    const card = widget.locator(".tp-card");
+    await expect.poll(() => card.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgb(31, 42, 68)");
+    // text automatically flips to stay readable on the dark card
+    const textColour = await card.evaluate((el) => getComputedStyle(el).color);
+    expect(textColour).not.toBe("rgb(42, 32, 25)");
+    // other widgets are untouched
+    await expect(frame.locator('[data-widget="reviews"] .tp-card')).not.toHaveCSS("background-color", "rgb(31, 42, 68)");
+    await expect(row(page, "serviceList")).toContainText(/\d settings? differ/);
+    await row(page, "serviceList").getByRole("button", { name: "Reset this widget to theme" }).click();
+    await expect(widget).not.toHaveAttribute("data-featured", "true");
+    await expect(row(page, "serviceList")).toContainText("Following your page style");
+  });
+
+  test("undo and redo (buttons and keyboard) and draft persistence after refresh", async ({ page }) => {
+    await openEditorWithSample(page, "Tutor");
+    const frame = previewFrame(page);
+    await expect(page.getByTestId("undo")).toBeDisabled();
+    const start = await rowOrder(page);
+
+    // an edit of each kind
+    await row(page, start[1]!).getByRole("button", { name: /^Move .* down$/ }).click();      // reorder
+    await page.getByRole("tab", { name: "Design" }).click();
+    await page.locator('[data-theme-id="ocean"]').click();                           // theme
+    await page.getByRole("tab", { name: "Content" }).click();
+    await openSection(page, "Your name and description");
+    const name = page.getByLabel("Business name");
+    await name.fill("Clearpath Maths Tuition (edited)");                              // content (typing = one undo step)
+    await expect(frame.getByRole("heading", { level: 1 })).toContainText("(edited)");
+    const reordered = await rowOrder(page);
+    expect(reordered).not.toEqual(start);
+
+    // undo the name edit as ONE step
+    await page.locator("body").click({ position: { x: 5, y: 5 } });
+    await page.getByTestId("undo").click();
+    await expect(frame.getByRole("heading", { level: 1 })).not.toContainText("(edited)");
+    // undo theme
+    await page.getByTestId("undo").click();
+    await expect.poll(() => frame.locator("[data-taplo-page]").getAttribute("data-header")).toBe("poster"); // back to Midnight
+    // undo reorder using the keyboard shortcut
+    await page.locator("body").click({ position: { x: 5, y: 5 } });
+    await page.keyboard.press("Control+z");
+    await expect.poll(() => rowOrder(page)).toEqual(start);
+    await expect(page.getByTestId("undo")).toBeDisabled();
+    // redo it all with the shortcut and button
+    await page.keyboard.press("Control+Shift+z");
+    await expect.poll(() => rowOrder(page)).toEqual(reordered);
+    await page.getByTestId("redo").click();
+    await page.getByTestId("redo").click();
+    await expect(frame.getByRole("heading", { level: 1 })).toContainText("(edited)");
+    await expect(page.getByTestId("redo")).toBeDisabled();
+
+    // draft persists after a refresh
+    await page.reload();
+    await page.waitForLoadState("networkidle");
+    expect(await rowOrder(page)).toEqual(reordered);
+    await expect(previewFrame(page).getByRole("heading", { level: 1 })).toContainText("(edited)");
+    await expect(previewFrame(page).locator("[data-taplo-page]")).toHaveAttribute("data-header", "side"); // Ocean
+  });
+
+  test("publishing: draft stays private, published matches the preview, changes need an explicit publish", async ({ page }) => {
+    await openEditorWithSample(page, "Consultant");
+    await page.getByRole("tab", { name: "Page settings" }).click();
+    await expect(page.getByText("Draft — not published")).toBeVisible();
+    await page.getByRole("button", { name: "Publish", exact: true }).first().click();
+    await expect(page.getByText(/Published · version 1/)).toBeVisible();
+    const slug = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.identity.slug);
+
+    // preview ↔ published parity: same widgets, same order, same theme
+    const prev = await previewOrder(page);
+    const attrs = await previewFrame(page).locator("[data-taplo-page]").evaluate((el) => ["data-header", "data-desktop", "data-decoration", "data-card-surface"].map((a) => el.getAttribute(a)));
+    const pub = await page.context().newPage();
+    await pub.goto(`/demo/p/${slug}`);
+    await expect(pub.getByRole("note")).toContainText("stored in this browser only");
+    const pubOrder = await pub.locator("[data-widget]").evaluateAll((els) => els.map((e) => e.getAttribute("data-widget")));
+    expect(pubOrder).toEqual(prev);
+    expect(await pub.locator("[data-taplo-page]").evaluate((el) => ["data-header", "data-desktop", "data-decoration", "data-card-surface"].map((a) => el.getAttribute(a)))).toEqual(attrs);
+
+    // a later draft edit does not change the published page until publishing again
+    await page.getByRole("tab", { name: "Design" }).click();
+    await page.locator('[data-theme-id="candy"]').click();
+    await page.getByRole("tab", { name: "Page settings" }).click();
+    await expect(page.getByText("You have unpublished changes.")).toBeVisible();
+    await pub.reload();
+    expect(await pub.locator("[data-taplo-page]").getAttribute("data-header")).toBe(attrs[0]);
+    await page.getByRole("button", { name: "Publish changes" }).first().click();
+    await expect(page.getByText(/Published · version 2/)).toBeVisible();
+    await pub.reload();
+    await expect(pub.locator("[data-taplo-page]")).toHaveAttribute("data-header", "centered");
+
+    // discard unpublished changes returns to the published copy
+    await page.getByRole("tab", { name: "Design" }).click();
+    await page.locator('[data-theme-id="midnight"]').click();
+    await page.getByRole("tab", { name: "Page settings" }).click();
+    await page.getByRole("button", { name: "Discard unpublished changes" }).click();
+    await expect(page.getByText("You have unpublished changes.")).toHaveCount(0);
+    // unpublish takes the page offline
+    await page.getByRole("button", { name: "Unpublish" }).click();
+    await pub.reload();
+    await expect(pub.getByText("Nothing published at this address")).toBeVisible();
+  });
+
+  test("starter suggestions are a separate, previewable, undoable action", async ({ page }) => {
+    await openEditorWithSample(page, "Consultant");
+    const start = await rowOrder(page);
+    await page.getByRole("button", { name: "Suggestions" }).click();
+    const dlg = page.getByRole("dialog");
+    await expect(dlg.getByText(/Will be added/)).toBeVisible();
+    await expect(dlg.getByText(/Will come off the page \(0\)/)).toBeVisible();   // "add" never removes
+    await dlg.getByRole("radio", { name: /Rearrange to the suggestion/ }).check();
+    await expect(dlg.getByText(/Will come off the page/)).toBeVisible();
+    await dlg.getByRole("button", { name: "Cancel" }).click();
+    expect(await rowOrder(page)).toEqual(start);                                     // cancel changes nothing
+    await page.getByRole("button", { name: "Suggestions" }).click();
+    await page.getByRole("dialog").getByRole("radio", { name: /Rearrange to the suggestion/ }).check();
+    await page.getByRole("dialog").getByRole("button", { name: "Apply" }).click();
+    await expect(page.getByTestId("notice")).toContainText("Rearranged");
+    await page.getByTestId("notice").getByRole("button", { name: "Undo" }).click();
+    await expect.poll(() => rowOrder(page)).toEqual(start);                          // fully undoable
+    // theme and business records were never touched by a starter
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page.themeId)).toBe("editorial");
+  });
+
+  test("images: upload with focal point, alt text, rejection of bad files, and fallbacks without images", async ({ page }) => {
+    await openEditorWithSample(page, "Unlisted");
+    const frame = previewFrame(page);
+    await page.getByRole("tab", { name: "Design" }).click();
+    await page.locator("summary", { hasText: "Header" }).click();
+    // no logo → initials fallback, never a broken image
+    await expect(frame.locator(".tp-avatar")).toContainText("PG");
+    const upload = page.getByLabel("Logo or profile picture: upload a picture");
+    await upload.setInputFiles({ name: "notes.txt", mimeType: "text/plain", buffer: Buffer.from("hello") });
+    await expect(page.getByRole("alert").filter({ hasText: "JPG, PNG or WebP" })).toBeVisible();
+    await upload.setInputFiles(pngFile("logo.png"));
+    await expect(frame.locator(".tp-avatar img")).toHaveCount(1);
+    await page.getByLabel("Describe the picture (for screen readers)").first().fill("Paws & Polish paw logo");
+    await expect(frame.locator(".tp-avatar img")).toHaveAttribute("alt", "Paws & Polish paw logo");
+    // focal point via the accessible sliders drives object-position
+    await page.getByLabel("Focus left–right").first().fill("20");
+    await page.getByLabel("Focus top–bottom").first().fill("80");
+    await expect.poll(() => frame.locator(".tp-avatar img").evaluate((el) => (el as HTMLElement).style.objectPosition)).toBe("20% 80%");
+    // stored as a small downscaled data URL, never an arbitrary script
+    const src = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.identity.logo.src as string);
+    expect(src).toMatch(/^data:image\/jpeg;base64,/);
+    expect(src.length).toBeLessThan(400_000);
+    // remove → initials again
+    await page.getByRole("button", { name: "Remove" }).first().click();
+    await expect(frame.locator(".tp-avatar img")).toHaveCount(0);
+  });
+
+  test("readability feedback: unreadable colours are corrected and explained", async ({ page }) => {
+    await openEditorWithSample(page, "Mechanic");
+    const frame = previewFrame(page);
+    await page.getByRole("tab", { name: "Design" }).click();
+    await page.locator("summary", { hasText: "Text" }).first().click();
+    const textSection = page.locator("details", { has: page.locator("summary", { hasText: /^Text/ }) });
+    await textSection.getByLabel("Text colour hex value").fill("#f7f1ea"); // same as Studio's background
+    await page.locator("summary", { hasText: "Readability check" }).click();
+    await expect(page.getByRole("tabpanel", { name: "Design" }).getByText(/Text colour was adjusted because it was hard to read/)).toBeVisible();
+    const ratio = await frame.locator("h1").evaluate((el) => {
+      const lum = (c: string) => { const [r, g, b] = c.match(/\d+/g)!.slice(0, 3).map(Number).map((v) => { const s = v / 255; return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!; };
+      const root = el.closest("[data-taplo-page]")!;
+      const fg = lum(getComputedStyle(el).color); const bg = lum(getComputedStyle(root).getPropertyValue("--tp-background").trim().startsWith("#") ? hexToRgb(getComputedStyle(root).getPropertyValue("--tp-background").trim()) : "rgb(247,241,234)");
+      function hexToRgb(h: string) { const n = parseInt(h.slice(1), 16); return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`; }
+      return (Math.max(fg, bg) + 0.05) / (Math.min(fg, bg) + 0.05);
+    });
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+  });
+
+  test("edge cases: long names and descriptions, many services, no images, no contacts, empty page", async ({ page }) => {
+    const stress = FIXTURES.find((f) => f.key === "stress")!;
+    await seedFixture(page, { v: 2, step: "publish", onboarded: true, plan: "business", content: stress.content, page: stress.page, slugEdited: true, published: null });
+    const frame = previewFrame(page);
+    // very long name, 14 services, long about text: the editor and the preview both stay inside the viewport
+    await expect(frame.getByRole("heading", { level: 1 })).toContainText("Extraordinarily Long-Named");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
+    await page.setViewportSize({ width: 360, height: 780 });
+    await page.goto("/dashboard/page");
+    await page.waitForLoadState("networkidle");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
+    const pubPage = await page.context().newPage();
+    await pubPage.setViewportSize({ width: 360, height: 780 });
+    await pubPage.goto("/demo-stress");
+    expect(await pubPage.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
+    await expect(pubPage.locator("[data-widget=serviceList] li, [data-widget=priceMenu] li").first()).toBeVisible();
+
+    // remove every widget → clear empty state in the editor, header-only page for visitors
+    await page.setViewportSize({ width: 1440, height: 900 });
+    // no images at all → initials, no broken <img>, no layout collapse
+    await expect(frame.locator(".tp-avatar")).toBeVisible();
+    for (let i = 0; i < 25; i++) {
+      const r = page.locator("[data-widget-row]").first();
+      if (!(await r.count())) break;
+      await r.locator("button[aria-expanded]").first().click();
+      await r.getByRole("button", { name: /Remove from page/ }).click();
+    }
+    await expect(page.getByText("Your page has no widgets yet")).toBeVisible();
+    await expect(frame.locator("[data-widget]")).toHaveCount(0);
+    await expect(frame.getByRole("heading", { level: 1 })).toBeVisible();
+    await page.getByTestId("undo").click();
+    await expect(page.locator("[data-widget-row]")).toHaveCount(1);
+  });
+
+  test("no contact methods: page stays valid, nothing dead is rendered, editor explains what is missing", async ({ page }) => {
+    const f = FIXTURES.find((x) => x.key === "no-contacts")!;
+    await seedFixture(page, { v: 2, step: "publish", onboarded: true, plan: "business", content: f.content, page: f.page, slugEdited: true, published: null });
+    const frame = previewFrame(page);
+    await expect(frame.getByRole("heading", { level: 1 })).toBeVisible();
+    expect(await frame.locator("a[href^='tel:'], a[href^='mailto:'], a[href*='wa.me']").count()).toBe(0);
+    await expect(page.getByText("To publish: at least one way to contact you.")).toBeVisible();
+    await expect(page.getByTestId("publish")).toBeDisabled();
+  });
+});

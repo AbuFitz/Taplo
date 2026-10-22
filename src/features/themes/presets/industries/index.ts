@@ -1,4 +1,5 @@
 import { industryPresetSchema, type IndustryPreset } from "../../contracts/industry";
+import type { WidgetType } from "@/features/page/contracts/widgets";
 
 /**
  * Industry presets are DATA. Supporting a new industry means adding an entry
@@ -16,6 +17,17 @@ const T = {
   general: { services: "Services", team: "Team", booking: "Book", reviews: "Reviews" },
 } satisfies Record<string, Terms>;
 
+const SUGGESTED_THEME = { trades: "workshop", beauty: "studio", education: "classroom", professional: "editorial", general: "garden" } as const;
+
+/** Compact, link-first starting points. Empty widgets simply stay hidden until content exists. */
+const STARTER: Record<keyof typeof T, WidgetType[]> = {
+  trades: ["booking", "serviceList", "reviews", "gallery", "serviceArea", "location", "faq"],
+  beauty: ["booking", "priceMenu", "gallery", "team", "reviews", "social", "hours", "location"],
+  education: ["booking", "text", "serviceList", "team", "credentials", "reviews", "faq"],
+  professional: ["booking", "text", "serviceList", "reviews", "credentials", "document", "social"],
+  general: ["booking", "serviceList", "text", "gallery", "reviews", "location"],
+};
+
 function preset(
   id: string,
   label: string,
@@ -24,16 +36,19 @@ function preset(
   services: string[],
   keywords: string[] = [],
   terminology: Partial<Terms> = {},
+  extra: Partial<IndustryPreset> = {},
 ): IndustryPreset {
   return {
     id,
     label,
     keywords,
-    defaultLayoutId: `${layout}-v1`,
+    suggestedThemeId: SUGGESTED_THEME[layout],
+    starterWidgets: STARTER[layout],
     terminology: { ...T[layout], ...terminology },
     suggestedServices: services.map((name) => ({ name })),
     suggestedBookingMode: bookingMode,
     onboardingFieldKeys: [],
+    ...extra,
   };
 }
 
@@ -80,7 +95,7 @@ const RAW: IndustryPreset[] = [
   preset("dentist", "Dentist / clinic", "general", "request", ["Check-up", "Hygiene appointment", "Consultation"], ["clinic", "dental"]),
   preset("physio", "Physio / therapist", "general", "request", ["Initial assessment", "Treatment session", "Follow-up"], ["physiotherapy", "chiropractor", "osteopath"]),
   preset("vet", "Vet / pet services", "general", "request", ["Consultation", "Vaccination", "Grooming", "Dog walking"], ["pet", "dog"]),
-  preset("hospitality", "Cafe / restaurant", "general", "contact", ["Menu", "Catering", "Private hire"], ["food", "cafe", "restaurant"]),
+  preset("hospitality", "Cafe / restaurant", "general", "contact", ["Menu", "Catering", "Private hire"], ["food", "cafe", "restaurant", "coffee", "bakery", "pub", "takeaway"], {}, { suggestedThemeId: "candy", starterWidgets: ["booking", "priceMenu", "document", "hours", "gallery", "location", "social", "reviews"] }),
   preset("event-services", "Events / entertainment", "general", "request", ["Wedding package", "Corporate event", "Party"], ["dj", "catering", "wedding"]),
   // Fallback — always available, publishes immediately.
   preset("other", "Other / describe your business", "general", "contact", [], []),
@@ -111,3 +126,4 @@ export function searchIndustries(query: string): IndustryPreset[] {
   );
   return [...hits, byId.get(OTHER_INDUSTRY_ID)!];
 }
+

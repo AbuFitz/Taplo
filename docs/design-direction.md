@@ -7,19 +7,23 @@
 2. **Dashboard** — neutral shadcn tokens, dense and calm. Not built yet.
 3. **Taplo marketing** — placeholder home + pricing only.
 
-## Family identities (as implemented)
-| Family | Hero | Image priority | Services | Rhythm / width | Type | CTA |
+## Product shape (direction 2)
+A compact, expressive business presence: identity, short description, location/online status, immediate actions, then widgets the owner arranges. Linktree is the reference for **setup, customisation and mobile usability** (claim → identity → look → widgets → arrange → publish); Taplo keeps its own richer widgets (services, booking, reviews, team, products) and identity. Desktop is designed, not stretched: three arrangements (centred column; sticky header beside widgets; header over two columns).
+
+## The eight themes (all work for every industry)
+| Theme | Header | Type | Background | Buttons | Cards | Desktop |
 |---|---|---|---|---|---|---|
-| Trades | full-bleed dark, uppercase condensed, huge stacked actions | darkened backdrop, practical | compact ruled rows, price right | compact, wide | Barlow Condensed + Inter | Call first; accent band mid-page; sticky mobile bar |
-| Beauty | split editorial, arched portrait | high; gallery directly after hero | treatment menu (image tiles + dotted-leader rows) | airy, wide | Fraunces + Manrope | pill booking button; sticky "book" on mobile |
-| Education | left-aligned explanation + contained action card, credential chips | low | subject cards with duration/mode chips | regular, mid width | Lexend + Inter | action card in hero; contextual mobile bar |
-| Professional | narrow serif, rule, text-link actions | low | numbered engagements, wide measure | airy, narrow | Source Serif 4 + Inter | restrained button + text links |
-| General | centred, works with zero photography | optional | balanced cards | regular | Manrope | primary + secondary buttons |
+| Studio | centred, arch portrait | Fraunces + Manrope | warm paper + grain | soft, rounded, soft shadow | solid, round, soft shadow | name left, widgets right |
+| Midnight | poster (text over cover photo) | Barlow Condensed caps | dark gradient + glow | outline, rounded | frosted glass | name left, widgets right |
+| Workshop | cover banner, square picture | Barlow Condensed caps | concrete + diagonal stripes | square, filled, hard offset shadow | square, thick border, hard shadow | two columns |
+| Candy | centred, circle | Lexend bold | pink→lavender gradient + dots | pill, filled, soft shadow | frosted, very round, roomy | centred column |
+| Editorial | text only | Source Serif | paper | square outline, no icons | borderless rules | name left, widgets right |
+| Ocean | side by side | Manrope bold | teal gradient, slowly drifting | pill, filled | frosted | centred column |
+| Classroom | cover banner, rounded picture | Lexend large | pale blue + grid | rounded filled | solid, thin border | centred column |
+| Garden | side by side, arch | Fraunces bold | sage | rounded filled, soft shadow | solid, round, soft shadow | two columns |
 
-## Rules applied
-- Palette swap alone is a failure: hero structure, image priority, service treatment, section rhythm, typography, width and CTA position all differ (asserted in `themes.test.ts`, reviewed in screenshots).
-- Tap targets ≥44px, visible focus from shadcn ring mapped to the accent, no colour-only status, native `<details>` FAQ, reduced-motion media query neutralises transitions.
-- Empty blocks disappear without leaving a gap; absent contact channels produce no links.
+## Reference inspection status: NOT DONE
+No reference site (Linktree, Stripe, Linear, Vercel, Booksy, Framer, Tesla, Fresha) was opened in this work, so no observations are recorded and none are claimed. The decisions above come from the brief and from reviewing the renders. Add real reference notes before treating the visual direction as signed off.
 
-## Visual QA performed (milestone 1)
-Full-page desktop renders of Trades/Beauty/Education/Professional/General and 390px mobile renders of four families were inspected by eye. Findings fixed: Professional layout carried a Booking block the spec's default order excludes. Not yet done: manual 200%-zoom visual review (only an automated 640px overflow proxy), screen-reader pass, automated axe scan.
+## Visual QA performed
+Renders reviewed by me (not by a designer): all eight themes for the café (phone) and the tutor (desktop), four businesses on phone and six on desktop, onboarding look/widgets steps, the editor on desktop and at 390px with the preview sheet. Problems found and fixed from those reviews: list text inheriting centred alignment, an oversized cover banner on desktop, horizontal overflow of the editor on phones (shrinkable grid tracks), a text-only header that could not show a chosen picture. Automated: no horizontal overflow, console errors, broken images, dead links or sub-40px tap targets across the matrix; axe (WCAG 2.1 A/AA + best practice) clean.

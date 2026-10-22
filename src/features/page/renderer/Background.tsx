@@ -1,0 +1,24 @@
+import { ProfileImage } from "./ProfileImage"
+import type { PageViewModel } from "./view-model"
+import { backgroundCss } from "../themes/resolve"
+
+/** Page background: solid, gradient (optionally drifting) or photo with a protective overlay, plus a decoration layer. */
+export function Background({ vm }: { vm: PageViewModel }) {
+  const { spec } = vm.style
+  const b = spec.background
+  return (
+    <>
+      <div className="tp-bg" aria-hidden="true">
+        {b.kind === "image" ? (
+          <>
+            <ProfileImage image={b.image} sizes="100vw" priority />
+            <div className="absolute inset-0" style={{ background: b.overlayColor, opacity: b.overlay / 100 }} />
+          </>
+        ) : (
+          <div className="tp-bg-gradient" style={{ background: backgroundCss(spec) }} />
+        )}
+      </div>
+      <div className="tp-deco" aria-hidden="true" />
+    </>
+  )
+}

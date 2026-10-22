@@ -6,30 +6,41 @@ import { useRouter } from "next/navigation"
 import { Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
+import { LOCATION_MODES } from "@/features/businesses/content"
+import { SLUG_PROBLEM_MESSAGE } from "@/features/businesses/slug"
+import { newWidget } from "@/features/page/starter"
+import { ThemePicker } from "@/features/page/editor/ThemePicker"
+import { getTheme } from "@/features/page/themes/catalogue"
+import { getWidget } from "@/features/page/widgets/registry"
+import { buildPageViewModel } from "@/features/page/renderer"
+import { resolveEntitlements } from "@/features/subscriptions/entitlements"
 import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures"
 import { OTHER_INDUSTRY_ID, getIndustryPreset, searchIndustries } from "@/features/themes/presets/industries"
-import { resolveLayout } from "@/features/themes/presets/layouts"
-import { LOCATION_MODES, type ServiceContent } from "@/features/businesses/content"
-import { SLUG_PROBLEM_MESSAGE } from "@/features/businesses/slug"
 import { cn } from "@/lib/utils"
-import { applyIndustry, blankService, normService, canPublish, hasContactChannel, loadSample, publish, readiness, setName, setSlug, slugProblems } from "./actions"
-import { ONBOARDING_STEPS, initialState, useDemo, type OnboardingStep } from "./store"
+import { applyIndustry, blankService, canPublish, hasContactChannel, loadSample, newId, normService, publish, readiness, setName, setSlug, slugProblems } from "./actions"
+import { ONBOARDING_STEPS, initialState, parseContent, useDemo, type OnboardingStep } from "./store"
 import { ServiceForm, serviceErrors } from "./ServiceForm"
 import { DemoNotice, EmailField, PhoneField, PreviewFrame } from "./ui"
+import type { WidgetType } from "@/features/page/contracts/widgets"
 
 const STEP_LABEL: Record<OnboardingStep, string> = {
   industry: "Your business",
-  business: "Name & address",
-  contacts: "Contact",
-  service: "First service",
-  review: "Preview & publish",
+  business: "Claim your page",
+  contacts: "Get in touch",
+  look: "Choose a look",
+  widgets: "Add what’s useful",
+  publish: "Preview & publish",
+}
+const STEP_TITLE: Record<OnboardingStep, string> = {
+  industry: "What kind of business is it?",
+  business: "Claim your page",
+  contacts: "How can people reach you?",
+  look: "Choose a look",
+  widgets: "Add what’s useful",
+  publish: "Preview and publish",
 }
 
-const LOCATION_LABEL = {
-  premises: "A place customers visit",
-  service_area: "I travel to customers (service area)",
-  online: "Online only",
-} as const
+const LOCATION_LABEL = { premises: "A place customers visit", service_area: "I travel to customers (service area)", online: "Online only" } as const
 
 export function Onboarding() {
   const router = useRouter()
@@ -53,32 +64,28 @@ export function Onboarding() {
 
   const c = s.content
   const slugErrs = slugProblems(c.identity.slug)
-  const rawService = (c.services ?? []).find((x) => !x.archived)
-  const service = rawService ? normService(rawService) : undefined
-  const industryReady = Boolean(c.identity.industryLabel.trim()) && (state !== null)
-
   const valid: Record<OnboardingStep, boolean> = {
-    industry: industryReady,
+    industry: state !== null && Boolean(c.identity.industryLabel.trim()),
     business: Boolean(c.identity.name.trim()) && slugErrs.length === 0,
     contacts: hasContactChannel(c),
-    service: Boolean(service) && Object.keys(serviceErrors(service!)).length === 0,
-    review: canPublish(s),
+    look: true,
+    widgets: true,
+    publish: canPublish(s),
   }
   const why: Record<OnboardingStep, string> = {
-    industry: "Choose a type of business (or Other) and describe it.",
+    industry: "Choose what you do (or Other) and describe it in a few words.",
     business: "Add a name and a valid web address.",
     contacts: "Add at least one way for customers to reach you.",
-    service: "Add your first service with a price (or choose “Quote on request”).",
-    review: "Complete the earlier steps to publish.",
+    look: "",
+    widgets: "",
+    publish: "Complete the earlier steps to publish.",
   }
 
-  const sampleKeys = INDUSTRY_FIXTURE_KEYS
-
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:py-10">
+    <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:py-10">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <Link href="/" className="text-sm font-semibold">Taplo</Link>
-        <Link href="/dashboard" className="text-sm underline underline-offset-4">Skip to dashboard</Link>
+        <Link href="/dashboard/page" className="text-sm underline underline-offset-4">Skip to the page editor</Link>
       </header>
       <DemoNotice className="mb-6" />
 
@@ -95,23 +102,19 @@ export function Onboarding() {
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_400px]">
         <section aria-labelledby="step-title" className="min-w-0">
-          <h1 id="step-title" className="mb-1 text-2xl font-semibold">{STEP_LABEL[step]}</h1>
+          <h1 id="step-title" className="mb-1 text-2xl font-semibold">{STEP_TITLE[step]}</h1>
 
           {step === "industry" ? (
             <div className="grid gap-6">
-              <p className="text-muted-foreground">Pick the closest match. It only sets sensible defaults, and you stay in control of everything.</p>
-              <TaploInput label="Search (e.g. barber, tutor, plumber)" value={query} onChange={(e) => setQuery(e.target.value)} />
+              <p className="text-muted-foreground">Pick the closest match. It only suggests a starting point; you can change anything, including the look, later.</p>
+              <TaploInput label="Search (e.g. barber, tutor, café, plumber)" value={query} onChange={(e) => setQuery(e.target.value)} />
               <ul className="grid gap-2 sm:grid-cols-2" aria-label="Types of business">
                 {searchIndustries(query).map((p) => {
                   const selected = state !== null && c.identity.industryKey === p.id
                   return (
                     <li key={p.id}>
-                      <button
-                        type="button"
-                        aria-pressed={selected}
-                        onClick={() => update((x) => applyIndustry(x, p.id, p.id === OTHER_INDUSTRY_ID ? "" : p.label))}
-                        className={cn("min-h-11 w-full rounded-lg border px-4 py-2.5 text-left text-sm transition-colors hover:bg-muted", selected && "border-primary bg-muted font-semibold ring-2 ring-primary/30")}
-                      >
+                      <button type="button" aria-pressed={selected} onClick={() => update((x) => applyIndustry(x, p.id, p.id === OTHER_INDUSTRY_ID ? "" : p.label))}
+                        className={cn("min-h-11 w-full rounded-lg border px-4 py-2.5 text-left text-sm transition-colors hover:bg-muted", selected && "border-primary bg-muted font-semibold ring-2 ring-primary/30")}>
                         {p.label}
                       </button>
                     </li>
@@ -124,17 +127,15 @@ export function Onboarding() {
                   hint={c.identity.industryKey === OTHER_INDUSTRY_ID ? "e.g. Dog groomer, Wedding florist, Piano restorer" : undefined}
                   value={c.identity.industryLabel}
                   maxLength={80}
-                  onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }))}
+                  onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }), { coalesce: "ind-label" })}
                 />
               ) : null}
               <div className="rounded-lg border border-dashed p-4">
                 <p className="text-sm font-medium">Just looking around?</p>
-                <p className="mb-3 text-sm text-muted-foreground">Load a synthetic sample business to explore the dashboard and every layout with content already in place.</p>
+                <p className="mb-3 text-sm text-muted-foreground">Open a sample business with content already in place, or see them all on the <Link className="underline" href="/demo/profiles">sample profiles</Link> page.</p>
                 <div className="flex flex-wrap gap-2">
-                  {sampleKeys.map((k) => (
-                    <Button key={k} size="sm" variant="outline" onClick={() => { update((x) => loadSample(x, k)); router.push("/dashboard") }}>
-                      {getFixture(k)!.label}
-                    </Button>
+                  {INDUSTRY_FIXTURE_KEYS.map((k) => (
+                    <Button key={k} size="sm" variant="outline" onClick={() => { update((x) => loadSample(x, k), { resetHistory: true }); router.push("/dashboard/page") }}>{getFixture(k)!.label}</Button>
                   ))}
                 </div>
               </div>
@@ -143,22 +144,15 @@ export function Onboarding() {
 
           {step === "business" ? (
             <div className="grid gap-5">
-              <TaploInput label="Business name" value={c.identity.name} maxLength={100} autoComplete="off" onChange={(e) => update((x) => setName(x, e.target.value))} />
+              <p className="text-muted-foreground">Your name and your own web address. You can change both later.</p>
+              <TaploInput label="Business name" value={c.identity.name} maxLength={100} autoComplete="off" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
               <div>
-                <TaploInput
-                  label="Your web address"
-                  value={c.identity.slug}
-                  maxLength={40}
-                  autoCapitalize="none"
-                  autoCorrect="off"
-                  onChange={(e) => update((x) => setSlug(x, e.target.value))}
-                  error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined}
-                />
+                <TaploInput label="Your web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />
                 <p className="mt-1.5 text-sm text-muted-foreground">
                   taplo.co/<strong>{c.identity.slug || "your-name"}</strong>
                   {slugErrs.length && c.identity.slug ? <span className="block text-destructive">{SLUG_PROBLEM_MESSAGE[slugErrs[0]!]}</span> : null}
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">Demo note: availability is checked against the database when you publish on a connected environment. Reserved and invalid addresses are blocked now.</p>
+                <p className="mt-1 text-xs text-muted-foreground">Demo note: whether an address is already taken is checked against the database when you publish on a connected environment. Reserved and invalid addresses are blocked now.</p>
               </div>
               <fieldset className="grid gap-2">
                 <legend className="mb-1 text-sm font-medium">Where do you work?</legend>
@@ -169,78 +163,36 @@ export function Onboarding() {
                   </label>
                 ))}
               </fieldset>
-              <TaploInput
-                label={c.location.mode === "service_area" ? "Areas you cover" : c.location.mode === "online" ? "Where you’re based (optional)" : "Town or area"}
-                value={c.location.locality ?? ""}
-                maxLength={120}
-                onChange={(e) => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, locality: e.target.value || undefined } } }))}
-              />
-              {c.location.mode === "premises" ? (
-                <TaploInput label="Street address (optional)" value={c.location.addressLine ?? ""} maxLength={240} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, addressLine: e.target.value || undefined } } }))} />
-              ) : (
-                <p className="text-sm text-muted-foreground">Your private address is never published for travelling or online businesses.</p>
-              )}
+              <TaploInput label={c.location.mode === "service_area" ? "Areas you cover" : c.location.mode === "online" ? "Where you’re based (optional)" : "Town or area"} value={c.location.locality ?? ""} maxLength={120} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, locality: e.target.value || undefined } } }), { coalesce: "loc" })} />
+              {c.location.mode === "premises" ? null : <p className="text-sm text-muted-foreground">Your private address is never published for travelling or online businesses.</p>}
             </div>
           ) : null}
 
           {step === "contacts" ? (
             <div className="grid gap-5">
-              <p className="text-muted-foreground">Customers act on these straight from your page. Only the ones you fill in appear.</p>
-              <PhoneField label="Phone" value={c.contacts.phone} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, phone: v } } }))} hint="Used for the Call button." />
-              <PhoneField label="WhatsApp number" value={c.contacts.whatsapp} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, whatsapp: v } } }))} hint="Include the country code, e.g. +44." />
-              <EmailField value={c.contacts.email} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }))} />
+              <p className="text-muted-foreground">Customers act on these straight from your page. Only the ones you fill in appear. You can add a logo, description and more afterwards.</p>
+              <PhoneField label="Phone" value={c.contacts.phone} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, phone: v } } }), { coalesce: "phone" })} hint="Used for the Call button." />
+              <PhoneField label="WhatsApp number" value={c.contacts.whatsapp} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, whatsapp: v } } }), { coalesce: "wa" })} hint="Include the country code, e.g. +44." />
+              <EmailField value={c.contacts.email} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }), { coalesce: "email" })} />
+              <TaploInput label="A line about you (optional)" hint="Shown under your name." value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
             </div>
           ) : null}
 
-          {step === "service" ? (
-            <div className="grid gap-5">
-              <p className="text-muted-foreground">Add one service to start. You set the price; nothing is pre-filled for you. More can be added in the dashboard.</p>
-              {(() => {
-                const preset = getIndustryPreset(c.identity.industryKey)
-                return preset.suggestedServices.length > 0 ? (
-                  <div>
-                    <p className="mb-2 text-sm font-medium">Common for {preset.label.toLowerCase()} — tap to use as the name</p>
-                    <ul className="flex flex-wrap gap-2">
-                      {preset.suggestedServices.map((sg) => (
-                        <li key={sg.name}>
-                          <button type="button" className="min-h-11 rounded-full border px-4 text-sm hover:bg-muted" onClick={() => update((x) => {
-                            const list = [...(x.content.services ?? [])]
-                            const i = list.findIndex((q) => !q.archived)
-                            const base: ServiceContent = i >= 0 ? normService(list[i]!) : blankService(0)
-                            const nextSvc = { ...base, name: sg.name }
-                            if (i >= 0) list[i] = nextSvc
-                            else list.push(nextSvc)
-                            return { ...x, content: { ...x.content, services: list } }
-                          })}>{sg.name}</button>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null
-              })()}
-              <ServiceForm
-                key={service?.id ?? "new"}
-                service={service ?? blankService(0)}
-                showErrors={showErrors}
-                onChange={(svc) => update((x) => {
-                  const list = [...(x.content.services ?? [])]
-                  const i = list.findIndex((q) => q.id === svc.id)
-                  if (i >= 0) list[i] = svc
-                  else list.push(svc)
-                  return { ...x, content: { ...x.content, services: list } }
-                })}
-              />
+          {step === "look" ? (
+            <div className="grid gap-4">
+              <p className="text-muted-foreground">Pick any look you like: they work for every kind of business. Watch your page change on the right. You can fine-tune colours, fonts, buttons and more later.</p>
+              <ThemePicker themeId={s.page.themeId} canSwitch onPick={(id) => update((x) => ({ ...x, page: { ...x.page, themeId: id } }))} columns="grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3" />
+              <p className="text-xs text-muted-foreground">Suggested for {c.identity.industryLabel || "your business"}: {getTheme(getIndustryPreset(c.identity.industryKey).suggestedThemeId)?.name}. It’s only a suggestion.</p>
             </div>
           ) : null}
 
-          {step === "review" ? <ReviewStep onDone={() => router.push("/dashboard")} /> : null}
+          {step === "widgets" ? <WidgetsStep /> : null}
+          {step === "publish" ? <PublishStep onEditor={() => router.push("/dashboard/page")} /> : null}
 
-          {step !== "review" ? (
+          {step !== "publish" ? (
             <div className="mt-8 flex flex-wrap items-center gap-3">
               {stepIndex > 0 ? <Button variant="outline" size="lg" onClick={back}>Back</Button> : null}
-              <Button size="lg" onClick={() => (valid[step] ? next() : setShowErrors(true))} aria-describedby="why-disabled">
-                Continue
-              </Button>
+              <Button size="lg" onClick={() => (valid[step] ? next() : setShowErrors(true))} aria-describedby="why-disabled">Continue</Button>
               {!valid[step] && showErrors ? <p id="why-disabled" role="alert" className="text-sm text-destructive">{why[step]}</p> : null}
             </div>
           ) : (
@@ -249,28 +201,94 @@ export function Onboarding() {
         </section>
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="hidden lg:block"><h2 className="mb-2 text-sm font-semibold">Live preview</h2><PreviewFrame /></div>
+          <div className="hidden lg:block"><h2 className="mb-2 text-sm font-semibold">Your page, taking shape</h2><PreviewFrame /></div>
           <div className="lg:hidden">
-            <Button variant="outline" onClick={() => setMobilePreview((v) => !v)} aria-expanded={mobilePreview}>{mobilePreview ? "Hide preview" : "Show live preview"}</Button>
+            <Button variant="outline" onClick={() => setMobilePreview((v) => !v)} aria-expanded={mobilePreview}>{mobilePreview ? "Hide preview" : "Show my page"}</Button>
             {mobilePreview ? <div className="mt-3"><PreviewFrame /></div> : null}
           </div>
         </aside>
       </div>
-    </div>
+    </main>
   )
 }
 
-function ReviewStep({ onDone }: { onDone: () => void }) {
+/** Suggested widgets for this kind of business: tick to include. Nothing is added silently; empty ones explain what they need. */
+function WidgetsStep() {
   const { state, update } = useDemo()
   const s = state ?? initialState()
-  const layout = resolveLayout(s.config.layoutId).layout
+  const industry = getIndustryPreset(s.content.identity.industryKey)
+  const parsed = parseContent(s.content)
+  const vm = React.useMemo(() => (parsed.success && parsed.data.identity.name ? buildPageViewModel(parsed.data, s.page, { plan: s.plan }) : null), [parsed, s.page, s.plan])
+  const have = new Set(s.page.widgets.map((w) => w.type as string))
+  const [svc, setSvc] = React.useState(() => (s.content.services ?? []).find((x) => !x.archived) ?? null)
+  const [showErr, setShowErr] = React.useState(false)
+  const first = (s.content.services ?? []).find((x) => !x.archived)
+  const current = first ? normService(first) : svc ? normService(svc) : blankService(0)
+
+  const toggle = (type: WidgetType, on: boolean) => update((x) => ({
+    ...x,
+    page: { ...x.page, widgets: on ? [...x.page.widgets, newWidget(type, {})] : x.page.widgets.filter((w) => w.type !== type) },
+  }))
+  const ent = resolveEntitlements(s.plan, "active")
+  void ent
+
+  return (
+    <div className="grid gap-6">
+      <p className="text-muted-foreground">These are the building blocks of your page. Tick the ones you want now; you can add, reorder and style widgets any time in the page editor.</p>
+      <ul className="grid gap-2" aria-label="Suggested widgets">
+        {industry.starterWidgets.map((type) => {
+          const def = getWidget(type)!
+          const st = vm?.widgets.find((w) => w.type === type)?.status
+          return (
+            <li key={type}>
+              <label className="flex min-h-12 items-start gap-3 rounded-lg border p-3 text-sm">
+                <input type="checkbox" className="mt-0.5 size-4 accent-[var(--primary)]" checked={have.has(type)} onChange={(e) => toggle(type, e.target.checked)} />
+                <span><span className="font-semibold">{def.label}</span> <span className="text-muted-foreground">— {def.description}</span>
+                  {have.has(type) && st && st.state !== "ready" ? <span className="block text-xs text-muted-foreground">Needs: {st.reason}</span> : null}</span>
+              </label>
+            </li>
+          )
+        })}
+      </ul>
+      <div className="rounded-xl border p-4">
+        <h2 className="font-semibold">Your first service <span className="text-sm font-normal text-muted-foreground">(optional)</span></h2>
+        <p className="mb-3 text-sm text-muted-foreground">You set every price; nothing is pre-filled. Skip this and add services later.</p>
+        {industry.suggestedServices.length ? (
+          <ul className="mb-3 flex flex-wrap gap-2" aria-label="Common services">
+            {industry.suggestedServices.map((sg) => (
+              <li key={sg.name}><button type="button" className="min-h-11 rounded-full border px-4 text-sm hover:bg-muted" onClick={() => { const base = { ...current, name: sg.name }; setSvc(base); save(base) }}>{sg.name}</button></li>
+            ))}
+          </ul>
+        ) : null}
+        <ServiceForm key={current.id} service={current} showErrors={showErr} onChange={(x) => { setSvc(x); save(x) }} />
+      </div>
+    </div>
+  )
+
+  function save(x: ReturnType<typeof normService>) {
+    const ok = Object.keys(serviceErrors(x)).length === 0
+    setShowErr(false)
+    if (!ok) { // keep typing local until it is a valid service, so the page never shows half-finished data
+      if (!x.name.trim()) return
+    }
+    update((st) => {
+      const list = [...(st.content.services ?? [])]
+      const i = list.findIndex((q) => q.id === x.id)
+      if (ok) { if (i >= 0) list[i] = x; else list.push({ ...x, id: x.id || newId("svc") }) }
+      return { ...st, content: { ...st.content, services: list } }
+    }, { coalesce: "first-service" })
+  }
+}
+
+function PublishStep({ onEditor }: { onEditor: () => void }) {
+  const { state, update } = useDemo()
+  const s = state ?? initialState()
   const checks = readiness(s)
   const ok = canPublish(s)
+  const theme = getTheme(s.page.themeId)
   return (
     <div className="grid gap-5">
-      <p className="text-muted-foreground">
-        We picked the <strong>{layout.label}</strong> layout for a {s.content.identity.industryLabel || "business"} like yours. Check the preview, then publish. You can change anything afterwards.
-      </p>
+      <p className="text-muted-foreground">Your page uses the <strong>{theme?.name}</strong> look with {s.page.widgets.length} widget{s.page.widgets.length === 1 ? "" : "s"}. Check the preview, then publish. Everything can be changed afterwards.</p>
       <ul className="grid gap-2">
         {checks.filter((c) => c.required).map((c) => (
           <li key={c.id} className="flex items-center gap-2 text-sm">
@@ -280,7 +298,7 @@ function ReviewStep({ onDone }: { onDone: () => void }) {
           </li>
         ))}
       </ul>
-      <p className="text-sm text-muted-foreground">Optional and can wait: logo, photos, About, FAQs, reviews, team, payments.</p>
+      <p className="text-sm text-muted-foreground">Optional and can wait: logo and cover picture, photos, services, reviews, team, payments.</p>
       {s.published ? (
         <div role="status" className="rounded-lg border border-green-600/40 bg-green-50 p-4 text-sm text-green-950">
           <p className="font-semibold">Published (demo) — version {s.published.version}</p>
@@ -288,10 +306,8 @@ function ReviewStep({ onDone }: { onDone: () => void }) {
         </div>
       ) : null}
       <div className="flex flex-wrap gap-3">
-        <Button size="lg" disabled={!ok} onClick={() => update((x) => ({ ...publish(x), onboarded: true }))}>
-          {s.published ? "Publish changes" : "Publish my page"}
-        </Button>
-        <Button size="lg" variant="outline" onClick={() => { update((x) => ({ ...x, onboarded: true })); onDone() }}>Go to dashboard</Button>
+        <Button size="lg" disabled={!ok} onClick={() => update((x) => ({ ...publish(x), onboarded: true }))}>{s.published ? "Publish changes" : "Publish my page"}</Button>
+        <Button size="lg" variant="outline" onClick={() => { update((x) => ({ ...x, onboarded: true })); onEditor() }}>Customise my page</Button>
       </div>
       {!ok ? <p className="text-sm text-destructive" role="alert">Finish the steps marked missing to publish.</p> : null}
     </div>

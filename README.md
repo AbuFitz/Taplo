@@ -2,7 +2,9 @@
 
 The business hub for local service businesses: profiles, services, reviews, bookings, payments, teams, analytics, optional NFC.
 
-Spec: the founder's *Taplo — Claude Code Product and Engineering Specification* v1.0. Start with `docs/implementation-status.md`.
+Spec: the founder's *Taplo — Claude Code Product and Engineering Specification* v1.0, as amended by `docs/spec-direction-2.md` (a compact, customisable business presence rather than a website template). Start with `docs/implementation-status.md`.
+
+**Try it (no sign-in, no setup):** `/demo/profiles` (six sample businesses, stable links) · `/demo/themes` (one business in all eight looks) · `/onboarding` · `/dashboard/page` (the My page editor).
 
 ## Develop
 ```bash
