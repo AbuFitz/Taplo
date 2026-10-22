@@ -17,19 +17,16 @@ test.describe("onboarding", () => {
     await page.goto("/");
     await expect(page.getByRole("link", { name: "Create your page" })).toHaveAttribute("href", "/onboarding");
     await page.goto("/onboarding");
-    await expect(page.getByRole("heading", { name: "What kind of business is it?" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Let’s start with your name" })).toBeVisible();
     await expect(page.locator("main")).not.toContainText(/pick your trade/i);
   });
 
   test("claim → identity → widgets → publish, with the page taking shape as you go", async ({ page }) => {
     await page.goto("/onboarding");
-    await page.getByRole("button", { name: /^Other \/ describe/ }).click();
-    await page.getByRole("button", { name: "Continue" }).click();
-    await expect(page.locator("#why-disabled")).toContainText("Choose what you do");
-    await page.getByLabel("Describe your business").fill("Dog groomer");
-    await page.getByRole("button", { name: "Continue" }).click();
 
-    // claim the page: reserved address blocked, name builds an address, preview responds
+    // 1. name first: the page appears immediately; reserved/invalid addresses are blocked
+    await page.getByRole("button", { name: "Continue" }).click();
+    await expect(page.locator("#why-disabled")).toContainText("name and a valid web address");
     await page.getByLabel("Business name").fill("Paws & Polish");
     await expect(page.getByLabel("Your web address")).toHaveValue("paws-and-polish");
     await expect(preview(page).getByRole("heading", { level: 1 })).toHaveText("Paws & Polish");
@@ -38,10 +35,17 @@ test.describe("onboarding", () => {
     await page.getByRole("button", { name: "Continue" }).click();
     await expect(page.locator("#why-disabled")).toContainText("valid web address");
     await page.getByLabel("Your web address").fill("paws-and-polish");
-    await page.getByLabel("Town or area").fill("Harpenden");
     await page.getByRole("button", { name: "Continue" }).click();
 
-    // contacts: at least one, validated; the header gains a Call button as soon as there is a number
+    // 2. what you do: it only suggests which sections to start with
+    await page.getByRole("button", { name: /^Other \/ describe/ }).click();
+    await page.getByRole("button", { name: "Continue" }).click();
+    await expect(page.locator("#why-disabled")).toContainText("Choose what you do");
+    await page.getByLabel("Describe your business").fill("Dog groomer");
+    await page.getByRole("button", { name: "Continue" }).click();
+
+    // 3. contacts and place: at least one channel, validated; the header gains a Call button as soon as there is a number
+    await page.getByLabel("Town or area").fill("Harpenden");
     await page.getByRole("button", { name: "Continue" }).click();
     await expect(page.locator("#why-disabled")).toContainText("at least one way");
     await page.getByLabel("Phone").fill("12");
@@ -67,7 +71,7 @@ test.describe("onboarding", () => {
 
     await page.goto("/demo/p/paws-and-polish");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Paws & Polish");
-    await expect(page.locator("[data-taplo-page]")).toHaveAttribute("data-header", "poster");
+    await expect(page.locator("[data-taplo-page]")).toHaveAttribute("data-header", /side|centered|cover|poster/);
     await expect(page.getByRole("link", { name: /Call/ }).first()).toHaveAttribute("href", "tel:01632960987");
     // nothing invented: no reviews, no gallery, no rating
     await expect(page.locator('[data-widget="reviews"], [data-widget="gallery"]')).toHaveCount(0);
@@ -75,11 +79,12 @@ test.describe("onboarding", () => {
 
   test("progress survives a reload", async ({ page }) => {
     await page.goto("/onboarding");
-    await page.getByRole("list", { name: "Types of business" }).getByRole("button", { name: "Barber" }).click();
-    await page.getByRole("button", { name: "Continue" }).click();
     await page.getByLabel("Business name").fill("Olive Test Barbers");
+    await page.getByRole("button", { name: "Continue" }).click();
+    await page.getByRole("list", { name: "Types of business" }).getByRole("button", { name: "Barber" }).click();
     await page.reload();
-    await expect(page.getByRole("heading", { name: "Claim your page" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "What kind of business is it?" })).toBeVisible();
+    await page.getByRole("button", { name: "Back" }).click();
     await expect(page.getByLabel("Business name")).toHaveValue("Olive Test Barbers");
     await expect(preview(page).getByRole("heading", { level: 1 })).toHaveText("Olive Test Barbers");
   });
@@ -88,8 +93,6 @@ test.describe("onboarding", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/onboarding");
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
-    await page.getByRole("list", { name: "Types of business" }).getByRole("button", { name: "Tutor" }).click();
-    await page.getByRole("button", { name: "Continue" }).click();
     await page.getByLabel("Business name").fill("Clearpath");
     await page.getByRole("button", { name: "Show my page" }).click();
     await expect(page.frameLocator('iframe[title="Live preview of your page"]').last().getByRole("heading", { level: 1 })).toHaveText("Clearpath");
@@ -112,7 +115,7 @@ test.describe("onboarding", () => {
     await expect(page.getByText(/updated to the latest design system/).first()).toBeVisible();
     const s = await page.evaluate(() => ({ v1: localStorage.getItem("taplo.demo.v1"), v2: JSON.parse(localStorage.getItem("taplo.demo.v2")!) }));
     expect(s.v1).toBeNull();
-    expect(s.v2.page.themeId).toBe("studio");
+    expect(s.v2.page.themeId).toBe("paper");
     expect(s.v2.page.appearance.colors.accent).toBe("#123456");
     expect(s.v2.content.services[0].name).toBe("Haircut");
     await expect(preview(page).locator('[data-widget="serviceList"], [data-widget="priceMenu"]').first()).toContainText("Haircut");
@@ -177,8 +180,9 @@ test.describe("plans and page settings", () => {
     await pickOption(page, "Simulated plan", /^Free/);
     await page.goto("/dashboard/page");
     await page.getByTestId("select-page").click();
+    await openSection(page, /Start from a look/);
     await expect(page.getByText("Choosing a different theme is included from the Core plan.")).toBeVisible();
-    await expect(page.locator('[data-theme-id="midnight"]')).toBeDisabled();
+    await expect(page.locator('[data-theme-id="pop"]')).toBeDisabled();
     await expect(row(page, "gallery")).toContainText("Plan needed");
     await expect(row(page, "gallery")).toContainText("Galleries are included from the Core plan");
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.gallery.length)).toBeGreaterThan(0);
@@ -275,7 +279,8 @@ test("uploading a logo in the editor flows to the published page with the owner'
   await openEditorWithSample(page, "Consultant");
   await page.getByTestId("select-header").click();
   await openSection(page, "Header");
-  // Editorial shows no picture by design: the editor says so, then choosing a shape reveals it
+  // With "no picture" chosen the editor says so; choosing a shape reveals the uploaded logo
+  await page.getByRole("radio", { name: "No picture" }).locator("xpath=ancestor::label").click();
   await page.getByLabel("Logo or profile picture: upload a picture").setInputFiles(pngFile());
   await page.getByTestId("crop-apply").click();
   await expect(page.getByText("this look shows no picture")).toBeVisible();

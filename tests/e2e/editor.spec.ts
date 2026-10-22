@@ -138,25 +138,25 @@ test.describe("My page editor", () => {
     // an optional look can still be a starting point; content and widgets stay exactly as they were
     await openSection(page, /Start from a look/);
     const seen = new Set<string>();
-    for (const id of ["studio", "midnight", "workshop", "candy", "editorial", "ocean", "classroom", "garden"]) {
+    for (const id of ["noir", "paper", "pop", "showroom"]) {
       await page.locator(`[data-theme-id="${id}"]`).click();
       await expect(page.locator(`[data-theme-id="${id}"]`)).toHaveAttribute("aria-pressed", "true");
       await expect.poll(async () => frame.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-background").trim())).not.toBe("");
       seen.add(await frame.locator("[data-taplo-page]").evaluate((el) => JSON.stringify([el.getAttribute("data-header"), el.getAttribute("data-desktop"), getComputedStyle(el).getPropertyValue("--tp-background").trim(), getComputedStyle(el).getPropertyValue("--tp-font-heading").trim()])));
     }
-    expect(seen.size).toBe(8);
+    expect(seen.size).toBe(4);
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content)).toEqual(contentBefore);
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page.widgets)).toEqual(widgetsBefore);
     expect(await rowOrder(page)).toEqual(orderBefore);
 
     // owner's custom values on top
-    await page.locator('[data-theme-id="studio"]').click();
+    await page.locator('[data-theme-id="paper"]').click();
     const buttonsSection = await openSection(page, "Buttons");
     await buttonsSection.getByRole("radio", { name: "Square" }).locator("xpath=ancestor::label").click();
     await buttonsSection.getByLabel("Button colour hex value").fill("#0a7a3b");
     await expect(buttonsSection.locator("summary")).toContainText("customised");
     await expect.poll(() => frame.locator(".tp-btn").first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
-    await page.locator('[data-theme-id="midnight"]').click();       // overrides stay on top of a different starting look
+    await page.locator('[data-theme-id="noir"]').click();       // overrides stay on top of a different starting look
     await expect(buttonsSection.locator("summary")).toContainText("customised");
 
     // reset one section, then everything
@@ -201,7 +201,7 @@ test.describe("My page editor", () => {
 
     // an edit of each kind
     await openRow(page, start[1]!); await insp(page).getByRole("button", { name: "Move down" }).click();      // reorder
-    await pickLook(page, "ocean");                           // theme
+    await pickLook(page, "showroom");                           // theme
     await page.getByTestId("select-header").click();
     await openSection(page, "Your name and description");
     const name = page.getByLabel("Business name");
@@ -257,7 +257,7 @@ test.describe("My page editor", () => {
     expect(await pub.locator("[data-taplo-page]").evaluate((el) => ["data-header", "data-desktop", "data-decoration", "data-card-surface"].map((a) => el.getAttribute(a)))).toEqual(attrs);
 
     // a later draft edit does not change the published page until publishing again
-    await pickLook(page, "candy");
+    await pickLook(page, "pop");
     await page.getByTestId("select-settings").click();
     await expect(page.getByText("You have unpublished changes.")).toBeVisible();
     await pub.reload();
@@ -268,7 +268,7 @@ test.describe("My page editor", () => {
     await expect(pub.locator("[data-taplo-page]")).toHaveAttribute("data-header", "centered");
 
     // discard unpublished changes returns to the published copy
-    await pickLook(page, "midnight");
+    await pickLook(page, "noir");
     await page.getByTestId("select-settings").click();
     await page.getByRole("button", { name: "Discard unpublished changes" }).click();
     await expect(page.getByText("You have unpublished changes.")).toHaveCount(0);
@@ -296,20 +296,20 @@ test.describe("My page editor", () => {
     await page.getByTestId("notice").getByRole("button", { name: "Undo" }).click();
     await expect.poll(() => rowOrder(page)).toEqual(start);                          // fully undoable
     // theme and business records were never touched by a starter
-    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page.themeId)).toBe("editorial");
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page.themeId)).toBe("paper");
   });
 
   test("images: upload with focal point, alt text, rejection of bad files, and fallbacks without images", async ({ page }) => {
     await openEditorWithSample(page, "Unlisted");
     const frame = previewFrame(page);
-    await page.getByTestId("select-page").click();
-    await page.locator("summary", { hasText: "Header" }).click();
+    await page.getByTestId("select-header").click();
     // no logo → initials fallback, never a broken image
     await expect(frame.locator(".tp-avatar")).toContainText("PG");
     const upload = page.getByLabel("Logo or profile picture: upload a picture");
     await upload.setInputFiles({ name: "notes.txt", mimeType: "text/plain", buffer: Buffer.from("hello") });
     await expect(page.getByRole("alert").filter({ hasText: "JPG, PNG or WebP" })).toBeVisible();
     await upload.setInputFiles(pngFile("logo.png"));
+    await page.getByTestId("crop-apply").click();               // frame it first
     await expect(frame.locator(".tp-avatar img")).toHaveCount(1);
     await page.getByLabel("Describe the picture (for screen readers)").first().fill("Paws & Polish paw logo");
     await expect(frame.locator(".tp-avatar img")).toHaveAttribute("alt", "Paws & Polish paw logo");
@@ -332,13 +332,13 @@ test.describe("My page editor", () => {
     await page.getByTestId("select-page").click();
     await page.locator("summary", { hasText: "Text" }).first().click();
     const textSection = page.locator("details", { has: page.locator("summary", { hasText: /^Text/ }) });
-    await textSection.getByLabel("Text colour hex value").fill("#f7f1ea"); // same as Studio's background
+    await textSection.getByLabel("Text colour hex value").fill("#f6f2ea"); // same as the page background
     await page.locator("summary", { hasText: "Readability check" }).click();
-    await expect(page.getByRole("tabpanel", { name: "Design" }).getByText(/Text colour was adjusted because it was hard to read/)).toBeVisible();
+    await expect(page.getByTestId("inspector").getByText(/Text colour was adjusted because it was hard to read/)).toBeVisible();
     const ratio = await frame.locator("h1").evaluate((el) => {
       const lum = (c: string) => { const [r, g, b] = c.match(/\d+/g)!.slice(0, 3).map(Number).map((v) => { const s = v / 255; return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!; };
       const root = el.closest("[data-taplo-page]")!;
-      const fg = lum(getComputedStyle(el).color); const bg = lum(getComputedStyle(root).getPropertyValue("--tp-background").trim().startsWith("#") ? hexToRgb(getComputedStyle(root).getPropertyValue("--tp-background").trim()) : "rgb(247,241,234)");
+      const fg = lum(getComputedStyle(el).color); const bg = lum(getComputedStyle(root).getPropertyValue("--tp-background").trim().startsWith("#") ? hexToRgb(getComputedStyle(root).getPropertyValue("--tp-background").trim()) : "rgb(246,242,234)");
       function hexToRgb(h: string) { const n = parseInt(h.slice(1), 16); return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`; }
       return (Math.max(fg, bg) + 0.05) / (Math.min(fg, bg) + 0.05);
     });
@@ -369,10 +369,10 @@ test.describe("My page editor", () => {
     for (let i = 0; i < 25; i++) {
       const r = page.locator("[data-widget-row]").first();
       if (!(await r.count())) break;
-      await r.locator("button[aria-expanded]").first().click();
-      await r.getByRole("button", { name: /Remove from page/ }).click();
+      await r.getByTestId("select-widget").click();
+      await insp(page).getByRole("button", { name: /Remove from page/ }).click();
     }
-    await expect(page.getByText("Your page has no widgets yet")).toBeVisible();
+    await expect(page.getByText("No widgets yet")).toBeVisible();
     await expect(frame.locator("[data-widget]")).toHaveCount(0);
     await expect(frame.getByRole("heading", { level: 1 })).toBeVisible();
     await page.getByTestId("undo").click();

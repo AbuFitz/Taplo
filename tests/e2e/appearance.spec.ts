@@ -1,4 +1,7 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect as baseExpect, test, type Page } from "@playwright/test";
+
+// Frames load a full page each; give polling assertions room on a busy machine.
+const expect = baseExpect.configure({ timeout: 15_000 });
 
 const frame = (page: Page, title = "Desktop preview") => page.frameLocator(`iframe[title="${title}"]`);
 const attr = async (page: Page, name: string, title?: string) => (await frame(page, title).locator("[data-taplo-page]").getAttribute(name)) ?? "";

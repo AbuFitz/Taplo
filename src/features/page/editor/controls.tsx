@@ -155,6 +155,7 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
   const [pending, setPending] = React.useState<File | null>(null)
   function onPick(file: File | undefined) {
     if (!file) return
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) { setError("Choose a JPG, PNG or WebP picture."); return }
     if (cropAspect) { setError(undefined); setPending(file) } else void onFile(file)
   }
   async function onFile(file: File | undefined) {

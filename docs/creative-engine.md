@@ -71,3 +71,38 @@ Page settings             selection outline (editor-only CSS)
 ## Verification
 
 See `docs/implementation-status.md` (Verification log) for the latest counts and the screenshots in `docs/screenshots/`.
+
+## Appearance system (added 22 Oct 2026)
+
+The first set of example themes did not meet the design standard, so their visual foundations were rebuilt rather than recoloured.
+
+### Rules (one scale each, so any combination of owner choices stays coherent)
+
+| Concern | Rule | Where |
+| --- | --- | --- |
+| Colour | Owners choose five colours (page, text, accent, cards, border). Everything else is **derived in OKLCH with Culori**: hover/press accents, soft accent, lines, a raised surface, tertiary ink, shadow tint. The step semantics follow Radix Colors (subtle background, interactive states, borders, solid, text). Readability is repaired and explained, never silently shipped. | `themes/roles.ts`, `themes/resolve.ts` |
+| Palettes | Eight coordinated palettes are built from **Radix Colors** neutral and accent steps (light and dark). Owners can pick any hex, so fixed Radix hues are a source of palettes, not the model. | `themes/looks.ts` |
+| Elevation | Three layered, tinted shadow levels plus a top edge highlight; dark pages get stronger shadows. | `roles.ts → elevation()` |
+| Type | Curated fonts (Fontsource, OFL): Instrument Serif, Bricolage Grotesque, Geist, Space Grotesk added to Fraunces, Inter, Manrope, Lexend, Source Serif, Barlow Condensed. Tabular numerals for prices, balanced headings, fluid name size. | `themes/fonts.ts`, `page.css` |
+| Shape | One radius scale (`--tp-radius-sm/md`) derived from the card radius; avatars, media and chips follow it. | `resolve.ts` |
+| Surfaces | solid, soft, frosted (blur + saturation), outline; nested panels tint from the text colour so they stay legible on any surface. | `page.css` |
+| Motion | `none / subtle / lively`: a calm staggered entrance, press feedback, optional hover lift. Removed entirely under reduced motion and print. | `page.css` |
+| Wallpapers | Plain, gradient, and optional **Paper Shaders** (Apache-2.0, pinned 0.82): aurora, silk, grain. The static colour fields always render underneath; the shader lazy-loads only for pages that choose it, freezes under reduced motion, and is skipped without WebGL. | `renderer/ShaderWallpaper.tsx` |
+
+### Four configurations of the one engine (not four stylesheets)
+
+`Noir`, `Paper`, `Pop` and `Showroom` (`themes/looks.ts`) are complete `StyleOverrides` over the same renderer. They replace the eight legacy themes as the optional starting looks. Every value in them is editable with the same controls an owner uses, and nothing about them is tied to an industry. `/appearance` shows two fictional businesses (a barber with services and a product, a car dealer with vehicle stock) through all four, on phone and desktop, with visual selectors for colour, type, header, buttons, surfaces and wallpaper, immediate preview, undo/redo and reset. Content is identical across looks (asserted in `tests/e2e/appearance.spec.ts`).
+
+### Evaluated and not adopted
+
+- **React Aria colour components:** no interaction gap found. `react-colorful` is keyboard-operable, and the popover, hex field and contrast badge cover the need. Revisit if a channel-level (HSB/alpha) editor is required.
+- **Tiptap, Uppy, Sharp:** still not needed for this scope (see above).
+- **Motion** is used only for the continuous selection indicator in the editor's visual selectors; it is not in the public page bundle.
+
+### Imagery
+
+Photographs are Unsplash-licensed (credits in `public/showcase/CREDITS.md`); logo marks are original SVGs. Product records gained `facts` and `badge` so stock (vehicles, or anything with specifications) is a first-class record type.
+
+### Platform application
+
+Taplo's own identity (warm paper, ink, one signal colour; Geist for UI, Instrument Serif for display) lives in `globals.css` tokens, separate from the page engine's `--tp-*` variables. The landing page shows live renders of the engine; setup starts with a name and optional logo and shows the page immediately; every preview uses shared phone/desktop device chrome.

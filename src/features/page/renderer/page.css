@@ -175,7 +175,7 @@
 .tp-products[data-count="1"] .tp-product-body { align-content: start; padding-block: 0.5rem 0; }
 .tp-products[data-count="1"] .tp-product-cta { grid-column: 1 / -1; padding-inline: 0.375rem; margin-top: 0; }
 .tp-product-cta .tp-btn { width: 100%; }
-.tp-product-cta .tp-btn-label { white-space: nowrap; }
+.tp-product-cta .tp-btn-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 380px) { .tp-products[data-count="1"] .tp-product { grid-template-columns: 1fr; } .tp-products[data-count="1"] .tp-product-cta { grid-column: 1; } }
 
 /* Reviews: the quote is the content; the attribution stays quiet. */
@@ -199,6 +199,7 @@
   [data-motion-level="subtle"] .tp-widget, [data-motion-level="lively"] .tp-widget { animation: tp-rise 0.7s var(--tp-ease) both; animation-delay: calc(80ms + min(var(--i, 0), 7) * 60ms); }
   @keyframes tp-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 }
+@media (prefers-reduced-motion: reduce) { .tp-btn, .tp-icon-action, .tp-card, .tp-btn > svg:last-child { transition: none !important; } .tp-btn:active, .tp-icon-action:active { transform: none; } }
 @media print { .tp-header, .tp-widget { animation: none !important; } }
 
 /* Editing chrome. Only present when the preview is opened by the editor (?edit=1); never on a published page. */

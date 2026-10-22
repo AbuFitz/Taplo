@@ -39,7 +39,7 @@ function Row({ stored, rw, selected, onSelect, onDetails, ed }: {
           {...attributes}
           {...listeners}
           aria-label={`Drag to reorder ${label}. Or press space, then the arrow keys.`}
-          className="grid size-10 shrink-0 cursor-grab place-items-center rounded-lg text-muted-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring active:cursor-grabbing"
+          className="grid size-11 shrink-0 cursor-grab place-items-center rounded-lg text-muted-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring active:cursor-grabbing"
           style={{ touchAction: "none" }}
           data-testid="drag-handle"
         >
@@ -55,7 +55,7 @@ function Row({ stored, rw, selected, onSelect, onDetails, ed }: {
           </span>
         </button>
         <div className="flex shrink-0 items-center">
-          <Button type="button" variant="ghost" size="icon" className="size-10" aria-pressed={!stored.hidden} aria-label={stored.hidden ? `Show ${label}` : `Hide ${label}`} onClick={() => ed.updateWidget(stored.id, { hidden: !stored.hidden })}>{stored.hidden ? <EyeOff /> : <Eye />}</Button>
+          <Button type="button" variant="ghost" size="icon" className="size-11" aria-pressed={!stored.hidden} aria-label={stored.hidden ? `Show ${label}` : `Hide ${label}`} onClick={() => ed.updateWidget(stored.id, { hidden: !stored.hidden })}>{stored.hidden ? <EyeOff /> : <Eye />}</Button>
         </div>
       </div>
       {note ? (

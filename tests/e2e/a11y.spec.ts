@@ -16,6 +16,7 @@ async function scan(page: Page, context: string, include?: string) {
 test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", () => {
   for (const t of THEMES) {
     test(`public profile: every widget type in the ${t.id} theme`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
       for (const slug of ["demo-cafe", "demo-tutor"]) {
         await page.goto(`/${slug}?theme=${t.id}`, { waitUntil: "networkidle" });
         await scan(page, `${slug}/${t.id}`, "[data-taplo-page]");
@@ -24,6 +25,7 @@ test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", ()
   }
 
   test("public profile: each headline business in its own theme, phone and desktop", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" }); // scan the settled page, not a frame of the entrance animation
     for (const slug of ["demo-mechanic", "demo-barber", "demo-tutor", "demo-cafe", "demo-consultant", "demo-groomer"]) {
       for (const w of [390, 1280]) {
         await page.setViewportSize({ width: w, height: 900 });
@@ -34,7 +36,8 @@ test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", ()
   });
 
   test("themed booking dialog", async ({ page }) => {
-    for (const theme of ["midnight", "candy", "workshop", "ocean"]) {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    for (const theme of ["noir", "pop", "showroom", "paper"]) {
       await page.goto(`/demo-cafe?theme=${theme}`, { waitUntil: "networkidle" });
       await page.locator('[data-widget="booking"] button').first().click();
       await expect(page.getByRole("dialog")).toBeVisible();
