@@ -38,3 +38,21 @@ export async function prepareImage(file: File, maxEdge = 1280): Promise<Prepared
   }
   throw new Error("That picture could not be compressed enough.");
 }
+
+export interface CropArea { x: number; y: number; width: number; height: number }
+
+/** Render the chosen crop region of a file into a new image file (demo: client-side; connected: server derivative). */
+export async function cropFile(file: File, area: CropArea): Promise<File> {
+  const bitmap = await createImageBitmap(file).catch(() => null);
+  if (!bitmap) throw new Error("That picture could not be read.");
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(area.width));
+  canvas.height = Math.max(1, Math.round(area.height));
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Your browser could not process the picture.");
+  ctx.drawImage(bitmap, area.x, area.y, area.width, area.height, 0, 0, canvas.width, canvas.height);
+  bitmap.close?.();
+  const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/jpeg", 0.92));
+  if (!blob) throw new Error("The crop could not be saved.");
+  return new File([blob], file.name.replace(/\.[^.]+$/, "") + ".jpg", { type: "image/jpeg" });
+}

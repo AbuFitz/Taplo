@@ -117,3 +117,10 @@
 
 /* Owner can turn off button icons; the trailing arrow stays as the affordance. */
 [data-btn-icons="off"] .tp-btn > svg:first-child, [data-btn-icons="off"] .tp-btn > .tp-btn-thumb + svg { display: none; }
+
+/* Editing chrome. Only present when the preview is opened by the editor (?edit=1); never on a published page. */
+[data-tp-editing] .tp-widget, [data-tp-editing] .tp-header { cursor: pointer; outline: 2px solid transparent; outline-offset: 4px; border-radius: 0.75rem; transition: outline-color 120ms; }
+[data-tp-editing] .tp-widget:hover, [data-tp-editing] .tp-header:hover { outline-color: color-mix(in srgb, #2563eb 45%, transparent); }
+[data-tp-editing] [data-tp-selected] { outline: 2px solid #2563eb !important; outline-offset: 4px; }
+[data-tp-editing] a, [data-tp-editing] button, [data-tp-editing] summary { pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { [data-tp-editing] .tp-widget, [data-tp-editing] .tp-header { transition: none; } }

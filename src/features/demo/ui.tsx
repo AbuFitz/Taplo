@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { normalizePhone } from "@/lib/validation"
 import { cn } from "@/lib/utils"
+import type { FromPreview, Selection, ToPreview } from "@/features/page/editor/selection"
 
 /** Local text that re-syncs when the stored value changes from elsewhere (undo/redo, loading a sample). */
 function useSyncedText(value: string | undefined) {
@@ -125,8 +126,28 @@ export function DemoNotice({ className }: { className?: string }) {
 }
 
 /** Live preview of the draft: an iframe on /demo/preview (same renderer as the real page). */
-export function PreviewFrame({ className, height = 640 }: { className?: string; height?: number }) {
-  const [device, setDevice] = React.useState<"mobile" | "desktop">("mobile")
+export function PreviewFrame({ className, height = 640, selection, onSelect, initialDevice = "mobile" }: {
+  className?: string; height?: number
+  /** When `onSelect` is given the preview opens in edit mode: clicking the page selects what was clicked. */
+  selection?: Selection; onSelect?: (s: Selection) => void; initialDevice?: "mobile" | "desktop"
+}) {
+  const [device, setDevice] = React.useState<"mobile" | "desktop">(initialDevice)
+  const frame = React.useRef<HTMLIFrameElement>(null)
+  const editing = Boolean(onSelect)
+  const postSelection = React.useCallback(() => {
+    if (selection) frame.current?.contentWindow?.postMessage({ type: "taplo:selected", selection } satisfies ToPreview, window.location.origin)
+  }, [selection])
+  React.useEffect(() => {
+    if (!onSelect) return
+    const onMessage = (e: MessageEvent<FromPreview>) => {
+      if (e.origin !== window.location.origin || e.source !== frame.current?.contentWindow) return
+      if (e.data?.type === "taplo:select") onSelect(e.data.selection)
+      else if (e.data?.type === "taplo:ready") postSelection()
+    }
+    window.addEventListener("message", onMessage)
+    return () => window.removeEventListener("message", onMessage)
+  }, [onSelect, postSelection])
+  React.useEffect(postSelection, [postSelection, device])
   const box = React.useRef<HTMLDivElement>(null)
   const [width, setWidth] = React.useState(360)
   React.useEffect(() => {
@@ -154,8 +175,11 @@ export function PreviewFrame({ className, height = 640 }: { className?: string; 
       <div ref={box} className="overflow-hidden rounded-2xl border bg-muted/60 shadow-sm" style={{ height: height * scale + 2 }}>
         <div className={cn(device === "mobile" ? "mx-auto" : "")} style={{ width: frameWidth * scale, height: height * scale }}>
           <iframe
+            ref={frame}
             title="Live preview of your page"
-            src="/demo/preview"
+            src={editing ? "/demo/preview?edit=1" : "/demo/preview"}
+            onLoad={postSelection}
+            data-testid="preview-frame"
             style={{ width: frameWidth, height, transform: `scale(${scale})`, transformOrigin: "top left", border: 0, background: "white" }}
           />
         </div>

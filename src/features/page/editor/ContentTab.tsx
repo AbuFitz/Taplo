@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Plus, Sparkles, Trash2 } from "lucide-react"
+import { Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
@@ -12,11 +12,7 @@ import { newId } from "@/features/demo/actions"
 import { EmailField, PhoneField, UrlField } from "@/features/demo/ui"
 import { Segmented } from "./controls"
 import { prepareImage } from "./image"
-import { AddWidgetDialog, StarterDialog } from "./Dialogs"
-import { WidgetList } from "./WidgetList"
 import type { Editor } from "./useEditor"
-import type { StoredWidget } from "../starter"
-import { getWidget } from "../widgets/registry"
 
 const LOCATION_LABEL = { premises: "A place customers visit", service_area: "I travel to customers", online: "Online only" } as const
 const SOCIALS = ["instagram", "facebook", "tiktok", "linkedin", "youtube", "x"] as const
@@ -33,7 +29,7 @@ function Section({ id, title, children, defaultOpen }: { id?: string; title: str
   )
 }
 
-export function ProfileSections({ ed }: { ed: Editor }) {
+export function ProfileSections({ ed, only }: { ed: Editor; only?: "identity" | "rest" }) {
   const c = ed.state.content
   const set = ed.setContent
   const [galleryError, setGalleryError] = React.useState<string>()
@@ -71,7 +67,7 @@ export function ProfileSections({ ed }: { ed: Editor }) {
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-2" id="profile">
-      <Section title="Your name and description" defaultOpen>
+      {only !== "rest" ? <Section title="Your name and description" defaultOpen>
         <TaploInput label="Business name" value={c.identity.name} maxLength={100} onChange={(e) => ed.update((s) => ({ ...s, content: { ...s.content, identity: { ...s.content.identity, name: e.target.value, slug: s.slugEdited ? s.content.identity.slug : normalizeForSlug(e.target.value) } } }), { coalesce: "name" })} />
         <div className="grid gap-1.5">
           <Label htmlFor="bio" className="text-sm font-medium">Short description</Label>
@@ -79,8 +75,8 @@ export function ProfileSections({ ed }: { ed: Editor }) {
           <p className="text-xs text-muted-foreground">Shown under your name. {160 - (c.identity.tagline?.length ?? 0)} characters left.</p>
         </div>
         <TaploInput label="What you’re called (e.g. Barber, Dog groomer)" value={c.identity.industryLabel} maxLength={80} onChange={(e) => set((x) => ({ ...x, identity: { ...x.identity, industryLabel: e.target.value } }), "label")} />
-        <p className="text-xs text-muted-foreground">Logo and cover picture are in the <strong>Design</strong> tab, under Header.</p>
-      </Section>
+        </Section> : null}
+      {only === "identity" ? null : <>
 
       <Section title="Contact details">
         <PhoneField label="Phone" value={c.contacts.phone} onCommit={(v) => set((x) => ({ ...x, contacts: { ...x.contacts, phone: v } }), "phone")} />
@@ -168,49 +164,11 @@ export function ProfileSections({ ed }: { ed: Editor }) {
           {galleryError ? <p role="alert" className="mt-2 text-sm text-destructive">{galleryError}</p> : null}
         </div>
       </Section>
+      </>}
     </div>
   )
 }
 
 function normalizeForSlug(name: string) {
   return name.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/&/g, " and ").replace(/[\s_]+/g, "-").replace(/[^a-z0-9-]/g, "").replace(/-{2,}/g, "-").replace(/^-+|-+$/g, "").slice(0, 40).replace(/-+$/g, "")
-}
-
-export function ContentTab({ ed, notify }: { ed: Editor; notify: (msg: string, undoable?: boolean) => void }) {
-  const [addOpen, setAddOpen] = React.useState(false)
-  const [starterOpen, setStarterOpen] = React.useState(false)
-  const [openId, setOpenId] = React.useState<string | null>(null)
-  const widgets = ed.state.page.widgets
-
-  return (
-    <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
-
-      <section aria-labelledby="widgets-h" className="grid gap-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <h2 id="widgets-h" className="text-base font-semibold">Widgets</h2>
-            <p className="text-xs text-muted-foreground">Drag the handle, or use the arrows, to reorder. Tap a widget to edit it.</p>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => setStarterOpen(true)}><Sparkles /> Suggestions</Button>
-            <Button size="sm" onClick={() => setAddOpen(true)} data-testid="add-widget"><Plus /> Add widget</Button>
-          </div>
-        </div>
-        {widgets.length === 0 ? (
-          <div className="rounded-xl border border-dashed p-6 text-center">
-            <h3 className="font-semibold">Your page has no widgets yet</h3>
-            <p className="mx-auto mt-1 max-w-sm text-sm text-muted-foreground">Visitors see your name and contact buttons. Add widgets for services, reviews, photos and more, or start from suggestions for your kind of business.</p>
-            <div className="mt-4 flex justify-center gap-2"><Button variant="outline" onClick={() => setStarterOpen(true)}><Sparkles /> See suggestions</Button><Button onClick={() => setAddOpen(true)}><Plus /> Add a widget</Button></div>
-          </div>
-        ) : (
-          <WidgetList ed={ed} openId={openId} setOpenId={setOpenId} onRemoved={(w: StoredWidget) => { setOpenId(null); notify(`Removed “${getWidget(w.type)?.label ?? "widget"}” from your page. Your records are kept.`, true) }} />
-        )}
-      </section>
-
-      <section aria-labelledby="details-h" className="grid gap-2"><h2 id="details-h" className="text-base font-semibold">Business details</h2><p className="-mt-1 text-xs text-muted-foreground">Your name, contact details, hours and photos. Widgets pull from these, so you only type things once.</p><ProfileSections ed={ed} /></section>
-
-      <AddWidgetDialog open={addOpen} onOpenChange={setAddOpen} ed={ed} onAdded={(id) => setOpenId(id)} />
-      <StarterDialog open={starterOpen} onOpenChange={setStarterOpen} ed={ed} onApplied={(m) => notify(m, true)} />
-    </div>
-  )
 }

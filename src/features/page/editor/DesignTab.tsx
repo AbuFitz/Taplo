@@ -41,13 +41,14 @@ function Section({ title, count, onReset, children, defaultOpen, id }: { title: 
       </summary>
       <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-4 border-t p-4">
         {children}
-        {onReset && count ? <button type="button" onClick={onReset} className="inline-flex items-center gap-1 justify-self-start text-xs font-medium text-primary underline-offset-4 hover:underline"><RotateCcw className="size-3" aria-hidden="true" />Reset this section to theme</button> : null}
+        {onReset && count ? <button type="button" onClick={onReset} className="inline-flex items-center gap-1 justify-self-start text-xs font-medium text-primary underline-offset-4 hover:underline"><RotateCcw className="size-3" aria-hidden="true" />Reset this section</button> : null}
       </div>
     </details>
   )
 }
 
-export function DesignTab({ ed }: { ed: Editor }) {
+/** `header` scope = identity look (logo, arrangement); `page` scope = everything that applies to the whole page. */
+export function DesignTab({ ed, scope = "page" }: { ed: Editor; scope?: "page" | "header" }) {
   const A = useAppearance(ed)
   const vm = ed.vm
   const spec = vm?.style.spec
@@ -63,19 +64,9 @@ export function DesignTab({ ed }: { ed: Editor }) {
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-2">
-      <Section title="Theme" defaultOpen id="theme">
-        <p className="text-xs text-muted-foreground">A theme sets the whole feel at once. Switching keeps your content and your widgets exactly as they are. Any colours or fonts you’ve customised stay on top.</p>
-        {!canSwitch ? <p className="flex items-center gap-1.5 text-xs text-muted-foreground"><Lock className="size-3.5" aria-hidden="true" />Choosing a different theme is included from the Core plan.</p> : null}
-        <ThemePicker themeId={themeId} canSwitch={canSwitch} onPick={(id) => ed.setTheme(id)} />
-        {total > 0 ? (
-          <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted px-3 py-2 text-xs">
-            <span>{total} custom setting{total === 1 ? "" : "s"} applied on top of this theme.</span>
-            <button type="button" className="font-medium text-primary underline underline-offset-4" onClick={() => ed.setPage((p) => ({ ...p, appearance: {} }))}>Reset everything to the theme</button>
-          </div>
-        ) : null}
-      </Section>
-
-      <Section title="Header" count={A.groupCount("header")} onReset={() => A.resetGroup("header")} id="header">
+      {scope === "header" ? (
+        <>
+      <Section title="Header" defaultOpen count={A.groupCount("header")} onReset={() => A.resetGroup("header")} id="header">
         <Segmented label="Arrangement" value={spec.header.layout} customised={A.has("header", "layout")} onReset={() => A.reset("header", "layout")} onChange={(v) => A.set("header", "layout", v)} columns={2}
           options={[{ value: "centered", label: "Centred", hint: "Picture, name, buttons" }, { value: "cover", label: "Cover banner", hint: "Wide photo on top" }, { value: "side", label: "Side by side", hint: "Picture beside name" }, { value: "poster", label: "Poster", hint: "Text over a photo" }, { value: "minimal", label: "Text only", hint: "Just the name" }]} />
         <Segmented label="Picture shape" value={spec.header.avatarShape} customised={A.has("header", "avatarShape")} onReset={() => A.reset("header", "avatarShape")} onChange={(v) => A.set("header", "avatarShape", v)} columns={3}
@@ -86,12 +77,15 @@ export function DesignTab({ ed }: { ed: Editor }) {
         </div>
         <Segmented label="Contact buttons" value={spec.header.actions} customised={A.has("header", "actions")} onReset={() => A.reset("header", "actions")} onChange={(v) => A.set("header", "actions", v)} columns={3} options={[{ value: "buttons", label: "Buttons" }, { value: "icons", label: "Icons" }, { value: "none", label: "Hidden" }]} hint="Call, WhatsApp and Email you’ve added. If you add one as a widget, it isn’t repeated here." />
         <SwitchField label="Show location under the name" checked={spec.header.showLocation} onChange={(v) => A.set("header", "showLocation", v)} />
-        <ImageField label="Logo or profile picture" value={c.identity.logo ?? null} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} onChange={(v) => ed.setContent((x) => ({ ...x, identity: { ...x.identity, logo: v ?? undefined } }))} focalHint="Choose the part that should stay in view when the picture is cropped to a circle or arch." />
+        <ImageField label="Logo or profile picture" cropAspect={1} cropRound={spec.header.avatarShape === "circle"} value={c.identity.logo ?? null} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} onChange={(v) => ed.setContent((x) => ({ ...x, identity: { ...x.identity, logo: v ?? undefined } }))} focalHint="Choose the part that should stay in view when the picture is cropped to a circle or arch." />
         {spec.header.avatarShape === "none" && c.identity.logo ? <p role="note" className="rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground">Your picture is saved, but this look shows no picture. Choose a picture shape above to show it.</p> : null}
-        <ImageField label="Cover picture" value={c.identity.heroImage ?? null} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1400} onChange={(v) => ed.setContent((x) => ({ ...x, identity: { ...x.identity, heroImage: v ?? undefined } }))} focalHint="Used by Cover banner and Poster headers. Choose the part that must always stay visible." />
+        <ImageField label="Cover picture" cropAspect={16 / 7} value={c.identity.heroImage ?? null} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1400} onChange={(v) => ed.setContent((x) => ({ ...x, identity: { ...x.identity, heroImage: v ?? undefined } }))} focalHint="Used by Cover banner and Poster headers. Choose the part that must always stay visible." />
       </Section>
 
-      <Section title="Background" count={(ed.state.page.appearance.background ? 1 : 0) + (ed.state.page.appearance.decoration ? 1 : 0)} onReset={() => { setBg(undefined); ed.setAppearance((a) => { const n = { ...a }; delete n.decoration; return n }) }} id="background">
+        </>
+      ) : (
+        <>
+      <Section title="Background" defaultOpen count={(ed.state.page.appearance.background ? 1 : 0) + (ed.state.page.appearance.decoration ? 1 : 0)} onReset={() => { setBg(undefined); ed.setAppearance((a) => { const n = { ...a }; delete n.decoration; return n }) }} id="background">
         <Segmented label="Type" value={bgKind} columns={2} onChange={(k) => {
           if (k === "theme") setBg(undefined)
           else if (k === "solid") setBg({ kind: "solid", color: bg.kind === "solid" ? bg.color : mid })
@@ -125,7 +119,7 @@ export function DesignTab({ ed }: { ed: Editor }) {
           <Segmented label="Heading weight" value={spec.text.headingWeight} customised={A.has("text", "headingWeight")} onReset={() => A.reset("text", "headingWeight")} onChange={(v) => A.set("text", "headingWeight", v)} columns={1} options={[{ value: "regular", label: "Light" }, { value: "bold", label: "Bold" }]} />
         </div>
         <Segmented label="Heading alignment" value={spec.text.align} customised={A.has("text", "align")} onReset={() => A.reset("text", "align")} onChange={(v) => A.set("text", "align", v)} columns={2} options={[{ value: "left", label: "Left" }, { value: "center", label: "Centre" }]} />
-        <ColorField label="Text colour" value={spec.colors.text} customised={A.has("colors", "text")} onReset={() => A.reset("colors", "text")} onChange={(v) => A.set("colors", "text", v)} />
+        <ColorField label="Text colour" against={vm.style.cssVars["--tp-background"] ?? spec.colors.background} value={spec.colors.text} customised={A.has("colors", "text")} onReset={() => A.reset("colors", "text")} onChange={(v) => A.set("colors", "text", v)} />
         <ColorField label="Accent colour" value={spec.colors.accent} customised={A.has("colors", "accent")} onReset={() => A.reset("colors", "accent")} onChange={(v) => A.set("colors", "accent", v)} />
         <ColorField label="Page colour" value={vm.style.cssVars["--tp-background"] ?? spec.colors.background} customised={A.has("colors", "background")} onReset={() => A.reset("colors", "background")} onChange={(v) => A.set("colors", "background", v)} hint="Behind your content when the background is a plain colour." />
       </Section>
@@ -169,7 +163,22 @@ export function DesignTab({ ed }: { ed: Editor }) {
         {vm.style.notices.length ? <ul className="grid gap-1 text-xs text-amber-900">{vm.style.notices.map((n) => <li key={n.code}>• {n.message}</li>)}</ul> : <p className="text-xs text-muted-foreground">Text needs at least 4.5:1 contrast to be comfortable to read. Taplo adjusts colours automatically if a choice would fall short, and tells you here.</p>}
       </Section>
 
-      <div className="pt-1"><Button variant="outline" size="sm" disabled={total === 0} onClick={() => ed.setPage((p) => ({ ...p, appearance: {} }))}><RotateCcw /> Reset all design changes to the theme</Button></div>
+      <Section title="Start from a look (optional)" id="theme">
+        <p className="text-xs text-muted-foreground">You don’t need to pick one. A look just sets starting colours, fonts and shapes in one go. Switching keeps your content and your widgets exactly as they are. Any colours or fonts you’ve customised stay on top.</p>
+        {!canSwitch ? <p className="flex items-center gap-1.5 text-xs text-muted-foreground"><Lock className="size-3.5" aria-hidden="true" />Choosing a different theme is included from the Core plan.</p> : null}
+        <ThemePicker themeId={themeId} canSwitch={canSwitch} onPick={(id) => ed.setTheme(id)} />
+        {total > 0 ? (
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted px-3 py-2 text-xs">
+            <span>{total} custom setting{total === 1 ? "" : "s"} applied on top of this theme.</span>
+            <button type="button" className="font-medium text-primary underline underline-offset-4" onClick={() => ed.setPage((p) => ({ ...p, appearance: {} }))}>Reset everything to the theme</button>
+          </div>
+        ) : null}
+      </Section>
+
+        </>
+      )}
+
+      <div className={scope === "page" ? "pt-1" : "hidden"}><Button variant="outline" size="sm" disabled={total === 0} onClick={() => ed.setPage((p) => ({ ...p, appearance: {} }))}><RotateCcw /> Reset all design changes</Button></div>
     </div>
   )
 }

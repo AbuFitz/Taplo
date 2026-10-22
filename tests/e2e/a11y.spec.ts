@@ -43,12 +43,16 @@ test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", ()
     }
   });
 
-  test("editor: Content, Design and Page settings", async ({ page }) => {
+  test("editor: structure, page style, header, a widget, details and settings", async ({ page }) => {
     await openEditorWithSample(page, "Barber");
-    await scan(page, "editor/content", '[data-testid="my-page"]');
-    await page.getByRole("tab", { name: "Design" }).click();
-    await scan(page, "editor/design", '[data-testid="my-page"]');
-    await page.getByRole("tab", { name: "Page settings" }).click();
+    await scan(page, "editor/page-style", '[data-testid="my-page"]');
+    await page.getByTestId("select-header").click();
+    await scan(page, "editor/header", '[data-testid="my-page"]');
+    await page.getByTestId("select-widget").first().click();
+    await scan(page, "editor/widget", '[data-testid="my-page"]');
+    await page.getByTestId("select-details").click();
+    await scan(page, "editor/details", '[data-testid="my-page"]');
+    await page.getByTestId("select-settings").click();
     await scan(page, "editor/settings", '[data-testid="my-page"]');
   });
 

@@ -3,16 +3,20 @@
 import * as React from "react"
 import Image from "next/image"
 import { ImagePlus, RotateCcw, Trash2 } from "lucide-react"
+import { HexColorPicker } from "react-colorful"
 import { Button } from "@/components/ui/button"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { contrastRatio } from "../themes/color"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { cn } from "@/lib/utils"
 import type { ImageRef } from "@/features/businesses/content"
+import { CropDialog } from "./CropDialog"
 import { SAMPLE_IMAGES, prepareImage } from "./image"
 
 /** A small "Customised · Reset to theme" affordance shared by every appearance control. */
-export function ResetLink({ show, onReset, label = "Reset to theme" }: { show: boolean; onReset: () => void; label?: string }) {
+export function ResetLink({ show, onReset, label = "Reset" }: { show: boolean; onReset: () => void; label?: string }) {
   if (!show) return null
   return (
     <button type="button" onClick={onReset} className="inline-flex min-h-8 items-center gap-1 text-xs font-medium text-primary underline-offset-4 hover:underline">
@@ -104,7 +108,7 @@ export function RangeField({ label, value, min, max, step = 1, unit = "%", onCha
 const HEX = /^#[0-9a-fA-F]{6}$/
 
 /** Native colour picker plus a hex box; only valid colours are committed. `value` is the resolved colour in effect. */
-export function ColorField({ label, value, onChange, customised, onReset, hint }: { label: string; value: string; onChange: (hex: string) => void; customised?: boolean; onReset?: () => void; hint?: string }) {
+export function ColorField({ label, value, onChange, customised, onReset, hint, against }: { label: string; value: string; onChange: (hex: string) => void; customised?: boolean; onReset?: () => void; hint?: string; /** Background this colour is read against; shows a live contrast rating. */ against?: string }) {
   const id = React.useId()
   const [text, setText] = React.useState(value)
   const [seen, setSeen] = React.useState(value)
@@ -114,13 +118,24 @@ export function ColorField({ label, value, onChange, customised, onReset, hint }
     setText(value)
   }
   const bad = text !== value && !HEX.test(text)
+  const ratio = against && HEX.test(value) && HEX.test(against) ? contrastRatio(value, against) : null
   return (
     <FieldShell label={label} id={id} customised={customised} onReset={onReset} hint={hint}>
       <div className="flex items-center gap-2">
-        <input id={id} type="color" value={HEX.test(value) ? value : "#000000"} onChange={(e) => onChange(e.target.value)} className="size-11 shrink-0 cursor-pointer rounded-lg border bg-transparent p-1" aria-label={`${label} colour picker`} />
-        <input type="text" inputMode="text" spellCheck={false} aria-label={`${label} hex value`} aria-invalid={bad || undefined} value={text} maxLength={7}
+        <Popover>
+          <PopoverTrigger asChild>
+            <button type="button" aria-label={`${label}: choose colour`} data-testid="colour-swatch" className="size-11 shrink-0 rounded-lg border p-1 focus-visible:ring-2 focus-visible:ring-ring">
+              <span className="block size-full rounded-md border border-black/10" style={{ background: HEX.test(value) ? value : "#000000" }} />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-60 p-3" align="start">
+            <HexColorPicker color={HEX.test(value) ? value : "#000000"} onChange={(c) => onChange(c.toLowerCase())} />
+          </PopoverContent>
+        </Popover>
+        <input id={id} type="text" inputMode="text" spellCheck={false} aria-label={`${label} hex value`} aria-invalid={bad || undefined} value={text} maxLength={7}
           onChange={(e) => { const v = e.target.value; setText(v); if (HEX.test(v)) onChange(v.toLowerCase()) }}
           className={cn("h-11 w-28 rounded-lg border bg-transparent px-3 font-mono text-sm", bad && "border-destructive")} />
+        {ratio !== null ? <span className={cn("rounded-full px-2 py-0.5 text-xs font-semibold", ratio >= 4.5 ? "bg-green-100 text-green-900" : "bg-amber-100 text-amber-900")} data-testid="contrast-badge">{ratio >= 4.5 ? "Readable" : "Hard to read"} · {ratio.toFixed(1)}:1</span> : null}
       </div>
       {bad ? <p role="alert" className="text-xs text-destructive">Use a six-digit colour like #1a2b3c.</p> : null}
     </FieldShell>
@@ -128,8 +143,8 @@ export function ColorField({ label, value, onChange, customised, onReset, hint }
 }
 
 /** Image chooser: upload (downscaled in the browser), pick a sample, remove; plus a focal-point picker so crops keep the subject. */
-export function ImageField({ label, value, onChange, defaultAlt, maxEdge, focalHint = "Click the picture (or use the sliders) to choose the part that should always stay in view." }: {
-  label: string; value: ImageRef | null | undefined; onChange: (v: ImageRef | null) => void; defaultAlt: string; maxEdge?: number; focalHint?: string
+export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAspect, cropRound, focalHint = "Click the picture (or use the sliders) to choose the part that should always stay in view." }: {
+  label: string; value: ImageRef | null | undefined; onChange: (v: ImageRef | null) => void; defaultAlt: string; maxEdge?: number; /** When set, a crop step frames the picture at this width/height ratio before it is used. */ cropAspect?: number; cropRound?: boolean; focalHint?: string
 }) {
   const inputId = React.useId()
   const [busy, setBusy] = React.useState(false)
@@ -137,6 +152,11 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, focalH
   const [showSamples, setShowSamples] = React.useState(false)
   const box = React.useRef<HTMLDivElement>(null)
 
+  const [pending, setPending] = React.useState<File | null>(null)
+  function onPick(file: File | undefined) {
+    if (!file) return
+    if (cropAspect) { setError(undefined); setPending(file) } else void onFile(file)
+  }
   async function onFile(file: File | undefined) {
     if (!file) return
     setBusy(true)
@@ -183,7 +203,8 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, focalH
       ) : null}
       <div className="flex flex-wrap gap-2">
         <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => document.getElementById(inputId)?.click()}><ImagePlus /> {busy ? "Preparing…" : value ? "Replace picture" : "Upload a picture"}</Button>
-        <input id={inputId} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(e) => { void onFile(e.target.files?.[0]); e.target.value = "" }} aria-label={`${label}: upload a picture`} />
+        <input id={inputId} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(e) => { onPick(e.target.files?.[0]); e.target.value = "" }} aria-label={`${label}: upload a picture`} />
+        {cropAspect ? <CropDialog file={pending} aspect={cropAspect} round={cropRound} title={`Frame: ${label}`} onCancel={() => setPending(null)} onDone={(f) => { setPending(null); void onFile(f) }} /> : null}
         <Button type="button" variant="ghost" size="sm" onClick={() => setShowSamples((v) => !v)} aria-expanded={showSamples}>Use a sample picture</Button>
         {value ? <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null)}><Trash2 /> Remove</Button> : null}
       </div>

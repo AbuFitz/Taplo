@@ -45,12 +45,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { ready, state, update } = useDemo()
   const router = useRouter()
   const [open, setOpen] = React.useState(false)
+  /** The page editor needs the full width: the side menu moves into the top-bar menu there. */
+  const focus = usePathname() === "/dashboard/page"
 
   const empty = ready && (!state || (!state.onboarded && !state.content.identity.name))
 
   return (
     <div className="flex min-h-screen flex-col lg:flex-row">
-      <aside className="hidden w-60 shrink-0 border-r p-4 lg:block">
+      <aside className={cn("hidden w-60 shrink-0 border-r p-4", !focus && "lg:block")}>
         <Link href="/" className="mb-6 block px-3 text-lg font-semibold">Taplo</Link>
         <NavList />
       </aside>
@@ -58,7 +60,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <header className="flex items-center gap-3 border-b px-4 py-3 lg:px-8">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open menu"><Menu /></Button>
+              <Button variant="outline" size="icon" className={focus ? "" : "lg:hidden"} aria-label="Open menu"><Menu /></Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-64">
               <SheetHeader><SheetTitle>Taplo</SheetTitle></SheetHeader>

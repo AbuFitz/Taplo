@@ -1,4 +1,5 @@
 import * as React from "react"
+import { SocialIcon } from "./social-icons"
 import { ArrowUpRight, ChevronDown } from "lucide-react"
 import type { ProductContent } from "@/features/businesses/content"
 import { formatDuration, formatMoney, formatPrice, groupServices } from "@/features/services/format"
@@ -74,7 +75,6 @@ function ChannelWidget({ w, vm }: P) {
   return <LinkRow w={w} href={href} label={str(s.label) || c.label} subtitle={s.subtitle} icon={c.icon} external={c.external} variant={s.variant} />
 }
 
-const SOCIAL_SHORT: Record<string, string> = { instagram: "IG", facebook: "f", tiktok: "TT", linkedin: "in", youtube: "YT", x: "X" }
 const SOCIAL_NAME: Record<string, string> = { instagram: "Instagram", facebook: "Facebook", tiktok: "TikTok", linkedin: "LinkedIn", youtube: "YouTube", x: "X" }
 
 function SocialWidget({ w, vm }: P) {
@@ -87,7 +87,7 @@ function SocialWidget({ w, vm }: P) {
     <ul className="tp-actions" aria-label="Social profiles">
       {links.map((l) => (
         <li key={l.platform}>
-          <a className="tp-icon-action text-sm font-bold" href={l.url} target="_blank" rel="noopener noreferrer"><span aria-hidden="true">{SOCIAL_SHORT[l.platform] ?? "•"}</span><span className="sr-only">{SOCIAL_NAME[l.platform] ?? l.platform}</span></a>
+          <a className="tp-icon-action text-sm font-bold" href={l.url} target="_blank" rel="noopener noreferrer"><SocialIcon platform={l.platform} /><span className="sr-only">{SOCIAL_NAME[l.platform] ?? l.platform}</span></a>
         </li>
       ))}
     </ul>

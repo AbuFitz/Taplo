@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { addWidget, openEditorWithSample, openRow, openSection, pngFile, previewFrame, previewOrder, row, rowOrder } from "./helpers";
+import { addWidget, openEditorWithSample, insp, openRow, openSection, pngFile, previewFrame, previewOrder, row, rowOrder } from "./helpers";
 
 const pickOption = async (page: Page, trigger: string | RegExp, option: string | RegExp) => {
   await page.getByRole("combobox", { name: trigger }).click();
@@ -169,8 +169,8 @@ test.describe("records flow into widgets (nothing is copied)", () => {
     await expect(preview(page).locator('[data-widget="serviceList"]')).toContainText("Nail trim");
     await openRow(page, "serviceList");
     // picking a subset by reference
-    await row(page, "serviceList").getByRole("checkbox", { name: /All of them/ }).uncheck();
-    await row(page, "serviceList").getByRole("checkbox", { name: /Nail trim/ }).uncheck();
+    await insp(page).getByRole("checkbox", { name: /All of them/ }).uncheck();
+    await insp(page).getByRole("checkbox", { name: /Nail trim/ }).uncheck();
     await expect(preview(page).locator('[data-widget="serviceList"]')).not.toContainText("Nail trim");
     await expect(preview(page).locator('[data-widget="serviceList"]')).toContainText("Full groom");
   });
@@ -182,10 +182,9 @@ test.describe("plans and page settings", () => {
     await page.goto("/dashboard/settings");
     await pickOption(page, "Simulated plan", /^Free/);
     await page.goto("/dashboard/page");
-    await page.getByRole("tab", { name: "Design" }).click();
+    await page.getByTestId("select-page").click();
     await expect(page.getByText("Choosing a different theme is included from the Core plan.")).toBeVisible();
     await expect(page.locator('[data-theme-id="midnight"]')).toBeDisabled();
-    await page.getByRole("tab", { name: "Content" }).click();
     await expect(row(page, "gallery")).toContainText("Plan needed");
     await expect(row(page, "gallery")).toContainText("Galleries are included from the Core plan");
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.gallery.length)).toBeGreaterThan(0);
@@ -198,7 +197,7 @@ test.describe("plans and page settings", () => {
 
   test("page settings: address validation, search visibility, share text and honest domain state", async ({ page }) => {
     await openEditorWithSample(page, "Tutor");
-    await page.getByRole("tab", { name: "Page settings" }).click();
+    await page.getByTestId("select-settings").click();
     await page.getByLabel("Your web address").fill("book");
     await page.getByLabel("Your web address").blur();
     await expect(page.getByText("That address is reserved. Try another.")).toBeVisible();
@@ -236,7 +235,7 @@ test.describe("editing on a phone", () => {
 
       // add a widget in a single column, with big tap targets
       await addWidget(page, /^Announcement/);
-      await row(page, "announcement").getByRole("textbox", { name: "Message" }).fill("Closed on Monday");
+      await insp(page).getByRole("textbox", { name: "Message" }).fill("Closed on Monday");
       expect(await overflow()).toBeLessThanOrEqual(0);
       const handle = await row(page, "announcement").getByTestId("drag-handle").boundingBox();
       expect(handle!.width).toBeGreaterThanOrEqual(44);
@@ -245,14 +244,14 @@ test.describe("editing on a phone", () => {
       // reorder with the move buttons (the touch-friendly alternative)
       const start = await rowOrder(page);
       const last = start[start.length - 1]!;
-      await row(page, last).getByRole("button", { name: /^Move .* up$/ }).click();
+      await openRow(page, last); await insp(page).getByRole("button", { name: "Move up" }).click();
       expect((await rowOrder(page))[start.length - 2]).toBe(last);
 
       // design tab fits too
-      await page.getByRole("tab", { name: "Design" }).click();
+      await page.getByTestId("select-page").click();
       await page.locator('[data-theme-id="candy"]').click();
       expect(await overflow()).toBeLessThanOrEqual(0);
-      await page.getByRole("tab", { name: "Page settings" }).click();
+      await page.getByTestId("select-settings").click();
       expect(await overflow()).toBeLessThanOrEqual(0);
 
       // the preview sheet shows exactly what was just edited
@@ -262,15 +261,15 @@ test.describe("editing on a phone", () => {
       await expect(frame.locator("[data-taplo-page]")).toHaveAttribute("data-header", "centered");
       expect(await overflow()).toBeLessThanOrEqual(0);
       await page.keyboard.press("Escape");
-      await expect(page.getByTestId("open-preview")).toBeVisible();
+      await expect(page.getByTestId("view-preview")).toBeVisible();
     });
   }
 
   test("the 200% zoom case (640px) still fits", async ({ page }) => {
     await page.setViewportSize({ width: 640, height: 450 });
     await openEditorWithSample(page, "Barber");
-    for (const tab of ["Content", "Design", "Page settings"]) {
-      await page.getByRole("tab", { name: tab }).click();
+    for (const tab of ["select-page", "select-header", "select-details", "select-settings"]) {
+      await page.getByTestId(tab).click();
       expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth), tab).toBeLessThanOrEqual(0);
     }
   });
@@ -278,15 +277,16 @@ test.describe("editing on a phone", () => {
 
 test("uploading a logo in the editor flows to the published page with the owner's crop", async ({ page }) => {
   await openEditorWithSample(page, "Consultant");
-  await page.getByRole("tab", { name: "Design" }).click();
+  await page.getByTestId("select-header").click();
   await openSection(page, "Header");
   // Editorial shows no picture by design: the editor says so, then choosing a shape reveals it
   await page.getByLabel("Logo or profile picture: upload a picture").setInputFiles(pngFile());
+  await page.getByTestId("crop-apply").click();
   await expect(page.getByText("this look shows no picture")).toBeVisible();
   await page.getByRole("radio", { name: "Circle" }).check({ force: true });
   await expect(page.getByText("this look shows no picture")).toHaveCount(0);
   await expect(preview(page).locator(".tp-header img").first()).toBeVisible();
-  await page.getByRole("tab", { name: "Page settings" }).click();
+  await page.getByTestId("select-settings").click();
   await page.getByRole("button", { name: "Publish", exact: true }).first().click();
   const slug = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.identity.slug);
   const pub = await page.context().newPage();

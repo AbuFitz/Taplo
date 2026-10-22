@@ -126,8 +126,8 @@ export function WidgetAppearanceForm({ stored, ed }: { stored: StoredWidget; ed:
   return (
     <div className="grid gap-4">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-sm text-muted-foreground">{count ? `${count} setting${count === 1 ? "" : "s"} differ from your page style.` : "Following your page style."}</p>
-        <button type="button" disabled={!count} onClick={() => ed.updateWidget(stored.id, { appearance: null })} className="text-sm font-medium text-primary underline-offset-4 hover:underline disabled:pointer-events-none disabled:opacity-40">Reset this widget to theme</button>
+        <p className="text-sm text-muted-foreground">{count ? `${count} setting${count === 1 ? "" : "s"} differ from the page style.` : "Following your page style."}</p>
+        <button type="button" disabled={!count} onClick={() => ed.updateWidget(stored.id, { appearance: null })} className="text-sm font-medium text-primary underline-offset-4 hover:underline disabled:pointer-events-none disabled:opacity-40">Reset to page style</button>
       </div>
       <Segmented label="Emphasis" value={a.emphasis ?? "normal"} options={[{ value: "normal", label: "Normal" }, { value: "featured", label: "Featured", hint: "Bigger, accent border" }]} customised={a.emphasis !== undefined} onReset={() => unset("emphasis")} onChange={(v) => set({ emphasis: v })} />
       {hasCard ? (
@@ -135,13 +135,13 @@ export function WidgetAppearanceForm({ stored, ed }: { stored: StoredWidget; ed:
           <Segmented label="Background" value={a.surface} options={SURFACES.map((x) => ({ ...x }))} columns={2} customised={a.surface !== undefined} onReset={() => unset("surface")} onChange={(v) => set({ surface: v })} />
           <Segmented label="Corners" value={a.radius} options={RADII.map((x) => ({ ...x }))} columns={3} customised={a.radius !== undefined} onReset={() => unset("radius")} onChange={(v) => set({ radius: v })} />
           <div className="grid grid-cols-2 gap-3">
-            <SelectField label="Border" value={a.border} inheritLabel="Theme default" options={[{ value: "none", label: "None" }, { value: "thin", label: "Thin" }, { value: "thick", label: "Thick" }]} customised={a.border !== undefined} onReset={() => unset("border")} onChange={(v) => set({ border: v })} />
-            <SelectField label="Shadow" value={a.shadow} inheritLabel="Theme default" options={[{ value: "none", label: "None" }, { value: "soft", label: "Soft" }, { value: "hard", label: "Hard offset" }]} customised={a.shadow !== undefined} onReset={() => unset("shadow")} onChange={(v) => set({ shadow: v })} />
-            <SelectField label="Spacing inside" value={a.padding} inheritLabel="Theme default" options={[{ value: "compact", label: "Compact" }, { value: "comfortable", label: "Comfortable" }, { value: "roomy", label: "Roomy" }]} customised={a.padding !== undefined} onReset={() => unset("padding")} onChange={(v) => set({ padding: v })} />
-            <SelectField label="Text alignment" value={a.align} inheritLabel="Theme default" options={[{ value: "left", label: "Left" }, { value: "center", label: "Centred" }]} customised={a.align !== undefined} onReset={() => unset("align")} onChange={(v) => set({ align: v })} />
+            <SelectField label="Border" value={a.border} inheritLabel="Page style" options={[{ value: "none", label: "None" }, { value: "thin", label: "Thin" }, { value: "thick", label: "Thick" }]} customised={a.border !== undefined} onReset={() => unset("border")} onChange={(v) => set({ border: v })} />
+            <SelectField label="Shadow" value={a.shadow} inheritLabel="Page style" options={[{ value: "none", label: "None" }, { value: "soft", label: "Soft" }, { value: "hard", label: "Hard offset" }]} customised={a.shadow !== undefined} onReset={() => unset("shadow")} onChange={(v) => set({ shadow: v })} />
+            <SelectField label="Spacing inside" value={a.padding} inheritLabel="Page style" options={[{ value: "compact", label: "Compact" }, { value: "comfortable", label: "Comfortable" }, { value: "roomy", label: "Roomy" }]} customised={a.padding !== undefined} onReset={() => unset("padding")} onChange={(v) => set({ padding: v })} />
+            <SelectField label="Text alignment" value={a.align} inheritLabel="Page style" options={[{ value: "left", label: "Left" }, { value: "center", label: "Centred" }]} customised={a.align !== undefined} onReset={() => unset("align")} onChange={(v) => set({ align: v })} />
           </div>
           <ColorField label="Card colour" value={a.background ?? spec.colors.surface} customised={a.background !== undefined} onReset={() => unset("background")} onChange={(v) => set({ background: v })} hint="Text colour adjusts automatically if it would be hard to read." />
-          <ColorField label="Text colour" value={a.text ?? spec.colors.text} customised={a.text !== undefined} onReset={() => unset("text")} onChange={(v) => set({ text: v })} />
+          <ColorField label="Text colour" against={a.background ?? spec.colors.surface} value={a.text ?? spec.colors.text} customised={a.text !== undefined} onReset={() => unset("text")} onChange={(v) => set({ text: v })} />
         </>
       ) : null}
       {hasBtn ? (

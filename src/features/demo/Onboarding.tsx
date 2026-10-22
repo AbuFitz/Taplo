@@ -9,8 +9,7 @@ import { TaploInput } from "@/components/taplo/taplo-input"
 import { LOCATION_MODES } from "@/features/businesses/content"
 import { SLUG_PROBLEM_MESSAGE } from "@/features/businesses/slug"
 import { newWidget } from "@/features/page/starter"
-import { ThemePicker } from "@/features/page/editor/ThemePicker"
-import { getTheme } from "@/features/page/themes/catalogue"
+import { ImageField } from "@/features/page/editor/controls"
 import { getWidget } from "@/features/page/widgets/registry"
 import { buildPageViewModel } from "@/features/page/renderer"
 import { resolveEntitlements } from "@/features/subscriptions/entitlements"
@@ -27,7 +26,6 @@ const STEP_LABEL: Record<OnboardingStep, string> = {
   industry: "Your business",
   business: "Claim your page",
   contacts: "Get in touch",
-  look: "Choose a look",
   widgets: "Add what’s useful",
   publish: "Preview & publish",
 }
@@ -35,7 +33,6 @@ const STEP_TITLE: Record<OnboardingStep, string> = {
   industry: "What kind of business is it?",
   business: "Claim your page",
   contacts: "How can people reach you?",
-  look: "Choose a look",
   widgets: "Add what’s useful",
   publish: "Preview and publish",
 }
@@ -49,7 +46,7 @@ export function Onboarding() {
   const [query, setQuery] = React.useState("")
   const [mobilePreview, setMobilePreview] = React.useState(false)
   const s = state ?? initialState()
-  const step = s.step
+  const step: OnboardingStep = (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "widgets"
   const stepIndex = ONBOARDING_STEPS.indexOf(step)
 
   const go = (to: OnboardingStep) => {
@@ -68,7 +65,6 @@ export function Onboarding() {
     industry: state !== null && Boolean(c.identity.industryLabel.trim()),
     business: Boolean(c.identity.name.trim()) && slugErrs.length === 0,
     contacts: hasContactChannel(c),
-    look: true,
     widgets: true,
     publish: canPublish(s),
   }
@@ -76,7 +72,6 @@ export function Onboarding() {
     industry: "Choose what you do (or Other) and describe it in a few words.",
     business: "Add a name and a valid web address.",
     contacts: "Add at least one way for customers to reach you.",
-    look: "",
     widgets: "",
     publish: "Complete the earlier steps to publish.",
   }
@@ -154,6 +149,7 @@ export function Onboarding() {
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">Demo note: whether an address is already taken is checked against the database when you publish on a connected environment. Reserved and invalid addresses are blocked now.</p>
               </div>
+              <ImageField label="Logo or profile picture (optional)" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
               <fieldset className="grid gap-2">
                 <legend className="mb-1 text-sm font-medium">Where do you work?</legend>
                 {LOCATION_MODES.map((m) => (
@@ -175,14 +171,6 @@ export function Onboarding() {
               <PhoneField label="WhatsApp number" value={c.contacts.whatsapp} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, whatsapp: v } } }), { coalesce: "wa" })} hint="Include the country code, e.g. +44." />
               <EmailField value={c.contacts.email} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }), { coalesce: "email" })} />
               <TaploInput label="A line about you (optional)" hint="Shown under your name." value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
-            </div>
-          ) : null}
-
-          {step === "look" ? (
-            <div className="grid gap-4">
-              <p className="text-muted-foreground">Pick any look you like: they work for every kind of business. Watch your page change on the right. You can fine-tune colours, fonts, buttons and more later.</p>
-              <ThemePicker themeId={s.page.themeId} canSwitch onPick={(id) => update((x) => ({ ...x, page: { ...x.page, themeId: id } }))} columns="grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3" />
-              <p className="text-xs text-muted-foreground">Suggested for {c.identity.industryLabel || "your business"}: {getTheme(getIndustryPreset(c.identity.industryKey).suggestedThemeId)?.name}. It’s only a suggestion.</p>
             </div>
           ) : null}
 
@@ -285,10 +273,9 @@ function PublishStep({ onEditor }: { onEditor: () => void }) {
   const s = state ?? initialState()
   const checks = readiness(s)
   const ok = canPublish(s)
-  const theme = getTheme(s.page.themeId)
   return (
     <div className="grid gap-5">
-      <p className="text-muted-foreground">Your page uses the <strong>{theme?.name}</strong> look with {s.page.widgets.length} widget{s.page.widgets.length === 1 ? "" : "s"}. Check the preview, then publish. Everything can be changed afterwards.</p>
+      <p className="text-muted-foreground">Your page has {s.page.widgets.length} widget{s.page.widgets.length === 1 ? "" : "s"}. Check the preview, then publish. Everything can be changed afterwards.</p>
       <ul className="grid gap-2">
         {checks.filter((c) => c.required).map((c) => (
           <li key={c.id} className="flex items-center gap-2 text-sm">

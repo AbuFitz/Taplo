@@ -17,11 +17,13 @@ export const rowOrder = (page: Page) => page.locator("[data-widget-row]").evalua
 export const previewOrder = (page: Page) => previewFrame(page).locator("[data-widget]").evaluateAll((els) => els.map((e) => e.getAttribute("data-widget")!));
 export const row = (page: Page, type: string, nth = 0) => page.locator(`[data-widget-row="${type}"]`).nth(nth);
 
+export const insp = (page: Page) => page.getByTestId("inspector");
+
+/** Select a widget from the structure list; its controls open in the inspector. */
 export async function openRow(page: Page, type: string, nth = 0) {
-  const r = row(page, type, nth);
-  const toggle = r.locator("button[aria-expanded]").first();
-  if ((await toggle.getAttribute("aria-expanded")) !== "true") await toggle.click();
-  return r;
+  await row(page, type, nth).getByTestId("select-widget").click();
+  await expect(insp(page).getByTestId("inspector-widget")).toHaveAttribute("data-widget-type", type);
+  return insp(page);
 }
 
 export async function addWidget(page: Page, label: RegExp | string) {

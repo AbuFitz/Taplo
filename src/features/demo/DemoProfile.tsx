@@ -2,6 +2,7 @@
 
 import { useMemo } from "react"
 import Link from "next/link"
+import { EditBridge } from "@/features/page/editor/EditBridge"
 import { PageRenderer, buildPageViewModel } from "@/features/page/renderer"
 import { parseContent, useDemo } from "./store"
 
@@ -9,7 +10,7 @@ import { parseContent, useDemo } from "./store"
  * Renders the draft ("preview") or the frozen published copy through the SAME
  * PageRenderer/view-model the real public route and fixture routes use.
  */
-export function DemoProfile({ mode, slug }: { mode: "draft" | "published"; slug?: string }) {
+export function DemoProfile({ mode, slug, editing = false }: { mode: "draft" | "published"; slug?: string; editing?: boolean }) {
   const { ready, state } = useDemo()
   const source = useMemo(() => {
     if (!state) return null
@@ -45,6 +46,7 @@ export function DemoProfile({ mode, slug }: { mode: "draft" | "published"; slug?
         </div>
       ) : null}
       <PageRenderer vm={vm} />
+      {editing ? <EditBridge /> : null}
     </>
   )
 }
