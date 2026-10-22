@@ -43,8 +43,8 @@ test.describe("stable sample profiles (no localStorage, no sign-in)", () => {
       expect(res.status(), f.key).toBe(200);
       await expect(page.getByRole("link", { name: "Open page" }).first()).toBeVisible();
     }
-    await expect(page.getByText("Look: Paper").first()).toBeVisible(); // a mechanic in the soft light look…
-    await expect(page.getByText("Look: Noir").first()).toBeVisible(); // …and a tutor in the dark one
+    await expect(page.getByText("Look: Clean").first()).toBeVisible(); // a mechanic in the soft light look…
+    await expect(page.getByText("Look: Night").first()).toBeVisible(); // …and a tutor in the dark one
   });
 
   test("a fresh browser sees the same page; ?theme= changes only the look", async ({ browser }) => {
@@ -54,7 +54,7 @@ test.describe("stable sample profiles (no localStorage, no sign-in)", () => {
     const order = (p: Page) => p.locator("[data-widget]").evaluateAll((e) => e.map((x) => x.getAttribute("data-widget")));
     expect(await order(a)).toEqual(await order(b));
     const before = await a.locator("[data-taplo-page]").getAttribute("data-header");
-    await a.goto("/demo-barber?theme=noir");
+    await a.goto("/demo-barber?theme=night");
     expect(await a.locator("[data-taplo-page]").getAttribute("data-header")).toBe("poster");
     expect(before).not.toBe("poster");
     expect(await order(a)).toEqual(await order(b)); // same widgets, same order, different look
@@ -100,7 +100,7 @@ test.describe("render matrix", () => {
 });
 
 test.describe("themed interaction", () => {
-  for (const [slug, theme] of [["demo-mechanic", "paper"], ["demo-tutor", "noir"], ["demo-barber", "showroom"], ["demo-cafe", "pop"]] as const) {
+  for (const [slug, theme] of [["demo-mechanic", "clean"], ["demo-tutor", "night"], ["demo-barber", "showroom"], ["demo-cafe", "colour"]] as const) {
     test(`booking dialog and select portal inherit the ${theme} theme`, async ({ page }) => {
       await page.goto(`/${slug}`, { waitUntil: "networkidle" });
       const rootBg = await page.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-background").trim());

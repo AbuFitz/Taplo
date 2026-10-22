@@ -171,22 +171,41 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
 
 test.describe("mobile editor", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
-  test("Edit/Preview switch, select in preview opens a controls sheet, nothing overflows", async ({ page }) => {
+  test("the preview fills the screen; tapping it opens a sheet that leaves the selection visible; nothing overflows", async ({ page }) => {
     await openEditorWithSample(page, "Barber");
-    await expect(page.getByTestId("structure")).toBeVisible();
-    await page.getByTestId("view-preview").click();
-    await expect(page.getByTestId("preview-frame")).toBeVisible();
+    await expect(page.locator('[data-editor="compact"]')).toBeVisible();
+    // the preview IS the screen: real device width, no handset frame, most of the height
+    const box = (await page.getByTestId("preview-frame").boundingBox())!;
+    expect(box.width).toBeGreaterThanOrEqual(388);
+    expect(box.height).toBeGreaterThan(844 * 0.7);
+    expect(await previewFrame(page).locator("body").evaluate(() => window.innerWidth)).toBe(390);
+
     await previewFrame(page).locator('[data-widget="priceMenu"]').tap();
-    await expect(page.getByTestId("inspector-sheet")).toBeVisible();
+    await expect(page.getByTestId("editor-drawer")).toBeVisible();
     await expect(page.getByTestId("inspector-widget")).toHaveAttribute("data-widget-type", "priceMenu");
+    await page.waitForTimeout(800);
+    // the selected widget was scrolled into the part of the preview the sheet leaves visible
+    const sheetTop = (await page.getByTestId("editor-drawer").boundingBox())!.y;
+    const selected = await previewFrame(page).locator('[data-widget="priceMenu"]').boundingBox();
+    expect(selected!.y).toBeLessThan(sheetTop - 40);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-    await page.keyboard.press("Escape");
-    await page.getByTestId("view-edit").click();
+
+    // the toolbar stays reachable beneath the sheet
+    await page.getByTestId("tab-organise").tap();
+    await expect(page.getByTestId("organise-panel")).toBeVisible();
+    await page.getByTestId("tab-content").tap();
     await expect(page.getByTestId("structure")).toBeVisible();
-    await page.getByTestId("select-widget").first().click();
-    await expect(page.getByTestId("inspector-sheet")).toBeVisible();
+    await page.getByTestId("select-widget").first().tap();
+    await expect(page.getByTestId("editor-drawer")).toBeVisible();
     // every control in the sheet is touch-sized
-    const small = await page.getByTestId("inspector-sheet").locator("button:visible, input:visible").evaluateAll((els) => els.filter((e) => { const r = e.getBoundingClientRect(); return r.height < 32 && r.height > 0 && !e.closest("summary") && (e as HTMLInputElement).type !== "radio" && (e as HTMLInputElement).type !== "range" && (e as HTMLInputElement).type !== "checkbox" && !e.className.includes("sr-only") }).length);
-    expect(small).toBeLessThanOrEqual(1); // only the sheet's own close button may be smaller
+    const small = await page.getByTestId("editor-drawer").locator("button:visible, input:visible").evaluateAll((els) => els.filter((e) => { const r = e.getBoundingClientRect(); return r.height < 32 && r.height > 0 && !e.closest("summary") && (e as HTMLInputElement).type !== "radio" && (e as HTMLInputElement).type !== "range" && (e as HTMLInputElement).type !== "checkbox" && !e.className.includes("sr-only") }).length);
+    expect(small).toBeLessThanOrEqual(1);
+
+    // customer preview: no sheet, no toolbar, the page behaves like the real one
+    await page.getByTestId("customer-preview").tap();
+    await expect(page.getByTestId("editor-drawer")).toBeHidden();
+    await expect(page.getByTestId("tab-content")).toBeHidden();
+    await page.getByTestId("customer-preview").tap();
+    await expect(page.getByTestId("tab-content")).toBeVisible();
   });
 });

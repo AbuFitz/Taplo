@@ -41,7 +41,7 @@ function Row({ stored, rw, selected, onSelect, onDetails, ed }: {
           aria-label={`Drag to reorder ${label}. Or press space, then the arrow keys.`}
           className="grid size-11 shrink-0 cursor-grab place-items-center rounded-lg text-muted-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring active:cursor-grabbing"
           style={{ touchAction: "none" }}
-          data-testid="drag-handle"
+          data-testid="drag-handle" data-base-ui-swipe-ignore=""
         >
           <GripVertical aria-hidden="true" className="size-5" />
         </button>

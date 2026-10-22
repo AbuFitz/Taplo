@@ -18,26 +18,48 @@ export const previewOrder = (page: Page) => previewFrame(page).locator("[data-wi
 export const row = (page: Page, type: string, nth = 0) => page.locator(`[data-widget-row="${type}"]`).nth(nth);
 
 /** The controls for the current selection: a side pane on wide screens, a bottom sheet on phones. */
-export const insp = (page: Page) => page.locator('[data-testid="inspector"], [data-testid="inspector-sheet"]');
+export const insp = (page: Page) => page.locator('[data-testid="inspector"], [data-testid="editor-drawer"]');
 
-/** On phones the controls sheet covers the list; close it before touching the list again. */
+/** True when the compact (phone/tablet) editor is showing. */
+export const isCompact = (page: Page) => page.locator('[data-editor="compact"]').isVisible().catch(() => false);
+
+/** On phones the controls sheet covers the preview; close it. */
 export async function closeSheet(page: Page) {
-  const sheet = page.getByTestId("inspector-sheet");
+  const sheet = page.getByTestId("editor-drawer");
   if (await sheet.isVisible().catch(() => false)) {
-    await page.keyboard.press("Escape");
+    await page.getByTestId("drawer-close").click();
     await expect(sheet).toBeHidden();
   }
 }
 
+/** Make the structure list (page style, header, widgets, details, settings) reachable: on phones it lives under the Content tab. */
+export async function openStructure(page: Page) {
+  if (await isCompact(page)) {
+    if (!(await page.getByTestId("structure").isVisible().catch(() => false))) {
+      await closeSheet(page);
+      await page.getByTestId("tab-content").tap();
+      await expect(page.getByTestId("structure")).toBeVisible();
+      await page.waitForTimeout(500); // sheet finishes sliding up
+    }
+  }
+}
+
+/** Open a row of the structure list: select-page, select-header, select-details, select-settings. */
+export async function selectPart(page: Page, part: "page" | "header" | "details" | "settings") {
+  await openStructure(page);
+  await page.getByTestId(`select-${part}`).click();
+}
+
 /** Select a widget from the structure list; its controls open in the inspector. */
 export async function openRow(page: Page, type: string, nth = 0) {
-  await closeSheet(page);
+  await openStructure(page);
   await row(page, type, nth).getByTestId("select-widget").click();
   await expect(insp(page).getByTestId("inspector-widget")).toHaveAttribute("data-widget-type", type);
   return insp(page);
 }
 
 export async function addWidget(page: Page, label: RegExp | string) {
+  await openStructure(page);
   await page.getByTestId("add-widget").click();
   await page.getByRole("dialog").getByRole("button", { name: label }).first().click();
 }
@@ -66,8 +88,10 @@ export async function seedFixture(page: Page, state: unknown) {
 
 /** Choose an optional starting look (collapsed by default: nothing requires it). */
 export async function pickLook(page: Page, id: string) {
-  await closeSheet(page);
-  await page.getByTestId("select-page").click();
-  await openSection(page, /Start from a look/);
-  await page.locator(`[data-theme-id="${id}"]`).click();
+  await selectPart(page, "page");
+  await openSection(page, /^Look/);
+  await look(page, id).click();
 }
+
+/** The starting-look choice with this id, in the shared Look selector. */
+export const look = (page: Page, id: string) => page.getByRole("radiogroup", { name: "Look" }).locator(`label[data-choice="${id}"]`)

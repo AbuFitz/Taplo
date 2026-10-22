@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { closeSheet, pickLook, addWidget, openEditorWithSample, insp, openRow, openSection, pngFile, previewFrame, previewOrder, row, rowOrder } from "./helpers";
+import { closeSheet, selectPart, pickLook, addWidget, openEditorWithSample, insp, openRow, openSection, pngFile, previewFrame, previewOrder, row, rowOrder } from "./helpers";
 
 const pickOption = async (page: Page, trigger: string | RegExp, option: string | RegExp) => {
   await page.getByRole("combobox", { name: trigger }).click();
@@ -115,7 +115,7 @@ test.describe("onboarding", () => {
     await expect(page.getByText(/updated to the latest design system/).first()).toBeVisible();
     const s = await page.evaluate(() => ({ v1: localStorage.getItem("taplo.demo.v1"), v2: JSON.parse(localStorage.getItem("taplo.demo.v2")!) }));
     expect(s.v1).toBeNull();
-    expect(s.v2.page.themeId).toBe("paper");
+    expect(s.v2.page.themeId).toBe("clean");
     expect(s.v2.page.appearance.colors.accent).toBe("#123456");
     expect(s.v2.content.services[0].name).toBe("Haircut");
     await expect(preview(page).locator('[data-widget="serviceList"], [data-widget="priceMenu"]').first()).toContainText("Haircut");
@@ -180,9 +180,9 @@ test.describe("plans and page settings", () => {
     await pickOption(page, "Simulated plan", /^Free/);
     await page.goto("/dashboard/page");
     await page.getByTestId("select-page").click();
-    await openSection(page, /Start from a look/);
+    await openSection(page, /^Look/);
     await expect(page.getByText("Choosing a different theme is included from the Core plan.")).toBeVisible();
-    await expect(page.locator('[data-theme-id="pop"]')).toBeDisabled();
+    await expect(page.getByRole("radiogroup", { name: "Look" }).locator('label[data-choice="colour"] input')).toBeDisabled();
     await expect(row(page, "gallery")).toContainText("Plan needed");
     await expect(row(page, "gallery")).toContainText("Galleries are included from the Core plan");
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.gallery.length)).toBeGreaterThan(0);
@@ -236,7 +236,8 @@ test.describe("editing on a phone", () => {
       await addWidget(page, /^Announcement/);
       await insp(page).getByRole("textbox", { name: "Message" }).fill("Closed on Monday");
       expect(await overflow()).toBeLessThanOrEqual(0);
-      await closeSheet(page);
+      await page.getByTestId("tab-organise").tap();
+      await page.waitForTimeout(700);
       const handle = await row(page, "announcement").getByTestId("drag-handle").boundingBox();
       expect(handle!.width).toBeGreaterThanOrEqual(44);
       expect(handle!.height).toBeGreaterThanOrEqual(44);
@@ -248,19 +249,19 @@ test.describe("editing on a phone", () => {
       expect((await rowOrder(page))[start.length - 2]).toBe(last);
 
       // design tab fits too
-      await pickLook(page, "pop");
+      await pickLook(page, "colour");
       expect(await overflow()).toBeLessThanOrEqual(0);
-      await page.getByTestId("select-settings").click();
+      await selectPart(page, "settings");
       expect(await overflow()).toBeLessThanOrEqual(0);
 
-      // the preview sheet shows exactly what was just edited
+      // the customer preview shows exactly what was just edited
       await closeSheet(page);
-      await page.getByTestId("view-preview").click();
+      await page.getByTestId("customer-preview").tap();
       const frame = page.frameLocator('iframe[title="Live preview of your page"]').last();
       await expect(frame.locator('[data-widget="announcement"]')).toContainText("Closed on Monday");
       await expect(frame.locator("[data-taplo-page]")).toHaveAttribute("data-header", "centered");
       expect(await overflow()).toBeLessThanOrEqual(0);
-      await expect(page.getByTestId("view-preview")).toBeVisible();
+      await expect(page.getByTestId("customer-preview")).toBeVisible();
     });
   }
 
@@ -268,8 +269,7 @@ test.describe("editing on a phone", () => {
     await page.setViewportSize({ width: 640, height: 450 });
     await openEditorWithSample(page, "Barber");
     for (const tab of ["select-page", "select-header", "select-details", "select-settings"]) {
-      await closeSheet(page);
-      await page.getByTestId(tab).click();
+      await selectPart(page, tab.replace("select-", "") as "page");
       expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth), tab).toBeLessThanOrEqual(0);
     }
   });

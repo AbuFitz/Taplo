@@ -18,7 +18,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
     const services = await f.locator('[data-widget="priceMenu"] li').count();
 
     const seen = new Set<string>();
-    for (const look of ["Noir", "Paper", "Pop", "Showroom"]) {
+    for (const look of ["Night", "Clean", "Colour", "Photo", "Showroom"]) {
       await choice(page, "Look", look);
       await expect.poll(async () => (await attr(page, "data-header")) + (await attr(page, "data-tone"))).not.toBe("");
       const sig = JSON.stringify([await attr(page, "data-header"), await attr(page, "data-tone"), await attr(page, "data-bg"), await attr(page, "data-card-surface"), await f.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-font-heading").trim())]);
@@ -26,7 +26,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
       expect(await f.getByRole("heading", { level: 1 }).textContent()).toBe(name);        // same words
       expect(await f.locator('[data-widget="priceMenu"] li').count()).toBe(services);       // same records
     }
-    expect(seen.size).toBe(4);                                                              // four genuinely different results
+    expect(seen.size).toBe(5);                                                              // five genuinely different results
   });
 
   test("every demonstrated choice is editable; undo, redo and reset work", async ({ page }) => {
@@ -116,7 +116,7 @@ test.describe("appearance lab on a phone", () => {
     await page.getByRole("radiogroup", { name: "Preview" }).locator("label", { hasText: "Desktop" }).click();
     await expect(page.locator('iframe[title="Desktop preview"]')).toBeVisible();
     await page.getByRole("radiogroup", { name: "Look" }).scrollIntoViewIfNeeded();
-    await choice(page, "Look", "Paper");
+    await choice(page, "Look", "Clean");
     await page.getByRole("radiogroup", { name: "Preview" }).locator("label", { hasText: "Phone" }).click();
     await expect.poll(() => page.frameLocator('iframe[title="Mobile preview"]').locator("[data-taplo-page]").getAttribute("data-header")).toBe("side");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
