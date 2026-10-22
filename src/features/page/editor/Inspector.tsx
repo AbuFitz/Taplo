@@ -96,7 +96,7 @@ function WidgetInspector({ ed, stored, onBack, onSelect, notify }: { ed: Editor;
         </div>
       ) : null}
       <Tabs defaultValue="content" key={stored.id}>
-        <TabsList className="mb-3 grid h-11 w-full grid-cols-2">
+        <TabsList className="mb-3 grid w-full grid-cols-2 p-1 group-data-horizontal/tabs:h-auto">
           <TabsTrigger value="content" className="min-h-11">Content</TabsTrigger>
           <TabsTrigger value="look" className="min-h-11">Appearance{custom ? ` · ${custom}` : ""}</TabsTrigger>
         </TabsList>

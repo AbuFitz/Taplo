@@ -32,6 +32,8 @@ export interface PagePreviewProps {
   desktopZoom?: "fit" | "actual"
   /** Decorative bezel / browser bar. Only for `device` and `desktop`, never while editing on a phone. */
   chrome?: boolean
+  /** Address shown in the desktop browser bar. */
+  url?: string
   frameRef?: (el: HTMLIFrameElement | null) => void
   edit?: { selection: Selection; onSelect: (s: Selection) => void; bottomInset?: number }
   onViewport?: (v: PreviewViewport) => void
@@ -60,7 +62,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, title, mode, device, desktopZoom = "fit", chrome = false, frameRef, edit, onViewport, className, testId }: PagePreviewProps) {
+export function PagePreview({ src, title, mode, device, desktopZoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
@@ -123,7 +125,7 @@ export function PagePreview({ src, title, mode, device, desktopZoom = "fit", chr
               {L.bar ? (
                 <div className="flex items-center gap-3 border-b border-black/10 px-4" style={{ height: L.bar }} aria-hidden="true">
                   <span className="flex gap-1.5">{["#ff5f57", "#febc2e", "#28c840"].map((c) => <i key={c} className="block size-2.5 rounded-full" style={{ background: c }} />)}</span>
-                  <span className="mx-auto h-5 w-64 rounded-md bg-white shadow-[0_0_0_1px_rgb(0_0_0/0.07)]" />
+                  <span className="mx-auto flex h-5 w-64 items-center justify-center truncate rounded-md bg-white px-2 text-[11px] text-neutral-500 shadow-[0_0_0_1px_rgb(0_0_0/0.07)]">{url}</span>
                   <span className="w-10" />
                 </div>
               ) : null}

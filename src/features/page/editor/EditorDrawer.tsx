@@ -17,10 +17,10 @@ export const TALL = 1
  * Escape handling, and keyboard-aware scrolling (VirtualKeyboardProvider). On a short landscape
  * screen it becomes a side panel so the preview keeps its height.
  */
-export function EditorDrawer({ open, onOpenChange, snap, onSnap, side, title, onBack, canGoBack, children, testId = "editor-drawer" }: {
+export function EditorDrawer({ open, onOpenChange, snap, onSnap, side, title, onBack, canGoBack, offsetTop = 0, offsetBottom = 0, children, testId = "editor-drawer" }: {
   open: boolean; onOpenChange: (open: boolean) => void
   snap: DrawerSnap | null; onSnap: (s: DrawerSnap | null) => void
-  side: "bottom" | "right"; title: string; onBack?: () => void; canGoBack?: boolean
+  side: "bottom" | "right"; title: string; /** Space left clear for the top bar / bottom toolbar so they stay tappable. */ offsetTop?: number; offsetBottom?: number; onBack?: () => void; canGoBack?: boolean
   children: React.ReactNode; testId?: string
 }) {
   const bottom = side === "bottom"
@@ -36,14 +36,14 @@ export function EditorDrawer({ open, onOpenChange, snap, onSnap, side, title, on
       onSnapPointChange={bottom ? (sp) => onSnap(sp) : undefined}
     >
       <Drawer.Portal>
-        <Drawer.Viewport className={cn("pointer-events-none fixed inset-0 z-40 flex", bottom ? "items-end justify-center" : "items-stretch justify-end")}>
+        <Drawer.Viewport style={{ top: offsetTop, bottom: offsetBottom }} className={cn("pointer-events-none fixed inset-x-0 z-40 flex overflow-hidden", bottom ? "items-end justify-center" : "items-stretch justify-end")}>
           <Drawer.Popup
             data-testid={testId}
             className={cn(
               "pointer-events-auto relative flex min-h-0 flex-col bg-white text-neutral-900 outline-none",
               "transition-[transform,box-shadow] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] data-ending-style:duration-[calc(var(--drawer-swipe-strength)*400ms)]",
               bottom
-                ? "w-full max-h-[calc(100dvh-0.75rem)] rounded-t-[1.75rem] shadow-[0_-12px_40px_-12px_rgb(0_0_0/0.28),0_0_0_1px_rgb(0_0_0/0.06)] touch-none [padding-bottom:max(0px,calc(var(--drawer-snap-point-offset)+var(--drawer-swipe-movement-y)))] [transform:translateY(calc(var(--drawer-snap-point-offset)+var(--drawer-swipe-movement-y)))] data-ending-style:[transform:translateY(calc(100%+2px))] data-starting-style:[transform:translateY(calc(100%+2px))] data-starting-style:[padding-bottom:0] data-ending-style:[padding-bottom:0]"
+                ? "w-full max-h-full rounded-t-[1.75rem] shadow-[0_-12px_40px_-12px_rgb(0_0_0/0.28),0_0_0_1px_rgb(0_0_0/0.06)] touch-none [padding-bottom:max(0px,calc(var(--drawer-snap-point-offset)+var(--drawer-swipe-movement-y)))] [transform:translateY(calc(var(--drawer-snap-point-offset)+var(--drawer-swipe-movement-y)))] data-ending-style:[transform:translateY(calc(100%+2px))] data-starting-style:[transform:translateY(calc(100%+2px))] data-starting-style:[padding-bottom:0] data-ending-style:[padding-bottom:0]"
                 : "h-full w-[min(24rem,58vw)] border-l border-black/10 shadow-[-12px_0_40px_-16px_rgb(0_0_0/0.3)] pr-[env(safe-area-inset-right)] [transform:translateX(var(--drawer-swipe-movement-x))] data-ending-style:[transform:translateX(calc(100%+2px))] data-starting-style:[transform:translateX(calc(100%+2px))]",
             )}
           >

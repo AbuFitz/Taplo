@@ -8,7 +8,7 @@ import { canPublish, hasUnpublishedChanges, publish } from "@/features/demo/acti
 import { PagePreview } from "@/features/preview/PagePreview"
 import { cn } from "@/lib/utils"
 import { getWidget } from "../widgets/registry"
-import { EditorDrawer, PEEK, TALL, type DrawerSnap } from "./EditorDrawer"
+import { EditorDrawer, PEEK, type DrawerSnap } from "./EditorDrawer"
 import { PageStylePanel } from "./EditorAppearance"
 import { Inspector } from "./Inspector"
 import { Recommendations } from "./Recommendations"
@@ -48,6 +48,16 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
   const [snap, setSnap] = React.useState<DrawerSnap | null>(PEEK)
   const [customer, setCustomer] = React.useState(false)
   const vp = useViewportSize()
+  const headRef = React.useRef<HTMLElement>(null)
+  const barRef = React.useRef<HTMLElement>(null)
+  const [head, setHead] = React.useState(56)
+  const [bar, setBar] = React.useState(0)
+  React.useEffect(() => {
+    const measure = () => { setHead(headRef.current?.offsetHeight ?? 56); setBar(barRef.current?.offsetHeight ?? 0) }
+    measure()
+    window.addEventListener("resize", measure)
+    return () => window.removeEventListener("resize", measure)
+  }, [vp.w, vp.h])
   const short = vp.h < 520 && vp.w > vp.h
   const s = ed.state
   const changed = hasUnpublishedChanges(s)
@@ -73,8 +83,9 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
     return { page: "Page style", header: "Header", details: "Business details", settings: "Page settings" }[selection.kind]
   })()
 
-  const drawerPx = snap === TALL ? vp.h : typeof snap === "number" ? snap * vp.h : PEEK * vp.h
-  const inset = open && !short ? Math.max(0, drawerPx - BAR) : 0
+  const room = Math.max(0, vp.h - bar - head)
+  const drawerPx = (typeof snap === "number" ? snap : PEEK) * room
+  const inset = open && !short ? Math.round(drawerPx) : 0
 
   const tabs: { id: Panel; label: string; icon: typeof Rows3 }[] = [
     { id: "content", label: "Content", icon: Rows3 },
@@ -93,7 +104,7 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
 
   return (
     <div className="fixed inset-0 z-30 flex flex-col overflow-hidden bg-background" style={{ height: "100dvh" }} data-testid="my-page" data-editor="compact">
-      <header className="flex shrink-0 items-center gap-1 border-b border-black/[0.07] bg-background/95 px-2 pb-1.5 pt-[calc(0.375rem+env(safe-area-inset-top,0px))] pl-[max(0.5rem,env(safe-area-inset-left))] pr-[max(0.5rem,env(safe-area-inset-right))]" role="toolbar" aria-label="Page actions">
+      <header ref={headRef} className="flex shrink-0 items-center gap-1 border-b border-black/[0.07] bg-background/95 px-2 pb-1.5 pt-[calc(0.375rem+env(safe-area-inset-top,0px))] pl-[max(0.5rem,env(safe-area-inset-left))] pr-[max(0.5rem,env(safe-area-inset-right))]" role="toolbar" aria-label="Page actions">
         <Button asChild variant="ghost" size="icon" aria-label="Dashboard menu"><Link href="/dashboard"><Menu /></Link></Button>
         <p className="min-w-0 flex-1 truncate px-1 text-sm font-semibold tracking-[-0.01em]">{s.content.identity.name || "Your page"}</p>
         {short && !customer ? <div className="mr-1 flex">{tabs.map((t) => tabButton(t, true))}</div> : null}
@@ -126,12 +137,12 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
       </div>
 
       {!short && !customer ? (
-        <nav aria-label="Editor" className="shrink-0 border-t border-black/[0.07] bg-background/95 px-2 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom,0px))] pl-[max(0.5rem,env(safe-area-inset-left))] pr-[max(0.5rem,env(safe-area-inset-right))]" style={{ minHeight: BAR }}>
+        <nav ref={barRef} aria-label="Editor" className="shrink-0 border-t border-black/[0.07] bg-background/95 px-2 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom,0px))] pl-[max(0.5rem,env(safe-area-inset-left))] pr-[max(0.5rem,env(safe-area-inset-right))]" style={{ minHeight: BAR }}>
           <div className="flex gap-1">{tabs.map((t) => tabButton(t))}</div>
         </nav>
       ) : null}
 
-      <EditorDrawer open={open} onOpenChange={(o) => { if (!o) close() }} snap={snap} onSnap={setSnap} side={short ? "right" : "bottom"} title={title} canGoBack={stack.length > 1} onBack={back}>
+      <EditorDrawer open={open} onOpenChange={(o) => { if (!o) close() }} snap={snap} onSnap={setSnap} side={short ? "right" : "bottom"} offsetTop={head} offsetBottom={short ? 0 : bar} title={title} canGoBack={stack.length > 1} onBack={back}>
         {stack.map((p) => (
           <div key={p} hidden={p !== top} className={p === top ? undefined : "hidden"}>
             {p === "content" ? <Structure ed={ed} selection={selection} onSelect={fromList} notify={notify} /> : null}

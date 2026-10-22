@@ -2,11 +2,11 @@
 
 import * as React from "react"
 import { z } from "zod"
-import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { normalizePhone } from "@/lib/validation"
 import { cn } from "@/lib/utils"
-import type { FromPreview, Selection, ToPreview } from "@/features/page/editor/selection"
+import { PagePreview } from "@/features/preview/PagePreview"
+import type { Selection } from "@/features/page/editor/selection"
 
 /** Local text that re-syncs when the stored value changes from elsewhere (undo/redo, loading a sample). */
 function useSyncedText(value: string | undefined) {
@@ -126,83 +126,52 @@ export function DemoNotice({ className }: { className?: string }) {
   )
 }
 
-/** Live preview of the draft: an iframe on /demo/preview (same renderer as the real page). */
-export function PreviewFrame({ className, height = 640, selection, onSelect, initialDevice = "mobile" }: {
+/**
+ * Live preview of the draft on /demo/preview (the same renderer as the real page), shown through
+ * the shared PagePreview controller. Phone shows a device-sized viewport; Desktop shows a readable
+ * desktop viewport that fits the space, or at actual size (scrollable).
+ */
+export function PreviewFrame({ className, height = 640, fill = false, selection, onSelect, initialDevice = "mobile" }: {
   className?: string; height?: number
+  /** Take the height left in the window instead of a fixed `height`. */
+  fill?: boolean
   /** When `onSelect` is given the preview opens in edit mode: clicking the page selects what was clicked. */
   selection?: Selection; onSelect?: (s: Selection) => void; initialDevice?: "mobile" | "desktop"
 }) {
   const [device, setDevice] = React.useState<"mobile" | "desktop">(initialDevice)
-  const frame = React.useRef<HTMLIFrameElement>(null)
+  const [zoom, setZoom] = React.useState<"fit" | "actual">("fit")
   const editing = Boolean(onSelect)
-  const postSelection = React.useCallback(() => {
-    if (selection) frame.current?.contentWindow?.postMessage({ type: "taplo:selected", selection } satisfies ToPreview, window.location.origin)
-  }, [selection])
-  React.useEffect(() => {
-    if (!onSelect) return
-    const onMessage = (e: MessageEvent<FromPreview>) => {
-      if (e.origin !== window.location.origin || e.source !== frame.current?.contentWindow) return
-      if (e.data?.type === "taplo:select") onSelect(e.data.selection)
-      else if (e.data?.type === "taplo:ready") postSelection()
-    }
-    window.addEventListener("message", onMessage)
-    return () => window.removeEventListener("message", onMessage)
-  }, [onSelect, postSelection])
-  React.useEffect(postSelection, [postSelection, device])
-  const box = React.useRef<HTMLDivElement>(null)
-  const [width, setWidth] = React.useState(360)
-  React.useEffect(() => {
-    const el = box.current
-    if (!el) return
-    const ro = new ResizeObserver(() => setWidth(el.clientWidth))
-    ro.observe(el)
-    setWidth(el.clientWidth)
-    return () => ro.disconnect()
-  }, [])
-  const bezel = device === "mobile" ? 9 : 0
-  const bar = device === "mobile" ? 0 : 38
-  const innerW = device === "mobile" ? 390 : 1280
-  const outerW = innerW + bezel * 2
-  const outerH = height + bezel * 2 + bar
-  const scale = Math.min(1, width / outerW)
+  const seg = (on: boolean) => cn("min-h-8 rounded-[0.625rem] px-3 text-xs font-medium transition-colors", on ? "bg-white text-foreground shadow-[0_1px_2px_rgb(0_0_0/0.16)]" : "text-muted-foreground hover:text-foreground")
   return (
     <div className={className}>
       <div className="mb-3 flex items-center justify-between gap-2">
-        <div role="group" aria-label="Preview size" className="inline-flex rounded-xl bg-black/[0.06] p-0.5">
-          {(["mobile", "desktop"] as const).map((d) => (
-            <button key={d} type="button" aria-pressed={device === d} onClick={() => setDevice(d)}
-              className={cn("min-h-8 rounded-[0.625rem] px-3 text-xs font-medium transition-colors", device === d ? "bg-white text-foreground shadow-[0_1px_2px_rgb(0_0_0/0.16)]" : "text-muted-foreground hover:text-foreground")}>
-              {d === "mobile" ? "Phone" : "Desktop"}
-            </button>
-          ))}
+        <div className="flex items-center gap-2">
+          <div role="group" aria-label="Preview size" className="inline-flex rounded-xl bg-black/[0.06] p-0.5">
+            {(["mobile", "desktop"] as const).map((d) => (
+              <button key={d} type="button" aria-pressed={device === d} onClick={() => setDevice(d)} className={seg(device === d)}>{d === "mobile" ? "Phone" : "Desktop"}</button>
+            ))}
+          </div>
+          {device === "desktop" ? (
+            <div role="group" aria-label="Desktop zoom" className="inline-flex rounded-xl bg-black/[0.06] p-0.5">
+              {(["fit", "actual"] as const).map((z) => (
+                <button key={z} type="button" aria-pressed={zoom === z} onClick={() => setZoom(z)} className={seg(zoom === z)}>{z === "fit" ? "Fit" : "Actual size"}</button>
+              ))}
+            </div>
+          ) : null}
         </div>
         <a className="text-xs font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline" href="/demo/preview" target="_blank" rel="noreferrer">Open full preview</a>
       </div>
-      <div ref={box} className="overflow-hidden">
-        <div className="mx-auto" style={{ width: outerW * scale, height: outerH * scale }}>
-          <div
-            className={cn("origin-top-left overflow-hidden bg-[#0b0b0c] shadow-[0_30px_60px_-28px_rgb(0_0_0/0.5),0_0_0_1px_rgb(0_0_0/0.1)]", device === "mobile" ? "rounded-[2.75rem]" : "rounded-2xl bg-[#f3f2ef]")}
-            style={{ width: outerW, height: outerH, padding: bezel, transform: `scale(${scale})` }}
-          >
-            {device === "desktop" ? (
-              <div className="flex items-center gap-3 border-b border-black/10 px-4" style={{ height: bar }} aria-hidden="true">
-                <span className="flex gap-1.5">{["#ff5f57", "#febc2e", "#28c840"].map((c) => <i key={c} className="block size-2.5 rounded-full" style={{ background: c }} />)}</span>
-                <span className="mx-auto h-5 w-64 rounded-md bg-white shadow-[0_0_0_1px_rgb(0_0_0/0.07)]" />
-                <span className="w-10" />
-              </div>
-            ) : null}
-            <div className={cn("overflow-hidden bg-white", device === "mobile" ? "rounded-[2.2rem]" : "")} style={{ width: innerW, height }}>
-              <iframe
-                ref={frame}
-                title="Live preview of your page"
-                src={editing ? "/demo/preview?edit=1" : "/demo/preview"}
-                onLoad={postSelection}
-                data-testid="preview-frame"
-                style={{ width: innerW, height, border: 0, background: "white", display: "block" }}
-              />
-            </div>
-          </div>
-        </div>
+      <div style={fill ? { height: "max(32rem, calc(100dvh - 11rem))" } : { height }}>
+        <PagePreview
+          mode={device === "mobile" ? "device" : "desktop"}
+          device={{ w: 390, h: 844 }}
+          desktopZoom={zoom}
+          chrome
+          src={editing ? "/demo/preview?edit=1" : "/demo/preview"}
+          title="Live preview of your page"
+          edit={onSelect && selection ? { selection, onSelect } : undefined}
+          testId="preview-frame"
+        />
       </div>
     </div>
   )

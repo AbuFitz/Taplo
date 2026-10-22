@@ -91,7 +91,7 @@ export function MyPage() {
   )
 
   const inspector = <Inspector ed={ed} selection={effective} onSelect={setSelection} notify={notify} />
-  const preview = <PreviewFrame height={wide ? 780 : 700} selection={effective} onSelect={select} />
+  const preview = <PreviewFrame fill selection={effective} onSelect={select} />
 
   if (!wide) return <MobileEditor ed={ed} selection={effective} setSelection={setSelection} notify={notify} note={note} clearNote={() => setNote(null)} />
 
