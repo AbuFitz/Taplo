@@ -235,7 +235,7 @@ test.describe("My page editor", () => {
     await page.waitForLoadState("networkidle");
     expect(await rowOrder(page)).toEqual(reordered);
     await expect(previewFrame(page).getByRole("heading", { level: 1 })).toContainText("(edited)");
-    await expect(previewFrame(page).locator("[data-taplo-page]")).toHaveAttribute("data-header", "side"); // Ocean
+    await expect(previewFrame(page).locator("[data-taplo-page]")).toHaveAttribute("data-header", "cover"); // Ocean
   });
 
   test("publishing: draft stays private, published matches the preview, changes need an explicit publish", async ({ page }) => {

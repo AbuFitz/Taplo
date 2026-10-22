@@ -95,20 +95,20 @@
 .tp-header[data-layout="minimal"] { padding-bottom: 1.25rem; border-bottom: 1px solid var(--tp-line-strong); justify-self: stretch; }
 
 .tp-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: var(--tp-header-justify, center); width: 100%; }
-.tp-icon-action { display: inline-grid; place-items: center; width: 2.875rem; height: 2.875rem; border-radius: var(--tp-btn-radius); background: var(--tp-btn-bg); background-image: var(--tp-btn-sheen); color: var(--tp-btn-text); border: var(--tp-btn-border-w) solid var(--tp-btn-border); box-shadow: var(--tp-btn-shadow); transition: transform var(--tp-dur) var(--tp-ease), background-color var(--tp-dur), box-shadow var(--tp-dur); }
+.tp-icon-action { display: inline-grid; place-items: center; width: 2.875rem; height: 2.875rem; border-radius: var(--tp-btn-radius); background: var(--tp-btn-bg); color: var(--tp-btn-text); border: var(--tp-btn-border-w) solid var(--tp-btn-border); box-shadow: var(--tp-btn-sheen), var(--tp-btn-shadow); transition: transform var(--tp-dur) var(--tp-ease), background-color var(--tp-dur), box-shadow var(--tp-dur); }
 .tp-icon-action:active { transform: scale(0.94); }
 [data-taplo-page] a:focus-visible, [data-taplo-page] button:focus-visible, [data-taplo-page] summary:focus-visible { outline: 2px solid var(--tp-accent); outline-offset: 3px; }
 
 /* ---------- buttons (rows) ---------- */
 .tp-btn { display: flex; align-items: center; gap: 0.75rem; width: 100%; min-height: 3.5rem; padding: 0.5rem 1rem; text-align: left; text-decoration: none; cursor: pointer;
-  background-color: var(--tp-btn-bg); background-image: var(--tp-btn-sheen); color: var(--tp-btn-text); border: var(--tp-btn-border-w) solid var(--tp-btn-border); border-radius: var(--tp-btn-radius); box-shadow: var(--tp-btn-shadow);
+  background-color: var(--tp-btn-bg); color: var(--tp-btn-text); border: var(--tp-btn-border-w) solid var(--tp-btn-border); border-radius: var(--tp-btn-radius); box-shadow: var(--tp-btn-sheen), var(--tp-btn-shadow);
   font-weight: 600; letter-spacing: -0.005em; transition: transform var(--tp-dur) var(--tp-ease), box-shadow var(--tp-dur) var(--tp-ease), background-color var(--tp-dur), border-color var(--tp-dur); -webkit-tap-highlight-color: transparent; }
 .tp-btn:active, .tp-icon-action:active { transform: scale(0.985); }
 .tp-btn[data-inline] { width: auto; justify-content: center; min-height: 2.875rem; padding-inline: 1rem; gap: 0.5rem; }
 .tp-actions .tp-btn[data-inline] > svg:last-child { display: none; }
 .tp-btn-main { flex: 1; min-width: 0; display: grid; }
 .tp-btn-label { overflow-wrap: anywhere; line-height: 1.2; }
-.tp-btn-sub { font-size: 0.8125rem; font-weight: 400; opacity: 0.8; }
+.tp-btn-sub { font-size: 0.8125rem; font-weight: 400; color: color-mix(in srgb, currentColor 82%, transparent); }
 .tp-btn-thumb { position: relative; width: 2.5rem; height: 2.5rem; border-radius: calc(var(--tp-btn-radius) * 0.6); overflow: hidden; flex: none; }
 .tp-btn[data-variant="compact"] { min-height: 2.875rem; font-weight: 500; }
 .tp-btn[data-variant="card"] { min-height: 4.25rem; }
@@ -121,9 +121,16 @@
   [data-motion-level="lively"] .tp-btn:hover { transform: translateY(-2px); box-shadow: var(--tp-shadow-2); }
   .tp-icon-action:hover { filter: brightness(1.06); }
 }
+/* Main action: one dominant button, with the other channels as quiet icons. */
+.tp-actions-primary { display: grid; grid-template-columns: minmax(0, 1fr); justify-content: stretch; gap: 0.75rem; justify-items: var(--tp-header-justify, center); width: 100%; }
+.tp-btn[data-hero] { width: min(100%, 24rem); min-height: 3.5rem; justify-content: center; font-size: 1rem; padding-inline: 1.25rem; gap: 0.625rem; }
+.tp-btn[data-hero] > .tp-btn-main { flex: 0 1 auto; }
+.tp-btn[data-hero] > svg:last-child { display: none; }
+.tp-quick .tp-icon-action { background: color-mix(in srgb, var(--tp-foreground) 9%, transparent); color: var(--tp-foreground); border: 0; box-shadow: none; }
+@media (hover: hover) and (pointer: fine) { .tp-quick .tp-icon-action:hover { background: color-mix(in srgb, var(--tp-foreground) 15%, transparent); filter: none; } }
 /* On a photo poster, secondary actions sit on glass; the first stays the primary colour. */
 .tp-poster .tp-btn:not([data-primary]) { background: rgb(255 255 255 / 0.14); background-image: none; color: #fff; border: 1px solid rgb(255 255 255 / 0.28); box-shadow: none; -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); }
-.tp-poster .tp-icon-action { background: rgb(255 255 255 / 0.16); background-image: none; color: #fff; border: 1px solid rgb(255 255 255 / 0.3); box-shadow: none; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.tp-poster .tp-quick .tp-icon-action, .tp-poster .tp-icon-action { background: rgb(255 255 255 / 0.16); background-image: none; color: #fff; border: 1px solid rgb(255 255 255 / 0.3); box-shadow: none; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 
 /* ---------- cards / widgets ---------- */
 .tp-widget { min-width: 0; text-align: left; }

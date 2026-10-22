@@ -17,10 +17,12 @@ export const pageDocSchema = z.object({
   meta: z
     .object({
       searchVisible: z.boolean().default(true),
+      /** The one dominant action at the top of the page. "auto" picks the best available (booking, call, WhatsApp, email). Independent of widget order. */
+      primaryAction: z.enum(["auto", "book", "call", "whatsapp", "email", "none"]).default("auto"),
       shareTitle: z.string().trim().max(80).optional(),
       shareDescription: z.string().trim().max(200).optional(),
     })
-    .default({ searchVisible: true }),
+    .default({ searchVisible: true, primaryAction: "auto" }),
   widgets: z.array(widgetEnvelopeSchema).max(60),
 });
 export type PageDoc = z.infer<typeof pageDocSchema>;

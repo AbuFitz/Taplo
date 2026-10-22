@@ -41,6 +41,10 @@ export interface PageViewModel {
   /** What visitors see: not hidden and status ready. */
   visible: RenderWidget[];
   actions: PageAction[];
+  /** The one dominant action at the top of the page (separate from widget order); null when the page has none. */
+  primary: { kind: ActionKind; label: string; href: string; event?: PageAction["event"] } | null;
+  /** A widget shown as the main action instead of in the list, so it is not drawn twice. */
+  promotedWidgetId: string | null;
   locationLine: string | null;
   showBranding: boolean;
   onlineBooking: boolean;
@@ -111,6 +115,21 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
   if (k.whatsapp) actions.push({ kind: "whatsapp", label: "WhatsApp", href: whatsappHref(k.whatsapp, `Hi ${business.identity.name}, I found you on Taplo.`), event: "whatsapp_click" });
   if (k.email) actions.push({ kind: "email", label: "Email", href: `mailto:${k.email}` });
 
+  // ---- main action: chosen on the page, independent of widget order
+  const primaryMode = effectiveStyle.spec.header.actions === "primary";
+  const bookingWidget = widgets.find((w) => w.type === "booking" && !w.hidden && w.status.state === "ready");
+  const available: Record<ActionKind, boolean> = { book: Boolean(bookingWidget) || onlineBooking, call: Boolean(k.phone), whatsapp: Boolean(k.whatsapp), email: Boolean(k.email) };
+  const order: ActionKind[] = ["book", "call", "whatsapp", "email"];
+  const pref = page.meta.primaryAction;
+  const chosen: ActionKind | undefined = pref === "none" ? undefined : pref !== "auto" && available[pref] ? pref : order.find((o) => available[o]);
+  let primary: PageViewModel["primary"] = null;
+  if (primaryMode && chosen) {
+    const found = actions.find((a) => a.kind === chosen);
+    if (chosen === "book") primary = { kind: "book", label: (bookingWidget?.settings.label as string | undefined) || industry.terminology.booking, href: found?.href ?? "", event: "booking_click" };
+    else if (found) primary = { kind: found.kind, label: found.kind === "call" ? "Call" : found.label, href: found.href, event: found.event };
+  }
+  const promotedWidgetId = primary?.kind === "book" && bookingWidget ? bookingWidget.id : null;
+
   const l = business.location;
   const locationLine = l.mode === "online" ? (l.locality ? l.locality : "Online") : l.mode === "service_area" ? (l.locality ? `Covering ${l.locality}` : "Service area") : (l.locality ?? null);
 
@@ -121,8 +140,10 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
     style: effectiveStyle,
     ctx,
     widgets,
-    visible: widgets.filter((w) => !w.hidden && w.status.state === "ready"),
+    visible: widgets.filter((w) => !w.hidden && w.status.state === "ready" && w.id !== promotedWidgetId),
     actions,
+    primary,
+    promotedWidgetId,
     locationLine,
     showBranding: !ent.removeBranding,
     onlineBooking,

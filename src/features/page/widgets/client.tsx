@@ -25,6 +25,8 @@ export interface BookingActionProps {
   /** "Ask about: X" context, e.g. a product. */
   topic?: string
   variant?: "button" | "card" | "compact"
+  /** Render as the page's main action (large, accent). */
+  hero?: boolean
   thumbnail?: React.ReactNode
 }
 
@@ -37,7 +39,7 @@ export function BookingAction(p: BookingActionProps) {
   return (
     <TaploModal
       trigger={
-        <button type="button" className="tp-btn" data-variant={p.variant ?? "button"}>
+        <button type="button" className="tp-btn" data-variant={p.variant ?? "button"} {...(p.hero ? { "data-primary": "", "data-hero": "" } : {})}>
           {p.thumbnail ?? <CalendarCheck aria-hidden="true" className="size-5" />}
           <span className="tp-btn-main"><span className="tp-btn-label">{p.label}</span>{p.subtitle ? <span className="tp-btn-sub">{p.subtitle}</span> : null}</span>
           <ArrowRight aria-hidden="true" className="size-4" />

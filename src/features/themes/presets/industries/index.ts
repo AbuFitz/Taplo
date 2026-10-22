@@ -17,7 +17,7 @@ const T = {
   general: { services: "Services", team: "Team", booking: "Book", reviews: "Reviews" },
 } satisfies Record<string, Terms>;
 
-const SUGGESTED_THEME = { trades: "showroom", beauty: "noir", education: "pop", professional: "paper", general: "paper" } as const;
+const SUGGESTED_THEME = { trades: "clean", beauty: "clean", education: "clean", professional: "clean", general: "clean" } as const;
 
 /** Compact, link-first starting points. Empty widgets simply stay hidden until content exists. */
 const STARTER: Record<keyof typeof T, WidgetType[]> = {
@@ -95,7 +95,7 @@ const RAW: IndustryPreset[] = [
   preset("dentist", "Dentist / clinic", "general", "request", ["Check-up", "Hygiene appointment", "Consultation"], ["clinic", "dental"]),
   preset("physio", "Physio / therapist", "general", "request", ["Initial assessment", "Treatment session", "Follow-up"], ["physiotherapy", "chiropractor", "osteopath"]),
   preset("vet", "Vet / pet services", "general", "request", ["Consultation", "Vaccination", "Grooming", "Dog walking"], ["pet", "dog"]),
-  preset("hospitality", "Cafe / restaurant", "general", "contact", ["Menu", "Catering", "Private hire"], ["food", "cafe", "restaurant", "coffee", "bakery", "pub", "takeaway"], {}, { suggestedThemeId: "pop", starterWidgets: ["booking", "priceMenu", "document", "hours", "gallery", "location", "social", "reviews"] }),
+  preset("hospitality", "Cafe / restaurant", "general", "contact", ["Menu", "Catering", "Private hire"], ["food", "cafe", "restaurant", "coffee", "bakery", "pub", "takeaway"], {}, { suggestedThemeId: "clean", starterWidgets: ["booking", "priceMenu", "document", "hours", "gallery", "location", "social", "reviews"] }),
   preset("event-services", "Events / entertainment", "general", "request", ["Wedding package", "Corporate event", "Party"], ["dj", "catering", "wedding"]),
   // Fallback — always available, publishes immediately.
   preset("other", "Other / describe your business", "general", "contact", [], []),

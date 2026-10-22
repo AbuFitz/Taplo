@@ -1,5 +1,7 @@
 import { ArrowUpRight, CalendarCheck, Mail, MapPin, MessageCircle, Phone } from "lucide-react"
 import { initialsOf } from "@/lib/validation"
+import { BookingAction } from "../widgets/client"
+import { bookingProps } from "../widgets/renderers"
 import { ProfileImage } from "./ProfileImage"
 import type { PageAction, PageViewModel } from "./view-model"
 
@@ -17,29 +19,59 @@ function Avatar({ vm }: { vm: PageViewModel }) {
   )
 }
 
+/** Channels the owner already placed as their own widget are not repeated in the header. */
+function headerActions(vm: PageViewModel) {
+  const placed = new Set(vm.visible.map((w) => w.type as string))
+  return vm.actions.filter((a) => !(WIDGET_FOR[a.kind] && placed.has(WIDGET_FOR[a.kind]!)))
+}
+
+const external = (kind: PageAction["kind"]) => (kind === "whatsapp" ? { target: "_blank", rel: "noopener noreferrer" } : {})
+
+function IconActions({ vm, list, label }: { vm: PageViewModel; list: PageAction[]; label: string }) {
+  void vm
+  return (
+    <ul className="tp-actions tp-quick" aria-label={label}>
+      {list.map((a) => {
+        const I = ICON[a.kind]
+        return <li key={a.kind}><a className="tp-icon-action" href={a.href} aria-label={a.label} data-event={a.event} {...external(a.kind)}><I aria-hidden="true" className="size-5" /></a></li>
+      })}
+    </ul>
+  )
+}
+
 function Actions({ vm }: { vm: PageViewModel }) {
   const mode = vm.style.spec.header.actions
   if (mode === "none") return null
-  // Don't repeat a channel the owner already placed as its own widget.
-  const placed = new Set(vm.visible.map((w) => w.type as string))
-  const actions = vm.actions.filter((a) => !(WIDGET_FOR[a.kind] && placed.has(WIDGET_FOR[a.kind]!)))
-  if (!actions.length) return null
-  if (mode === "icons") {
+  const actions = headerActions(vm)
+
+  if (mode === "primary") {
+    const p = vm.primary
+    const rest = actions.filter((a) => a.kind !== p?.kind)
+    if (!p && !rest.length) return null
+    const PI = p ? ICON[p.kind] : null
     return (
-      <ul className="tp-actions" aria-label="Contact">
-        {actions.map((a) => {
-          const I = ICON[a.kind]
-          return <li key={a.kind}><a className="tp-icon-action" href={a.href} aria-label={a.label} data-event={a.event} {...(a.kind === "whatsapp" ? { target: "_blank", rel: "noopener noreferrer" } : {})}><I aria-hidden="true" className="size-5" /></a></li>
-        })}
-      </ul>
+      <div className="tp-actions tp-actions-primary">
+        {p ? (
+          p.kind === "book" && vm.promotedWidgetId ? (
+            <BookingAction {...bookingProps(vm, { label: p.label, variant: "button", hero: true })} />
+          ) : (
+            <a className="tp-btn" data-hero="" data-primary="" data-event={p.event} href={p.href} {...external(p.kind)}>
+              {PI ? <PI aria-hidden="true" className="size-5" /> : null}<span className="tp-btn-main"><span className="tp-btn-label">{p.label}</span></span><ArrowUpRight aria-hidden="true" className="size-4" />
+            </a>
+          )
+        ) : null}
+        {rest.length ? <IconActions vm={vm} list={rest} label="More ways to reach us" /> : null}
+      </div>
     )
   }
+  if (!actions.length) return null
+  if (mode === "icons") return <IconActions vm={vm} list={actions} label="Contact" />
   return (
     <div className="tp-actions">
       {actions.map((a) => {
         const I = ICON[a.kind]
         return (
-          <a key={a.kind} className="tp-btn" data-inline="" {...(a.kind === "book" ? { "data-primary": "" } : {})} data-event={a.event} href={a.href} {...(a.kind === "whatsapp" ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+          <a key={a.kind} className="tp-btn" data-inline="" {...(a.kind === "book" ? { "data-primary": "" } : {})} data-event={a.event} href={a.href} {...external(a.kind)}>
             <I aria-hidden="true" className="size-4" /><span className="tp-btn-label">{a.label}</span><ArrowUpRight aria-hidden="true" className="size-3.5 opacity-70" />
           </a>
         )

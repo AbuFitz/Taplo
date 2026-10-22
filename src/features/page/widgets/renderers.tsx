@@ -44,7 +44,7 @@ function LinkRow({ w, href, label, subtitle, icon, external, variant }: { w: Ren
   )
 }
 
-function bookingProps(vm: PageViewModel, extra: Partial<BookingActionProps> & { label: string }): BookingActionProps {
+export function bookingProps(vm: PageViewModel, extra: Partial<BookingActionProps> & { label: string }): BookingActionProps {
   const b = vm.business
   return {
     businessName: b.identity.name,

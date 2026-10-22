@@ -22,7 +22,7 @@ export function newWidget(type: WidgetType, settings: Record<string, unknown> = 
 function tune(type: WidgetType, industry: IndustryPreset): Record<string, unknown> {
   const t = industry.terminology;
   switch (type) {
-    case "serviceList": return { title: t.services, variant: industry.suggestedThemeId === "pop" ? "cards" : "list" };
+    case "serviceList": return { title: t.services, variant: industry.id === "tutor" ? "cards" : "list" };
     case "priceMenu": return { title: t.services };
     case "team": return { title: t.team };
     case "reviews": return { title: t.reviews };
@@ -50,7 +50,7 @@ export function newPage(industryKey: string): PageDoc {
     schemaVersion: 2,
     themeId: getTheme(industry.suggestedThemeId) ? industry.suggestedThemeId : DEFAULT_THEME_ID,
     appearance: {},
-    meta: { searchVisible: true },
+    meta: { searchVisible: true, primaryAction: "auto" },
     widgets: starterWidgets(industryKey),
   };
 }

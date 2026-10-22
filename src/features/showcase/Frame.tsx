@@ -19,7 +19,7 @@ export function Frame() {
   React.useEffect(() => {
     const onMessage = (e: MessageEvent<LabMessage>) => {
       if (e.origin !== window.location.origin || e.data?.type !== "taplo:lab") return
-      setCfg({ scenario: e.data.scenario, overrides: e.data.overrides })
+      setCfg({ scenario: e.data.scenario, themeId: e.data.themeId, overrides: e.data.overrides })
     }
     window.addEventListener("message", onMessage)
     if (window.parent !== window) window.parent.postMessage({ type: "taplo:lab-ready" }, window.location.origin)

@@ -67,7 +67,7 @@ export const headerSchema = z.object({
   avatarSize: z.enum(["sm", "md", "lg"]),
   align: z.enum(["left", "center"]),
   /** How the primary contact actions appear under the name. */
-  actions: z.enum(["buttons", "icons", "none"]),
+  actions: z.enum(["primary", "buttons", "icons", "none"]),
   showLocation: z.boolean(),
 });
 

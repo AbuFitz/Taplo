@@ -1,21 +1,18 @@
 import { businessContentSchema, type BusinessContent } from "@/features/businesses/content"
 import type { PageDoc } from "@/features/page/contracts/page"
 import type { StyleOverrides } from "@/features/page/contracts/style"
+import { DEFAULT_THEME_ID, getTheme } from "@/features/page/themes/catalogue"
 import { SCENARIOS, type Scenario } from "./content"
-import { LOOKS } from "./looks"
 
-/** The neutral base every configuration is applied to. Owners never pick it; it only seeds defaults. */
-export const BASE_THEME = "paper"
-
+/** What the showcase edits: exactly the owner editor's appearance model (starting look + the owner's changes). */
 export interface LabConfig {
   scenario: Scenario
+  themeId: string
   overrides: StyleOverrides
 }
 
-export const lookById = (id: string) => LOOKS.find((l) => l.id === id) ?? LOOKS[0]!
-
-export function initialConfig(scenario: Scenario = "barber", lookId = scenario === "dealer" ? "showroom" : "noir"): LabConfig {
-  return { scenario, overrides: structuredClone(lookById(lookId).overrides) }
+export function initialConfig(scenario: Scenario = "barber", lookId = scenario === "dealer" ? "showroom" : "night"): LabConfig {
+  return { scenario, themeId: getTheme(lookId) ? lookId : DEFAULT_THEME_ID, overrides: {} }
 }
 
 /** One stable set of widgets per scenario, so changing appearance never touches content or order. */
@@ -26,11 +23,11 @@ function widgetsFor(s: Scenario) {
 }
 
 export function toPage(cfg: LabConfig): PageDoc {
-  return { schemaVersion: 2, themeId: BASE_THEME, appearance: cfg.overrides, meta: { searchVisible: false }, widgets: widgetsFor(cfg.scenario) }
+  return { schemaVersion: 2, themeId: cfg.themeId, appearance: cfg.overrides, meta: { searchVisible: false, primaryAction: "auto" }, widgets: widgetsFor(cfg.scenario) }
 }
 
 export function toContent(cfg: LabConfig): BusinessContent {
   return businessContentSchema.parse(SCENARIOS[cfg.scenario].content)
 }
 
-export type LabMessage = { type: "taplo:lab"; scenario: Scenario; overrides: StyleOverrides }
+export type LabMessage = { type: "taplo:lab"; scenario: Scenario; themeId: string; overrides: StyleOverrides }

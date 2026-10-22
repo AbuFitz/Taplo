@@ -6,14 +6,14 @@ import type { Scenario } from "../content"
 import type { LabMessage } from "../lab-state"
 
 /** Sends the configuration to every preview frame and answers their "ready" handshake. */
-export function useFrames(scenario: Scenario, overrides: StyleOverrides) {
+export function useFrames(scenario: Scenario, themeId: string, overrides: StyleOverrides) {
   const frames = React.useRef(new Set<HTMLIFrameElement>())
-  const latest = React.useRef<LabMessage>({ type: "taplo:lab", scenario, overrides })
+  const latest = React.useRef<LabMessage>({ type: "taplo:lab", scenario, themeId, overrides })
   const push = React.useCallback(() => frames.current.forEach((f) => f.contentWindow?.postMessage(latest.current, window.location.origin)), [])
   React.useEffect(() => {
-    latest.current = { type: "taplo:lab", scenario, overrides }
+    latest.current = { type: "taplo:lab", scenario, themeId, overrides }
     push()
-  }, [scenario, overrides, push])
+  }, [scenario, themeId, overrides, push])
   React.useEffect(() => {
     const onMsg = (e: MessageEvent) => { if (e.origin === window.location.origin && e.data?.type === "taplo:lab-ready") push() }
     window.addEventListener("message", onMsg)

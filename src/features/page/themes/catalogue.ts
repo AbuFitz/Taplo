@@ -21,6 +21,16 @@ export const THEMES: ThemeDefinition[] = LOOKS.map((l) => ({
   style: styleSpecSchema.parse(l.overrides),
 }));
 
-export const DEFAULT_THEME_ID = "paper";
+export const DEFAULT_THEME_ID = "clean";
 const byId = new Map(THEMES.map((t) => [t.id, t]));
-export const getTheme = (id: string): ThemeDefinition | undefined => byId.get(id);
+
+/** Earlier looks, mapped to the nearest current one so saved pages keep resolving. Owner changes on top are never touched. */
+const ALIASES: Record<string, string> = {
+  studio: "clean", paper: "clean", editorial: "clean", garden: "clean",
+  midnight: "night", noir: "night",
+  candy: "colour", pop: "colour", classroom: "colour",
+  workshop: "showroom", ocean: "showroom",
+};
+/** The current id for a stored one (identity for current ids, the alias target for retired ones, undefined if unknown). */
+export const canonicalThemeId = (id: string): string | undefined => (byId.has(id) ? id : ALIASES[id]);
+export const getTheme = (id: string): ThemeDefinition | undefined => byId.get(canonicalThemeId(id) ?? "");

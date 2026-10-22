@@ -1,6 +1,6 @@
 import { pageDocSchema, PAGE_SCHEMA_VERSION, type PageDoc } from "./contracts/page";
 import type { StyleOverrides } from "./contracts/style";
-import { DEFAULT_THEME_ID, getTheme } from "./themes/catalogue";
+import { DEFAULT_THEME_ID, canonicalThemeId, getTheme } from "./themes/catalogue";
 import { getWidget } from "./widgets/registry";
 import { newPage, type StoredWidget } from "./starter";
 
@@ -13,11 +13,11 @@ export interface MigrationResult {
 
 /** Legacy v1 token preset ids -> nearest current theme. */
 const LEGACY_THEME: Record<string, string> = {
-  "trades-dark": "noir",
-  "beauty-light": "paper",
-  "education-clean": "pop",
-  "professional-refined": "paper",
-  "general-balanced": "showroom",
+  "trades-dark": "night",
+  "beauty-light": "clean",
+  "education-clean": "colour",
+  "professional-refined": "clean",
+  "general-balanced": "clean",
 };
 
 interface LegacyConfig {
@@ -70,7 +70,7 @@ export function migratePage(raw: unknown, industryKey = "other"): MigrationResul
       schemaVersion: PAGE_SCHEMA_VERSION,
       themeId: typeof r.themeId === "string" ? r.themeId : DEFAULT_THEME_ID,
       appearance: (typeof r.appearance === "object" && r.appearance ? r.appearance : {}) as StyleOverrides,
-      meta: { searchVisible: (r.meta as { searchVisible?: boolean } | undefined)?.searchVisible !== false },
+      meta: { searchVisible: (r.meta as { searchVisible?: boolean } | undefined)?.searchVisible !== false, primaryAction: ((r.meta as { primaryAction?: string } | undefined)?.primaryAction ?? "auto") as PageDoc["meta"]["primaryAction"] },
       widgets: widgets
         .filter((w): w is Record<string, unknown> => !!w && typeof w === "object" && typeof (w as { type?: unknown }).type === "string" && typeof (w as { id?: unknown }).id === "string")
         .map((w) => ({ id: String(w.id), type: String(w.type), version: Number(w.version) || 1, hidden: Boolean(w.hidden), appearance: (w.appearance ?? {}) as StoredWidget["appearance"], settings: (w.settings ?? {}) as Record<string, unknown> })),
@@ -78,6 +78,11 @@ export function migratePage(raw: unknown, industryKey = "other"): MigrationResul
     notes.push("Some saved page settings were repaired.");
   }
 
+  const canon = canonicalThemeId(page.themeId);
+  if (canon && canon !== page.themeId) {
+    notes.push("Starting looks were redesigned. Your content and your own style changes are kept; check how the page looks.");
+    page = { ...page, themeId: canon };
+  }
   if (!getTheme(page.themeId)) {
     notes.push("The theme you used is no longer available, so a standard look is shown. Pick a theme in Design.");
     page = { ...page, themeId: DEFAULT_THEME_ID };

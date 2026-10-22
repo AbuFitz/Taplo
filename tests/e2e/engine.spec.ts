@@ -99,7 +99,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
     // the public page reads the published copy from the same browser storage
     const ctxPage = await page.context().newPage();
     await ctxPage.goto("/demo/p/" + slug);
-    await expect(ctxPage.getByText("Book an appointment").first()).toBeVisible();
+    await expect(ctxPage.getByText("Book your chair").first()).toBeVisible();
     await expect(ctxPage.getByText("Reserve a chair")).toHaveCount(0);
 
     // publish B: public page now shows B, and its widget order equals the preview's

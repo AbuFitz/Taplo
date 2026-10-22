@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { LOOKS } from "./looks"
-import { LookTile } from "./lab/previews"
+import { LookTile } from "@/features/appearance/previews"
 import "@/features/page/themes/fonts"
 
 /** The four configurations as links into the appearance lab. */

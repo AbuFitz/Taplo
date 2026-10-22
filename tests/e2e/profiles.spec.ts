@@ -43,8 +43,8 @@ test.describe("stable sample profiles (no localStorage, no sign-in)", () => {
       expect(res.status(), f.key).toBe(200);
       await expect(page.getByRole("link", { name: "Open page" }).first()).toBeVisible();
     }
-    await expect(page.getByText("Look: Paper")).toBeVisible(); // a mechanic in the soft light look…
-    await expect(page.getByText("Look: Noir")).toBeVisible(); // …and a tutor in the dark one
+    await expect(page.getByText("Look: Paper").first()).toBeVisible(); // a mechanic in the soft light look…
+    await expect(page.getByText("Look: Noir").first()).toBeVisible(); // …and a tutor in the dark one
   });
 
   test("a fresh browser sees the same page; ?theme= changes only the look", async ({ browser }) => {

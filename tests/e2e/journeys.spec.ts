@@ -248,7 +248,7 @@ test.describe("editing on a phone", () => {
       expect((await rowOrder(page))[start.length - 2]).toBe(last);
 
       // design tab fits too
-      await pickLook(page, "candy");
+      await pickLook(page, "pop");
       expect(await overflow()).toBeLessThanOrEqual(0);
       await page.getByTestId("select-settings").click();
       expect(await overflow()).toBeLessThanOrEqual(0);

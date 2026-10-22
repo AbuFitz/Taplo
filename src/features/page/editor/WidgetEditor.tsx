@@ -13,6 +13,8 @@ import type { WidgetAppearance } from "../contracts/style"
 import type { StoredWidget } from "../starter"
 import type { FieldSource, FieldSpec } from "../widgets/types"
 import { getWidget } from "../widgets/registry"
+import { ChoiceGrid, Field, Segment } from "@/features/appearance/controls"
+import { ButtonTile, SurfaceTile } from "@/features/appearance/previews"
 import { ColorField, FieldShell, ImageField, Segmented, SelectField, SwitchField } from "./controls"
 import type { Editor } from "./useEditor"
 
@@ -101,12 +103,7 @@ export function WidgetFields({ stored, ed }: { stored: StoredWidget; ed: Editor 
   )
 }
 
-const SURFACES = [
-  { value: "solid", label: "Solid" }, { value: "glass", label: "Frosted" }, { value: "transparent", label: "None" }, { value: "accent", label: "Accent fill" },
-] as const
-const RADII = [{ value: "none", label: "Square" }, { value: "sm", label: "Slight" }, { value: "md", label: "Medium" }, { value: "lg", label: "Round" }, { value: "xl", label: "Rounder" }] as const
-
-/** Per-widget overrides on top of the page style. Every control shows when it is customised and can reset to the theme. */
+/** Per-widget overrides on top of the page style, using the same visual controls as the page. Every choice shows when it differs and can reset to the page style. */
 export function WidgetAppearanceForm({ stored, ed }: { stored: StoredWidget; ed: Editor }) {
   const def = getWidget(stored.type)!
   const a = stored.appearance as WidgetAppearance
@@ -122,41 +119,53 @@ export function WidgetAppearanceForm({ stored, ed }: { stored: StoredWidget; ed:
   const hasCard = def.appearance.includes("card")
   const hasBtn = def.appearance.includes("button")
   const hasThumb = def.appearance.includes("thumbnail")
+  const dirty = (k: keyof WidgetAppearance) => a[k] !== undefined
+  const accentTile = <span className="grid h-14 w-full place-items-center bg-[#ecebe7]"><span className="grid h-9 w-[4.5rem] place-items-center rounded-lg text-[0.625rem] font-semibold" style={{ background: spec.colors.accent, color: spec.colors.accentText }}>Aa</span></span>
 
   return (
-    <div className="grid gap-4">
-      <div className="flex items-center justify-between gap-2">
-        <p className="text-sm text-muted-foreground">{count ? `${count} setting${count === 1 ? "" : "s"} differ from the page style.` : "Following your page style."}</p>
-        <button type="button" disabled={!count} onClick={() => ed.updateWidget(stored.id, { appearance: null })} className="text-sm font-medium text-primary underline-offset-4 hover:underline disabled:pointer-events-none disabled:opacity-40">Reset to page style</button>
+    <div className="grid gap-5" data-testid="widget-appearance">
+      <div className="flex items-center justify-between gap-2 rounded-xl bg-black/[0.04] px-3 py-2">
+        <p className="text-xs text-neutral-600">{count ? `${count} setting${count === 1 ? "" : "s"} differ from the page style.` : "Following your page style."}</p>
+        <button type="button" disabled={!count} onClick={() => ed.updateWidget(stored.id, { appearance: null })} className="min-h-8 text-xs font-medium text-neutral-900 underline-offset-4 hover:underline disabled:pointer-events-none disabled:opacity-40">Reset to page style</button>
       </div>
-      <Segmented label="Emphasis" value={a.emphasis ?? "normal"} options={[{ value: "normal", label: "Normal" }, { value: "featured", label: "Featured", hint: "Bigger, accent border" }]} customised={a.emphasis !== undefined} onReset={() => unset("emphasis")} onChange={(v) => set({ emphasis: v })} />
+      <Field label="Emphasis" dirty={dirty("emphasis")} onReset={() => unset("emphasis")} hint="Featured is larger with an accent border.">
+        <Segment label="Emphasis" value={a.emphasis ?? "normal"} options={[{ value: "normal", label: "Normal" }, { value: "featured", label: "Featured" }]} onChange={(v) => set({ emphasis: v })} />
+      </Field>
       {hasCard ? (
         <>
-          <Segmented label="Background" value={a.surface} options={SURFACES.map((x) => ({ ...x }))} columns={2} customised={a.surface !== undefined} onReset={() => unset("surface")} onChange={(v) => set({ surface: v })} />
-          <Segmented label="Corners" value={a.radius} options={RADII.map((x) => ({ ...x }))} columns={3} customised={a.radius !== undefined} onReset={() => unset("radius")} onChange={(v) => set({ radius: v })} />
-          <div className="grid grid-cols-2 gap-3">
-            <SelectField label="Border" value={a.border} inheritLabel="Page style" options={[{ value: "none", label: "None" }, { value: "thin", label: "Thin" }, { value: "thick", label: "Thick" }]} customised={a.border !== undefined} onReset={() => unset("border")} onChange={(v) => set({ border: v })} />
-            <SelectField label="Shadow" value={a.shadow} inheritLabel="Page style" options={[{ value: "none", label: "None" }, { value: "soft", label: "Soft" }, { value: "hard", label: "Hard offset" }]} customised={a.shadow !== undefined} onReset={() => unset("shadow")} onChange={(v) => set({ shadow: v })} />
-            <SelectField label="Spacing inside" value={a.padding} inheritLabel="Page style" options={[{ value: "compact", label: "Compact" }, { value: "comfortable", label: "Comfortable" }, { value: "roomy", label: "Roomy" }]} customised={a.padding !== undefined} onReset={() => unset("padding")} onChange={(v) => set({ padding: v })} />
-            <SelectField label="Text alignment" value={a.align} inheritLabel="Page style" options={[{ value: "left", label: "Left" }, { value: "center", label: "Centred" }]} customised={a.align !== undefined} onReset={() => unset("align")} onChange={(v) => set({ align: v })} />
-          </div>
-          <ColorField label="Card colour" value={a.background ?? spec.colors.surface} customised={a.background !== undefined} onReset={() => unset("background")} onChange={(v) => set({ background: v })} hint="Text colour adjusts automatically if it would be hard to read." />
-          <ColorField label="Text colour" against={a.background ?? spec.colors.surface} value={a.text ?? spec.colors.text} customised={a.text !== undefined} onReset={() => unset("text")} onChange={(v) => set({ text: v })} />
+          <Field label="Surface" dirty={dirty("surface")} onReset={() => unset("surface")}>
+            <ChoiceGrid label="Surface" value={a.surface ?? spec.cards.surface} columns={5} onChange={(v) => set({ surface: v })}
+              options={[
+                ...(["solid", "soft", "glass", "transparent"] as const).map((k) => ({ value: k as NonNullable<WidgetAppearance["surface"]>, label: { solid: "Solid", soft: "Soft", glass: "Frosted", transparent: "None" }[k], preview: <SurfaceTile kind={k} accent={spec.colors.accent} /> })),
+                { value: "accent" as const, label: "Accent", preview: accentTile },
+              ]} />
+          </Field>
+          <Field label="Corners" dirty={dirty("radius")} onReset={() => unset("radius")}><Segment label="Corners" value={a.radius ?? spec.cards.radius} options={[{ value: "none", label: "Square" }, { value: "sm", label: "S" }, { value: "md", label: "M" }, { value: "lg", label: "L" }, { value: "xl", label: "XL" }]} onChange={(v) => set({ radius: v })} /></Field>
+          <Field label="Border" dirty={dirty("border")} onReset={() => unset("border")}><Segment label="Border" value={a.border ?? spec.cards.border} options={[{ value: "none", label: "None" }, { value: "thin", label: "Thin" }, { value: "thick", label: "Thick" }]} onChange={(v) => set({ border: v })} /></Field>
+          <Field label="Shadow" dirty={dirty("shadow")} onReset={() => unset("shadow")}><Segment label="Shadow" value={a.shadow ?? spec.cards.shadow} options={[{ value: "none", label: "None" }, { value: "soft", label: "Soft" }, { value: "hard", label: "Hard" }]} onChange={(v) => set({ shadow: v })} /></Field>
+          <Field label="Space inside" dirty={dirty("padding")} onReset={() => unset("padding")}><Segment label="Spacing inside" value={a.padding ?? spec.cards.padding} options={[{ value: "compact", label: "Compact" }, { value: "comfortable", label: "Comfortable" }, { value: "roomy", label: "Roomy" }]} onChange={(v) => set({ padding: v })} /></Field>
+          <Field label="Text alignment" dirty={dirty("align")} onReset={() => unset("align")}><Segment label="Text alignment" value={a.align ?? spec.text.align} options={[{ value: "left", label: "Left" }, { value: "center", label: "Centre" }]} onChange={(v) => set({ align: v })} /></Field>
+          <ColorField label="Card colour" value={a.background ?? spec.colors.surface} customised={dirty("background")} onReset={() => unset("background")} onChange={(v) => set({ background: v })} hint="Text colour adjusts automatically if it would be hard to read." />
+          <ColorField label="Text colour" against={a.background ?? spec.colors.surface} value={a.text ?? spec.colors.text} customised={dirty("text")} onReset={() => unset("text")} onChange={(v) => set({ text: v })} />
         </>
       ) : null}
       {hasBtn ? (
         <>
-          <Segmented label="Button style" value={a.buttonFill} options={[{ value: "solid", label: "Filled" }, { value: "outline", label: "Outline" }, { value: "soft", label: "Soft" }]} customised={a.buttonFill !== undefined} onReset={() => unset("buttonFill")} onChange={(v) => set({ buttonFill: v })} />
-          <Segmented label="Button shape" value={a.buttonShape} options={[{ value: "square", label: "Square" }, { value: "rounded", label: "Rounded" }, { value: "pill", label: "Pill" }]} customised={a.buttonShape !== undefined} onReset={() => unset("buttonShape")} onChange={(v) => set({ buttonShape: v })} />
+          <Field label="Button style" dirty={dirty("buttonFill")} onReset={() => unset("buttonFill")}>
+            <ChoiceGrid label="Button style" value={a.buttonFill ?? spec.buttons.fill} columns={3} onChange={(v) => set({ buttonFill: v })}
+              options={(["solid", "outline", "soft"] as const).map((f) => ({ value: f, label: { solid: "Filled", outline: "Outline", soft: "Soft" }[f], preview: <ButtonTile fill={f} shape={a.buttonShape ?? spec.buttons.shape} accent={a.accent ?? spec.colors.accent} on={spec.colors.accentText} /> }))} />
+          </Field>
+          <Field label="Button shape" dirty={dirty("buttonShape")} onReset={() => unset("buttonShape")}>
+            <ChoiceGrid label="Button shape" value={a.buttonShape ?? spec.buttons.shape} columns={3} onChange={(v) => set({ buttonShape: v })}
+              options={(["square", "rounded", "pill"] as const).map((sh) => ({ value: sh, label: { square: "Square", rounded: "Rounded", pill: "Pill" }[sh], preview: <ButtonTile fill={a.buttonFill ?? spec.buttons.fill} shape={sh} accent={a.accent ?? spec.colors.accent} on={spec.colors.accentText} /> }))} />
+          </Field>
         </>
       ) : null}
-      <ColorField label="Accent colour" value={a.accent ?? spec.colors.accent} customised={a.accent !== undefined} onReset={() => unset("accent")} onChange={(v) => set({ accent: v })} />
+      <ColorField label="Accent colour" value={a.accent ?? spec.colors.accent} customised={dirty("accent")} onReset={() => unset("accent")} onChange={(v) => set({ accent: v })} />
       {hasThumb ? (
-        <div className="grid gap-1.5">
-          <FieldShell label="Thumbnail picture" customised={a.thumbnail !== undefined} onReset={() => unset("thumbnail")}>
-            <ImageField label="Shown beside the button text" value={a.thumbnail ?? null} defaultAlt="Link thumbnail" onChange={(v) => set({ thumbnail: v ?? undefined })} focalHint="Choose the part of the picture to keep in the small square." maxEdge={256} />
-          </FieldShell>
-        </div>
+        <FieldShell label="Thumbnail picture" customised={a.thumbnail !== undefined} onReset={() => unset("thumbnail")}>
+          <ImageField label="Shown beside the button text" value={a.thumbnail ?? null} defaultAlt="Link thumbnail" onChange={(v) => set({ thumbnail: v ?? undefined })} focalHint="Choose the part of the picture to keep in the small square." maxEdge={256} />
+        </FieldShell>
       ) : null}
     </div>
   )

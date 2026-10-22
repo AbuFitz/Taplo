@@ -7,7 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { WidgetIcon } from "../widgets/WidgetIcon"
 import { getWidget } from "../widgets/registry"
 import type { StoredWidget } from "../starter"
-import { DesignTab } from "./DesignTab"
+import { Toggle } from "@/features/appearance/controls"
+import { HeaderPanel, PageStylePanel } from "./EditorAppearance"
 import { ProfileSections } from "./ContentTab"
 import { SettingsTab } from "./SettingsTab"
 import { Recommendations } from "./Recommendations"
@@ -39,10 +40,7 @@ export function Inspector({ ed, selection, onSelect, notify }: { ed: Editor; sel
     return (
       <div data-testid="inspector-header">
         <Head title="Header" hint="Your name, logo and how the top of the page is arranged." onBack={back} />
-        <div className="grid gap-2">
-          <ProfileSections ed={ed} only="identity" />
-          <DesignTab ed={ed} scope="header" />
-        </div>
+        <HeaderPanel ed={ed} notify={notify} />
       </div>
     )
   }
@@ -67,7 +65,7 @@ export function Inspector({ ed, selection, onSelect, notify }: { ed: Editor; sel
       <Head title="Page style" hint="Applies to the whole page. Select a widget to style just that one." />
       <div className="grid gap-3">
         <Recommendations ed={ed} onSelect={onSelect} notify={notify} />
-        <DesignTab ed={ed} scope="page" />
+        <PageStylePanel ed={ed} notify={notify} />
       </div>
     </div>
   )
@@ -80,6 +78,13 @@ function WidgetInspector({ ed, stored, onBack, onSelect, notify }: { ed: Editor;
   return (
     <div data-testid="inspector-widget" data-widget-type={stored.type}>
       <Head title={def.label} hint={def.description} onBack={onBack} icon={<WidgetIcon name={def.icon} className="mt-0.5 size-5 shrink-0 text-muted-foreground" />} />
+      {stored.type === "booking" ? (
+        <div className="mb-3 rounded-xl bg-black/[0.04] px-3" data-testid="booking-main-action">
+          <Toggle label="Make booking my main action" hint="Shows it as the big button at the top of your page. Your widget order does not change."
+            checked={ed.vm?.promotedWidgetId === stored.id}
+            onChange={(on) => ed.setPage((p) => ({ ...p, meta: { ...p.meta, primaryAction: on ? "book" : p.meta.primaryAction === "book" ? "auto" : p.meta.primaryAction } }))} />
+        </div>
+      ) : null}
       <Tabs defaultValue="content" key={stored.id}>
         <TabsList className="mb-3 grid h-11 w-full grid-cols-2">
           <TabsTrigger value="content" className="min-h-11">Content</TabsTrigger>
