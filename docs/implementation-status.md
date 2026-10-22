@@ -20,7 +20,7 @@ Legend: ✅ done and verified as stated · 🟡 partial · ⬜ not started. "Ver
 - ✅ §5.8 checks automated in Playwright (50 tests passing against a production build): every fixture × family at 360/390/640(≈200% zoom)/820/1280 → no horizontal overflow, no console errors, no broken images, one `h1`, no dead links; themed dialog + select portals inherit tokens; focus trap/restore; token isolation from marketing; reduced-motion; reserved paths 404; fixtures noindex + labelled.
 - ✅ Theme switching leaves business content identical (unit test); free plan cannot switch tokens; unplaced content reported.
 - 🟡 Draft vs published **persistence** exists in SQL; no UI to edit/publish yet. "Preview of what appears after switching" is available as `visibleBlockTypes` and shown in the showcase, not yet in a dashboard.
-- 🟡 Visual QA: screenshots inspected by a human-equivalent pass for desktop (5 families) and mobile (4); no axe scan, no manual screen-reader pass, 200% zoom only by proxy.
+- 🟡 Visual QA: screenshots reviewed by me (not by a designer) for desktop (5 families) and mobile (4); no axe scan, no manual screen-reader pass, 200% zoom only by proxy.
 - ⬜ Reference-site design observations (see `design-direction.md`).
 
 ### Phases 3–9
