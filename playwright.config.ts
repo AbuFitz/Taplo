@@ -10,7 +10,7 @@ export default defineConfig({
   },
   // Dev tools + synthetic fixtures are enabled explicitly for visual QA only.
   webServer: {
-    command: "TAPLO_ENABLE_DEV_TOOLS=1 npx next start -p 3100",
+    command: "TAPLO_ENABLE_DEV_TOOLS=1 TAPLO_DEMO_MODE=1 npx next start -p 3100",
     url: "http://localhost:3100",
     reuseExistingServer: true,
   },

@@ -1,10 +1,14 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { PLANS, PLAN_IDS } from "@/features/subscriptions/plans"
-import { devToolsEnabled } from "@/lib/env"
+import { demoModeEnabled, devToolsEnabled } from "@/lib/env"
 import { formatMoney } from "@/features/services/format"
 
+// Read the demo flag per request, never frozen at build time.
+export const dynamic = "force-dynamic"
+
 export default function Home() {
+  const demo = demoModeEnabled()
   return (
     <main className="mx-auto w-full max-w-5xl px-5 py-16 sm:py-24">
       <p className="text-sm font-semibold text-muted-foreground">Taplo</p>
@@ -15,11 +19,20 @@ export default function Home() {
         A professional profile, services, reviews, bookings and payments for local service businesses. Pick your trade, add a service, publish. No website or design work required.
       </p>
       <div className="mt-8 flex flex-wrap gap-3">
-        <Button size="lg" disabled aria-describedby="signup-note">Create your page</Button>
+        {demo ? (
+          <Button size="lg" asChild><Link href="/onboarding">Create your page</Link></Button>
+        ) : (
+          <Button size="lg" disabled aria-describedby="signup-note">Create your page</Button>
+        )}
+        {demo ? <Button size="lg" variant="outline" asChild><Link href="/dashboard">Open dashboard</Link></Button> : null}
         <Button size="lg" variant="outline" asChild><Link href="/pricing">See pricing</Link></Button>
         {devToolsEnabled() ? <Button size="lg" variant="ghost" asChild><Link href="/dev/themes">Theme showcase (dev)</Link></Button> : null}
       </div>
-      <p id="signup-note" className="mt-3 text-sm text-muted-foreground">Sign-up opens once authentication is configured for this environment.</p>
+      {demo ? (
+        <p className="mt-3 text-sm text-muted-foreground">Demo mode: no sign-in, and everything you enter stays in this browser.</p>
+      ) : (
+        <p id="signup-note" className="mt-3 text-sm text-muted-foreground">Sign-up opens once authentication is configured for this environment.</p>
+      )}
 
       <h2 className="mt-20 text-xl font-semibold">Plans</h2>
       <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

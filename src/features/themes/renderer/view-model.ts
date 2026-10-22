@@ -54,7 +54,7 @@ export interface BuildOptions {
 
 /** Apply plan limits to content. Content itself is never mutated or deleted. */
 function applyEntitlements(content: BusinessContent, ent: Entitlements): BusinessContent {
-  const services = [...content.services].sort((a, b) => a.sortOrder - b.sortOrder);
+  const services = content.services.filter((s) => !s.archived).sort((a, b) => a.sortOrder - b.sortOrder);
   return {
     ...content,
     services: ent.maxServices === null ? services : services.slice(0, ent.maxServices),

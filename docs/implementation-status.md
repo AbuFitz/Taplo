@@ -2,7 +2,20 @@
 
 Legend: ✅ done and verified as stated · 🟡 partial · ⬜ not started. "Verified" names the evidence.
 
-## Milestone 1 — Foundation + theme engine core (this commit)
+## Milestone 1b — Demo mode (review aid, NOT the real product flow)
+
+`TAPLO_DEMO_MODE=1` opens onboarding and the dashboard **without authentication**, storing everything in the visitor's own browser (`localStorage`). It exists so the product can be reviewed before Supabase/auth are configured. Off by default; when off, `/onboarding` and `/dashboard` show a clear "not available" gate and `/demo/*`, `/dev/*` and sample pages 404 (checked against a flag-less production server).
+
+What is genuinely usable in demo mode (6 Playwright journeys passing):
+- ✅ Onboarding wizard (industry search + Other with own label → name/address with reserved/invalid-slug rejection → contacts with phone/email validation → first service with real price rules → preview & publish). Resumable after reload; live preview iframe updates as you type.
+- ✅ "Publish" freezes a copy; the page renders at `/demo/p/<slug>` through the same view-model/renderer as the real route; later draft edits don't change it until republished; unpublish.
+- ✅ Dashboard: Overview (real set-up progress, publish status, copy link, metrics shown as "—" not invented), Profile (details, location, contacts, social links, About, credentials, FAQ, layout switcher with "what shows / what is kept", accent colour + heading font with contrast rejection), Services (add/edit/validate/reorder/archive/restore, plan limit visibly applied), Reviews (review links + labelled testimonials with permission checkbox), Team (public bios, reserved staff-slug guard), Settings (plan simulator showing every entitlement; reset).
+- ✅ Plan gating is real: Free cannot switch layouts/colours, hides services beyond 3 without deleting them, no gallery/social/review links; Pro+ shows team pages.
+- ✅ Sample businesses (mechanic, detailer, barber, tutor, consultant, unlisted) can be loaded to explore with content in place.
+
+Explicitly **not** real, and labelled as such in the UI: Bookings (Phase 6), Analytics (Phase 5), Products/NFC (Phase 9), Stripe billing/Connect, email, custom domains, team invitations/logins/permissions, image/logo/gallery uploads (need Storage), web-address *availability* (needs the database; reserved/invalid are checked locally), `/review/{slug}` page, `/{slug}/book`, staff profile pages. Demo pages are visible only in the browser that created them. Demo mode must never be enabled next to real customer data.
+
+## Milestone 1 — Foundation + theme engine core
 
 ### Phase 1 — Foundation
 - ✅ Next.js 16.4 + TypeScript + Tailwind 4 scaffold; Radix-based shadcn (`radix-nova`) initialised once; required components added (`form` is not offered by the current shadcn registry; React Hook Form installed for later forms).
@@ -30,7 +43,8 @@ Dashboard menu, booking state machine and payment architecture docs are intentio
 ## Verification log (commands actually run)
 - `npx tsc --noEmit` ✅ · `npx eslint .` ✅ · `npm run build` ✅
 - `vitest run` — 28 unit + 15 DB integration = 43 ✅ (DB tests need `TAPLO_TEST_DATABASE_URL`; skipped otherwise)
-- `playwright test` — 50 ✅ (against `next start` with `TAPLO_ENABLE_DEV_TOOLS=1`)
+- `playwright test` — 56 ✅ (50 theme/render + 6 demo journeys; against `next start` with `TAPLO_ENABLE_DEV_TOOLS=1 TAPLO_DEMO_MODE=1`)
+- DB integration tests (15) last run green before the demo work; no database changes since, and they were skipped in the final run (no Postgres available then).
 
 ## External setup still required
 Supabase project (URL, anon key, service key; apply migrations; Auth providers) · Stripe (test keys, Price IDs, webhooks) · Resend (key, verified domain) · Vercel project + domain API token · `taplo.co` DNS. None configured; nothing here claims they are.

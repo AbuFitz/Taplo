@@ -96,7 +96,7 @@ test("public route: fixtures render with noindex and a synthetic notice; reserve
   expect(res?.status()).toBe(200);
   await expect(page.getByRole("note")).toContainText("Synthetic development fixture");
   expect(await page.locator('meta[name="robots"]').getAttribute("content")).toContain("noindex");
-  for (const p of ["/dashboard", "/api", "/login", "/book", "/does-not-exist"]) {
+  for (const p of ["/api", "/login", "/book", "/review", "/does-not-exist"]) {
     const r = await page.goto(p);
     expect(r?.status(), p).toBe(404);
   }

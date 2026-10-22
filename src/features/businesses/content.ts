@@ -37,6 +37,8 @@ export const serviceSchema = z.object({
   bookingMode: z.enum(SERVICE_BOOKING_MODES).default("contact"),
   image: imageSchema.optional(),
   sortOrder: z.number().int().default(0),
+  /** Archived services are hidden publicly but kept for historical bookings. */
+  archived: z.boolean().default(false),
 });
 export type ServiceContent = z.infer<typeof serviceSchema>;
 
