@@ -17,7 +17,7 @@ import { PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
 const KEY = "taplo.demo.v2";
 const LEGACY_KEY = "taplo.demo.v1";
 
-export const ONBOARDING_STEPS = ["industry", "business", "contacts", "widgets", "publish"] as const;
+export const ONBOARDING_STEPS = ["business", "industry", "contacts", "widgets", "publish"] as const;
 export type OnboardingStep = (typeof ONBOARDING_STEPS)[number];
 
 export interface DemoState {
@@ -70,7 +70,7 @@ export function blankContent(): BusinessContentInput {
 export function initialState(): DemoState {
   return {
     v: 2,
-    step: "industry",
+    step: "business",
     onboarded: false,
     plan: "business", // the review default shows every capability; switch in Settings to see gating
     content: blankContent(),

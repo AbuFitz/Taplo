@@ -21,7 +21,10 @@ export function DemoProfile({ mode, slug, editing = false }: { mode: "draft" | "
 
   const vm = useMemo(() => {
     if (!source) return null
-    const parsed = parseContent(source.content)
+    // A draft in progress may not have every required field yet; the preview fills gaps with neutral placeholders (publishing still requires the real values).
+    const id = source.content.identity
+    const content = mode === "draft" ? { ...source.content, identity: { ...id, industryKey: id.industryKey || "other", industryLabel: id.industryLabel || "Your business", slug: id.slug || "your-page" } } : source.content
+    const parsed = parseContent(content)
     if (!parsed.success || !parsed.data.identity.name) return null
     return buildPageViewModel(parsed.data, source.page, { plan: source.plan })
   }, [source])

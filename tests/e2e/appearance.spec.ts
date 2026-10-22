@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const frame = (page: Page, title = "Desktop preview") => page.frameLocator(`iframe[title="${title}"]`);
-const attr = (page: Page, name: string, title?: string) => frame(page, title).locator("[data-taplo-page]").getAttribute(name);
+const attr = async (page: Page, name: string, title?: string) => (await frame(page, title).locator("[data-taplo-page]").getAttribute(name)) ?? "";
 const choice = (page: Page, group: string, label: string | RegExp) => page.getByRole("radiogroup", { name: group }).locator("label", { hasText: label }).first().click();
 
 test.describe("Appearance lab: one engine, four configurations", () => {

@@ -119,8 +119,9 @@ export function UrlField({ label, value, onCommit, validate, help }: { label: st
 /** Honest demo labelling, shown on every demo surface. */
 export function DemoNotice({ className }: { className?: string }) {
   return (
-    <p className={cn("rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-950", className)}>
-      <strong>Demo mode.</strong> No sign-in, no server storage: everything you enter stays in this browser. Payments, email, bookings and analytics are not connected.
+    <p role="note" className={cn("flex items-center gap-2 rounded-xl bg-signal-soft px-3.5 py-2 text-xs text-[oklch(0.35_0.08_45)]", className)}>
+      <span className="size-1.5 shrink-0 rounded-full bg-signal" aria-hidden="true" />
+      <span><strong className="font-semibold">Demo.</strong> Nothing is sent or stored on a server: what you enter stays in this browser. Payments, email, bookings and analytics aren’t connected.</span>
     </p>
   )
 }
@@ -158,30 +159,49 @@ export function PreviewFrame({ className, height = 640, selection, onSelect, ini
     setWidth(el.clientWidth)
     return () => ro.disconnect()
   }, [])
-  const frameWidth = device === "mobile" ? 390 : 1280
-  const scale = Math.min(1, width / frameWidth)
+  const bezel = device === "mobile" ? 9 : 0
+  const bar = device === "mobile" ? 0 : 38
+  const innerW = device === "mobile" ? 390 : 1280
+  const outerW = innerW + bezel * 2
+  const outerH = height + bezel * 2 + bar
+  const scale = Math.min(1, width / outerW)
   return (
     <div className={className}>
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <div role="group" aria-label="Preview size" className="flex gap-1">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <div role="group" aria-label="Preview size" className="inline-flex rounded-xl bg-black/[0.06] p-0.5">
           {(["mobile", "desktop"] as const).map((d) => (
-            <Button key={d} size="sm" type="button" variant={device === d ? "default" : "outline"} aria-pressed={device === d} onClick={() => setDevice(d)}>
-              {d === "mobile" ? "Mobile" : "Desktop"}
-            </Button>
+            <button key={d} type="button" aria-pressed={device === d} onClick={() => setDevice(d)}
+              className={cn("min-h-8 rounded-[0.625rem] px-3 text-xs font-medium transition-colors", device === d ? "bg-white text-foreground shadow-[0_1px_2px_rgb(0_0_0/0.16)]" : "text-muted-foreground hover:text-foreground")}>
+              {d === "mobile" ? "Phone" : "Desktop"}
+            </button>
           ))}
         </div>
-        <a className="text-sm underline underline-offset-4" href="/demo/preview" target="_blank" rel="noreferrer">Open full preview</a>
+        <a className="text-xs font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline" href="/demo/preview" target="_blank" rel="noreferrer">Open full preview</a>
       </div>
-      <div ref={box} className="overflow-hidden rounded-2xl border bg-muted/60 shadow-sm" style={{ height: height * scale + 2 }}>
-        <div className={cn(device === "mobile" ? "mx-auto" : "")} style={{ width: frameWidth * scale, height: height * scale }}>
-          <iframe
-            ref={frame}
-            title="Live preview of your page"
-            src={editing ? "/demo/preview?edit=1" : "/demo/preview"}
-            onLoad={postSelection}
-            data-testid="preview-frame"
-            style={{ width: frameWidth, height, transform: `scale(${scale})`, transformOrigin: "top left", border: 0, background: "white" }}
-          />
+      <div ref={box} className="overflow-hidden">
+        <div className="mx-auto" style={{ width: outerW * scale, height: outerH * scale }}>
+          <div
+            className={cn("origin-top-left overflow-hidden bg-[#0b0b0c] shadow-[0_30px_60px_-28px_rgb(0_0_0/0.5),0_0_0_1px_rgb(0_0_0/0.1)]", device === "mobile" ? "rounded-[2.75rem]" : "rounded-2xl bg-[#f3f2ef]")}
+            style={{ width: outerW, height: outerH, padding: bezel, transform: `scale(${scale})` }}
+          >
+            {device === "desktop" ? (
+              <div className="flex items-center gap-3 border-b border-black/10 px-4" style={{ height: bar }} aria-hidden="true">
+                <span className="flex gap-1.5">{["#ff5f57", "#febc2e", "#28c840"].map((c) => <i key={c} className="block size-2.5 rounded-full" style={{ background: c }} />)}</span>
+                <span className="mx-auto h-5 w-64 rounded-md bg-white shadow-[0_0_0_1px_rgb(0_0_0/0.07)]" />
+                <span className="w-10" />
+              </div>
+            ) : null}
+            <div className={cn("overflow-hidden bg-white", device === "mobile" ? "rounded-[2.2rem]" : "")} style={{ width: innerW, height }}>
+              <iframe
+                ref={frame}
+                title="Live preview of your page"
+                src={editing ? "/demo/preview?edit=1" : "/demo/preview"}
+                onLoad={postSelection}
+                data-testid="preview-frame"
+                style={{ width: innerW, height, border: 0, background: "white", display: "block" }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

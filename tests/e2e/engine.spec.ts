@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { addWidget, insp, openEditorWithSample, openRow, openSection, pngFile, previewFrame, previewOrder, rowOrder } from "./helpers";
+import { insp, openEditorWithSample, openRow, openSection, pngFile, previewFrame, previewOrder, rowOrder } from "./helpers";
 
 const store = (page: import("@playwright/test").Page) => page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!));
 

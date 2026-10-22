@@ -5,7 +5,7 @@ import { SCENARIOS, type Scenario } from "./content"
 import { LOOKS } from "./looks"
 
 /** The neutral base every configuration is applied to. Owners never pick it; it only seeds defaults. */
-export const BASE_THEME = "studio"
+export const BASE_THEME = "paper"
 
 export interface LabConfig {
   scenario: Scenario

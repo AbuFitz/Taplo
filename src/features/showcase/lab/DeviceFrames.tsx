@@ -9,9 +9,11 @@ import type { LabMessage } from "../lab-state"
 export function useFrames(scenario: Scenario, overrides: StyleOverrides) {
   const frames = React.useRef(new Set<HTMLIFrameElement>())
   const latest = React.useRef<LabMessage>({ type: "taplo:lab", scenario, overrides })
-  latest.current = { type: "taplo:lab", scenario, overrides }
   const push = React.useCallback(() => frames.current.forEach((f) => f.contentWindow?.postMessage(latest.current, window.location.origin)), [])
-  React.useEffect(push, [scenario, overrides, push])
+  React.useEffect(() => {
+    latest.current = { type: "taplo:lab", scenario, overrides }
+    push()
+  }, [scenario, overrides, push])
   React.useEffect(() => {
     const onMsg = (e: MessageEvent) => { if (e.origin === window.location.origin && e.data?.type === "taplo:lab-ready") push() }
     window.addEventListener("message", onMsg)

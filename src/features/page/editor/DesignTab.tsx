@@ -91,7 +91,7 @@ export function DesignTab({ ed, scope = "page" }: { ed: Editor; scope?: "page" |
           else if (k === "solid") setBg({ kind: "solid", color: bg.kind === "solid" ? bg.color : mid })
           else if (k === "gradient") setBg({ kind: "gradient", from: bg.kind === "gradient" ? bg.from : mid, to: bg.kind === "gradient" ? bg.to : spec.colors.accent, angle: 160, motion: false })
           else setBg({ kind: "image", image: bg.kind === "image" ? bg.image : { src: "/fixtures/img-2.svg", alt: "Background picture", focal: { x: 50, y: 50 } }, overlay: 55, overlayColor: spec.colors.background, fallback: spec.colors.background })
-        }} options={[{ value: "theme", label: "Theme default" }, { value: "solid", label: "Solid colour" }, { value: "gradient", label: "Gradient" }, { value: "image", label: "Photo" }]} />
+        }} options={[{ value: "theme", label: "Starting look" }, { value: "solid", label: "Solid colour" }, { value: "gradient", label: "Gradient" }, { value: "image", label: "Photo" }]} />
         {bg.kind === "solid" && bgKind === "solid" ? <ColorField label="Colour" value={bg.color} onChange={(v) => setBg({ kind: "solid", color: v })} /> : null}
         {bg.kind === "gradient" && bgKind === "gradient" ? (
           <>
@@ -107,7 +107,7 @@ export function DesignTab({ ed, scope = "page" }: { ed: Editor; scope?: "page" |
             <ColorField label="Overlay colour" value={bg.overlayColor} onChange={(v) => setBg({ ...bg, overlayColor: v, fallback: v })} hint="A stronger overlay keeps text readable over any photo. Taplo raises it automatically if it’s too weak." />
           </>
         ) : null}
-        <SelectField label="Pattern on top" value={ed.state.page.appearance.decoration} inheritLabel="Theme default" options={DECORATIONS.map((d) => ({ value: d, label: { none: "None", grain: "Paper grain", dots: "Dots", grid: "Grid", stripes: "Diagonal stripes", glow: "Soft glow" }[d] }))} customised={ed.state.page.appearance.decoration !== undefined} onReset={() => ed.setAppearance((a) => { const n = { ...a }; delete n.decoration; return n })} onChange={(v) => ed.setAppearance((a) => { const n = { ...a }; if (v) n.decoration = v; else delete n.decoration; return n })} />
+        <SelectField label="Pattern on top" value={ed.state.page.appearance.decoration} inheritLabel="Starting look" options={DECORATIONS.map((d) => ({ value: d, label: { none: "None", grain: "Paper grain", dots: "Dots", grid: "Grid", stripes: "Diagonal stripes", glow: "Soft glow" }[d] }))} customised={ed.state.page.appearance.decoration !== undefined} onReset={() => ed.setAppearance((a) => { const n = { ...a }; delete n.decoration; return n })} onChange={(v) => ed.setAppearance((a) => { const n = { ...a }; if (v) n.decoration = v; else delete n.decoration; return n })} />
       </Section>
 
       <Section title="Text" count={A.groupCount("text") + (["text", "muted", "accent", "accentText"].filter((k) => A.has("colors", k)).length)} onReset={() => { A.resetGroup("text"); ;["text", "muted"].forEach((k) => A.reset("colors", k)) }} id="typography">

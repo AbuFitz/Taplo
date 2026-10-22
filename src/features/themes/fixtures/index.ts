@@ -2,6 +2,7 @@ import type { BusinessContentInput } from "@/features/businesses/content";
 import type { PlanId } from "@/features/subscriptions/plans";
 import type { PageDoc } from "@/features/page/contracts/page";
 import { newPage, newWidget, type StoredWidget } from "@/features/page/starter";
+import { BARBER, DEALER, SCENARIOS } from "@/features/showcase/content";
 
 /**
  * SYNTHETIC fixtures for development and visual QA only.
@@ -344,7 +345,7 @@ const withPage = (f: Omit<Fixture, "page">, themeId: string, tweak?: (w: StoredW
 
 export const FIXTURES: Fixture[] = [
   // Soft light theme for a mechanic: theme is independent of industry.
-  withPage(mechanic, "studio", (w) => {
+  withPage(mechanic, "paper", (w) => {
     const featured = newWidget("featuredService", { serviceId: "s1", headline: "Most booked" });
     featured.appearance = { emphasis: "featured" };
     const notice = newWidget("announcement", { text: "Open Saturdays 9–1 this month (sample notice).", tone: "promo" });
@@ -352,34 +353,41 @@ export const FIXTURES: Fixture[] = [
     const pay = newWidget("payment", { label: "Pay a diagnostics deposit", kind: "deposit", serviceId: "s3" });
     return [notice, newWidget("call", { subtitle: "Talk to a mechanic" }), ...w.slice(0, 1), featured, ...w.slice(1), pay];
   }),
-  withPage(detailer, "ocean", (w) => [...w.filter((x) => x.type !== "serviceArea"), newWidget("serviceArea"), newWidget("whatsapp", { label: "Send photos of your car on WhatsApp", variant: "card" })]),
+  withPage(detailer, "showroom", (w) => [...w.filter((x) => x.type !== "serviceArea"), newWidget("serviceArea"), newWidget("whatsapp", { label: "Send photos of your car on WhatsApp", variant: "card" })]),
   // Hard-edged yellow theme for a barber.
-  withPage(barber, "workshop", (w) => {
+  withPage(barber, "showroom", (w) => {
     const hrs = w.find((x) => x.type === "hours");
     if (hrs) hrs.settings = { ...hrs.settings, variant: "compact" };
     return w;
   }),
   // Dark, bold theme for a tutor.
-  withPage(tutor, "midnight", (w) => {
+  withPage(tutor, "noir", (w) => {
     const video = newWidget("video", { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", title: "How a first lesson works (sample link)" });
     const intro = newWidget("link", { label: "Free 15-minute introductory call", url: "https://example.com/intro", subtitle: "No obligation", variant: "card" });
     intro.appearance = { emphasis: "featured" };
     return [intro, ...w, video];
   }),
-  withPage(cafe, "candy", (w) => {
+  withPage(cafe, "pop", (w) => {
     const offers = newWidget("offers", { title: "Today’s offer" });
     const products = newWidget("products", { title: "Take some home", variant: "grid" });
     const doc = newWidget("document", { title: "Download the full menu", url: "https://example.com/menu.pdf", description: "PDF, updated weekly (sample)" });
     return [offers, ...w.filter((x) => x.type !== "document"), products, doc, newWidget("directions", { label: "Walk in: get directions" })];
   }),
-  withPage(consultant, "editorial"),
-  withPage(unlisted, "garden", (w) => [...w, newWidget("whatsapp", { label: "WhatsApp a photo of your dog", variant: "card" })]),
-  withPage(minimal, "classroom"),
-  withPage(noContacts, "studio"),
-  withPage(stress, "workshop"),
+  withPage(consultant, "paper"),
+  withPage(unlisted, "paper", (w) => [...w, newWidget("whatsapp", { label: "WhatsApp a photo of your dog", variant: "card" })]),
+  withPage(minimal, "pop"),
+  withPage(noContacts, "paper"),
+  withPage(stress, "showroom"),
 ];
 
-export const INDUSTRY_FIXTURE_KEYS = ["mechanic", "barber", "tutor", "cafe", "consultant", "unlisted"];
+/** The polished showcase businesses, offered as ready-made starting points in the dashboard. */
+const showcase = (key: string, label: string, content: BusinessContentInput, scenario: "barber" | "dealer", themeId: string): Fixture => ({
+  key, label, plan: "business", content,
+  page: { schemaVersion: 2, themeId, appearance: {}, meta: { searchVisible: true }, widgets: SCENARIOS[scenario].widgets() },
+});
+FIXTURES.push(showcase("showcase-barber", "Barber", BARBER, "barber", "noir"), showcase("showcase-dealer", "Car dealer", DEALER, "dealer", "showroom"));
+
+export const INDUSTRY_FIXTURE_KEYS = ["showcase-barber", "showcase-dealer", "mechanic", "tutor", "cafe", "consultant", "unlisted"];
 
 const byKey = new Map(FIXTURES.map((f) => [f.key, f]));
 const bySlug = new Map(FIXTURES.map((f) => [f.content.identity.slug, f]));

@@ -46,8 +46,8 @@ describe("widget registry", () => {
 });
 
 describe("themes", () => {
-  it("ships at least six, each genuinely different (not accent swaps)", () => {
-    expect(THEMES.length).toBeGreaterThanOrEqual(6);
+  it("ships at least four, each genuinely different (not accent swaps)", () => {
+    expect(THEMES.length).toBeGreaterThanOrEqual(4);
     const sig = (t: (typeof THEMES)[number]) => JSON.stringify([t.style.header.layout, t.style.header.avatarShape, t.style.text.headingFont, t.style.buttons.shape, t.style.buttons.fill, t.style.buttons.shadow, t.style.cards.surface, t.style.cards.radius, t.style.layout.desktop, t.style.background.kind, t.style.decoration]);
     expect(new Set(THEMES.map(sig)).size).toBe(THEMES.length);
     expect(new Set(THEMES.map((t) => t.style.header.layout)).size).toBeGreaterThanOrEqual(4);
@@ -73,54 +73,54 @@ describe("themes", () => {
   });
   it("is independent of industry: every industry can use every theme", () => {
     for (const i of INDUSTRY_PRESETS) expect(getTheme(i.suggestedThemeId), i.id).toBeDefined();
-    const cafe = vmOf("cafe", { themeId: "midnight" });
-    expect(cafe.style.theme.id).toBe("midnight");
+    const cafe = vmOf("cafe", { themeId: "noir" });
+    expect(cafe.style.theme.id).toBe("noir");
   });
 });
 
 describe("style overrides", () => {
   it("applies owner overrides on top of the theme and 'reset to theme' removes them", () => {
-    const withOv = resolveStyle("studio", { colors: { accent: "#0a7a3b" }, buttons: { shape: "pill" } });
+    const withOv = resolveStyle("paper", { colors: { accent: "#0a7a3b" }, buttons: { shape: "pill" } });
     expect(withOv.spec.colors.accent).toBe("#0a7a3b");
     expect(withOv.spec.buttons.shape).toBe("pill");
     expect(withOv.overrideCount).toBe(2);
-    const reset = resolveStyle("studio", {});
-    expect(reset.spec.colors.accent).toBe(getTheme("studio")!.style.colors.accent);
+    const reset = resolveStyle("paper", {});
+    expect(reset.spec.colors.accent).toBe(getTheme("paper")!.style.colors.accent);
     expect(reset.overrideCount).toBe(0);
   });
   it("rescues unreadable text and explains it", () => {
-    const r = resolveStyle("studio", { colors: { text: "#f4eee6" } });
+    const r = resolveStyle("paper", { colors: { text: "#f4eee6" } });
     expect(contrastRatio(r.spec.colors.text, "#f7f1ea")).toBeGreaterThanOrEqual(4.5);
     expect(r.notices.map((n) => n.code)).toContain("text_adjusted");
   });
   it("strengthens a too-weak photo overlay", () => {
-    const r = resolveStyle("midnight", { background: { kind: "image", image: { src: "/fixtures/img-1.svg", alt: "x" }, overlay: 0, overlayColor: "#0b0d12", fallback: "#0b0d12" } });
+    const r = resolveStyle("noir", { background: { kind: "image", image: { src: "/fixtures/img-1.svg", alt: "x" }, overlay: 0, overlayColor: "#0b0d12", fallback: "#0b0d12" } });
     expect(r.spec.background.kind === "image" && r.spec.background.overlay).toBeGreaterThan(30);
     expect(r.notices.map((n) => n.code)).toContain("overlay_boosted");
   });
   it("drops corrupt overrides instead of breaking the page", () => {
-    const r = resolveStyle("studio", { colors: { accent: "red" }, text: { headingFont: "comic-sans" } });
-    expect(r.spec.colors.accent).toBe(getTheme("studio")!.style.colors.accent);
+    const r = resolveStyle("paper", { colors: { accent: "red" }, text: { headingFont: "comic-sans" } });
+    expect(r.spec.colors.accent).toBe(getTheme("paper")!.style.colors.accent);
     expect(r.notices.length).toBeGreaterThan(0);
   });
   it("falls back safely for an unknown theme", () => {
     const r = resolveStyle("deleted-theme", {});
-    expect(r.theme.id).toBe("studio");
+    expect(r.theme.id).toBe("paper");
     expect(r.notices[0]?.code).toBe("theme_missing");
   });
   it("a page-colour override recolours a plain-colour background", () => {
-    const r = resolveStyle("studio", { colors: { background: "#e8f0e8" } });
+    const r = resolveStyle("paper", { colors: { background: "#e8f0e8" } });
     expect(r.spec.background).toEqual({ kind: "solid", color: "#e8f0e8" });
   });
   it("accent-filled widgets stay readable", () => {
-    const r = resolveStyle("studio", {});
+    const r = resolveStyle("paper", {});
     const w = widgetStyle(r, { surface: "accent", accent: "#ffee00" });
     expect(contrastRatio(w.vars["--tp-foreground"]!, w.vars["--tp-card-bg"]!)).toBeGreaterThanOrEqual(4.5);
   });
   it("per-widget overrides do not leak to the page style", () => {
-    const r = resolveStyle("studio", {});
+    const r = resolveStyle("paper", {});
     widgetStyle(r, { radius: "none", emphasis: "featured" });
-    expect(r.cssVars["--tp-card-radius"]).toBe("1.25rem");
+    expect(r.cssVars["--tp-card-radius"]).toBe("0.75rem");
   });
 });
 
@@ -132,7 +132,7 @@ describe("page document and migration", () => {
   it("migrates the legacy layout config, keeping the owner's colour and font choices", () => {
     const m = migratePage({ schemaVersion: 1, layoutId: "beauty-v1", tokenPresetId: "beauty-light", overrides: { accent: "#123456", headingFont: "lexend" } }, "barber");
     expect(m.changed).toBe(true);
-    expect(m.page.themeId).toBe("studio");
+    expect(m.page.themeId).toBe("paper");
     expect(m.page.appearance.colors?.accent).toBe("#123456");
     expect(m.page.appearance.text?.headingFont).toBe("lexend");
     expect(m.page.widgets.length).toBeGreaterThan(0);
@@ -149,7 +149,7 @@ describe("page document and migration", () => {
     const w = newWidget("link", { label: "A", url: "https://example.com" });
     const m = migratePage({ schemaVersion: 2, themeId: "ghost", appearance: "nope", widgets: [w, { ...w }] }, "other");
     expect(new Set(m.page.widgets.map((x) => x.id)).size).toBe(2);
-    expect(m.page.themeId).toBe("studio");
+    expect(m.page.themeId).toBe("paper");
   });
   it("legacy conversion never throws on junk", () => {
     expect(() => fromLegacyConfig({ tokenPresetId: 5 as never, overrides: { accent: "nope" } }, "other")).not.toThrow();
@@ -221,7 +221,7 @@ describe("view-model", () => {
     expect(pay.widgets[0]!.status.state).toBe("locked");
   });
   it("free plan keeps the industry's suggested theme", () => {
-    const vm = buildPageViewModel(fx("tutor").content, { ...fx("tutor").page, themeId: "ocean" }, { plan: "free" });
+    const vm = buildPageViewModel(fx("tutor").content, { ...fx("tutor").page, themeId: "showroom" }, { plan: "free" });
     expect(vm.style.theme.id).toBe(getIndustryPreset("tutor").suggestedThemeId);
   });
   it("unsafe or unsupported links never become visible widgets", () => {

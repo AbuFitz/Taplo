@@ -30,17 +30,17 @@ function webglAvailable() {
   }
 }
 
+const noopSubscribe = () => () => {}
+const reducedQuery = "(prefers-reduced-motion: reduce)"
+
 export function ShaderWallpaper(props: Props) {
-  const [on, setOn] = React.useState(false)
-  const [reduced, setReduced] = React.useState(true)
-  React.useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
-    const sync = () => setReduced(mq.matches)
-    sync()
-    mq.addEventListener("change", sync)
-    setOn(webglAvailable())
-    return () => mq.removeEventListener("change", sync)
-  }, [])
+  // Both values only exist in the browser, so the server (and first hydration pass) renders nothing here.
+  const on = React.useSyncExternalStore(noopSubscribe, webglAvailable, () => false)
+  const reduced = React.useSyncExternalStore(
+    (cb) => { const mq = window.matchMedia(reducedQuery); mq.addEventListener("change", cb); return () => mq.removeEventListener("change", cb) },
+    () => window.matchMedia(reducedQuery).matches,
+    () => true,
+  )
   if (!on) return null
   return (
     <div className="tp-shader" aria-hidden="true">

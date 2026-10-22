@@ -27,7 +27,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -68,39 +68,43 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Taplo identity: warm paper, ink, and one signal colour. The page engine never reads these. */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: oklch(0.972 0.005 85);
+  --foreground: oklch(0.18 0.012 70);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.18 0.012 70);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.49 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.18 0.012 70);
+  --primary: oklch(0.2 0.012 70);
+  --primary-foreground: oklch(0.985 0.004 85);
+  --secondary: oklch(0.945 0.007 85);
+  --secondary-foreground: oklch(0.2 0.012 70);
+  --muted: oklch(0.945 0.007 85);
+  --muted-foreground: oklch(0.47 0.012 75);
+  --accent: oklch(0.945 0.007 85);
+  --accent-foreground: oklch(0.2 0.012 70);
+  --destructive: oklch(0.55 0.22 27);
+  --border: oklch(0.9 0.008 85);
+  --input: oklch(0.88 0.009 85);
+  --ring: oklch(0.64 0.19 38);
+  --font-display: "Instrument Serif", "Fraunces Variable", Georgia, serif;
+  --signal: oklch(0.64 0.19 38);
+  --signal-soft: oklch(0.95 0.04 50);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 0.75rem;
+  --sidebar: oklch(0.985 0.004 85);
+  --sidebar-foreground: oklch(0.18 0.012 70);
+  --sidebar-primary: oklch(0.2 0.012 70);
+  --sidebar-primary-foreground: oklch(0.985 0.004 85);
+  --sidebar-accent: oklch(0.945 0.007 85);
+  --sidebar-accent-foreground: oklch(0.2 0.012 70);
+  --sidebar-border: oklch(0.9 0.008 85);
+  --sidebar-ring: oklch(0.64 0.19 38);
 }
 
 .dark {
@@ -146,7 +150,10 @@
   }
   html {
     @apply font-sans;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
+  ::selection { background: color-mix(in oklch, var(--signal) 28%, transparent); }
 }
 
 /* ---- Taplo profile surface (scoped; never applied to dashboard/marketing) ---- */
@@ -203,3 +210,12 @@
     scroll-behavior: auto !important;
   }
 }
+
+@utility font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+@utility bg-signal { background-color: var(--signal); }
+@utility text-signal { color: var(--signal); }
+@utility bg-signal-soft { background-color: var(--signal-soft); }

@@ -13,11 +13,11 @@ export interface MigrationResult {
 
 /** Legacy v1 token preset ids -> nearest current theme. */
 const LEGACY_THEME: Record<string, string> = {
-  "trades-dark": "midnight",
-  "beauty-light": "studio",
-  "education-clean": "classroom",
-  "professional-refined": "editorial",
-  "general-balanced": "garden",
+  "trades-dark": "noir",
+  "beauty-light": "paper",
+  "education-clean": "pop",
+  "professional-refined": "paper",
+  "general-balanced": "showroom",
 };
 
 interface LegacyConfig {

@@ -22,7 +22,7 @@ export function Frame() {
       setCfg({ scenario: e.data.scenario, overrides: e.data.overrides })
     }
     window.addEventListener("message", onMessage)
-    window.parent !== window && window.parent.postMessage({ type: "taplo:lab-ready" }, window.location.origin)
+    if (window.parent !== window) window.parent.postMessage({ type: "taplo:lab-ready" }, window.location.origin)
     return () => window.removeEventListener("message", onMessage)
   }, [])
 

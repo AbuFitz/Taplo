@@ -23,15 +23,15 @@ import { DemoNotice, EmailField, PhoneField, PreviewFrame } from "./ui"
 import type { WidgetType } from "@/features/page/contracts/widgets"
 
 const STEP_LABEL: Record<OnboardingStep, string> = {
-  industry: "Your business",
-  business: "Claim your page",
-  contacts: "Get in touch",
+  industry: "What you do",
+  business: "Your name",
+  contacts: "Contact and place",
   widgets: "Add what’s useful",
   publish: "Preview & publish",
 }
 const STEP_TITLE: Record<OnboardingStep, string> = {
   industry: "What kind of business is it?",
-  business: "Claim your page",
+  business: "Let’s start with your name",
   contacts: "How can people reach you?",
   widgets: "Add what’s useful",
   publish: "Preview and publish",
@@ -78,30 +78,31 @@ export function Onboarding() {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:py-10">
-      <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/" className="text-sm font-semibold">Taplo</Link>
-        <Link href="/dashboard/page" className="text-sm underline underline-offset-4">Skip to the page editor</Link>
-      </header>
       <DemoNotice className="mb-6" />
+      <header className="mb-8 flex flex-wrap items-center justify-between gap-3">
+        <Link href="/" className="text-[1.1875rem] font-semibold tracking-[-0.03em]">Taplo</Link>
+        <Link href="/dashboard/page" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip to the page editor</Link>
+      </header>
 
-      <ol className="mb-8 flex flex-wrap gap-x-4 gap-y-2 text-sm" aria-label="Progress">
-        {ONBOARDING_STEPS.map((st, i) => (
-          <li key={st} aria-current={st === step ? "step" : undefined} className={cn("flex items-center gap-2", st === step ? "font-semibold" : "text-muted-foreground")}>
-            <span className={cn("grid size-6 place-items-center rounded-full border text-xs", i < stepIndex && "bg-primary text-primary-foreground")}>
-              {i < stepIndex ? <Check className="size-3.5" aria-hidden="true" /> : i + 1}
-            </span>
-            {STEP_LABEL[st]}
-          </li>
-        ))}
-      </ol>
+      <nav aria-label="Progress" className="mb-10">
+        <p className="mb-3 text-xs font-medium text-muted-foreground">Step {stepIndex + 1} of {ONBOARDING_STEPS.length} · {STEP_LABEL[step]}</p>
+        <ol className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${ONBOARDING_STEPS.length}, minmax(0, 1fr))` }}>
+          {ONBOARDING_STEPS.map((st, i) => (
+            <li key={st} aria-current={st === step ? "step" : undefined} className="h-1 overflow-hidden rounded-full bg-black/[0.09]">
+              <span className={cn("block h-full rounded-full bg-primary transition-[width] duration-500 ease-out", i < stepIndex ? "w-full" : i === stepIndex ? "w-1/2 bg-signal" : "w-0")} />
+              <span className="sr-only">{STEP_LABEL[st]}{i < stepIndex ? " (done)" : ""}</span>
+            </li>
+          ))}
+        </ol>
+      </nav>
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_400px]">
         <section aria-labelledby="step-title" className="min-w-0">
-          <h1 id="step-title" className="mb-1 text-2xl font-semibold">{STEP_TITLE[step]}</h1>
+          <h1 id="step-title" className="font-display mb-3 text-[clamp(2.25rem,5vw,3.25rem)] leading-[1.02]">{STEP_TITLE[step]}</h1>
 
           {step === "industry" ? (
             <div className="grid gap-6">
-              <p className="text-muted-foreground">Pick the closest match. It only suggests a starting point; you can change anything, including the look, later.</p>
+              <p className="text-muted-foreground">Pick the closest match. It only suggests which sections to start with; you can change anything later.</p>
               <TaploInput label="Search (e.g. barber, tutor, café, plumber)" value={query} onChange={(e) => setQuery(e.target.value)} />
               <ul className="grid gap-2 sm:grid-cols-2" aria-label="Types of business">
                 {searchIndustries(query).map((p) => {
@@ -109,7 +110,7 @@ export function Onboarding() {
                   return (
                     <li key={p.id}>
                       <button type="button" aria-pressed={selected} onClick={() => update((x) => applyIndustry(x, p.id, p.id === OTHER_INDUSTRY_ID ? "" : p.label))}
-                        className={cn("min-h-11 w-full rounded-lg border px-4 py-2.5 text-left text-sm transition-colors hover:bg-muted", selected && "border-primary bg-muted font-semibold ring-2 ring-primary/30")}>
+                        className={cn("min-h-12 w-full rounded-xl bg-white px-4 py-2.5 text-left text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] transition-[box-shadow,transform] duration-150 hover:shadow-[0_0_0_1px_rgb(0_0_0/0.22)] active:scale-[0.99]", selected && "font-semibold shadow-[0_0_0_2px_var(--primary),0_8px_20px_-12px_rgb(0_0_0/0.4)]")}>
                         {p.label}
                       </button>
                     </li>
@@ -139,7 +140,7 @@ export function Onboarding() {
 
           {step === "business" ? (
             <div className="grid gap-5">
-              <p className="text-muted-foreground">Your name and your own web address. You can change both later.</p>
+              <p className="text-muted-foreground">Add your name and, if you have one, your logo. Your page appears on the right as you type.</p>
               <TaploInput label="Business name" value={c.identity.name} maxLength={100} autoComplete="off" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
               <div>
                 <TaploInput label="Your web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />
@@ -150,6 +151,16 @@ export function Onboarding() {
                 <p className="mt-1 text-xs text-muted-foreground">Demo note: whether an address is already taken is checked against the database when you publish on a connected environment. Reserved and invalid addresses are blocked now.</p>
               </div>
               <ImageField label="Logo or profile picture (optional)" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
+            </div>
+          ) : null}
+
+          {step === "contacts" ? (
+            <div className="grid gap-5">
+              <p className="text-muted-foreground">Customers act on these straight from your page. Only the ones you fill in appear. You can add a logo, description and more afterwards.</p>
+              <PhoneField label="Phone" value={c.contacts.phone} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, phone: v } } }), { coalesce: "phone" })} hint="Used for the Call button." />
+              <PhoneField label="WhatsApp number" value={c.contacts.whatsapp} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, whatsapp: v } } }), { coalesce: "wa" })} hint="Include the country code, e.g. +44." />
+              <EmailField value={c.contacts.email} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }), { coalesce: "email" })} />
+              <TaploInput label="A line about you (optional)" hint="Shown under your name." value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
               <fieldset className="grid gap-2">
                 <legend className="mb-1 text-sm font-medium">Where do you work?</legend>
                 {LOCATION_MODES.map((m) => (
@@ -161,16 +172,6 @@ export function Onboarding() {
               </fieldset>
               <TaploInput label={c.location.mode === "service_area" ? "Areas you cover" : c.location.mode === "online" ? "Where you’re based (optional)" : "Town or area"} value={c.location.locality ?? ""} maxLength={120} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, locality: e.target.value || undefined } } }), { coalesce: "loc" })} />
               {c.location.mode === "premises" ? null : <p className="text-sm text-muted-foreground">Your private address is never published for travelling or online businesses.</p>}
-            </div>
-          ) : null}
-
-          {step === "contacts" ? (
-            <div className="grid gap-5">
-              <p className="text-muted-foreground">Customers act on these straight from your page. Only the ones you fill in appear. You can add a logo, description and more afterwards.</p>
-              <PhoneField label="Phone" value={c.contacts.phone} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, phone: v } } }), { coalesce: "phone" })} hint="Used for the Call button." />
-              <PhoneField label="WhatsApp number" value={c.contacts.whatsapp} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, whatsapp: v } } }), { coalesce: "wa" })} hint="Include the country code, e.g. +44." />
-              <EmailField value={c.contacts.email} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }), { coalesce: "email" })} />
-              <TaploInput label="A line about you (optional)" hint="Shown under your name." value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
             </div>
           ) : null}
 
@@ -189,7 +190,7 @@ export function Onboarding() {
         </section>
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="hidden lg:block"><h2 className="mb-2 text-sm font-semibold">Your page, taking shape</h2><PreviewFrame /></div>
+          <div className="hidden lg:block"><h2 className="font-display mb-3 text-2xl">Your page, taking shape</h2><PreviewFrame height={720} /></div>
           <div className="lg:hidden">
             <Button variant="outline" onClick={() => setMobilePreview((v) => !v)} aria-expanded={mobilePreview}>{mobilePreview ? "Hide preview" : "Show my page"}</Button>
             {mobilePreview ? <div className="mt-3"><PreviewFrame /></div> : null}

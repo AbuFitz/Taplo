@@ -51,7 +51,7 @@ export default async function BusinessProfilePage({ params, searchParams }: { pa
     <>
       {p.synthetic ? (
         <div role="note" className="relative z-10 bg-amber-300 px-4 py-2 text-center text-sm font-medium text-black">
-          Synthetic demo profile — not a real business. Try another look with <code>?theme=midnight</code>, <code>candy</code>, <code>workshop</code>…
+          Synthetic demo profile — not a real business. Try another look with <code>?theme=noir</code>, <code>pop</code>, <code>showroom</code>…
         </div>
       ) : null}
       <PageRenderer vm={vm} />

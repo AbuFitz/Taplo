@@ -27,7 +27,7 @@ const PAIRS: { id: string; label: string; heading: FontKey; body: FontKey }[] = 
 ]
 void FONT_KEYS
 
-const SHADER_DEFAULT = ["#4f3bd9", "#a02fb8", "#d6336c", "#1a7fb3"]
+const SHADER_DEFAULT = ["#4f3bd9", "#a02fb8", "#c92a63", "#17709f"]
 
 export function Lab() {
   const [scenario, setScenario] = React.useState<Scenario>("barber")
