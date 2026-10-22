@@ -27,12 +27,12 @@ export function Structure({ ed, selection, onSelect, notify }: { ed: Editor; sel
   const name = ed.state.content.identity.name.trim()
   return (
     <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3" data-testid="structure">
-      <div className="grid gap-2">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-2">
         <Item icon={Palette} label="Page style" hint="Colours, fonts, buttons, spacing" active={sameSelection(selection, { kind: "page" })} onClick={() => onSelect({ kind: "page" })} testId="select-page" />
         <Item icon={LayoutTemplate} label={name || "Header"} hint="Name, logo and header arrangement" active={sameSelection(selection, { kind: "header" })} onClick={() => onSelect({ kind: "header" })} testId="select-header" />
       </div>
 
-      <section aria-labelledby="widgets-h" className="grid gap-2">
+      <section aria-labelledby="widgets-h" className="grid grid-cols-[minmax(0,1fr)] gap-2">
         <div className="flex items-center justify-between gap-2">
           <h2 id="widgets-h" className="text-sm font-semibold">Widgets</h2>
           <div className="flex gap-1.5">

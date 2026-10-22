@@ -17,10 +17,21 @@ export const rowOrder = (page: Page) => page.locator("[data-widget-row]").evalua
 export const previewOrder = (page: Page) => previewFrame(page).locator("[data-widget]").evaluateAll((els) => els.map((e) => e.getAttribute("data-widget")!));
 export const row = (page: Page, type: string, nth = 0) => page.locator(`[data-widget-row="${type}"]`).nth(nth);
 
-export const insp = (page: Page) => page.getByTestId("inspector");
+/** The controls for the current selection: a side pane on wide screens, a bottom sheet on phones. */
+export const insp = (page: Page) => page.locator('[data-testid="inspector"], [data-testid="inspector-sheet"]');
+
+/** On phones the controls sheet covers the list; close it before touching the list again. */
+export async function closeSheet(page: Page) {
+  const sheet = page.getByTestId("inspector-sheet");
+  if (await sheet.isVisible().catch(() => false)) {
+    await page.keyboard.press("Escape");
+    await expect(sheet).toBeHidden();
+  }
+}
 
 /** Select a widget from the structure list; its controls open in the inspector. */
 export async function openRow(page: Page, type: string, nth = 0) {
+  await closeSheet(page);
   await row(page, type, nth).getByTestId("select-widget").click();
   await expect(insp(page).getByTestId("inspector-widget")).toHaveAttribute("data-widget-type", type);
   return insp(page);
@@ -51,4 +62,12 @@ export async function seedFixture(page: Page, state: unknown) {
   await page.goto("/dashboard/page");
   await expect(page.getByTestId("my-page")).toBeVisible();
   await page.waitForLoadState("networkidle");
+}
+
+/** Choose an optional starting look (collapsed by default: nothing requires it). */
+export async function pickLook(page: Page, id: string) {
+  await closeSheet(page);
+  await page.getByTestId("select-page").click();
+  await openSection(page, /Start from a look/);
+  await page.locator(`[data-theme-id="${id}"]`).click();
 }

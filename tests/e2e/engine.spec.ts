@@ -39,9 +39,9 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
     // header arrangement + logo shape + size
     await page.getByTestId("select-header").click();
     await openSection(page, "Header");
-    await insp(page).getByRole("radio", { name: /Cover banner/ }).check({ force: true });
+    await insp(page).getByRole("radio", { name: /Cover banner/ }).locator("xpath=ancestor::label").click();
     await expect(frame.locator('.tp-header[data-layout="cover"]')).toHaveCount(1);
-    await insp(page).getByRole("radio", { name: "Arch" }).check({ force: true });
+    await insp(page).getByRole("radio", { name: "Arch" }).locator("xpath=ancestor::label").click();
     await expect(frame.locator('.tp-avatar[data-shape="arch"]')).toHaveCount(1);
 
     // colour: drag the picker many steps = ONE history entry
@@ -187,6 +187,6 @@ test.describe("mobile editor", () => {
     await expect(page.getByTestId("inspector-sheet")).toBeVisible();
     // every control in the sheet is touch-sized
     const small = await page.getByTestId("inspector-sheet").locator("button:visible, input:visible").evaluateAll((els) => els.filter((e) => { const r = e.getBoundingClientRect(); return r.height < 32 && r.height > 0 && !e.closest("summary") && (e as HTMLInputElement).type !== "radio" && (e as HTMLInputElement).type !== "range" && (e as HTMLInputElement).type !== "checkbox" && !e.className.includes("sr-only") }).length);
-    expect(small).toBeLessThan(6);
+    expect(small).toBeLessThanOrEqual(1); // only the sheet's own close button may be smaller
   });
 });

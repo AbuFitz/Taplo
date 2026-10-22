@@ -81,19 +81,19 @@ function WidgetInspector({ ed, stored, onBack, onSelect, notify }: { ed: Editor;
     <div data-testid="inspector-widget" data-widget-type={stored.type}>
       <Head title={def.label} hint={def.description} onBack={onBack} icon={<WidgetIcon name={def.icon} className="mt-0.5 size-5 shrink-0 text-muted-foreground" />} />
       <Tabs defaultValue="content" key={stored.id}>
-        <TabsList className="mb-3 grid w-full grid-cols-2">
-          <TabsTrigger value="content">Content</TabsTrigger>
-          <TabsTrigger value="look">Appearance{custom ? ` · ${custom}` : ""}</TabsTrigger>
+        <TabsList className="mb-3 grid h-11 w-full grid-cols-2">
+          <TabsTrigger value="content" className="min-h-11">Content</TabsTrigger>
+          <TabsTrigger value="look" className="min-h-11">Appearance{custom ? ` · ${custom}` : ""}</TabsTrigger>
         </TabsList>
         <TabsContent value="content"><WidgetFields stored={stored} ed={ed} /></TabsContent>
         <TabsContent value="look"><WidgetAppearanceForm stored={stored} ed={ed} /></TabsContent>
       </Tabs>
       {def.simulated ? <p className="mt-3 rounded-md border border-amber-400 bg-amber-100 px-3 py-2 text-xs text-amber-950"><strong>Simulated in demo:</strong> payments aren’t connected, so this opens a clearly-labelled mock-up.</p> : null}
       <div className="mt-4 flex flex-wrap gap-2 border-t pt-3">
-        <Button type="button" variant="outline" size="sm" data-testid="move-up" disabled={index <= 0} onClick={() => ed.moveWidget(stored.id, -1)}><ArrowUp /> Move up</Button>
-        <Button type="button" variant="outline" size="sm" data-testid="move-down" disabled={index >= ed.state.page.widgets.length - 1} onClick={() => ed.moveWidget(stored.id, 1)}><ArrowDown /> Move down</Button>
-        {def.multiple ? <Button type="button" variant="outline" size="sm" data-testid="duplicate-widget" onClick={() => { const id = ed.duplicateWidget(stored.id); if (id) onSelect({ kind: "widget", id }) }}><Copy /> Duplicate</Button> : null}
-        <Button type="button" variant="outline" size="sm" data-testid="remove-widget" onClick={() => { const w = ed.removeWidget(stored.id); if (w) { onSelect({ kind: "page" }); notify(`Removed “${def.label}” from your page. Your records are kept.`, true) } }}><Trash2 /> Remove from page</Button>
+        <Button type="button" variant="outline" className="min-h-11" data-testid="move-up" disabled={index <= 0} onClick={() => ed.moveWidget(stored.id, -1)}><ArrowUp /> Move up</Button>
+        <Button type="button" variant="outline" className="min-h-11" data-testid="move-down" disabled={index >= ed.state.page.widgets.length - 1} onClick={() => ed.moveWidget(stored.id, 1)}><ArrowDown /> Move down</Button>
+        {def.multiple ? <Button type="button" variant="outline" className="min-h-11" data-testid="duplicate-widget" onClick={() => { const id = ed.duplicateWidget(stored.id); if (id) onSelect({ kind: "widget", id }) }}><Copy /> Duplicate</Button> : null}
+        <Button type="button" variant="outline" className="min-h-11" data-testid="remove-widget" onClick={() => { const w = ed.removeWidget(stored.id); if (w) { onSelect({ kind: "page" }); notify(`Removed “${def.label}” from your page. Your records are kept.`, true) } }}><Trash2 /> Remove from page</Button>
         <p className="basis-full text-xs text-muted-foreground">Removing a widget only takes it off your page. Your services, team, photos and other records are kept.</p>
       </div>
     </div>

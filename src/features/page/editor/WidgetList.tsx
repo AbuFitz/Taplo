@@ -45,7 +45,7 @@ function Row({ stored, rw, selected, onSelect, onDetails, ed }: {
         >
           <GripVertical aria-hidden="true" className="size-5" />
         </button>
-        <button type="button" onClick={onSelect} aria-pressed={selected} aria-label={`Edit ${label}`} data-testid="select-widget" className="flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-lg px-1 text-left hover:bg-muted">
+        <button type="button" onClick={onSelect} aria-pressed={selected} data-testid="select-widget" className="flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-lg px-1 text-left hover:bg-muted">
           <WidgetIcon name={def.icon} className="size-5 shrink-0 text-muted-foreground" />
           <span className="min-w-0">
             <span className="block truncate text-sm font-semibold">{label}{summary(rw ?? ({ settings: stored.settings } as RenderWidget)) ? <span className="font-normal text-muted-foreground"> · {summary(rw ?? ({ settings: stored.settings } as RenderWidget))}</span> : null}</span>

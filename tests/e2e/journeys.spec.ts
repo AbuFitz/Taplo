@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { addWidget, openEditorWithSample, insp, openRow, openSection, pngFile, previewFrame, previewOrder, row, rowOrder } from "./helpers";
+import { closeSheet, pickLook, addWidget, openEditorWithSample, insp, openRow, openSection, pngFile, previewFrame, previewOrder, row, rowOrder } from "./helpers";
 
 const pickOption = async (page: Page, trigger: string | RegExp, option: string | RegExp) => {
   await page.getByRole("combobox", { name: trigger }).click();
@@ -21,7 +21,7 @@ test.describe("onboarding", () => {
     await expect(page.locator("main")).not.toContainText(/pick your trade/i);
   });
 
-  test("claim → identity → look → widgets → publish, with the page taking shape as you go", async ({ page }) => {
+  test("claim → identity → widgets → publish, with the page taking shape as you go", async ({ page }) => {
     await page.goto("/onboarding");
     await page.getByRole("button", { name: /^Other \/ describe/ }).click();
     await page.getByRole("button", { name: "Continue" }).click();
@@ -52,14 +52,8 @@ test.describe("onboarding", () => {
     await expect(preview(page).getByText("Gentle grooming for dogs of every size.")).toBeVisible();
     await page.getByRole("button", { name: "Continue" }).click();
 
-    // choose a look: any theme for any business; the live preview changes composition
-    await expect(page.getByRole("heading", { name: "Choose a look" })).toBeVisible();
-    const attr = () => preview(page).locator("[data-taplo-page]").getAttribute("data-header");
-    const before = await attr();
-    await page.locator('[data-theme-id="midnight"]').click();
-    await expect.poll(attr).toBe("poster");
-    expect(before).not.toBe("poster");
-    await page.getByRole("button", { name: "Continue" }).click();
+    // there is no look step: nobody has to pick a theme to get a good page
+    await expect(page.getByRole("heading", { name: "Choose a look" })).toHaveCount(0);
 
     // widgets: suggestions are opt-in per widget; the first service is optional
     await expect(page.getByRole("heading", { name: "Add what’s useful" })).toBeVisible();
@@ -128,7 +122,7 @@ test.describe("onboarding", () => {
 test.describe("records flow into widgets (nothing is copied)", () => {
   test("products and offers: add a record → widget shows it → archive → widget explains and hides", async ({ page }) => {
     await openEditorWithSample(page, "Unlisted");
-    await page.getByRole("link", { name: "Products" }).first().click();
+    await page.goto("/dashboard/products");
     await expect(page.getByText("No products yet")).toBeVisible();
     await page.getByRole("button", { name: "Add product" }).click();
     await page.getByLabel("Name").first().fill("Oatmeal dog shampoo");
@@ -136,7 +130,7 @@ test.describe("records flow into widgets (nothing is copied)", () => {
     await page.getByRole("button", { name: "Save product" }).click();
     await expect(page.getByText("Oatmeal dog shampoo")).toBeVisible();
 
-    await page.getByRole("link", { name: "Services" }).first().click();
+    await page.goto("/dashboard/services");
     await page.getByLabel("Offer title").fill("First groom 10% off");
     await page.getByLabel("Last day (optional)").fill("2020-01-01");
     await page.getByRole("button", { name: "Add offer" }).click();
@@ -150,7 +144,7 @@ test.describe("records flow into widgets (nothing is copied)", () => {
     await expect(row(page, "offers")).toContainText("Needs content");             // expired offer is hidden, and explained
     await expect(preview(page).locator('[data-widget="offers"]')).toHaveCount(0);
 
-    await page.getByRole("link", { name: "Products" }).first().click();
+    await page.goto("/dashboard/products");
     await page.getByRole("button", { name: "Archive" }).first().click();
     await page.getByRole("link", { name: "My page" }).first().click();
     await expect(row(page, "products")).toContainText("Needs content");
@@ -159,7 +153,7 @@ test.describe("records flow into widgets (nothing is copied)", () => {
 
   test("a service added in Services appears in every service widget at once", async ({ page }) => {
     await openEditorWithSample(page, "Unlisted");
-    await page.getByRole("link", { name: "Services" }).first().click();
+    await page.goto("/dashboard/services");
     await page.getByRole("button", { name: "Add service" }).click();
     await page.getByLabel("Service name").fill("Nail trim");
     await pickOption(page, "Price", "Fixed price");
@@ -216,6 +210,7 @@ test.describe("plans and page settings", () => {
 
   test("navigation puts My page first; overview links to it", async ({ page }) => {
     await openEditorWithSample(page, "Mechanic");
+    await page.getByRole("button", { name: "Open menu" }).click();   // the editor uses the full width, so the menu lives in the top bar
     const links = await page.getByRole("navigation", { name: "Dashboard" }).getByRole("link").allTextContents();
     expect(links[0]!.trim()).toBe("My page");
     await page.goto("/dashboard");
@@ -237,6 +232,7 @@ test.describe("editing on a phone", () => {
       await addWidget(page, /^Announcement/);
       await insp(page).getByRole("textbox", { name: "Message" }).fill("Closed on Monday");
       expect(await overflow()).toBeLessThanOrEqual(0);
+      await closeSheet(page);
       const handle = await row(page, "announcement").getByTestId("drag-handle").boundingBox();
       expect(handle!.width).toBeGreaterThanOrEqual(44);
       expect(handle!.height).toBeGreaterThanOrEqual(44);
@@ -248,19 +244,18 @@ test.describe("editing on a phone", () => {
       expect((await rowOrder(page))[start.length - 2]).toBe(last);
 
       // design tab fits too
-      await page.getByTestId("select-page").click();
-      await page.locator('[data-theme-id="candy"]').click();
+      await pickLook(page, "candy");
       expect(await overflow()).toBeLessThanOrEqual(0);
       await page.getByTestId("select-settings").click();
       expect(await overflow()).toBeLessThanOrEqual(0);
 
       // the preview sheet shows exactly what was just edited
-      await page.getByTestId("open-preview").click();
+      await closeSheet(page);
+      await page.getByTestId("view-preview").click();
       const frame = page.frameLocator('iframe[title="Live preview of your page"]').last();
       await expect(frame.locator('[data-widget="announcement"]')).toContainText("Closed on Monday");
       await expect(frame.locator("[data-taplo-page]")).toHaveAttribute("data-header", "centered");
       expect(await overflow()).toBeLessThanOrEqual(0);
-      await page.keyboard.press("Escape");
       await expect(page.getByTestId("view-preview")).toBeVisible();
     });
   }
@@ -269,6 +264,7 @@ test.describe("editing on a phone", () => {
     await page.setViewportSize({ width: 640, height: 450 });
     await openEditorWithSample(page, "Barber");
     for (const tab of ["select-page", "select-header", "select-details", "select-settings"]) {
+      await closeSheet(page);
       await page.getByTestId(tab).click();
       expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth), tab).toBeLessThanOrEqual(0);
     }
@@ -283,7 +279,7 @@ test("uploading a logo in the editor flows to the published page with the owner'
   await page.getByLabel("Logo or profile picture: upload a picture").setInputFiles(pngFile());
   await page.getByTestId("crop-apply").click();
   await expect(page.getByText("this look shows no picture")).toBeVisible();
-  await page.getByRole("radio", { name: "Circle" }).check({ force: true });
+  await page.getByRole("radio", { name: "Circle" }).locator("xpath=ancestor::label").click();
   await expect(page.getByText("this look shows no picture")).toHaveCount(0);
   await expect(preview(page).locator(".tp-header img").first()).toBeVisible();
   await page.getByTestId("select-settings").click();

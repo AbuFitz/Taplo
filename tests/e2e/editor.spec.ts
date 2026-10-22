@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { FIXTURES } from "../../src/features/themes/fixtures";
-import { addWidget, openEditorWithSample, insp, openRow, openSection, pngFile, previewFrame, previewOrder, row, rowOrder, seedFixture } from "./helpers";
+import { pickLook, addWidget, openEditorWithSample, insp, openRow, openSection, pngFile, previewFrame, previewOrder, row, rowOrder, seedFixture } from "./helpers";
 
 test.describe("My page editor", () => {
   test("add, edit, duplicate, hide and remove widgets; records survive removal", async ({ page }) => {
@@ -152,7 +152,7 @@ test.describe("My page editor", () => {
     // owner's custom values on top
     await page.locator('[data-theme-id="studio"]').click();
     const buttonsSection = await openSection(page, "Buttons");
-    await buttonsSection.getByRole("radio", { name: "Square" }).check({ force: true });
+    await buttonsSection.getByRole("radio", { name: "Square" }).locator("xpath=ancestor::label").click();
     await buttonsSection.getByLabel("Button colour hex value").fill("#0a7a3b");
     await expect(buttonsSection.locator("summary")).toContainText("customised");
     await expect.poll(() => frame.locator(".tp-btn").first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
@@ -161,7 +161,7 @@ test.describe("My page editor", () => {
 
     // reset one section, then everything
     const textSection = await openSection(page, /^Text/);
-    await textSection.getByRole("radio", { name: "Large" }).check({ force: true });
+    await textSection.getByRole("radio", { name: "Large" }).locator("xpath=ancestor::label").click();
     await buttonsSection.getByRole("button", { name: /Reset this section/ }).click();
     await expect(buttonsSection.locator("summary")).not.toContainText("customised");
     await expect(textSection.locator("summary")).toContainText("customised");
@@ -175,8 +175,8 @@ test.describe("My page editor", () => {
     await openRow(page, "serviceList");
     await insp(page).getByRole("tab", { name: "Appearance" }).click();
     await expect(insp(page)).toContainText("Following your page style");
-    await insp(page).getByRole("radio", { name: "Featured" }).check({ force: true });
-    await insp(page).getByRole("radio", { name: "None", exact: true }).first().check({ force: true });
+    await insp(page).getByRole("radio", { name: "Featured" }).locator("xpath=ancestor::label").click();
+    await insp(page).getByRole("radio", { name: "None", exact: true }).first().locator("xpath=ancestor::label").click();
     await insp(page).getByLabel("Card colour hex value").fill("#1f2a44");
     const widget = frame.locator('[data-widget="serviceList"]');
     await expect(widget).toHaveAttribute("data-featured", "true");
@@ -201,8 +201,8 @@ test.describe("My page editor", () => {
 
     // an edit of each kind
     await openRow(page, start[1]!); await insp(page).getByRole("button", { name: "Move down" }).click();      // reorder
-    await page.getByTestId("select-page").click();
-    await page.locator('[data-theme-id="ocean"]').click();                           // theme
+    await pickLook(page, "ocean");                           // theme
+    await page.getByTestId("select-header").click();
     await openSection(page, "Your name and description");
     const name = page.getByLabel("Business name");
     await name.fill("Clearpath Maths Tuition (edited)");                              // content (typing = one undo step)
@@ -257,8 +257,7 @@ test.describe("My page editor", () => {
     expect(await pub.locator("[data-taplo-page]").evaluate((el) => ["data-header", "data-desktop", "data-decoration", "data-card-surface"].map((a) => el.getAttribute(a)))).toEqual(attrs);
 
     // a later draft edit does not change the published page until publishing again
-    await page.getByTestId("select-page").click();
-    await page.locator('[data-theme-id="candy"]').click();
+    await pickLook(page, "candy");
     await page.getByTestId("select-settings").click();
     await expect(page.getByText("You have unpublished changes.")).toBeVisible();
     await pub.reload();
@@ -269,8 +268,7 @@ test.describe("My page editor", () => {
     await expect(pub.locator("[data-taplo-page]")).toHaveAttribute("data-header", "centered");
 
     // discard unpublished changes returns to the published copy
-    await page.getByTestId("select-page").click();
-    await page.locator('[data-theme-id="midnight"]').click();
+    await pickLook(page, "midnight");
     await page.getByTestId("select-settings").click();
     await page.getByRole("button", { name: "Discard unpublished changes" }).click();
     await expect(page.getByText("You have unpublished changes.")).toHaveCount(0);
