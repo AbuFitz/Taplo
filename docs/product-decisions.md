@@ -26,5 +26,5 @@ Locked decisions come from the founder spec (v1.0, 22 Oct 2026). Everything unde
 | Professional layout | Default order has no Booking block (per spec); booking content is reported as "unplaced" | `presets/layouts` |
 | Slug policy | 3–40 chars, a–z 0–9 single hyphens, not all digits; platform-name variants (`*taplo*`) reserved; retired slugs stay owned by their business forever | `slug.ts` + migration |
 | Dev tooling | `/dev/*` and synthetic fixtures only when `NODE_ENV!=production` or `TAPLO_ENABLE_DEV_TOOLS=1` | `lib/env.ts` |
-| Demo mode | `TAPLO_DEMO_MODE=1` opens onboarding/dashboard without auth, data in browser localStorage, labelled everywhere; implies dev tools/fixtures. For review deployments only | `lib/env.ts`, `features/demo` |
+| Demo mode | On by default (`TAPLO_DEMO_MODE=0` closes it): opens onboarding/dashboard without auth, data in browser localStorage, labelled everywhere; implies dev tools/fixtures. For review deployments only | `lib/env.ts`, `features/demo` |
 | Service archive | Services gain `archived` (hidden publicly, kept for history) instead of deletion | `content.ts` |

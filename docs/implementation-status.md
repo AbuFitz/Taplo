@@ -4,7 +4,7 @@ Legend: ✅ done and verified as stated · 🟡 partial · ⬜ not started. "Ver
 
 ## Milestone 1b — Demo mode (review aid, NOT the real product flow)
 
-`TAPLO_DEMO_MODE=1` opens onboarding and the dashboard **without authentication**, storing everything in the visitor's own browser (`localStorage`). It exists so the product can be reviewed before Supabase/auth are configured. Off by default; when off, `/onboarding` and `/dashboard` show a clear "not available" gate and `/demo/*`, `/dev/*` and sample pages 404 (checked against a flag-less production server).
+Demo mode (**on by default**, `TAPLO_DEMO_MODE=0` turns it off) opens onboarding and the dashboard **without authentication**, storing everything in the visitor's own browser (`localStorage`). It exists so the product can be reviewed before Supabase/auth are configured. When turned off, `/onboarding` and `/dashboard` show a clear "not available" gate and `/demo/*`, `/dev/*` and sample pages 404 (checked with the flag set off in a production build).
 
 What is genuinely usable in demo mode (6 Playwright journeys passing):
 - ✅ Onboarding wizard (industry search + Other with own label → name/address with reserved/invalid-slug rejection → contacts with phone/email validation → first service with real price rules → preview & publish). Resumable after reload; live preview iframe updates as you type.

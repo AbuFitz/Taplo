@@ -11,7 +11,7 @@ npm run dev            # http://localhost:3000 ; /dev/themes shows the theme sho
 npm run typecheck && npm run lint && npm test
 npm run build && npm run test:e2e     # Playwright (set PW_CHROMIUM if the browser path differs)
 ```
-**Review without auth:** set `TAPLO_DEMO_MODE=1` (see `.env.example`) to open onboarding + dashboard with data kept in your browser. Never use alongside real customer data.
+**Demo mode is on by default:** onboarding + dashboard open without auth and keep data in your browser. Set `TAPLO_DEMO_MODE=0` to close them. Never use alongside real customer data.
 
 DB integration tests run only when `TAPLO_TEST_DATABASE_URL` points at a throwaway Postgres 16 server (the harness creates and drops its own databases). Copy `.env.example` for configuration; no service is configured by default.
 

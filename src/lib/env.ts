@@ -12,11 +12,11 @@ export function devToolsEnabled(): boolean {
 }
 
 /**
- * Demo mode: opt-in (TAPLO_DEMO_MODE=1). Opens onboarding and the dashboard WITHOUT
- * authentication, keeping all data in the visitor's own browser (localStorage).
- * It exists so the product can be reviewed before auth/backends are configured.
- * It must never be enabled on a deployment holding real customer data.
+ * Demo mode is ON by default while the whole product is a demo: onboarding and the
+ * dashboard open WITHOUT authentication and keep all data in the visitor's own
+ * browser (localStorage). Set TAPLO_DEMO_MODE=0 to close them (the real, auth-gated
+ * behaviour). It must never run alongside real customer data.
  */
 export function demoModeEnabled(): boolean {
-  return process.env.TAPLO_DEMO_MODE === "1";
+  return process.env.TAPLO_DEMO_MODE !== "0";
 }
