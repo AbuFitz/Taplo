@@ -5,11 +5,11 @@ export default defineConfig({
   timeout: 60_000,
   workers: 2,
   use: {
-    baseURL: "http://localhost:3100",
+    baseURL: process.env.BASE_URL ?? "http://localhost:3100",
     launchOptions: { executablePath: process.env.PW_CHROMIUM ?? "/opt/pw-browsers/chromium-1194/chrome-linux/chrome" },
   },
   // Dev tools + synthetic fixtures are enabled explicitly for visual QA only.
-  webServer: {
+  webServer: process.env.BASE_URL ? undefined : {
     command: "npx next start -p 3100",
     url: "http://localhost:3100",
     reuseExistingServer: true,

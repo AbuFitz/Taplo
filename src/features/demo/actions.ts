@@ -129,5 +129,5 @@ export function blankService(sortOrder: number): ServiceContent {
 }
 
 export function normProduct(x: NonNullable<BusinessContentInput["products"]>[number]): ProductContent {
-  return { ...x, currency: x.currency ?? "GBP", mode: x.mode ?? "enquire", archived: x.archived ?? false };
+  return { ...x, currency: x.currency ?? "GBP", mode: x.mode ?? "enquire", archived: x.archived ?? false, facts: x.facts ?? [] };
 }

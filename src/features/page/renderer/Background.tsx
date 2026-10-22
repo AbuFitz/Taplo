@@ -1,8 +1,9 @@
 import { ProfileImage } from "./ProfileImage"
+import { ShaderWallpaper } from "./ShaderWallpaper"
 import type { PageViewModel } from "./view-model"
 import { backgroundCss } from "../themes/resolve"
 
-/** Page background: solid, gradient (optionally drifting) or photo with a protective overlay, plus a decoration layer. */
+/** Page background: solid, gradient (optionally drifting), shader wallpaper or photo with a protective overlay, plus a decoration layer. */
 export function Background({ vm }: { vm: PageViewModel }) {
   const { spec } = vm.style
   const b = spec.background
@@ -17,6 +18,7 @@ export function Background({ vm }: { vm: PageViewModel }) {
         ) : (
           <div className="tp-bg-gradient" style={{ background: backgroundCss(spec) }} />
         )}
+        {b.kind === "shader" ? <ShaderWallpaper style={b.style} colors={b.colors} base={b.base} /> : null}
       </div>
       <div className="tp-deco" aria-hidden="true" />
     </>

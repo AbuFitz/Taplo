@@ -1,0 +1,121 @@
+import { expect, test, type Page } from "@playwright/test";
+
+const frame = (page: Page, title = "Desktop preview") => page.frameLocator(`iframe[title="${title}"]`);
+const attr = (page: Page, name: string, title?: string) => frame(page, title).locator("[data-taplo-page]").getAttribute(name);
+const choice = (page: Page, group: string, label: string | RegExp) => page.getByRole("radiogroup", { name: group }).locator("label", { hasText: label }).first().click();
+
+test.describe("Appearance lab: one engine, four configurations", () => {
+  test.use({ viewport: { width: 1600, height: 1000 } });
+
+  test("looks are configurations of the same engine; content never changes", async ({ page }) => {
+    await page.goto("/appearance");
+    const f = frame(page);
+    await expect(f.getByRole("heading", { level: 1 })).toHaveText("Marlowe & Finch");
+    const name = await f.getByRole("heading", { level: 1 }).textContent();
+    const services = await f.locator('[data-widget="priceMenu"] li').count();
+
+    const seen = new Set<string>();
+    for (const look of ["Noir", "Paper", "Pop", "Showroom"]) {
+      await choice(page, "Look", look);
+      await expect.poll(async () => (await attr(page, "data-header")) + (await attr(page, "data-tone"))).not.toBe("");
+      const sig = JSON.stringify([await attr(page, "data-header"), await attr(page, "data-tone"), await attr(page, "data-bg"), await attr(page, "data-card-surface"), await f.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-font-heading").trim())]);
+      seen.add(sig);
+      expect(await f.getByRole("heading", { level: 1 }).textContent()).toBe(name);        // same words
+      expect(await f.locator('[data-widget="priceMenu"] li').count()).toBe(services);       // same records
+    }
+    expect(seen.size).toBe(4);                                                              // four genuinely different results
+  });
+
+  test("every demonstrated choice is editable; undo, redo and reset work", async ({ page }) => {
+    await page.goto("/appearance");
+    const f = frame(page);
+    await expect(page.getByTestId("lab-reset")).toBeDisabled();                             // untouched look
+    expect(await attr(page, "data-header")).toBe("poster");
+
+    await choice(page, "Header arrangement", "Centred");
+    await expect.poll(() => attr(page, "data-header")).toBe("centered");
+    await choice(page, "Button shape", "Square");
+    await expect.poll(() => f.locator(".tp-btn").first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
+    await choice(page, "Card surface", "Frosted");
+    await expect.poll(() => attr(page, "data-card-surface")).toBe("glass");
+    await choice(page, "Font pair", "Technical");
+    await expect.poll(() => f.locator("h1").evaluate((el) => getComputedStyle(el).fontFamily)).toContain("Space Grotesk");
+    await choice(page, "Wallpaper", "Aurora");
+    await expect.poll(() => attr(page, "data-bg")).toBe("shader");
+    await expect(page.getByTestId("lab-reset")).toBeEnabled();
+
+    // undo walks back one choice at a time; redo returns
+    await page.getByTestId("lab-undo").click();
+    await expect.poll(() => attr(page, "data-bg")).toBe("solid");
+    await page.getByTestId("lab-redo").click();
+    await expect.poll(() => attr(page, "data-bg")).toBe("shader");
+
+    // reset returns to the look, and is itself undoable
+    await page.getByTestId("lab-reset").click();
+    await expect.poll(() => attr(page, "data-header")).toBe("poster");
+    await expect(page.getByTestId("lab-reset")).toBeDisabled();
+    await page.getByTestId("lab-undo").click();
+    await expect.poll(() => attr(page, "data-bg")).toBe("shader");
+  });
+
+  test("a colour drag is one undo step and readability is reported", async ({ page }) => {
+    await page.goto("/appearance");
+    const accent = () => frame(page).locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-accent").trim());
+    const before = await accent();
+    await page.getByRole("button", { name: /Accent: choose colour/ }).click();
+    const area = page.locator(".react-colorful__saturation");
+    const b = (await area.boundingBox())!;
+    await page.mouse.move(b.x + 30, b.y + 30);
+    await page.mouse.down();
+    for (let i = 0; i < 10; i++) await page.mouse.move(b.x + 30 + i * 9, b.y + 30 + i * 6);
+    await page.mouse.up();
+    expect(await accent()).not.toBe(before);
+    await page.keyboard.press("Escape");
+    await page.getByTestId("lab-undo").click();
+    expect(await accent()).toBe(before);
+
+    // an unreadable pairing is corrected and explained, never silently shipped
+    await page.getByLabel("Text hex value").fill("#1a1816");
+    await expect(page.getByLabel("Readability notes")).toContainText(/adjusted|readable/i);
+  });
+
+  test("the same appearance renders a car dealer's stock; phone and desktop both reflect it", async ({ page }) => {
+    await page.goto("/appearance");
+    await choice(page, "Look", "Showroom");
+    await page.getByRole("radiogroup", { name: "Business" }).locator("label", { hasText: "Car dealer" }).click();
+    const d = frame(page);
+    await expect(d.getByRole("heading", { level: 1 })).toHaveText("Aldous Motor Co.");
+    await expect(d.locator(".tp-product")).toHaveCount(4);
+    await expect(d.locator(".tp-product").first()).toContainText("£27,995");
+    await expect(d.locator(".tp-product").first().locator(".tp-fact")).toHaveCount(4);
+    await expect(d.locator(".tp-badge").first()).toHaveText("Just arrived");
+    // phone frame shows the identical configuration
+    const m = frame(page, "Mobile preview");
+    await expect(m.getByRole("heading", { level: 1 })).toHaveText("Aldous Motor Co.");
+    expect(await attr(page, "data-header", "Mobile preview")).toBe("cover");
+  });
+
+  test("the showcase carries no developer commentary", async ({ page }) => {
+    await page.goto("/appearance");
+    await frame(page).getByRole("heading", { level: 1 }).waitFor();
+    for (const frag of ["Synthetic", "fixture", "placeholder", "TODO", "Lorem", "?theme="]) {
+      await expect(page.locator("body")).not.toContainText(frag);
+      await expect(frame(page).locator("body")).not.toContainText(frag);
+    }
+  });
+});
+
+test.describe("appearance lab on a phone", () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
+  test("fits the screen and every selector is reachable", async ({ page }) => {
+    await page.goto("/appearance");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await page.getByRole("radiogroup", { name: "Preview" }).locator("label", { hasText: "Desktop" }).click();
+    await expect(page.locator('iframe[title="Desktop preview"]')).toBeVisible();
+    await page.getByRole("radiogroup", { name: "Look" }).scrollIntoViewIfNeeded();
+    await choice(page, "Look", "Paper");
+    await page.getByRole("radiogroup", { name: "Preview" }).locator("label", { hasText: "Phone" }).click();
+    await expect.poll(() => page.frameLocator('iframe[title="Mobile preview"]').locator("[data-taplo-page]").getAttribute("data-header")).toBe("side");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  });
+});

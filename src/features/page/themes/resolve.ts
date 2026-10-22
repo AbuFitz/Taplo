@@ -3,6 +3,7 @@ import { styleOverridesSchema } from "../contracts/style";
 import { DEFAULT_THEME_ID, getTheme, type ThemeDefinition } from "./catalogue";
 import { contrastRatio, ensureReadable, mix, readableOn } from "./color";
 import { FONT_STACKS } from "./fonts";
+import { deriveRoles, elevation } from "./roles";
 
 export interface StyleNotice {
   code: string;
@@ -35,7 +36,6 @@ const PAD = { compact: "0.75rem", comfortable: "1rem", roomy: "1.5rem" } as cons
 const WIDTH = { narrow: "30rem", regular: "36rem", wide: "44rem" } as const;
 const GAP = { compact: "0.625rem", comfortable: "0.875rem" } as const;
 const SCALE = { sm: "0.94", md: "1", lg: "1.1" } as const;
-const SOFT = "0 10px 28px -14px rgb(0 0 0 / 0.38)";
 
 export function countOverrides(o: StyleOverrides): number {
   let n = 0;
@@ -50,6 +50,7 @@ function bgSamples(spec: StyleSpec): string[] {
   const b = spec.background;
   if (b.kind === "solid") return [b.color];
   if (b.kind === "gradient") return [b.from, b.to, mix(b.from, b.to, 0.5)];
+  if (b.kind === "shader") return [b.base, ...b.colors];
   return [b.fallback];
 }
 
@@ -116,6 +117,7 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
     cards: { ...base.cards, ...ov.cards },
     layout: { ...base.layout, ...ov.layout },
     decoration: ov.decoration ?? base.decoration,
+    motion: ov.motion ?? base.motion ?? "subtle",
   };
   // A "page colour" override recolours a plain-colour background (gradients/photos keep their own).
   if (!ov.background && ov.colors?.background && base.background.kind === "solid") spec.background = { kind: "solid", color: ov.colors.background };
@@ -165,11 +167,16 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
   const cardBg =
     spec.cards.surface === "transparent"
       ? "transparent"
-      : `color-mix(in srgb, ${spec.colors.surface} ${spec.cards.surface === "glass" ? spec.cards.opacity : 100}%, transparent)`;
+      : spec.cards.surface === "soft"
+        ? "var(--tp-surface-2)"
+        : `color-mix(in srgb, ${spec.colors.surface} ${spec.cards.surface === "glass" ? spec.cards.opacity : 100}%, transparent)`;
 
   const bg = spec.background;
+  const pageBg = bg.kind === "solid" ? bg.color : bg.kind === "gradient" ? mix(bg.from, bg.to, 0.5) : bg.kind === "shader" ? bg.base : bg.fallback;
+  const roles = deriveRoles(spec.colors, pageBg);
+  const el = elevation(roles);
   const cssVars: Record<string, string> = {
-    "--tp-background": bg.kind === "solid" ? bg.color : bg.kind === "gradient" ? mix(bg.from, bg.to, 0.5) : bg.fallback,
+    "--tp-background": pageBg,
     "--tp-foreground": spec.colors.text,
     "--tp-muted": spec.colors.muted,
     "--tp-surface": spec.colors.surface,
@@ -186,14 +193,30 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
     "--tp-card-bg": cardBg,
     "--tp-card-radius": RADIUS[spec.cards.radius],
     "--tp-card-border-w": BORDER_W[spec.cards.border],
-    "--tp-card-shadow": spec.cards.shadow === "soft" ? SOFT : spec.cards.shadow === "hard" ? hardShadow : "none",
+    "--tp-card-shadow": spec.cards.shadow === "soft" ? `${el.e2}, var(--tp-edge)` : spec.cards.shadow === "hard" ? hardShadow : "none",
     "--tp-card-pad": PAD[spec.cards.padding],
-    "--tp-card-blur": spec.cards.surface === "glass" ? "14px" : "0px",
+    "--tp-card-blur": spec.cards.surface === "glass" ? "22px" : "0px",
+    "--tp-surface-2": roles.surface2,
+    "--tp-line": roles.line,
+    "--tp-line-strong": roles.lineStrong,
+    "--tp-ink-3": roles.ink3,
+    "--tp-accent-hover": roles.accentHover,
+    "--tp-accent-press": roles.accentPress,
+    "--tp-accent-soft": roles.accentSoft,
+    "--tp-accent-line": roles.accentLine,
+    "--tp-edge": el.edge,
+    "--tp-shadow-1": el.e1,
+    "--tp-shadow-2": el.e2,
+    "--tp-shadow-3": el.e3,
+    "--tp-radius-sm": `calc(${RADIUS[spec.cards.radius]} * 0.5)`,
+    "--tp-radius-md": `calc(${RADIUS[spec.cards.radius]} * 0.75)`,
+    "--tp-btn-sheen": spec.buttons.fill === "solid" && spec.buttons.shadow !== "hard" ? "linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 62%)" : "none",
+    "--tp-btn-hover": spec.buttons.fill === "solid" ? roles.accentHover : "transparent",
     "--tp-btn-bg": btn.bg,
     "--tp-btn-text": btn.text,
     "--tp-btn-border": btn.border,
     "--tp-btn-radius": BTN_RADIUS[spec.buttons.shape],
-    "--tp-btn-shadow": spec.buttons.shadow === "soft" ? SOFT : spec.buttons.shadow === "hard" ? hardShadow : "none",
+    "--tp-btn-shadow": spec.buttons.shadow === "soft" ? el.e1 : spec.buttons.shadow === "hard" ? hardShadow : "none",
     "--tp-btn-border-w": spec.buttons.fill === "outline" || spec.buttons.shadow === "hard" || spec.cards.border === "thick" ? "2px" : "1px",
     "--tp-width": WIDTH[spec.layout.width],
     "--tp-gap": GAP[spec.layout.density],
@@ -213,6 +236,9 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
       "data-card-surface": spec.cards.surface,
       "data-btn-fill": spec.buttons.fill,
       "data-btn-icons": spec.buttons.showIcons ? "on" : "off",
+      "data-bg": bg.kind,
+      "data-tone": roles.dark ? "dark" : "light",
+      "data-motion-level": spec.motion ?? "subtle",
     },
     notices,
     contrast,
@@ -220,11 +246,19 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
   };
 }
 
+/** Static stand-in for a shader wallpaper: layered radial colour fields on the base colour. Used until the shader mounts, for reduced motion and without WebGL. */
+export function shaderFallbackCss(b: { colors: string[]; base: string }): string {
+  const spots = [["18% 12%", 0], ["88% 22%", 1], ["70% 92%", 2], ["8% 78%", 3]] as const;
+  const layers = b.colors.map((c, i) => `radial-gradient(60% 55% at ${spots[i % spots.length]![0]}, ${c} 0%, transparent 70%)`);
+  return `${layers.join(", ")}, ${b.base}`;
+}
+
 /** Background layer CSS (solid/gradient only; images render as an element). */
 export function backgroundCss(spec: StyleSpec): string | undefined {
   const b = spec.background;
   if (b.kind === "solid") return b.color;
   if (b.kind === "gradient") return `linear-gradient(${b.angle}deg, ${b.from}, ${b.to})`;
+  if (b.kind === "shader") return shaderFallbackCss(b);
   return undefined;
 }
 
@@ -248,8 +282,12 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
     attrs["data-card-surface"] = "transparent";
   } else if (a.surface === "glass") {
     vars["--tp-card-bg"] = `color-mix(in srgb, ${spec.colors.surface} 62%, transparent)`;
-    vars["--tp-card-blur"] = "14px";
+    vars["--tp-card-blur"] = "22px";
     attrs["data-card-surface"] = "glass";
+  } else if (a.surface === "soft") {
+    vars["--tp-card-bg"] = "var(--tp-surface-2)";
+    vars["--tp-card-blur"] = "0px";
+    attrs["data-card-surface"] = "soft";
   } else if (a.surface === "solid") {
     vars["--tp-card-bg"] = spec.colors.surface;
     vars["--tp-card-blur"] = "0px";
@@ -274,7 +312,7 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
     if (a.radius === "pill") vars["--tp-card-radius"] = "1.75rem";
   }
   if (a.border) vars["--tp-card-border-w"] = BORDER_W[a.border];
-  if (a.shadow) vars["--tp-card-shadow"] = a.shadow === "soft" ? SOFT : a.shadow === "hard" ? `4px 4px 0 0 ${vars["--tp-foreground"] ?? spec.colors.text}` : "none";
+  if (a.shadow) vars["--tp-card-shadow"] = a.shadow === "soft" ? `${style.cssVars["--tp-shadow-2"]}, var(--tp-edge)` : a.shadow === "hard" ? `4px 4px 0 0 ${vars["--tp-foreground"] ?? spec.colors.text}` : "none";
   if (a.padding) vars["--tp-card-pad"] = PAD[a.padding];
   if (a.align) vars["--tp-text-align"] = a.align;
   if (featured) {

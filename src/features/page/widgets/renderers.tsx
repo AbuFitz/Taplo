@@ -117,7 +117,7 @@ function ServiceListWidget({ w, vm }: P) {
       <Card title={s.title}>
         <ul className="grid gap-2 sm:grid-cols-2">
           {list.map((x) => (
-            <li key={x.id} className="rounded-[calc(var(--tp-card-radius)*0.6)] border p-3" style={{ borderColor: "var(--tp-border)" }}>
+            <li key={x.id} className="tp-subcard">
               <p className="font-semibold leading-snug">{x.name}</p>
               {s.showDescriptions && x.description ? <p className="tp-muted mt-1 text-sm">{x.description}</p> : null}
               <p className="mt-2 text-sm"><span className="tp-price">{s.showPrices ? formatPrice(x) : ""}</span>{s.showDuration && x.durationMinutes ? <span className="tp-muted"> · {formatDuration(x.durationMinutes)}</span> : null}</p>
@@ -153,7 +153,7 @@ function PriceMenuWidget({ w, vm }: P) {
       <div className="grid gap-5">
         {groups.map((g) => (
           <div key={g.name ?? "all"}>
-            {g.name ? <h3 className="mb-2 text-sm uppercase tracking-wider tp-muted">{g.name}</h3> : null}
+            {g.name ? <h3 className="tp-group-title">{g.name}</h3> : null}
             <ul className="grid gap-2.5">
               {g.items.map((x) => (
                 <li key={x.id}>
@@ -195,12 +195,15 @@ function ProductCard({ p, vm }: { p: ProductContent; vm: PageViewModel }) {
     ? <a className="tp-btn" data-variant="compact" href={p.linkUrl} target="_blank" rel="noopener noreferrer"><span className="tp-btn-main"><span className="tp-btn-label">View</span></span><ArrowUpRight aria-hidden="true" className="size-4" /></a>
     : <BookingAction {...bookingProps(vm, { label: "Ask about this", topic: p.name, variant: "compact" })} />
   return (
-    <div className="flex h-full flex-col gap-2">
-      {p.image ? <div className="tp-media aspect-square"><ProfileImage image={p.image} sizes="(min-width:900px) 20rem, 45vw" /></div> : null}
-      <p className="font-semibold leading-snug">{p.name}</p>
-      {p.description ? <p className="tp-muted text-sm">{p.description}</p> : null}
-      {p.priceMinor !== undefined ? <p className="tp-price">{formatMoney(p.priceMinor, p.currency)}</p> : null}
-      <div className="mt-auto">{cta}</div>
+    <div className="tp-product">
+      {p.image ? <div className="tp-media">{p.badge ? <span className="tp-badge">{p.badge}</span> : null}<ProfileImage image={p.image} sizes="(min-width:900px) 20rem, 90vw" /></div> : null}
+      <div className="tp-product-body">
+        <p className="tp-product-name">{p.name}</p>
+        {p.priceMinor !== undefined ? <p className="tp-product-price">{formatMoney(p.priceMinor, p.currency)}</p> : null}
+        {p.facts.length ? <ul className="tp-facts" aria-label="Details">{p.facts.map((f) => <li key={f.label} className="tp-fact">{f.label} <b>{f.value}</b></li>)}</ul> : null}
+        {p.description ? <p className="tp-muted text-sm">{p.description}</p> : null}
+      </div>
+      <div className="tp-product-cta">{cta}</div>
     </div>
   )
 }
@@ -210,8 +213,7 @@ function ProductsWidget({ w, vm }: P) {
   const list = pick(vm.business.products.filter((x) => !x.archived), s.productIds)
   return (
     <Card title={s.title}>
-      <ul className={cn("grid gap-4", s.variant === "grid" ? "grid-cols-2" : "grid-cols-1")}>{list.map((p) => <li key={p.id}><ProductCard p={p} vm={vm} /></li>)}</ul>
-      <p className="tp-muted mt-3 text-xs">Checkout isn’t built yet: products open an enquiry or your own link.</p>
+      <ul className="tp-products" data-variant={s.variant === "grid" ? "grid" : "list"} data-count={Math.min(list.length, 3)}>{list.map((p) => <li key={p.id}><ProductCard p={p} vm={vm} /></li>)}</ul>
     </Card>
   )
 }
@@ -258,8 +260,8 @@ function ReviewsWidget({ w, vm }: P) {
     <Card title={s.title || vm.industry.terminology.reviews}>
       {s.showRating ? <RatingLine vm={vm} /> : null}
       {s.variant === "quote" && lead ? (
-        <figure>
-          <blockquote className="text-lg leading-snug" style={{ fontFamily: "var(--tp-font-heading)" }}>“{lead.quote}”</blockquote>
+        <figure className="tp-figure">
+          <blockquote className="tp-quote tp-quote-lead">“{lead.quote}”</blockquote>
           <figcaption className="tp-muted mt-2 text-sm"><strong className="text-[var(--tp-foreground)]">{lead.author}</strong> · {SOURCE_LABEL[lead.source]}</figcaption>
           {rest.length ? <p className="tp-muted mt-3 text-xs">+ {rest.length} more shared by the business</p> : null}
         </figure>
@@ -267,7 +269,7 @@ function ReviewsWidget({ w, vm }: P) {
         <ul className="tp-rows">
           {list.map((t) => (
             <li key={t.id}>
-              <blockquote className={s.variant === "compact" ? "text-sm" : ""}>“{t.quote}”</blockquote>
+              <blockquote className={s.variant === "compact" ? "text-sm" : "tp-quote"}>“{t.quote}”</blockquote>
               <p className="tp-muted mt-1 text-sm"><strong className="text-[var(--tp-foreground)]">{t.author}</strong> · {t.sourceUrl ? <a className="underline" href={t.sourceUrl} target="_blank" rel="noopener noreferrer">{SOURCE_LABEL[t.source]}</a> : SOURCE_LABEL[t.source]}</p>
             </li>
           ))}
@@ -355,7 +357,7 @@ function GalleryWidget({ w, vm }: P) {
         </div>{g.caption ? <p className="tp-muted mt-1 text-xs">{g.caption}</p> : null}</li>))}</ul></div>
     )
   }
-  return <div>{title}<ul className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">{items.map((g) => <li key={g.id}><div className="tp-media aspect-square"><ProfileImage image={g.image} sizes="(min-width:900px) 14rem, 33vw" /></div></li>)}</ul></div>
+  return <div>{title}<ul className="tp-gallery">{items.map((g) => <li key={g.id}><div className="tp-media"><ProfileImage image={g.image} sizes="(min-width:900px) 24rem, 50vw" /></div></li>)}</ul></div>
 }
 
 function VideoWidget({ w }: P) {

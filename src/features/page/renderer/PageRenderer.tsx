@@ -17,8 +17,8 @@ export function PageRenderer({ vm }: { vm: PageViewModel }) {
       <div className="tp-frame">
         <PageHeader vm={vm} />
         <main className="tp-widgets" aria-label="Page content">
-          {vm.visible.map((w) => (
-            <section key={w.id} className="tp-widget" data-widget={w.type} data-widget-id={w.id} {...w.style.attrs} style={w.style.vars as React.CSSProperties}>
+          {vm.visible.map((w, i) => (
+            <section key={w.id} className="tp-widget" data-widget={w.type} data-widget-id={w.id} {...w.style.attrs} style={{ ...w.style.vars, "--i": i } as React.CSSProperties}>
               {renderWidgetBody(w, vm)}
             </section>
           ))}

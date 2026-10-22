@@ -57,7 +57,7 @@ describe("themes", () => {
     for (const t of THEMES) {
       const c = t.style.colors;
       const bg = t.style.background;
-      const ends = bg.kind === "solid" ? [bg.color] : bg.kind === "gradient" ? [bg.from, bg.to] : [bg.fallback];
+      const ends = bg.kind === "solid" ? [bg.color] : bg.kind === "gradient" ? [bg.from, bg.to] : bg.kind === "shader" ? [bg.base] : [bg.fallback];
       for (const e of ends) expect(contrastRatio(c.text, e), `${t.id} text/bg`).toBeGreaterThanOrEqual(4.5);
       expect(contrastRatio(c.text, c.surface), `${t.id} text/surface`).toBeGreaterThanOrEqual(4.5);
       expect(contrastRatio(c.accentText, c.accent), `${t.id} accent`).toBeGreaterThanOrEqual(4.5);

@@ -39,7 +39,7 @@ function Actions({ vm }: { vm: PageViewModel }) {
       {actions.map((a) => {
         const I = ICON[a.kind]
         return (
-          <a key={a.kind} className="tp-btn" data-inline="" data-event={a.event} href={a.href} {...(a.kind === "whatsapp" ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+          <a key={a.kind} className="tp-btn" data-inline="" {...(a.kind === "book" ? { "data-primary": "" } : {})} data-event={a.event} href={a.href} {...(a.kind === "whatsapp" ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
             <I aria-hidden="true" className="size-4" /><span className="tp-btn-label">{a.label}</span><ArrowUpRight aria-hidden="true" className="size-3.5 opacity-70" />
           </a>
         )

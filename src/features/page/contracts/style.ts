@@ -29,8 +29,19 @@ export const textSchema = z.object({
   align: z.enum(["left", "center"]),
 });
 
+/** Optional animated wallpaper. Always has a static equivalent: reduced motion, no WebGL and print all use `colors`. */
+export const SHADER_STYLES = ["aurora", "silk", "grain"] as const;
+export const backgroundShaderSchema = z.object({
+  kind: z.literal("shader"),
+  style: z.enum(SHADER_STYLES),
+  colors: z.array(hex).min(2).max(4),
+  /** Base colour behind the shader and in the static fallback. */
+  base: hex,
+});
+
 export const backgroundSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("solid"), color: hex }),
+  backgroundShaderSchema,
   z.object({
     kind: z.literal("gradient"),
     from: hex,
@@ -72,7 +83,7 @@ export const buttonsSchema = z.object({
 });
 
 export const cardsSchema = z.object({
-  surface: z.enum(["solid", "glass", "transparent"]),
+  surface: z.enum(["solid", "glass", "transparent", "soft"]),
   opacity: z.number().min(0).max(100),
   radius: z.enum(["none", "sm", "md", "lg", "xl"]),
   border: z.enum(["none", "thin", "thick"]),
@@ -87,6 +98,8 @@ export const layoutSchema = z.object({
   desktop: z.enum(["centered", "split", "columns"]),
 });
 
+export const MOTION_LEVELS = ["none", "subtle", "lively"] as const;
+
 export const DECORATIONS = ["none", "grain", "dots", "grid", "stripes", "glow"] as const;
 
 export const styleSpecSchema = z.object({
@@ -98,6 +111,8 @@ export const styleSpecSchema = z.object({
   cards: cardsSchema,
   layout: layoutSchema,
   decoration: z.enum(DECORATIONS),
+  /** Entrance and hover motion. Always off for visitors who prefer reduced motion. */
+  motion: z.enum(MOTION_LEVELS).optional(),
 });
 export type StyleSpec = z.infer<typeof styleSpecSchema>;
 
@@ -112,6 +127,7 @@ export const styleOverridesSchema = z
     cards: cardsSchema.partial(),
     layout: layoutSchema.partial(),
     decoration: z.enum(DECORATIONS),
+    motion: z.enum(MOTION_LEVELS),
   })
   .partial();
 export type StyleOverrides = z.infer<typeof styleOverridesSchema>;
@@ -119,7 +135,7 @@ export type StyleOverrides = z.infer<typeof styleOverridesSchema>;
 /** Per-widget overrides: all optional; absent = follow the page style. */
 export const widgetAppearanceSchema = z
   .object({
-    surface: z.enum(["solid", "glass", "transparent", "accent"]),
+    surface: z.enum(["solid", "glass", "transparent", "accent", "soft"]),
     background: hex,
     text: hex,
     accent: hex,

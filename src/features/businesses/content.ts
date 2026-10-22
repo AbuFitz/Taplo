@@ -125,6 +125,10 @@ export const productSchema = z.object({
   priceMinor: z.number().int().nonnegative().optional(),
   currency: z.string().length(3).default("GBP"),
   image: imageSchema.optional(),
+  /** Short label such as "Just arrived" or "Reserved". */
+  badge: optText(24),
+  /** Key facts shown as a compact list (size, year, mileage, fuel...). Any kind of product. */
+  facts: z.array(z.object({ label: text(30), value: text(60) })).max(8).default([]),
   /** "enquire": customer contacts the business. "link": opens the owner's own shop/payment link. No checkout is built. */
   mode: z.enum(["enquire", "link"]).default("enquire"),
   linkUrl: safeUrl.optional(),

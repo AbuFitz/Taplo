@@ -16,7 +16,7 @@ import { useDraft } from "../hooks"
 import { UrlField } from "../ui"
 import { NotBuilt, PageHeader } from "./Panel"
 
-const blank = (): ProductContent => ({ id: newId("prod"), name: "", currency: "GBP", mode: "enquire", archived: false })
+const blank = (): ProductContent => ({ id: newId("prod"), name: "", currency: "GBP", mode: "enquire", archived: false, facts: [] })
 
 /** Products are business records. Product widgets reference them; nothing is copied onto the page. */
 export function Products() {
