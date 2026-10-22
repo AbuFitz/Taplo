@@ -383,7 +383,7 @@ export const FIXTURES: Fixture[] = [
 /** The polished showcase businesses, offered as ready-made starting points in the dashboard. */
 const showcase = (key: string, label: string, content: BusinessContentInput, scenario: "barber" | "dealer", themeId: string): Fixture => ({
   key, label, plan: "business", content,
-  page: { schemaVersion: 2, themeId, appearance: {}, meta: { searchVisible: true, primaryAction: "auto" }, widgets: SCENARIOS[scenario].widgets() },
+  page: { schemaVersion: 2, themeId, appearance: {}, meta: { searchVisible: true, primaryAction: "auto" }, widgets: SCENARIOS[scenario].widgets(), savedLooks: [], savedStyles: [] },
 });
 FIXTURES.push(showcase("showcase-barber", "Barber", BARBER, "barber", "night"), showcase("showcase-dealer", "Car dealer", DEALER, "dealer", "showroom"));
 

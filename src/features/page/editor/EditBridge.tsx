@@ -14,7 +14,7 @@ export function EditBridge() {
     const doc = document
     const send = (m: FromPreview) => window.parent !== window && window.parent.postMessage(m, window.location.origin)
 
-    const mark = (sel: Selection) => {
+    const mark = (sel: Selection, inset = 0) => {
       doc.querySelectorAll("[data-tp-selected]").forEach((el) => el.removeAttribute("data-tp-selected"))
       const target =
         sel.kind === "widget" ? doc.querySelector(`[data-widget-id="${CSS.escape(sel.id)}"]`)
@@ -22,8 +22,14 @@ export function EditBridge() {
         : null
       if (target) {
         target.setAttribute("data-tp-selected", "")
+        // Keep the selection inside the part of the screen a sheet leaves visible.
         const r = target.getBoundingClientRect()
-        if (r.top < 0 || r.bottom > window.innerHeight) target.scrollIntoView({ block: "center", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
+        const visible = Math.max(120, window.innerHeight - inset)
+        const margin = 16
+        if (r.top < margin || r.bottom > visible - margin) {
+          const wanted = r.height + margin * 2 > visible ? r.top - margin : r.top - (visible - r.height) / 2
+          window.scrollBy({ top: wanted, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
+        }
       }
     }
 
@@ -42,7 +48,7 @@ export function EditBridge() {
     }
     const onMessage = (e: MessageEvent<ToPreview>) => {
       if (e.origin !== window.location.origin || e.data?.type !== "taplo:selected") return
-      mark(e.data.selection)
+      mark(e.data.selection, e.data.bottomInset ?? 0)
     }
 
     doc.documentElement.setAttribute("data-tp-editing", "")

@@ -52,6 +52,8 @@ export function newPage(industryKey: string): PageDoc {
     appearance: {},
     meta: { searchVisible: true, primaryAction: "auto" },
     widgets: starterWidgets(industryKey),
+    savedLooks: [],
+    savedStyles: [],
   };
 }
 

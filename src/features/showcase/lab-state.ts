@@ -23,7 +23,7 @@ function widgetsFor(s: Scenario) {
 }
 
 export function toPage(cfg: LabConfig): PageDoc {
-  return { schemaVersion: 2, themeId: cfg.themeId, appearance: cfg.overrides, meta: { searchVisible: false, primaryAction: "auto" }, widgets: widgetsFor(cfg.scenario) }
+  return { schemaVersion: 2, themeId: cfg.themeId, appearance: cfg.overrides, meta: { searchVisible: false, primaryAction: "auto" }, widgets: widgetsFor(cfg.scenario), savedLooks: [], savedStyles: [] }
 }
 
 export function toContent(cfg: LabConfig): BusinessContent {

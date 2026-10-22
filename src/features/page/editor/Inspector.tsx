@@ -16,7 +16,11 @@ import { WidgetAppearanceForm, WidgetFields } from "./WidgetEditor"
 import type { Selection } from "./selection"
 import type { Editor } from "./useEditor"
 
+const CompactCtx = React.createContext(false)
+
 function Head({ title, hint, icon, onBack }: { title: string; hint?: string; icon?: React.ReactNode; onBack?: () => void }) {
+  const compact = React.useContext(CompactCtx)
+  if (compact) return hint ? <p className="mb-3 text-xs text-muted-foreground">{hint}</p> : null
   return (
     <div className="mb-3 flex items-start gap-2">
       {onBack ? <Button type="button" variant="ghost" size="icon" className="-ml-2 size-10 shrink-0" onClick={onBack} aria-label="Back to page style"><ArrowLeft /></Button> : null}
@@ -27,7 +31,13 @@ function Head({ title, hint, icon, onBack }: { title: string; hint?: string; ico
 }
 
 /** Right pane: controls for exactly what is selected. Nothing else is shown. */
-export function Inspector({ ed, selection, onSelect, notify }: { ed: Editor; selection: Selection; onSelect: (s: Selection) => void; notify: (msg: string, undoable?: boolean) => void }) {
+export function Inspector(props: InspectorProps) {
+  return <CompactCtx.Provider value={props.compact ?? false}><InspectorBody {...props} /></CompactCtx.Provider>
+}
+
+interface InspectorProps { ed: Editor; selection: Selection; onSelect: (s: Selection) => void; notify: (msg: string, undoable?: boolean) => void; /** Inside a sheet that already shows the title and a back button. */ compact?: boolean }
+
+function InspectorBody({ ed, selection, onSelect, notify }: InspectorProps) {
   const back = () => onSelect({ kind: "page" })
 
   if (selection.kind === "widget") {

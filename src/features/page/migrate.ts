@@ -71,6 +71,8 @@ export function migratePage(raw: unknown, industryKey = "other"): MigrationResul
       themeId: typeof r.themeId === "string" ? r.themeId : DEFAULT_THEME_ID,
       appearance: (typeof r.appearance === "object" && r.appearance ? r.appearance : {}) as StyleOverrides,
       meta: { searchVisible: (r.meta as { searchVisible?: boolean } | undefined)?.searchVisible !== false, primaryAction: ((r.meta as { primaryAction?: string } | undefined)?.primaryAction ?? "auto") as PageDoc["meta"]["primaryAction"] },
+      savedLooks: [],
+      savedStyles: [],
       widgets: widgets
         .filter((w): w is Record<string, unknown> => !!w && typeof w === "object" && typeof (w as { type?: unknown }).type === "string" && typeof (w as { id?: unknown }).id === "string")
         .map((w) => ({ id: String(w.id), type: String(w.type), version: Number(w.version) || 1, hidden: Boolean(w.hidden), appearance: (w.appearance ?? {}) as StoredWidget["appearance"], settings: (w.settings ?? {}) as Record<string, unknown> })),

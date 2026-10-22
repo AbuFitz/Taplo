@@ -28,11 +28,18 @@ export function Lab() {
   const [device, setDevice] = React.useState<"phone" | "desktop">("phone")
 
   const set = h.set
+  const [savedLooks, setSavedLooks] = React.useState<{ id: string; name: string; themeId: string; overrides: StyleOverrides }[]>([])
   const host = React.useMemo<AppearanceHost>(() => ({
     themeId, overrides, canSwitchLook: true,
+    saved: {
+      items: savedLooks.map((l) => ({ id: l.id, name: l.name })),
+      save: (name) => setSavedLooks((s) => [...s.slice(-11), { id: `look-${Date.now().toString(36)}`, name, themeId, overrides: structuredClone(overrides) }]),
+      apply: (id) => { const l = savedLooks.find((x) => x.id === id); if (l) set({ themeId: l.themeId, overrides: structuredClone(l.overrides) }) },
+      remove: (id) => setSavedLooks((s) => s.filter((l) => l.id !== id)),
+    },
     apply: (fn, coalesce) => set((s) => ({ ...s, overrides: fn(s.overrides) }), coalesce),
     setAppearance: (id, o) => set({ themeId: id, overrides: o }),
-  }), [themeId, overrides, set])
+  }), [themeId, overrides, set, savedLooks])
   const m = useAppearanceModel(host)
 
   const frameSrc = (s: Scenario) => `/appearance/frame?scenario=${s}&look=${themeId}`

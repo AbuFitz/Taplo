@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Lock, RotateCcw } from "lucide-react"
+import { Lock, RotateCcw, X } from "lucide-react"
 import { ColorField, ImageField } from "@/features/page/editor/controls"
 import { DECORATIONS, type StyleSpec } from "@/features/page/contracts/style"
 import { FONT_LABELS } from "@/features/page/themes/fonts"
@@ -27,6 +27,32 @@ export function LookPicker({ m }: M) {
       />
       {!m.canSwitchLook ? <p className="flex items-center gap-1.5 text-xs text-neutral-500"><Lock className="size-3.5" aria-hidden="true" />Choosing a different theme is included from the Core plan.</p> : null}
       <p className="text-xs text-neutral-500">{m.look.description} Everything below stays editable.</p>
+      {m.saved ? <SavedLooks m={m} /> : null}
+    </div>
+  )
+}
+
+/** Owner-created looks: save the current style under a name, apply it again later. */
+function SavedLooks({ m }: M) {
+  const [name, setName] = React.useState("")
+  const saved = m.saved!
+  return (
+    <div className="grid gap-2 rounded-2xl bg-black/[0.035] p-3" data-testid="saved-looks">
+      <p className="text-xs font-semibold">My looks</p>
+      {saved.items.length ? (
+        <ul className="flex flex-wrap gap-1.5" aria-label="Saved looks">
+          {saved.items.map((l) => (
+            <li key={l.id} className="inline-flex items-center overflow-hidden rounded-full bg-white shadow-[0_0_0_1px_rgb(0_0_0/0.1)]">
+              <button type="button" onClick={() => saved.apply(l.id)} className="min-h-9 pl-3 pr-2 text-xs font-medium hover:bg-black/[0.04]">{l.name}</button>
+              <button type="button" onClick={() => saved.remove(l.id)} aria-label={`Delete ${l.name}`} className="grid size-9 place-items-center text-neutral-500 hover:bg-black/[0.04] hover:text-neutral-900"><X className="size-3.5" aria-hidden="true" /></button>
+            </li>
+          ))}
+        </ul>
+      ) : <p className="text-xs text-neutral-500">Happy with how it looks? Save it, then try other things and come back.</p>}
+      <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); const n = name.trim(); if (!n) return; saved.save(n); setName("") }}>
+        <input aria-label="Name this look" value={name} maxLength={40} onChange={(e) => setName(e.target.value)} placeholder="Name this look" className="h-10 min-w-0 flex-1 rounded-xl border border-input bg-white px-3 text-sm" />
+        <button type="submit" disabled={!name.trim()} className="h-10 shrink-0 rounded-xl bg-neutral-900 px-3.5 text-xs font-medium text-white disabled:opacity-40">Save</button>
+      </form>
     </div>
   )
 }

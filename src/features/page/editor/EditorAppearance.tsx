@@ -5,6 +5,7 @@ import { Disclosure } from "@/features/appearance/controls"
 import { useAppearanceModel, type AppearanceHost } from "@/features/appearance/model"
 import { AppearancePanel, HeaderControls } from "@/features/appearance/sections"
 import { ChoiceGrid } from "@/features/appearance/controls"
+import { newId } from "@/features/demo/actions"
 import { ImageField } from "./controls"
 import { ProfileSections } from "./ContentTab"
 import type { Editor } from "./useEditor"
@@ -20,7 +21,13 @@ function useEditorAppearance(ed: Editor, notify: (m: string, undoable?: boolean)
     apply: (fn, coalesce) => setAppearance(fn, coalesce ? `ap:${coalesce}` : undefined),
     setAppearance: (themeId, appearance) => setPage((p) => ({ ...p, themeId, appearance })),
     notify,
-  }), [page.themeId, page.appearance, ed.vm?.ent.themeSwitching, setAppearance, setPage, notify])
+    saved: {
+      items: page.savedLooks.map((l) => ({ id: l.id, name: l.name })),
+      save: (name) => { setPage((p) => ({ ...p, savedLooks: [...p.savedLooks.slice(-11), { id: newId("look"), name, themeId: p.themeId, overrides: structuredClone(p.appearance) }] })); notify("Saved to My looks.") },
+      apply: (id) => { setPage((p) => { const l = p.savedLooks.find((x) => x.id === id); return l ? { ...p, themeId: l.themeId, appearance: structuredClone(l.overrides) } : p }); notify("Look applied.", true) },
+      remove: (id) => setPage((p) => ({ ...p, savedLooks: p.savedLooks.filter((l) => l.id !== id) })),
+    },
+  }), [page.themeId, page.appearance, page.savedLooks, ed.vm?.ent.themeSwitching, setAppearance, setPage, notify])
   return useAppearanceModel(host)
 }
 

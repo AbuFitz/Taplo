@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { styleOverridesSchema } from "./style";
+import { styleOverridesSchema, widgetAppearanceSchema } from "./style";
 import { widgetEnvelopeSchema } from "./widgets";
 
 export const PAGE_SCHEMA_VERSION = 2;
@@ -24,5 +24,9 @@ export const pageDocSchema = z.object({
     })
     .default({ searchVisible: true, primaryAction: "auto" }),
   widgets: z.array(widgetEnvelopeSchema).max(60),
+  /** Owner-created, reusable page styles ("My looks"): a starting look plus the owner's changes. */
+  savedLooks: z.array(z.object({ id: z.string().min(1).max(64), name: z.string().trim().min(1).max(40), themeId: z.string().min(1).max(64), overrides: styleOverridesSchema })).max(12).default([]),
+  /** Owner-created, reusable widget styles. Applying one copies it onto a widget; widgets stay individually editable. */
+  savedStyles: z.array(z.object({ id: z.string().min(1).max(64), name: z.string().trim().min(1).max(40), appearance: widgetAppearanceSchema })).max(20).default([]),
 });
 export type PageDoc = z.infer<typeof pageDocSchema>;

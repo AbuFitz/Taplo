@@ -1,13 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { Eye, Pencil, Redo2, Undo2 } from "lucide-react"
+import { Redo2, Undo2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { canPublish, hasUnpublishedChanges, publish, readiness } from "@/features/demo/actions"
 import { PreviewFrame } from "@/features/demo/ui"
-import { cn } from "@/lib/utils"
 import { Inspector } from "./Inspector"
+import { MobileEditor } from "./MobileEditor"
 import { Structure } from "./Structure"
 import { PAGE, type Selection } from "./selection"
 import { useEditor } from "./useEditor"
@@ -26,8 +25,6 @@ export function MyPage() {
   const ed = useEditor()
   const wide = useWide()
   const [selection, setSelection] = React.useState<Selection>(PAGE)
-  const [view, setView] = React.useState<"edit" | "preview">("edit")
-  const [sheetOpen, setSheetOpen] = React.useState(false)
   const [note, setNote] = React.useState<{ msg: string; undoable: boolean } | null>(null)
   const noteTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -37,10 +34,7 @@ export function MyPage() {
     noteTimer.current = setTimeout(() => setNote(null), 9000)
   }, [])
 
-  const select = React.useCallback((s: Selection) => {
-    setSelection(s)
-    setSheetOpen(true)
-  }, [])
+  const select = setSelection
 
   // A selected widget that disappears (removed, or undone away) shows the page controls instead.
   const gone = selection.kind === "widget" && ed && !ed.state.page.widgets.some((w) => w.id === selection.id)
@@ -99,37 +93,19 @@ export function MyPage() {
   const inspector = <Inspector ed={ed} selection={effective} onSelect={setSelection} notify={notify} />
   const preview = <PreviewFrame height={wide ? 780 : 700} selection={effective} onSelect={select} />
 
+  if (!wide) return <MobileEditor ed={ed} selection={effective} setSelection={setSelection} notify={notify} note={note} clearNote={() => setNote(null)} />
+
   return (
     <div data-testid="my-page">
       <div className="sticky top-0 z-20 -mx-4 mb-3 border-b bg-background/95 px-4 py-2.5 backdrop-blur lg:-mx-8 lg:px-8">{toolbar}</div>
       {banners}
       {missing.length ? <p className="mb-3 text-xs text-muted-foreground">To publish: {missing.map((m) => m.label.toLowerCase()).join(", ")}.</p> : null}
 
-      {wide ? (
-        <div className="grid grid-cols-[18rem_minmax(0,1fr)_22rem] items-start gap-5">
+      <div className="grid grid-cols-[18rem_minmax(0,1fr)_22rem] items-start gap-5">
           <div className="max-h-[calc(100dvh-8rem)] overflow-y-auto pr-1"><Structure ed={ed} selection={effective} onSelect={setSelection} notify={notify} /></div>
           <div className="sticky top-20 min-w-0">{preview}</div>
           <div className="max-h-[calc(100dvh-8rem)] overflow-y-auto rounded-xl border bg-card p-4" data-testid="inspector">{inspector}</div>
-        </div>
-      ) : (
-        <>
-          <div role="group" aria-label="Editor view" className="mb-3 grid grid-cols-2 gap-1 rounded-lg bg-muted p-1">
-            {([["edit", "Edit", Pencil], ["preview", "Preview", Eye]] as const).map(([v, label, Icon]) => (
-              <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)} data-testid={`view-${v}`}
-                className={cn("flex min-h-11 items-center justify-center gap-2 rounded-md text-sm font-medium", view === v ? "bg-background shadow-sm" : "text-muted-foreground")}>
-                <Icon aria-hidden="true" className="size-4" />{label}
-              </button>
-            ))}
-          </div>
-          {view === "edit" ? <Structure ed={ed} selection={effective} onSelect={select} notify={notify} /> : preview}
-          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-            <SheetContent side="bottom" className="h-[85dvh] gap-0 overflow-y-auto rounded-t-2xl p-4" data-testid="inspector-sheet">
-              <SheetHeader className="p-0 pb-2"><SheetTitle className="sr-only">Edit</SheetTitle><SheetDescription className="sr-only">Controls for the selected part of your page</SheetDescription></SheetHeader>
-              {inspector}
-            </SheetContent>
-          </Sheet>
-        </>
-      )}
+      </div>
     </div>
   )
 }

@@ -13,6 +13,7 @@ import type { WidgetAppearance } from "../contracts/style"
 import type { StoredWidget } from "../starter"
 import type { FieldSource, FieldSpec } from "../widgets/types"
 import { getWidget } from "../widgets/registry"
+import { newId } from "@/features/demo/actions"
 import { ChoiceGrid, Field, Segment } from "@/features/appearance/controls"
 import { ButtonTile, SurfaceTile } from "@/features/appearance/previews"
 import { ColorField, FieldShell, ImageField, Segmented, SelectField, SwitchField } from "./controls"
@@ -122,12 +123,21 @@ export function WidgetAppearanceForm({ stored, ed }: { stored: StoredWidget; ed:
   const dirty = (k: keyof WidgetAppearance) => a[k] !== undefined
   const accentTile = <span className="grid h-14 w-full place-items-center bg-[#ecebe7]"><span className="grid h-9 w-[4.5rem] place-items-center rounded-lg text-[0.625rem] font-semibold" style={{ background: spec.colors.accent, color: spec.colors.accentText }}>Aa</span></span>
 
+  const page = ed.state.page
+  const saveStyle = (name: string) => ed.setPage((p) => ({ ...p, savedStyles: [...p.savedStyles.slice(-19), { id: newId("style"), name, appearance: structuredClone(a) }] }))
+  const applyStyle = (id: string, toAll = false) => ed.setPage((p) => {
+    const st = p.savedStyles.find((x) => x.id === id)
+    if (!st) return p
+    return { ...p, widgets: p.widgets.map((w) => (w.id === stored.id || (toAll && w.type === stored.type) ? { ...w, appearance: structuredClone(st.appearance) } : w)) }
+  })
+
   return (
     <div className="grid gap-5" data-testid="widget-appearance">
       <div className="flex items-center justify-between gap-2 rounded-xl bg-black/[0.04] px-3 py-2">
         <p className="text-xs text-neutral-600">{count ? `${count} setting${count === 1 ? "" : "s"} differ from the page style.` : "Following your page style."}</p>
         <button type="button" disabled={!count} onClick={() => ed.updateWidget(stored.id, { appearance: null })} className="min-h-8 text-xs font-medium text-neutral-900 underline-offset-4 hover:underline disabled:pointer-events-none disabled:opacity-40">Reset to page style</button>
       </div>
+      <SavedStyles styles={page.savedStyles} canSave={count > 0} onSave={saveStyle} onApply={applyStyle} onRemove={(id) => ed.setPage((p) => ({ ...p, savedStyles: p.savedStyles.filter((x) => x.id !== id) }))} typeLabel={def.label} />
       <Field label="Emphasis" dirty={dirty("emphasis")} onReset={() => unset("emphasis")} hint="Featured is larger with an accent border.">
         <Segment label="Emphasis" value={a.emphasis ?? "normal"} options={[{ value: "normal", label: "Normal" }, { value: "featured", label: "Featured" }]} onChange={(v) => set({ emphasis: v })} />
       </Field>
@@ -166,6 +176,35 @@ export function WidgetAppearanceForm({ stored, ed }: { stored: StoredWidget; ed:
         <FieldShell label="Thumbnail picture" customised={a.thumbnail !== undefined} onReset={() => unset("thumbnail")}>
           <ImageField label="Shown beside the button text" value={a.thumbnail ?? null} defaultAlt="Link thumbnail" onChange={(v) => set({ thumbnail: v ?? undefined })} focalHint="Choose the part of the picture to keep in the small square." maxEdge={256} />
         </FieldShell>
+      ) : null}
+    </div>
+  )
+}
+
+/** Reusable widget styles: save what this widget looks like, then apply it to another widget (or every widget of this kind). */
+function SavedStyles({ styles, canSave, onSave, onApply, onRemove, typeLabel }: { styles: { id: string; name: string }[]; canSave: boolean; onSave: (name: string) => void; onApply: (id: string, toAll?: boolean) => void; onRemove: (id: string) => void; typeLabel: string }) {
+  const [name, setName] = React.useState("")
+  if (!styles.length && !canSave) return null
+  return (
+    <div className="grid gap-2 rounded-2xl bg-black/[0.035] p-3" data-testid="saved-styles">
+      <p className="text-xs font-semibold">Saved styles</p>
+      {styles.length ? (
+        <ul className="grid gap-1.5" aria-label="Saved widget styles">
+          {styles.map((st) => (
+            <li key={st.id} className="flex items-center gap-1 rounded-xl bg-white pl-3 shadow-[0_0_0_1px_rgb(0_0_0/0.1)]">
+              <span className="min-w-0 flex-1 truncate text-xs font-medium">{st.name}</span>
+              <button type="button" onClick={() => onApply(st.id)} className="min-h-9 px-2 text-xs font-medium underline-offset-4 hover:underline">Apply</button>
+              <button type="button" onClick={() => onApply(st.id, true)} className="min-h-9 px-2 text-xs font-medium underline-offset-4 hover:underline">All {typeLabel.toLowerCase()}</button>
+              <button type="button" onClick={() => onRemove(st.id)} aria-label={`Delete ${st.name}`} className="grid size-9 place-items-center text-neutral-500 hover:text-neutral-900">×</button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {canSave ? (
+        <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); const n = name.trim(); if (!n) return; onSave(n); setName("") }}>
+          <input aria-label="Name this style" value={name} maxLength={40} onChange={(e) => setName(e.target.value)} placeholder="Save this look as…" className="h-10 min-w-0 flex-1 rounded-xl border border-input bg-white px-3 text-sm" />
+          <button type="submit" disabled={!name.trim()} className="h-10 shrink-0 rounded-xl bg-neutral-900 px-3.5 text-xs font-medium text-white disabled:opacity-40">Save</button>
+        </form>
       ) : null}
     </div>
   )
