@@ -155,7 +155,7 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
       return { text: jsQR(new Uint8ClampedArray(data), info.width, info.height)?.data, w: info.width, h: info.height }
     }
 
-    // The on-screen code: rasterise it as shown and decode it. The business has a logo, so it sits in the middle.
+    // The on-screen code: rasterise it as shown and decode it. Every business gets the Taplo mark in the middle.
     await expect(panel.locator('[data-testid="qr-preview"] svg image')).toHaveCount(1)
     const px = await panel.locator("[data-testid=qr-preview] svg").evaluate(async (svg) => {
       const s = new XMLSerializer().serializeToString(svg)
@@ -167,15 +167,11 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
     })
     expect(jsQR(new Uint8ClampedArray(px), 520, 520)?.data).toBe(url)
 
-    // Every export, in every style: file name, exact size and the destination it decodes to.
-    for (const look of ["Classic", "Soft", "Round"]) {
-      await panel.getByRole("button", { name: look, exact: true }).click()
-      const [dl] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: /QR code · Screen/ }).click()])
-      expect(dl.suggestedFilename(), look).toBe("marlowe-and-finch-preview-qr-1024px.png")
-      const f = await decodeFile(await dl.path())
-      expect((await sharp(await dl.path()).metadata()).width, look).toBe(1024)
-      expect(f.text, `${look} screen PNG`).toBe(url)
-    }
+    // Every export: file name, exact size and the destination it decodes to.
+    const [dl] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: /QR code · Screen/ }).click()])
+    expect(dl.suggestedFilename()).toBe("marlowe-and-finch-preview-qr-1024px.png")
+    expect((await decodeFile(await dl.path())).text, "screen PNG").toBe(url)
+    expect((await sharp(await dl.path()).metadata()).width).toBe(1024)
     const [big] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: /QR code · Print/ }).click()])
     expect(big.suggestedFilename()).toBe("marlowe-and-finch-preview-qr-3000px.png")
     const bf = await decodeFile(await big.path())

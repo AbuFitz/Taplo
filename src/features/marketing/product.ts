@@ -2,10 +2,11 @@
  * Product pages. Every claim here is checked against docs/messaging.md ("Supported now").
  * `status` is shown on each page so what works today and what needs a connection are never blurred.
  */
-export type Status = { label: string; state: "works" | "needs"; note?: string }
+import { featureNote, featureState, type FeatureId } from "@/lib/feature-status"
+export type Status = { label: string; state: "works" | "needs"; note?: string; /** When set, state and note come from the central feature-status list. */ feature?: FeatureId }
 
 export interface ProductPage {
-  slug: "design" | "services" | "enquiries" | "booking" | "team" | "products" | "vehicles" | "gallery-reviews" | "sharing"
+  slug: "design" | "services" | "enquiries" | "booking" | "team" | "products" | "vehicles" | "gallery-reviews" | "sharing" | "messages"
   label: string
   eyebrow: string
   title: string
@@ -47,8 +48,8 @@ export const PRODUCT_PAGES: ProductPage[] = [
     status: [
       { label: "Call, WhatsApp, email and directions buttons", state: "works" },
       { label: "A contact form with validation and clear confirmation", state: "works" },
-      { label: "Enquiries kept in this browser in preview", state: "works" },
-      { label: "Email delivery of enquiries", state: "needs", note: "Needs an email provider. Nothing is emailed today." },
+      { label: "Every enquiry kept for the owner", state: "works", feature: "enquiryInbox" },
+      { label: "Each enquiry also emailed to the owner", state: "needs", feature: "enquiryEmail" },
     ],
     related: ["booking", "services", "sharing"],
   },
@@ -118,15 +119,34 @@ export const PRODUCT_PAGES: ProductPage[] = [
   {
     slug: "sharing", label: "Sharing and QR codes", eyebrow: "Sharing and QR codes",
     title: "One link, and a code for the counter.",
-    lead: "Copy the link, download a QR code to print, make a share image, or send it from your phone.",
+    lead: "Copy the link, download a Taplo QR code, make a share image, or send it from your phone.",
     status: [
-      { label: "Link, QR code (PNG and print-ready SVG), share image", state: "works" },
+      { label: "A Taplo QR code with the Taplo mark in the middle, as PNG for screens, PNG for print and SVG", state: "works" },
+      { label: "A share image with your name, your logo and the code", state: "works" },
       { label: "Share from a phone with the system share sheet", state: "works" },
-      { label: "A public link anyone can open", state: "needs", note: "Needs accounts and publishing. In preview the link opens in your own browser." },
+      { label: "A public address for every page", state: "needs", feature: "publicLinks" },
       { label: "Exact link previews in social apps", state: "needs", note: "Apps decide this and cache it. Taplo cannot guarantee it." },
     ],
     related: ["design", "enquiries", "gallery-reviews"],
   },
+  {
+    slug: "messages", label: "Messages and reminders", eyebrow: "Messages and reminders",
+    title: "Five kinds of message, each one called what it is.",
+    lead: "Opening a customer’s text app, sending an enquiry, confirming an appointment, reminding them, and telling opted-in customers about an offer are different things. Taplo keeps them apart.",
+    status: [
+      { label: "Text us: opens the customer’s own messages app with the words ready", state: "works", feature: "textApp" },
+      { label: "A contact form that keeps each enquiry for the owner", state: "works", feature: "enquiryInbox" },
+      { label: "Appointment confirmations, changes and cancellations", state: "needs", feature: "appointmentMessages" },
+      { label: "Reminders before an appointment", state: "needs", feature: "reminders" },
+      { label: "Offers to customers who have opted in", state: "needs", feature: "promotions" },
+    ],
+    related: ["enquiries", "booking", "sharing"],
+  },
 ]
+
+/** A product page's status lines with anything tied to a feature resolved from the central list. */
+export function resolveStatus(list: Status[]): Status[] {
+  return list.map((x) => (x.feature ? { ...x, state: featureState(x.feature), note: featureState(x.feature) === "needs" ? featureNote(x.feature) : x.note } : x))
+}
 
 export const pageBySlug = (slug: string) => PRODUCT_PAGES.find((p) => p.slug === slug)

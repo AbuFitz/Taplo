@@ -5,7 +5,7 @@ import { Check, Clock } from "lucide-react"
 import { SiteFooter, SiteHeader, primaryAction } from "@/features/marketing/Site"
 import { ArrowLink } from "@/features/marketing/Scenes"
 import { SCENES } from "@/features/marketing/ProductScenes"
-import { PRODUCT_PAGES, pageBySlug } from "@/features/marketing/product"
+import { PRODUCT_PAGES, pageBySlug, resolveStatus } from "@/features/marketing/product"
 
 export function generateStaticParams() { return PRODUCT_PAGES.map((p) => ({ slug: p.slug })) }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -25,17 +25,16 @@ export default async function ProductPageRoute({ params }: { params: Promise<{ s
       <main>
         <section className="mx-auto w-full max-w-7xl px-5 pb-12 pt-14 sm:pt-20">
           <nav aria-label="Breadcrumb" className="text-sm text-foreground/55"><Link href="/product" className="hover:text-foreground">Product</Link></nav>
-          <p className="mt-6 text-sm font-semibold uppercase tracking-[0.16em] text-signal-ink">{p.eyebrow}</p>
-          <h1 className="font-display font-display-tight mt-4 max-w-4xl text-[clamp(2.5rem,6vw,5rem)] text-balance">{p.title}</h1>
+          <h1 className="font-display font-display-tight mt-6 max-w-4xl text-[clamp(2.5rem,6vw,5rem)] text-balance">{p.title}</h1>
           <p className="mt-6 max-w-2xl text-xl leading-relaxed text-foreground/70">{p.lead}</p>
         </section>
         <section className="mx-auto w-full max-w-7xl px-5 pb-20"><Scene /></section>
 
         <section className="border-y border-foreground/10 bg-muted py-16">
           <div className="mx-auto grid grid-cols-[minmax(0,1fr)] w-full max-w-7xl gap-10 px-5 lg:grid-cols-[1fr_2fr]">
-            <div><h2 className="font-display font-display-tight text-[clamp(1.5rem,3vw,2.25rem)]">What works today</h2><p className="mt-3 text-[0.9375rem] text-foreground/65">Taplo is in preview. This is exactly what you can use now, and what still needs a connection.</p></div>
+            <div><h2 className="font-display font-display-tight text-[clamp(1.5rem,3vw,2.25rem)]">What is included</h2><p className="mt-3 text-[0.9375rem] text-foreground/65">What works now, and what switches on when a service is connected.</p></div>
             <ul className="divide-y divide-foreground/10" data-testid="status">
-              {p.status.map((s) => (
+              {resolveStatus(p.status).map((s) => (
                 <li key={s.label} className="flex gap-3 py-3.5">
                   {s.state === "works" ? <Check aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-emerald-700" /> : <Clock aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-amber-700" />}
                   <div><p className="font-medium"><span className="sr-only">{s.state === "works" ? "Works today: " : "Needs a connection: "}</span>{s.label}</p>{s.note ? <p className="mt-0.5 text-sm text-foreground/60">{s.note}</p> : null}</div>

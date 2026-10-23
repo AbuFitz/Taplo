@@ -12,6 +12,7 @@ export const PRODUCT_GROUPS: NavGroup[] = [
       { href: "/product/design", label: "Looks and design", blurb: "Start from a look, then change anything." },
       { href: "/product/services", label: "Services and prices", blurb: "Price menus people can read at a glance." },
       { href: "/product/enquiries", label: "Contact and enquiries", blurb: "A clear way to ask, with nothing reserved by mistake." },
+      { href: "/product/messages", label: "Messages and reminders", blurb: "Texts, enquiries, confirmations and reminders, kept apart." },
     ],
   },
   {

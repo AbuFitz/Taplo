@@ -32,7 +32,7 @@ describe("widget registry", () => {
     }
   });
   it("covers every required category of widget", () => {
-    const need: WidgetType[] = ["call", "whatsapp", "email", "social", "link", "directions", "serviceList", "featuredService", "priceMenu", "booking", "products", "offers", "payment", "reviews", "leaveReview", "team", "credentials", "text", "image", "gallery", "video", "faq", "document", "hours", "location", "serviceArea", "announcement"];
+    const need: WidgetType[] = ["call", "sms", "whatsapp", "email", "social", "link", "directions", "serviceList", "featuredService", "priceMenu", "booking", "products", "offers", "payment", "reviews", "leaveReview", "team", "credentials", "text", "image", "gallery", "video", "faq", "document", "hours", "location", "serviceArea", "announcement"];
     for (const t of need) expect(WIDGETS[t], t).toBeDefined();
   });
   it("marks payments as simulated and never as live", () => {

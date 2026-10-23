@@ -14,7 +14,7 @@ const ids = z.array(z.string().max(64)).nullable().default(null);
 const linkVariant = z.enum(["button", "card", "compact"]).default("button");
 
 export const WIDGET_TYPES = [
-  "call", "whatsapp", "email", "social", "link", "directions",
+  "call", "sms", "whatsapp", "email", "social", "link", "directions",
   "serviceList", "featuredService", "priceMenu", "booking", "products", "offers", "payment",
   "reviews", "leaveReview", "team", "credentials",
   "text", "image", "gallery", "video", "faq", "document",
@@ -29,6 +29,7 @@ export type WidgetCategory = (typeof WIDGET_CATEGORIES)[number];
 /** One settings schema per type. Every field has a default so a stored widget can never be half-valid. */
 export const settingsSchemas = {
   call: z.object({ label, subtitle: label, variant: linkVariant }),
+  sms: z.object({ label, subtitle: label, variant: linkVariant }),
   whatsapp: z.object({ label, subtitle: label, variant: linkVariant }),
   email: z.object({ label, subtitle: label, variant: linkVariant }),
   directions: z.object({ label, subtitle: label, variant: linkVariant }),

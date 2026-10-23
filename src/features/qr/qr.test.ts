@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import sharp from "sharp"
 import jsQR from "jsqr"
@@ -13,7 +14,11 @@ const URL_SHORT = "https://taplo.example/marlowe-and-finch"
 const URL_LOCAL = "http://localhost:3200/demo/p/marlowe-and-finch"
 const URL_LONG = `https://taplo.example/marlowe-and-finch/book?service=signature-cut&staff=jonah-marlowe&utm_source=window-sticker&utm_medium=qr&utm_campaign=${"spring-opening-offer-".repeat(6)}`
 
+// The code every business gets: the real Taplo mark in the middle, Taplo ink on white.
+const TAPLO_MARK: QrLogo = { href: `data:image/svg+xml;base64,${readFileSync("public/logo/taplo-symbol-black-tight.svg").toString("base64")}`, aspect: 577 / 526 }
+
 const styles: Record<string, QrStyle> = {
+  "the Taplo code: Taplo mark, soft modules, rounded corners": { dots: "rounded", corners: "rounded", fg: "#12141a", bg: "#ffffff", logo: TAPLO_MARK },
   "square, no logo": { dots: "square", corners: "square", fg: "#000000", bg: "#ffffff" },
   "rounded dots, rounded corners, brand colour": { dots: "rounded", corners: "rounded", fg: "#14213d", bg: "#ffffff" },
   "round dots, round corners, logo": { dots: "dots", corners: "round", fg: "#0b3d2e", bg: "#ffffff", logo: svgLogo(200, 200) },

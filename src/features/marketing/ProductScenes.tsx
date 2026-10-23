@@ -3,6 +3,7 @@ import { Shot } from "./Shot"
 import { YoursScene } from "./YoursScene"
 import { cn } from "@/lib/utils"
 import type { ProductPage } from "./product"
+import { featureNote, featureState, type FeatureId } from "@/lib/feature-status"
 
 /**
  * One composition per product page, each built differently on purpose: a strip of looks, a journey timeline,
@@ -184,6 +185,40 @@ function Sharing() {
   )
 }
 
+const MESSAGE_KINDS: { id: FeatureId; kind: string; from: string; text: string; who: string }[] = [
+  { id: "textApp", kind: "Text us", from: "Opens the customer’s own messages app", text: "Hi Marlowe & Finch, I’d like to ask about your services.", who: "The customer reads it, edits it and sends it from their own phone." },
+  { id: "enquiryInbox", kind: "Enquiry", from: "Sent from the contact form", text: "Thanks. Marlowe & Finch will reply to the number you gave. Nothing is reserved.", who: "Kept in the owner’s dashboard with the customer’s details." },
+  { id: "appointmentMessages", kind: "Appointment message", from: "Sent by the business, about one booking", text: "Confirmed: Signature cut with Jonah, Thursday 23 October at 10:30.", who: "Confirmations, changes and cancellations." },
+  { id: "reminders", kind: "Reminder", from: "Sent before the appointment", text: "Reminder: Signature cut tomorrow at 10:30. Reply to change it.", who: "A nudge that cuts missed appointments." },
+  { id: "promotions", kind: "Offer", from: "Sent only to customers who opted in", text: "Spring offer: 10% off a first cut. Reply STOP to opt out.", who: "Needs consent, and a clear way out, every time." },
+]
+
+function Messages() {
+  return (
+    <ol className="grid grid-cols-[minmax(0,1fr)] gap-px overflow-hidden rounded-3xl bg-foreground/10" aria-label="The five kinds of message">
+      {MESSAGE_KINDS.map((m, n) => {
+        const live = featureState(m.id) === "works"
+        return (
+          <li key={m.id} className="grid grid-cols-[minmax(0,1fr)] items-center gap-6 bg-background p-6 sm:p-8 md:grid-cols-[3rem_1fr_1.2fr]" data-testid="message-kind" data-state={live ? "works" : "needs"}>
+            <p className="font-display text-4xl tabular-nums text-foreground/20 max-md:hidden">{n + 1}</p>
+            <div>
+              <h2 className="font-display font-display-tight text-[clamp(1.5rem,2.6vw,2.125rem)]">{m.kind}</h2>
+              <p className="mt-1 text-foreground/65">{m.from}</p>
+              <p className="mt-3 text-sm text-foreground/60">{m.who}</p>
+              <p className={cn("mt-4 inline-flex rounded-full px-3 py-1 text-sm font-medium", live ? "bg-emerald-100 text-emerald-900" : "bg-amber-100 text-amber-900")}>{live ? "Works now" : "Switches on when messaging is connected"}</p>
+              {live ? null : <p className="mt-2 max-w-sm text-sm text-foreground/60">{featureNote(m.id)}</p>}
+            </div>
+            <div className="max-w-md justify-self-start md:justify-self-end">
+              <p className={cn("rounded-3xl rounded-bl-md px-5 py-4 text-[0.9375rem] leading-relaxed", live ? "bg-signal text-white" : "bg-foreground/[0.06] text-foreground/80")}>{m.text}</p>
+              <p className="mt-2 text-xs text-foreground/50">{live ? "Sample of what the customer sees" : "Sample of what it will say. Nothing is sent yet."}</p>
+            </div>
+          </li>
+        )
+      })}
+    </ol>
+  )
+}
+
 export const SCENES: Record<ProductPage["slug"], () => React.ReactNode> = {
-  design: Design, services: Services, booking: Booking, team: Team, products: Products, vehicles: Vehicles, "gallery-reviews": GalleryReviews, enquiries: Enquiries, sharing: Sharing,
+  design: Design, services: Services, booking: Booking, team: Team, products: Products, vehicles: Vehicles, "gallery-reviews": GalleryReviews, enquiries: Enquiries, sharing: Sharing, messages: Messages,
 }

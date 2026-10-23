@@ -20,6 +20,11 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
     fields: [{ kind: "text", key: "label", label: "Button text", placeholder: "Call us", max: 60 }, { kind: "text", key: "subtitle", label: "Small text (optional)", max: 60 }, VARIANT_LINK],
     status: (_s, c) => (c.business.contacts.phone ? READY : channelEmpty("Add a phone number to show this button.")),
   },
+  sms: {
+    type: "sms", version: 1, label: "Text us", description: "Opens the customer's own text-message app with a message ready. Nothing is sent by Taplo.", category: "contact", icon: "MessageSquare", multiple: false, appearance: ["button", "card", "thumbnail"],
+    fields: [{ kind: "text", key: "label", label: "Button text", placeholder: "Text us", max: 60 }, { kind: "text", key: "subtitle", label: "Small text (optional)", max: 60 }, VARIANT_LINK],
+    status: (_s, c) => (c.business.contacts.phone ? READY : channelEmpty("Add a mobile number to show this button.")),
+  },
   whatsapp: {
     type: "whatsapp", version: 1, label: "WhatsApp", description: "Opens a WhatsApp chat.", category: "contact", icon: "MessageCircle", multiple: false, appearance: ["button", "card", "thumbnail"],
     fields: [{ kind: "text", key: "label", label: "Button text", placeholder: "Message us on WhatsApp", max: 60 }, { kind: "text", key: "subtitle", label: "Small text (optional)", max: 60 }, VARIANT_LINK],

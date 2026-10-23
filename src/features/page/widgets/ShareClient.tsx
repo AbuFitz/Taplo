@@ -6,7 +6,7 @@ import { Overlay } from "@/components/taplo/overlay"
 import { Button } from "@/components/ui/button"
 import { capabilities } from "@/lib/capabilities"
 import { loadQrLogo, svgToPng } from "@/features/qr/browser"
-import { QR_PRESETS, contrast, qrFilename, qrSvg, type QrLogo, type QrStyle } from "@/features/qr/render"
+import { QR_PRESETS, qrFilename, qrSvg, type QrLogo, type QrStyle } from "@/features/qr/render"
 
 /**
  * Sharing, with three things kept separate:
@@ -18,14 +18,12 @@ import { QR_PRESETS, contrast, qrFilename, qrSvg, type QrLogo, type QrStyle } fr
  * is the one that opens in this browser, and the files are named and explained that way.
  */
 
-export interface ShareData { name: string; tagline?: string; slug: string; /** The business logo, when it has one; used in the QR code and on the share image. */ logo?: string; /** What the share image says under the code, for example "Scan to book". */ action?: string }
+export interface ShareData { name: string; tagline?: string; slug: string; /** The business logo, when it has one; shown at the top of the share image (never inside the QR code). */ logo?: string; /** What the share image says under the code, for example "Scan to book". */ action?: string }
 
-const QR_LOOKS = {
-  classic: { label: "Classic", dots: "square", corners: "square" },
-  soft: { label: "Soft", dots: "rounded", corners: "rounded" },
-  round: { label: "Round", dots: "dots", corners: "round" },
-} as const
-type QrLook = keyof typeof QR_LOOKS
+/** Every business gets the same Taplo code: the Taplo mark in the middle, Taplo ink on white, soft modules and rounded finder corners. */
+const TAPLO_MARK = "/logo/taplo-symbol-black-tight.svg"
+const TAPLO_INK = "#12141a"
+const TAPLO_QR = { dots: "rounded", corners: "rounded" } as const
 
 function download(name: string, blob: Blob) {
   const url = URL.createObjectURL(blob)
@@ -59,7 +57,7 @@ function fitSize(ctx: CanvasRenderingContext2D, text: string, family: string, we
 
 const loadImage = (src: string): Promise<HTMLImageElement | null> => new Promise((res) => { const i = new window.Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src })
 
-export interface ShareImageInput { name: string; tagline?: string; url: string; action?: string; logo?: QrLogo | null; qr: QrStyle; fonts?: { heading: string; body: string }; colours: { bg: string; fg: string; accent: string; accentText: string } }
+export interface ShareImageInput { name: string; tagline?: string; url: string; action?: string; /** The business logo for the top of the image. The code carries the Taplo mark through `qr.logo`. */ logo?: QrLogo | null; qr: QrStyle; fonts?: { heading: string; body: string }; colours: { bg: string; fg: string; accent: string; accentText: string } }
 
 /** A 1080x1350 share image in the page's own colours and fonts: name, line, the business's QR code, the message and the link. Drawn on a canvas, never uploaded. */
 export async function renderShareImage(d: ShareImageInput): Promise<Blob | null> {
@@ -99,7 +97,7 @@ export async function renderShareImage(d: ShareImageInput): Promise<Blob | null>
   }
 
   // The code is the shared renderer's own drawing, on a plain plate (its quiet zone is part of the drawing).
-  const qrImg = await loadImage(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(qrSvg(d.url, { ...d.qr, logo: d.logo ?? null }, qrSize))}`)
+  const qrImg = await loadImage(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(qrSvg(d.url, d.qr, qrSize))}`)
   const bgq = "#ffffff"
   ctx.fillStyle = bgq; ctx.beginPath(); ctx.roundRect(qx - 16, qy - 16, qrSize + 32, qrSize + 32, 36); ctx.fill()
   if (qrImg) ctx.drawImage(qrImg, qx, qy, qrSize, qrSize)
@@ -129,12 +127,6 @@ function readFonts(el: HTMLElement | null) {
   return heading && body ? { heading, body } : undefined
 }
 
-/** The business's own colour for the code: its accent if that is dark enough, otherwise its text or page colour; the renderer still guarantees 7:1. */
-function brandColour(c: { bg: string; fg: string; accent: string }): string {
-  const ok = (x: string) => /^#[0-9a-f]{6}$/i.test(x) && contrast(x, "#ffffff") >= 7
-  return [c.accent, c.fg, c.bg].find(ok) ?? "#111111"
-}
-
 export function ShareButton({ data, label = "Share this page", variant = "button" }: { data: ShareData; label?: string; variant?: "button" | "card" }) {
   return (
     <SharePanel data={data} trigger={
@@ -153,7 +145,6 @@ export function SharePanel({ data, trigger, open, onOpenChange }: { data: ShareD
 }
 
 const noopSubscribe = () => () => {}
-const STORE = "taplo.qr.look"
 
 function ShareBody({ data }: { data: ShareData }) {
   // Read from the browser without an effect: empty on the server, real values once hydrated.
@@ -165,25 +156,25 @@ function ShareBody({ data }: { data: ShareData }) {
   const canShare = sharable === "true"
   const local = !preview && /^(https?:\/\/)(localhost|127\.|10\.|192\.168\.|\[::1\])/.test(origin)
   const [note, setNote] = React.useState("")
-  const [look, setLook] = React.useState<QrLook>(() => { try { const v = localStorage.getItem(STORE); return v && v in QR_LOOKS ? (v as QrLook) : "soft" } catch { return "soft" } })
-  const [logo, setLogo] = React.useState<QrLogo | null>(null)
+  const [mark, setMark] = React.useState<QrLogo | null>(null)
+  const [bizLogo, setBizLogo] = React.useState<QrLogo | null>(null)
   const [colours, setColours] = React.useState({ bg: "#ffffff", fg: "#111111", accent: "#111111", accentText: "#ffffff" })
   const root = React.useRef<HTMLDivElement>(null)
   const themed = () => root.current?.closest<HTMLElement>("[data-taplo-theme]") ?? document.querySelector<HTMLElement>("[data-taplo-theme]")
 
   React.useEffect(() => { setColours(readColours(themed())) }, [where])
-  React.useEffect(() => { let live = true; loadQrLogo(data.logo).then((l) => { if (live) setLogo(l) }); return () => { live = false } }, [data.logo])
+  React.useEffect(() => { let live = true; loadQrLogo(TAPLO_MARK).then((l) => { if (live) setMark(l) }); return () => { live = false } }, [])
+  React.useEffect(() => { let live = true; loadQrLogo(data.logo).then((l) => { if (live) setBizLogo(l) }); return () => { live = false } }, [data.logo])
 
   const say = (m: string) => { setNote(m); window.setTimeout(() => setNote((x) => (x === m ? "" : x)), 3500) }
-  const style: QrStyle = React.useMemo(() => ({ dots: QR_LOOKS[look].dots, corners: QR_LOOKS[look].corners, fg: brandColour(colours), bg: "#ffffff", logo }), [look, colours, logo])
+  const style: QrStyle = React.useMemo(() => ({ ...TAPLO_QR, fg: TAPLO_INK, bg: "#ffffff", logo: mark }), [mark])
   const svg = React.useMemo(() => (url ? qrSvg(url, style, 260, `QR code for ${data.name}`) : ""), [url, style, data.name])
-  const chooseLook = (l: QrLook) => { setLook(l); try { localStorage.setItem(STORE, l) } catch { /* the choice just is not remembered */ } }
 
   const copy = async () => {
     try { await navigator.clipboard.writeText(url); say("Link copied") }
     catch { const t = root.current?.querySelector<HTMLInputElement>("input[readonly]"); t?.select(); say("Press copy on your keyboard to copy the link") }
   }
-  const imageBlob = () => renderShareImage({ name: data.name, tagline: data.tagline, url, action: data.action ?? "Scan to open our page", logo, qr: style, fonts: readFonts(themed()), colours })
+  const imageBlob = () => renderShareImage({ name: data.name, tagline: data.tagline, url, action: data.action ?? "Scan to open our page", logo: bizLogo, qr: style, fonts: readFonts(themed()), colours })
   const shareNative = async () => {
     try {
       const blob = await imageBlob()
@@ -211,15 +202,7 @@ function ShareBody({ data }: { data: ShareData }) {
         <label htmlFor="share-url" className="text-sm font-medium">Link</label>
         <div className="flex gap-2"><input id="share-url" readOnly value={url} onFocus={(e) => e.currentTarget.select()} className="min-h-11 min-w-0 flex-1 rounded-xl border border-tp-border bg-transparent px-3 text-sm" /><Button type="button" variant="outline" className="min-h-11 shrink-0" onClick={copy}><Copy /> Copy link</Button></div>
       </div>
-      <fieldset className="grid gap-1.5">
-        <legend className="text-sm font-medium">QR code style</legend>
-        <div className="grid grid-cols-3 gap-2">
-          {(Object.keys(QR_LOOKS) as QrLook[]).map((k) => (
-            <button key={k} type="button" aria-pressed={look === k} onClick={() => chooseLook(k)} className="min-h-11 rounded-xl border border-tp-border px-3 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-tp-accent aria-pressed:border-tp-accent aria-pressed:bg-tp-accent/10">{QR_LOOKS[k].label}</button>
-          ))}
-        </div>
-        <p className="text-xs text-tp-muted">{logo ? "Your logo sits in the middle. " : "No logo to place, so the code stays clean. "}Colours come from your page; the code always stays dark on light so it scans.</p>
-      </fieldset>
+      <p className="text-xs text-tp-muted">The code carries the Taplo mark and stays dark on white so every phone reads it.</p>
       <div className="grid gap-2 sm:grid-cols-2">
         {canShare ? <Button type="button" className="min-h-11 bg-tp-accent text-tp-accent-fg hover:bg-tp-accent/90 sm:col-span-2" onClick={shareNative}><Share2 /> Share from this device</Button> : null}
         <Button type="button" variant="outline" className="min-h-11 sm:col-span-2" onClick={saveImage}><Download /> Share image (1080 × 1350)</Button>

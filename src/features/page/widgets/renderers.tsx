@@ -5,7 +5,7 @@ import type { ProductContent, ServiceContent } from "@/features/businesses/conte
 import { formatDuration, formatMoney, formatPrice, groupServices } from "@/features/services/format"
 import { SOURCE_LABEL } from "@/components/taplo/taplo-review-card"
 import { TaploAvatar } from "@/components/taplo/taplo-avatar"
-import { isHttpUrl } from "@/lib/validation"
+import { isHttpUrl, smsHref } from "@/lib/validation"
 import { cn } from "@/lib/utils"
 import type { WidgetType } from "../contracts/widgets"
 import { ProfileImage } from "../renderer/ProfileImage"
@@ -75,6 +75,7 @@ export function bookingProps(vm: PageViewModel, extra: Partial<BookingActionProp
 /* ------------------------------------------------------------------ contact / links */
 const CHANNEL: Partial<Record<WidgetType, { icon: string; label: string; href: (vm: PageViewModel) => string | null; external?: boolean }>> = {
   call: { icon: "Phone", label: "Call us", href: (vm) => vm.actions.find((a) => a.kind === "call")?.href ?? null },
+  sms: { icon: "MessageSquare", label: "Text us", href: (vm) => (vm.business.contacts.phone ? smsHref(vm.business.contacts.phone, `Hi ${vm.business.identity.name}, I'd like to ask about your services.`) : null) },
   whatsapp: { icon: "MessageCircle", label: "Message us on WhatsApp", href: (vm) => vm.actions.find((a) => a.kind === "whatsapp")?.href ?? null, external: true },
   email: { icon: "Mail", label: "Email us", href: (vm) => vm.actions.find((a) => a.kind === "email")?.href ?? null },
   directions: { icon: "MapPin", label: "Get directions", href: (vm) => vm.business.location.directionsUrl ?? null, external: true },
@@ -482,7 +483,7 @@ function AnnouncementWidget({ w }: P) {
 /** The only place a stored widget type becomes a component. Unknown types render nothing. */
 export function renderWidgetBody(w: RenderWidget, vm: PageViewModel): React.ReactNode {
   switch (w.type) {
-    case "call": case "whatsapp": case "email": case "directions": return <ChannelWidget w={w} vm={vm} />
+    case "call": case "sms": case "whatsapp": case "email": case "directions": return <ChannelWidget w={w} vm={vm} />
     case "social": return <SocialWidget w={w} vm={vm} />
     case "link": return <LinkWidget w={w} vm={vm} />
     case "document": return <DocumentWidget w={w} vm={vm} />

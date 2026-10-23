@@ -63,6 +63,7 @@ export const CHOICES: ContentChoice[] = [
   { id: "faq", type: "faq", name: "Questions", blurb: "Answers to what customers always ask.", group: "trust", art: "list", needs: "faq" },
 
   { id: "call", type: "call", name: "Call button", blurb: "A one-tap call button.", group: "reach", art: "button", needs: "phone" },
+  { id: "sms", type: "sms", name: "Text us", blurb: "Opens the customer’s own text app with a message ready.", group: "reach", art: "button", needs: "phone" },
   { id: "whatsapp", type: "whatsapp", name: "WhatsApp", blurb: "Open a WhatsApp chat with you.", group: "reach", art: "button", needs: "whatsapp" },
   { id: "email", type: "email", name: "Email", blurb: "Start an email to you.", group: "reach", art: "button", needs: "email" },
   { id: "social", type: "social", name: "Social links", blurb: "Your profiles as icons or a list.", group: "reach", art: "links", needs: "social" },
@@ -153,6 +154,7 @@ export function summarise(w: StoredWidget, records: BusinessContent | null, ctx:
         break
       }
       case "call": summary = r.contacts.phone ?? ""; break
+      case "sms": summary = r.contacts.phone ?? ""; break
       case "whatsapp": summary = r.contacts.whatsapp ?? ""; break
       case "email": summary = r.contacts.email ?? ""; break
       case "directions": case "location": summary = r.location.locality ?? ""; break
