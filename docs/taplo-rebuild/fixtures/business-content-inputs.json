@@ -1,0 +1,704 @@
+{
+  "stillwater-detailing": {
+    "identity": {
+      "name": "Parkside Valeting",
+      "slug": "stillwater-detailing",
+      "tagline": "Valeting and detailing in Hertfordshire.",
+      "industryKey": "detailing",
+      "industryLabel": "Car detailing",
+      "heroImage": {
+        "src": "/taplo-demo/stillwater-hero.png",
+        "alt": "A gloved hand wipes the bonnet of a blue coupe in an illustrative detailing workshop.",
+        "width": 1536,
+        "height": 1024,
+        "focal": {
+          "x": 62,
+          "y": 48
+        }
+      }
+    },
+    "location": {
+      "mode": "service_area",
+      "locality": "Hertfordshire",
+      "timezone": "Europe/London"
+    },
+    "contacts": {
+      "social": []
+    },
+    "about": "Choose a valet, check what is included and ask for a price for your car. Size and condition can change the work, so we agree the price before starting.",
+    "credentials": [],
+    "hours": [],
+    "services": [
+      {
+        "id": "sd-maintenance",
+        "name": "Maintenance valet",
+        "description": "Exterior wash, wheels and tyres, plus a vacuum and wipe-down inside. Includes: Pre-wash and contact wash; Wheels and tyres; Vacuum and interior wipe-down.",
+        "group": "Regular care",
+        "priceMode": "from",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 0,
+        "priceMinor": 6500,
+        "durationMinutes": 90
+      },
+      {
+        "id": "sd-interior",
+        "name": "Deep interior clean",
+        "description": "Seats, carpets, interior glass and trim, with the right treatment for the materials in your car. Includes: Fabric or leather care; Carpet extraction where suitable; Interior glass and trim.",
+        "group": "Deep clean",
+        "priceMode": "from",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 1,
+        "priceMinor": 14500,
+        "durationMinutes": 240
+      },
+      {
+        "id": "sd-enhancement",
+        "name": "Paint enhancement",
+        "description": "A single-stage machine polish. We inspect the paint and agree what can be improved before starting. Includes: Preparation and decontamination; Test area and agreed correction scope; Finishing protection.",
+        "group": "Paint care",
+        "priceMode": "from",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 2,
+        "priceMinor": 29500
+      },
+      {
+        "id": "sd-protection",
+        "name": "Protection consultation",
+        "description": "Discuss condition, use and the right protection options before agreeing a package.",
+        "group": "Paint care",
+        "priceMode": "quote",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 3,
+        "durationMinutes": 30
+      }
+    ],
+    "staff": [
+      {
+        "id": "sd-alex",
+        "slug": "sd-alex",
+        "name": "Alex Mercer",
+        "role": "Detailer",
+        "bio": "Looks after paint preparation and the final inspection.",
+        "serviceIds": null,
+        "credentials": [],
+        "subjects": [],
+        "bookable": false
+      }
+    ],
+    "gallery": [],
+    "testimonials": [],
+    "reviewLinks": [],
+    "faqs": [
+      {
+        "id": "stillwater-detailing-faq-1",
+        "question": "Does the price depend on the car?",
+        "answer": "Yes. Size and condition affect the work. We agree the scope and price before starting."
+      },
+      {
+        "id": "stillwater-detailing-faq-2",
+        "question": "Can I book paint enhancement straight away?",
+        "answer": "Send an enquiry first so we can discuss the paint and the result you want."
+      }
+    ],
+    "caseStudies": [],
+    "products": [],
+    "offers": [],
+    "booking": {
+      "mode": "contact",
+      "onlineBookingReady": false
+    }
+  },
+  "common-room-barbers": {
+    "identity": {
+      "name": "Station Road Barbers",
+      "slug": "common-room-barbers",
+      "tagline": "Haircuts, skin fades and beard trims.",
+      "industryKey": "barber",
+      "industryLabel": "Barbers"
+    },
+    "location": {
+      "mode": "premises",
+      "locality": "Watford",
+      "timezone": "Europe/London"
+    },
+    "contacts": {
+      "social": []
+    },
+    "about": "See the menu, choose your barber and find a time. This is a fictional business for trying Taplo.",
+    "credentials": [],
+    "hours": [],
+    "services": [
+      {
+        "id": "cr-cut",
+        "name": "Haircut",
+        "description": "Consultation, cut, wash and finish.",
+        "group": "Cuts",
+        "priceMode": "fixed",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 0,
+        "priceMinor": 2200,
+        "durationMinutes": 30
+      },
+      {
+        "id": "cr-fade",
+        "name": "Skin fade",
+        "description": "A close, carefully blended fade with a styled finish.",
+        "group": "Cuts",
+        "priceMode": "fixed",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 1,
+        "priceMinor": 2500,
+        "durationMinutes": 40
+      },
+      {
+        "id": "cr-restyle",
+        "name": "Scissor cut and restyle",
+        "description": "Extra time for a new shape, longer hair and a proper consultation.",
+        "group": "Cuts",
+        "priceMode": "fixed",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 2,
+        "priceMinor": 3200,
+        "durationMinutes": 45
+      },
+      {
+        "id": "cr-beard",
+        "name": "Beard trim",
+        "description": "Shape, line-up and conditioning finish.",
+        "group": "Beards",
+        "priceMode": "fixed",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 3,
+        "priceMinor": 1200,
+        "durationMinutes": 20
+      },
+      {
+        "id": "cr-pair",
+        "name": "Haircut and beard",
+        "description": "Your cut and beard appointment in one visit.",
+        "group": "Together",
+        "priceMode": "fixed",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 4,
+        "priceMinor": 3200,
+        "durationMinutes": 50
+      }
+    ],
+    "staff": [
+      {
+        "id": "cr-sam",
+        "slug": "cr-sam",
+        "name": "Sam Ellis",
+        "role": "Barber",
+        "bio": "Haircuts, skin fades and beard trims.",
+        "serviceIds": [
+          "cr-cut",
+          "cr-fade",
+          "cr-beard",
+          "cr-pair"
+        ],
+        "credentials": [],
+        "subjects": [],
+        "bookable": false
+      },
+      {
+        "id": "cr-lee",
+        "slug": "cr-lee",
+        "name": "Lee Morgan",
+        "role": "Barber",
+        "bio": "Scissor cuts, longer hair and restyles.",
+        "serviceIds": [
+          "cr-cut",
+          "cr-restyle",
+          "cr-beard",
+          "cr-pair"
+        ],
+        "credentials": [],
+        "subjects": [],
+        "bookable": false
+      },
+      {
+        "id": "cr-iman",
+        "slug": "cr-iman",
+        "name": "Iman Brooks",
+        "role": "Barber",
+        "bio": "Haircuts and skin fades.",
+        "serviceIds": [
+          "cr-cut",
+          "cr-fade"
+        ],
+        "credentials": [],
+        "subjects": [],
+        "bookable": false
+      }
+    ],
+    "gallery": [],
+    "testimonials": [],
+    "reviewLinks": [],
+    "faqs": [
+      {
+        "id": "common-room-barbers-faq-1",
+        "question": "Can I choose a barber?",
+        "answer": "Yes. Choose from the people who offer your service, or pick any available barber."
+      },
+      {
+        "id": "common-room-barbers-faq-2",
+        "question": "Are these real appointments?",
+        "answer": "This is a fictional example. Trying the booking flow does not reserve a real appointment."
+      }
+    ],
+    "caseStudies": [],
+    "products": [
+      {
+        "id": "cr-paste",
+        "name": "Matte styling paste",
+        "description": "A light, reworkable finish. Ask your barber which amount suits your hair.",
+        "currency": "GBP",
+        "mode": "enquire",
+        "kind": "product",
+        "availability": "available",
+        "priceMinor": 1600
+      }
+    ],
+    "offers": [],
+    "booking": {
+      "mode": "contact",
+      "onlineBookingReady": false
+    }
+  },
+  "alder-motor-house": {
+    "identity": {
+      "name": "Brookfield Motors",
+      "slug": "alder-motor-house",
+      "tagline": "Used cars in Hertfordshire.",
+      "industryKey": "dealer",
+      "industryLabel": "Car dealers"
+    },
+    "location": {
+      "mode": "premises",
+      "locality": "Hertfordshire",
+      "timezone": "Europe/London"
+    },
+    "contacts": {
+      "social": []
+    },
+    "about": "See the price, mileage and specification, then ask about the car you are interested in. All stock shown here is fictional.",
+    "credentials": [],
+    "hours": [],
+    "services": [],
+    "staff": [],
+    "gallery": [],
+    "testimonials": [],
+    "reviewLinks": [],
+    "faqs": [
+      {
+        "id": "alder-motor-house-faq-1",
+        "question": "Can I arrange a viewing?",
+        "answer": "Open the car and send a viewing enquiry. This demo does not reserve a real vehicle."
+      },
+      {
+        "id": "alder-motor-house-faq-2",
+        "question": "What does reserved mean?",
+        "answer": "That example vehicle is not available to reserve again. You can ask about similar stock."
+      }
+    ],
+    "caseStudies": [],
+    "products": [
+      {
+        "id": "am-golf",
+        "name": "Volkswagen Golf 1.5 TSI Life",
+        "description": "A five-door hatchback in this fictional stock collection. Ask about a viewing and the full specification.",
+        "currency": "GBP",
+        "mode": "enquire",
+        "kind": "vehicle",
+        "availability": "available",
+        "facts": [
+          {
+            "label": "Year",
+            "value": "2022"
+          },
+          {
+            "label": "Mileage",
+            "value": "28,450 miles"
+          },
+          {
+            "label": "Fuel",
+            "value": "Petrol"
+          },
+          {
+            "label": "Gearbox",
+            "value": "Manual"
+          }
+        ],
+        "priceMinor": 1795000
+      },
+      {
+        "id": "am-cx5",
+        "name": "Mazda CX-5 2.0 Sport",
+        "description": "Reserved in this demonstration collection. Ask about similar vehicles.",
+        "currency": "GBP",
+        "mode": "enquire",
+        "kind": "vehicle",
+        "availability": "reserved",
+        "facts": [
+          {
+            "label": "Year",
+            "value": "2021"
+          },
+          {
+            "label": "Mileage",
+            "value": "36,100 miles"
+          },
+          {
+            "label": "Fuel",
+            "value": "Petrol"
+          },
+          {
+            "label": "Gearbox",
+            "value": "Automatic"
+          }
+        ],
+        "priceMinor": 2095000
+      },
+      {
+        "id": "am-mini",
+        "name": "MINI Cooper 1.5 Classic",
+        "description": "Sold example retained to demonstrate an honest stock status.",
+        "currency": "GBP",
+        "mode": "enquire",
+        "kind": "vehicle",
+        "availability": "sold",
+        "facts": [
+          {
+            "label": "Year",
+            "value": "2020"
+          },
+          {
+            "label": "Mileage",
+            "value": "41,750 miles"
+          },
+          {
+            "label": "Fuel",
+            "value": "Petrol"
+          },
+          {
+            "label": "Gearbox",
+            "value": "Manual"
+          }
+        ],
+        "priceMinor": 1345000
+      },
+      {
+        "id": "am-estate",
+        "name": "Estate car enquiry example",
+        "description": "Price on request, showing how a listing behaves without a fixed public price.",
+        "currency": "GBP",
+        "mode": "enquire",
+        "kind": "vehicle",
+        "availability": "available",
+        "facts": [
+          {
+            "label": "Year",
+            "value": "2023"
+          },
+          {
+            "label": "Mileage",
+            "value": "19,600 miles"
+          },
+          {
+            "label": "Fuel",
+            "value": "Hybrid"
+          },
+          {
+            "label": "Gearbox",
+            "value": "Automatic"
+          }
+        ]
+      }
+    ],
+    "offers": [],
+    "booking": {
+      "mode": "contact",
+      "onlineBookingReady": false
+    }
+  },
+  "fieldwork-home-care": {
+    "identity": {
+      "name": "Oakfield Home Repairs",
+      "slug": "fieldwork-home-care",
+      "tagline": "Small repairs, shelves and fittings.",
+      "industryKey": "trades",
+      "industryLabel": "Home services"
+    },
+    "location": {
+      "mode": "service_area",
+      "locality": "Hertfordshire",
+      "timezone": "Europe/London"
+    },
+    "contacts": {
+      "social": []
+    },
+    "about": "Tell us about the job and where you are based. We will discuss the work and agree a price before a visit.",
+    "credentials": [],
+    "hours": [],
+    "services": [
+      {
+        "id": "fh-small",
+        "name": "Small repairs visit",
+        "description": "Tell us what needs attention so we can agree the right visit.",
+        "group": "Home care",
+        "priceMode": "from",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 0,
+        "priceMinor": 6500,
+        "durationMinutes": 60
+      },
+      {
+        "id": "fh-shelf",
+        "name": "Shelves and fittings",
+        "description": "An estimate based on the wall, fittings and work involved.",
+        "group": "Home care",
+        "priceMode": "quote",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 1
+      },
+      {
+        "id": "fh-plan",
+        "name": "Discuss a longer job",
+        "description": "A short first conversation to understand the work.",
+        "group": "Planning",
+        "priceMode": "free",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 2,
+        "priceMinor": 0,
+        "durationMinutes": 15
+      }
+    ],
+    "staff": [],
+    "gallery": [],
+    "testimonials": [],
+    "reviewLinks": [],
+    "faqs": [
+      {
+        "id": "fieldwork-home-care-faq-1",
+        "question": "Do you show a public address?",
+        "answer": "This example serves customers at their premises and shows a service area instead."
+      }
+    ],
+    "caseStudies": [],
+    "products": [],
+    "offers": [],
+    "booking": {
+      "mode": "contact",
+      "onlineBookingReady": false
+    }
+  },
+  "rowan-learning": {
+    "identity": {
+      "name": "Rowan Learning",
+      "slug": "rowan-learning",
+      "tagline": "GCSE and A-level maths, online and locally.",
+      "industryKey": "tutor",
+      "industryLabel": "Tutoring"
+    },
+    "location": {
+      "mode": "online",
+      "locality": "Online and Hertfordshire",
+      "timezone": "Europe/London"
+    },
+    "contacts": {
+      "social": []
+    },
+    "about": "GCSE and A-level maths, online and locally.",
+    "credentials": [],
+    "hours": [],
+    "services": [
+      {
+        "id": "rl-intro",
+        "name": "Introduction",
+        "description": "A short conversation about the learner and what they would like help with.",
+        "group": "Start here",
+        "priceMode": "free",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 0,
+        "priceMinor": 0,
+        "durationMinutes": 20
+      },
+      {
+        "id": "rl-gcse",
+        "name": "GCSE maths session",
+        "description": "One-to-one practice with clear explanations and a short plan for the week.",
+        "group": "Sessions",
+        "priceMode": "fixed",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 1,
+        "priceMinor": 4500,
+        "durationMinutes": 60
+      },
+      {
+        "id": "rl-alevel",
+        "name": "A-level maths session",
+        "description": "Time to work through harder ideas and exam questions at the right pace.",
+        "group": "Sessions",
+        "priceMode": "fixed",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 2,
+        "priceMinor": 5500,
+        "durationMinutes": 60
+      }
+    ],
+    "staff": [
+      {
+        "id": "rl-rowan",
+        "slug": "rl-rowan",
+        "name": "Rowan",
+        "role": "Maths tutor",
+        "bio": "A fictional tutor profile demonstrating a clear, personal introduction.",
+        "serviceIds": null,
+        "credentials": [],
+        "subjects": [],
+        "bookable": false
+      }
+    ],
+    "gallery": [],
+    "testimonials": [],
+    "reviewLinks": [],
+    "faqs": [
+      {
+        "id": "rowan-learning-faq-1",
+        "question": "Are sessions online?",
+        "answer": "This example offers online and local sessions. Choose your preference when you enquire."
+      }
+    ],
+    "caseStudies": [],
+    "products": [],
+    "offers": [],
+    "booking": {
+      "mode": "contact",
+      "onlineBookingReady": false
+    }
+  },
+  "sunday-counter": {
+    "identity": {
+      "name": "Corner Table Café",
+      "slug": "sunday-counter",
+      "tagline": "Coffee, breakfast and lunch.",
+      "industryKey": "cafe",
+      "industryLabel": "Café"
+    },
+    "location": {
+      "mode": "premises",
+      "locality": "St Albans",
+      "timezone": "Europe/London"
+    },
+    "contacts": {
+      "social": []
+    },
+    "about": "See what is on the menu, find us and ask about a group visit. This is a fictional café.",
+    "credentials": [],
+    "hours": [],
+    "services": [
+      {
+        "id": "sc-flat",
+        "name": "Flat white",
+        "description": "Double espresso and silky steamed milk.",
+        "group": "Coffee",
+        "priceMode": "fixed",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 0,
+        "priceMinor": 360
+      },
+      {
+        "id": "sc-filter",
+        "name": "Batch filter",
+        "description": "The day's filter coffee.",
+        "group": "Coffee",
+        "priceMode": "fixed",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 1,
+        "priceMinor": 320
+      },
+      {
+        "id": "sc-toast",
+        "name": "Mushrooms on toast",
+        "description": "Roasted mushrooms, sourdough and herbs.",
+        "group": "From the kitchen",
+        "priceMode": "fixed",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 2,
+        "priceMinor": 950
+      },
+      {
+        "id": "sc-granola",
+        "name": "House granola",
+        "description": "Yoghurt, seasonal fruit and toasted granola.",
+        "group": "From the kitchen",
+        "priceMode": "fixed",
+        "currency": "GBP",
+        "delivery": [],
+        "bookingMode": "contact",
+        "sortOrder": 3,
+        "priceMinor": 650
+      }
+    ],
+    "staff": [],
+    "gallery": [],
+    "testimonials": [],
+    "reviewLinks": [],
+    "faqs": [
+      {
+        "id": "sunday-counter-faq-1",
+        "question": "Can I book a table?",
+        "answer": "Use the group enquiry for a larger visit. Ordinary menu items do not start an appointment flow."
+      },
+      {
+        "id": "sunday-counter-faq-2",
+        "question": "What about allergens?",
+        "answer": "Ask the team before ordering. This illustrative menu does not establish allergen information."
+      }
+    ],
+    "caseStudies": [],
+    "products": [],
+    "offers": [],
+    "booking": {
+      "mode": "contact",
+      "onlineBookingReady": false
+    }
+  }
+}

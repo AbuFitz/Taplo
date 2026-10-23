@@ -1,0 +1,559 @@
+{
+  "schemaVersion": 1,
+  "kind": "editorial-source-not-runtime-schema",
+  "status": "PROVISIONAL",
+  "currency": "GBP",
+  "fictional": true,
+  "notes": [
+    "All names, people, service prices, stock and quotes are fictional illustrative content.",
+    "Adapt through Taplo BusinessContent schema; do not load directly into production or replace existing owner records.",
+    "Do not advertise invented availability, live activity, customer ratings or verified credentials.",
+    "Use example.invalid destinations and intercept demo contact actions; do not send messages.",
+    "Display names and copy revised for a down-to-earth UK direction on 24 October. Names are provisional, not cleared trade names; stable IDs are retained. Example prices are authored demo values, not market averages or competitor quotations."
+  ],
+  "businesses": [
+    {
+      "id": "stillwater-detailing",
+      "name": "Parkside Valeting",
+      "industry": "detailing",
+      "proposedLook": "Stillwater",
+      "tagline": "Valeting and detailing in Hertfordshire.",
+      "locality": "Hertfordshire",
+      "locationMode": "service-area",
+      "primaryAction": {
+        "label": "Ask about your car",
+        "mode": "enquiry"
+      },
+      "intro": "Choose a valet, check what is included and ask for a price for your car. Size and condition can change the work, so we agree the price before starting.",
+      "services": [
+        {
+          "id": "sd-maintenance",
+          "name": "Maintenance valet",
+          "group": "Regular care",
+          "priceMode": "from",
+          "pricePence": 6500,
+          "durationMinutes": 90,
+          "description": "Exterior wash, wheels and tyres, plus a vacuum and wipe-down inside.",
+          "includes": [
+            "Pre-wash and contact wash",
+            "Wheels and tyres",
+            "Vacuum and interior wipe-down"
+          ],
+          "action": "request"
+        },
+        {
+          "id": "sd-interior",
+          "name": "Deep interior clean",
+          "group": "Deep clean",
+          "priceMode": "from",
+          "pricePence": 14500,
+          "durationMinutes": 240,
+          "description": "Seats, carpets, interior glass and trim, with the right treatment for the materials in your car.",
+          "includes": [
+            "Fabric or leather care",
+            "Carpet extraction where suitable",
+            "Interior glass and trim"
+          ],
+          "action": "request"
+        },
+        {
+          "id": "sd-enhancement",
+          "name": "Paint enhancement",
+          "group": "Paint care",
+          "priceMode": "from",
+          "pricePence": 29500,
+          "durationMinutes": null,
+          "description": "A single-stage machine polish. We inspect the paint and agree what can be improved before starting.",
+          "includes": [
+            "Preparation and decontamination",
+            "Test area and agreed correction scope",
+            "Finishing protection"
+          ],
+          "action": "enquiry"
+        },
+        {
+          "id": "sd-protection",
+          "name": "Protection consultation",
+          "group": "Paint care",
+          "priceMode": "quote",
+          "pricePence": null,
+          "durationMinutes": 30,
+          "description": "Discuss condition, use and the right protection options before agreeing a package.",
+          "action": "enquiry"
+        }
+      ],
+      "team": [
+        {
+          "id": "sd-alex",
+          "name": "Alex Mercer",
+          "role": "Detailer",
+          "bio": "Looks after paint preparation and the final inspection.",
+          "imageAssetId": null
+        }
+      ],
+      "faq": [
+        {
+          "q": "Does the price depend on the car?",
+          "a": "Yes. Size and condition affect the work. We agree the scope and price before starting."
+        },
+        {
+          "q": "Can I book paint enhancement straight away?",
+          "a": "Send an enquiry first so we can discuss the paint and the result you want."
+        }
+      ],
+      "gallery": [
+        {
+          "assetId": "stillwater-hero",
+          "caption": "Illustrative detailing workshop scene."
+        }
+      ],
+      "imageNeeds": [
+        "hero workshop photograph",
+        "cabin craft detail",
+        "workshop exterior"
+      ],
+      "demoQuote": {
+        "text": "The package was explained clearly before I chose the work.",
+        "author": "Example customer",
+        "source": "Fictional demonstration quote"
+      }
+    },
+    {
+      "id": "common-room-barbers",
+      "name": "Station Road Barbers",
+      "industry": "barber",
+      "proposedLook": "After Hours",
+      "tagline": "Haircuts, skin fades and beard trims.",
+      "locality": "Watford",
+      "locationMode": "premises",
+      "primaryAction": {
+        "label": "Choose your cut",
+        "mode": "booking-demo"
+      },
+      "intro": "See the menu, choose your barber and find a time. This is a fictional business for trying Taplo.",
+      "services": [
+        {
+          "id": "cr-cut",
+          "name": "Haircut",
+          "group": "Cuts",
+          "priceMode": "exact",
+          "pricePence": 2200,
+          "durationMinutes": 30,
+          "description": "Consultation, cut, wash and finish.",
+          "staffIds": [
+            "cr-sam",
+            "cr-lee",
+            "cr-iman"
+          ],
+          "action": "booking-demo"
+        },
+        {
+          "id": "cr-fade",
+          "name": "Skin fade",
+          "group": "Cuts",
+          "priceMode": "exact",
+          "pricePence": 2500,
+          "durationMinutes": 40,
+          "description": "A close, carefully blended fade with a styled finish.",
+          "staffIds": [
+            "cr-sam",
+            "cr-iman"
+          ],
+          "action": "booking-demo"
+        },
+        {
+          "id": "cr-restyle",
+          "name": "Scissor cut and restyle",
+          "group": "Cuts",
+          "priceMode": "exact",
+          "pricePence": 3200,
+          "durationMinutes": 45,
+          "description": "Extra time for a new shape, longer hair and a proper consultation.",
+          "staffIds": [
+            "cr-lee"
+          ],
+          "action": "booking-demo"
+        },
+        {
+          "id": "cr-beard",
+          "name": "Beard trim",
+          "group": "Beards",
+          "priceMode": "exact",
+          "pricePence": 1200,
+          "durationMinutes": 20,
+          "description": "Shape, line-up and conditioning finish.",
+          "staffIds": [
+            "cr-sam",
+            "cr-lee"
+          ],
+          "action": "booking-demo"
+        },
+        {
+          "id": "cr-pair",
+          "name": "Haircut and beard",
+          "group": "Together",
+          "priceMode": "exact",
+          "pricePence": 3200,
+          "durationMinutes": 50,
+          "description": "Your cut and beard appointment in one visit.",
+          "staffIds": [
+            "cr-sam",
+            "cr-lee"
+          ],
+          "action": "booking-demo"
+        }
+      ],
+      "team": [
+        {
+          "id": "cr-sam",
+          "name": "Sam Ellis",
+          "role": "Barber",
+          "bio": "Haircuts, skin fades and beard trims.",
+          "imageAssetId": null
+        },
+        {
+          "id": "cr-lee",
+          "name": "Lee Morgan",
+          "role": "Barber",
+          "bio": "Scissor cuts, longer hair and restyles.",
+          "imageAssetId": null
+        },
+        {
+          "id": "cr-iman",
+          "name": "Iman Brooks",
+          "role": "Barber",
+          "bio": "Haircuts and skin fades.",
+          "imageAssetId": null
+        }
+      ],
+      "products": [
+        {
+          "id": "cr-paste",
+          "name": "Matte styling paste",
+          "pricePence": 1600,
+          "status": "available",
+          "description": "A light, reworkable finish. Ask your barber which amount suits your hair.",
+          "action": "enquiry",
+          "imageAssetId": null
+        }
+      ],
+      "faq": [
+        {
+          "q": "Can I choose a barber?",
+          "a": "Yes. Choose from the people who offer your service, or pick any available barber."
+        },
+        {
+          "q": "Are these real appointments?",
+          "a": "This is a fictional example. Trying the booking flow does not reserve a real appointment."
+        }
+      ],
+      "imageNeeds": [
+        "barber working with client",
+        "shop interior",
+        "three coherent fictional staff portraits",
+        "styling paste photograph"
+      ]
+    },
+    {
+      "id": "alder-motor-house",
+      "name": "Brookfield Motors",
+      "industry": "dealer",
+      "proposedLook": "Forecourt",
+      "tagline": "Used cars in Hertfordshire.",
+      "locality": "Hertfordshire",
+      "locationMode": "premises",
+      "primaryAction": {
+        "label": "Explore the cars",
+        "mode": "stock"
+      },
+      "intro": "See the price, mileage and specification, then ask about the car you are interested in. All stock shown here is fictional.",
+      "vehicles": [
+        {
+          "id": "am-golf",
+          "title": "Volkswagen Golf 1.5 TSI Life",
+          "year": 2022,
+          "mileage": 28450,
+          "mileageUnit": "miles",
+          "fuel": "Petrol",
+          "transmission": "Manual",
+          "priceMode": "exact",
+          "pricePence": 1795000,
+          "status": "available",
+          "description": "A five-door hatchback in this fictional stock collection. Ask about a viewing and the full specification.",
+          "imageAssetIds": [],
+          "action": "viewing-enquiry"
+        },
+        {
+          "id": "am-cx5",
+          "title": "Mazda CX-5 2.0 Sport",
+          "year": 2021,
+          "mileage": 36100,
+          "mileageUnit": "miles",
+          "fuel": "Petrol",
+          "transmission": "Automatic",
+          "priceMode": "exact",
+          "pricePence": 2095000,
+          "status": "reserved",
+          "description": "Reserved in this demonstration collection. Ask about similar vehicles.",
+          "imageAssetIds": [],
+          "action": "similar-stock-enquiry"
+        },
+        {
+          "id": "am-mini",
+          "title": "MINI Cooper 1.5 Classic",
+          "year": 2020,
+          "mileage": 41750,
+          "mileageUnit": "miles",
+          "fuel": "Petrol",
+          "transmission": "Manual",
+          "priceMode": "exact",
+          "pricePence": 1345000,
+          "status": "sold",
+          "description": "Sold example retained to demonstrate an honest stock status.",
+          "imageAssetIds": [],
+          "action": "similar-stock-enquiry"
+        },
+        {
+          "id": "am-estate",
+          "title": "Estate car enquiry example",
+          "year": 2023,
+          "mileage": 19600,
+          "mileageUnit": "miles",
+          "fuel": "Hybrid",
+          "transmission": "Automatic",
+          "priceMode": "quote",
+          "pricePence": null,
+          "status": "available",
+          "description": "Price on request, showing how a listing behaves without a fixed public price.",
+          "imageAssetIds": [],
+          "action": "stock-enquiry"
+        }
+      ],
+      "faq": [
+        {
+          "q": "Can I arrange a viewing?",
+          "a": "Open the car and send a viewing enquiry. This demo does not reserve a real vehicle."
+        },
+        {
+          "q": "What does reserved mean?",
+          "a": "That example vehicle is not available to reserve again. You can ask about similar stock."
+        }
+      ],
+      "imageNeeds": [
+        "premises",
+        "three internally consistent angles per available vehicle",
+        "matching photographs for reserved and sold vehicles"
+      ],
+      "prohibitedClaims": [
+        "finance approved",
+        "warranty included",
+        "verified service history",
+        "live inventory",
+        "specific vehicle condition"
+      ]
+    },
+    {
+      "id": "fieldwork-home-care",
+      "name": "Oakfield Home Repairs",
+      "industry": "trades",
+      "proposedLook": "Fieldwork",
+      "tagline": "Small repairs, shelves and fittings.",
+      "locality": "Hertfordshire",
+      "locationMode": "service-area",
+      "primaryAction": {
+        "label": "Ask about a job",
+        "mode": "enquiry"
+      },
+      "services": [
+        {
+          "id": "fh-small",
+          "name": "Small repairs visit",
+          "group": "Home care",
+          "priceMode": "from",
+          "pricePence": 6500,
+          "durationMinutes": 60,
+          "description": "Tell us what needs attention so we can agree the right visit.",
+          "action": "request"
+        },
+        {
+          "id": "fh-shelf",
+          "name": "Shelves and fittings",
+          "group": "Home care",
+          "priceMode": "quote",
+          "pricePence": null,
+          "durationMinutes": null,
+          "description": "An estimate based on the wall, fittings and work involved.",
+          "action": "enquiry"
+        },
+        {
+          "id": "fh-plan",
+          "name": "Discuss a longer job",
+          "group": "Planning",
+          "priceMode": "free",
+          "pricePence": 0,
+          "durationMinutes": 15,
+          "description": "A short first conversation to understand the work.",
+          "action": "enquiry"
+        }
+      ],
+      "faq": [
+        {
+          "q": "Do you show a public address?",
+          "a": "This example serves customers at their premises and shows a service area instead."
+        }
+      ],
+      "imageNeeds": [
+        "repair craft detail",
+        "tools",
+        "finished fitting"
+      ],
+      "credentials": [],
+      "intro": "Tell us about the job and where you are based. We will discuss the work and agree a price before a visit."
+    },
+    {
+      "id": "rowan-learning",
+      "name": "Rowan Learning",
+      "industry": "tutor",
+      "proposedLook": "Studio Notes",
+      "tagline": "GCSE and A-level maths, online and locally.",
+      "locality": "Online and Hertfordshire",
+      "locationMode": "online-and-local",
+      "primaryAction": {
+        "label": "Arrange an introduction",
+        "mode": "request"
+      },
+      "services": [
+        {
+          "id": "rl-intro",
+          "name": "Introduction",
+          "group": "Start here",
+          "priceMode": "free",
+          "pricePence": 0,
+          "durationMinutes": 20,
+          "description": "A short conversation about the learner and what they would like help with.",
+          "action": "request"
+        },
+        {
+          "id": "rl-gcse",
+          "name": "GCSE maths session",
+          "group": "Sessions",
+          "priceMode": "exact",
+          "pricePence": 4500,
+          "durationMinutes": 60,
+          "description": "One-to-one practice with clear explanations and a short plan for the week.",
+          "action": "request"
+        },
+        {
+          "id": "rl-alevel",
+          "name": "A-level maths session",
+          "group": "Sessions",
+          "priceMode": "exact",
+          "pricePence": 5500,
+          "durationMinutes": 60,
+          "description": "Time to work through harder ideas and exam questions at the right pace.",
+          "action": "request"
+        }
+      ],
+      "team": [
+        {
+          "id": "rl-rowan",
+          "name": "Rowan",
+          "role": "Maths tutor",
+          "bio": "A fictional tutor profile demonstrating a clear, personal introduction.",
+          "imageAssetId": null
+        }
+      ],
+      "credentials": [],
+      "faq": [
+        {
+          "q": "Are sessions online?",
+          "a": "This example offers online and local sessions. Choose your preference when you enquire."
+        }
+      ],
+      "imageNeeds": [
+        "fictional tutor portrait",
+        "simple learning workspace"
+      ],
+      "prohibitedClaims": [
+        "guaranteed grade improvement",
+        "DBS checked",
+        "qualified teacher"
+      ]
+    },
+    {
+      "id": "sunday-counter",
+      "name": "Corner Table Café",
+      "industry": "cafe",
+      "proposedLook": "Counter Culture",
+      "tagline": "Coffee, breakfast and lunch.",
+      "locality": "St Albans",
+      "locationMode": "premises",
+      "primaryAction": {
+        "label": "See the menu",
+        "mode": "menu"
+      },
+      "services": [
+        {
+          "id": "sc-flat",
+          "name": "Flat white",
+          "group": "Coffee",
+          "priceMode": "exact",
+          "pricePence": 360,
+          "durationMinutes": null,
+          "description": "Double espresso and silky steamed milk.",
+          "action": "none"
+        },
+        {
+          "id": "sc-filter",
+          "name": "Batch filter",
+          "group": "Coffee",
+          "priceMode": "exact",
+          "pricePence": 320,
+          "durationMinutes": null,
+          "description": "The day's filter coffee.",
+          "action": "none"
+        },
+        {
+          "id": "sc-toast",
+          "name": "Mushrooms on toast",
+          "group": "From the kitchen",
+          "priceMode": "exact",
+          "pricePence": 950,
+          "durationMinutes": null,
+          "description": "Roasted mushrooms, sourdough and herbs.",
+          "action": "none"
+        },
+        {
+          "id": "sc-granola",
+          "name": "House granola",
+          "group": "From the kitchen",
+          "priceMode": "exact",
+          "pricePence": 650,
+          "durationMinutes": null,
+          "description": "Yoghurt, seasonal fruit and toasted granola.",
+          "action": "none"
+        }
+      ],
+      "faq": [
+        {
+          "q": "Can I book a table?",
+          "a": "Use the group enquiry for a larger visit. Ordinary menu items do not start an appointment flow."
+        },
+        {
+          "q": "What about allergens?",
+          "a": "Ask the team before ordering. This illustrative menu does not establish allergen information."
+        }
+      ],
+      "imageNeeds": [
+        "coffee and breakfast",
+        "cafe interior",
+        "specific menu dish"
+      ],
+      "secondaryAction": {
+        "label": "Ask about a group visit",
+        "mode": "enquiry"
+      },
+      "intro": "See what is on the menu, find us and ask about a group visit. This is a fictional café."
+    }
+  ]
+}

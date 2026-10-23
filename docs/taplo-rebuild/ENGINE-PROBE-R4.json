@@ -1,0 +1,77 @@
+{
+  "sourceCommit": "4a08d1ffe3c163b21d6b4b2060c602ba18b0ebc8",
+  "kind": "actual-source-resolver-probe-not-full-browser-test",
+  "adaptations": [
+    "TypeScript imports resolved to local .ts files",
+    "Font CSS side-effect imports omitted; no resolver logic changed"
+  ],
+  "cases": [
+    {
+      "id": "transparent-text-background",
+      "input": {
+        "theme": "night",
+        "pageBackground": "#ffffff",
+        "widget": {
+          "surface": "transparent",
+          "text": "#ffffff"
+        }
+      },
+      "resolvedPage": "#ffffff",
+      "storedPaletteBackground": "#0d0e11",
+      "resolvedWidgetText": "#ffffff",
+      "contrastOnActualPage": 1,
+      "pageChecks": [
+        {
+          "label": "Text on page background",
+          "ratio": 21,
+          "ok": true
+        },
+        {
+          "label": "Text on cards",
+          "ratio": 21,
+          "ok": true
+        },
+        {
+          "label": "Button text",
+          "ratio": 14.7,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "id": "outline-on-widget-background",
+      "input": {
+        "theme": "night",
+        "widget": {
+          "background": "#ffffff",
+          "text": "#000000",
+          "buttonFill": "outline"
+        }
+      },
+      "widgetVariables": {
+        "--tp-card-bg": "#ffffff",
+        "--tp-foreground": "#000000",
+        "--tp-muted": "#000000",
+        "--tp-btn-bg": "transparent",
+        "--tp-btn-text": "#f3f3f5",
+        "--tp-btn-border": "#c6f432"
+      },
+      "contrastOnWidgetBackground": 1.1081976317208186
+    },
+    {
+      "id": "transparent-retains-page-blur",
+      "input": {
+        "theme": "night",
+        "pageCards": "glass",
+        "widget": {
+          "surface": "transparent"
+        }
+      },
+      "pageBlur": "22px",
+      "widgetVariables": {
+        "--tp-card-bg": "transparent"
+      },
+      "effectiveBlur": "22px"
+    }
+  ]
+}

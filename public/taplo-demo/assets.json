@@ -1,0 +1,51 @@
+{
+  "assets": [
+    {
+      "id": "stillwater-hero",
+      "file": "/taplo-demo/stillwater-hero.png",
+      "width": 1536,
+      "height": 1024,
+      "alt": "A gloved hand wipes the bonnet of a blue coupe in an illustrative detailing workshop.",
+      "focalPoint": {
+        "x": 62,
+        "y": 48
+      },
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "created": "2026-10-24 Europe/London",
+      "status": "illustrative-fictional-demo",
+      "uses": [
+        "detailer example cover",
+        "creative direction review"
+      ],
+      "restrictions": [
+        "Not a real customer result",
+        "Not an identifiable vehicle listing",
+        "Not before-and-after proof"
+      ],
+      "prompt": "Use case: photorealistic-natural. Asset type: original premium car-detailing photography for a clearly fictional Taplo example business called Stillwater Detailing. Create a single polished editorial photograph, landscape 3:2. Close three-quarter view of the front quarter and bonnet of a deep midnight-blue unbranded sports coupe in a clean contemporary detailing bay. A technician's natural gloved hand uses a folded pale microfibre cloth on the bonnet, excellent plausible hand anatomy. Broad overhead strip lights reflected as controlled clean lines across flawless paint, restrained cool daylight, tactile real materials, subtly wet floor, sophisticated deep blue and silver palette. It should feel like a carefully commissioned independent automotive workshop photograph, credible and specific rather than a generic CGI supercar. Keep the car's front quarter in the centre-right with breathable dark workshop space upper left for crop flexibility. No text, no logos, no badges, no watermark, no before-and-after comparison, no invented performance claim. This is illustrative generated demo photography, not evidence of an actual business or completed job."
+    },
+    {
+      "id": "station-road-barber-work",
+      "file": "/taplo-demo/station-road-barber-work.png",
+      "width": 1536,
+      "height": 1024,
+      "alt": "An illustrative barber cutting a client’s hair in a naturally lit high-street shop.",
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "created": "2026-10-24 Europe/London",
+      "status": "candidate-UK-direction-study",
+      "uses": [
+        "UK direction review",
+        "future fictional barber example"
+      ],
+      "restrictions": [
+        "Fictional people and premises",
+        "Not an actual customer or completed service",
+        "Not yet bound to a runtime example"
+      ],
+      "generationSource": "exec-067c5081-1892-4882-bf22-bec8f21a6d16.png",
+      "brief": "Original natural documentary-style photograph, ordinary independent British high-street shop, practical black chair and mirrors, overcast daylight, believable working haircut, no writing or logos. See UK-DIRECTION.md."
+    }
+  ]
+}

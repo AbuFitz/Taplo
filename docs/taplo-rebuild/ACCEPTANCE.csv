@@ -1,0 +1,39 @@
+id,area,acceptance,evidence,status
+R01,Version reconciliation,Incoming commit and deployment identified separately; inherited findings classified,ROUND4-RECONCILIATION.md: production Vercel metadata matches 4a08d1f; historical/current findings separated,identified; audit reconciliation ongoing
+R02,Mobile-led gallery,Phone previews default; designs visible before secondary filter wall,Round-four live gallery defaults Desktop; seven businesses,current-fail
+R03,Design detail,Useful mobile example first; desktop optional; clear use action,Round-four detail still leads with desktop capture and technical details,current-fail
+R04,Distinct catalogue,Detailer barber dealer flagships plus remaining supported industries; more than recolours,Populated comparison matrix,open
+R05,Cross-industry looks,Same content works in multiple looks without industry lock,Cross-paired renderer captures,open
+R06,Theme preservation,Switch apply reset undo preserve records IDs order and entitlements,Migration and journey evidence,unverified
+R07,Catalogue consistency,Counts IDs available looks and examples come from clear shared data,Source map and route comparison,open
+R08,Header quality,Wide logos long names no photo and image contrast behave intentionally,Header workbench matrix,unverified
+R09,Services,Exact from quote free pricing; useful detail; no redundant facts,Service states and interaction,baseline-issue
+R10,Booking modes,Confirmed request enquiry unavailable kept distinct,Branch journey recordings,unverified
+R11,Booking context,Eligible staff service price duration and timezone preserved through back/retry,CUSTOMER-JOURNEY-AUDIT.md J01 and J02; live multi/solo direct entries plus latest source,current-defects-confirmed
+R12,Team,Useful portraits or designed fallback; services and booking linked,Team states,unverified
+R13,Products,Relevant imagery correct stock status useful detail affiliate disclosure,Product states,unverified
+R14,Vehicles,Coherent imagery and specs; available reserved sold; stock-specific enquiry,CUSTOMER-JOURNEY-AUDIT.md J03; live Volvo flow and form payload source lose topic,current-defect-confirmed; other states open
+R15,Media,Lightbox keyboard close return; video fallback; no fake result imagery,Gallery media checks,unverified
+R16,Reviews,Honest attribution and demo labels; no fabricated verified ratings,Review states,unverified
+R17,Contact,Correct channels; validation retry; honest delivery state,CUSTOMER-JOURNEY-AUDIT.md J04 local-only success contradiction; source only,source-defect-confirmed; terminal UI unverified
+R18,Hours location,Timezone DST overnight exceptions premises/service area,Fixtures and rendered states,unverified
+R19,All widgets,Every current registry type has appropriate review coverage,WIDGET-COVERAGE.csv: 30 types; rendered coverage still open,partial-source-inventory
+R20,Overlays,Focus entry trap restore Escape scroll safe area and keyboard,Desktop mobile keyboard checks,unverified
+R21,Owner editing,Select edit layout reorder return are obvious and connected,Full owner task journey,unverified
+R22,Touch reorder,Drag and non-drag alternatives save same order,Touch keyboard move actions,unverified
+R23,Save recovery,Undo redo reload error recovery accurate save and publish state,Persistence checks,unverified
+R24,Setup,Own content appears early; back resume validation first useful result,Fresh resumed and narrow setup,open
+R25,Customer desktop,Identity order and action maintained with deliberate width/collections,Same business phone desktop,open
+R26,Homepage,Clear promise early useful UI varied authored story,Full page and interaction captures,open
+R27,Navigation footer,Useful hierarchy desktop mobile focus sticky behavior coherent brand close,Menu and footer states,open
+R28,Feature pages,Every supported capability has its own relevant illustration/demo,Feature artwork route matrix,open
+R29,Marketing truth,Claims match configured capabilities and existing commercial rules,Feature-status and copy review,unverified
+R30,Films,Editable source plus 16:9 9:16 4:5 posters and capability loops,Playback and frame QA,open
+R31,Images,Relevant coherent local media with provenance alt crops and rights,Asset manifest,partial-needs-UK-redirection
+R32,Share,Actual URL preview export parity copy and unpublished states,Downloaded export evidence,unverified
+R33,QR,Independent decode correct destination print safe contrast quiet zone,PNG SVG and physical scan evidence,unverified
+R34,Accessibility,Keyboard focus contrast zoom reduced motion screen reader review,ENGINE-PROBE-R4.json re-executes latest resolver; complete browser/a11y audit open,current-resolver-failures-confirmed; full audit open
+R35,Performance,Documented mobile lab baseline; field CWV when traffic available,Trace conditions and field report,unverified
+R36,Browsers devices,Representative Chromium Firefox WebKit; physical-device limits explicit,Named environment results,open
+R37,Tools,Every addition solves named gap; current workbench used first,Setup demonstration and dependency rationale,partial
+R38,Completion honesty,Each unresolved item remains open with next action,Updated acceptance and delivery report,open

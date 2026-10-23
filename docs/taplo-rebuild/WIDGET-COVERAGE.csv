@@ -1,0 +1,31 @@
+type,label,registry_declared,explicit_workbench_type_declaration,audit_result,next_action,source_commit
+call,Call button,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+sms,Text us,yes,not found,source inventory only; rendered state coverage unverified,"check wider tests, then add a real-renderer workbench case if absent",e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+whatsapp,WhatsApp,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+email,Email,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+social,Social links,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+link,Custom link,yes,not found,source inventory only; rendered state coverage unverified,"check wider tests, then add a real-renderer workbench case if absent",e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+directions,Directions,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+serviceList,Services,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+featuredService,Featured service,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+priceMenu,Price menu,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+booking,Book or enquire,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+products,Products,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+offers,Offers,yes,not found,source inventory only; rendered state coverage unverified,"check wider tests, then add a real-renderer workbench case if absent",e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+payment,Pay or deposit,yes,not found,source inventory only; rendered state coverage unverified,"check wider tests, then add a real-renderer workbench case if absent",e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+reviews,Reviews,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+leaveReview,Leave a review,yes,not found,source inventory only; rendered state coverage unverified,"check wider tests, then add a real-renderer workbench case if absent",e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+team,Team,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+credentials,Credentials,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+text,Text,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+image,Image,yes,not found,source inventory only; rendered state coverage unverified,"check wider tests, then add a real-renderer workbench case if absent",e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+gallery,Gallery,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+video,Video,yes,not found,source inventory only; rendered state coverage unverified,"check wider tests, then add a real-renderer workbench case if absent",e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+faq,Questions,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+document,Download,yes,not found,source inventory only; rendered state coverage unverified,"check wider tests, then add a real-renderer workbench case if absent",e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+hours,Opening hours,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+location,Location,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+serviceArea,Areas we cover,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+announcement,Announcement,yes,not found,source inventory only; rendered state coverage unverified,"check wider tests, then add a real-renderer workbench case if absent",e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+enquiry,Contact form,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52
+share,Share,yes,yes,source inventory only; rendered state coverage unverified,inspect existing cases and variants,e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52

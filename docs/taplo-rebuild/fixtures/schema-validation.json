@@ -1,0 +1,51 @@
+{
+  "schemaCommit": "e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52",
+  "schemaBlob": "ce9acabc3d0a1bb1d8a72fd2ef6937aa0ae3e992",
+  "zodVersion": "4.6.7",
+  "date": "2026-10-24 Europe/London",
+  "caveat": "Schema shape only. No renderer, booking availability, live delivery or production import is validated.",
+  "results": [
+    {
+      "id": "stillwater-detailing",
+      "valid": true,
+      "services": 4,
+      "staff": 1,
+      "products": 0
+    },
+    {
+      "id": "common-room-barbers",
+      "valid": true,
+      "services": 5,
+      "staff": 3,
+      "products": 1
+    },
+    {
+      "id": "alder-motor-house",
+      "valid": true,
+      "services": 0,
+      "staff": 0,
+      "products": 4
+    },
+    {
+      "id": "fieldwork-home-care",
+      "valid": true,
+      "services": 3,
+      "staff": 0,
+      "products": 0
+    },
+    {
+      "id": "rowan-learning",
+      "valid": true,
+      "services": 3,
+      "staff": 1,
+      "products": 0
+    },
+    {
+      "id": "sunday-counter",
+      "valid": true,
+      "services": 4,
+      "staff": 0,
+      "products": 0
+    }
+  ]
+}
