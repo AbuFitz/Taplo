@@ -16,9 +16,9 @@ const PRICE_LABEL: Record<(typeof PRICE_MODES)[number], string> = {
 }
 const DELIVERY_LABEL = { premises: "At my premises", mobile: "I travel to the customer", online: "Online" } as const
 const BOOKING_LABEL: Record<(typeof SERVICE_BOOKING_MODES)[number], string> = {
-  contact: "Contact me (call / WhatsApp / email)",
-  request: "Customer requests a time",
-  instant: "Instant booking",
+  contact: "Enquiry only: no time is reserved",
+  request: "Customer requests a time and I accept it",
+  instant: "Customer books a time and it is confirmed",
 }
 
 export function serviceErrors(s: ServiceContent): Partial<Record<"name" | "price" | "duration", string>> {
@@ -113,7 +113,7 @@ export function ServiceForm({ service, onChange, showErrors }: { service: Servic
             {SERVICE_BOOKING_MODES.map((m) => <SelectItem key={m} value={m}>{BOOKING_LABEL[m]}</SelectItem>)}
           </SelectContent>
         </Select>
-        <p className="text-sm text-muted-foreground">Online booking and payments are built in a later phase. For now customers contact you directly.</p>
+        <p className="text-sm text-muted-foreground">{service.bookingMode === "contact" ? "Customers send you an enquiry. Nothing is reserved." : service.durationMinutes ? "Customers pick a time from your working hours (Bookings, then Hours and rules). Online booking is part of the Pro plan; no payment is taken." : "Add a duration above so customers have a length of time to book."}</p>
       </div>
     </div>
   )

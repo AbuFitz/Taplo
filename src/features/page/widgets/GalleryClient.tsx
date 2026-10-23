@@ -59,10 +59,15 @@ function Lightbox({ items, at, setAt }: { items: GalleryItem[]; at: number; setA
   const n = items.length
   const go = React.useCallback((d: -1 | 1) => { setZoom(false); setAt((at + d + n) % n) }, [at, n, setAt])
   React.useEffect(() => { for (const d of [-1, 1]) { const g = items[(at + d + n) % n]; if (g) { const im = new window.Image(); im.src = g.image.src } } }, [at, items, n])
+  // Arrow keys work wherever focus is inside the open lightbox (it is a modal, so that is everywhere that matters).
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "ArrowRight") { e.preventDefault(); go(1) } else if (e.key === "ArrowLeft") { e.preventDefault(); go(-1) } }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [go])
   const dims = item.image.width && item.image.height ? { width: item.image.width, height: item.image.height } : {}
   return (
     <div className="relative flex h-full min-h-[22rem] flex-col" tabIndex={-1}
-      onKeyDown={(e) => { if (e.key === "ArrowRight") { e.preventDefault(); go(1) } else if (e.key === "ArrowLeft") { e.preventDefault(); go(-1) } }}
       onPointerDown={(e) => { start.current = { x: e.clientX, y: e.clientY } }}
       onPointerUp={(e) => { const s = start.current; start.current = null; if (!s || zoom) return; const dx = e.clientX - s.x; const dy = e.clientY - s.y; if (Math.abs(dx) > 56 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1) }}>
       <div className={cn("min-h-0 flex-1 overscroll-contain", zoom ? "overflow-auto" : "grid place-items-center overflow-hidden")} style={{ touchAction: zoom ? "pan-x pan-y pinch-zoom" : "pan-y pinch-zoom" }} data-testid="lightbox-stage">

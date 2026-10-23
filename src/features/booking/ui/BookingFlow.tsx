@@ -63,6 +63,8 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
   const mode = service ? modeOf(service) : "instant"
   const online = service ? isOnlineBookable(service) : false
   const people = ctx.staff.filter((p) => eligible.includes(p.id))
+  // Opened for one person: only the services they provide are offered.
+  const offered = preStaff ? ctx.services.filter((s) => eligibleStaff(ctx, s).includes(preStaff)) : ctx.services
   const eligibleKey = eligible.join()
 
   React.useEffect(() => { heading.current?.focus() }, [step])
@@ -141,7 +143,6 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
     step === "time" ? <Button className="min-h-12 w-full" disabled={!pick} onClick={toDetails}>{pick ? `${OUTCOME[mode].choose}: ${formatSlot(pick.startsAt, tz)}` : "Choose a time"}</Button>
     : step === "details" ? <Button className="min-h-12 w-full" onClick={() => { if (validate()) go("review") }}>Review</Button>
     : step === "review" ? <Button className="min-h-12 w-full" disabled={sending} onClick={submit}>{sending ? "Sending…" : OUTCOME[mode].review}</Button>
-    : step === "done" ? <Button className="min-h-12 w-full" onClick={onClose}>Done</Button>
     : null
 
   return (
@@ -155,9 +156,9 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
       {step === "service" ? (
         <section aria-labelledby="bk-h">
           <h2 id="bk-h" ref={heading} tabIndex={-1} className="font-tp-heading text-2xl outline-none">What would you like to book?</h2>
-          {ctx.services.length === 0 ? <p className="mt-3 text-tp-muted">This business has not listed any services yet.</p> : (
+          {offered.length === 0 ? <p className="mt-3 text-tp-muted">This business has not listed any services yet.</p> : (
             <ul className="mt-4 grid gap-2">
-              {ctx.services.map((s) => {
+              {offered.map((s) => {
                 const m = modeOf(s)
                 return (
                   <li key={s.id}>
@@ -251,7 +252,7 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
         </section>
       ) : null}
 
-      {step === "done" && done ? <Done ctx={ctx} booking={done} tz={tz} viewerTz={viewerTz} onChanged={() => undefined} update={update} state={state} config={config} /> : null}
+      {step === "done" && done ? <Done onClose={onClose} ctx={ctx} booking={done} tz={tz} viewerTz={viewerTz} onChanged={() => undefined} update={update} state={state} config={config} /> : null}
       {footer ? <div className="sticky bottom-0 -mx-4 -mb-4 border-t border-tp-border/60 bg-tp-bg px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pt-3 sm:static sm:mx-0 sm:mb-0 sm:border-0 sm:p-0">{footer}</div> : null}
     </div>
   )
@@ -338,13 +339,16 @@ function SlotGrid({ slots, tz, viewerTz, pick, onPick, date }: { slots: { starts
   )
 }
 
-function Done({ ctx, booking, tz, viewerTz, update, state, config }: { ctx: BookingContext; booking: Booking; tz: string; viewerTz: string; onChanged: () => void; update: (fn: (s: typeof state) => typeof state) => boolean; state: ReturnType<typeof useBookingState>["state"]; config: ReturnType<typeof useSchedulingConfig> }) {
+function Done({ ctx, booking, tz, viewerTz, update, state, config, onClose }: { onClose: () => void; ctx: BookingContext; booking: Booking; tz: string; viewerTz: string; onChanged: () => void; update: (fn: (s: typeof state) => typeof state) => boolean; state: ReturnType<typeof useBookingState>["state"]; config: ReturnType<typeof useSchedulingConfig> }) {
   const heading = React.useRef<HTMLHeadingElement>(null)
   React.useEffect(() => { heading.current?.focus() }, [])
   const live = state.bookings.find((b) => b.id === booking.id) ?? booking
   const o = OUTCOME[live.mode]
   const cancelled = live.status === "cancelled"
   const [t0] = React.useState(nowMs)
+  // A double tap on "Confirm booking" must not land on "Done" and dismiss the confirmation.
+  const [armed, setArmed] = React.useState(false)
+  React.useEffect(() => { const t = window.setTimeout(() => setArmed(true), 800); return () => window.clearTimeout(t) }, [])
   const cancel = canCancel(live, t0, config)
   const move = canReschedule(live, t0, config)
   const download = () => {
@@ -372,6 +376,7 @@ function Done({ ctx, booking, tz, viewerTz, update, state, config }: { ctx: Book
         </div>
       ) : null}
       {!cancelled && !move.ok && move.reason ? <p className="text-xs text-tp-muted">{move.reason}</p> : null}
+      <Button className="mt-2 min-h-12 w-full" onClick={() => { if (armed) onClose() }}>Done</Button>
     </section>
   )
 }

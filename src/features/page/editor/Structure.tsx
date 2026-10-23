@@ -1,11 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { Briefcase, LayoutTemplate, Palette, Plus, Settings, Sparkles } from "lucide-react"
+import { ArrowDownUp, Briefcase, LayoutTemplate, Palette, Plus, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { AddWidgetDialog, StarterDialog } from "./Dialogs"
-import { WidgetList } from "./WidgetList"
+import { AddContent } from "./AddContent"
+import { ContentCards, OrganiseList } from "./ContentCards"
+import type { RecordKind } from "./content-model"
 import { sameSelection, type Selection } from "./selection"
 import type { Editor } from "./useEditor"
 
@@ -22,7 +23,8 @@ function Item({ icon: Icon, label, hint, active, onClick, testId }: { icon: type
 /** Left pane: what is on the page, in order. Selecting anything here (or in the preview) opens its controls. */
 export function Structure({ ed, selection, onSelect, notify }: { ed: Editor; selection: Selection; onSelect: (s: Selection) => void; notify: (msg: string, undoable?: boolean) => void }) {
   const [addOpen, setAddOpen] = React.useState(false)
-  const [starterOpen, setStarterOpen] = React.useState(false)
+  const [kind, setKind] = React.useState<RecordKind | null>(null)
+  const [organise, setOrganise] = React.useState(false)
   const widgets = ed.state.page.widgets
   const name = ed.state.content.identity.name.trim()
   return (
@@ -34,20 +36,20 @@ export function Structure({ ed, selection, onSelect, notify }: { ed: Editor; sel
 
       <section aria-labelledby="widgets-h" className="grid grid-cols-[minmax(0,1fr)] gap-2">
         <div className="flex items-center justify-between gap-2">
-          <h2 id="widgets-h" className="text-sm font-semibold">Widgets</h2>
+          <h2 id="widgets-h" className="text-sm font-semibold">{organise ? "Organise" : "Content"}</h2>
           <div className="flex gap-1.5">
-            <Button variant="outline" size="sm" onClick={() => setStarterOpen(true)}><Sparkles /> Suggestions</Button>
-            <Button size="sm" onClick={() => setAddOpen(true)} data-testid="add-widget"><Plus /> Add</Button>
+            {widgets.length > 1 && !organise ? <Button variant="outline" size="sm" className="min-h-10" onClick={() => setOrganise(true)} data-testid="organise"><ArrowDownUp /> Organise</Button> : null}
+            {!organise ? <Button size="sm" className="min-h-10" onClick={() => { setKind(null); setAddOpen(true) }} data-testid="add-widget"><Plus /> Add content</Button> : null}
           </div>
         </div>
-        {widgets.length === 0 ? (
-          <div className="rounded-xl border border-dashed p-5 text-center">
-            <h3 className="text-sm font-semibold">No widgets yet</h3>
-            <p className="mx-auto mt-1 max-w-xs text-xs text-muted-foreground">Visitors see your name and contact buttons. Add services, reviews, photos and more.</p>
-            <div className="mt-3 flex justify-center gap-2"><Button variant="outline" size="sm" onClick={() => setStarterOpen(true)}><Sparkles /> Suggestions</Button><Button size="sm" onClick={() => setAddOpen(true)}><Plus /> Add</Button></div>
+        {organise ? <OrganiseList ed={ed} onDone={() => setOrganise(false)} /> : widgets.length === 0 ? (
+          <div className="rounded-2xl border border-dashed p-5 text-center">
+            <h3 className="text-sm font-semibold">Nothing on your page yet</h3>
+            <p className="mx-auto mt-1 max-w-xs text-xs text-muted-foreground">Visitors see your name and contact buttons. Add services, photos, reviews and more, and see each one appear as you go.</p>
+            <div className="mt-3 flex justify-center"><Button size="sm" className="min-h-10" onClick={() => { setKind(null); setAddOpen(true) }}><Plus /> Add content</Button></div>
           </div>
         ) : (
-          <WidgetList ed={ed} selectedId={selection.kind === "widget" ? selection.id : null} onSelect={(id) => onSelect({ kind: "widget", id })} onDetails={() => onSelect({ kind: "details" })} />
+          <ContentCards ed={ed} selectedId={selection.kind === "widget" ? selection.id : null} onSelect={(id) => onSelect({ kind: "widget", id })} onDetails={() => onSelect({ kind: "details" })} onAddRecord={(k) => { setKind(k); setAddOpen(true) }} />
         )}
       </section>
 
@@ -55,8 +57,7 @@ export function Structure({ ed, selection, onSelect, notify }: { ed: Editor; sel
 
       <Item icon={Settings} label="Page settings" hint="Search visibility and share text" active={sameSelection(selection, { kind: "settings" })} onClick={() => onSelect({ kind: "settings" })} testId="select-settings" />
 
-      <AddWidgetDialog open={addOpen} onOpenChange={setAddOpen} ed={ed} onAdded={(id) => onSelect({ kind: "widget", id })} />
-      <StarterDialog open={starterOpen} onOpenChange={setStarterOpen} ed={ed} onApplied={(m) => notify(m, true)} />
+      <AddContent ed={ed} open={addOpen} onOpenChange={setAddOpen} initialKind={kind} onAdded={(id) => { onSelect({ kind: "widget", id }); notify("Added to your page.", true) }} />
     </div>
   )
 }

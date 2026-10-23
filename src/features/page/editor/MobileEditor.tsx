@@ -13,7 +13,7 @@ import { PageStylePanel } from "./EditorAppearance"
 import { Inspector } from "./Inspector"
 import { Recommendations } from "./Recommendations"
 import { Structure } from "./Structure"
-import { WidgetList } from "./WidgetList"
+import { OrganiseList } from "./ContentCards"
 import { PAGE, type Selection } from "./selection"
 import type { Editor } from "./useEditor"
 
@@ -147,7 +147,7 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
           <div key={p} hidden={p !== top} className={p === top ? undefined : "hidden"}>
             {p === "content" ? <Structure ed={ed} selection={selection} onSelect={fromList} notify={notify} /> : null}
             {p === "design" ? <div className="grid gap-3"><Recommendations ed={ed} onSelect={fromList} notify={notify} /><PageStylePanel ed={ed} notify={notify} /></div> : null}
-            {p === "organise" ? <OrganisePanel ed={ed} selection={selection} onSelect={fromList} /> : null}
+            {p === "organise" ? <OrganisePanel ed={ed} onDone={close} /> : null}
             {p === "selection" ? <Inspector ed={ed} selection={selection} onSelect={(sel) => { setSelection(sel) }} notify={notify} compact /> : null}
           </div>
         ))}
@@ -156,13 +156,6 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
   )
 }
 
-function OrganisePanel({ ed, selection, onSelect }: { ed: Editor; selection: Selection; onSelect: (s: Selection) => void }) {
-  return (
-    <div className="grid gap-3" data-testid="organise-panel">
-      <p className="text-xs text-neutral-500">Press and hold a handle to drag. You can also use the arrows. Your page order and your main action are separate.</p>
-      <WidgetList ed={ed} selectedId={selection.kind === "widget" ? selection.id : null} onSelect={(id) => onSelect({ kind: "widget", id })} onDetails={() => onSelect({ kind: "details" })} />
-    </div>
-  )
+function OrganisePanel({ ed, onDone }: { ed: Editor; onDone: () => void }) {
+  return <OrganiseList ed={ed} onDone={onDone} />
 }
-
-export { PAGE }
