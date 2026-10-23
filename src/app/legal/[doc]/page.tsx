@@ -12,8 +12,8 @@ export async function generateMetadata({ params }: { params: Promise<{ doc: stri
 }
 
 /**
- * The approved legal text has not been supplied, and none is invented here. This page states that plainly
- * and lists what is needed so it can be published, instead of showing text that looks authoritative but is not.
+ * The approved legal text has not been supplied, and none is invented here: the page says so in one line. What is still
+ * needed is tracked in docs/launch-dependencies.md.
  */
 export default async function LegalPage({ params }: { params: Promise<{ doc: string }> }) {
   const d = (await params).doc as Doc
@@ -22,16 +22,8 @@ export default async function LegalPage({ params }: { params: Promise<{ doc: str
     <div className="bg-background">
       <SiteHeader />
       <main className="mx-auto w-full max-w-3xl px-5 py-20 sm:py-28">
-        <h1 className="font-display font-display-tight text-[clamp(2.5rem,7vw,4.5rem)]">{DOCS[d]}</h1>
-        <p className="mt-6 rounded-2xl border border-amber-500/40 bg-amber-50 p-5 text-[0.9375rem] leading-relaxed text-amber-950"><strong>Not published yet.</strong> Taplo is in preview and the approved {DOCS[d].toLowerCase()} has not been supplied. This page will show the real text once it is. Nothing here is legal advice or a statement of how the live service will behave.</p>
-        <h2 className="mt-10 text-lg font-semibold">What is needed before launch</h2>
-        <ul className="mt-3 list-disc space-y-2 pl-5 leading-relaxed text-foreground/75">
-          <li>The company name, registered address and registration number that operate Taplo.</li>
-          <li>{d === "privacy" ? "The approved privacy notice, including data controller, purposes, retention and rights contact." : "The approved terms covering accounts, acceptable use, plans and billing."}</li>
-          <li>A support and reporting contact for businesses and the public.</li>
-          <li>Cookie and consent wording that matches what the live service actually sets.</li>
-        </ul>
-        <p className="mt-8 text-sm text-foreground/60">In this preview, everything you enter is stored in your own browser and is not sent anywhere.</p>
+        <h1 className="font-display font-display-tight text-[clamp(2rem,5vw,3.25rem)]">{DOCS[d]}</h1>
+        <p className="mt-6 max-w-xl text-lg leading-relaxed text-foreground/70">The full {DOCS[d].toLowerCase()} will be published here before Taplo opens to the public. Until then, everything you enter stays in your own browser.</p>
       </main>
       <SiteFooter />
     </div>

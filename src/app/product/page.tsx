@@ -14,8 +14,8 @@ export default function ProductIndex() {
     <div className="bg-background">
       <SiteHeader />
       <main className="mx-auto w-full max-w-7xl px-5 py-14 sm:py-20">
-        <h1 className="font-display font-display-tight mt-4 max-w-4xl text-[clamp(2.5rem,6.5vw,5.25rem)] text-balance">What goes on a Taplo page.</h1>
-        <p className="mt-6 max-w-2xl text-xl leading-relaxed text-foreground/70">Nine things, each shown working. Every page says what you can use today and what still needs a connection.</p>
+        <h1 className="font-display font-display-tight mt-4 max-w-4xl text-[clamp(2rem,4.8vw,3.75rem)] text-balance">What goes on a Taplo page.</h1>
+        <p className="mt-6 max-w-2xl text-xl leading-relaxed text-foreground/70">Ten things a page can do, each shown working.</p>
         <div className="mt-16 grid grid-cols-[minmax(0,1fr)] gap-16">
           {PRODUCT_GROUPS.map((g) => (
             <section key={g.title} aria-labelledby={`g-${g.title}`} className="grid grid-cols-[minmax(0,1fr)] gap-6 border-t border-foreground/10 pt-8 md:grid-cols-[14rem_1fr]">
@@ -37,7 +37,7 @@ export default function ProductIndex() {
             </section>
           ))}
         </div>
-        <div className="mt-20"><Link href={a.href} className="inline-flex min-h-12 items-center rounded-full bg-foreground px-6 text-base font-semibold text-background hover:opacity-90">{a.label}</Link></div>
+        <div className="mt-20"><Link href={a.href} className="inline-flex min-h-12 items-center rounded-xl bg-foreground px-6 text-base font-semibold text-background hover:opacity-90">{a.label}</Link></div>
       </main>
       <SiteFooter />
     </div>

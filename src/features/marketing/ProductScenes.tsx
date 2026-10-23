@@ -133,7 +133,7 @@ function Products() {
       <div className="lg:col-span-7">
         <Shot id="prod-detail-affiliate" alt="A product detail that says it is an affiliate link and opens the maker's shop" width={680} frame="none" className="w-full" />
         <Label>A product you recommend but do not sell sends people to the maker, and says so.</Label>
-        <p className="mt-8 max-w-xl text-[0.9375rem] leading-relaxed text-foreground/70">There is no checkout on Taplo yet, and nothing pretends there is. A product either takes an enquiry or opens a shop you already use, in a new tab.</p>
+        <p className="mt-8 max-w-xl text-[0.9375rem] leading-relaxed text-foreground/70">A product either takes an enquiry or opens the shop you already use, in a new tab. Checkout on Taplo needs a payment provider, which is not connected yet.</p>
       </div>
     </div>
   )

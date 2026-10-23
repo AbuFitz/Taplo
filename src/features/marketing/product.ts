@@ -43,8 +43,8 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "enquiries", label: "Contact and enquiries", eyebrow: "Contact and enquiries",
-    title: "A message that cannot be mistaken for a booking.",
-    lead: "Call, WhatsApp, email and a contact form. A message says plainly that nothing is reserved, and keeps what was typed if something goes wrong.",
+    title: "Enquiries that arrive as enquiries.",
+    lead: "Call, WhatsApp, email and a contact form. Customers see that nothing is reserved until you reply, and what they typed is kept if something goes wrong.",
     status: [
       { label: "Call, WhatsApp, email and directions buttons", state: "works" },
       { label: "A contact form with validation and clear confirmation", state: "works" },
@@ -55,14 +55,14 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "booking", label: "Booking", eyebrow: "Booking",
-    title: "Service, person, time, details. Done.",
+    title: "Service, person, time. Done.",
     lead: "Customers choose what they want, who with, and when. The journey says whether the time is confirmed, only requested, or just an enquiry, and means it.",
     status: [
       { label: "Service, person, date and time, details, review, result", state: "works" },
       { label: "Working hours, breaks, leave, buffers, notice and booking window", state: "works" },
       { label: "Business time zone and clock changes", state: "works" },
       { label: "Owner calendar: agenda, day, week, month, blocked time", state: "works" },
-      { label: "Server-checked booking with no double-booking", state: "needs", note: "Written and tested on Postgres. Needs a connected database to run live. In preview, bookings stay in this browser." },
+      { label: "Server-checked booking with no double-booking", state: "needs", note: "Written and tested on Postgres. Needs a connected database to run live; until then bookings stay in this browser." },
       { label: "Email or text confirmations", state: "needs", note: "Needs an email or text provider. None is sent." },
       { label: "Deposits and payment", state: "needs", note: "Needs a payment provider. Nothing is charged." },
     ],
@@ -106,7 +106,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "gallery-reviews", label: "Photos and reviews", eyebrow: "Photos and reviews",
-    title: "A lightbox that works, and words with their source.",
+    title: "Photos that open large. Reviews that say where they came from.",
     lead: "Photos open large, with arrows, zoom and the keyboard. Reviews always say where the words came from, and Taplo never makes one up.",
     status: [
       { label: "Photo grid and swipe rows, with a full-screen viewer", state: "works" },
@@ -131,8 +131,8 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "messages", label: "Messages and reminders", eyebrow: "Messages and reminders",
-    title: "Five kinds of message, each one called what it is.",
-    lead: "Opening a customer’s text app, sending an enquiry, confirming an appointment, reminding them, and telling opted-in customers about an offer are different things. Taplo keeps them apart.",
+    title: "Texts, enquiries, confirmations and reminders.",
+    lead: "A customer can text you in one tap, send an enquiry, get a confirmation and a reminder, and hear about an offer if they opted in. Each is its own message, so nothing is mistaken for something else.",
     status: [
       { label: "Text us: opens the customer’s own messages app with the words ready", state: "works", feature: "textApp" },
       { label: "A contact form that keeps each enquiry for the owner", state: "works", feature: "enquiryInbox" },

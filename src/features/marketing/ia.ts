@@ -11,8 +11,8 @@ export const PRODUCT_GROUPS: NavGroup[] = [
     links: [
       { href: "/product/design", label: "Looks and design", blurb: "Start from a look, then change anything." },
       { href: "/product/services", label: "Services and prices", blurb: "Price menus people can read at a glance." },
-      { href: "/product/enquiries", label: "Contact and enquiries", blurb: "A clear way to ask, with nothing reserved by mistake." },
-      { href: "/product/messages", label: "Messages and reminders", blurb: "Texts, enquiries, confirmations and reminders, kept apart." },
+      { href: "/product/enquiries", label: "Contact and enquiries", blurb: "A clear way to ask a question or request a time." },
+      { href: "/product/messages", label: "Messages and reminders", blurb: "Text us, confirmations and reminders." },
     ],
   },
   {
@@ -27,7 +27,7 @@ export const PRODUCT_GROUPS: NavGroup[] = [
     links: [
       { href: "/product/products", label: "Products and links", blurb: "Your products, or ones you recommend." },
       { href: "/product/vehicles", label: "Vehicle stock", blurb: "Specifications, price and honest status." },
-      { href: "/product/gallery-reviews", label: "Photos and reviews", blurb: "A lightbox that works, and words with their source." },
+      { href: "/product/gallery-reviews", label: "Photos and reviews", blurb: "Pictures that open large, and words with their source." },
     ],
   },
   {

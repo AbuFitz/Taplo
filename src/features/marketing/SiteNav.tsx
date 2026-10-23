@@ -9,8 +9,8 @@ import { TaploLogo } from "@/components/taplo/brand"
 import { cn } from "@/lib/utils"
 import { INDUSTRY_FILTERS, PRODUCT_GROUPS } from "./ia"
 
-const ink = "rounded-full px-3.5 py-2 text-sm font-medium text-foreground/70 outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/60 data-[state=open]:text-foreground aria-[current=page]:text-foreground"
-const primary = "inline-flex min-h-10 items-center rounded-full bg-foreground px-4 text-sm font-semibold text-background outline-none transition-opacity hover:opacity-90 focus-visible:ring-3 focus-visible:ring-ring/60"
+const ink = "rounded-lg px-3.5 py-2 text-sm font-medium text-foreground/70 outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/60 data-[state=open]:text-foreground aria-[current=page]:text-foreground"
+const primary = "inline-flex min-h-10 items-center rounded-lg bg-foreground px-4 text-sm font-semibold text-background outline-none transition-opacity hover:opacity-90 focus-visible:ring-3 focus-visible:ring-ring/60"
 
 /**
  * Compact floating navigation. Product opens a real menu whose entries are real pages; Pricing and
@@ -26,7 +26,7 @@ export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: str
 
   return (
     <header className="sticky top-0 z-40 px-3 pt-3 sm:px-5">
-      <div className="mx-auto flex h-14 w-full max-w-5xl items-center gap-2 rounded-full border border-foreground/10 bg-background/85 pl-4 pr-2 shadow-[0_8px_30px_-12px_rgb(0_0_0/0.25)] backdrop-blur-xl">
+      <div className="mx-auto flex h-14 w-full max-w-5xl items-center gap-2 rounded-2xl border border-foreground/10 bg-background/90 pl-4 pr-2 shadow-[0_8px_30px_-12px_rgb(0_0_0/0.25)] backdrop-blur-xl">
         <Link href="/" aria-label="Taplo home" className="mr-1 rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo className="h-9 -ml-1" /></Link>
 
         <NavigationMenu.Root className="relative hidden md:block" aria-label="Primary">
@@ -37,7 +37,7 @@ export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: str
                 <div className="grid grid-cols-2 gap-x-8 gap-y-5">
                   {PRODUCT_GROUPS.map((g) => (
                     <div key={g.title}>
-                      <p className="px-3 text-xs font-semibold uppercase tracking-[0.14em] text-foreground/45">{g.title}</p>
+                      <p className="px-3 text-sm font-semibold text-foreground/50">{g.title}</p>
                       <ul className="mt-1.5">{g.links.map((l) => (
                         <li key={l.href}><NavigationMenu.Link asChild><Link href={l.href} className="block rounded-xl px-3 py-2 outline-none hover:bg-foreground/5 focus-visible:ring-3 focus-visible:ring-ring/60"><span className="block text-sm font-semibold">{l.label}</span><span className="block text-[0.8125rem] leading-snug text-foreground/60">{l.blurb}</span></Link></NavigationMenu.Link></li>
                       ))}</ul>

@@ -185,8 +185,10 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
     expect(svgText).not.toMatch(/href="https?:/)
     expect((await decodeFile(await svgDl.path())).text).toBe(url)
 
+    await panel.getByTestId("share-tab-card").click()
+    await expect(panel.getByTestId("share-card-preview")).toBeVisible()
     const [shareDl] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: /Share image/ }).click()])
-    expect(shareDl.suggestedFilename()).toBe("marlowe-and-finch-preview-share.png")
+    expect(shareDl.suggestedFilename()).toBe("marlowe-and-finch-preview-share-post.png")
     const sf = await decodeFile(await shareDl.path(), 700)
     expect((await sharp(await shareDl.path()).metadata()).width).toBe(1080)
     expect(sf.text).toBe(url)
@@ -196,6 +198,7 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
     await page.addInitScript(() => { Object.defineProperty(navigator, "share", { value: () => Promise.reject(Object.assign(new Error("cancelled"), { name: "AbortError" })), configurable: true }) })
     await open(page, FRAME())
     await page.getByRole("button", { name: /Share Marlowe/ }).click()
+    await page.getByTestId("share-tab-card").click()
     const native = page.getByRole("button", { name: "Share from this device" })
     await expect(native).toBeVisible()
     await native.click()
@@ -205,7 +208,62 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
     await page.addInitScript(() => { Object.defineProperty(navigator, "share", { value: undefined, configurable: true }) })
     await open(page, FRAME())
     await page.getByRole("button", { name: /Share Marlowe/ }).click()
+    await page.getByTestId("share-tab-card").click()
     await expect(page.getByRole("button", { name: "Share from this device" })).toHaveCount(0)
+  })
+
+  test("QR options: transparent is real, a business logo and colour survive export, repeated downloads work, nothing goes stale", async ({ page }) => {
+    await open(page, FRAME())
+    await page.getByRole("button", { name: /Share Marlowe/ }).click()
+    const panel = page.getByTestId("share-panel")
+    const url = await panel.locator("#share-url").inputValue()
+    const sharp = (await import("sharp")).default
+    const fs = await import("node:fs")
+    const decodeOn = async (path: string, bg: string) => {
+      const { data, info } = await sharp(path).resize(512, 512, { fit: "inside", withoutEnlargement: true }).flatten({ background: bg }).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+      return jsQR(new Uint8ClampedArray(data), info.width, info.height)?.data
+    }
+    const png = async (name: RegExp) => { const [d] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name }).click()]); return d }
+
+    // Transparent: the file has no background pixels at all, and decodes on every light surface.
+    await panel.getByRole("radio", { name: "Transparent" }).click()
+    const t = await png(/QR code · Screen/)
+    expect(t.suggestedFilename()).toBe("marlowe-and-finch-preview-qr-transparent-1024px.png")
+    const raw = await sharp(await t.path()).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+    const alphaAt = (x: number, y: number) => raw.data[(y * raw.info.width + x) * 4 + 3]
+    expect(alphaAt(2, 2), "corner").toBe(0)
+    expect(alphaAt(raw.info.width - 3, raw.info.height - 3), "far corner").toBe(0)
+    expect((raw.data.filter((_, i) => i % 4 === 3 && raw.data[i] === 255)).length, "dark modules are opaque").toBeGreaterThan(1000)
+    for (const bg of ["#ffffff", "#f1f1f1", "#fbf3e2"]) expect(await decodeOn(await t.path(), bg), `on ${bg}`).toBe(url)
+    const clearSvg = fs.readFileSync(await (await png(/QR code · SVG/)).path(), "utf8")
+    expect(clearSvg).not.toMatch(/<rect width="\d+" height="\d+" fill=/)
+
+    // A business logo and its own colour, as a self-contained SVG that still decodes.
+    await panel.getByRole("radio", { name: "White" }).click()
+    const taploSvg = fs.readFileSync(await (await png(/QR code · SVG/)).path(), "utf8")
+    await panel.getByRole("radio", { name: "Your logo" }).click()
+    await panel.getByRole("radio", { name: "Dots" }).click()
+    await panel.getByRole("radio", { name: "Your colour" }).click()
+    const mine = await png(/QR code · SVG/)
+    const mineSvg = fs.readFileSync(await mine.path(), "utf8")
+    expect(mineSvg).toContain('href="data:image/')
+    expect(mineSvg).not.toMatch(/href="https?:/)
+    expect(mineSvg, "different artwork from the Taplo mark").not.toBe(taploSvg)
+    const fg = /<path d="[^"]*" fill="(#[0-9a-f]{6})"/i.exec(mineSvg)?.[1]
+    expect(fg).toBeTruthy()
+    const lum = (c: string) => { const n = parseInt(c.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const s = v / 255; return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4 }).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i]!, 0) }
+    expect((1.05) / (lum(fg!) + 0.05), "7:1 on white").toBeGreaterThanOrEqual(7)
+    expect(await decodeOn(await mine.path(), "#ffffff")).toBe(url)
+
+    // The preview is the export: the same drawing, not a second one that can drift.
+    const previewPath = await panel.locator('[data-testid="qr-preview"] svg path').first().getAttribute("d")
+    expect(mineSvg).toContain(previewPath!)
+
+    // Repeated downloads work, and each reflects what is chosen now.
+    for (let i = 0; i < 3; i++) expect(await decodeOn(await (await png(/QR code · Screen/)).path(), "#ffffff"), `download ${i + 1}`).toBe(url)
+    await panel.getByRole("radio", { name: "Classic" }).click()
+    const after = fs.readFileSync(await (await png(/QR code · SVG/)).path(), "utf8")
+    expect(after, "a changed style is never exported stale").not.toBe(mineSvg)
   })
 })
 

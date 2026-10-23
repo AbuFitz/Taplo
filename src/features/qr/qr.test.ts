@@ -79,4 +79,19 @@ describe("business QR codes", () => {
     expect(qrFilename("marlowe-and-finch", "qr", "svg", { preview: true })).toBe("marlowe-and-finch-preview-qr.svg")
     expect(qrFilename("marlowe-and-finch", "share", "png")).toBe("marlowe-and-finch-share.png")
   })
+
+  it("draws no background at all when transparent, and still makes the code dark enough for a light surface", () => {
+    const svg = qrSvg(URL_SHORT, { ...styles["square, no logo"]!, fg: "#c6f432", transparent: true }, 512)
+    expect(svg).not.toMatch(/<rect width="\d+" height="\d+" fill=/)
+    const fg = /<path d="[^"]*" fill="(#[0-9a-f]{6})"/i.exec(svg)![1]!
+    expect(contrast(fg, "#ffffff")).toBeGreaterThanOrEqual(7)
+  })
+
+  it("keeps a transparent code's logo free of a plate, and names the file as transparent", () => {
+    const svg = qrSvg(URL_SHORT, { ...styles["round dots, round corners, logo"]!, transparent: true }, 512)
+    expect(svg).toContain("<image")
+    expect(svg).not.toMatch(/<rect [^>]*rx=/)
+    expect(qrFilename("marlowe-and-finch", "qr", "png", { px: 1024, preview: true, transparent: true })).toBe("marlowe-and-finch-preview-qr-transparent-1024px.png")
+    expect(qrFilename("marlowe-and-finch", "share", "png", { format: "story" })).toBe("marlowe-and-finch-share-story.png")
+  })
 })

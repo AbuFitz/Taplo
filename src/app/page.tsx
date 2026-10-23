@@ -18,12 +18,12 @@ export const dynamic = "force-dynamic"
 
 /** What a customer meets, in the order a page is used: one swipeable row, each item a real capture of the page renderer. */
 const ROW = [
-  { id: "team-swipe", w: 300, title: "People", body: "A card for each person, a full profile on a tap, and booking with them.", href: "/product/team", alt: "Team cards in a swipeable row" },
-  { id: "cap-vehicles", w: 300, crop: 560, title: "Vehicle stock", body: "Year, mileage, fuel and gearbox before the price. Reserved and sold stay honest.", href: "/product/vehicles", alt: "A list of cars with specifications and prices" },
-  { id: "prod-swipe", w: 300, title: "Products and links", body: "Sell your own, or recommend one with an affiliate link that says so.", href: "/product/products", alt: "Products in a swipeable row" },
-  { id: "gal-lightbox", w: 420, title: "Photos that open large", body: "Arrows, zoom and the keyboard, with a caption for each picture.", href: "/product/gallery-reviews", alt: "A photo open in a full-screen viewer" },
-  { id: "svc-detail", w: 420, title: "Prices with detail", body: "Price, time and who does it, one tap from the menu.", href: "/product/services", alt: "A service detail with price, duration and the people who provide it" },
-  { id: "rev-quote", w: 300, title: "Reviews with a source", body: "Words say where they came from. Nothing is made up.", href: "/product/gallery-reviews", alt: "A customer review with its source" },
+  { id: "team-swipe", w: 300, title: "Meet the team", body: "Names, faces, a short bio and a button to book with each person.", href: "/product/team", alt: "Team cards in a swipeable row" },
+  { id: "cap-vehicles", w: 300, crop: 560, title: "Stock with the facts", body: "Year, mileage, fuel and gearbox first, then the price. Reserved and sold cars say so.", href: "/product/vehicles", alt: "A list of cars with specifications and prices" },
+  { id: "prod-swipe", w: 300, title: "Products and links", body: "Sell your own, or recommend one with a link that says it is an affiliate link.", href: "/product/products", alt: "Products in a swipeable row" },
+  { id: "gal-lightbox", w: 420, title: "Photos that open large", body: "Arrows, zoom and captions, on a phone or a keyboard.", href: "/product/gallery-reviews", alt: "A photo open in a full-screen viewer" },
+  { id: "svc-detail", w: 420, title: "Prices with detail", body: "Price, length and who does it, one tap from the menu.", href: "/product/services", alt: "A service detail with price, duration and the people who provide it" },
+  { id: "rev-quote", w: 300, title: "Reviews with a source", body: "Real words, with where they came from.", href: "/product/gallery-reviews", alt: "A customer review with its source" },
 ] as const
 
 const BUBBLES = [
@@ -40,27 +40,29 @@ export default function Home() {
     <div className="bg-background">
       <SiteHeader />
       <main>
-        {/* Hero: the thing itself, large. */}
-        <section className="relative mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-14 px-5 pb-24 pt-12 sm:pt-20 lg:grid-cols-12">
-          <div className="lg:col-span-6">
-            <h1 className="font-display font-display-tight text-[clamp(2.75rem,5vw,4.5rem)] text-balance">The page your customers use before they call.</h1>
-            <p className="mt-6 max-w-lg text-xl leading-relaxed text-foreground/70">Prices, people and a way to book or ask, on one page that looks like yours. Share it with a link or a code.</p>
+        {/* Hero: three real pages, three identities, at a size where the words can be read. */}
+        <section className="mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-14 px-5 pb-20 pt-12 sm:pt-20 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <h1 className="font-display font-display-tight text-[clamp(2.5rem,4.6vw,4rem)] text-balance">Everything your customers ask, on one page.</h1>
+            <p className="mt-6 max-w-lg text-xl leading-relaxed text-foreground/70">Prices, people, products and a way to book or enquire, on a page that looks like yours. Choose a design, add what you offer, share a link.</p>
             <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Link href={a.href} className="inline-flex min-h-13 items-center rounded-full bg-foreground px-7 text-base font-semibold text-background outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-ring/60">{a.label}</Link>
-              <Link href="/inspiration" className="inline-flex min-h-13 items-center gap-2 rounded-full border border-foreground/20 px-6 text-base font-semibold outline-none hover:border-foreground/50 focus-visible:ring-3 focus-visible:ring-ring/60">See designs<ArrowRight aria-hidden="true" className="size-4" /></Link>
+              <Link href={a.href} className="inline-flex min-h-12 items-center rounded-xl bg-foreground px-6 text-base font-semibold text-background outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-ring/60">{a.label}</Link>
+              <Link href="/inspiration" className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-foreground/20 px-5 text-base font-semibold outline-none hover:border-foreground/50 focus-visible:ring-3 focus-visible:ring-ring/60">See designs<ArrowRight aria-hidden="true" className="size-4" /></Link>
             </div>
           </div>
-          <div className="relative lg:col-span-6" aria-label="A barber's page on a laptop and a phone, with its QR code">
-            <Shot id="ex-hollin-physio-desk" alt="A physiotherapy clinic's Taplo page on a laptop screen" width={700} frame="browser" priority className="hidden w-[80%] max-w-full sm:block" />
-            <Shot id="ex-marlowe-and-finch-phone" alt="A barber's Taplo page on a phone" width={250} priority cropTo={470} className="mx-auto sm:absolute sm:-bottom-6 sm:right-0 sm:mx-0" />
-            <div className="absolute -left-4 bottom-[-2.5rem] hidden w-36 rounded-3xl bg-white p-2.5 shadow-[0_24px_50px_-24px_rgb(0_0_0/0.5),0_0_0_1px_rgb(0_0_0/0.08)] lg:block [&>svg]:h-auto [&>svg]:w-full" aria-hidden="true" dangerouslySetInnerHTML={{ __html: qr }} />
+          <div className="relative lg:col-span-7" aria-label="Three example pages: a barber, a café and a maths tutor">
+            <div className="mx-auto flex max-w-[44rem] items-start justify-center gap-4 sm:gap-5">
+              <Shot id="ex-marlowe-and-finch-phone" alt="A barber's page: dark, with a bright Book your chair button" width={250} priority cropTo={500} frame="none" className="w-[34%] sm:w-[250px]" />
+              <Shot id="ex-pims-kitchen-phone" alt="A café's page: warm terracotta with a photograph of brunch" width={250} priority cropTo={500} frame="none" className="mt-12 w-[34%] sm:mt-16 sm:w-[250px]" />
+              <Shot id="ex-ada-okafor-maths-phone" alt="A maths tutor's page: soft green with a free trial lesson" width={250} priority cropTo={500} frame="none" className="mt-4 hidden w-[250px] sm:block" />
+            </div>
           </div>
         </section>
 
         {/* The short film. Asked for, never autoplayed. */}
-        <section aria-labelledby="film-h" className="bg-foreground py-20 text-background sm:py-28">
+        <section aria-labelledby="film-h" className="bg-foreground py-16 text-background sm:py-24">
           <div className="mx-auto w-full max-w-5xl px-5">
-            <Reveal><h2 id="film-h" className="font-display font-display-tight mb-8 text-[clamp(2rem,4.4vw,3.5rem)] text-balance">See it in fifteen seconds.</h2></Reveal>
+            <Reveal><h2 id="film-h" className="font-display font-display-tight mb-8 text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">From a name to a shared page in fifteen seconds.</h2></Reveal>
             <Film className="[&_figcaption]:text-background/60 [&_figcaption_span]:text-background" />
           </div>
         </section>
@@ -69,8 +71,8 @@ export default function Home() {
         <section className="mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-14 px-5 py-24 sm:py-32 lg:grid-cols-12">
           <div className="lg:col-span-6">
             <Reveal>
-              <h2 className="font-display font-display-tight text-[clamp(2rem,4.6vw,3.75rem)] text-balance">Prices up front. A time picked in a few taps.</h2>
-              <p className="mt-6 max-w-lg text-lg leading-relaxed text-foreground/70">This is a real Taplo page, running here. Open a service, meet the barbers, choose a time.</p>
+              <h2 className="font-display font-display-tight text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">Customers see prices first, then pick a time.</h2>
+              <p className="mt-6 max-w-lg text-lg leading-relaxed text-foreground/70">This is a working page for an example barber. Open a service, meet the team, choose a time. Yours does the same with your own services.</p>
               <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2"><ArrowLink href="/product/services">Services and prices</ArrowLink><ArrowLink href="/product/booking">Booking</ArrowLink></div>
             </Reveal>
           </div>
@@ -80,7 +82,7 @@ export default function Home() {
         {/* Swipeable: what a page can hold. */}
         <section aria-labelledby="row-h" className="border-y border-foreground/10 bg-muted py-24 sm:py-32">
           <div className="mx-auto w-full max-w-7xl px-5">
-            <Reveal><h2 id="row-h" className="font-display font-display-tight max-w-3xl text-[clamp(2rem,4.6vw,3.75rem)] text-balance">Everything a customer asks about, in one place.</h2></Reveal>
+            <Reveal><h2 id="row-h" className="font-display font-display-tight max-w-3xl text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">One page, whatever you sell.</h2></Reveal>
           </div>
           <ul className="mt-14 flex snap-x snap-mandatory scroll-px-5 gap-8 overflow-x-auto px-5 pb-6 [scrollbar-width:thin] lg:px-[max(1.25rem,calc((100vw-80rem)/2+1.25rem))]" aria-label="What a page can hold" tabIndex={0}>
             {ROW.map((r, n) => (
@@ -108,8 +110,8 @@ export default function Home() {
             </ol>
           </div>
           <Reveal className="lg:col-span-6">
-            <h2 className="font-display font-display-tight text-[clamp(2rem,4.6vw,3.75rem)] text-balance">Text, ask, confirm, remind. Each one says what it is.</h2>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-foreground/70">A tap to text opens the customer’s own messages app. An enquiry never pretends to be a booking.{anyPending ? " Appointment confirmations and reminders switch on when messaging is connected." : " Confirmations and reminders go out on their own."}</p>
+            <h2 className="font-display font-display-tight text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">Customers can text you in one tap.</h2>
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-foreground/70">A Text us button opens their own messages app with a note ready to send. Questions arrive as enquiries and bookings as bookings.{anyPending ? " Confirmations and reminders switch on when you connect messaging." : " Confirmations and reminders go out on their own."}</p>
             <div className="mt-8"><ArrowLink href="/product/messages">Messages and reminders</ArrowLink></div>
           </Reveal>
         </section>
@@ -118,8 +120,8 @@ export default function Home() {
         <section className="bg-signal text-white">
           <div className="mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-14 px-5 py-24 sm:py-32 lg:grid-cols-12">
             <Reveal className="lg:col-span-5">
-              <h2 className="font-display font-display-tight text-[clamp(2rem,4.6vw,3.75rem)] text-balance">A code for the counter, the van and the window.</h2>
-              <p className="mt-6 max-w-md text-lg leading-relaxed text-white/80">Copy the link, download the code for print, or post the image. Your name, your logo and your words, ready to share.</p>
+              <h2 className="font-display font-display-tight text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">A code for the counter, the van and the window.</h2>
+              <p className="mt-6 max-w-md text-lg leading-relaxed text-white/80">Download a clean QR code for print or screen, on white or transparent, with your logo or ours in the middle. Or post a designed card with your name, link and code.</p>
               <div className="mt-8"><Link href="/product/sharing" className="inline-flex min-h-11 items-center gap-2 font-semibold underline underline-offset-4">Sharing and QR codes<ArrowRight aria-hidden="true" className="size-4" /></Link></div>
             </Reveal>
             <div className="mx-auto grid w-full max-w-xl grid-cols-2 items-center gap-4 sm:gap-8 lg:col-span-7 lg:mx-0 lg:ml-auto">
@@ -131,30 +133,30 @@ export default function Home() {
 
         {/* Interactive: make it yours. */}
         <section className="mx-auto w-full max-w-7xl px-5 py-24 sm:py-32">
-          <Reveal><h2 className="font-display font-display-tight mb-14 max-w-3xl text-[clamp(2rem,4.6vw,3.75rem)] text-balance">Start from a look. End up with your own.</h2></Reveal>
+          <Reveal><h2 className="font-display font-display-tight mb-14 max-w-3xl text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">Start from a design. End up with your own.</h2></Reveal>
           <LookSwitcher />
         </section>
 
         {/* Setup. */}
         <section aria-labelledby="setup-h" className="border-y border-foreground/10 bg-muted py-24 sm:py-32">
           <div className="mx-auto w-full max-w-7xl px-5">
-            <Reveal className="max-w-2xl"><h2 id="setup-h" className="font-display font-display-tight text-[clamp(2rem,4.6vw,3.75rem)] text-balance">A page in a few minutes.</h2><p className="mt-6 text-lg leading-relaxed text-foreground/70">Your name, what you do, a starting point, how to reach you. Add the rest when you are ready; a checklist keeps what is left.</p></Reveal>
-            <div className="mt-14 grid grid-cols-[minmax(0,1fr)] gap-10">
-              {(["setup-1-name", "setup-3-start", "setup-4-contact"] as const).map((id, n) => (
+            <Reveal className="max-w-2xl"><h2 id="setup-h" className="font-display font-display-tight text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">Live in a few minutes.</h2><p className="mt-6 text-lg leading-relaxed text-foreground/70">Name it, say what you do and how people should reach you, choose a design, add your first service. Your page takes shape beside you as you go.</p></Reveal>
+            <div className="mt-14 grid grid-cols-[minmax(0,1fr)] gap-14">
+              {(["setup-2-what", "setup-3-design", "setup-4-first"] as const).map((id, n) => (
                 <Reveal key={id} delay={n * 80} className={cn("grid grid-cols-[minmax(0,1fr)] items-center gap-6 md:grid-cols-12", n === 1 && "md:[&>*:first-child]:order-last")}>
-                  <div className="md:col-span-4"><p className="font-display text-5xl tabular-nums text-foreground/15">{n + 1}</p><p className="mt-2 text-2xl font-semibold tracking-[-0.02em]">{["Say who you are", "Pick a starting point", "Add a way to reach you"][n]}</p><p className="mt-2 text-foreground/65">{["Your page appears as you type.", "A look, shown on your own business. Change it any time.", "One way is enough. The rest can wait."][n]}</p></div>
-                  <div className="md:col-span-8"><Shot id={id} alt={["The first step: your business name, with your page appearing beside it", "A starting point: looks shown on your own business", "How people can reach you"][n]!} width={760} frame="browser" className="w-full" /></div>
+                  <div className="md:col-span-4"><p className="font-display text-5xl tabular-nums text-foreground/15">{n + 2}</p><p className="mt-2 text-2xl font-semibold tracking-[-0.02em]">{["Say what you do", "Choose a design", "Add your first service"][n]}</p><p className="mt-2 text-foreground/65">{["Pick your kind of business and what people should do first.", "Each one shown on a real page. Change any of it later.", "A name and a price. Your page fills in as you type."][n]}</p></div>
+                  <div className="md:col-span-8"><Shot id={id} alt={["Choosing what you do and what people should do first", "Choosing a design while your own page takes shape beside it", "Adding a first service while the page fills in beside it"][n]!} width={760} frame="none" className="w-full" /></div>
                 </Reveal>
               ))}
             </div>
-            <div className="mt-14"><Link href={a.href} className="inline-flex min-h-13 items-center rounded-full bg-foreground px-7 text-base font-semibold text-background outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-ring/60">{a.label}</Link></div>
+            <div className="mt-14"><Link href={a.href} className="inline-flex min-h-12 items-center rounded-xl bg-foreground px-6 text-base font-semibold text-background outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-ring/60">{a.label}</Link></div>
           </div>
         </section>
 
         {/* Plans, briefly. */}
         <section className="mx-auto w-full max-w-7xl px-5 py-24 sm:py-32">
           <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-4"><h2 className="font-display font-display-tight text-[clamp(2rem,4vw,3.25rem)] text-balance">Start free. Pay when you need more.</h2><p className="mt-5 text-foreground/70">One price a month, no commission and no contract.</p><div className="mt-6"><ArrowLink href="/pricing">Compare every feature</ArrowLink></div></div>
+            <div className="lg:col-span-4"><h2 className="font-display font-display-tight text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">Start free. Upgrade when you need more.</h2><p className="mt-5 text-foreground/70">One price a month, no commission and no contract.</p><div className="mt-6"><ArrowLink href="/pricing">Compare every feature</ArrowLink></div></div>
             <ul className="divide-y divide-foreground/10 border-y border-foreground/10 lg:col-span-8">
               {PLAN_IDS.map((id) => (
                 <li key={id} className="grid grid-cols-[minmax(0,1fr)] items-baseline gap-x-8 gap-y-1 py-6 sm:grid-cols-[8rem_1fr_auto]">
@@ -168,9 +170,9 @@ export default function Home() {
         </section>
 
         <section className="mx-auto w-full max-w-7xl px-5 pb-8">
-          <div className="flex flex-wrap items-center justify-between gap-8 rounded-[2rem] bg-foreground px-7 py-12 text-background sm:px-12">
-            <h2 className="font-display font-display-tight max-w-xl text-[clamp(2rem,4vw,3.25rem)] text-balance">Make your Taplo in a few minutes.</h2>
-            <Link href={a.href} className="inline-flex min-h-13 items-center rounded-full bg-background px-7 text-base font-semibold text-foreground outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-white/50">{a.label}</Link>
+          <div className="flex flex-wrap items-center justify-between gap-8 rounded-3xl bg-foreground px-7 py-12 text-background sm:px-12">
+            <h2 className="font-display font-display-tight max-w-xl text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">Make your Taplo in a few minutes.</h2>
+            <Link href={a.href} className="inline-flex min-h-13 items-center rounded-xl bg-background px-6 text-base font-semibold text-foreground outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-white/50">{a.label}</Link>
           </div>
         </section>
       </main>

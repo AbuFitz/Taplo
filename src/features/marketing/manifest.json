@@ -547,5 +547,32 @@
     "cssHeight": 700,
     "bytes": 88062,
     "source": "/onboarding"
+  },
+  "setup-2-what": {
+    "file": "/marketing/setup-2-what.webp",
+    "width": 2200,
+    "height": 1400,
+    "cssWidth": 1100,
+    "cssHeight": 700,
+    "bytes": 102920,
+    "source": "/onboarding"
+  },
+  "setup-3-design": {
+    "file": "/marketing/setup-3-design.webp",
+    "width": 2200,
+    "height": 1400,
+    "cssWidth": 1100,
+    "cssHeight": 700,
+    "bytes": 138720,
+    "source": "/onboarding"
+  },
+  "setup-4-first": {
+    "file": "/marketing/setup-4-first.webp",
+    "width": 2200,
+    "height": 1400,
+    "cssWidth": 1100,
+    "cssHeight": 700,
+    "bytes": 94122,
+    "source": "/onboarding"
   }
 }

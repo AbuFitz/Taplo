@@ -32,6 +32,8 @@ export interface QrStyle {
   fg: string
   /** Background and quiet-zone colour, as a hex. */
   bg: string
+  /** Draw no background at all (real transparency). The code is still made dark enough for a light surface, and says so in its name. */
+  transparent?: boolean
   logo?: QrLogo | null
 }
 
@@ -85,7 +87,7 @@ const f = (v: number) => (Math.round(v * 100) / 100).toString()
 
 /** The drawing as an SVG document, in module units (viewBox `0 0 size size`), scaled to `px` by width/height. */
 export function qrSvg(url: string, style: QrStyle, px = 512, label?: string): string {
-  const colours = safeColours(style.fg, style.bg)
+  const colours = safeColours(style.fg, style.transparent ? "#ffffff" : style.bg)
   const logo = style.logo && style.logo.aspect > 0 && style.logo.aspect < 3 ? style.logo : null
   const m = qrModel(url, Boolean(logo))
   const { n, size } = m
@@ -112,11 +114,11 @@ export function qrSvg(url: string, style: QrStyle, px = 512, label?: string): st
     // Fit the logo inside the inner square, keeping its proportions.
     const w = logo.aspect >= 1 ? inner : inner * logo.aspect
     const h = logo.aspect >= 1 ? inner / logo.aspect : inner
-    logoEl = `<rect x="${px0}" y="${px0}" width="${plate}" height="${plate}" rx="${f(plate * 0.18)}" fill="${colours.bg}"/><image href="${logo.href}" x="${f(lo + QUIET + (inner - w) / 2)}" y="${f(lo + QUIET + (inner - h) / 2)}" width="${f(w)}" height="${f(h)}" preserveAspectRatio="xMidYMid meet"/>`
+    logoEl = `${style.transparent ? "" : `<rect x="${px0}" y="${px0}" width="${plate}" height="${plate}" rx="${f(plate * 0.18)}" fill="${colours.bg}"/>`}<image href="${logo.href}" x="${f(lo + QUIET + (inner - w) / 2)}" y="${f(lo + QUIET + (inner - h) / 2)}" width="${f(w)}" height="${f(h)}" preserveAspectRatio="xMidYMid meet"/>`
   }
 
   const title = label ? `<title>${label.replace(/[<>&"]/g, "")}</title>` : ""
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${px}" height="${px}" role="img" aria-label="${(label ?? "QR code").replace(/[<>&"]/g, "")}" shape-rendering="geometricPrecision">${title}<rect width="${size}" height="${size}" fill="${colours.bg}"/><path d="${d}" fill="${colours.fg}"/><path d="${finders}" fill="${colours.fg}" fill-rule="evenodd"/>${logoEl}</svg>`
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${px}" height="${px}" role="img" aria-label="${(label ?? "QR code").replace(/[<>&"]/g, "")}" shape-rendering="geometricPrecision">${title}${style.transparent ? "" : `<rect width="${size}" height="${size}" fill="${colours.bg}"/>`}<path d="${d}" fill="${colours.fg}"/><path d="${finders}" fill="${colours.fg}" fill-rule="evenodd"/>${logoEl}</svg>`
 }
 
 /** What the exports offer. Sizes are explicit so a filename always says what it is. */
@@ -126,5 +128,5 @@ export const QR_PRESETS = [
 ] as const
 export type QrPresetId = (typeof QR_PRESETS)[number]["id"]
 
-export const qrFilename = (slug: string, kind: "qr" | "share", ext: "png" | "svg", opts: { px?: number; preview?: boolean } = {}) =>
-  `${slug || "page"}${opts.preview ? "-preview" : ""}-${kind}${opts.px ? `-${opts.px}px` : ""}.${ext}`
+export const qrFilename = (slug: string, kind: "qr" | "share", ext: "png" | "svg", opts: { px?: number; preview?: boolean; transparent?: boolean; format?: string } = {}) =>
+  `${slug || "page"}${opts.preview ? "-preview" : ""}-${kind}${opts.format ? `-${opts.format}` : ""}${opts.transparent ? "-transparent" : ""}${opts.px ? `-${opts.px}px` : ""}.${ext}`
