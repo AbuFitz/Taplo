@@ -1,16 +1,6 @@
 import { NotBuilt, PageHeader } from "./Panel"
 
-export function BookingsPage() {
-  return (
-    <>
-      <PageHeader title="Bookings" description="Requests, appointments and payment state." />
-      <NotBuilt title="Bookings, calendar and availability" phase="Phase 6">
-        <p>Not built yet: availability rules, transactional slot holds, request/instant booking, cancellation and rescheduling, and confirmation emails.</p>
-        <p>What works now: customers reach you through the Call, WhatsApp and Email buttons on your page, with the chosen service pre-filled.</p>
-      </NotBuilt>
-    </>
-  )
-}
+export { OwnerBookings as BookingsPage } from "@/features/booking/ui/owner/OwnerBookings"
 
 export function AnalyticsPage() {
   return (
