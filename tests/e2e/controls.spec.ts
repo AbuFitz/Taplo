@@ -95,6 +95,8 @@ test.describe("design controls change the rendered page, undo, and persist", () 
     test(c.id, async ({ page }) => {
       await openEditorWithSample(page, "Barber")
       await page.waitForTimeout(600)
+      // Every control is exercised from the same known start. The sample barber now opens in the Folio design, whose values already equal several of the targets below (and whose light page rejects light text), so the Night look is chosen first through the Look control.
+      if (c.id !== "look") { await selectPart(page, "page"); await radio("Look", "night")(page); await page.waitForTimeout(400) }
       await go(page, c)
       const before = await c.probe(page)
       await c.run(page)

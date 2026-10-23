@@ -50,7 +50,7 @@ Status: **done** (built and verified), **reference** (built once as the referenc
 | 21 | Film | open | Existing film is the round-three cut; to be rewritten with the HyperFrames story/spec workflow |
 | 22 | Sharing | done | Round-three work retained: standalone QR and share card, transparent and solid, business logo or Taplo mark. The brief now makes the business logo the preferred centre; the default is still Taplo's mark. Switching the default to the business logo when it is usable is scheduled |
 | 23 | Launch behaviour | done | One sandbox indicator; capability flags unchanged |
-| 24 | Verification | see the delivery message | |
+| 24 | Verification | done for the reference | Production build, Chromium: tsc, eslint clean; vitest 209/209 (with Postgres); Playwright 302/302; width sweep 135 checks, 0 overflowing. No WebKit, no physical device |
 
 ## The reference, item by item
 

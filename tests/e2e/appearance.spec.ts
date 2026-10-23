@@ -38,8 +38,10 @@ test.describe("Appearance lab: one engine, four configurations", () => {
   test("every demonstrated choice is editable; undo, redo and reset work", async ({ page }) => {
     await page.goto("/appearance");
     const f = frame(page);
+    // The lab opens on the barber's own design (Folio). This walk-through starts from the Night look so every step changes something.
+    await choice(page, "Look", "Night");
+    await expect.poll(() => attr(page, "data-header")).toBe("side");
     await expect(page.getByTestId("lab-reset")).toBeDisabled();                             // untouched look
-    expect(await attr(page, "data-header")).toBe("side");
 
     await choice(page, "Header arrangement", "Text-led");
     await expect.poll(() => attr(page, "data-header")).toBe("centered");
@@ -69,6 +71,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
 
   test("a colour drag is one undo step and readability is reported", async ({ page }) => {
     await page.goto("/appearance");
+    await choice(page, "Look", "Night");                                                   // a dark page, so a dark text colour is the unreadable one
     const accent = () => frame(page).locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-accent").trim());
     const before = await accent();
     await page.getByRole("button", { name: /Accent: choose colour/ }).click();
