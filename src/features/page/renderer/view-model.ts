@@ -81,8 +81,8 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
     rating: ent.reviewLinks ? parsed.rating : undefined,
   };
 
-  const onlineBooking = ent.onlineBooking && business.booking.onlineBookingReady && business.services.some((s) => s.bookingMode !== "contact");
-  const ctx: WidgetContext = { business, ent, industry, onlineBooking, today: todayIn(business.location.timezone, opts.now ?? new Date()) };
+  const onlineBooking = ent.onlineBooking && business.booking.onlineBookingReady && business.services.some((s) => !s.archived && s.bookingMode !== "contact" && Boolean(s.durationMinutes));
+  const ctx: WidgetContext = { business, ent, industry, onlineBooking, paymentsConnected: false, today: todayIn(business.location.timezone, opts.now ?? new Date()) };
 
   const mig = migratePage(pageRaw, parsed.identity.industryKey);
   const page: PageDoc = opts.themeOverride ? { ...mig.page, themeId: opts.themeOverride } : mig.page;

@@ -1,7 +1,7 @@
 import * as React from "react"
 import { SocialIcon } from "./social-icons"
 import { ArrowUpRight, ChevronDown } from "lucide-react"
-import type { ProductContent } from "@/features/businesses/content"
+import type { ProductContent, ServiceContent } from "@/features/businesses/content"
 import { formatDuration, formatMoney, formatPrice, groupServices } from "@/features/services/format"
 import { SOURCE_LABEL } from "@/components/taplo/taplo-review-card"
 import { TaploAvatar } from "@/components/taplo/taplo-avatar"
@@ -12,6 +12,16 @@ import { ProfileImage } from "../renderer/ProfileImage"
 import type { PageViewModel, RenderWidget } from "../renderer/view-model"
 import { BookingAction, ItemDetail, PaymentAction, VideoEmbed, type BookingActionProps } from "./client"
 import { WidgetIcon } from "./WidgetIcon"
+import { buildContext, priceWording } from "@/features/booking/model"
+import { TeamMembers, type TeamMemberData } from "./TeamClient"
+import { ServiceCollection } from "./ServiceClient"
+import { Gallery } from "./GalleryClient"
+import { Hours } from "./HoursClient"
+import { Collection } from "./Collection"
+import { ShareButton } from "./ShareClient"
+import { EnquiryButton } from "./EnquiryButton"
+import { EnquiryForm } from "@/features/booking/ui/EnquiryForm"
+import type { BookableService } from "@/features/booking/model"
 
 type S = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any -- validated per type by settingsSchemas before reaching a renderer
 interface P { w: RenderWidget; vm: PageViewModel }
@@ -54,6 +64,9 @@ export function bookingProps(vm: PageViewModel, extra: Partial<BookingActionProp
     whatsapp: b.contacts.whatsapp,
     email: b.contacts.email,
     onlineBooking: vm.onlineBooking,
+    // The scheduling context (services with timing, people when the plan allows choosing, hours) travels with the action,
+    // so the booking journey needs nothing else from the page.
+    booking: vm.onlineBooking ? buildContext(vm.ent.multiStaff ? b : { ...b, staff: [] }) : undefined,
     ...extra,
   }
 }
@@ -107,64 +120,41 @@ function DocumentWidget({ w }: P) {
 }
 
 /* ------------------------------------------------------------------ services / sales */
+function bookable(x: ServiceContent): BookableService {
+  return { id: x.id, name: x.name, description: x.description, group: x.group, priceMode: x.priceMode, priceMinor: x.priceMinor, currency: x.currency, durationMinutes: x.durationMinutes, bookingMode: x.bookingMode }
+}
+
+/** Who provides each service, so the detail view can say so. People with serviceIds null provide every service. */
+function providersByService(vm: PageViewModel) {
+  const out: Record<string, { id: string; name: string; serviceIds: string[] | null }[]> = {}
+  for (const s of vm.business.services) out[s.id] = vm.business.staff.filter((p) => p.bookable !== false && (p.serviceIds == null || p.serviceIds.includes(s.id))).map((p) => ({ id: p.id, name: p.name, serviceIds: p.serviceIds ?? null }))
+  return out
+}
+
+function serviceCtx(vm: PageViewModel) {
+  return vm.onlineBooking ? buildContext(vm.ent.multiStaff ? vm.business : { ...vm.business, staff: [] }) : undefined
+}
+
 function ServiceListWidget({ w, vm }: P) {
   const s = w.settings as S
   let list = pick(vm.business.services, s.serviceIds)
   if (s.group) list = list.filter((x) => x.group === s.group)
   if (s.limit) list = list.slice(0, s.limit)
-  if (s.variant === "cards") {
-    return (
-      <Card title={s.title}>
-        <ul className="grid gap-2 sm:grid-cols-2">
-          {list.map((x) => (
-            <li key={x.id} className="tp-subcard">
-              <p className="font-semibold leading-snug">{x.name}</p>
-              {s.showDescriptions && x.description ? <p className="tp-muted mt-1 text-sm">{x.description}</p> : null}
-              <p className="mt-2 text-sm"><span className="tp-price">{s.showPrices ? formatPrice(x) : ""}</span>{s.showDuration && x.durationMinutes ? <span className="tp-muted"> · {formatDuration(x.durationMinutes)}</span> : null}</p>
-            </li>
-          ))}
-        </ul>
-      </Card>
-    )
-  }
   return (
     <Card title={s.title}>
-      <ul className="tp-rows">
-        {list.map((x) => (
-          <li key={x.id} className="tp-row">
-            <div className="min-w-0">
-              <p className="font-semibold leading-snug [overflow-wrap:anywhere]">{x.name}</p>
-              {s.variant !== "compact" && s.showDescriptions && x.description ? <p className="tp-muted text-sm">{x.description}</p> : null}
-              {s.variant !== "compact" && s.showDuration && x.durationMinutes ? <p className="tp-muted text-xs">{formatDuration(x.durationMinutes)}</p> : null}
-            </div>
-            {s.showPrices ? <p className="tp-price text-right">{formatPrice(x)}</p> : null}
-          </li>
-        ))}
-      </ul>
+      <ServiceCollection groups={[{ items: list.map(bookable) }]} variant={s.variant === "cards" ? "cards" : s.variant === "compact" ? "compact" : "rows"} options={{ showPrices: s.showPrices !== false, showDuration: s.showDuration !== false, showDescriptions: s.showDescriptions !== false }}
+        ctx={serviceCtx(vm)} businessName={vm.business.identity.name} slug={vm.business.identity.slug} staffNames={providersByService(vm)} />
     </Card>
   )
 }
 
 function PriceMenuWidget({ w, vm }: P) {
   const s = w.settings as S
-  const groups = groupServices(pick(vm.business.services, s.serviceIds))
+  const groups = groupServices(pick(vm.business.services, s.serviceIds)).map((g) => ({ name: g.name ?? undefined, items: g.items.map(bookable) }))
   return (
     <Card title={s.title}>
-      <div className="grid gap-5">
-        {groups.map((g) => (
-          <div key={g.name ?? "all"}>
-            {g.name ? <h3 className="tp-group-title">{g.name}</h3> : null}
-            <ul className="grid gap-2.5">
-              {g.items.map((x) => (
-                <li key={x.id}>
-                  <div className="flex items-baseline gap-2"><span className="font-semibold [overflow-wrap:anywhere]">{x.name}</span><span aria-hidden="true" className="tp-leader" /><span className="tp-price">{formatPrice(x)}</span></div>
-                  {s.showDescriptions && x.description ? <p className="tp-muted text-sm">{x.description}</p> : null}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+      <ServiceCollection groups={groups} variant="menu" options={{ showPrices: true, showDuration: false, showDescriptions: Boolean(s.showDescriptions) }}
+        ctx={serviceCtx(vm)} businessName={vm.business.identity.name} slug={vm.business.identity.slug} staffNames={providersByService(vm)} />
     </Card>
   )
 }
@@ -256,7 +246,9 @@ function ProductsWidget({ w, vm }: P) {
       {groups.map((g) => (
         <div key={g.name} className={grouped ? "tp-product-group" : undefined}>
           {grouped && g.name ? <h3 className="tp-group-title">{g.name}</h3> : null}
-          <ul className="tp-products" data-variant={s.variant === "grid" ? "grid" : "list"} data-count={Math.min(g.items.length, 3)}>{g.items.map((p) => <li key={p.id}><ProductCard p={p} vm={vm} /></li>)}</ul>
+          {s.variant === "swipe" && g.items.length > 1
+            ? <Collection label={g.name || s.title || "Products"}>{g.items.map((p) => <ProductCard key={p.id} p={p} vm={vm} />)}</Collection>
+            : <ul className="tp-products" data-variant={s.variant === "grid" ? "grid" : "list"} data-count={Math.min(g.items.length, 3)}>{g.items.map((p) => <li key={p.id}><ProductCard p={p} vm={vm} /></li>)}</ul>}
         </div>
       ))}
     </Card>
@@ -310,6 +302,15 @@ function ReviewsWidget({ w, vm }: P) {
           <figcaption className="tp-muted mt-2 text-sm"><strong className="text-[var(--tp-foreground)]">{lead.author}</strong> · {SOURCE_LABEL[lead.source]}</figcaption>
           {rest.length ? <p className="tp-muted mt-3 text-xs">+ {rest.length} more shared by the business</p> : null}
         </figure>
+      ) : s.variant === "swipe" && list.length > 1 ? (
+        <Collection label={s.title || "Reviews"}>
+          {list.map((t) => (
+            <figure key={t.id} className="tp-subcard m-0 h-full">
+              <blockquote className="tp-quote tp-clamp-5">“{t.quote}”</blockquote>
+              <figcaption className="tp-muted mt-2 text-sm"><strong className="text-[var(--tp-foreground)]">{t.author}</strong> · {t.sourceUrl ? <a className="underline" href={t.sourceUrl} target="_blank" rel="noopener noreferrer">{SOURCE_LABEL[t.source]}</a> : SOURCE_LABEL[t.source]}</figcaption>
+            </figure>
+          ))}
+        </Collection>
       ) : (
         <ul className="tp-rows">
           {list.map((t) => (
@@ -335,24 +336,27 @@ function LeaveReviewWidget({ w, vm }: P) {
   )
 }
 
+function firstSentences(text: string | undefined, max = 110): string {
+  const t = (text ?? "").trim().replace(/\s+/g, " ")
+  if (!t) return ""
+  const m = t.match(/^(.+?[.!?])(\s|$)/)
+  const s = m ? m[1]! : t
+  return s.length <= max ? s : `${s.slice(0, max - 1).trimEnd()}…`
+}
+
 function TeamWidget({ w, vm }: P) {
   const s = w.settings as S
-  const list = pick(vm.business.staff, s.staffIds)
+  const list = pick(vm.business.staff, s.staffIds).filter((m) => m.bookable !== false || true)
+  const svcById = new Map(vm.business.services.filter((x) => !x.archived).map((x) => [x.id, x]))
+  const members: TeamMemberData[] = list.map((m) => ({
+    id: m.id, name: m.name, role: m.role, bio: m.bio, summary: firstSentences(m.bio), photo: m.photo ? { src: m.photo.src, alt: m.photo.alt, focal: m.photo.focal } : undefined,
+    subjects: m.subjects, credentials: m.credentials ?? [], bookable: m.bookable !== false,
+    services: [...svcById.values()].filter((x) => m.serviceIds === null || m.serviceIds === undefined || m.serviceIds.includes(x.id)).map((x) => ({ id: x.id, name: x.name, price: priceWording({ ...x, bookingMode: x.bookingMode } as never), minutes: x.durationMinutes })),
+  }))
+  const ctx = vm.onlineBooking ? buildContext(vm.ent.multiStaff ? vm.business : { ...vm.business, staff: [] }) : undefined
   return (
     <Card title={s.title || vm.industry.terminology.team}>
-      {s.variant === "avatars" ? (
-        <ul className="flex flex-wrap gap-4">{list.map((m) => <li key={m.id} className="w-24 text-center"><TaploAvatar name={m.name} image={m.photo} size="lg" className="mx-auto !size-20" /><p className="mt-1 text-sm font-semibold leading-tight">{m.name}</p>{m.role ? <p className="tp-muted text-xs">{m.role}</p> : null}</li>)}</ul>
-      ) : (
-        <ul className="tp-rows">
-          {list.map((m) => (
-            <li key={m.id} className="flex items-start gap-3 text-left">
-              <TaploAvatar name={m.name} image={m.photo} size="md" />
-              <div className="min-w-0"><p className="font-semibold leading-tight">{m.name}</p>{m.role ? <p className="tp-muted text-sm">{m.role}</p> : null}{m.bio ? <p className="mt-1 text-sm">{m.bio}</p> : null}
-                {m.subjects.length ? <p className="mt-1 flex flex-wrap gap-1.5">{m.subjects.map((x) => <span key={x} className="tp-chip">{x}</span>)}</p> : null}</div>
-            </li>
-          ))}
-        </ul>
-      )}
+      <TeamMembers members={members} variant={(s.variant as "list" | "swipe" | "grid" | "avatars") ?? "list"} ctx={ctx} />
     </Card>
   )
 }
@@ -388,21 +392,9 @@ function ImageWidget({ w }: P) {
 
 function GalleryWidget({ w, vm }: P) {
   const s = w.settings as S
-  const items = pick(vm.business.gallery, s.itemIds)
+  const items = pick(vm.business.gallery, s.itemIds).map((g) => ({ id: g.id, caption: g.caption, image: { src: g.image.src, alt: g.image.alt, width: g.image.width, height: g.image.height, focal: g.image.focal }, before: g.beforeImage ? { src: g.beforeImage.src, alt: g.beforeImage.alt, focal: g.beforeImage.focal } : undefined }))
   const title = s.title ? <h2 className="mb-2 px-1 text-[1.125rem]" style={{ fontFamily: "var(--tp-font-heading)", fontWeight: "var(--tp-heading-weight)", textTransform: "var(--tp-heading-case)" as never }}>{s.title}</h2> : null
-  if (s.variant === "carousel") {
-    return <div>{title}<ul className="tp-scroller" aria-label={s.title || "Gallery"}>{items.map((g) => <li key={g.id}><div className="tp-media aspect-[4/5]"><ProfileImage image={g.image} sizes="80vw" /></div>{g.caption ? <p className="tp-muted mt-1 text-xs">{g.caption}</p> : null}</li>)}</ul></div>
-  }
-  if (s.variant === "beforeAfter") {
-    return (
-      <div>{title}<ul className="grid gap-4">{items.map((g) => (
-        <li key={g.id}><div className="grid grid-cols-2 gap-1">
-          {g.beforeImage ? <div className="tp-media relative aspect-[4/5]"><ProfileImage image={g.beforeImage} sizes="45vw" /><span className="absolute left-2 top-2 rounded bg-black/70 px-1.5 py-0.5 text-xs font-semibold text-white">Before</span></div> : null}
-          <div className={cn("tp-media relative aspect-[4/5]", !g.beforeImage && "col-span-2 aspect-[4/3]")}><ProfileImage image={g.image} sizes="45vw" />{g.beforeImage ? <span className="absolute left-2 top-2 rounded bg-[var(--tp-accent)] px-1.5 py-0.5 text-xs font-semibold text-[var(--tp-accent-foreground)]">After</span> : null}</div>
-        </div>{g.caption ? <p className="tp-muted mt-1 text-xs">{g.caption}</p> : null}</li>))}</ul></div>
-    )
-  }
-  return <div>{title}<ul className="tp-gallery">{items.map((g) => <li key={g.id}><div className="tp-media"><ProfileImage image={g.image} sizes="(min-width:900px) 24rem, 50vw" /></div></li>)}</ul></div>
+  return <div>{title}<Gallery items={items} variant={s.variant === "carousel" ? "carousel" : s.variant === "beforeAfter" ? "beforeAfter" : "grid"} title={s.title} /></div>
 }
 
 function VideoWidget({ w }: P) {
@@ -431,13 +423,9 @@ const DAY_ORDER = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
 function HoursWidget({ w, vm }: P) {
   const s = w.settings as S
-  // Every day is shown; a day without times reads "Closed" rather than disappearing.
-  const hours = DAY_ORDER.map((d) => vm.business.hours.find((h) => h.day === d) ?? { day: d as "mon" })
   return (
     <Card title={s.title || "Opening hours"}>
-      <dl className={cn("grid grid-cols-[auto_1fr] gap-x-6 gap-y-1", s.variant === "compact" && "text-sm")}>
-        {hours.map((h) => <div key={h.day} className="contents"><dt className="font-medium text-left">{DAY[h.day]}</dt><dd className="tp-muted text-left">{h.opens && h.closes ? `${h.opens}–${h.closes}` : "Closed"}</dd></div>)}
-      </dl>
+      <Hours hours={DAY_ORDER.map((d) => vm.business.hours.find((h) => h.day === d) ?? { day: d as "mon" })} tz={vm.business.location.timezone || "Europe/London"} compact={s.variant === "compact"} />
     </Card>
   )
 }
@@ -457,6 +445,25 @@ function ServiceAreaWidget({ w, vm }: P) {
   const s = w.settings as S
   const areas = (vm.business.location.locality ?? "").split(/,| and /).map((x) => x.trim()).filter(Boolean)
   return <Card title={s.title || "Areas we cover"}><ul className="flex flex-wrap gap-2">{areas.map((a) => <li key={a} className="tp-chip">{a}</li>)}</ul><p className="tp-muted mt-2 text-xs">We travel to you. A private address is never published.</p></Card>
+}
+
+function EnquiryWidget({ w, vm }: P) {
+  const s = w.settings as S
+  const b = vm.business
+  const services = b.services.filter((x) => !x.archived).map((x) => ({ id: x.id, name: x.name }))
+  if (s.variant === "inline")
+    return (
+      <Card title={s.title || "Send us a message"}>
+        {s.intro ? <p className="tp-muted mb-3 text-left">{s.intro}</p> : null}
+        <EnquiryForm slug={b.identity.slug} businessName={b.identity.name} services={services} submitLabel={str(s.buttonLabel) || "Send message"} />
+      </Card>
+    )
+  return <EnquiryButton label={str(s.buttonLabel) || "Send us a message"} subtitle={str(s.intro) || undefined} title={s.title || "Send us a message"} slug={b.identity.slug} businessName={b.identity.name} services={services} />
+}
+
+function ShareWidget({ w, vm }: P) {
+  const s = w.settings as S
+  return <ShareButton data={{ name: vm.business.identity.name, tagline: vm.business.identity.tagline, slug: vm.business.identity.slug }} label={str(s.label) || "Share this page"} variant={s.variant === "card" ? "card" : "button"} />
 }
 
 function AnnouncementWidget({ w }: P) {
@@ -484,6 +491,8 @@ export function renderWidgetBody(w: RenderWidget, vm: PageViewModel): React.Reac
     case "featuredService": return <FeaturedServiceWidget w={w} vm={vm} />
     case "booking": return <BookingWidget w={w} vm={vm} />
     case "products": return <ProductsWidget w={w} vm={vm} />
+    case "enquiry": return <EnquiryWidget w={w} vm={vm} />
+    case "share": return <ShareWidget w={w} vm={vm} />
     case "offers": return <OffersWidget w={w} vm={vm} />
     case "payment": return <PaymentWidget w={w} vm={vm} />
     case "reviews": return <ReviewsWidget w={w} vm={vm} />

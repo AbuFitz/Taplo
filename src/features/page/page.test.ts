@@ -254,9 +254,13 @@ describe("fixtures", () => {
       expect(pageDocSchema.safeParse(f.page).success, f.key).toBe(true);
     }
   });
-  it("cover the six required kinds of business, and never advertise a booking flow that doesn't exist", () => {
+  it("cover the six required kinds of business, and only offer online booking where a time can actually be booked", () => {
     for (const k of ["barber", "tutor", "mechanic", "cafe", "consultant", "unlisted"]) expect(fx(k)).toBeDefined();
-    for (const f of FIXTURES) expect(f.content.booking?.onlineBookingReady, f.key).toBe(false);
+    for (const f of FIXTURES) {
+      const vm = buildPageViewModel(businessContentSchema.parse(f.content), f.page, { plan: "business" });
+      const bookable = vm.business.services.some((s) => !s.archived && s.bookingMode !== "contact" && s.durationMinutes);
+      expect(vm.onlineBooking, f.key).toBe(bookable && vm.business.booking.onlineBookingReady);
+    }
   });
   it("pair looks and industries independently (several fixtures do NOT use their suggested theme)", () => {
     const off = FIXTURES.filter((f) => f.page.themeId !== getIndustryPreset(f.content.identity.industryKey).suggestedThemeId);

@@ -19,6 +19,7 @@ export const WIDGET_TYPES = [
   "reviews", "leaveReview", "team", "credentials",
   "text", "image", "gallery", "video", "faq", "document",
   "hours", "location", "serviceArea", "announcement",
+  "enquiry", "share",
 ] as const;
 export type WidgetType = (typeof WIDGET_TYPES)[number];
 
@@ -42,12 +43,12 @@ export const settingsSchemas = {
   featuredService: z.object({ serviceId: z.string().max(64).nullable().default(null), headline: label, ctaLabel: label }),
   priceMenu: z.object({ title, serviceIds: ids, showDescriptions: z.boolean().default(false) }),
   booking: z.object({ label, serviceId: z.string().max(64).nullable().default(null), variant: z.enum(["button", "card"]).default("button") }),
-  products: z.object({ title, productIds: ids, variant: z.enum(["grid", "list"]).default("grid") }),
+  products: z.object({ title, productIds: ids, variant: z.enum(["grid", "list", "swipe"]).default("grid") }),
   offers: z.object({ title, offerIds: ids }),
   payment: z.object({ label: z.string().trim().max(60).default("Pay a deposit"), serviceId: z.string().max(64).nullable().default(null), kind: z.enum(["deposit", "full", "pay"]).default("deposit") }),
-  reviews: z.object({ title, testimonialIds: ids, variant: z.enum(["cards", "quote", "compact"]).default("cards"), showRating: z.boolean().default(true) }),
+  reviews: z.object({ title, testimonialIds: ids, variant: z.enum(["cards", "quote", "compact", "swipe"]).default("cards"), showRating: z.boolean().default(true) }),
   leaveReview: z.object({ label, platforms: z.array(z.string()).nullable().default(null) }),
-  team: z.object({ title, staffIds: ids, variant: z.enum(["list", "avatars"]).default("list") }),
+  team: z.object({ title, staffIds: ids, variant: z.enum(["list", "swipe", "grid", "avatars"]).default("list") }),
   credentials: z.object({ title, variant: z.enum(["chips", "list"]).default("chips") }),
   text: z.object({ title, body: z.string().max(4000).default(""), align: z.enum(["left", "center"]).optional() }),
   image: z.object({ image: imageSchema.nullable().default(null), caption: z.string().max(240).optional(), linkUrl: z.string().max(2048).optional(), shape: z.enum(["rounded", "square", "wide"]).default("rounded") }),
@@ -58,6 +59,8 @@ export const settingsSchemas = {
   hours: z.object({ title, variant: z.enum(["list", "compact"]).default("list") }),
   location: z.object({ title, showDirections: z.boolean().default(true) }),
   serviceArea: z.object({ title }),
+  enquiry: z.object({ title, intro: z.string().trim().max(240).optional(), buttonLabel: label, variant: z.enum(["button", "inline"]).default("button") }),
+  share: z.object({ title, label, variant: z.enum(["button", "card"]).default("button") }),
   announcement: z.object({
     text: z.string().trim().max(240).default(""),
     tone: z.enum(["info", "promo", "warning"]).default("info"),

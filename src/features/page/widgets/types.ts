@@ -9,6 +9,8 @@ export interface WidgetContext {
   ent: Entitlements;
   industry: IndustryPreset;
   onlineBooking: boolean;
+  /** A payment provider is connected for this environment. False until Stripe is configured; payment widgets stay hidden until then. */
+  paymentsConnected: boolean;
   /** YYYY-MM-DD in the business timezone; used for expiring notices/offers. */
   today: string;
 }

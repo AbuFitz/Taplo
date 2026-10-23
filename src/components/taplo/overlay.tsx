@@ -58,13 +58,15 @@ export interface OverlayProps {
   footer?: React.ReactNode
   /** Hide the visible title (it stays available to screen readers). */
   hideTitle?: boolean
+  /** Where focus goes on close. Defaults to the trigger; controlled overlays opened from several places use this. */
+  onCloseAutoFocus?: (e: Event) => void
   className?: string
   bodyClassName?: string
   testId?: string
   children: React.ReactNode
 }
 
-export function Overlay({ open, onOpenChange, trigger, kind = "dialog", tone = "admin", title, description, onBack, dirty, footer, hideTitle, className, bodyClassName, testId, children }: OverlayProps) {
+export function Overlay({ open, onOpenChange, trigger, kind = "dialog", tone = "admin", title, description, onBack, dirty, footer, hideTitle, onCloseAutoFocus, className, bodyClassName, testId, children }: OverlayProps) {
   const container = usePortalContainer()
   const [shell, setShell] = React.useState<HTMLElement | null>(null)
   const [confirming, setConfirming] = React.useState(false)
@@ -89,6 +91,7 @@ export function Overlay({ open, onOpenChange, trigger, kind = "dialog", tone = "
         <DialogPrimitive.Overlay className={cn("fixed inset-0 z-50 bg-black/35 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none", page && "backdrop-blur-[2px]")} />
         <DialogPrimitive.Content
           ref={setShell}
+          onCloseAutoFocus={onCloseAutoFocus}
           data-overlay={kind}
           data-testid={testId}
           {...(description ? {} : { "aria-describedby": undefined })}

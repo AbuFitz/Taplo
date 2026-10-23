@@ -6,6 +6,9 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { TaploButton } from "@/components/taplo/taplo-button"
 import { TaploModal } from "@/components/taplo/taplo-modal"
+import { BookingFlow } from "@/features/booking/ui/BookingFlow"
+import { EnquiryForm } from "@/features/booking/ui/EnquiryForm"
+import type { BookingContext } from "@/features/booking/model"
 import { telHref, videoEmbed, whatsappHref } from "@/lib/validation"
 import { cn } from "@/lib/utils"
 
@@ -28,6 +31,10 @@ export interface BookingActionProps {
   /** Render as the page's main action (large, accent). */
   hero?: boolean
   thumbnail?: React.ReactNode
+  /** Present when online booking is available: opens the stepped booking journey instead of the channel list. */
+  booking?: BookingContext
+  /** Open the journey with this person already chosen. */
+  staffId?: string
 }
 
 /** A page row that opens a themed dialog. Online booking links onward; otherwise it opens the business's own channels. */
@@ -36,40 +43,35 @@ export function BookingAction(p: BookingActionProps) {
   const service = p.services.find((s) => s.id === serviceId)
   const subject = p.topic ?? service?.name
   const message = subject ? `Hi ${p.businessName}, I'd like to ask about: ${subject}.` : `Hi ${p.businessName}, I'd like to ask about your services.`
+  const trigger = (
+    <button type="button" className="tp-btn" data-variant={p.variant ?? "button"} {...(p.hero ? { "data-primary": "", "data-hero": "" } : {})}>
+      {p.thumbnail ?? <CalendarCheck aria-hidden="true" className="size-5" />}
+      <span className="tp-btn-main"><span className="tp-btn-label">{p.label}</span>{p.subtitle ? <span className="tp-btn-sub">{p.subtitle}</span> : null}</span>
+      <ArrowRight aria-hidden="true" className="size-4" />
+    </button>
+  )
+  // Appointments: the stepped journey. A product enquiry (`topic`) is not a booking, so it keeps the contact dialog.
+  if (p.booking && !p.topic) return <BookingFlow ctx={p.booking} trigger={trigger} serviceId={p.preselect ?? undefined} staffId={p.staffId} title={p.label} />
+  const hasChannel = Boolean(p.phone || p.whatsapp || p.email)
   return (
-    <TaploModal
-      trigger={
-        <button type="button" className="tp-btn" data-variant={p.variant ?? "button"} {...(p.hero ? { "data-primary": "", "data-hero": "" } : {})}>
-          {p.thumbnail ?? <CalendarCheck aria-hidden="true" className="size-5" />}
-          <span className="tp-btn-main"><span className="tp-btn-label">{p.label}</span>{p.subtitle ? <span className="tp-btn-sub">{p.subtitle}</span> : null}</span>
-          <ArrowRight aria-hidden="true" className="size-4" />
-        </button>
-      }
-      title={p.label}
-      description={p.onlineBooking ? "Choose a service to continue to booking." : "Choose how you’d like to get in touch."}
-    >
+    <TaploModal trigger={trigger} title={p.topic ? `Ask about ${p.topic}` : p.label} description={hasChannel ? "Choose how you’d like to get in touch, or send a message." : "Send a message and the business will reply."}>
       <div className="grid gap-4">
-        {p.services.length > 0 && !p.topic ? (
-          <div className="grid gap-1.5">
-            <Label htmlFor="tp-service">Service</Label>
-            <Select value={serviceId} onValueChange={setServiceId}>
-              <SelectTrigger id="tp-service" className="min-h-11 w-full"><SelectValue placeholder="Choose a service (optional)" /></SelectTrigger>
-              <SelectContent position="popper">{p.services.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}</SelectContent>
-            </Select>
+        {p.topic ? <p className="text-sm text-tp-muted">About: <strong className="text-tp-fg">{p.topic}</strong></p> : null}
+        {hasChannel ? (
+          <div className="grid gap-2">
+            {p.phone ? <TaploButton tone="primary" size="lg" href={telHref(p.phone)}><Phone aria-hidden="true" /> Call</TaploButton> : null}
+            {p.whatsapp ? <TaploButton tone="secondary" size="lg" href={whatsappHref(p.whatsapp, message)} external><MessageCircle aria-hidden="true" /> WhatsApp</TaploButton> : null}
+            {p.email ? <TaploButton tone="secondary" size="lg" href={`mailto:${p.email}?subject=${encodeURIComponent(`Enquiry: ${subject ?? p.businessName}`)}&body=${encodeURIComponent(message)}`}><Mail aria-hidden="true" /> Email</TaploButton> : null}
           </div>
         ) : null}
-        {p.topic ? <p className="text-sm text-tp-muted">About: <strong className="text-tp-fg">{p.topic}</strong></p> : null}
-        <div className="grid gap-2">
-          {p.onlineBooking ? <TaploButton size="lg" href={`/${p.slug}/book${serviceId ? `?service=${encodeURIComponent(serviceId)}` : ""}`}>Continue to booking <ArrowRight aria-hidden="true" /></TaploButton> : null}
-          {p.phone ? <TaploButton tone={p.onlineBooking ? "secondary" : "primary"} size="lg" href={telHref(p.phone)}><Phone aria-hidden="true" /> Call</TaploButton> : null}
-          {p.whatsapp ? <TaploButton tone="secondary" size="lg" href={whatsappHref(p.whatsapp, message)} external><MessageCircle aria-hidden="true" /> WhatsApp</TaploButton> : null}
-          {p.email ? <TaploButton tone="secondary" size="lg" href={`mailto:${p.email}?subject=${encodeURIComponent(`Enquiry: ${subject ?? p.businessName}`)}&body=${encodeURIComponent(message)}`}><Mail aria-hidden="true" /> Email</TaploButton> : null}
-        </div>
+        <details className="rounded-xl border border-tp-border p-3 [&[open]>summary]:mb-3" open={!hasChannel}>
+          <summary className="flex min-h-11 cursor-pointer list-none items-center font-semibold [&::-webkit-details-marker]:hidden">Send a message instead</summary>
+          <EnquiryForm slug={p.slug} businessName={p.businessName} services={p.services} serviceId={p.preselect ?? undefined} />
+        </details>
       </div>
     </TaploModal>
   )
 }
-
 /** Payments are not connected: this is a clearly labelled simulation so the journey can be reviewed. */
 export function PaymentAction({ label, summary, thumbnail }: { label: string; summary: string; thumbnail?: React.ReactNode }) {
   return (

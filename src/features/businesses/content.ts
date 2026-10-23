@@ -65,6 +65,12 @@ export const staffSchema = z.object({
   bio: optText(1200),
   photo: imageSchema.optional(),
   subjects: z.array(text(80)).max(12).default([]),
+  /** Services this person provides and can be booked for. null = every service. Drives booking eligibility. */
+  serviceIds: z.array(text(64)).nullable().default(null),
+  /** Qualifications the business supplies for this person. Never inferred. */
+  credentials: z.array(text(160)).max(8).default([]),
+  /** Show a "Book with" action and allow choosing this person when booking. */
+  bookable: z.boolean().default(true),
 });
 export type StaffContent = z.infer<typeof staffSchema>;
 
@@ -204,7 +210,7 @@ export const businessContentSchema = z.object({
   booking: z.object({
     mode: z.enum(["contact", "request", "instant"]),
     /** Set only once an operator has real availability configured. */
-    onlineBookingReady: z.boolean().default(false),
+    onlineBookingReady: z.boolean().default(true),
   }),
 });
 export type BusinessContent = z.infer<typeof businessContentSchema>;

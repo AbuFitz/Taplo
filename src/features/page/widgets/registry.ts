@@ -68,7 +68,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
   },
   products: {
     type: "products", version: 1, label: "Products", description: "Things you sell.", category: "sales", icon: "ShoppingBag", multiple: true, appearance: ["card"],
-    fields: [TITLE, { kind: "refs", key: "productIds", label: "Which products", source: "products" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "grid", label: "Grid" }, { value: "list", label: "List" }] }],
+    fields: [TITLE, { kind: "refs", key: "productIds", label: "Which products", source: "products" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "swipe", label: "Swipe sideways" }, { value: "grid", label: "Grid" }, { value: "list", label: "Compact list" }] }],
     status: (_s, c) => (c.business.products.some((p) => !p.archived) ? READY : { state: "empty", reason: "Add a product to show it here.", fix: "products" }),
   },
   offers: {
@@ -79,12 +79,12 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
   payment: {
     type: "payment", version: 1, label: "Pay or deposit", description: "A payment button (simulated until payments are connected).", category: "sales", icon: "CreditCard", multiple: true, appearance: ["button", "card"], simulated: true,
     fields: [{ kind: "text", key: "label", label: "Button text", max: 60 }, { kind: "select", key: "kind", label: "What it takes", options: [{ value: "deposit", label: "A deposit" }, { value: "full", label: "Full payment" }, { value: "pay", label: "A payment" }] }, { kind: "record", key: "serviceId", label: "For which service (optional)", source: "services" }],
-    status: (_s, c) => (c.ent.payments ? READY : { state: "locked", reason: "Taking payments is included from the Pro plan." }),
+    status: (_s, c) => (!c.ent.payments ? { state: "locked", reason: "Taking payments is included from the Pro plan." } : c.paymentsConnected ? READY : { state: "locked", reason: "Payments are not connected yet, so this stays off your page. It needs a payment provider (Stripe) connected to this environment." }),
   },
 
   reviews: {
     type: "reviews", version: 1, label: "Reviews", description: "Testimonials you have permission to share.", category: "trust", icon: "Star", multiple: true, appearance: ["card"],
-    fields: [TITLE, { kind: "refs", key: "testimonialIds", label: "Which reviews", source: "testimonials" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "cards", label: "Cards" }, { value: "quote", label: "One big quote" }, { value: "compact", label: "Compact" }] }, { kind: "switch", key: "showRating", label: "Show your rating (only if you added a verified one)" }],
+    fields: [TITLE, { kind: "refs", key: "testimonialIds", label: "Which reviews", source: "testimonials" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "swipe", label: "Swipe sideways" }, { value: "cards", label: "Cards" }, { value: "quote", label: "One big quote" }, { value: "compact", label: "Compact" }] }, { kind: "switch", key: "showRating", label: "Show your rating (only if you added a verified one)" }],
     status: (_s, c) => (c.business.testimonials.length || c.business.rating ? READY : { state: "empty", reason: "Add a testimonial to show reviews. Taplo never invents a rating.", fix: "reviews" }),
   },
   leaveReview: {
@@ -94,7 +94,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
   },
   team: {
     type: "team", version: 1, label: "Team", description: "Introduce the people behind the business.", category: "trust", icon: "Users", multiple: true, appearance: ["card"],
-    fields: [TITLE, { kind: "refs", key: "staffIds", label: "Who to show", source: "staff" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "list", label: "List" }, { value: "avatars", label: "Photos" }] }],
+    fields: [TITLE, { kind: "refs", key: "staffIds", label: "Who to show", source: "staff" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "list", label: "Compact list" }, { value: "swipe", label: "Swipe sideways" }, { value: "grid", label: "Grid of cards" }, { value: "avatars", label: "Small photos" }] }],
     status: (_s, c) => (!c.ent.teamPages ? { state: "locked", reason: "Team pages are included from the Pro plan." } : c.business.staff.length ? READY : { state: "empty", reason: "Add a team member to show them here.", fix: "team" }),
   },
   credentials: {
@@ -148,6 +148,16 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
     type: "serviceArea", version: 1, label: "Areas we cover", description: "The places you travel to.", category: "info", icon: "Compass", multiple: false, appearance: ["card"],
     fields: [TITLE],
     status: (_s, c) => (c.business.location.mode === "service_area" && c.business.location.locality ? READY : { state: "empty", reason: "Set your location to “I travel to customers” and list the areas.", fix: "profile" }),
+  },
+  enquiry: {
+    type: "enquiry", version: 1, label: "Contact form", description: "A form customers fill in to ask you something. It reserves no time.", category: "contact", icon: "MessageSquare", multiple: false, appearance: ["button", "card"],
+    fields: [TITLE, { kind: "textarea", key: "intro", label: "Introduction (optional)", rows: 2, max: 240 }, { kind: "text", key: "buttonLabel", label: "Button text", placeholder: "Send us a message", max: 60 }, { kind: "select", key: "variant", label: "Style", options: [{ value: "button", label: "Button that opens the form" }, { value: "inline", label: "Form shown on the page" }] }],
+    status: () => READY,
+  },
+  share: {
+    type: "share", version: 1, label: "Share", description: "A Share button with a link, QR code and image for your page.", category: "contact", icon: "Share2", multiple: false, appearance: ["button", "card"],
+    fields: [TITLE, { kind: "text", key: "label", label: "Button text", placeholder: "Share this page", max: 60 }, { kind: "select", key: "variant", label: "Style", options: [{ value: "button", label: "Button" }, { value: "card", label: "Card" }] }],
+    status: () => READY,
   },
   announcement: {
     type: "announcement", version: 1, label: "Announcement", description: "A highlighted notice, such as holiday hours or an offer.", category: "info", icon: "Megaphone", multiple: true, appearance: ["card"],

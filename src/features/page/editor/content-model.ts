@@ -28,6 +28,8 @@ export interface ContentChoice {
   needs?: RecordKind
   /** Industry keys this is suggested for, in addition to the preset's own starter list. */
   suggestFor?: string[]
+  /** Why it cannot be added yet (an integration that is not connected). Shown, not hidden. */
+  blocked?: string
 }
 
 export const GROUP_LABEL: Record<ContentChoice["group"], { title: string; hint: string }> = {
@@ -46,7 +48,7 @@ export const CHOICES: ContentChoice[] = [
   { id: "vehicles", type: "products", settings: { title: "In stock", variant: "list" }, name: "Vehicles", blurb: "Stock with photos, price and the facts buyers ask about.", group: "offer", art: "cards", needs: "vehicle", suggestFor: ["car-dealer"] },
   { id: "offers", type: "offers", name: "Offers", blurb: "A current deal. Expired offers hide themselves.", group: "offer", art: "tag", needs: "offer" },
   { id: "booking", type: "booking", name: "Book or enquire", blurb: "A button to ask for a time or get in touch.", group: "offer", art: "button" },
-  { id: "payment", type: "payment", name: "Pay or deposit", blurb: "A payment button. Simulated until payments are connected.", group: "offer", art: "button" },
+  { id: "payment", type: "payment", name: "Pay or deposit", blurb: "Take a deposit or payment. Needs a payment provider connected, which this environment does not have yet.", group: "offer", art: "button", blocked: "Payments are not connected yet" },
 
   { id: "photos", type: "gallery", name: "Photos", blurb: "A set of pictures of your work or your place.", group: "show", art: "photos", needs: "photo" },
   { id: "image", type: "image", name: "One picture", blurb: "A single image with a caption.", group: "show", art: "photos" },
@@ -64,6 +66,8 @@ export const CHOICES: ContentChoice[] = [
   { id: "whatsapp", type: "whatsapp", name: "WhatsApp", blurb: "Open a WhatsApp chat with you.", group: "reach", art: "button", needs: "whatsapp" },
   { id: "email", type: "email", name: "Email", blurb: "Start an email to you.", group: "reach", art: "button", needs: "email" },
   { id: "social", type: "social", name: "Social links", blurb: "Your profiles as icons or a list.", group: "reach", art: "links", needs: "social" },
+  { id: "enquiry", type: "enquiry", name: "Contact form", blurb: "A form for questions. It reserves no time.", group: "reach", art: "text" },
+  { id: "share", type: "share", name: "Share button", blurb: "A link, QR code and image for your page.", group: "reach", art: "links" },
   { id: "link", type: "link", name: "Link", blurb: "Link to your shop, a menu or a form.", group: "reach", art: "links" },
 
   { id: "hours", type: "hours", name: "Opening hours", blurb: "When you are open.", group: "info", art: "clock" },

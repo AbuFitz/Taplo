@@ -11,8 +11,10 @@ const newWidget = (type: WidgetType, settings: Record<string, unknown> = {}) => 
  * invented; photographs are credited in public/showcase/CREDITS.md.
  */
 const photo = (name: string, alt: string, w: number, h: number, focal?: { x: number; y: number }) => ({ src: `/showcase/${name}.jpg`, alt, width: w, height: h, focal })
-const svc = (id: string, group: string, name: string, priceMinor: number, durationMinutes: number, description: string, sortOrder: number) =>
-  ({ id, group, name, description, priceMode: "fixed" as const, priceMinor, currency: "GBP", durationMinutes, delivery: [], bookingMode: "request" as const, sortOrder })
+const svc = (id: string, group: string, name: string, priceMinor: number, durationMinutes: number, description: string, sortOrder: number, bookingMode: "instant" | "request" | "contact" = "instant") =>
+  ({ id, group, name, description, priceMode: "fixed" as const, priceMinor, currency: "GBP", durationMinutes, delivery: [], bookingMode, sortOrder })
+const person = (id: string, name: string, role: string, bio: string, face: string, serviceIds: string[] | null, subjects: string[] = [], credentials: string[] = []) =>
+  ({ id, slug: id, name, role, bio, photo: { src: `/showcase/people/${face}.svg`, alt: `Illustrated portrait of ${name}`, width: 400, height: 500 }, subjects, serviceIds, credentials, bookable: true })
 const hours = (days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[], opens: string, closes: string) => days.map((day) => ({ day, opens, closes }))
 
 export const BARBER: BusinessContentInput = {
@@ -44,9 +46,13 @@ export const BARBER: BusinessContentInput = {
     svc("s3", "Hair", "Junior cut (under 12)", 2200, 30, "Same care, a little less sitting still.", 3),
     svc("s4", "Shave", "Hot-towel shave", 3000, 40, "Warm towels, lather and a slow, close shave.", 4),
     svc("s5", "Shave", "Beard sculpt", 2000, 25, "Shaped, lined and conditioned.", 5),
-    svc("s6", "Together", "Cut and beard", 4800, 60, "Our most-booked pairing.", 6),
+    svc("s6", "Together", "Cut and beard", 4800, 60, "Our most-booked pairing.", 6, "request"),
   ],
-  staff: [],
+  staff: [
+    person("jonah", "Jonah Marlowe", "Head barber and co-founder", "Twelve years behind the chair. Jonah does the consultations, the razor work and the long conversations about fades.", "jonah", null, ["Fades", "Razor shaves"], ["Twelve years cutting hair"]),
+    person("reece", "Reece Finch", "Barber and co-founder", "Reece is the classic-cut specialist: scissor work, tapers and the hot-towel shave regulars drive across London for.", "reece", ["s1", "s2", "s4", "s5", "s6"], ["Scissor cuts", "Beards"], ["Ten years cutting hair"]),
+    person("mira", "Mira Okoye", "Barber", "Mira looks after our younger clients and anyone new to the shop, and is the quickest in the building with a clean skin fade.", "mira", ["s1", "s2", "s3", "s5"], ["Kids' cuts", "Skin fades"]),
+  ],
   gallery: [
     { id: "g1", image: photo("barber-shop", "The shop floor: brick, brass and a single leather chair", 933, 1400, { x: 50, y: 60 }), caption: "The shop" },
     { id: "g2", image: photo("barber-cut", "A barber's gloved hands shaping a client's hair with scissors and comb", 933, 1400, { x: 50, y: 40 }), caption: "In the chair" },
@@ -72,9 +78,25 @@ export const BARBER: BusinessContentInput = {
       mode: "enquire",
       archived: false,
     },
+    {
+      id: "p2",
+      name: "Boar-bristle shaving brush",
+      description: "The brush we use in the shop for hot-towel shaves. We recommend it; it is sold by a maker we trust.",
+      priceMinor: 2400,
+      currency: "GBP",
+      badge: "We recommend",
+      facts: [{ label: "Bristle", value: "Boar" }, { label: "Handle", value: "Walnut" }],
+      mode: "link",
+      linkUrl: "https://example.com/shaving-brush",
+      kind: "product",
+      availability: "available",
+      images: [],
+      affiliate: true,
+      archived: false,
+    },
   ],
   offers: [],
-  booking: { mode: "request", onlineBookingReady: false },
+  booking: { mode: "instant", onlineBookingReady: true },
 }
 
 const car = (id: string, name: string, priceMinor: number, image: string, w: number, h: number, focal: { x: number; y: number }, alt: string, facts: [string, string][], badge?: string, availability: "available" | "reserved" | "sold" = "available") => ({
@@ -102,11 +124,14 @@ export const DEALER: BusinessContentInput = {
   credentials: [],
   hours: [...hours(["mon", "tue", "wed", "thu", "fri"], "09:00", "18:00"), ...hours(["sat"], "09:00", "16:00")],
   services: [
-    { id: "d1", name: "Book a viewing", description: "See a car in person, with no pressure.", priceMode: "free", currency: "GBP", durationMinutes: 30, delivery: [], bookingMode: "request", sortOrder: 1 },
+    { id: "d1", name: "Book a viewing", description: "See a car in person, with no pressure.", priceMode: "free", currency: "GBP", durationMinutes: 30, delivery: [], bookingMode: "instant", sortOrder: 1 },
     { id: "d2", name: "Part-exchange valuation", description: "A straight answer on what your car is worth.", priceMode: "free", currency: "GBP", durationMinutes: 20, delivery: [], bookingMode: "request", sortOrder: 2 },
-    { id: "d3", name: "Finance conversation", description: "Plain terms, any budget, no obligation.", priceMode: "free", currency: "GBP", durationMinutes: 30, delivery: [], bookingMode: "request", sortOrder: 3 },
+    { id: "d3", name: "Finance conversation", description: "Plain terms, any budget, no obligation.", priceMode: "free", currency: "GBP", durationMinutes: 30, delivery: [], bookingMode: "contact", sortOrder: 3 },
   ],
-  staff: [],
+  staff: [
+    person("ellis", "Ellis Aldous", "Owner and sales", "Ellis started the business after fifteen years selling cars for other people and now picks every car personally.", "dan", null, ["Used cars", "Part-exchange"]),
+    person("noor", "Noor Haddad", "Sales and aftercare", "Noor handles viewings, handovers and the after-sale questions, and knows the history of every car on the forecourt.", "priya", ["d1", "d2"], ["Viewings", "Handover"]),
+  ],
   gallery: [],
   testimonials: [{ id: "t1", quote: "Straightforward from the first call. The car was exactly as described, and ready to drive away.", author: "Helen M.", source: "owner_supplied", permissionConfirmed: true }],
   reviewLinks: [],
@@ -119,7 +144,7 @@ export const DEALER: BusinessContentInput = {
     car("v4", "BMW X1 xDrive20d", 1799500, "car-x1", 1200, 800, { x: 50, y: 70 }, "A white SUV photographed head-on in a dark showroom", [["Year", "2019"], ["Mileage", "42,800"], ["Fuel", "Diesel"], ["Gearbox", "Auto"]], undefined, "sold"),
   ],
   offers: [],
-  booking: { mode: "request", onlineBookingReady: false },
+  booking: { mode: "instant", onlineBookingReady: true },
 }
 
 export const TRADES: BusinessContentInput = {
@@ -143,12 +168,15 @@ export const TRADES: BusinessContentInput = {
   hours: [...hours(["mon", "tue", "wed", "thu", "fri"], "07:30", "18:30"), ...hours(["sat"], "08:00", "14:00")],
   services: [
     svc("n1", "Heating", "Boiler service", 8500, 60, "Annual safety check and service with a written report.", 1),
-    svc("n2", "Heating", "Boiler repair", 9500, 90, "Diagnosis and repair, parts quoted before we fit them.", 2),
+    svc("n2", "Heating", "Boiler repair", 9500, 90, "Diagnosis and repair, parts quoted before we fit them.", 2, "request"),
     svc("n3", "Plumbing", "Leak and burst pipe call-out", 11000, 60, "Emergency visit, first hour included.", 3),
     svc("n4", "Plumbing", "Tap, toilet or radiator fix", 7500, 60, "A straightforward fix at a fixed price.", 4),
-    svc("n5", "Bathrooms", "Bathroom design visit", 0, 45, "Free survey and written quote.", 5),
+    { ...svc("n5", "Bathrooms", "Bathroom design visit", 0, 45, "Free survey and written quote.", 5, "request"), priceMode: "free" as const, priceMinor: undefined },
   ],
-  staff: [],
+  staff: [
+    person("tomas", "Tomas Nowak", "Gas engineer", "Tomas does most of the boiler repairs and annual services, and is the person who usually answers the emergency line.", "tomas", ["n1", "n2", "n3", "n4"], ["Boilers", "Heating"], ["Gas Safe registered (fictional example)"]),
+    person("kofi", "Kofi Mensah", "Plumber and bathroom fitter", "Kofi covers leaks, bathrooms and anything involving pipes, and is the one to ask about a bathroom quote.", "kofi", ["n3", "n4", "n5"], ["Leaks", "Bathrooms"]),
+  ],
   gallery: [],
   testimonials: [
     { id: "t1", quote: "Boiler failed on a Sunday night. Someone was here by ten the next morning and it was fixed within the hour.", author: "Amara O.", source: "owner_supplied", permissionConfirmed: true },
@@ -162,7 +190,7 @@ export const TRADES: BusinessContentInput = {
   caseStudies: [],
   products: [],
   offers: [],
-  booking: { mode: "request", onlineBookingReady: false },
+  booking: { mode: "instant", onlineBookingReady: true },
 }
 
 export type Scenario = "barber" | "dealer" | "trades"
@@ -173,12 +201,14 @@ export const SCENARIOS: Record<Scenario, { label: string; content: BusinessConte
     widgets: () => [
       newWidget("booking", { label: "Book your chair", variant: "button" }),
       newWidget("priceMenu", { title: "Services" }),
-      newWidget("products", { title: "From the shop", variant: "grid" }),
+      newWidget("team", { title: "The barbers", variant: "swipe" }),
+      newWidget("products", { title: "From the shop", variant: "swipe" }),
       newWidget("gallery", { title: "Inside", variant: "grid" }),
       newWidget("reviews", { title: "Kind words", variant: "cards" }),
       newWidget("hours", { title: "Hours" }),
       newWidget("location", { title: "Find us" }),
       newWidget("social", { variant: "icons" }),
+      newWidget("share", { label: "Share Marlowe & Finch", variant: "button" }),
     ],
   },
   trades: {
@@ -188,9 +218,11 @@ export const SCENARIOS: Record<Scenario, { label: string; content: BusinessConte
       newWidget("call", { label: "Call an engineer", variant: "button" }),
       newWidget("booking", { label: "Request a visit", variant: "button" }),
       newWidget("serviceList", { title: "Fixed prices", variant: "cards" }),
+      newWidget("team", { title: "Your engineers", variant: "list" }),
       newWidget("reviews", { title: "What customers say", variant: "quote" }),
       newWidget("serviceArea", { title: "Where we work" }),
       newWidget("faq", { title: "Questions" }),
+      newWidget("enquiry", { title: "Send us a message", intro: "Describe the problem and we will tell you what we can do, and when.", variant: "inline" }),
       newWidget("hours", { title: "Hours" }),
     ],
   },
@@ -201,9 +233,11 @@ export const SCENARIOS: Record<Scenario, { label: string; content: BusinessConte
       newWidget("booking", { label: "Book a viewing", variant: "button" }),
       newWidget("products", { title: "In stock", variant: "list" }),
       newWidget("serviceList", { title: "How we can help", variant: "cards" }),
+      newWidget("team", { title: "Who you will meet", variant: "list" }),
       newWidget("reviews", { title: "From our customers", variant: "quote" }),
       newWidget("hours", { title: "Opening hours" }),
       newWidget("location", { title: "Visit us" }),
+      newWidget("enquiry", { title: "Ask about a car", intro: "Tell us which car you like and we will get back to you.", buttonLabel: "Ask about a car", variant: "button" }),
       newWidget("social", { variant: "icons" }),
     ],
   },

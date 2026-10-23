@@ -13,7 +13,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
  *    item's own controls stay in the tab order;
  *  - no automatic movement; reduced motion turns smooth scrolling off.
  */
-export function Collection({ label, children, itemClassName }: { label: string; children: React.ReactNode[]; itemClassName?: string }) {
+export function Collection({ label, children, itemClassName, compact = false }: { label: string; children: React.ReactNode[]; itemClassName?: string; compact?: boolean }) {
   const ref = React.useRef<HTMLUListElement>(null)
   const [edge, setEdge] = React.useState({ start: true, end: false, first: 1, last: 1 })
   const count = React.Children.count(children)
@@ -46,7 +46,7 @@ export function Collection({ label, children, itemClassName }: { label: string; 
   }
 
   return (
-    <div className="tp-collection" role="group" aria-roledescription="collection" aria-label={label} data-start={edge.start || undefined} data-end={edge.end || undefined}>
+    <div className="tp-collection" role="group" aria-roledescription="collection" aria-label={label} data-compact={compact || undefined} data-start={edge.start || undefined} data-end={edge.end || undefined}>
       <ul
         ref={ref}
         className="tp-collection-track"
