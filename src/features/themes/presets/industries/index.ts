@@ -94,6 +94,7 @@ const RAW: IndustryPreset[] = [
   // Clinics and other service businesses -> General layout
   preset("dentist", "Dentist / clinic", "general", "request", ["Check-up", "Hygiene appointment", "Consultation"], ["clinic", "dental"]),
   preset("physio", "Physio / therapist", "general", "request", ["Initial assessment", "Treatment session", "Follow-up"], ["physiotherapy", "chiropractor", "osteopath"]),
+  preset("car-dealer", "Car dealer", "general", "instant", ["Book a viewing", "Part-exchange valuation", "Finance conversation"], ["cars", "used cars", "motors", "forecourt"], { booking: "Book a viewing" }, { starterWidgets: ["booking", "products", "serviceList", "team", "reviews", "hours", "location", "enquiry"] }),
   preset("vet", "Vet / pet services", "general", "request", ["Consultation", "Vaccination", "Grooming", "Dog walking"], ["pet", "dog"]),
   preset("hospitality", "Cafe / restaurant", "general", "contact", ["Menu", "Catering", "Private hire"], ["food", "cafe", "restaurant", "coffee", "bakery", "pub", "takeaway"], {}, { suggestedThemeId: "clean", starterWidgets: ["booking", "priceMenu", "document", "hours", "gallery", "location", "social", "reviews"] }),
   preset("event-services", "Events / entertainment", "general", "request", ["Wedding package", "Corporate event", "Party"], ["dj", "catering", "wedding"]),

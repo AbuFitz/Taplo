@@ -18,8 +18,10 @@ const primary = "inline-flex min-h-10 items-center rounded-full bg-foreground px
  */
 export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: string; loginHref: string }) {
   const path = usePathname() ?? "/"
-  const [open, setOpen] = React.useState(false)
-  React.useEffect(() => setOpen(false), [path])
+  // The sheet belongs to the page it was opened on, so navigating closes it without an effect.
+  const [openOn, setOpenOn] = React.useState<string | null>(null)
+  const open = openOn === path
+  const setOpen = (v: boolean) => setOpenOn(v ? path : null)
   const at = (p: string) => (path === p || path.startsWith(p + "/") ? "page" : undefined)
 
   return (
@@ -75,11 +77,11 @@ export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: str
             <Dialog.Trigger aria-label="Menu" className="grid size-11 place-items-center rounded-full outline-none hover:bg-foreground/5 focus-visible:ring-3 focus-visible:ring-ring/60 md:hidden"><Menu aria-hidden="true" className="size-5" /></Dialog.Trigger>
             <Dialog.Portal>
               <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 data-[state=open]:animate-in data-[state=open]:fade-in-0" />
-              <Dialog.Content className="fixed inset-x-0 top-0 z-50 flex max-h-[100dvh] flex-col overflow-y-auto bg-background px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-3 outline-none">
+              <Dialog.Content className="fixed inset-x-0 top-0 z-50 flex h-[100dvh] flex-col bg-background px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 outline-none">
                 <Dialog.Title className="sr-only">Menu</Dialog.Title>
                 <Dialog.Description className="sr-only">Site navigation</Dialog.Description>
                 <div className="flex h-14 items-center justify-between"><TaploLogo className="h-10 -my-1 -ml-3" /><Dialog.Close aria-label="Close menu" className="grid size-11 place-items-center rounded-full outline-none hover:bg-foreground/5 focus-visible:ring-3 focus-visible:ring-ring/60"><X aria-hidden="true" className="size-5" /></Dialog.Close></div>
-                <nav aria-label="Menu" className="mt-2 grid gap-1">
+                <nav aria-label="Menu" className="mt-2 grid flex-1 content-start gap-1 overflow-y-auto overscroll-contain">
                   <MobileSection title="Product" href="/product" all="Everything Taplo does">
                     {PRODUCT_GROUPS.flatMap((g) => g.links).map((l) => <MobileLink key={l.href} href={l.href}>{l.label}</MobileLink>)}
                   </MobileSection>
@@ -89,7 +91,7 @@ export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: str
                   <MobileLink href="/pricing" big>Pricing</MobileLink>
                   <MobileLink href={loginHref} big>Log in</MobileLink>
                 </nav>
-                <Link href={ctaHref} className={cn(primary, "mt-6 min-h-12 justify-center text-base")}>{cta}</Link>
+                <Link href={ctaHref} className={cn(primary, "mt-3 min-h-12 shrink-0 justify-center text-base")}>{cta}</Link>
               </Dialog.Content>
             </Dialog.Portal>
           </Dialog.Root>

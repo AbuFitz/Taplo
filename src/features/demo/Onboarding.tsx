@@ -17,6 +17,8 @@ import { resolveEntitlements } from "@/features/subscriptions/entitlements"
 import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures"
 import { OTHER_INDUSTRY_ID, getIndustryPreset, searchIndustries } from "@/features/themes/presets/industries"
 import { cn } from "@/lib/utils"
+import { exampleStart, suggestedLooks } from "@/features/inspiration/suggest"
+import { FONT_STACKS } from "@/features/page/themes/fonts"
 import { applyIndustry, blankService, canPublish, hasContactChannel, loadSample, newId, normService, publish, readiness, setName, setSlug, slugProblems } from "./actions"
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans"
 import { ONBOARDING_STEPS, initialState, parseContent, useDemo, type OnboardingStep } from "./store"
@@ -25,18 +27,37 @@ import { DemoNotice, EmailField, PhoneField, PreviewFrame } from "./ui"
 import type { WidgetType } from "@/features/page/contracts/widgets"
 
 const STEP_LABEL: Record<OnboardingStep, string> = {
-  industry: "What you do",
   business: "Your name",
+  industry: "What you do",
+  widgets: "Look and content",
   contacts: "Contact and place",
-  widgets: "Add what’s useful",
-  publish: "Preview & publish",
+  publish: "Preview and share",
 }
 const STEP_TITLE: Record<OnboardingStep, string> = {
-  industry: "What kind of business is it?",
   business: "Let’s start with your name",
+  industry: "What do you do, and what should people do first?",
+  widgets: "Choose a starting point",
   contacts: "How can people reach you?",
-  widgets: "Add what’s useful",
-  publish: "Preview and publish",
+  publish: "Preview, publish and share",
+}
+
+const POPULAR = ["barber", "hairdresser", "beauty-therapist", "nails", "plumber", "electrician", "builder", "mechanic", "cleaner", "tutor", "personal-trainer", "physio", "hospitality", "car-dealer", "photographer", "other"]
+
+type Goal = "book" | "request" | "call" | "message"
+const GOALS: { id: Goal; label: string; hint: string }[] = [
+  { id: "book", label: "Book a time", hint: "The time is confirmed straight away." },
+  { id: "request", label: "Ask for a time", hint: "You accept or decline each request." },
+  { id: "call", label: "Call me", hint: "A big call button comes first." },
+  { id: "message", label: "Send me a message", hint: "Nothing is reserved. You reply." },
+]
+function goalOf(s: { content: { booking?: { mode: string } }; page: { meta: { primaryAction: string } } }): Goal {
+  if (s.page.meta.primaryAction === "call") return "call"
+  const m = s.content.booking?.mode
+  return m === "instant" ? "book" : m === "request" ? "request" : "message"
+}
+function applyGoal<T extends ReturnType<typeof initialState>>(s: T, g: Goal): T {
+  const mode = g === "book" ? "instant" : g === "request" ? "request" : "contact"
+  return { ...s, content: { ...s.content, booking: { ...s.content.booking, mode } }, page: { ...s.page, meta: { ...s.page.meta, primaryAction: g === "call" ? "call" : g === "message" ? "auto" : "book" } } }
 }
 
 const LOCATION_LABEL = { premises: "A place customers visit", service_area: "I travel to customers (service area)", online: "Online only" } as const
@@ -46,6 +67,7 @@ export function Onboarding() {
   const { ready, state, update } = useDemo()
   const [showErrors, setShowErrors] = React.useState(false)
   const [query, setQuery] = React.useState("")
+  const [showAll, setShowAll] = React.useState(false)
   const [mobilePreview, setMobilePreview] = React.useState(false)
   const s = state ?? initialState()
   const step: OnboardingStep = (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "widgets"
@@ -60,15 +82,35 @@ export function Onboarding() {
   const back = () => go(ONBOARDING_STEPS[Math.max(stepIndex - 1, 0)]!)
 
   // A plan chosen on the pricing page carries into setup (and stays through every step) without taking payment.
-  const [intent, setIntent] = React.useState<PlanId | null>(null)
+  // Nothing is rendered before `ready`, so reading the address once on the client cannot cause a hydration mismatch.
+  const [intent] = React.useState<PlanId | null>(() => {
+    const p = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("plan")
+    return p && (PLAN_IDS as readonly string[]).includes(p) ? (p as PlanId) : null
+  })
   React.useEffect(() => {
-    if (!ready) return
-    const p = new URLSearchParams(window.location.search).get("plan")
-    if (p && (PLAN_IDS as readonly string[]).includes(p)) {
-      setIntent(p as PlanId)
-      update((x) => (x.plan === p ? x : { ...x, plan: p as PlanId }))
-    }
-  }, [ready]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (ready && intent) update((x) => (x.plan === intent ? x : { ...x, plan: intent }))
+  }, [ready, intent]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // "Start from this" on an inspiration page: take its kind of business, look and content types. Never its sample content.
+  const [from] = React.useState(() => {
+    const slug = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("from")
+    return slug ? exampleStart(slug) : null
+  })
+  const fromName = from?.name ?? null
+  React.useEffect(() => {
+    const ex = from
+    if (!ready || !ex) return
+    // Applied once: drop it from the address so a refresh never overwrites what the owner has done since.
+    window.history.replaceState(null, "", window.location.pathname)
+    update((x) => {
+      const withIndustry = applyIndustry(x, ex.industryKey, ex.industryLabel)
+      return {
+        ...withIndustry,
+        content: { ...withIndustry.content, booking: { ...withIndustry.content.booking, mode: ex.bookingMode } },
+        page: { ...withIndustry.page, themeId: ex.lookId, appearance: {}, widgets: ex.widgets.map((w) => newWidget(w.type as WidgetType, w.settings)) },
+      }
+    })
+  }, [ready, from]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!ready) return <main className="p-8 text-sm text-muted-foreground">Loading…</main>
 
@@ -92,6 +134,7 @@ export function Onboarding() {
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:py-10">
       <DemoNotice className="mb-6" />
+      {fromName ? <p className="mb-4 rounded-xl bg-black/[0.04] px-4 py-2.5 text-sm" data-testid="from-example">Starting from the look and content types of <strong>{fromName}</strong>. It is a fictional business: none of its words, prices or pictures are copied, and you can change everything.</p> : null}
       {intent ? <p className="mb-4 rounded-xl bg-black/[0.04] px-4 py-2.5 text-sm" data-testid="plan-intent">You are setting up on the <strong>{PLANS[intent].name}</strong> plan. In preview mode nothing is charged, and you can switch plans in Settings.</p> : null}
       <header className="mb-8 flex flex-wrap items-center justify-between gap-3">
         <Link href="/" aria-label="Taplo home" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo /></Link>
@@ -119,7 +162,7 @@ export function Onboarding() {
               <p className="text-muted-foreground">Pick the closest match. It only suggests which sections to start with; you can change anything later.</p>
               <TaploInput label="Search (e.g. barber, tutor, café, plumber)" value={query} onChange={(e) => setQuery(e.target.value)} />
               <ul className="grid gap-2 sm:grid-cols-2" aria-label="Types of business">
-                {searchIndustries(query).map((p) => {
+                {searchIndustries(query).filter((p) => query.trim() || showAll || POPULAR.includes(p.id) || (state !== null && c.identity.industryKey === p.id)).map((p) => {
                   const selected = state !== null && c.identity.industryKey === p.id
                   return (
                     <li key={p.id}>
@@ -131,6 +174,7 @@ export function Onboarding() {
                   )
                 })}
               </ul>
+              {!query.trim() && !showAll ? <button type="button" onClick={() => setShowAll(true)} className="justify-self-start rounded-lg px-1 py-2 text-sm font-medium underline underline-offset-4">Show every kind of business</button> : null}
               {state !== null ? (
                 <TaploInput
                   label={c.identity.industryKey === OTHER_INDUSTRY_ID ? "Describe your business" : "How should we describe you? (shown on your page)"}
@@ -139,6 +183,19 @@ export function Onboarding() {
                   maxLength={80}
                   onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }), { coalesce: "ind-label" })}
                 />
+              ) : null}
+              {state !== null ? (
+                <fieldset className="grid gap-2" data-testid="goal">
+                  <legend className="mb-1 text-sm font-medium">What should people do first on your page?</legend>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {GOALS.map((g) => (
+                      <label key={g.id} className={cn("flex min-h-14 cursor-pointer items-start gap-3 rounded-xl bg-white p-3 text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] has-[:checked]:shadow-[0_0_0_2px_var(--primary)]")}>
+                        <input type="radio" name="goal" className="mt-0.5 size-4 accent-[var(--primary)]" checked={goalOf(s) === g.id} onChange={() => update((x) => applyGoal(x, g.id))} />
+                        <span><span className="block font-semibold">{g.label}</span><span className="text-muted-foreground">{g.hint}</span></span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
               ) : null}
               <div className="rounded-lg border border-dashed p-4">
                 <p className="text-sm font-medium">Just looking around?</p>
@@ -215,6 +272,34 @@ export function Onboarding() {
   )
 }
 
+/** Suggested looks for this kind of business. A look is a starting point: every colour, font and shape can be changed afterwards. */
+function LookPicker({ industryKey, themeId, onPick }: { industryKey: string; themeId: string; onPick: (id: string) => void }) {
+  const looks = React.useMemo(() => suggestedLooks(industryKey), [industryKey])
+  return (
+    <fieldset className="grid gap-3" data-testid="look-picker">
+      <legend className="mb-1 text-lg font-semibold">Pick a look</legend>
+      <p className="-mt-1 text-muted-foreground">Your page on the right changes as you choose. This is only a start: you can change every colour, font and shape later, and no look is tied to a kind of business.</p>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {looks.map((l, i) => {
+          const o = l.overrides
+          const c = o.colors!
+          const active = themeId === l.id
+          return (
+            <label key={l.id} className={cn("relative grid cursor-pointer gap-2 rounded-xl p-2.5 text-left text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring", active && "shadow-[0_0_0_2px_var(--primary)]")}>
+              <input type="radio" name="look" value={l.id} checked={active} onChange={() => onPick(l.id)} className="sr-only" />
+              <span aria-hidden="true" className="flex h-14 items-end justify-between rounded-lg p-2" style={{ background: c.background }}>
+                <span className="text-xl leading-none" style={{ color: c.text, fontFamily: FONT_STACKS[o.text!.headingFont!], fontWeight: o.text!.headingWeight === "bold" ? 700 : 400, textTransform: o.text!.headingCase === "upper" ? "uppercase" : "none" }}>Aa</span>
+                <span className="flex gap-1">{[c.surface, c.accent, c.text].map((x, n) => <i key={n} className="block size-3.5 rounded-full border border-black/10" style={{ background: x }} />)}</span>
+              </span>
+              <span><span className="block font-semibold">{l.name}{i === 0 ? <span className="ml-1.5 rounded-full bg-black/[0.06] px-1.5 py-0.5 text-[0.6875rem] font-medium">Suggested</span> : null}</span><span className="block text-xs leading-snug text-muted-foreground">{l.blurb}</span></span>
+            </label>
+          )
+        })}
+      </div>
+    </fieldset>
+  )
+}
+
 /** Suggested widgets for this kind of business: tick to include. Nothing is added silently; empty ones explain what they need. */
 function WidgetsStep() {
   const { state, update } = useDemo()
@@ -236,10 +321,13 @@ function WidgetsStep() {
   void ent
 
   return (
-    <div className="grid gap-6">
-      <p className="text-muted-foreground">These are the building blocks of your page. Tick the ones you want now; you can add, reorder and style widgets any time in the page editor.</p>
-      <ul className="grid gap-2" aria-label="Suggested widgets">
-        {industry.starterWidgets.map((type) => {
+    <div className="grid gap-8">
+      <LookPicker industryKey={s.content.identity.industryKey} themeId={s.page.themeId} onPick={(id) => update((x) => ({ ...x, page: { ...x.page, themeId: id, appearance: {} } }))} />
+      <div className="grid gap-3">
+      <h2 className="text-lg font-semibold">Content to start with</h2>
+      <p className="text-muted-foreground">Tick what you want on your page. Anything you have not added yet stays hidden from visitors until you do, so there is nothing to fill in now.</p>
+      <ul className="grid gap-2" aria-label="Suggested content">
+        {[...new Set([...industry.starterWidgets, ...s.page.widgets.map((w) => w.type as WidgetType)])].map((type) => {
           const def = getWidget(type)!
           const st = vm?.widgets.find((w) => w.type === type)?.status
           return (
@@ -253,9 +341,13 @@ function WidgetsStep() {
           )
         })}
       </ul>
-      <div className="rounded-xl border p-4">
-        <h2 className="font-semibold">Your first service <span className="text-sm font-normal text-muted-foreground">(optional)</span></h2>
-        <p className="mb-3 text-sm text-muted-foreground">You set every price; nothing is pre-filled. Skip this and add services later.</p>
+      </div>
+      <details className="group rounded-xl border p-4" open={Boolean(first)}>
+        <summary className="flex cursor-pointer list-none items-center justify-between font-semibold [&::-webkit-details-marker]:hidden">
+          <span>Add your first service <span className="text-sm font-normal text-muted-foreground">(optional)</span></span>
+          <span aria-hidden="true" className="text-muted-foreground transition-transform group-open:rotate-180">⌄</span>
+        </summary>
+        <p className="mb-3 mt-2 text-sm text-muted-foreground">You set every price; nothing is pre-filled. Skip this and add services later.</p>
         {industry.suggestedServices.length ? (
           <ul className="mb-3 flex flex-wrap gap-2" aria-label="Common services">
             {industry.suggestedServices.map((sg) => (
@@ -264,7 +356,7 @@ function WidgetsStep() {
           </ul>
         ) : null}
         <ServiceForm key={current.id} service={current} showErrors={showErr} onChange={(x) => { setSvc(x); save(x) }} />
-      </div>
+      </details>
     </div>
   )
 
@@ -288,9 +380,21 @@ function PublishStep({ onEditor }: { onEditor: () => void }) {
   const s = state ?? initialState()
   const checks = readiness(s)
   const ok = canPublish(s)
+  const parsed = parseContent(s.content)
+  const vm = React.useMemo(() => (parsed.success && parsed.data.identity.name ? buildPageViewModel(parsed.data, s.page, { plan: s.plan }) : null), [parsed, s.page, s.plan])
+  const label = (type: string) => getWidget(type as WidgetType)?.label ?? type
+  const shown = vm ? vm.widgets.filter((w) => w.status.state === "ready").map((w) => label(w.type)) : []
+  const waiting = vm ? vm.widgets.filter((w) => w.status.state !== "ready").map((w) => label(w.type)) : []
+  const [copied, setCopied] = React.useState(false)
   return (
     <div className="grid gap-5">
-      <p className="text-muted-foreground">Your page has {s.page.widgets.length} widget{s.page.widgets.length === 1 ? "" : "s"}. Check the preview, then publish. Everything can be changed afterwards.</p>
+      <p className="text-muted-foreground">Check the preview, then publish. Everything can be changed afterwards.</p>
+      {shown.length || waiting.length ? (
+        <div className="grid gap-3 rounded-xl border p-4 text-sm" data-testid="page-summary">
+          <p><span className="font-semibold">On your page now:</span> {shown.length ? shown.join(", ") : "your name and contact buttons"}.</p>
+          {waiting.length ? <p className="text-muted-foreground"><span className="font-semibold text-foreground">Hidden until you add them:</span> {waiting.join(", ")}. Visitors never see an empty section.</p> : null}
+        </div>
+      ) : null}
       <ul className="grid gap-2">
         {checks.filter((c) => c.required).map((c) => (
           <li key={c.id} className="flex items-center gap-2 text-sm">
@@ -305,6 +409,10 @@ function PublishStep({ onEditor }: { onEditor: () => void }) {
         <div role="status" className="rounded-lg border border-green-600/40 bg-green-50 p-4 text-sm text-green-950">
           <p className="font-semibold">Published (demo) — version {s.published.version}</p>
           <p className="mt-1">View it at <Link className="underline" href={`/demo/p/${s.published.content.identity.slug}`} target="_blank">/demo/p/{s.published.content.identity.slug}</Link> in this browser.</p>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <Button size="sm" variant="outline" onClick={() => { void navigator.clipboard?.writeText(`${window.location.origin}/demo/p/${s.published!.content.identity.slug}`).then(() => setCopied(true)).catch(() => undefined) }}>{copied ? "Link copied" : "Copy link"}</Button>
+            <span className="text-xs">Preview link: it only opens in this browser. A public link needs accounts and hosting, which are not connected yet.</span>
+          </div>
         </div>
       ) : null}
       <div className="flex flex-wrap gap-3">
