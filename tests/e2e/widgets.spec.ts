@@ -45,7 +45,10 @@ test.describe("team", () => {
 })
 
 test.describe("swipe collections", () => {
-  test("show that there is more, scroll by button and arrow key, never autoplay, and keep keyboard reachability", async ({ page }) => {
+  test("show that there is more, scroll by button and arrow key, never autoplay, and keep keyboard reachability", async ({ browser }) => {
+    // At desktop width three cards fit and there is nothing to scroll, so use a phone-width frame.
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } })
+    const page = await ctx.newPage()
     await open(page, FRAME())
     const coll = page.locator(".tp-collection").first()
     await expect(coll.locator(".tp-collection-count")).toContainText("of 3")
@@ -62,6 +65,7 @@ test.describe("swipe collections", () => {
     await page.waitForTimeout(1500)
     expect(await track.evaluate((e) => e.scrollLeft)).toBe(x1)             // nothing moves by itself
     await expect(coll.getByRole("button", { name: /^Previous in/ })).toBeEnabled()
+    await ctx.close()
   })
   test("vertical page scrolling still works over a swipe collection on touch", async ({ browser }) => {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })
@@ -109,7 +113,7 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
     await expect(lb).toContainText("3 of 3")
     await page.keyboard.press("Escape")
     await expect(lb).toBeHidden()
-    await expect(thumbs.nth(2)).toBeFocused()
+    await expect(thumbs.nth(0)).toBeFocused()   // the one that opened it, not the last picture viewed
   })
 
   test("opening hours highlight today and say whether the business is open now, in the business's own zone", async ({ page }) => {
@@ -189,7 +193,6 @@ test.describe("products, status and payments", () => {
   })
   test("an affiliate link is disclosed and opens safely in a new tab", async ({ page }) => {
     await open(page, FRAME())
-    await page.getByRole("button", { name: /^Next in/ }).last().click().catch(() => undefined)
     const link = page.getByRole("link", { name: /View on example\.com/ })
     await expect(link).toHaveAttribute("rel", /sponsored/)
     await expect(link).toHaveAttribute("target", "_blank")
