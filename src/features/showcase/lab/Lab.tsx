@@ -1,5 +1,7 @@
 "use client"
 
+import Link from "next/link"
+import { TaploLogo } from "@/components/taplo/brand"
 import * as React from "react"
 import { Redo2, RotateCcw, Undo2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -51,7 +53,7 @@ export function Lab() {
     <div className="min-h-dvh bg-background text-foreground antialiased" data-testid="appearance-lab">
       <header className="sticky top-0 z-30 border-b border-black/[0.08] bg-background/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[96rem] flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 sm:px-6">
-          <span className="text-[1.0625rem] font-semibold tracking-[-0.03em]">Taplo</span>
+          <Link href="/" aria-label="Taplo home" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo /></Link>
           <span className="hidden text-sm text-neutral-400 sm:inline">/</span>
           <h1 className="hidden text-sm font-medium sm:block">Appearance</h1>
           <div className="order-last w-full sm:order-none sm:ml-6 sm:mr-auto sm:w-52"><Segment label="Business" value={scenario} options={(Object.keys(SCENARIOS) as Scenario[]).map((s) => ({ value: s, label: SCENARIOS[s].label }))} onChange={setScenario} /></div>

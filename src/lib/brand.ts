@@ -1,13 +1,16 @@
 /**
- * Taplo's own brand configuration. The final logo is supplied separately; set the flags when the SVGs
- * are placed in /public/brand (see public/brand/README.md). Nothing here describes a business page:
- * owners' pages never read these values.
+ * Taplo's own brand configuration. The supplied logo files live in /public/logo (unchanged); this file
+ * only says which one each placement uses. Nothing here describes a business page: owners' pages never
+ * read these values.
  */
 export const BRAND = {
   name: "Taplo",
-  logoSupplied: false,
-  markSupplied: false,
-  lockupSrc: "/brand/taplo-logo.svg",
-  lockupLightSrc: "/brand/taplo-logo-light.svg",
-  markSrc: "/brand/taplo-mark.svg",
+  logoSupplied: true,
+  /** Horizontal lockup: symbol and wordmark. */
+  lockup: { dark: "/logo/taplo-horizontal-black.svg", light: "/logo/taplo-horizontal-white.svg", ratio: 800 / 300 },
+  /** The symbol alone. */
+  mark: { dark: "/logo/taplo-symbol-black.svg", light: "/logo/taplo-symbol-white.svg" },
+  /** Rounded-square app icon, black or white. */
+  app: { dark: "/logo/taplo-app-black.svg", light: "/logo/taplo-app-white.svg" },
+  stacked: { dark: "/logo/taplo-stacked-black.svg", light: "/logo/taplo-stacked-white.svg" },
 } as const

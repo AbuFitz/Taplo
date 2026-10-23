@@ -1,5 +1,6 @@
 "use client"
 
+import { TaploLogo } from "@/components/taplo/brand"
 import * as React from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
@@ -53,7 +54,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col lg:flex-row">
       <aside className={cn("hidden w-60 shrink-0 border-r p-4", !focus && "lg:block")}>
-        <Link href="/" className="mb-6 block px-3 text-lg font-semibold">Taplo</Link>
+        <Link href="/" aria-label="Taplo home" className="mb-6 block px-3"><TaploLogo /></Link>
         <NavList />
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">

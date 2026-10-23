@@ -1,5 +1,6 @@
 "use client"
 
+import { TaploLogo } from "@/components/taplo/brand"
 import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -80,7 +81,7 @@ export function Onboarding() {
     <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:py-10">
       <DemoNotice className="mb-6" />
       <header className="mb-8 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/" className="text-[1.1875rem] font-semibold tracking-[-0.03em]">Taplo</Link>
+        <Link href="/" aria-label="Taplo home" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo /></Link>
         <Link href="/dashboard/page" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip to the page editor</Link>
       </header>
 

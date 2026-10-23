@@ -1,3 +1,4 @@
+import { TaploLogo } from "@/components/taplo/brand"
 import Link from "next/link"
 import type { Metadata } from "next"
 import { FIXTURES } from "@/features/themes/fixtures"
@@ -14,7 +15,7 @@ export default function SampleProfiles() {
   const featured = HEADLINE.map((k) => FIXTURES.find((f) => f.key === k)!)
   return (
     <main className="mx-auto w-full max-w-5xl px-5 py-10">
-      <p className="text-sm font-semibold text-neutral-600"><Link href="/">Taplo</Link></p>
+      <p className="text-sm font-semibold text-neutral-600"><Link href="/" aria-label="Taplo home"><TaploLogo /></Link></p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight">Sample profiles</h1>
       <p className="mt-2 max-w-2xl text-neutral-600">
         Invented businesses, rendered by the same engine as every real Taplo page. Industry and look are independent: a mechanic can be soft and light, a tutor dark and bold. Open any link on your phone.
