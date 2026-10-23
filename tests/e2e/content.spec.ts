@@ -34,7 +34,7 @@ test.describe("adding content is one journey", () => {
     await openEditorWithSample(page, "Barber")
     const before = await records(page)
     await page.getByTestId("add-widget").click()
-    await page.getByTestId("choice").filter({ hasText: /^Price menu/ }).click()
+    await page.getByTestId("choice").filter({ hasText: /^Price menu/ }).first().click()
     await expect(page.getByTestId("add-content")).toBeHidden()
     const after = await records(page)
     expect(after.page.widgets.length).toBe(before.page.widgets.length + 1)

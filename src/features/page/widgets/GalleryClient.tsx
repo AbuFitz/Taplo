@@ -20,10 +20,11 @@ const pos = (f?: { x: number; y: number }) => (f ? { objectPosition: `${f.x}% ${
 export function Gallery({ items, variant, title }: { items: GalleryItem[]; variant: "grid" | "carousel" | "beforeAfter"; title?: string }) {
   const [at, setAt] = React.useState<number | null>(null)
   const thumbs = React.useRef<(HTMLButtonElement | null)[]>([])
+  const openedFrom = React.useRef(0)
   const label = title || "Gallery"
 
   const tile = (g: GalleryItem, i: number, ratio?: string) => (
-    <button type="button" ref={(el) => { thumbs.current[i] = el }} className="tp-gallery-open" onClick={() => setAt(i)} aria-haspopup="dialog" aria-label={`${g.caption || g.image.alt}. Open larger`} data-testid="gallery-open">
+    <button type="button" ref={(el) => { thumbs.current[i] = el }} className="tp-gallery-open" onClick={() => { openedFrom.current = i; setAt(i) }} aria-haspopup="dialog" aria-label={`${g.caption || g.image.alt}. Open larger`} data-testid="gallery-open">
       <span className="tp-media block" style={ratio ? { aspectRatio: ratio } : undefined}>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={g.image.src} alt="" loading="lazy" draggable={false} style={pos(g.image.focal)} /></span>
     </button>
   )
@@ -45,7 +46,7 @@ export function Gallery({ items, variant, title }: { items: GalleryItem[]; varia
         <ul className="tp-gallery" aria-label={label}>{items.map((g, i) => <li key={g.id}>{tile(g, i)}</li>)}</ul>
       )}
       <Overlay tone="page" kind="detail" open={at !== null} onOpenChange={(o) => !o && setAt(null)} title={at !== null ? `${label}: picture ${at + 1} of ${items.length}` : label} hideTitle
-        onCloseAutoFocus={(e) => { e.preventDefault(); thumbs.current[at ?? 0]?.focus() }} className="!border-0 !bg-black !text-white" bodyClassName="p-0" testId="lightbox">
+        onCloseAutoFocus={(e) => { e.preventDefault(); thumbs.current[openedFrom.current]?.focus() }} className="!border-0 !bg-black !text-white" bodyClassName="p-0" testId="lightbox">
         {at !== null ? <Lightbox items={items} at={at} setAt={setAt} /> : null}
       </Overlay>
     </>

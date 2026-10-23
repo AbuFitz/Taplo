@@ -105,7 +105,11 @@ test.describe("customer booking journey", () => {
     await reach(page, "review")
     await flow(page).getByRole("button", { name: "Confirm booking" }).click()
     await expect(flow(page).getByTestId("bk-done")).toBeVisible()
-    await flow(page).getByRole("button", { name: "Done" }).click()
+    // Done is deliberately inert for a moment so a double tap on Confirm cannot dismiss the confirmation.
+    await expect(async () => {
+      await flow(page).getByRole("button", { name: "Done" }).click({ timeout: 1000 })
+      await expect(flow(page)).toBeHidden({ timeout: 1000 })
+    }).toPass({ timeout: 10000 })
     await page.getByRole("button", { name: /Book your chair/ }).first().click()
     await flow(page).getByTestId("bk-service").first().click()
     await flow(page).getByRole("button", { name: /Anyone available/ }).click()
