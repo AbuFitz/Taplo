@@ -32,7 +32,7 @@ export async function closeSheet(page: Page) {
   }
 }
 
-/** Make the structure list (page style, header, widgets, details, settings) reachable: on phones it lives under the Content tab. */
+/** Make the content list reachable: on phones it lives under the Content tab. */
 export async function openStructure(page: Page) {
   if (await isCompact(page)) {
     if (!(await page.getByTestId("structure").isVisible().catch(() => false))) {
@@ -41,13 +41,21 @@ export async function openStructure(page: Page) {
       await expect(page.getByTestId("structure")).toBeVisible();
       await page.waitForTimeout(500); // sheet finishes sliding up
     }
+  } else if (!(await page.getByTestId("structure").isVisible().catch(() => false))) {
+    await page.getByTestId("tab-content").click();
+    await page.getByTestId("back-to-content").click().catch(() => undefined);
+    await expect(page.getByTestId("structure")).toBeVisible();
   }
 }
 
-/** Open a row of the structure list: select-page, select-header, select-details, select-settings. */
+/** Open one of the four editor tabs' screens: design (page look), header, details (business details), settings (page settings). */
 export async function selectPart(page: Page, part: "page" | "header" | "details" | "settings") {
-  await openStructure(page);
-  await page.getByTestId(`select-${part}`).click();
+  const compact = await isCompact(page);
+  const tab = part === "page" ? "design" : part === "header" ? "header" : "settings";
+  await page.getByTestId(`tab-${tab}`).click();
+  if (part === "settings") await page.getByRole("button", { name: "Page settings" }).click();
+  if (part === "details") await page.getByRole("button", { name: "Business details" }).click();
+  void compact;
 }
 
 /** Select a widget from the structure list; its controls open in the inspector. */

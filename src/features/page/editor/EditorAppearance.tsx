@@ -6,6 +6,7 @@ import { useAppearanceModel, type AppearanceHost } from "@/features/appearance/m
 import { AppearancePanel, HeaderControls } from "@/features/appearance/sections"
 import { ChoiceGrid } from "@/features/appearance/controls"
 import { newId } from "@/features/demo/actions"
+import { ColourSuggestion } from "./ColourSuggestion"
 import { ImageField } from "./controls"
 import { ProfileSections } from "./ContentTab"
 import type { Editor } from "./useEditor"
@@ -75,7 +76,8 @@ export function HeaderPanel({ ed, notify }: { ed: Editor; notify: (m: string, un
             onChange={(v) => ed.setContent((x) => ({ ...x, identity: { ...x.identity, logo: v ?? undefined } }))} focalHint="Choose the part that should stay in view when the picture is cropped to a circle or arch." />
           {m.spec.header.avatarShape === "none" && c.identity.logo ? <p role="note" className="rounded-xl bg-black/[0.04] px-3 py-2 text-xs text-neutral-600">Your picture is saved, but this look shows no picture. Choose a picture shape below to show it.</p> : null}
           <ImageField label="Cover picture" cropAspect={16 / 7} value={c.identity.heroImage ?? null} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1400}
-            onChange={(v) => ed.setContent((x) => ({ ...x, identity: { ...x.identity, heroImage: v ?? undefined } }))} focalHint="Used by Cover and Poster headers. Choose the part that must always stay visible." />
+            onChange={(v) => ed.setContent((x) => ({ ...x, identity: { ...x.identity, heroImage: v ?? undefined } }))} focalHint="Used by the Cover and Image hero headers. Choose the part that must always stay visible." />
+          <ColourSuggestion ed={ed} image={c.identity.heroImage ?? c.identity.logo} notify={notify} />
         </div>
       </Disclosure>
       <Disclosure title="Main action" defaultOpen id="main-action"><MainActionControl ed={ed} /></Disclosure>
