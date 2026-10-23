@@ -11,7 +11,9 @@ import { cn } from "@/lib/utils"
 import { ChoiceGrid, Disclosure, Field, Segment, Slider, Toggle } from "./controls"
 import { FONT_PAIRS, SHADER_DEFAULT_COLOURS, type AppearanceModel } from "./model"
 import { LookThumb } from "@/components/taplo/look-thumb"
-import { ButtonTile, FontTile, HeaderTile, LookTile, PaletteTile, SurfaceTile, WallpaperTile, backgroundPreview } from "./previews"
+import type { BusinessContent } from "@/features/businesses/content"
+import { ProfileMark } from "@/features/page/renderer/ProfileMark"
+import { ButtonTile, FontTile, HeaderTile, PaletteTile, SurfaceTile, WallpaperTile, backgroundPreview } from "./previews"
 
 type M = { m: AppearanceModel }
 
@@ -120,7 +122,7 @@ export function TypeControls({ m }: M) {
 
 /* ------------------------------------------------------------------ header */
 const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] = [["side", "Compact"], ["cover", "Cover"], ["poster", "Image hero"], ["centered", "Text-led"]]
-export function HeaderControls({ m }: M) {
+export function HeaderControls({ m, identity }: M & { identity?: BusinessContent["identity"] }) {
   const { spec } = m
   return (
     <div className="grid gap-4">
@@ -128,11 +130,27 @@ export function HeaderControls({ m }: M) {
         options={(spec.header.layout === "minimal" ? [...HEADER_OPTIONS, ["minimal", "Text only (earlier)"] as [StyleSpec["header"]["layout"], string]] : HEADER_OPTIONS).map(([v, l]) => ({ value: v, label: l, preview: <HeaderTile layout={v} /> }))} />
       {spec.header.layout === "poster" || spec.header.layout === "cover" ? <Field label="Photo fade" dirty={m.has("header", "scrim")} onReset={() => m.reset("header", "scrim")} hint="How far the photograph fades into the page. Text always sits on the page colour."><Segment label="Photo fade" value={spec.header.scrim ?? "medium"} options={[{ value: "soft", label: "Soft" }, { value: "medium", label: "Medium" }, { value: "strong", label: "Strong" }]} onChange={(v) => m.patch("header", "scrim", v)} /></Field> : null}
       <div className="grid gap-3">
-        <Field label="Logo shape" dirty={m.has("header", "avatarShape")} onReset={() => m.reset("header", "avatarShape")}><Segment label="Logo shape" value={spec.header.avatarShape} options={[{ value: "circle", label: "Circle" }, { value: "rounded", label: "Rounded" }, { value: "square", label: "Square" }, { value: "arch", label: "Arch" }, { value: "logo", label: "Uncropped" }, { value: "none", label: "No picture" }]} onChange={(v) => m.patch("header", "avatarShape", v)} /></Field>
+        <Field label="Your picture" dirty={m.has("header", "avatarShape")} onReset={() => m.reset("header", "avatarShape")}>
+          <ChoiceGrid label="Picture style" value={spec.header.avatarShape} columns={2} onChange={(v) => m.patch("header", "avatarShape", v)}
+            options={([
+              ["logo", "Keep whole"], ["circle", "Circle"], ["rounded", "Soft square"], ["none", "Name only"],
+              ...(spec.header.avatarShape === "arch" || spec.header.avatarShape === "square" ? [[spec.header.avatarShape, "Current style"]] : []),
+            ] as [StyleSpec["header"]["avatarShape"], string][]).map(([value, label]) => ({ value, label, preview:
+              <span aria-hidden="true" className="flex h-24 items-center justify-center overflow-hidden px-3" style={{ ...m.resolved.cssVars, background: m.resolved.cssVars["--tp-background"] } as React.CSSProperties}>
+                {value === "none" ? <span className="text-sm font-semibold" style={{ color: spec.colors.text }}>{identity?.name || "Your business"}</span> :
+                  <span className="flex max-w-full scale-75 items-center justify-center [&_.tp-logo]:max-h-20 [&_.tp-logo]:max-w-full"><ProfileMark image={identity?.logo} name={identity?.name || "Your business"} shape={value} /></span>}
+              </span>
+            }))} />
+        </Field>
+        <details>
+          <summary className="flex min-h-11 cursor-pointer items-center text-sm font-medium">Adjust layout</summary>
+          <div className="mt-3 grid gap-3">
         <Field label="Logo size" dirty={m.has("header", "avatarSize")} onReset={() => m.reset("header", "avatarSize")}><Segment label="Logo size" value={spec.header.avatarSize} options={[{ value: "sm", label: "Small" }, { value: "md", label: "Medium" }, { value: "lg", label: "Large" }]} onChange={(v) => m.patch("header", "avatarSize", v)} /></Field>
         <Field label="Alignment" dirty={m.has("header", "align")} onReset={() => m.reset("header", "align")}><Segment label="Header alignment" value={spec.header.align} options={[{ value: "left", label: "Left" }, { value: "center", label: "Centre" }]} onChange={(v) => m.patch("header", "align", v)} /></Field>
         <Field label="Contact actions" dirty={m.has("header", "actions")} onReset={() => m.reset("header", "actions")} hint="Call, WhatsApp and Email you’ve added. If you add one as a widget, it isn’t repeated here."><Segment label="Contact actions" value={spec.header.actions} options={[{ value: "primary", label: "Main + icons" }, { value: "buttons", label: "Buttons" }, { value: "icons", label: "Icons" }, { value: "none", label: "Hidden" }]} onChange={(v) => m.patch("header", "actions", v)} /></Field>
         <Toggle label="Show location under the name" checked={spec.header.showLocation} onChange={(v) => m.patch("header", "showLocation", v)} />
+          </div>
+        </details>
       </div>
     </div>
   )

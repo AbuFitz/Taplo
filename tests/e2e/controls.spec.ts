@@ -57,11 +57,11 @@ const C: Control[] = [
   { id: "pattern", part: "page", open: "Wallpaper", run: radio("Pattern", "dots"), probe: at("data-decoration"), expect: "dots" },
   // Header
   { id: "header-layout", part: "header", run: radio("Header arrangement", "poster"), probe: at("data-header"), expect: "poster" },
-  { id: "header-shape", part: "header", run: radio("Logo shape", "circle"), probe: sub(".tp-avatar", "data-shape"), expect: "circle" },
-  { id: "header-size", part: "header", run: radio("Logo size", "lg"), probe: sub(".tp-avatar", "data-size"), expect: "lg" },
-  { id: "header-align", part: "header", run: radio("Header alignment", "center"), probe: sub(".tp-header", "data-align"), expect: "center" },
-  { id: "header-actions", part: "header", run: radio("Contact actions", "icons"), probe: count(".tp-header .tp-actions-primary, .tp-header .tp-quick") },
-  { id: "header-location", part: "header", run: toggle("Show location under the name"), probe: count(".tp-meta svg") },
+  { id: "header-shape", part: "header", run: radio("Picture style", "circle"), probe: sub(".tp-avatar", "data-shape"), expect: "circle" },
+  { id: "header-size", part: "header", more: "Adjust layout", run: radio("Logo size", "lg"), probe: sub(".tp-avatar", "data-size"), expect: "lg" },
+  { id: "header-align", part: "header", more: "Adjust layout", run: radio("Header alignment", "center"), probe: sub(".tp-header", "data-align"), expect: "center" },
+  { id: "header-actions", part: "header", more: "Adjust layout", run: radio("Contact actions", "icons"), probe: count(".tp-header .tp-actions-primary, .tp-header .tp-quick") },
+  { id: "header-location", part: "header", more: "Adjust layout", run: toggle("Show location under the name"), probe: count(".tp-meta svg") },
   { id: "header-fade", part: "header", also: radio("Header arrangement", "poster"), run: radio("Photo fade", "strong"), probe: cv("--tp-fade"), expect: "74%" },
   // Buttons
   { id: "button-style", part: "page", open: "Buttons", run: radio("Button style", "outline"), probe: at("data-btn-fill"), expect: "outline" },

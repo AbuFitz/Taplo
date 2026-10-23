@@ -69,19 +69,19 @@ export function HeaderPanel({ ed, notify }: { ed: Editor; notify: (m: string, un
   const c = ed.state.content
   return (
     <div className="grid gap-2.5" data-testid="header-panel">
-      <ProfileSections ed={ed} only="identity" />
-      <Disclosure title="Logo and cover" defaultOpen id="header-images">
+      <Disclosure title="Header layout" defaultOpen id="header" count={m.count("header")} onReset={() => m.resetGroup("header")}><HeaderControls m={m} identity={c.identity} /></Disclosure>
+      <ProfileSections ed={ed} only="identity" identityOpen={!c.identity.name} />
+      <Disclosure title="Logo and cover" id="header-images">
         <div className="grid gap-5">
           <ImageField label="Logo or profile picture" cropAspect={1} cropRound={m.spec.header.avatarShape === "circle"} value={c.identity.logo ?? null} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640}
-            onChange={(v) => ed.setContent((x) => ({ ...x, identity: { ...x.identity, logo: v ?? undefined } }))} focalHint="Choose the part that should stay in view when the picture is cropped to a circle or arch." />
+            onChange={(v) => ed.setContent((x) => ({ ...x, identity: { ...x.identity, logo: v ?? undefined } }))} focalHint="Keep your face or mark in view. Wide logos are always shown whole." />
           {m.spec.header.avatarShape === "none" && c.identity.logo ? <p role="note" className="rounded-xl bg-black/[0.04] px-3 py-2 text-xs text-neutral-600">Your picture is saved, but this look shows no picture. Choose a picture shape below to show it.</p> : null}
           <ImageField label="Cover picture" cropAspect={16 / 7} value={c.identity.heroImage ?? null} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1400}
             onChange={(v) => ed.setContent((x) => ({ ...x, identity: { ...x.identity, heroImage: v ?? undefined } }))} focalHint="Used by the Cover and Image hero headers. Choose the part that must always stay visible." />
           <ColourSuggestion ed={ed} image={c.identity.heroImage ?? c.identity.logo} notify={notify} />
         </div>
       </Disclosure>
-      <Disclosure title="Main action" defaultOpen id="main-action"><MainActionControl ed={ed} /></Disclosure>
-      <Disclosure title="Header layout" defaultOpen id="header" count={m.count("header")} onReset={() => m.resetGroup("header")}><HeaderControls m={m} /></Disclosure>
+      <Disclosure title="Main action" id="main-action"><MainActionControl ed={ed} /></Disclosure>
     </div>
   )
 }

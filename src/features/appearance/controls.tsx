@@ -76,28 +76,24 @@ export function Field({ label, dirty, onReset, hint, children }: { label: string
 export interface Choice<T extends string> { value: T; label: string; preview?: React.ReactNode; disabled?: boolean }
 
 /**
- * Visual single-choice selector. Each option shows a miniature of what it does; the selection
- * ring glides between options (Motion shared layout), which is the one continuous, responsive
- * piece of feedback in the controls. Native radios underneath keep it keyboard and screen-reader complete.
+ * Visual single-choice selector. Selection stays on its tile rather than flying across
+ * other previews when the grid scrolls or changes size. Native radios provide keyboard semantics.
  */
 export function ChoiceGrid<T extends string>({ label, value, options, onChange, columns = 3 }: { label: string; value: T | undefined; options: Choice<T>[]; onChange: (v: T) => void; columns?: number }) {
   const id = React.useId()
   return (
-    <LayoutGroup id={id}>
       <div role="radiogroup" aria-label={label} className="grid gap-2" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
         {options.map((o) => {
           const on = value === o.value
           return (
-            <label key={o.value} data-choice={o.value} className={cn("relative grid cursor-pointer gap-1.5 rounded-xl p-1.5 text-center outline-none transition-colors focus-within:ring-2 focus-within:ring-[var(--ring)]/60", on ? "" : "hover:bg-black/[0.035]", o.disabled && "pointer-events-none opacity-45")}>
+            <label key={o.value} data-choice={o.value} className={cn("relative grid cursor-pointer gap-1.5 rounded-xl p-1.5 text-center outline-none transition-colors focus-within:ring-2 focus-within:ring-[var(--ring)]/60", on ? "bg-white shadow-[0_0_0_1.5px_rgb(23_23_23),0_6px_16px_-8px_rgb(0_0_0/0.35)]" : "hover:bg-black/[0.035]", o.disabled && "pointer-events-none opacity-45")}>
               <input type="radio" className="sr-only" name={id} value={o.value} checked={on} disabled={o.disabled} onChange={() => onChange(o.value)} />
-              {on ? <motion.span layoutId="choice-ring" transition={{ type: "spring", stiffness: 520, damping: 40 }} className="absolute inset-0 rounded-xl bg-white shadow-[0_0_0_1.5px_rgb(23_23_23),0_6px_16px_-8px_rgb(0_0_0/0.35)]" /> : null}
               {o.preview ? <span className="relative block overflow-hidden rounded-lg">{o.preview}</span> : null}
               <span className={cn("relative text-[0.6875rem] leading-tight", on ? "font-semibold text-neutral-900" : "text-neutral-600")}>{o.label}</span>
             </label>
           )
         })}
       </div>
-    </LayoutGroup>
   )
 }
 

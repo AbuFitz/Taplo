@@ -161,9 +161,7 @@ html:has([data-taplo-page]) { scrollbar-width: thin; scrollbar-color: color-mix(
 .tp-widget { min-width: 0; text-align: left; }
 /* The page's alignment applies to headings and statement-style widgets only; lists and rows always read left-to-right. */
 .tp-card > h2, .tp-widget[data-widget="text"] .tp-card, .tp-widget[data-widget="featuredService"] .tp-card, .tp-widget[data-widget="offers"] .tp-card, .tp-widget[data-widget="announcement"] .tp-card, .tp-widget[data-widget="image"] figcaption { text-align: var(--tp-text-align); }
-.tp-card { background: var(--tp-card-bg); border: var(--tp-card-border-w) solid var(--tp-border); border-radius: var(--tp-card-radius); box-shadow: var(--tp-card-shadow); padding: var(--tp-card-pad); -webkit-backdrop-filter: blur(var(--tp-card-blur)) saturate(1.5); backdrop-filter: blur(var(--tp-card-blur)) saturate(1.5); color: var(--tp-foreground); transition: box-shadow var(--tp-dur) var(--tp-ease), transform var(--tp-dur) var(--tp-ease); }
-[data-card-surface="glass"] .tp-card { border-color: color-mix(in srgb, var(--tp-foreground) 14%, transparent); }
-[data-card-surface="soft"] .tp-card { border-color: transparent; }
+.tp-card { background: var(--tp-card-bg); border: var(--tp-card-border-w) solid var(--tp-card-border-color, var(--tp-border)); border-radius: var(--tp-card-radius); box-shadow: var(--tp-card-shadow); padding: var(--tp-card-pad); -webkit-backdrop-filter: var(--tp-card-filter, none); backdrop-filter: var(--tp-card-filter, none); color: var(--tp-foreground); transition: box-shadow var(--tp-dur) var(--tp-ease), transform var(--tp-dur) var(--tp-ease); }
 @media (hover: hover) and (pointer: fine) { [data-motion-level="lively"] .tp-card:hover { box-shadow: var(--tp-shadow-3); transform: translateY(-2px); } }
 .tp-widget[data-featured="true"] .tp-card { border-width: 1.5px; border-color: var(--tp-accent); background-image: linear-gradient(180deg, color-mix(in srgb, var(--tp-accent) 9%, transparent), transparent 55%); }
 .tp-widget[data-featured="true"] .tp-card h2 { font-size: var(--tp-t-xl); }

@@ -29,7 +29,7 @@ function Section({ id, title, children, defaultOpen }: { id?: string; title: str
   )
 }
 
-export function ProfileSections({ ed, only }: { ed: Editor; only?: "identity" | "rest" }) {
+export function ProfileSections({ ed, only, identityOpen = true }: { ed: Editor; only?: "identity" | "rest"; identityOpen?: boolean }) {
   const c = ed.state.content
   const set = ed.setContent
   const [galleryError, setGalleryError] = React.useState<string>()
@@ -67,7 +67,7 @@ export function ProfileSections({ ed, only }: { ed: Editor; only?: "identity" | 
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-2" id="profile">
-      {only !== "rest" ? <Section title="Your name and description" defaultOpen>
+      {only !== "rest" ? <Section title="Your name and description" defaultOpen={identityOpen}>
         <TaploInput label="Business name" value={c.identity.name} maxLength={100} onChange={(e) => ed.update((s) => ({ ...s, content: { ...s.content, identity: { ...s.content.identity, name: e.target.value, slug: s.slugEdited ? s.content.identity.slug : normalizeForSlug(e.target.value) } } }), { coalesce: "name" })} />
         <div className="grid gap-1.5">
           <Label htmlFor="bio" className="text-sm font-medium">Short description</Label>

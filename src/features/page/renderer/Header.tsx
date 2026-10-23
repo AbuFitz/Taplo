@@ -1,8 +1,8 @@
 import { ArrowUpRight, CalendarCheck, Mail, MapPin, MessageCircle, Phone } from "lucide-react"
-import { initialsOf } from "@/lib/validation"
 import { BookingAction } from "../widgets/client"
 import { bookingProps } from "../widgets/renderers"
 import { ProfileImage } from "./ProfileImage"
+import { ProfileMark } from "./ProfileMark"
 import type { PageAction, PageViewModel } from "./view-model"
 
 const ICON = { book: CalendarCheck, call: Phone, whatsapp: MessageCircle, email: Mail } as const
@@ -11,19 +11,7 @@ const WIDGET_FOR: Partial<Record<PageAction["kind"], string>> = { call: "call", 
 function Avatar({ vm }: { vm: PageViewModel }) {
   const { spec } = vm.style
   const { identity } = vm.business
-  if (spec.header.avatarShape === "none") return null
-  const logo = identity.logo
-  // A wide logo (a wordmark) is shown whole, at its own proportions. Cropping it to a face shape is always wrong.
-  const wide = logo?.width && logo?.height ? logo.width / logo.height > 1.5 : false
-  if (logo && (spec.header.avatarShape === "logo" || wide)) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img className="tp-logo" data-size={spec.header.avatarSize} src={logo.src} alt={logo.alt} width={logo.width} height={logo.height} />
-  }
-  return (
-    <span className="tp-avatar" data-shape={spec.header.avatarShape} data-size={spec.header.avatarSize}>
-      {identity.logo ? <ProfileImage image={identity.logo} sizes="160px" priority /> : <span aria-hidden="true">{initialsOf(identity.name)}</span>}
-    </span>
-  )
+  return <ProfileMark image={identity.logo} name={identity.name} shape={spec.header.avatarShape} size={spec.header.avatarSize} priority />
 }
 
 /** Channels the owner already placed as their own widget are not repeated in the header. */

@@ -164,8 +164,8 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
     notices.push({ code: "accent_text_adjusted", message: "Button text colour was adjusted so it reads on your accent colour." });
     spec.colors.accentText = a.color;
   }
-  const btn = deriveButton(spec.colors, spec.buttons);
-  check("Button text", contrastRatio(btn.text, btn.bg === "transparent" ? spec.colors.background : btn.bg));
+  const btn = deriveButton({ ...spec.colors, background: refBg }, spec.buttons);
+  check("Button text", contrastRatio(btn.text, btn.bg === "transparent" ? refBg : btn.bg));
 
   const ratio = (n: number) => n;
   void ratio;
@@ -203,6 +203,8 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
     "--tp-card-shadow": spec.cards.shadow === "soft" ? `${el.e2}, var(--tp-edge)` : spec.cards.shadow === "hard" ? hardShadow : "none",
     "--tp-card-pad": PAD[spec.cards.padding],
     "--tp-card-blur": spec.cards.surface === "glass" ? "22px" : "0px",
+    "--tp-card-filter": spec.cards.surface === "glass" ? "blur(22px) saturate(1.5)" : "none",
+    "--tp-card-border-color": spec.cards.surface === "glass" ? "color-mix(in srgb, var(--tp-foreground) 14%, transparent)" : spec.cards.surface === "soft" ? "transparent" : "var(--tp-border)",
     "--tp-surface-2": roles.surface2,
     "--tp-line": roles.line,
     "--tp-line-strong": roles.lineStrong,
@@ -279,6 +281,13 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
   const accent = a.accent ?? spec.colors.accent;
   const featured = a.emphasis === "featured";
 
+  // A section owns its surface effects. Ancestor selectors must not keep applying a page's glass/soft styling.
+  if (a.surface) {
+    vars["--tp-card-filter"] = a.surface === "glass" ? "blur(22px) saturate(1.5)" : "none";
+    vars["--tp-card-blur"] = a.surface === "glass" ? "22px" : "0px";
+    vars["--tp-card-border-color"] = a.surface === "glass" ? "color-mix(in srgb, var(--tp-foreground) 14%, transparent)" : a.surface === "soft" ? "transparent" : "var(--tp-border)";
+  }
+
   if (a.surface === "accent") {
     const t = ensureReadable(spec.colors.accentText, accent);
     vars["--tp-card-bg"] = accent;
@@ -288,6 +297,7 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
     attrs["data-card-surface"] = "solid";
   } else if (a.surface === "transparent") {
     vars["--tp-card-bg"] = "transparent";
+    vars["--tp-card-blur"] = "0px";
     attrs["data-card-surface"] = "transparent";
   } else if (a.surface === "glass") {
     vars["--tp-card-bg"] = `color-mix(in srgb, ${spec.colors.surface} 62%, transparent)`;
@@ -308,7 +318,7 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
     vars["--tp-foreground"] = t.color;
     vars["--tp-muted"] = t.color;
   } else if (a.text && a.surface !== "accent") {
-    const surfaceNow = a.surface === "transparent" ? spec.colors.background : spec.colors.surface;
+    const surfaceNow = widgetBackground(style, a);
     const t = ensureReadable(a.text, surfaceNow);
     vars["--tp-foreground"] = t.color;
   }
@@ -329,13 +339,13 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
     attrs["data-featured"] = "true";
   }
 
-  const needsButton = a.buttonFill || a.buttonShape || a.accent || a.background || a.text || a.surface === "accent";
+  const needsButton = a.buttonFill || a.buttonShape || a.accent || a.background || a.text || a.surface;
   if (needsButton) {
     // On an accent-filled card, buttons invert so they stay distinguishable.
     const inverted = a.surface === "accent";
     const btn = inverted
       ? { bg: ensureReadable(spec.colors.accentText, accent).color, text: accent, border: ensureReadable(spec.colors.accentText, accent).color }
-      : deriveButton(spec.colors, spec.buttons, { fill: a.buttonFill, accent });
+      : deriveButton({ ...spec.colors, background: widgetBackground(style, a), surface: widgetBackground(style, a), text: vars["--tp-foreground"] ?? spec.colors.text }, spec.buttons, { fill: a.buttonFill, accent });
     vars["--tp-btn-bg"] = btn.bg;
     vars["--tp-btn-text"] = btn.text;
     vars["--tp-btn-border"] = btn.border;
@@ -343,4 +353,16 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
   }
   if (a.buttonShape) vars["--tp-btn-radius"] = BTN_RADIUS[a.buttonShape];
   return { vars, attrs };
+}
+
+/** Effective solid sample used by controls/buttons. Wallpaper colours may differ from the saved palette. */
+export function widgetBackground(style: ResolvedStyle, a: WidgetAppearance): string {
+  if (a.background) return a.background;
+  const surface = a.surface ?? style.spec.cards.surface;
+  const page = style.cssVars["--tp-background"]!;
+  if (surface === "transparent") return page;
+  if (surface === "accent") return a.accent ?? style.spec.colors.accent;
+  if (surface === "soft") return style.cssVars["--tp-surface-2"]!;
+  if (surface === "glass") return mix(page, style.spec.colors.surface, a.surface === "glass" ? 0.62 : style.spec.cards.opacity / 100);
+  return style.spec.colors.surface;
 }
