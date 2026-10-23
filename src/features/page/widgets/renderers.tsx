@@ -463,7 +463,7 @@ function EnquiryWidget({ w, vm }: P) {
 
 function ShareWidget({ w, vm }: P) {
   const s = w.settings as S
-  return <ShareButton data={{ name: vm.business.identity.name, tagline: vm.business.identity.tagline, slug: vm.business.identity.slug, logo: vm.business.identity.logo?.src }} label={str(s.label) || "Share this page"} variant={s.variant === "card" ? "card" : "button"} />
+  return <ShareButton data={{ name: vm.business.identity.name, tagline: vm.business.identity.tagline, slug: vm.business.identity.slug, logo: vm.business.identity.logo?.src, action: vm.onlineBooking ? "Scan to book" : undefined }} label={str(s.label) || "Share this page"} variant={s.variant === "card" ? "card" : "button"} />
 }
 
 function AnnouncementWidget({ w }: P) {

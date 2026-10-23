@@ -1,45 +1,37 @@
 "use client"
 
 import * as React from "react"
-import qrcode from "qrcode-generator"
 import { Check, Copy, Download, Share2 } from "lucide-react"
 import { Overlay } from "@/components/taplo/overlay"
 import { Button } from "@/components/ui/button"
+import { capabilities } from "@/lib/capabilities"
+import { loadQrLogo, svgToPng } from "@/features/qr/browser"
+import { QR_PRESETS, contrast, qrFilename, qrSvg, type QrLogo, type QrStyle } from "@/features/qr/render"
 
 /**
- * Sharing, with three separate things kept separate:
- *  1. this card: Taplo's own preview of how the page is shared;
- *  2. the downloadable artwork (share image, QR code);
+ * Sharing, with three things kept separate:
+ *  1. this panel: how the page is shared, with a preview of the code and the image;
+ *  2. the downloadable artwork (share image, QR code), all drawn by the one QR renderer in `features/qr`;
  *  3. the Open Graph metadata external apps read (set on the public route, not here).
- * Social apps cache and render links their own way, so nothing here promises an exact preview there.
- * A preview-mode link only works in this browser and says so.
+ * Social apps cache and show links their own way, so nothing here promises an exact preview there.
+ * The code always points at the page's own address. A draft that is not public has no public address, so its link
+ * is the one that opens in this browser, and the files are named and explained that way.
  */
 
-export interface ShareData { name: string; tagline?: string; slug: string; /** The business logo, when it has one; drawn on the share image. */ logo?: string }
+export interface ShareData { name: string; tagline?: string; slug: string; /** The business logo, when it has one; used in the QR code and on the share image. */ logo?: string; /** What the share image says under the code, for example "Scan to book". */ action?: string }
 
-function qrMatrix(url: string) {
-  const q = qrcode(0, "M")
-  q.addData(url)
-  q.make()
-  const n = q.getModuleCount()
-  return { n, dark: (r: number, c: number) => q.isDark(r, c) }
-}
-
-function qrSvg(url: string, size = 220, quiet = 4, fg = "#000", bg = "#fff"): string {
-  const m = qrMatrix(url)
-  const cell = size / (m.n + quiet * 2)
-  let d = ""
-  for (let r = 0; r < m.n; r++) for (let c = 0; c < m.n; c++) if (m.dark(r, c)) d += `M${((c + quiet) * cell).toFixed(2)} ${((r + quiet) * cell).toFixed(2)}h${cell.toFixed(2)}v${cell.toFixed(2)}h-${cell.toFixed(2)}z`
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="QR code for ${url.replace(/"/g, "")}"><rect width="${size}" height="${size}" fill="${bg}"/><path d="${d}" fill="${fg}"/></svg>`
-}
+const QR_LOOKS = {
+  classic: { label: "Classic", dots: "square", corners: "square" },
+  soft: { label: "Soft", dots: "rounded", corners: "rounded" },
+  round: { label: "Round", dots: "dots", corners: "round" },
+} as const
+type QrLook = keyof typeof QR_LOOKS
 
 function download(name: string, blob: Blob) {
   const url = URL.createObjectURL(blob)
   const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove()
   setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
-
-const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "page"
 
 function wrap(ctx: CanvasRenderingContext2D, text: string, max: number): string[] {
   const words = text.split(/\s+/).filter(Boolean); const lines: string[] = []; let cur = ""
@@ -57,7 +49,7 @@ function clamp(ctx: CanvasRenderingContext2D, lines: string[], n: number, max: n
   return out
 }
 
-/** Shrink the size until the longest single word fits the width, so a very long unbroken name is never cut off. */
+/** Shrink until the longest single word fits, so a very long unbroken name is never cut off. */
 function fitSize(ctx: CanvasRenderingContext2D, text: string, family: string, weight: number, size: number, min: number, max: number): number {
   const longest = text.split(/\s+/).reduce((a, b) => (b.length > a.length ? b : a), "")
   let px = size
@@ -65,18 +57,17 @@ function fitSize(ctx: CanvasRenderingContext2D, text: string, family: string, we
   return px
 }
 
-function loadImage(src: string): Promise<HTMLImageElement | null> {
-  return new Promise((res) => { const i = new window.Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src })
-}
+const loadImage = (src: string): Promise<HTMLImageElement | null> => new Promise((res) => { const i = new window.Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src })
 
-/** A 1080x1350 share image drawn from the page's own colours and fonts: logo, name, line, QR and link. Rendered on a canvas, never uploaded. */
-export async function renderShareImage(d: { name: string; tagline?: string; url: string; logo?: string; fonts?: { heading: string; body: string }; colours: { bg: string; fg: string; accent: string; accentText: string } }): Promise<Blob | null> {
+export interface ShareImageInput { name: string; tagline?: string; url: string; action?: string; logo?: QrLogo | null; qr: QrStyle; fonts?: { heading: string; body: string }; colours: { bg: string; fg: string; accent: string; accentText: string } }
+
+/** A 1080x1350 share image in the page's own colours and fonts: name, line, the business's QR code, the message and the link. Drawn on a canvas, never uploaded. */
+export async function renderShareImage(d: ShareImageInput): Promise<Blob | null> {
   const W = 1080, H = 1350, PAD = 80
   const canvas = document.createElement("canvas"); canvas.width = W; canvas.height = H
   const ctx = canvas.getContext("2d"); if (!ctx) return null
   const heading = d.fonts?.heading || '"Inter Variable", system-ui, sans-serif'
   const body = d.fonts?.body || '"Inter Variable", system-ui, sans-serif'
-  // The page's own fonts must be loaded before they can be drawn; fall back to the system font if they are not.
   try { await Promise.all([document.fonts.load(`700 80px ${heading}`), document.fonts.load(`400 40px ${body}`), document.fonts.ready]) } catch { /* system font fallback */ }
   const { bg, fg, accent, accentText } = d.colours
   ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H)
@@ -84,7 +75,7 @@ export async function renderShareImage(d: { name: string; tagline?: string; url:
   ctx.fillStyle = fg; ctx.textBaseline = "alphabetic"; ctx.textAlign = "left"
 
   let y = 150
-  const logo = d.logo ? await loadImage(d.logo) : null
+  const logo = d.logo ? await loadImage(d.logo.href) : null
   if (logo && logo.naturalWidth > 0) {
     const s = Math.min(420 / logo.naturalWidth, 130 / logo.naturalHeight, 1.5)
     const w = logo.naturalWidth * s, h = logo.naturalHeight * s
@@ -97,21 +88,28 @@ export async function renderShareImage(d: { name: string; tagline?: string; url:
   const nameLines = clamp(ctx, wrap(ctx, d.name, W - PAD * 2), 3, W - PAD * 2)
   nameLines.forEach((l, i) => ctx.fillText(l, PAD, y + size * 0.8 + i * size * 1.12))
   y += nameLines.length * size * 1.12 + 16
-  const size2 = 520, quiet = 3
-  const qx = (W - size2) / 2, qy = H - size2 - 230
+
+  const qrSize = 520
+  const qx = (W - qrSize) / 2, qy = H - qrSize - 290
   if (d.tagline) {
-    // Only as many lines as fit above the QR code, so a long line can never run into it.
     const room = Math.max(1, Math.min(4, Math.floor((qy - 56 - y) / 58)))
     ctx.globalAlpha = 0.74; ctx.font = `400 42px ${body}`
     for (const l of clamp(ctx, wrap(ctx, d.tagline, W - PAD * 2), room, W - PAD * 2)) { ctx.fillText(l, PAD, y + 40); y += 58 }
     ctx.globalAlpha = 1
   }
-  const m = qrMatrix(d.url); const cell = size2 / (m.n + quiet * 2)
-  ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.roundRect(qx - 28, qy - 28, size2 + 56, size2 + 56, 36); ctx.fill()
-  ctx.fillStyle = "#000"
-  for (let r = 0; r < m.n; r++) for (let c = 0; c < m.n; c++) if (m.dark(r, c)) ctx.fillRect(qx + (c + quiet) * cell, qy + (r + quiet) * cell, Math.ceil(cell), Math.ceil(cell))
-  ctx.fillStyle = accent; ctx.beginPath(); ctx.roundRect(PAD, H - 150, W - PAD * 2, 84, 42); ctx.fill()
+
+  // The code is the shared renderer's own drawing, on a plain plate (its quiet zone is part of the drawing).
+  const qrImg = await loadImage(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(qrSvg(d.url, { ...d.qr, logo: d.logo ?? null }, qrSize))}`)
+  const bgq = "#ffffff"
+  ctx.fillStyle = bgq; ctx.beginPath(); ctx.roundRect(qx - 16, qy - 16, qrSize + 32, qrSize + 32, 36); ctx.fill()
+  if (qrImg) ctx.drawImage(qrImg, qx, qy, qrSize, qrSize)
+
+  if (d.action) {
+    ctx.fillStyle = fg; ctx.textAlign = "center"; ctx.font = `600 40px ${body}`
+    ctx.fillText(clamp(ctx, [d.action], 1, W - PAD * 2)[0]!, W / 2, qy + qrSize + 78)
+  }
   const label = d.url.replace(/^https?:\/\//, "")
+  ctx.fillStyle = accent; ctx.beginPath(); ctx.roundRect(PAD, H - 150, W - PAD * 2, 84, 42); ctx.fill()
   ctx.fillStyle = accentText; ctx.textAlign = "center"
   let lp = 36; ctx.font = `600 ${lp}px ${body}`
   while (lp > 20 && ctx.measureText(label).width > W - PAD * 2 - 48) { lp -= 2; ctx.font = `600 ${lp}px ${body}` }
@@ -129,6 +127,12 @@ function readFonts(el: HTMLElement | null) {
   const cs = el ? getComputedStyle(el) : null
   const heading = cs?.getPropertyValue("--tp-font-heading").trim(), body = cs?.getPropertyValue("--tp-font-body").trim()
   return heading && body ? { heading, body } : undefined
+}
+
+/** The business's own colour for the code: its accent if that is dark enough, otherwise its text or page colour; the renderer still guarantees 7:1. */
+function brandColour(c: { bg: string; fg: string; accent: string }): string {
+  const ok = (x: string) => /^#[0-9a-f]{6}$/i.test(x) && contrast(x, "#ffffff") >= 7
+  return [c.accent, c.fg, c.bg].find(ok) ?? "#111111"
 }
 
 export function ShareButton({ data, label = "Share this page", variant = "button" }: { data: ShareData; label?: string; variant?: "button" | "card" }) {
@@ -149,33 +153,41 @@ export function SharePanel({ data, trigger, open, onOpenChange }: { data: ShareD
 }
 
 const noopSubscribe = () => () => {}
+const STORE = "taplo.qr.look"
 
 function ShareBody({ data }: { data: ShareData }) {
   // Read from the browser without an effect: empty on the server, real values once hydrated.
   const where = React.useSyncExternalStore(noopSubscribe, () => `${window.location.origin}|${window.location.pathname}|${typeof navigator.share === "function"}`, () => "")
   const [origin = "", path = "", sharable = ""] = where.split("|")
-  const demo = path.startsWith("/demo") || path.startsWith("/appearance") || path.startsWith("/dashboard")
-  const url = origin ? (demo ? `${origin}/demo/p/${data.slug}` : `${origin}/${data.slug}`) : ""
+  // Only a page served at its own public address has a public link. Anything opened from the workspace is a local preview link.
+  const preview = !capabilities().publicPublishing || path.startsWith("/demo") || path.startsWith("/appearance") || path.startsWith("/dashboard")
+  const url = origin ? (preview ? `${origin}/demo/p/${data.slug}` : `${origin}/${data.slug}`) : ""
   const canShare = sharable === "true"
-  const local = !demo && /^(https?:\/\/)(localhost|127\.|10\.|192\.168\.|\[::1\])/.test(origin)
+  const local = !preview && /^(https?:\/\/)(localhost|127\.|10\.|192\.168\.|\[::1\])/.test(origin)
   const [note, setNote] = React.useState("")
+  const [look, setLook] = React.useState<QrLook>(() => { try { const v = localStorage.getItem(STORE); return v && v in QR_LOOKS ? (v as QrLook) : "soft" } catch { return "soft" } })
+  const [logo, setLogo] = React.useState<QrLogo | null>(null)
+  const [colours, setColours] = React.useState({ bg: "#ffffff", fg: "#111111", accent: "#111111", accentText: "#ffffff" })
   const root = React.useRef<HTMLDivElement>(null)
+  const themed = () => root.current?.closest<HTMLElement>("[data-taplo-theme]") ?? document.querySelector<HTMLElement>("[data-taplo-theme]")
+
+  React.useEffect(() => { setColours(readColours(themed())) }, [where])
+  React.useEffect(() => { let live = true; loadQrLogo(data.logo).then((l) => { if (live) setLogo(l) }); return () => { live = false } }, [data.logo])
 
   const say = (m: string) => { setNote(m); window.setTimeout(() => setNote((x) => (x === m ? "" : x)), 3500) }
-  const svg = React.useMemo(() => (url ? qrSvg(url, 260, 2) : ""), [url])
+  const style: QrStyle = React.useMemo(() => ({ dots: QR_LOOKS[look].dots, corners: QR_LOOKS[look].corners, fg: brandColour(colours), bg: "#ffffff", logo }), [look, colours, logo])
+  const svg = React.useMemo(() => (url ? qrSvg(url, style, 260, `QR code for ${data.name}`) : ""), [url, style, data.name])
+  const chooseLook = (l: QrLook) => { setLook(l); try { localStorage.setItem(STORE, l) } catch { /* the choice just is not remembered */ } }
 
   const copy = async () => {
     try { await navigator.clipboard.writeText(url); say("Link copied") }
     catch { const t = root.current?.querySelector<HTMLInputElement>("input[readonly]"); t?.select(); say("Press copy on your keyboard to copy the link") }
   }
-  const imageBlob = () => {
-    const themed = root.current?.closest<HTMLElement>("[data-taplo-theme]") ?? document.querySelector<HTMLElement>("[data-taplo-theme]")
-    return renderShareImage({ name: data.name, tagline: data.tagline, url, logo: data.logo, fonts: readFonts(themed), colours: readColours(themed) })
-  }
+  const imageBlob = () => renderShareImage({ name: data.name, tagline: data.tagline, url, action: data.action ?? "Scan to open our page", logo, qr: style, fonts: readFonts(themed()), colours })
   const shareNative = async () => {
     try {
       const blob = await imageBlob()
-      const file = blob ? new File([blob], `${slugify(data.name)}-share.png`, { type: "image/png" }) : null
+      const file = blob ? new File([blob], qrFilename(data.slug, "share", "png", { preview }), { type: "image/png" }) : null
       if (file && navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file], title: data.name, text: data.tagline ?? data.name, url })
       else await navigator.share({ title: data.name, text: data.tagline ?? data.name, url })
     } catch (e) {
@@ -183,32 +195,36 @@ function ShareBody({ data }: { data: ShareData }) {
       say("Sharing is not available here. Copy the link instead.")
     }
   }
-  const saveImage = async () => { const b = await imageBlob(); if (b) { download(`${slugify(data.name)}-share.png`, b); say("Share image downloaded") } else say("Could not make the image") }
-  const saveQr = (kind: "png" | "svg") => {
-    if (kind === "svg") { download(`${slugify(data.name)}-qr.svg`, new Blob([qrSvg(url, 1024, 4)], { type: "image/svg+xml" })); say("QR code (SVG) downloaded"); return }
-    const c = document.createElement("canvas"); c.width = c.height = 1024
-    const img = new window.Image()
-    img.onload = () => { const ctx = c.getContext("2d"); if (!ctx) return; ctx.drawImage(img, 0, 0, 1024, 1024); c.toBlob((b) => { if (b) { download(`${slugify(data.name)}-qr.png`, b); say("QR code (PNG) downloaded") } }, "image/png") }
-    img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(qrSvg(url, 1024, 4))}`
-  }
+  const saveImage = async () => { const b = await imageBlob(); if (b) { download(qrFilename(data.slug, "share", "png", { preview }), b); say("Share image downloaded") } else say("Could not make the image") }
+  const savePng = async (px: number) => { const b = await svgToPng(qrSvg(url, style, px, `QR code for ${data.name}`), px); if (b) { download(qrFilename(data.slug, "qr", "png", { px, preview }), b); say(`QR code downloaded (${px} px)`) } else say("Could not make the QR code") }
+  const saveSvg = () => { download(qrFilename(data.slug, "qr", "svg", { preview }), new Blob([qrSvg(url, style, 1024, `QR code for ${data.name}`)], { type: "image/svg+xml" })); say("QR code downloaded (SVG)") }
 
   return (
     <div ref={root} className="grid gap-5">
       <section aria-label="How your page is shared" className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded-2xl border border-tp-border bg-tp-surface p-4" data-testid="share-card">
         <div className="min-w-0"><p className="truncate font-tp-heading text-lg font-semibold">{data.name}</p>{data.tagline ? <p className="mt-0.5 line-clamp-2 text-sm text-tp-muted">{data.tagline}</p> : null}<p className="mt-2 truncate text-xs font-medium text-tp-accent">{url.replace(/^https?:\/\//, "")}</p></div>
-        {svg ? <div className="size-24 overflow-hidden rounded-lg bg-white p-1 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: svg }} /> : null}
+        {svg ? <div className="size-28 overflow-hidden rounded-xl bg-white [&>svg]:h-full [&>svg]:w-full" data-testid="qr-preview" dangerouslySetInnerHTML={{ __html: svg }} /> : null}
       </section>
-      {demo ? <p className="rounded-xl border border-amber-500/50 bg-amber-50 px-3 py-2 text-sm text-amber-950" data-testid="share-demo-note"><strong>Preview link.</strong> This page is not public yet. The link and QR code only work in this browser. A real public link comes with publishing.</p> : null}
+      {preview ? <p className="rounded-xl border border-amber-500/50 bg-amber-50 px-3 py-2 text-sm text-amber-950" data-testid="share-demo-note"><strong>Preview link.</strong> This page is not public yet, so the link and QR code only work in this browser. Files are named “preview” until the page has its own address.</p> : null}
       {local ? <p className="rounded-xl border border-amber-500/50 bg-amber-50 px-3 py-2 text-sm text-amber-950" data-testid="share-local-note"><strong>This link only works on this device.</strong> It points at your own computer, not a public address.</p> : null}
       <div className="grid gap-1.5">
         <label htmlFor="share-url" className="text-sm font-medium">Link</label>
-        <div className="flex gap-2"><input id="share-url" readOnly value={url} onFocus={(e) => e.currentTarget.select()} className="min-h-11 min-w-0 flex-1 rounded-xl border border-tp-border bg-transparent px-3 text-sm" /><Button type="button" variant="outline" className="min-h-11" onClick={copy}><Copy /> Copy link</Button></div>
+        <div className="flex gap-2"><input id="share-url" readOnly value={url} onFocus={(e) => e.currentTarget.select()} className="min-h-11 min-w-0 flex-1 rounded-xl border border-tp-border bg-transparent px-3 text-sm" /><Button type="button" variant="outline" className="min-h-11 shrink-0" onClick={copy}><Copy /> Copy link</Button></div>
       </div>
+      <fieldset className="grid gap-1.5">
+        <legend className="text-sm font-medium">QR code style</legend>
+        <div className="grid grid-cols-3 gap-2">
+          {(Object.keys(QR_LOOKS) as QrLook[]).map((k) => (
+            <button key={k} type="button" aria-pressed={look === k} onClick={() => chooseLook(k)} className="min-h-11 rounded-xl border border-tp-border px-3 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-tp-accent aria-pressed:border-tp-accent aria-pressed:bg-tp-accent/10">{QR_LOOKS[k].label}</button>
+          ))}
+        </div>
+        <p className="text-xs text-tp-muted">{logo ? "Your logo sits in the middle. " : "No logo to place, so the code stays clean. "}Colours come from your page; the code always stays dark on light so it scans.</p>
+      </fieldset>
       <div className="grid gap-2 sm:grid-cols-2">
         {canShare ? <Button type="button" className="min-h-11 bg-tp-accent text-tp-accent-fg hover:bg-tp-accent/90 sm:col-span-2" onClick={shareNative}><Share2 /> Share from this device</Button> : null}
-        <Button type="button" variant="outline" className="min-h-11" onClick={saveImage}><Download /> Share image</Button>
-        <Button type="button" variant="outline" className="min-h-11" onClick={() => saveQr("png")}><Download /> QR code (PNG)</Button>
-        <Button type="button" variant="outline" className="min-h-11 sm:col-span-2" onClick={() => saveQr("svg")}><Download /> QR code (SVG, for print)</Button>
+        <Button type="button" variant="outline" className="min-h-11 sm:col-span-2" onClick={saveImage}><Download /> Share image (1080 × 1350)</Button>
+        {QR_PRESETS.map((p) => <Button key={p.id} type="button" variant="outline" className="min-h-11" onClick={() => savePng(p.px)} title={p.note}><Download /> QR code · {p.label} ({p.px} px)</Button>)}
+        <Button type="button" variant="outline" className="min-h-11 sm:col-span-2" onClick={saveSvg}><Download /> QR code · SVG (any size, for print)</Button>
       </div>
       <p role="status" className="min-h-5 text-sm font-medium text-tp-accent" aria-live="polite">{note ? <span className="inline-flex items-center gap-1.5"><Check aria-hidden="true" className="size-4" />{note}</span> : null}</p>
       <p className="text-xs text-tp-muted">Apps like Instagram, WhatsApp and Facebook choose how a link looks and may keep an old preview for a while. Taplo cannot control that.</p>

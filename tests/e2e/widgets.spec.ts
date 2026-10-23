@@ -137,7 +137,7 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
     await expect(page.getByTestId("enquiry-sent")).toContainText("not emailed or texted")
   })
 
-  test("share: link, QR that decodes to the link, preview-mode honesty, downloads", async ({ page }) => {
+  test("share: link, branded QR that decodes to the link, preview honesty, exported files decode", async ({ page }) => {
     await open(page, FRAME())
     await page.getByRole("button", { name: /Share Marlowe/ }).click()
     const panel = page.getByTestId("share-panel")
@@ -147,8 +147,17 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
     expect(url).toMatch(/\/demo\/p\/marlowe-and-finch$/)
     await panel.getByRole("button", { name: "Copy link" }).click()
     await expect(panel.getByRole("status")).toContainText(/copied|Press copy/)
-    // The QR code really encodes the link: rasterise the SVG and decode it.
-    const px = await panel.locator("[data-testid=share-card] svg").evaluate(async (svg) => {
+
+    const sharp = (await import("sharp")).default
+    // jsQR is a strict decoder that loses large images to its own thresholding, so a file is decoded at a camera-like working size (the dimensions are asserted on the file itself).
+    const decodeFile = async (path: string, max = 512) => {
+      const { data, info } = await sharp(path, { density: 144 }).resize(max, max, { fit: "inside", withoutEnlargement: true }).flatten({ background: "#ffffff" }).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+      return { text: jsQR(new Uint8ClampedArray(data), info.width, info.height)?.data, w: info.width, h: info.height }
+    }
+
+    // The on-screen code: rasterise it as shown and decode it. The business has a logo, so it sits in the middle.
+    await expect(panel.locator('[data-testid="qr-preview"] svg image')).toHaveCount(1)
+    const px = await panel.locator("[data-testid=qr-preview] svg").evaluate(async (svg) => {
       const s = new XMLSerializer().serializeToString(svg)
       const img = new Image(); img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(s)}`
       await img.decode()
@@ -156,22 +165,36 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
       const ctx = c.getContext("2d")!; ctx.imageSmoothingEnabled = false; ctx.drawImage(img, 0, 0, 520, 520)
       return Array.from(ctx.getImageData(0, 0, 520, 520).data)
     })
-    const decoded = jsQR(new Uint8ClampedArray(px), 520, 520)
-    expect(decoded?.data).toBe(url)
-    const [dl] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: "Share image" }).click()])
-    expect(dl.suggestedFilename()).toMatch(/marlowe-finch-share\.png$/)
-    // The downloaded share image is 1080x1350 and the QR code inside it scans to the same link.
-    const sharp = (await import("sharp")).default
-    const { data, info } = await sharp(await dl.path()).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
-    expect([info.width, info.height]).toEqual([1080, 1350])
-    expect(jsQR(new Uint8ClampedArray(data), info.width, info.height)?.data).toBe(url)
-    const [qrDl] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: "QR code (PNG)" }).click()])
-    expect(qrDl.suggestedFilename()).toMatch(/marlowe-finch-qr\.png$/)
-    const qr = await sharp(await qrDl.path()).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
-    expect(jsQR(new Uint8ClampedArray(qr.data), qr.info.width, qr.info.height)?.data).toBe(url)
-    const [svgDl] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: /QR code \(SVG/ }).click()])
-    expect(svgDl.suggestedFilename()).toMatch(/-qr\.svg$/)
-  })
+    expect(jsQR(new Uint8ClampedArray(px), 520, 520)?.data).toBe(url)
+
+    // Every export, in every style: file name, exact size and the destination it decodes to.
+    for (const look of ["Classic", "Soft", "Round"]) {
+      await panel.getByRole("button", { name: look, exact: true }).click()
+      const [dl] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: /QR code · Screen/ }).click()])
+      expect(dl.suggestedFilename(), look).toBe("marlowe-and-finch-preview-qr-1024px.png")
+      const f = await decodeFile(await dl.path())
+      expect((await sharp(await dl.path()).metadata()).width, look).toBe(1024)
+      expect(f.text, `${look} screen PNG`).toBe(url)
+    }
+    const [big] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: /QR code · Print/ }).click()])
+    expect(big.suggestedFilename()).toBe("marlowe-and-finch-preview-qr-3000px.png")
+    const bf = await decodeFile(await big.path())
+    expect(bf.text).toBe(url)
+    expect((await sharp(await big.path()).metadata()).width).toBe(3000)
+
+    const [svgDl] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: /QR code · SVG/ }).click()])
+    expect(svgDl.suggestedFilename()).toBe("marlowe-and-finch-preview-qr.svg")
+    const svgText = (await import("node:fs")).readFileSync(await svgDl.path(), "utf8")
+    expect(svgText).toContain('href="data:image/')          // the logo travels inside the file
+    expect(svgText).not.toMatch(/href="https?:/)
+    expect((await decodeFile(await svgDl.path())).text).toBe(url)
+
+    const [shareDl] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: /Share image/ }).click()])
+    expect(shareDl.suggestedFilename()).toBe("marlowe-and-finch-preview-share.png")
+    const sf = await decodeFile(await shareDl.path(), 700)
+    expect((await sharp(await shareDl.path()).metadata()).width).toBe(1080)
+    expect(sf.text).toBe(url)
+  });
 
   test("native share is offered only when the browser supports it, and cancelling is not an error", async ({ page }) => {
     await page.addInitScript(() => { Object.defineProperty(navigator, "share", { value: () => Promise.reject(Object.assign(new Error("cancelled"), { name: "AbortError" })), configurable: true }) })
