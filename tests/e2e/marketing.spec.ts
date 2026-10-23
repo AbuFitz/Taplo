@@ -9,15 +9,30 @@ const EXAMPLE_SLUGS = ["marlowe-and-finch", "hollin-physio", "pims-kitchen", "ad
 const noSideScroll = async (page: Page) => expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
 
 test.describe("navigation", () => {
-  test("Product and Inspiration open real menus; every entry is a real page", async ({ page }) => {
+  test("Product and Inspiration open real menus from the keyboard; every entry is a real page; Escape closes and returns focus", async ({ page }) => {
     await page.goto("/")
     const nav = page.getByRole("navigation", { name: "Primary" })
-    await nav.getByRole("button", { name: "Product" }).click()
-    for (const l of PRODUCT_LINKS) await expect(page.getByRole("link", { name: new RegExp(`^${l.label}`) }).first()).toBeVisible()
+    const product = nav.getByRole("button", { name: "Product" })
+    await product.focus()
+    await page.keyboard.press("Enter")
+    await expect(product).toHaveAttribute("aria-expanded", "true")
+    for (const l of PRODUCT_LINKS) await expect(nav.getByRole("link", { name: new RegExp(`^${l.label}`) })).toBeVisible()
     await page.keyboard.press("Escape")
-    await nav.getByRole("button", { name: "Inspiration" }).click()
-    for (const i of INDUSTRY_FILTERS) await expect(page.getByRole("link", { name: i.label }).first()).toBeVisible()
-    await expect(page.getByRole("link", { name: /Browse all examples/ })).toBeVisible()
+    await expect(product).toHaveAttribute("aria-expanded", "false")
+    await expect(product).toBeFocused()
+    await page.keyboard.press("Tab")
+    await page.keyboard.press("Enter")
+    for (const i of INDUSTRY_FILTERS) await expect(nav.getByRole("link", { name: i.label })).toBeVisible()
+    await expect(nav.getByRole("link", { name: /Browse all examples/ })).toBeVisible()
+  })
+
+  test("with a mouse, hovering opens a menu and moving away closes it", async ({ page }) => {
+    await page.goto("/")
+    const nav = page.getByRole("navigation", { name: "Primary" })
+    await nav.getByRole("button", { name: "Inspiration" }).hover()
+    await expect(nav.getByRole("link", { name: /Browse all examples/ })).toBeVisible()
+    await page.mouse.move(640, 700)
+    await expect(nav.getByRole("link", { name: /Browse all examples/ })).toBeHidden()
   })
 
   test("the header offers Pricing, Log in and the one primary action", async ({ page }) => {
@@ -108,7 +123,7 @@ test.describe("inspiration", () => {
     await expect(page.getByTestId("goal")).toBeVisible()
     await page.getByRole("button", { name: "Continue" }).click()          // → look and content
     await expect(page.getByTestId("look-picker").getByRole("radio", { name: /Journal/ })).toBeChecked()
-    await expect(page.locator("main")).not.toContainText("Hollin")
+    await expect(page.locator("section[aria-labelledby=step-title]")).not.toContainText("Hollin")
     await page.getByTestId("look-picker").getByText("Orchard").click()
     await page.reload()
     await expect(page.getByTestId("look-picker").getByRole("radio", { name: /Orchard/ })).toBeChecked()   // a refresh does not re-apply the example

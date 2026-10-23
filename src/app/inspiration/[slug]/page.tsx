@@ -30,7 +30,7 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
       <main>
         <section className="mx-auto w-full max-w-7xl px-5 pb-10 pt-12 sm:pt-16">
           <nav aria-label="Breadcrumb" className="text-sm text-foreground/55"><Link href="/inspiration" className="hover:text-foreground">Inspiration</Link> <span aria-hidden="true">/</span> <Link href={`/inspiration?industry=${e.industry}`} className="hover:text-foreground">{industry.label}</Link></nav>
-          <div className="mt-6 grid gap-8 lg:grid-cols-12 lg:items-end">
+          <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-12 lg:items-end">
             <div className="lg:col-span-8">
               <h1 className="font-display font-display-tight text-[clamp(2.5rem,6vw,5rem)] text-balance">{f.name}</h1>
               <p className="mt-5 max-w-2xl text-xl leading-relaxed text-foreground/70">{e.hook} {f.tagline}</p>
@@ -42,12 +42,12 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
           </div>
         </section>
 
-        <section className="mx-auto grid w-full max-w-7xl gap-10 px-5 pb-16 lg:grid-cols-12">
+        <section className="mx-auto grid grid-cols-[minmax(0,1fr)] w-full max-w-7xl gap-10 px-5 pb-16 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <h2 className="sr-only">On a desktop</h2>
             <Shot id={`ex-${e.slug}-desk` as never} alt={`${f.name}'s page on a desktop screen`} width={900} frame="browser" priority className="w-full" />
             <p className="mt-3 text-sm text-foreground/55">The same page on a laptop. On a phone it is always one column.</p>
-            <ul className="mt-10 grid gap-3 border-t border-foreground/10 pt-8 sm:grid-cols-3">{e.highlights.map((h) => <li key={h} className="text-[0.9375rem] font-medium leading-snug">{h}</li>)}</ul>
+            <ul className="mt-10 grid grid-cols-[minmax(0,1fr)] gap-3 border-t border-foreground/10 pt-8 sm:grid-cols-3">{e.highlights.map((h) => <li key={h} className="text-[0.9375rem] font-medium leading-snug">{h}</li>)}</ul>
           </div>
           <div className="lg:col-span-5">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-foreground/55">Try it. It is the real page.</h2>
@@ -56,10 +56,10 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
         </section>
 
         <section className="border-y border-foreground/10 bg-[oklch(0.955_0.012_85)] py-16">
-          <div className="mx-auto grid w-full max-w-7xl gap-12 px-5 md:grid-cols-3">
+          <div className="mx-auto grid grid-cols-[minmax(0,1fr)] w-full max-w-7xl gap-12 px-5 md:grid-cols-3">
             <div>
               <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-foreground/55">What is on the page</h2>
-              <ul className="mt-4 grid gap-2">{f.content.map((c) => <li key={c} className="text-lg font-medium">{c}</li>)}</ul>
+              <ul className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-2">{f.content.map((c) => <li key={c} className="text-lg font-medium">{c}</li>)}</ul>
             </div>
             <div>
               <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-foreground/55">What makes it different</h2>
@@ -75,14 +75,14 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
             </div>
             <div>
               <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-foreground/55">The thinking</h2>
-              <ul className="mt-4 grid gap-3 text-[0.9375rem] leading-relaxed text-foreground/80">{e.notes.map((n) => <li key={n}>{n}</li>)}<li>{BOOKING_WORDS[f.bookingMode]}</li></ul>
+              <ul className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-3 text-[0.9375rem] leading-relaxed text-foreground/80">{e.notes.map((n) => <li key={n}>{n}</li>)}<li>{BOOKING_WORDS[f.bookingMode]}</li></ul>
             </div>
           </div>
         </section>
 
         <section className="mx-auto w-full max-w-7xl px-5 py-16">
           <div className="flex flex-wrap items-end justify-between gap-4"><h2 className="font-display font-display-tight text-[clamp(1.75rem,3.5vw,2.75rem)]">More to look at</h2><ArrowLink href="/inspiration">All examples</ArrowLink></div>
-          <ul className="mt-8 grid gap-6 sm:grid-cols-3">
+          <ul className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-6 sm:grid-cols-3">
             {others.map((o) => { const g = describe(o); return (
               <li key={o.slug}><Link href={`/inspiration/${o.slug}`} className="group block rounded-2xl border border-foreground/10 p-5 outline-none transition-colors hover:border-foreground/30 focus-visible:ring-3 focus-visible:ring-ring/60"><p className="text-sm text-foreground/55">{g.industryLabel}</p><p className="mt-1 text-xl font-semibold tracking-[-0.02em]">{g.name}</p><p className="mt-2 text-[0.9375rem] leading-relaxed text-foreground/65">{o.hook}</p></Link></li>
             ) })}

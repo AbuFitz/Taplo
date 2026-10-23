@@ -21,12 +21,12 @@ export default function HowItWorks() {
       <main className="mx-auto w-full max-w-5xl px-5 py-20 sm:py-28">
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-signal-ink">How it works</p>
         <h1 className="font-display font-display-tight mt-4 text-[clamp(2.75rem,8vw,6rem)] text-balance">Four steps to a page you can share.</h1>
-        <ol className="mt-14 grid gap-px overflow-hidden rounded-3xl bg-foreground/10 sm:grid-cols-2">
+        <ol className="mt-14 grid grid-cols-[minmax(0,1fr)] gap-px overflow-hidden rounded-3xl bg-foreground/10 sm:grid-cols-2">
           {STEPS.map((s) => <li key={s.n} className="bg-background p-8"><span className="font-display text-5xl tabular-nums text-foreground/20">{s.n}</span><h2 className="mt-5 text-xl font-semibold tracking-[-0.025em]">{s.title}</h2><p className="mt-2 leading-relaxed text-foreground/70">{s.body}</p></li>)}
         </ol>
         <h2 className="font-display font-display-tight mt-24 text-[clamp(2rem,5vw,3.5rem)]">Common questions</h2>
         <dl className="mt-8 divide-y divide-foreground/10 border-y border-foreground/10">
-          {FAQ.map((f) => <div key={f.q} className="grid gap-2 py-6 md:grid-cols-[2fr_3fr] md:gap-10"><dt className="font-semibold tracking-[-0.02em]">{f.q}</dt><dd className="leading-relaxed text-foreground/70">{f.a}</dd></div>)}
+          {FAQ.map((f) => <div key={f.q} className="grid grid-cols-[minmax(0,1fr)] gap-2 py-6 md:grid-cols-[2fr_3fr] md:gap-10"><dt className="font-semibold tracking-[-0.02em]">{f.q}</dt><dd className="leading-relaxed text-foreground/70">{f.a}</dd></div>)}
         </dl>
         <div className="mt-12"><Link href={a.href} className="inline-flex min-h-13 items-center rounded-full bg-foreground px-7 text-base font-semibold text-background hover:opacity-90">{a.label}</Link></div>
       </main>

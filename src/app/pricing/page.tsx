@@ -54,7 +54,7 @@ export default function PricingPage() {
         <h1 className="font-display font-display-tight mt-4 max-w-4xl text-[clamp(2.5rem,7vw,5.5rem)] text-balance">Start free. Pay when you need more.</h1>
         <p className="mt-6 max-w-2xl text-xl leading-relaxed text-foreground/70">One price a month for each plan, no commission on your bookings and no contract. Pick a plan and it carries into setup.</p>
 
-        <ul className="mt-12 grid gap-px overflow-hidden rounded-3xl bg-foreground/10 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-12 grid grid-cols-[minmax(0,1fr)] gap-px overflow-hidden rounded-3xl bg-foreground/10 sm:grid-cols-2 lg:grid-cols-4">
           {PLAN_IDS.map((id) => (
             <li key={id} className="flex flex-col bg-background p-7">
               <h2 className="text-sm font-semibold">{PLANS[id].name}</h2>

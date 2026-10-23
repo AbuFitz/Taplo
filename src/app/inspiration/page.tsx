@@ -38,7 +38,7 @@ export default async function InspirationPage({ searchParams }: { searchParams: 
                 const f = describe(e)
                 const flip = n % 2 === 1
                 return (
-                  <li key={e.slug} className="grid items-center gap-8 py-12 md:grid-cols-12 md:gap-12">
+                  <li key={e.slug} className="grid grid-cols-[minmax(0,1fr)] items-center gap-8 py-12 md:grid-cols-12 md:gap-12">
                     <Link href={`/inspiration/${e.slug}`} aria-label={`${f.name}: open the example`} className={cn("group md:col-span-7", flip && "md:order-last")}>
                       <Shot id={`ex-${e.slug}-desk` as never} alt={`${f.name}'s page on a desktop screen`} width={760} frame="browser" className="w-full transition-transform duration-300 group-hover:-translate-y-1 motion-reduce:transition-none" />
                     </Link>
@@ -80,12 +80,12 @@ function Lead({ slug }: { slug: string }) {
   return (
     <section className="mx-auto w-full max-w-7xl px-5 py-10">
       <div className="relative overflow-hidden rounded-[2rem] bg-[oklch(0.955_0.012_85)] px-5 pb-0 pt-10 sm:px-12 sm:pt-14">
-        <div className="grid items-end gap-10 lg:grid-cols-12">
+        <div className="grid grid-cols-[minmax(0,1fr)] items-end gap-10 lg:grid-cols-12">
           <div className="pb-10 lg:col-span-5 lg:pb-16">
             <p className="text-sm font-semibold text-foreground/55">{f.industryLabel}</p>
             <h2 className="font-display font-display-tight mt-2 text-[clamp(2rem,4.4vw,3.5rem)]">{f.name}</h2>
             <p className="mt-4 text-lg leading-relaxed text-foreground/70">{e.hook}</p>
-            <ul className="mt-6 grid gap-2 text-[0.9375rem] text-foreground/75">{e.highlights.map((h) => <li key={h} className="flex gap-2"><span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-signal" />{h}</li>)}</ul>
+            <ul className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-2 text-[0.9375rem] text-foreground/75">{e.highlights.map((h) => <li key={h} className="flex gap-2"><span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-signal" />{h}</li>)}</ul>
             <div className="mt-8"><ArrowLink href={`/inspiration/${e.slug}`}>See {f.name}</ArrowLink></div>
           </div>
           <Link href={`/inspiration/${e.slug}`} aria-label={`${f.name}: open the example`} className="relative lg:col-span-7">

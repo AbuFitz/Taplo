@@ -3,7 +3,7 @@
 import { TaploLogo } from "@/components/taplo/brand"
 import * as React from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
@@ -82,9 +82,10 @@ export function Onboarding() {
   const back = () => go(ONBOARDING_STEPS[Math.max(stepIndex - 1, 0)]!)
 
   // A plan chosen on the pricing page carries into setup (and stays through every step) without taking payment.
-  // Nothing is rendered before `ready`, so reading the address once on the client cannot cause a hydration mismatch.
+  // Read from the router, not window.location: on a client-side navigation (pricing → setup) the address has not changed yet when this first renders.
+  const params = useSearchParams()
   const [intent] = React.useState<PlanId | null>(() => {
-    const p = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("plan")
+    const p = params.get("plan")
     return p && (PLAN_IDS as readonly string[]).includes(p) ? (p as PlanId) : null
   })
   React.useEffect(() => {
@@ -93,7 +94,7 @@ export function Onboarding() {
 
   // "Start from this" on an inspiration page: take its kind of business, look and content types. Never its sample content.
   const [from] = React.useState(() => {
-    const slug = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("from")
+    const slug = params.get("from")
     return slug ? exampleStart(slug) : null
   })
   const fromName = from?.name ?? null

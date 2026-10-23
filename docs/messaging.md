@@ -62,3 +62,13 @@ Never write that a booking "is emailed", that a customer "pays", or that a page 
 
 ## Plans
 Plans and prices come from `src/features/subscriptions/plans.ts` and entitlements from `entitlements.ts`. Marketing copy may only restate those. Where a plan limits looks or features, the pricing page says so in the same words the editor uses.
+
+## Decision: "your Taplo" (evaluated this phase)
+
+- **Kept for the action only.** "Make your Taplo" is the primary action everywhere (header, hero, footer, pricing, onboarding title). It is short, ownable and says what happens.
+- **Body copy says "page" or "Taplo page".** "Your Taplo" as a noun in running text read as jargon in testing the copy aloud ("share your Taplo" sounds like sharing the product), so sentences use "your page", "a Taplo page" or the business name.
+- **"Business profile"** appears only where someone needs the thing explained from nothing (the product index), never as the name.
+- Everything that links to setup uses the same label; `primaryAction()` in `src/features/marketing/Site.tsx` is the single source, and the e2e suite checks the label and destination.
+
+## Rejected phrases now removed from the site
+"Create your page", "Everything your business does. One page.", "See it change", "Try the looks" as a primary action (it remains a secondary link to the lab), "Features" and "Industries" as navigation labels (replaced by Product and Inspiration, each with real destinations).

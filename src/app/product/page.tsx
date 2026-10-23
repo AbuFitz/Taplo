@@ -17,16 +17,16 @@ export default function ProductIndex() {
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-signal-ink">Product</p>
         <h1 className="font-display font-display-tight mt-4 max-w-4xl text-[clamp(2.5rem,6.5vw,5.25rem)] text-balance">What goes on a Taplo page.</h1>
         <p className="mt-6 max-w-2xl text-xl leading-relaxed text-foreground/70">Nine things, each shown working. Every page says what you can use today and what still needs a connection.</p>
-        <div className="mt-16 grid gap-16">
+        <div className="mt-16 grid grid-cols-[minmax(0,1fr)] gap-16">
           {PRODUCT_GROUPS.map((g) => (
-            <section key={g.title} aria-labelledby={`g-${g.title}`} className="grid gap-6 border-t border-foreground/10 pt-8 md:grid-cols-[14rem_1fr]">
+            <section key={g.title} aria-labelledby={`g-${g.title}`} className="grid grid-cols-[minmax(0,1fr)] gap-6 border-t border-foreground/10 pt-8 md:grid-cols-[14rem_1fr]">
               <h2 id={`g-${g.title}`} className="text-sm font-semibold uppercase tracking-[0.14em] text-foreground/55">{g.title}</h2>
-              <ul className="grid gap-1">
+              <ul className="grid grid-cols-[minmax(0,1fr)] gap-1">
                 {g.links.map((l) => {
                   const p = pageBySlug(l.href.split("/").pop()!)!
                   return (
                     <li key={l.href}>
-                      <Link href={l.href} className="group grid items-baseline gap-x-6 gap-y-1 rounded-2xl px-4 py-5 outline-none transition-colors hover:bg-foreground/[0.04] focus-visible:ring-3 focus-visible:ring-ring/60 sm:grid-cols-[1fr_auto]">
+                      <Link href={l.href} className="group grid grid-cols-[minmax(0,1fr)] items-baseline gap-x-6 gap-y-1 rounded-2xl px-4 py-5 outline-none transition-colors hover:bg-foreground/[0.04] focus-visible:ring-3 focus-visible:ring-ring/60 sm:grid-cols-[1fr_auto]">
                         <span className="font-display font-display-tight text-[clamp(1.5rem,3vw,2.25rem)]">{l.label}</span>
                         <ArrowUpRight aria-hidden="true" className="hidden size-6 text-foreground/30 transition-colors group-hover:text-foreground sm:block" />
                         <span className="max-w-2xl text-foreground/65">{p.lead}</span>
