@@ -37,11 +37,10 @@ export default function Home() {
               <Link href={a.href} className="inline-flex min-h-13 items-center rounded-full bg-foreground px-7 text-base font-semibold text-background outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-ring/60">{a.label}</Link>
               <Link href="/inspiration" className="inline-flex min-h-13 items-center gap-2 rounded-full border border-foreground/20 px-6 text-base font-semibold outline-none hover:border-foreground/50 focus-visible:ring-3 focus-visible:ring-ring/60">See real examples</Link>
             </div>
-            <p className="mt-4 text-sm text-foreground/55">{a.demo ? "Preview: no sign-in, and what you make stays in this browser." : "Sign-up opens when accounts are connected."}</p>
           </div>
           <div className="relative lg:col-span-7" aria-label="A physiotherapy clinic's page on a laptop, and a barber's page on a phone">
-            <Shot id="ex-hollin-physio-desk" alt="A physiotherapy clinic's Taplo page on a laptop screen" width={700} frame="browser" priority className="w-[88%] max-w-full" />
-            <Shot id="ex-marlowe-and-finch-phone" alt="A barber's Taplo page on a phone" width={250} priority cropTo={470} className="absolute -bottom-6 right-0 hidden sm:block" />
+            <Shot id="ex-hollin-physio-desk" alt="A physiotherapy clinic's Taplo page on a laptop screen" width={700} frame="browser" priority className="hidden w-[78%] max-w-full sm:block" />
+            <Shot id="ex-marlowe-and-finch-phone" alt="A barber's Taplo page on a phone" width={250} priority cropTo={470} className="mx-auto sm:absolute sm:-bottom-6 sm:right-0 sm:mx-0" />
           </div>
         </section>
 

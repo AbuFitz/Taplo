@@ -29,7 +29,7 @@ export function Film({ className }: { className?: string }) {
           <button type="button" onClick={() => setStarted(true)} className="group absolute inset-0 grid place-items-center outline-none focus-visible:ring-3 focus-visible:ring-ring/60" aria-label="Play the 15-second film">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/marketing/film/poster.webp" alt="" width={1920} height={1080} className="absolute inset-0 size-full object-cover" />
-            <span className="relative grid size-20 place-items-center rounded-full bg-white/95 text-black shadow-xl transition-transform group-hover:scale-105 motion-reduce:transition-none"><Play aria-hidden="true" className="size-8 translate-x-0.5 fill-current" /></span>
+            <span className="absolute bottom-4 left-4 inline-flex items-center gap-2.5 rounded-full bg-white/95 py-2 pl-2 pr-4 text-sm font-semibold text-black shadow-xl transition-transform group-hover:scale-[1.03] motion-reduce:transition-none sm:bottom-6 sm:left-6"><span className="grid size-9 place-items-center rounded-full bg-black text-white"><Play aria-hidden="true" className="size-4 translate-x-px fill-current" /></span>Play, 15 seconds</span>
           </button>
         )}
       </div>
