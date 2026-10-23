@@ -27,3 +27,29 @@ Legend: ✅ implemented and verified as stated · 🟡 partial (what is missing 
 | Payment | payment | ✅ (labelled simulated) | ⬜ | none | opens a labelled mock-up | none | button/card | 🚧 Stripe not configured |
 
 Backend reality at baseline: Supabase Postgres foundation only (businesses, locations, drafts, versions, subscriptions, audit). No staff, services, availability, holds or bookings tables. Postgres 16 is installed locally, so SQL can be tested for real.
+
+## Final status (end of this phase)
+
+Verified by the Playwright specs named in the last column (Chromium, production build) and unit/integration tests. "Preview" = works against the browser demo adapter; 🚧 rows name exactly what is not connected.
+
+| Family | Type(s) | Add-content UI | Examples / marketing | Primary action | Expanded view | Compact variants | Tests | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Identity / header | page header | n/a | all 7 examples | main action | n/a | five header layouts | widgets, appearance | ✅ |
+| Contact actions | call, whatsapp, email, directions | ✅ | ✅ | tel / WhatsApp / mailto / map | n/a | button / card / compact | widgets | ✅ |
+| Links and social | link, social, document | ✅ | ✅ | opens URL | n/a | button / card; icons / list | widgets | ✅ |
+| Text, announcements, promotion | text, announcement, offers, image, video | ✅ | 🟡 offers not shown in an example | optional link | n/a | card | page.test | 🟡 offers have no detail view (named, not hidden) |
+| Services and prices | priceMenu, serviceList, featuredService | ✅ | ✅ | book / request / enquire per mode | ✅ service detail | menu, list, cards | widgets | ✅ |
+| Booking | booking | ✅ | ✅ | full journey | n/a | button / card | booking, tests/integration | ✅ in preview · 🚧 live database, email/text, payment |
+| Products / affiliate | products | ✅ | ✅ | enquire / own shop (disclosed affiliate) | ✅ | grid, list, swipe | widgets | ✅ |
+| Vehicle stock | products (kind vehicle) | ✅ | ✅ | enquire / viewing | ✅ | list, swipe | widgets | ✅ · 🚧 live stock feeds |
+| Gallery and media | gallery, image, video | ✅ | ✅ (barber) | opens lightbox | ✅ lightbox | grid, swipe, before/after | widgets | ✅ |
+| Team | team | ✅ | ✅ (4 examples) | book with that person | ✅ profile | list, swipe, grid, avatars | widgets, booking | ✅ · choosing a person needs the Business plan |
+| Reviews | reviews, leaveReview | ✅ | ✅ | review link | n/a | cards, quote, compact, swipe | widgets | ✅ provenance always shown |
+| Opening hours | hours | ✅ | ✅ | none | n/a | list, compact (today, open now, in the business's zone) | widgets | ✅ |
+| Location / service area | location, serviceArea | ✅ | ✅ | directions | n/a | card | widgets | ✅ |
+| FAQs | faq | ✅ | ✅ | disclosure | inline | list | page.test | ✅ |
+| Contact / enquiry form | enquiry | ✅ | ✅ | send message (no time reserved) | confirmation | button, inline | widgets | ✅ in preview · 🚧 email delivery |
+| Sharing and QR | share | ✅ | ✅ | share sheet | ✅ | button, card | widgets (QR decoded) | ✅ preview link · 🚧 public link needs publishing |
+| Payment | payment | ✅ (hidden on public pages) | not advertised | none | none | button / card | widgets (never public while unconnected) | 🚧 no payment provider |
+
+Overlays: service, product, vehicle, team profile, booking, enquiry, lightbox, share, add-content chooser, record editors and destructive confirmation all use `src/components/taplo/overlay.tsx` (dialog, detail and mobile sheet kinds). Owner content management: chooser, create-in-place, Organise mode (touch drag, auto-scroll, keyboard, move menu, cancel, undo) in `src/features/page/editor/`, tested by `tests/e2e/content.spec.ts`.

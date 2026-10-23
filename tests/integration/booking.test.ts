@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- rows come straight from Postgres jsonb; the assertions below check the shape */
 import { afterAll, beforeAll, describe, expect, it } from "vitest"
 import type { Pool } from "pg"
 import { TEST_DB_URL, as, createCleanDatabase } from "./db"
@@ -34,7 +35,7 @@ describe.skipIf(!TEST_DB_URL)("booking (real Postgres)", () => {
   const setNow = async (iso: string) => { await pool.query("delete from public.taplo_test_clock"); await pool.query("insert into public.taplo_test_clock (t) values ($1)", [iso]) }
   const saveConfig = (c: SchedulingConfig) => as(pool, { sub: U1 }, (q) => q("select public.save_scheduling_settings($1, $2::jsonb)", [biz, JSON.stringify(c)]))
   const book = (o: { service?: string; staff?: string | null; start: number; mode?: string; key?: string; customer?: object }) =>
-    as(pool, "anon", async (q) => (await q("select public.create_booking($1,$2,$3,$4,$5::jsonb,$6,$7) as r", [biz, o.service ?? "s1", o.staff ?? null, new Date(o.start).toISOString(), JSON.stringify(o.customer ?? { name: "Sam", email: "sam@example.com" }), o.mode ?? "instant", o.key ?? key()])).rows[0].r as any)
+    as(pool, "anon", async (q) => (await q("select public.create_booking($1,$2,$3,$4,$5::jsonb,$6,$7) as r", [biz, o.service ?? "s1", o.staff ?? null, new Date(o.start).toISOString(), JSON.stringify(o.customer ?? { name: "Sam", email: "sam@example.com" }), o.mode ?? "instant", o.key ?? key()])).rows[0].r as Record<string, any>)
   const reset = async () => { await pool.query("delete from public.bookings"); await pool.query("delete from public.booking_holds") }
 
   beforeAll(async () => {
@@ -159,7 +160,7 @@ describe.skipIf(!TEST_DB_URL)("booking (real Postgres)", () => {
     it("a hold stops other customers until it expires, and is consumed by its own booking", async () => {
       await reset()
       const holder = `hold-${key()}`
-      const h = await as(pool, "anon", async (q) => (await q("select public.hold_slot($1,'s1','a',$2,$3) as r", [biz, new Date(t()).toISOString(), holder])).rows[0].r as any)
+      const h = await as(pool, "anon", async (q) => (await q("select public.hold_slot($1,'s1','a',$2,$3) as r", [biz, new Date(t()).toISOString(), holder])).rows[0].r as Record<string, any>)
       expect(h.ok).toBe(true)
       expect((await book({ start: t(), staff: "a" })).ok).toBe(false)
       expect((await book({ start: t(), staff: "a", key: holder })).ok).toBe(true)
@@ -203,7 +204,7 @@ describe.skipIf(!TEST_DB_URL)("booking (real Postgres)", () => {
   describe("enquiries and access", () => {
     it("an enquiry reserves nothing, is idempotent and needs a way to reply", async () => {
       const k = key()
-      const call = (e?: string, p?: string, key_ = k) => as(pool, "anon", async (q) => (await q("select public.submit_enquiry($1,'Ana',$2,$3,'Do you do kids cuts?','s1',$4) as r", [biz, e ?? null, p ?? null, key_])).rows[0].r as any)
+      const call = (e?: string, p?: string, key_ = k) => as(pool, "anon", async (q) => (await q("select public.submit_enquiry($1,'Ana',$2,$3,'Do you do kids cuts?','s1',$4) as r", [biz, e ?? null, p ?? null, key_])).rows[0].r as Record<string, any>)
       expect((await call("ana@example.com")).ok).toBe(true)
       expect((await call("ana@example.com")).replay).toBe(true)
       expect((await call(undefined, undefined, key())).ok).toBe(false)
