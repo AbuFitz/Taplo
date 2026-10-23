@@ -88,6 +88,8 @@ async function go(page: Page, c: Control) {
 }
 
 test.describe("design controls change the rendered page, undo, and persist", () => {
+  // Animated wallpapers are heavy in a software-rendered browser; reduced motion freezes them without changing what is being tested.
+  test.use({ reducedMotion: "reduce" })
   for (const c of C) {
     test(c.id, async ({ page }) => {
       await openEditorWithSample(page, "Barber")
@@ -102,6 +104,7 @@ test.describe("design controls change the rendered page, undo, and persist", () 
       // Undo returns the page to how it was, and redo brings the change back.
       await page.getByTestId("undo").click()
       await expect.poll(() => c.probe(page), { message: `${c.id}: undo` }).toBe(before)
+      await expect(page.getByTestId("redo")).toBeEnabled()
       await page.getByTestId("redo").click()
       await expect.poll(() => c.probe(page), { message: `${c.id}: redo` }).toBe(after)
 

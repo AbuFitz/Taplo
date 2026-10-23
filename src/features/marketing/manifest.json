@@ -5,7 +5,7 @@
     "height": 1200,
     "cssWidth": 1280,
     "cssHeight": 800,
-    "bytes": 119120,
+    "bytes": 119006,
     "source": "/appearance/frame?scenario=dealer&look=showroom"
   },
   "hero-barber": {
@@ -23,7 +23,7 @@
     "height": 1400,
     "cssWidth": 390,
     "cssHeight": 700,
-    "bytes": 77636,
+    "bytes": 83320,
     "source": "/appearance/frame?scenario=dealer&look=showroom"
   },
   "hero-trades": {
@@ -95,7 +95,7 @@
     "height": 1738,
     "cssWidth": 358,
     "cssHeight": 869,
-    "bytes": 107868,
+    "bytes": 127934,
     "source": "/appearance/frame?scenario=dealer&look=showroom"
   },
   "cap-fixed-prices": {
@@ -239,7 +239,7 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 85230,
+    "bytes": 90924,
     "source": "/appearance/frame?scenario=dealer"
   },
   "ex-aldous-motor-co-desk": {
@@ -248,7 +248,7 @@
     "height": 1200,
     "cssWidth": 1280,
     "cssHeight": 800,
-    "bytes": 119120,
+    "bytes": 119006,
     "source": "/appearance/frame?scenario=dealer"
   },
   "bk-1-service": {
@@ -266,7 +266,7 @@
     "height": 1620,
     "cssWidth": 704,
     "cssHeight": 810,
-    "bytes": 86202,
+    "bytes": 83976,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-3-details": {
@@ -275,7 +275,7 @@
     "height": 1316,
     "cssWidth": 704,
     "cssHeight": 658,
-    "bytes": 36670,
+    "bytes": 37226,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-4-review": {
@@ -284,7 +284,7 @@
     "height": 1116,
     "cssWidth": 704,
     "cssHeight": 558,
-    "bytes": 52762,
+    "bytes": 52704,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-5-done": {
@@ -293,7 +293,7 @@
     "height": 1172,
     "cssWidth": 704,
     "cssHeight": 586,
-    "bytes": 48696,
+    "bytes": 48652,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-request-review": {
@@ -302,7 +302,7 @@
     "height": 1156,
     "cssWidth": 704,
     "cssHeight": 578,
-    "bytes": 62522,
+    "bytes": 62588,
     "source": "/appearance/frame?scenario=physio"
   },
   "svc-detail": {
@@ -410,7 +410,7 @@
     "height": 1508,
     "cssWidth": 704,
     "cssHeight": 754,
-    "bytes": 122706,
+    "bytes": 122758,
     "source": "/appearance/frame?scenario=dealer"
   },
   "gal-lightbox": {

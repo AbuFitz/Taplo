@@ -18,7 +18,7 @@ export function Section({ title, hint, action, children }: { title: string; hint
       <div className="flex items-baseline justify-between gap-3">
         <div>
           <h3 className="text-[0.8125rem] font-semibold tracking-[-0.005em]">{title}</h3>
-          {hint ? <p className="mt-0.5 text-xs text-neutral-500">{hint}</p> : null}
+          {hint ? <p className="mt-0.5 text-xs text-neutral-600">{hint}</p> : null}
         </div>
         {action}
       </div>
@@ -42,8 +42,8 @@ export function Disclosure({ title, hint, count, onReset, defaultOpen, id, child
         </span>
         <ChevronRight aria-hidden="true" className="size-4 text-neutral-400 transition-transform duration-200 group-open/disc:rotate-90" />
       </summary>
-      <div className="grid min-w-0 gap-5 px-4 pb-5 pt-1">
-        {hint ? <p className="-mt-1 text-xs text-neutral-500">{hint}</p> : null}
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5 px-4 pb-5 pt-1">
+        {hint ? <p className="-mt-1 text-xs text-neutral-600">{hint}</p> : null}
         {children}
         {onReset && count ? (
           <button type="button" onClick={onReset} className="inline-flex min-h-9 items-center gap-1.5 justify-self-start text-xs font-medium text-neutral-600 underline-offset-4 hover:text-neutral-900 hover:underline">
@@ -62,13 +62,13 @@ export function Field({ label, dirty, onReset, hint, children }: { label: string
       <div className="flex min-h-5 items-center justify-between gap-2">
         <span className="text-xs font-medium text-neutral-700">{label}{dirty ? <span className="ml-1.5 text-[0.625rem] font-semibold uppercase tracking-wider text-[var(--signal)]">Changed</span> : null}</span>
         {dirty && onReset ? (
-          <button type="button" onClick={onReset} className="inline-flex min-h-6 items-center gap-1 text-[0.6875rem] font-medium text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline">
+          <button type="button" onClick={onReset} className="inline-flex min-h-6 items-center gap-1 text-[0.6875rem] font-medium text-neutral-600 underline-offset-4 hover:text-neutral-900 hover:underline">
             <RotateCcw aria-hidden="true" className="size-3" />Reset
           </button>
         ) : null}
       </div>
       {children}
-      {hint ? <p className="text-xs text-neutral-500">{hint}</p> : null}
+      {hint ? <p className="text-xs text-neutral-600">{hint}</p> : null}
     </div>
   )
 }
@@ -127,7 +127,7 @@ export function Toggle({ label, checked, onChange, hint }: { label: string; chec
   const id = React.useId()
   return (
     <div className="flex min-h-11 items-center justify-between gap-3">
-      <label htmlFor={id} className="min-w-0 text-xs font-medium text-neutral-700">{label}{hint ? <span className="block font-normal text-neutral-500">{hint}</span> : null}</label>
+      <label htmlFor={id} className="min-w-0 text-xs font-medium text-neutral-700">{label}{hint ? <span className="block font-normal text-neutral-600">{hint}</span> : null}</label>
       <button id={id} type="button" role="switch" aria-checked={checked} onClick={() => onChange(!checked)}
         className={cn("relative h-7 w-12 shrink-0 rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]/60", checked ? "bg-neutral-900" : "bg-black/[0.16]")}>
         <span className={cn("absolute left-0.5 top-0.5 size-6 rounded-full bg-white shadow-[0_1px_3px_rgb(0_0_0/0.3)] transition-transform duration-200", checked && "translate-x-5")} />
@@ -141,7 +141,7 @@ export function Slider({ label, value, min, max, step = 1, unit = "", onChange }
   const id = React.useId()
   return (
     <div className="grid gap-1">
-      <div className="flex items-center justify-between text-xs"><label htmlFor={id} className="font-medium text-neutral-700">{label}</label><span className="tabular-nums text-neutral-500">{value}{unit}</span></div>
+      <div className="flex items-center justify-between text-xs"><label htmlFor={id} className="font-medium text-neutral-700">{label}</label><span className="tabular-nums text-neutral-600">{value}{unit}</span></div>
       <input id={id} type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} className="h-8 w-full accent-neutral-900" />
     </div>
   )

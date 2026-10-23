@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { THEMES } from "../../src/features/page/themes/catalogue";
-import { openEditorWithSample, selectPart } from "./helpers";
+import { openEditorWithSample, selectPart, openStructure } from "./helpers";
 
 /** Serious and critical axe findings fail the build; each is printed with the offending selector. */
 async function scan(page: Page, context: string, include?: string) {
@@ -51,6 +51,7 @@ test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", ()
     await scan(page, "editor/page-style", '[data-testid="my-page"]');
     await selectPart(page, "header");
     await scan(page, "editor/header", '[data-testid="my-page"]');
+    await openStructure(page);
     await page.getByTestId("select-widget").first().click();
     await scan(page, "editor/widget", '[data-testid="my-page"]');
     await selectPart(page, "details");

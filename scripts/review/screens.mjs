@@ -17,11 +17,10 @@ const shot = async (name, vp, run, full = false) => {
 }
 const go = async (p, u) => { await p.goto(base + u, { waitUntil: "load" }); await p.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {}); await p.evaluate(() => document.fonts.ready) }
 const sample = async (p, label = "Barber") => {
-  await go(p, "/onboarding"); await p.evaluate(() => localStorage.clear()); await go(p, "/onboarding")
-  await p.getByLabel(/Business name/).fill("Marlowe & Finch").catch(() => {})
-  for (let i = 0; i < 2; i++) await p.getByRole("button", { name: "Continue" }).click().catch(() => {})
-  await p.getByRole("button", { name: label, exact: true }).last().click().catch(() => {})
-  await p.waitForURL(/dashboard/, { timeout: 15000 }).catch(() => {})
+  // The dashboard offers each sample business directly; each lands in the editor with that business loaded.
+  await go(p, "/dashboard"); await p.evaluate(() => localStorage.clear()); await go(p, "/dashboard")
+  await p.getByRole("button", { name: new RegExp(`^${label}`) }).first().click()
+  await p.waitForURL(/dashboard\/page/, { timeout: 15000 })
   await p.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {})
 }
 await shot("home-1280", [1280, 800], (p) => go(p, "/"))

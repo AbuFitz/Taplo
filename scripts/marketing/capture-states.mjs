@@ -31,7 +31,7 @@ const jobs = [
   { id: "team-swipe", url: frame("barber"), vp: [390, 900], shot: '[data-widget="team"]' },
   { id: "team-grid", url: frame("physio"), vp: [390, 900], shot: '[data-widget="team"]' },
   { id: "team-list", url: frame("trades"), vp: [390, 900], shot: '[data-widget="team"]' },
-  { id: "team-profile", url: frame("barber"), vp: [1000, 900], run: async (p) => { await p.getByTestId("team-card").first().getByRole("button", { name: /View .* profile/ }).click() }, shot: '[data-testid="team-profile"]' },
+  { id: "team-profile", url: frame("barber"), vp: [1000, 900], run: async (p) => { await p.getByTestId("team-card").first().getByRole("button", { name: /View profile/ }).click() }, shot: '[data-testid="team-profile"]' },
   // ---- Products, vehicles
   { id: "prod-swipe", url: frame("barber"), vp: [390, 900], shot: '[data-widget="products"]' },
   { id: "prod-detail-affiliate", url: frame("barber"), vp: [1000, 900], run: async (p) => { await p.locator(".tp-product").nth(1).getByRole("button", { name: /View details/ }).first().click() }, shot: DIALOG },

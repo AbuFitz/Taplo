@@ -13,7 +13,8 @@ const choice = async (page: Page, group: string, label: string | RegExp) => {
 };
 
 test.describe("Appearance lab: one engine, four configurations", () => {
-  test.use({ viewport: { width: 1600, height: 1000 } });
+  // Reduced motion freezes animated wallpapers, which are heavy in a software-rendered browser.
+  test.use({ viewport: { width: 1600, height: 1000 }, reducedMotion: "reduce" });
 
   test("looks are configurations of the same engine; content never changes", async ({ page }) => {
     await page.goto("/appearance");
