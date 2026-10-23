@@ -132,6 +132,16 @@ export const productSchema = z.object({
   /** "enquire": customer contacts the business. "link": opens the owner's own shop/payment link. No checkout is built. */
   mode: z.enum(["enquire", "link"]).default("enquire"),
   linkUrl: safeUrl.optional(),
+  /** What it is. Only changes wording and the suggested facts; every kind uses the same record. */
+  kind: z.enum(["product", "vehicle"]).default("product"),
+  /** Stock status. A sold or reserved item stays on the page (and in records) with its status shown. */
+  availability: z.enum(["available", "reserved", "sold", "unavailable"]).default("available"),
+  /** More pictures, shown in the item's detail view after `image`. */
+  images: z.array(imageSchema).max(8).default([]),
+  /** The link is an affiliate or referral link: shown as such so visitors are told. */
+  affiliate: z.boolean().default(false),
+  /** Optional group heading, e.g. "Hatchbacks" or "Oils". */
+  collection: optText(40),
   archived: z.boolean().default(false),
 });
 export type ProductContent = z.infer<typeof productSchema>;

@@ -77,8 +77,8 @@ export const BARBER: BusinessContentInput = {
   booking: { mode: "request", onlineBookingReady: false },
 }
 
-const car = (id: string, name: string, priceMinor: number, image: string, w: number, h: number, focal: { x: number; y: number }, alt: string, facts: [string, string][], badge?: string) => ({
-  id, name, priceMinor, currency: "GBP", badge, facts: facts.map(([label, value]) => ({ label, value })), image: photo(image, alt, w, h, focal), mode: "enquire" as const, archived: false,
+const car = (id: string, name: string, priceMinor: number, image: string, w: number, h: number, focal: { x: number; y: number }, alt: string, facts: [string, string][], badge?: string, availability: "available" | "reserved" | "sold" = "available") => ({
+  id, name, priceMinor, currency: "GBP", badge, facts: facts.map(([label, value]) => ({ label, value })), image: photo(image, alt, w, h, focal), mode: "enquire" as const, archived: false, kind: "vehicle" as const, availability, images: [], affiliate: false,
 })
 
 export const DEALER: BusinessContentInput = {
@@ -115,8 +115,8 @@ export const DEALER: BusinessContentInput = {
   products: [
     car("v1", "Volvo XC40 Recharge", 2799500, "car-xc40", 1120, 1400, { x: 50, y: 82 }, "A white compact SUV beside a concrete wall", [["Year", "2022"], ["Mileage", "14,200"], ["Fuel", "Electric"], ["Gearbox", "Auto"]], "Just arrived"),
     car("v2", "Genesis GV60", 3845000, "car-gv60", 1120, 1400, { x: 60, y: 78 }, "A white electric crossover under a modern building", [["Year", "2023"], ["Mileage", "6,900"], ["Fuel", "Electric"], ["Gearbox", "Auto"]]),
-    car("v3", "Volkswagen Golf R", 2975000, "car-golf", 1120, 1400, { x: 55, y: 55 }, "A grey hatchback parked beside a field of sunflowers", [["Year", "2020"], ["Mileage", "31,400"], ["Fuel", "Petrol"], ["Gearbox", "DSG"]], "Reserved"),
-    car("v4", "BMW X1 xDrive20d", 1799500, "car-x1", 1200, 800, { x: 50, y: 70 }, "A white SUV photographed head-on in a dark showroom", [["Year", "2019"], ["Mileage", "42,800"], ["Fuel", "Diesel"], ["Gearbox", "Auto"]]),
+    car("v3", "Volkswagen Golf R", 2975000, "car-golf", 1120, 1400, { x: 55, y: 55 }, "A grey hatchback parked beside a field of sunflowers", [["Year", "2020"], ["Mileage", "31,400"], ["Fuel", "Petrol"], ["Gearbox", "DSG"]], undefined, "reserved"),
+    car("v4", "BMW X1 xDrive20d", 1799500, "car-x1", 1200, 800, { x: 50, y: 70 }, "A white SUV photographed head-on in a dark showroom", [["Year", "2019"], ["Mileage", "42,800"], ["Fuel", "Diesel"], ["Gearbox", "Auto"]], undefined, "sold"),
   ],
   offers: [],
   booking: { mode: "request", onlineBookingReady: false },

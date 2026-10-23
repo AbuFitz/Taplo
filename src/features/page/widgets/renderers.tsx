@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
 import type { WidgetType } from "../contracts/widgets"
 import { ProfileImage } from "../renderer/ProfileImage"
 import type { PageViewModel, RenderWidget } from "../renderer/view-model"
-import { BookingAction, PaymentAction, VideoEmbed, type BookingActionProps } from "./client"
+import { BookingAction, ItemDetail, PaymentAction, VideoEmbed, type BookingActionProps } from "./client"
 import { WidgetIcon } from "./WidgetIcon"
 
 type S = Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any -- validated per type by settingsSchemas before reaching a renderer
@@ -190,20 +190,51 @@ function BookingWidget({ w, vm }: P) {
   return <BookingAction {...props} />
 }
 
-function ProductCard({ p, vm }: { p: ProductContent; vm: PageViewModel }) {
-  const cta = p.mode === "link" && isHttpUrl(p.linkUrl)
-    ? <a className="tp-btn" data-variant="compact" href={p.linkUrl} target="_blank" rel="noopener noreferrer"><span className="tp-btn-main"><span className="tp-btn-label">View</span></span><ArrowUpRight aria-hidden="true" className="size-4" /></a>
-    : <BookingAction {...bookingProps(vm, { label: "Ask about this", topic: p.name, variant: "compact" })} />
-  return (
-    <div className="tp-product">
-      {p.image ? <div className="tp-media">{p.badge ? <span className="tp-badge">{p.badge}</span> : null}<ProfileImage image={p.image} sizes="(min-width:900px) 20rem, 90vw" /></div> : null}
-      <div className="tp-product-body">
-        <p className="tp-product-name">{p.name}</p>
-        {p.priceMinor !== undefined ? <p className="tp-product-price">{formatMoney(p.priceMinor, p.currency)}</p> : null}
-        {p.facts.length ? <ul className="tp-facts" aria-label="Details">{p.facts.map((f) => <li key={f.label} className="tp-fact">{f.label} <b>{f.value}</b></li>)}</ul> : null}
-        {p.description ? <p className="tp-muted text-sm">{p.description}</p> : null}
+const STATUS_LABEL = { reserved: "Reserved", sold: "Sold", unavailable: "Not available" } as const
+
+function hostOf(url: string) { try { return new URL(url).hostname.replace(/^www\./, "") } catch { return "" } }
+
+/** The action for an item: honest about what it does (enquiry, someone else's shop, an affiliate link, or nothing when it is gone). */
+function ItemAction({ p, vm, compact }: { p: ProductContent; vm: PageViewModel; compact?: boolean }) {
+  if (p.availability === "sold" || p.availability === "unavailable")
+    return <span className="tp-status-note" data-status={p.availability}>{p.availability === "sold" ? (p.kind === "vehicle" ? "Sold" : "Sold out") : "Not available right now"}</span>
+  if (p.mode === "link" && isHttpUrl(p.linkUrl)) {
+    const host = hostOf(p.linkUrl!)
+    return (
+      <div className="tp-link-out">
+        <a className="tp-btn" data-variant={compact ? "compact" : "button"} href={p.linkUrl} target="_blank" rel={p.affiliate ? "noopener noreferrer sponsored" : "noopener noreferrer"}>
+          <span className="tp-btn-main"><span className="tp-btn-label">{host ? `View on ${host}` : "View"}</span></span><ArrowUpRight aria-hidden="true" className="size-4" />
+        </a>
+        {p.affiliate ? <p className="tp-affiliate">Affiliate link: {vm.business.identity.name} may earn a commission.</p> : null}
       </div>
-      <div className="tp-product-cta">{cta}</div>
+    )
+  }
+  return <BookingAction {...bookingProps(vm, { label: p.kind === "vehicle" ? "Enquire about this car" : "Ask about this", topic: p.name, variant: compact ? "compact" : "button" })} />
+}
+
+function ProductCard({ p, vm }: { p: ProductContent; vm: PageViewModel }) {
+  const images = [p.image, ...p.images].filter((x): x is NonNullable<typeof p.image> => Boolean(x))
+  const statusText = p.availability !== "available" ? STATUS_LABEL[p.availability] : null
+  const badge = statusText ?? p.badge
+  const price = p.priceMinor !== undefined ? formatMoney(p.priceMinor, p.currency) : undefined
+  const facts = p.facts.filter((f) => f.label.trim() && f.value.trim())
+  const open = (children: React.ReactNode) => (
+    <ItemDetail
+      trigger={<button type="button" className="tp-product-open" aria-label={`View details: ${p.name}`}>{children}</button>}
+      title={p.name} price={price} status={statusText ?? undefined} facts={facts} description={p.description}
+      images={images.map((m) => ({ src: m.src, alt: m.alt, focal: m.focal }))} cta={<ItemAction p={p} vm={vm} />}
+    />
+  )
+  return (
+    <div className="tp-product" data-status={p.availability} data-kind={p.kind}>
+      {p.image ? <div className="tp-media">{badge ? <span className="tp-badge" data-status={statusText ? p.availability : undefined}>{badge}</span> : null}{open(<ProfileImage image={p.image} sizes="(min-width:900px) 20rem, 90vw" />)}</div> : null}
+      <div className="tp-product-body">
+        <p className="tp-product-name">{!p.image && badge ? <span className="tp-badge tp-badge-inline" data-status={statusText ? p.availability : undefined}>{badge}</span> : null}{p.image ? p.name : open(<span>{p.name}</span>)}</p>
+        {price ? <p className="tp-product-price">{price}</p> : null}
+        {facts.length ? <ul className="tp-facts" aria-label="Details">{facts.map((f) => <li key={f.label} className="tp-fact">{f.label} <b>{f.value}</b></li>)}</ul> : null}
+        {p.description ? <p className="tp-muted text-sm tp-clamp">{p.description}</p> : null}
+      </div>
+      <div className="tp-product-cta"><ItemAction p={p} vm={vm} compact /></div>
     </div>
   )
 }
@@ -211,9 +242,23 @@ function ProductCard({ p, vm }: { p: ProductContent; vm: PageViewModel }) {
 function ProductsWidget({ w, vm }: P) {
   const s = w.settings as S
   const list = pick(vm.business.products.filter((x) => !x.archived), s.productIds)
+  // Group by the owner's collection names, in first-seen order. One group (or none) renders exactly as before.
+  const groups: { name: string; items: ProductContent[] }[] = []
+  for (const p of list) {
+    const name = p.collection?.trim() ?? ""
+    const g = groups.find((x) => x.name === name)
+    if (g) g.items.push(p)
+    else groups.push({ name, items: [p] })
+  }
+  const grouped = groups.length > 1 || (groups.length === 1 && groups[0]!.name !== "")
   return (
     <Card title={s.title}>
-      <ul className="tp-products" data-variant={s.variant === "grid" ? "grid" : "list"} data-count={Math.min(list.length, 3)}>{list.map((p) => <li key={p.id}><ProductCard p={p} vm={vm} /></li>)}</ul>
+      {groups.map((g) => (
+        <div key={g.name} className={grouped ? "tp-product-group" : undefined}>
+          {grouped && g.name ? <h3 className="tp-group-title">{g.name}</h3> : null}
+          <ul className="tp-products" data-variant={s.variant === "grid" ? "grid" : "list"} data-count={Math.min(g.items.length, 3)}>{g.items.map((p) => <li key={p.id}><ProductCard p={p} vm={vm} /></li>)}</ul>
+        </div>
+      ))}
     </Card>
   )
 }

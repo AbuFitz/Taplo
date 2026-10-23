@@ -112,3 +112,55 @@ export function VideoEmbed({ url, title }: { url: string; title?: string }) {
     </div>
   )
 }
+
+
+export interface DetailImage { src: string; alt: string; focal?: { x: number; y: number } }
+
+/**
+ * Item detail view (products, vehicles). It opens in the page's own themed dialog, so it inherits the
+ * page's colours, type and corner style, and in the editor preview it stays inside the preview frame.
+ */
+export function ItemDetail({ trigger, title, price, status, facts, description, images, cta }: {
+  trigger: React.ReactNode
+  title: string
+  price?: string
+  status?: string
+  facts: { label: string; value: string }[]
+  description?: string
+  images: DetailImage[]
+  cta: React.ReactNode
+}) {
+  const [i, setI] = React.useState(0)
+  const img = images[i]
+  return (
+    <TaploModal trigger={trigger} title={title} description={[price, status].filter(Boolean).join(" · ") || undefined} wide>
+      <div className="grid gap-4">
+        {img ? (
+          <div className="grid gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={img.src} alt={img.alt} className="aspect-[4/3] w-full rounded-[var(--tp-radius-md,0.75rem)] object-cover" style={img.focal ? { objectPosition: `${img.focal.x}% ${img.focal.y}%` } : undefined} />
+            {images.length > 1 ? (
+              <ul className="flex gap-2 overflow-x-auto" aria-label="Pictures">
+                {images.map((m, n) => (
+                  <li key={m.src + n} className="shrink-0">
+                    <button type="button" onClick={() => setI(n)} aria-label={`Show picture ${n + 1} of ${images.length}`} aria-current={n === i} className={cn("block size-16 overflow-hidden rounded-lg border-2 outline-none focus-visible:ring-2 focus-visible:ring-tp-accent", n === i ? "border-tp-accent" : "border-transparent opacity-80")}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={m.src} alt="" className="size-full object-cover" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+        ) : null}
+        {facts.length ? (
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm sm:grid-cols-4">
+            {facts.map((f) => <div key={f.label}><dt className="text-tp-muted">{f.label}</dt><dd className="font-semibold">{f.value}</dd></div>)}
+          </dl>
+        ) : null}
+        {description ? <p className="text-sm leading-relaxed text-tp-muted">{description}</p> : null}
+        <div className="grid gap-2">{cta}</div>
+      </div>
+    </TaploModal>
+  )
+}
