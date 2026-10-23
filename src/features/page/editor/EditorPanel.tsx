@@ -32,7 +32,7 @@ export function EditorPanel({ ed, selection, onSelect, notify }: { ed: Editor; s
   React.useEffect(() => { body.current?.scrollTo({ top: 0 }) }, [tab, screen])
 
   return (
-    <section aria-label="Edit your page" className="flex h-[calc(100dvh-8.5rem)] min-h-[30rem] min-w-0 flex-col overflow-hidden rounded-2xl border bg-card" data-testid="editor-panel">
+    <section aria-label="Edit your page" className="flex h-[calc(100dvh-6.5rem)] min-h-[30rem] min-w-0 flex-col overflow-hidden rounded-2xl border bg-card" data-testid="editor-panel">
       <div role="tablist" aria-label="Editor sections" className="grid shrink-0 grid-cols-4 gap-1 border-b bg-muted/40 p-1.5">
         {TABS.map((t) => {
           const on = tab === t.id

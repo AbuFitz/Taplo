@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   // Revisit when public profiles move to tag-based caching (docs/product-decisions.md).
   cacheComponents: false,
   partialPrefetching: false,
+  devIndicators: false,
   // Earlier marketing addresses keep working.
   async redirects() {
     return [

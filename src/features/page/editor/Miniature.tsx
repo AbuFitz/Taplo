@@ -24,6 +24,11 @@ export function Miniature({ art }: { art: MiniArt }) {
     case "video": return <div className="grid h-full place-items-center bg-neutral-800"><i className="block size-0 border-y-[0.4rem] border-l-[0.7rem] border-y-transparent border-l-white" /></div>
     case "clock": return <div className={wrap}>{[0, 1, 2].map((i) => <div key={i} className="flex justify-between">{bar("22%", 0.8, "0.3125rem")}{bar("34%", 0.45, "0.3125rem")}</div>)}</div>
     case "links": return <div className={wrap}>{[0, 1].map((i) => <i key={i} className="mx-auto block h-4 w-4/5 rounded-full ring-2 ring-neutral-800" />)}</div>
+    case "swipe": return <div className="flex h-full items-center gap-1.5 overflow-hidden p-2.5">{[0, 1, 2].map((i) => <div key={i} className="grid h-14 w-[42%] shrink-0 content-between rounded-md bg-white p-1.5 ring-1 ring-neutral-200"><i className="block h-6 rounded bg-neutral-300" />{bar("70%", 0.8)}</div>)}</div>
+    case "quote": return <div className={wrap}><span className="text-2xl font-bold leading-none text-neutral-300" aria-hidden="true">“</span>{bar("90%", 0.8, "0.3125rem")}{bar("65%", 0.5, "0.3125rem")}</div>
+    case "chips": return <div className="flex h-full flex-wrap content-center gap-1.5 p-2.5">{["34%", "26%", "40%", "30%"].map((w, i) => <i key={i} className="block h-4 rounded-full bg-neutral-300" style={{ width: w }} />)}</div>
+    case "icons": return <div className="flex h-full items-center justify-center gap-2 p-2.5">{[0, 1, 2, 3].map((i) => <i key={i} className="block size-6 rounded-full bg-neutral-800" />)}</div>
+    case "beforeAfter": return <div className="grid h-full grid-cols-2 gap-0.5 p-2.5"><i className="rounded-l bg-neutral-400" /><i className="rounded-r bg-neutral-200" /></div>
     case "bell": return <div className={wrap}><div className="rounded-md bg-neutral-900 p-1.5">{bar("80%", 1, "0.3125rem")}</div></div>
   }
 }

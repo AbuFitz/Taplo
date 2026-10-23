@@ -117,7 +117,7 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
         <Button variant="ghost" size="icon" onClick={ed.undo} disabled={!ed.canUndo} aria-label="Undo" data-testid="undo"><Undo2 /></Button>
         <Button variant="ghost" size="icon" onClick={ed.redo} disabled={!ed.canRedo} aria-label="Redo" data-testid="redo"><Redo2 /></Button>
         <Button variant={customer ? "default" : "outline"} size="sm" onClick={() => { setCustomer((c) => !c); close() }} aria-pressed={customer} data-testid="customer-preview">
-          {customer ? <EyeOff /> : <Eye />}{customer ? "Edit" : "Preview"}
+          {customer ? <EyeOff /> : <Eye />}<span className="max-[420px]:sr-only">{customer ? "Edit" : "Preview"}</span>
         </Button>
         <Button size="sm" disabled={!canPublish(s)} onClick={() => { ed.update((x) => publish(x)); notify(s.published ? "Changes published." : "Your page is published.") }} data-testid="publish">{s.published ? (changed ? "Publish" : "Live") : "Publish"}</Button>
       </header>

@@ -43,6 +43,22 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
   )
 }
 
+/** The dashboard menu on its own, for screens that supply their own top bar (the page editor). */
+export function DashboardMenu({ className }: { className?: string }) {
+  const [open, setOpen] = React.useState(false)
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="icon" className={cn("size-11", className)} aria-label="Open menu"><Menu /></Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-64">
+        <SheetHeader><SheetTitle><TaploLogo /></SheetTitle></SheetHeader>
+        <div className="px-2"><NavList onNavigate={() => setOpen(false)} /></div>
+      </SheetContent>
+    </Sheet>
+  )
+}
+
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { ready, state, update } = useDemo()
   const router = useRouter()
@@ -59,10 +75,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <NavList />
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center gap-3 border-b px-4 py-2 lg:px-8">
+        {focus ? null : <header className="flex items-center gap-3 border-b px-4 py-2 lg:px-8">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className={focus ? "" : "lg:hidden"} aria-label="Open menu"><Menu /></Button>
+              <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open menu"><Menu /></Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-64">
               <SheetHeader><SheetTitle>Taplo</SheetTitle></SheetHeader>
@@ -73,9 +89,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             {state?.content.identity.name ? <>Managing <strong className="text-foreground">{state.content.identity.name}</strong></> : "No business yet"}
           </p>
           {capabilities().sandbox ? <SandboxBadge /> : null}
-          <span className="rounded-full border px-2.5 py-1 text-xs font-medium capitalize">{state?.plan ?? "business"} plan</span>
-        </header>
-        <main className={cn("min-w-0 flex-1 px-4 lg:px-8", focus ? "py-3" : "py-6")}>
+          <span className="rounded-md border px-2.5 py-1 text-xs font-medium capitalize">{state?.plan ?? "business"} plan</span>
+        </header>}
+        <main className={cn("min-w-0 flex-1 px-4 lg:px-8", focus ? "pb-3 pt-0" : "py-6")}>
           {!ready ? <p className="text-sm text-muted-foreground">Loading…</p> : empty ? (
             <div className="max-w-xl">
               <h1 className="text-2xl font-semibold">Let’s set up your page</h1>

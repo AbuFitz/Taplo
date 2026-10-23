@@ -43,7 +43,9 @@ function Portrait({ m, className, ratio = "4 / 5" }: { m: TeamMemberData; classN
  * work, and booking with them). Booking from a profile closes the profile and opens the booking journey, so
  * there are never two overlays stacked. No private contact details are ever in this data.
  */
-export function TeamMembers({ members, variant, ctx }: { members: TeamMemberData[]; variant: "list" | "swipe" | "grid" | "avatars"; ctx?: BookingContext }) {
+export function TeamMembers({ members, variant: chosen, ctx }: { members: TeamMemberData[]; variant: "list" | "swipe" | "grid" | "avatars"; ctx?: BookingContext }) {
+  // Portrait cards need portraits. With none supplied, a wall of identical silhouettes says "unfinished", so people are listed instead.
+  const variant = (chosen === "swipe" || chosen === "grid") && !members.some((m) => m.photo) ? "list" : chosen
   const [profile, setProfile] = React.useState<string | null>(null)
   const [book, setBook] = React.useState<{ staffId: string } | null>(null)
   const member = members.find((m) => m.id === profile) ?? null

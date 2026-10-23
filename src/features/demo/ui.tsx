@@ -149,7 +149,7 @@ export function PreviewFrame({ className, height = 640, fill = false, selection,
         </div>
         <a className="text-xs font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline" href="/demo/preview" target="_blank" rel="noreferrer">Open full preview</a>
       </div>
-      <div style={fill ? { height: "max(32rem, calc(100dvh - 11rem))" } : { height }}>
+      <div style={fill ? { height: "max(32rem, calc(100dvh - 9rem))" } : { height }}>
         <PagePreview
           mode={device === "mobile" ? "device" : "desktop"}
           device={{ w: 390, h: 844 }}

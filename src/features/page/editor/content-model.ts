@@ -13,7 +13,7 @@ import type { WidgetContext } from "../widgets/types"
 
 export type RecordKind = "service" | "product" | "vehicle" | "review" | "staff" | "faq" | "photo" | "social" | "credential" | "phone" | "whatsapp" | "email" | "directions" | "offer"
 
-export type MiniArt = "list" | "cards" | "grid" | "avatars" | "button" | "text" | "map" | "photos" | "stars" | "tag" | "video" | "clock" | "links" | "bell" | "card"
+export type MiniArt = "list" | "cards" | "grid" | "avatars" | "button" | "text" | "map" | "photos" | "stars" | "tag" | "video" | "clock" | "links" | "bell" | "card" | "swipe" | "quote" | "chips" | "icons" | "beforeAfter"
 
 export interface ContentChoice {
   id: string

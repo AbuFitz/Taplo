@@ -3,8 +3,12 @@
 import * as React from "react"
 import { Redo2, Undo2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { canPublish, hasUnpublishedChanges, publish, readiness } from "@/features/demo/actions"
 import { PreviewFrame } from "@/features/demo/ui"
+import { DashboardMenu } from "@/features/demo/DashboardShell"
+import { SandboxBadge } from "@/components/taplo/sandbox-badge"
+import { capabilities } from "@/lib/capabilities"
 import { EditorPanel } from "./EditorPanel"
 import { MobileEditor } from "./MobileEditor"
 import { CONTENT, type Selection } from "./selection"
@@ -59,13 +63,19 @@ export function MyPage() {
   const changed = hasUnpublishedChanges(s)
   const effective = gone ? CONTENT : selection
 
+  const saveText = ed.storageFailed ? "Not saved: browser storage is full or blocked" : s.published ? (changed ? "Draft saved · unpublished changes" : "Saved · live") : "Draft saved"
   const toolbar = (
-    <div className="flex flex-wrap items-center gap-2" role="toolbar" aria-label="Page actions">
-      <Button variant="outline" size="icon" className="size-11" onClick={ed.undo} disabled={!ed.canUndo} aria-label="Undo" data-testid="undo"><Undo2 /></Button>
-      <Button variant="outline" size="icon" className="size-11" onClick={ed.redo} disabled={!ed.canRedo} aria-label="Redo" data-testid="redo"><Redo2 /></Button>
-      <span className="mx-1 hidden text-xs text-muted-foreground sm:inline" data-testid="save-state">{ed.storageFailed ? "⚠ Not saved: browser storage is full or blocked" : s.published ? (changed ? "Draft saved · unpublished changes" : "Saved · live") : "Draft saved"}</span>
-      <div className="ml-auto flex items-center gap-2">
-        <Button asChild variant="outline" className="hidden min-h-11 sm:inline-flex"><a href="/demo/preview" target="_blank" rel="noreferrer" data-testid="full-preview">Open preview</a></Button>
+    <div className="flex items-center gap-2" role="toolbar" aria-label="Page actions">
+      <DashboardMenu className="-ml-2" />
+      <div className="min-w-0 pr-2">
+        <p className="truncate text-sm font-semibold leading-tight">{s.content.identity.name || "Your page"}</p>
+        <p className={cn("truncate text-xs leading-tight", ed.storageFailed ? "text-destructive" : "text-muted-foreground")} data-testid="save-state">{saveText}</p>
+      </div>
+      <div className="ml-auto flex items-center gap-1.5">
+        {capabilities().sandbox ? <SandboxBadge /> : null}
+        <Button variant="ghost" size="icon" className="size-11" onClick={ed.undo} disabled={!ed.canUndo} aria-label="Undo" data-testid="undo"><Undo2 /></Button>
+        <Button variant="ghost" size="icon" className="size-11" onClick={ed.redo} disabled={!ed.canRedo} aria-label="Redo" data-testid="redo"><Redo2 /></Button>
+        <Button asChild variant="outline" className="min-h-11"><a href="/demo/preview" target="_blank" rel="noreferrer" data-testid="full-preview">Preview</a></Button>
         <Button className="min-h-11" disabled={!canPublish(s)} onClick={() => { ed.update((x) => publish(x)); notify(s.published ? "Changes published." : "Your page is published.") }} data-testid="publish">{s.published ? (changed ? "Publish changes" : "Published") : "Publish"}</Button>
       </div>
     </div>
@@ -95,11 +105,11 @@ export function MyPage() {
 
   return (
     <div data-testid="my-page">
-      <div className="sticky top-0 z-20 -mx-4 mb-3 border-b bg-background/95 px-4 py-2.5 backdrop-blur lg:-mx-8 lg:px-8">{toolbar}</div>
+      <div className="sticky top-0 z-20 -mx-4 mb-4 border-b bg-background/95 px-4 py-2 backdrop-blur lg:-mx-8 lg:px-8">{toolbar}</div>
       {banners}
       {missing.length ? <p className="mb-3 text-xs text-muted-foreground">To publish: {missing.map((m) => m.label.toLowerCase()).join(", ")}.</p> : null}
 
-      <div className="grid grid-cols-[26rem_minmax(0,1fr)] items-start gap-5">
+      <div className="grid grid-cols-[minmax(26rem,30rem)_minmax(0,1fr)] items-start gap-5">
         <div className="min-w-0"><EditorPanel ed={ed} selection={effective} onSelect={setSelection} notify={notify} /></div>
         <div className="sticky top-20 min-w-0">{preview}</div>
       </div>

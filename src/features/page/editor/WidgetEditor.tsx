@@ -17,6 +17,9 @@ import { newId } from "@/features/demo/actions"
 import { ChoiceGrid, Field, Segment } from "@/features/appearance/controls"
 import { ButtonTile, SurfaceTile } from "@/features/appearance/previews"
 import { ColorField, FieldShell, ImageField, Segmented, SelectField, SwitchField } from "./controls"
+import { Miniature } from "./Miniature"
+import { RecordsField } from "./RecordsField"
+import type { MiniArt } from "./content-model"
 import type { Editor } from "./useEditor"
 
 interface Option { id: string; label: string }
@@ -62,14 +65,23 @@ function RefsField({ f, value, ed, onChange }: { f: Extract<FieldSpec, { kind: "
   )
 }
 
+const VARIANT_ART: Record<string, MiniArt> = { list: "list", cards: "cards", compact: "list", grid: "grid", swipe: "swipe", carousel: "swipe", quote: "quote", chips: "chips", icons: "icons", beforeAfter: "beforeAfter", button: "button", card: "card", inline: "text", avatars: "avatars" }
+
 export function WidgetFields({ stored, ed }: { stored: StoredWidget; ed: Editor }) {
   const def = getWidget(stored.type)!
   const { settings } = parseSettings(stored.type as WidgetType, stored.settings)
   const s = settings as Record<string, unknown>
   const set = (key: string, v: unknown) => ed.updateWidget(stored.id, { settings: { [key]: v } })
 
+  const variant = def.fields.find((f): f is Extract<FieldSpec, { kind: "select" }> => f.kind === "select" && f.key === "variant")
   return (
     <div className="grid gap-4">
+      {variant ? (
+        <Field label="Layout">
+          <ChoiceGrid label="Layout" value={String(s.variant ?? variant.options[0]!.value)} columns={variant.options.length > 3 ? 2 : variant.options.length} onChange={(v) => set("variant", v)}
+            options={variant.options.map((o) => ({ value: o.value, label: o.label, preview: <span className="block h-[4.25rem] bg-neutral-100"><Miniature art={VARIANT_ART[o.value] ?? "list"} /></span> }))} />
+        </Field>
+      ) : null}
       {def.fields.map((f) => {
         const v = s[f.key]
         switch (f.kind) {
@@ -89,9 +101,12 @@ export function WidgetFields({ stored, ed }: { stored: StoredWidget; ed: Editor 
           case "switch":
             return <SwitchField key={f.key} label={f.label} checked={Boolean(v)} onChange={(c) => set(f.key, c)} />
           case "select":
+            if (f.key === "variant") return null
             return <Segmented key={f.key} label={f.label} value={String(v ?? f.options[0]!.value)} options={f.options} onChange={(x) => set(f.key, x)} columns={f.options.length > 3 ? 2 : f.options.length} />
           case "refs":
-            return <RefsField key={f.key} f={f} value={v} ed={ed} onChange={(x) => set(f.key, x)} />
+            return f.source === "socialPlatforms" || f.source === "reviewPlatforms"
+              ? <RefsField key={f.key} f={f} value={v} ed={ed} onChange={(x) => set(f.key, x)} />
+              : <RecordsField key={f.key} f={f} value={v} ed={ed} vehicles={stored.type === "products" && s.title === "In stock"} onChange={(x) => set(f.key, x)} />
           case "record": {
             const opts = optionsFor(f.source, ed)
             return <SelectField key={f.key} label={f.label} value={(v as string | null) || undefined} inheritLabel="Automatic" options={opts.map((o) => ({ value: o.id, label: o.label }))} onChange={(x) => set(f.key, x ?? null)} />
