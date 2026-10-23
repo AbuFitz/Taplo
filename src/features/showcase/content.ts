@@ -1,21 +1,8 @@
 import type { BusinessContentInput } from "@/features/businesses/content"
 import type { PageDoc } from "@/features/page/contracts/page"
-import { newWidget as make } from "@/features/page/starter"
-import type { WidgetType } from "@/features/page/contracts/widgets"
 
-/** Showcase widgets get fixed ids so server and client render identical markup. */
-const newWidget = (type: WidgetType, settings: Record<string, unknown> = {}) => ({ ...make(type, settings), id: `showcase-${type}` })
-
-/**
- * Two fictional businesses used to show the appearance engine. Names, numbers and reviews are
- * invented; photographs are credited in public/showcase/CREDITS.md.
- */
-const photo = (name: string, alt: string, w: number, h: number, focal?: { x: number; y: number }) => ({ src: `/showcase/${name}.jpg`, alt, width: w, height: h, focal })
-const svc = (id: string, group: string, name: string, priceMinor: number, durationMinutes: number, description: string, sortOrder: number, bookingMode: "instant" | "request" | "contact" = "instant") =>
-  ({ id, group, name, description, priceMode: "fixed" as const, priceMinor, currency: "GBP", durationMinutes, delivery: [], bookingMode, sortOrder })
-const person = (id: string, name: string, role: string, bio: string, face: string, serviceIds: string[] | null, subjects: string[] = [], credentials: string[] = []) =>
-  ({ id, slug: id, name, role, bio, photo: { src: `/showcase/people/${face}.svg`, alt: `Illustrated portrait of ${name}`, width: 400, height: 500 }, subjects, serviceIds, credentials, bookable: true })
-const hours = (days: ("mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun")[], opens: string, closes: string) => days.map((day) => ({ day, opens, closes }))
+import { hours, newWidget, person, photo, svc } from "./helpers"
+import { CAFE, EXTRA_WIDGETS, GYM, PHYSIO, TUTOR } from "./examples"
 
 export const BARBER: BusinessContentInput = {
   identity: {
@@ -193,8 +180,12 @@ export const TRADES: BusinessContentInput = {
   booking: { mode: "instant", onlineBookingReady: true },
 }
 
-export type Scenario = "barber" | "dealer" | "trades"
+export type Scenario = "barber" | "dealer" | "trades" | "physio" | "cafe" | "tutor" | "gym"
 export const SCENARIOS: Record<Scenario, { label: string; content: BusinessContentInput; widgets: () => PageDoc["widgets"] }> = {
+  physio: { label: "Physiotherapy clinic", content: PHYSIO, widgets: EXTRA_WIDGETS.physio },
+  cafe: { label: "Café", content: CAFE, widgets: EXTRA_WIDGETS.cafe },
+  tutor: { label: "Tutor", content: TUTOR, widgets: EXTRA_WIDGETS.tutor },
+  gym: { label: "Fitness studio", content: GYM, widgets: EXTRA_WIDGETS.gym },
   barber: {
     label: "Barber",
     content: BARBER,
