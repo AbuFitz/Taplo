@@ -5,7 +5,12 @@ const expect = baseExpect.configure({ timeout: 15_000 });
 
 const frame = (page: Page, title = "Desktop preview") => page.frameLocator(`iframe[title="${title}"]`);
 const attr = async (page: Page, name: string, title?: string) => (await frame(page, title).locator("[data-taplo-page]").getAttribute(name)) ?? "";
-const choice = (page: Page, group: string, label: string | RegExp) => page.getByRole("radiogroup", { name: group }).locator("label", { hasText: label }).first().click();
+const choice = async (page: Page, group: string, label: string | RegExp) => {
+  const g = page.locator(`[role="radiogroup"][aria-label="${group}"]`);
+  // Sections are collapsed disclosures; open the one that holds this control, as a person would.
+  await g.first().evaluate((el) => { for (let d = el.closest("details"); d; d = d.parentElement?.closest("details") ?? null) d.open = true; });
+  await g.locator("label", { hasText: label }).first().click();
+};
 
 test.describe("Appearance lab: one engine, four configurations", () => {
   test.use({ viewport: { width: 1600, height: 1000 } });
@@ -33,9 +38,9 @@ test.describe("Appearance lab: one engine, four configurations", () => {
     await page.goto("/appearance");
     const f = frame(page);
     await expect(page.getByTestId("lab-reset")).toBeDisabled();                             // untouched look
-    expect(await attr(page, "data-header")).toBe("poster");
+    expect(await attr(page, "data-header")).toBe("side");
 
-    await choice(page, "Header arrangement", "Centred");
+    await choice(page, "Header arrangement", "Text-led");
     await expect.poll(() => attr(page, "data-header")).toBe("centered");
     await choice(page, "Button shape", "Square");
     await expect.poll(() => f.locator(".tp-btn").first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
@@ -55,7 +60,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
 
     // reset returns to the look, and is itself undoable
     await page.getByTestId("lab-reset").click();
-    await expect.poll(() => attr(page, "data-header")).toBe("poster");
+    await expect.poll(() => attr(page, "data-header")).toBe("side");
     await expect(page.getByTestId("lab-reset")).toBeDisabled();
     await page.getByTestId("lab-undo").click();
     await expect.poll(() => attr(page, "data-bg")).toBe("shader");
@@ -78,7 +83,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
     expect(await accent()).toBe(before);
 
     // an unreadable pairing is corrected and explained, never silently shipped
-    await page.getByLabel("Text hex value").fill("#1a1816");
+    await page.getByRole("textbox", { name: "Text hex value", exact: true }).fill("#1a1816");
     await expect(page.getByLabel("Readability notes")).toContainText(/adjusted|readable/i);
   });
 
@@ -118,7 +123,7 @@ test.describe("appearance lab on a phone", () => {
     await page.getByRole("radiogroup", { name: "Look" }).scrollIntoViewIfNeeded();
     await choice(page, "Look", "Clean");
     await page.getByRole("radiogroup", { name: "Preview" }).locator("label", { hasText: "Phone" }).click();
-    await expect.poll(() => page.frameLocator('iframe[title="Mobile preview"]').locator("[data-taplo-page]").getAttribute("data-header")).toBe("side");
+    await expect.poll(() => page.frameLocator('iframe[title="Mobile preview"]').locator("[data-taplo-page]").getAttribute("data-header")).toBe("centered");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 });

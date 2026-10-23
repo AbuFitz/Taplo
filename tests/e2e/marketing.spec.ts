@@ -122,7 +122,7 @@ test.describe("inspiration", () => {
     await page.getByRole("button", { name: "Continue" }).click()          // → what you do
     await expect(page.getByTestId("goal")).toBeVisible()
     await page.getByRole("button", { name: "Continue" }).click()          // → look and content
-    await expect(page.getByTestId("look-picker").getByRole("radio", { name: /Journal/ })).toBeChecked()
+    await expect(page.getByTestId("look-picker").getByRole("radio", { name: /Mono/ })).toBeChecked()
     await expect(page.locator("section[aria-labelledby=step-title]")).not.toContainText("Hollin")
     await page.getByTestId("look-picker").getByText("Orchard").click()
     await page.reload()
@@ -157,7 +157,7 @@ test.describe("film", () => {
     await page.goto("/")
     await expect(page.locator("video")).toHaveCount(0)
     await expect(page.getByRole("button", { name: /Play the 15-second film/ })).toBeVisible()
-    await expect(page.getByText("Confirmed, or requested. It says which")).toBeVisible()
+    await expect(page.getByText("Share it three ways")).toBeVisible()
     await page.getByRole("button", { name: /Play the 15-second film/ }).click()
     const v = page.locator("video")
     await expect(v).toHaveCount(1)

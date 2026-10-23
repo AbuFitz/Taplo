@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { THEMES } from "../../src/features/page/themes/catalogue";
-import { openEditorWithSample } from "./helpers";
+import { openEditorWithSample, selectPart } from "./helpers";
 
 /** Serious and critical axe findings fail the build; each is printed with the offending selector. */
 async function scan(page: Page, context: string, include?: string) {
@@ -39,7 +39,7 @@ test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", ()
     await page.emulateMedia({ reducedMotion: "reduce" });
     for (const theme of ["night", "colour", "showroom", "clean"]) {
       await page.goto(`/demo-cafe?theme=${theme}`, { waitUntil: "networkidle" });
-      await page.locator('[data-widget="booking"] button').first().click();
+      await page.locator('.tp-actions-primary button, [data-widget="booking"] button').first().click();
       await expect(page.getByRole("dialog")).toBeVisible();
       await scan(page, `dialog/${theme}`, '[role="dialog"]');
       await page.keyboard.press("Escape");
@@ -49,13 +49,13 @@ test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", ()
   test("editor: structure, page style, header, a widget, details and settings", async ({ page }) => {
     await openEditorWithSample(page, "Barber");
     await scan(page, "editor/page-style", '[data-testid="my-page"]');
-    await page.getByTestId("select-header").click();
+    await selectPart(page, "header");
     await scan(page, "editor/header", '[data-testid="my-page"]');
     await page.getByTestId("select-widget").first().click();
     await scan(page, "editor/widget", '[data-testid="my-page"]');
-    await page.getByTestId("select-details").click();
+    await selectPart(page, "details");
     await scan(page, "editor/details", '[data-testid="my-page"]');
-    await page.getByTestId("select-settings").click();
+    await selectPart(page, "settings");
     await scan(page, "editor/settings", '[data-testid="my-page"]');
   });
 

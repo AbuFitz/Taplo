@@ -43,7 +43,8 @@ export async function openStructure(page: Page) {
     }
   } else if (!(await page.getByTestId("structure").isVisible().catch(() => false))) {
     await page.getByTestId("tab-content").click();
-    await page.getByTestId("back-to-content").click().catch(() => undefined);
+    // On the Content tab while one item is open, the tab itself returns to the list; otherwise use the back button.
+    if (!(await page.getByTestId("structure").isVisible().catch(() => false)) && (await page.getByTestId("back-to-content").count())) await page.getByTestId("back-to-content").click();
     await expect(page.getByTestId("structure")).toBeVisible();
   }
 }
@@ -69,7 +70,7 @@ export async function openRow(page: Page, type: string, nth = 0) {
 export async function addWidget(page: Page, label: RegExp | string) {
   await openStructure(page);
   await page.getByTestId("add-widget").click();
-  await page.getByRole("dialog").getByRole("button", { name: label }).first().click();
+  await page.getByTestId("choice").filter({ hasText: label }).first().click();
 }
 
 /** Tiny valid PNG (1x1) used for upload tests. */
@@ -80,8 +81,10 @@ export function pngFile(name = "pic.png") {
 
 /** Open a collapsible <details> section by its heading, only if it is currently closed. */
 export async function openSection(page: Page, title: string | RegExp) {
-  const d = page.locator("details", { has: page.locator("summary", { hasText: title }) }).first();
-  if ((await d.getAttribute("open")) === null) await d.locator("summary").first().click();
+  // The disclosure whose own summary matches (a `has` filter would also match an outer one that contains it).
+  const sum = page.locator("summary", { hasText: title }).first();
+  const d = sum.locator("xpath=..");
+  if ((await d.getAttribute("open")) === null) await sum.click();
   return d;
 }
 

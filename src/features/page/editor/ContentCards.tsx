@@ -61,7 +61,7 @@ export function ContentCards({ ed, selectedId, onSelect, onDetails, onAddRecord 
             </div>
             {s.needs ? (
               <div className="px-2 pb-2">
-                {s.needs.kind === "details" ? <Button variant="outline" className="min-h-11 w-full justify-start" onClick={onDetails}>{s.needs.cta}</Button> : <Button variant="outline" className="min-h-11 w-full justify-start" onClick={() => onAddRecord(s.needs!.kind as RecordKind)} data-testid="needs-cta">{s.needs.cta}</Button>}
+                {s.needs.kind === "details" ? <Button variant="outline" className="min-h-11 w-full justify-start" onClick={onDetails}>{s.needs.cta}</Button> : s.needs.kind === "self" ? <Button variant="outline" className="min-h-11 w-full justify-start" onClick={() => onSelect(w.id)} data-testid="needs-cta">{s.needs.cta}</Button> : <Button variant="outline" className="min-h-11 w-full justify-start" onClick={() => onAddRecord(s.needs!.kind as RecordKind)} data-testid="needs-cta">{s.needs.cta}</Button>}
               </div>
             ) : null}
             {s.locked ? <p className="mx-2 mb-2 flex items-start gap-2 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground"><Lock aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />{s.locked} Your content is kept.</p> : null}

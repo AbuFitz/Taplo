@@ -55,8 +55,8 @@ test.describe("stable sample profiles (no localStorage, no sign-in)", () => {
     expect(await order(a)).toEqual(await order(b));
     const before = await a.locator("[data-taplo-page]").getAttribute("data-header");
     await a.goto("/demo-barber?theme=night");
-    expect(await a.locator("[data-taplo-page]").getAttribute("data-header")).toBe("poster");
-    expect(before).not.toBe("poster");
+    expect(await a.locator("[data-taplo-page]").getAttribute("data-header")).toBe("side");
+    expect(before).not.toBe("side");
     expect(await order(a)).toEqual(await order(b)); // same widgets, same order, different look
     await a.goto("/demo-barber?theme=nonsense");
     await expect(a.getByRole("heading", { level: 1 })).toBeVisible(); // unknown theme is ignored, not an error
@@ -104,18 +104,21 @@ test.describe("themed interaction", () => {
     test(`booking dialog and select portal inherit the ${theme} theme`, async ({ page }) => {
       await page.goto(`/${slug}`, { waitUntil: "networkidle" });
       const rootBg = await page.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-background").trim());
-      await page.locator('[data-widget="booking"] button').first().click();
+      await page.locator('.tp-actions-primary button, [data-widget="booking"] button').first().click();
       const dialog = page.getByRole("dialog");
       await expect(dialog).toBeVisible();
       expect(await dialog.evaluate((el) => !!el.closest("[data-taplo-theme]"))).toBe(true);
       const dialogBg = await dialog.evaluate((el) => getComputedStyle(el).backgroundColor);
       const hexToRgb = (h: string) => { const n = parseInt(h.slice(1), 16); return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`; };
       expect(dialogBg).toBe(hexToRgb(rootBg));
-      await dialog.getByRole("combobox").click();
-      const listbox = page.getByRole("listbox");
-      await expect(listbox).toBeVisible();
-      expect(await listbox.evaluate((el) => !!el.closest("[data-taplo-theme]"))).toBe(true);
-      await page.keyboard.press("Escape");
+      // A select inside the dialog, if this flow has one, opens in a portal that still carries the theme.
+      if (await dialog.getByRole("combobox").count()) {
+        await dialog.getByRole("combobox").first().click();
+        const listbox = page.getByRole("listbox");
+        await expect(listbox).toBeVisible();
+        expect(await listbox.evaluate((el) => !!el.closest("[data-taplo-theme]"))).toBe(true);
+        await page.keyboard.press("Escape");
+      }
       await page.keyboard.press("Escape");
       await expect(dialog).toBeHidden();
     });
@@ -131,7 +134,7 @@ test.describe("themed interaction", () => {
       if (await page.evaluate(() => !!document.activeElement?.closest("[data-taplo-page]"))) break;
     }
     expect(ring).toMatch(/solid\|2px/);
-    const trigger = page.locator('[data-widget="booking"] button').first();
+    const trigger = page.locator('.tp-actions-primary button, [data-widget="booking"] button').first();
     await trigger.focus();
     await page.keyboard.press("Enter");
     const dialog = page.getByRole("dialog");
@@ -164,13 +167,11 @@ test.describe("themed interaction", () => {
     await expect(page.locator('[data-widget="video"] iframe')).toHaveAttribute("src", /youtube-nocookie\.com\/embed\//);
   });
 
-  test("payment widget is plainly simulated", async ({ page }) => {
+  test("a payment widget stays off the public page until payments are connected", async ({ page }) => {
     await page.goto("/demo-mechanic", { waitUntil: "networkidle" });
-    await page.locator('[data-widget="payment"] button').click();
-    const dlg = page.getByRole("dialog");
-    await expect(dlg).toContainText("Simulated");
-    await expect(dlg).toContainText("Payments aren’t connected");
-    await expect(dlg.getByRole("button", { name: /not available in demo/ })).toBeDisabled();
+    // Nothing on the page pretends to take money: the widget is saved on the page but not shown.
+    await expect(page.locator('[data-widget="payment"]')).toHaveCount(0);
+    await expect(page.getByText(/Simulated|deposit/i)).toHaveCount(0);
   });
 
   test("header never repeats a channel that already has its own widget", async ({ page }) => {

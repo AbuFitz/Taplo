@@ -197,7 +197,7 @@ li.tp-subcard + li.tp-subcard, figure.tp-subcard + figure.tp-subcard { padding-t
 .tp-products[data-variant="list"] .tp-product-name { font-size: 1rem; }
 .tp-products[data-variant="list"] .tp-product-price { font-size: 1.1875rem; }
 .tp-products[data-variant="list"] .tp-product-cta { grid-column: 1 / -1; padding-top: 0.25rem; }
-.tp-products[data-variant="list"] .tp-product-body > p, .tp-products[data-variant="list"] .tp-product-body > .tp-clamp { display: none; }
+.tp-products[data-variant="list"] .tp-product-body > .tp-clamp { display: none; }
 @media (min-width: 640px) { .tp-products[data-variant="list"] { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .tp-products[data-count="1"] { grid-template-columns: minmax(0, 1fr); }
 /* A single product is a feature card: picture beside the details. */

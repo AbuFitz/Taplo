@@ -267,7 +267,7 @@ export function Readability({ m }: M) {
  */
 export function AppearancePanel({ m, header = false }: { m: AppearanceModel; header?: boolean }) {
   return (
-    <div className="grid gap-2.5" data-testid="appearance-panel">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-2.5" data-testid="appearance-panel">
       <Disclosure title="Look" defaultOpen id="look" hint="A starting point, not a template. Change anything afterwards."><LookPicker m={m} /></Disclosure>
       <Disclosure title="Colour" defaultOpen id="colour" count={m.count("colors")} onReset={() => m.resetGroup("colors")}><ColourControls m={m} /></Disclosure>
       <Disclosure title="Type" id="type" count={m.count("text")} onReset={() => m.resetGroup("text")}><TypeControls m={m} /></Disclosure>

@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { insp, openEditorWithSample, openRow, openSection, pngFile, previewFrame, previewOrder, rowOrder } from "./helpers";
+import { insp, openEditorWithSample, openRow, openSection, pngFile, previewFrame, previewOrder, rowOrder, selectPart } from "./helpers";
 
 const store = (page: import("@playwright/test").Page) => page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!));
 
@@ -27,7 +27,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
     await openRow(page, "reviews");
     await expect(frame.locator('[data-widget="reviews"]')).toHaveAttribute("data-tp-selected", "");
     // page style when nothing is selected
-    await page.getByTestId("select-page").click();
+    await selectPart(page, "page");
     await expect(page.getByTestId("inspector-page")).toBeVisible();
     await expect(frame.locator("[data-tp-selected]")).toHaveCount(0);
   });
@@ -37,7 +37,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
     const frame = previewFrame(page);
 
     // header arrangement + logo shape + size
-    await page.getByTestId("select-header").click();
+    await selectPart(page, "header");
     await openSection(page, "Header");
     await insp(page).getByRole("radio", { name: /Cover banner/ }).locator("xpath=ancestor::label").click();
     await expect(frame.locator('.tp-header[data-layout="cover"]')).toHaveCount(1);
@@ -45,7 +45,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
     await expect(frame.locator('.tp-avatar[data-shape="arch"]')).toHaveCount(1);
 
     // colour: drag the picker many steps = ONE history entry
-    await page.getByTestId("select-page").click();
+    await selectPart(page, "page");
     await openSection(page, "Text");
     const before = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page.appearance.colors?.accent ?? null);
     await insp(page).getByRole("button", { name: /Accent colour: choose colour/ }).click();
@@ -73,7 +73,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
     await insp(page).getByLabel("Text colour hex value").fill("#222244");
     await expect(insp(page).getByTestId("contrast-badge")).toContainText("Hard to read");
 
-    await page.getByTestId("select-page").click();
+    await selectPart(page, "page");
     await openSection(page, "Text");
     await insp(page).getByLabel("Page colour hex value").fill("#fff4e6");
     const w = (await store(page)).page.widgets.find((x: { type: string }) => x.type === "reviews");
@@ -120,7 +120,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
 
   test("recommendations are optional, undoable and never overwrite choices", async ({ page }) => {
     await openEditorWithSample(page, "Unlisted");
-    await page.getByTestId("select-page").click();
+    await selectPart(page, "page");
     const rec = page.getByTestId("recommendation").first();
     await expect(page.getByTestId("recommendations")).toBeVisible();
     const before = await rowOrder(page);
@@ -142,7 +142,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
 
   test("logo: crop step frames the picture before it is used; social links use real brand marks", async ({ page }) => {
     await openEditorWithSample(page, "Barber");
-    await page.getByTestId("select-header").click();
+    await selectPart(page, "header");
     await openSection(page, "Header");
     await insp(page).getByLabel("Logo or profile picture: upload a picture").setInputFiles(pngFile("logo.png"));
     await expect(page.getByTestId("crop-dialog")).toBeVisible();

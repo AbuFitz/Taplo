@@ -101,7 +101,7 @@ export interface ContentSummary {
   summary: string
   thumb: { src: string; alt: string } | null
   /** Set when the block cannot show anything yet, and what would fix it. */
-  needs: { kind: RecordKind; cta: string } | { kind: "details"; cta: string } | null
+  needs: { kind: RecordKind; cta: string } | { kind: "details" | "self"; cta: string } | null
   locked: string | null
 }
 
@@ -163,7 +163,9 @@ export function summarise(w: StoredWidget, records: BusinessContent | null, ctx:
     const kind = choiceFor(w)?.needs
     const fix = "fix" in st ? st.fix : undefined
     if (kind) need = { kind, cta: needCta(kind) }
-    else if (fix === "profile" || fix === "settings" || !fix) need = { kind: "details", cta: "Finish this in Business details" }
+    else if (fix === "profile" || fix === "settings") need = { kind: "details", cta: "Finish this in Business details" }
+    // Nothing to fill in elsewhere: the widget's own settings are what is missing (a video address, some text, a link).
+    else if (!fix) need = { kind: "self", cta: "Finish setting this up" }
   }
   return { name, summary, thumb, needs: need, locked: st.state === "locked" ? st.reason : null }
 }

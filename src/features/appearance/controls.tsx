@@ -34,7 +34,7 @@ export function Section({ title, hint, action, children }: { title: string; hint
  */
 export function Disclosure({ title, hint, count, onReset, defaultOpen, id, children }: { title: string; hint?: string; count?: number; onReset?: () => void; defaultOpen?: boolean; id?: string; children: React.ReactNode }) {
   return (
-    <details id={id} open={defaultOpen} className="group/disc rounded-2xl bg-black/[0.03] open:bg-transparent open:shadow-[inset_0_0_0_1px_rgb(0_0_0/0.08)]">
+    <details id={id} open={defaultOpen} className="group/disc min-w-0 rounded-2xl bg-black/[0.03] open:bg-transparent open:shadow-[inset_0_0_0_1px_rgb(0_0_0/0.08)]">
       <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-2 rounded-2xl px-4 text-sm font-semibold [&::-webkit-details-marker]:hidden">
         <span className="flex items-center gap-2">
           {title}

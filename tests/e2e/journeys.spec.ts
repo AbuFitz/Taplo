@@ -179,7 +179,7 @@ test.describe("plans and page settings", () => {
     await page.goto("/dashboard/settings");
     await pickOption(page, "Simulated plan", /^Free/);
     await page.goto("/dashboard/page");
-    await page.getByTestId("select-page").click();
+    await selectPart(page, "page");
     await openSection(page, /^Look/);
     await expect(page.getByText("Choosing a different theme is included from the Core plan.")).toBeVisible();
     await expect(page.getByRole("radiogroup", { name: "Look" }).locator('label[data-choice="colour"] input')).toBeDisabled();
@@ -195,7 +195,7 @@ test.describe("plans and page settings", () => {
 
   test("page settings: address validation, search visibility, share text and honest domain state", async ({ page }) => {
     await openEditorWithSample(page, "Tutor");
-    await page.getByTestId("select-settings").click();
+    await selectPart(page, "settings");
     await page.getByLabel("Your web address").fill("book");
     await page.getByLabel("Your web address").blur();
     await expect(page.getByText("That address is reserved. Try another.")).toBeVisible();
@@ -277,7 +277,7 @@ test.describe("editing on a phone", () => {
 
 test("uploading a logo in the editor flows to the published page with the owner's crop", async ({ page }) => {
   await openEditorWithSample(page, "Consultant");
-  await page.getByTestId("select-header").click();
+  await selectPart(page, "header");
   await openSection(page, "Header");
   // With "no picture" chosen the editor says so; choosing a shape reveals the uploaded logo
   await page.getByRole("radio", { name: "No picture" }).locator("xpath=ancestor::label").click();
@@ -287,7 +287,7 @@ test("uploading a logo in the editor flows to the published page with the owner'
   await page.getByRole("radio", { name: "Circle" }).locator("xpath=ancestor::label").click();
   await expect(page.getByText("this look shows no picture")).toHaveCount(0);
   await expect(preview(page).locator(".tp-header img").first()).toBeVisible();
-  await page.getByTestId("select-settings").click();
+  await selectPart(page, "settings");
   await page.getByRole("button", { name: "Publish", exact: true }).first().click();
   const slug = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.identity.slug);
   const pub = await page.context().newPage();

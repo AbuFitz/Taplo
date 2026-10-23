@@ -66,7 +66,7 @@ export default function PricingPage() {
         </ul>
 
         <h2 className="font-display font-display-tight mt-20 text-[clamp(1.75rem,4vw,3rem)]">What each plan includes</h2>
-        <div className="mt-8 overflow-x-auto rounded-3xl border border-foreground/10">
+        <div className="relative mt-8 overflow-x-auto rounded-3xl border border-foreground/10">
           <table className="w-full min-w-[40rem] border-collapse text-left text-sm" data-testid="plan-table">
             <caption className="sr-only">Plan comparison</caption>
             <thead><tr className="border-b border-foreground/10"><th scope="col" className="p-4 font-semibold">Feature</th>{PLAN_IDS.map((id) => <th key={id} scope="col" className="w-28 p-4 text-center font-semibold">{PLANS[id].name}</th>)}</tr></thead>

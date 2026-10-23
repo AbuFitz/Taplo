@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test"
-import { openEditorWithSample, previewFrame, rowOrder, previewOrder } from "./helpers"
+import { openEditorWithSample, openStructure, previewFrame, rowOrder, previewOrder } from "./helpers"
 
 const records = (page: import("@playwright/test").Page) => page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!))
 
@@ -26,6 +26,7 @@ test.describe("adding content is one journey", () => {
     const s = await records(page)
     expect(s.page.widgets.length).toBe(before + 1)
     expect(s.content.products.at(-1)).toMatchObject({ name: "Mini Cooper S", kind: "vehicle", availability: "available" })
+    await openStructure(page)
     await expect(page.getByTestId("content-list")).toContainText("Vehicles")
     await expect(previewFrame(page).getByText("Mini Cooper S")).toBeVisible()
   })

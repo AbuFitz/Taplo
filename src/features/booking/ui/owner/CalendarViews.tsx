@@ -74,7 +74,7 @@ export function TimeGrid({ columns, bookings, config, tz, onOpen, onSlot, now }:
   const today = localParts(now, tz).date
   const nowMin = localParts(now, tz).minutes
   return (
-    <div className="overflow-x-auto rounded-2xl border bg-card" data-testid="time-grid">
+    <div className="relative overflow-x-auto rounded-2xl border bg-card" data-testid="time-grid">
       <div className="grid min-w-[40rem]" style={{ gridTemplateColumns: `3.25rem repeat(${columns.length}, minmax(5.5rem, 1fr))` }}>
         <div />
         {columns.map((c) => <div key={c.key} className={cn("border-l px-2 py-2 text-center text-xs", c.date === today && "bg-primary/5")}><span className="block font-semibold">{c.label}</span>{c.sub ? <span className="block text-muted-foreground">{c.sub}</span> : null}</div>)}
