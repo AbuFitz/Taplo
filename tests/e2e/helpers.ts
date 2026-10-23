@@ -53,7 +53,10 @@ export async function openStructure(page: Page) {
 export async function selectPart(page: Page, part: "page" | "header" | "details" | "settings") {
   const compact = await isCompact(page);
   const tab = part === "page" ? "design" : part === "header" ? "header" : "settings";
-  await page.getByTestId(`tab-${tab}`).click();
+  const t = page.getByTestId(`tab-${tab}`);
+  // On a phone the open tab is pressed; pressing it again would close its sheet.
+  const open = (await t.getAttribute("aria-pressed")) === "true" || (await t.getAttribute("aria-selected")) === "true";
+  if (!(compact && open) || part === "page" || part === "header") await t.click();
   if (part === "settings") await page.getByRole("button", { name: "Page settings" }).click();
   if (part === "details") await page.getByRole("button", { name: "Business details" }).click();
   void compact;

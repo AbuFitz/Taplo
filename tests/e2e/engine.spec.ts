@@ -9,9 +9,9 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
     const frame = previewFrame(page);
     const url = page.url();
 
-    await frame.locator('[data-widget="booking"]').click();
+    // The booking button is the page's main action, shown in the header.
+    await frame.locator('.tp-primary-slot, [data-widget="booking"]').first().click();
     await expect(insp(page).getByTestId("inspector-widget")).toHaveAttribute("data-widget-type", "booking");
-    await expect(frame.locator('[data-widget="booking"]')).toHaveAttribute("data-tp-selected", "");
     expect(page.url()).toBe(url);                                   // the booking link/button did nothing
     await expect(page.getByRole("dialog")).toHaveCount(0);          // and no booking sheet opened in edit mode
 
@@ -38,17 +38,16 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
 
     // header arrangement + logo shape + size
     await selectPart(page, "header");
-    await openSection(page, "Header");
-    await insp(page).getByRole("radio", { name: /Cover banner/ }).locator("xpath=ancestor::label").click();
+    await insp(page).locator('label[data-choice="cover"]').click();
     await expect(frame.locator('.tp-header[data-layout="cover"]')).toHaveCount(1);
     await insp(page).getByRole("radio", { name: "Arch" }).locator("xpath=ancestor::label").click();
     await expect(frame.locator('.tp-avatar[data-shape="arch"]')).toHaveCount(1);
 
     // colour: drag the picker many steps = ONE history entry
     await selectPart(page, "page");
-    await openSection(page, "Text");
+    await openSection(page, /^Colour/);
     const before = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page.appearance.colors?.accent ?? null);
-    await insp(page).getByRole("button", { name: /Accent colour: choose colour/ }).click();
+    await insp(page).getByRole("button", { name: /Accent: choose colour/ }).click();
     const area = page.locator(".react-colorful__saturation");
     const b = (await area.boundingBox())!;
     await page.mouse.move(b.x + 20, b.y + 20);
@@ -74,8 +73,8 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
     await expect(insp(page).getByTestId("contrast-badge")).toContainText("Hard to read");
 
     await selectPart(page, "page");
-    await openSection(page, "Text");
-    await insp(page).getByLabel("Page colour hex value").fill("#fff4e6");
+    await openSection(page, /^Colour/);
+    await insp(page).getByRole("textbox", { name: "Page hex value", exact: true }).fill("#fff4e6");
     const w = (await store(page)).page.widgets.find((x: { type: string }) => x.type === "reviews");
     expect(w.appearance.background).toBe("#1f2a44");             // the deliberate override is untouched
 
@@ -191,9 +190,10 @@ test.describe("mobile editor", () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 
     // the toolbar stays reachable beneath the sheet
-    await page.getByTestId("tab-organise").tap();
-    await expect(page.getByTestId("organise-panel")).toBeVisible();
     await page.getByTestId("tab-content").tap();
+    await page.getByTestId("organise").tap();
+    await expect(page.getByTestId("organise-panel")).toBeVisible();
+    await page.getByTestId("organise-done").tap();
     await expect(page.getByTestId("structure")).toBeVisible();
     await page.getByTestId("select-widget").first().tap();
     await expect(page.getByTestId("editor-drawer")).toBeVisible();

@@ -60,7 +60,9 @@ function Actions({ vm }: { vm: PageViewModel }) {
       <div className="tp-actions tp-actions-primary">
         {p ? (
           p.kind === "book" && vm.promotedWidgetId ? (
-            <BookingAction {...bookingProps(vm, { label: p.label, variant: "button", hero: true })} />
+            // The wrapper has a box of its own, so a tap on the main action selects the booking widget while editing
+            // (buttons ignore the pointer in the editor).
+            <div className="tp-primary-slot" data-widget-id={vm.promotedWidgetId}><BookingAction {...bookingProps(vm, { label: p.label, variant: "button", hero: true })} /></div>
           ) : (
             <a className="tp-btn" data-hero="" data-primary="" data-event={p.event} href={p.href} {...external(p.kind)}>
               {PI ? <PI aria-hidden="true" className="size-5" /> : null}<span className="tp-btn-main"><span className="tp-btn-label">{p.label}</span></span><ArrowUpRight aria-hidden="true" className="size-4" />

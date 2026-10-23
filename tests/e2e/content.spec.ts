@@ -138,7 +138,7 @@ test.describe("content editing on a phone", () => {
     await expect(page.getByTestId("content-list")).toBeVisible()
     expect(await page.locator('[data-testid="content-list"] [data-testid="drag-handle"]').count()).toBe(0)   // no handles while just editing
     await expect(page.getByTestId("add-widget")).toBeVisible()
-    await page.getByTestId("tab-organise").tap()
+    await page.getByTestId("organise").tap()
     await expect(page.getByTestId("organise-panel")).toBeVisible()
     await page.waitForTimeout(700)
     const start = await rowOrder(page)

@@ -144,7 +144,14 @@ export function summarise(w: StoredWidget, records: BusinessContent | null, ctx:
       case "faq": { const n = pickIds(r.faqs, s.faqIds).length; summary = `${n} ${n === 1 ? "question" : "questions"}`; break }
       case "social": summary = r.contacts.social.map((x) => x.platform).join(", "); break
       case "credentials": summary = r.credentials.slice(0, 3).join(", "); break
-      case "offers": { const n = r.offers.filter((o) => !o.archived).length; summary = `${n} ${n === 1 ? "offer" : "offers"}`; break }
+      case "offers": {
+        // Expired offers hide themselves, so they are not counted as showing.
+        const today = ctx?.today ?? ""
+        const live = r.offers.filter((o) => !o.archived && (!o.endsAt || !today || o.endsAt >= today)).length
+        const expired = r.offers.filter((o) => !o.archived).length - live
+        summary = live ? `${live} ${live === 1 ? "offer" : "offers"}` : expired ? `${expired} expired` : ""
+        break
+      }
       case "call": summary = r.contacts.phone ?? ""; break
       case "whatsapp": summary = r.contacts.whatsapp ?? ""; break
       case "email": summary = r.contacts.email ?? ""; break
