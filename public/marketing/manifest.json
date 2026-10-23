@@ -250,5 +250,266 @@
     "cssHeight": 800,
     "bytes": 96636,
     "source": "/appearance/frame?scenario=dealer"
+  },
+  "bk-1-service": {
+    "file": "/marketing/bk-1-service.webp",
+    "width": 1408,
+    "height": 1424,
+    "cssWidth": 704,
+    "cssHeight": 712,
+    "bytes": 40602,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "bk-2-time": {
+    "file": "/marketing/bk-2-time.webp",
+    "width": 1408,
+    "height": 1620,
+    "cssWidth": 704,
+    "cssHeight": 810,
+    "bytes": 93854,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "bk-3-details": {
+    "file": "/marketing/bk-3-details.webp",
+    "width": 1408,
+    "height": 1316,
+    "cssWidth": 704,
+    "cssHeight": 658,
+    "bytes": 36288,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "bk-4-review": {
+    "file": "/marketing/bk-4-review.webp",
+    "width": 1408,
+    "height": 1116,
+    "cssWidth": 704,
+    "cssHeight": 558,
+    "bytes": 53046,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "bk-5-done": {
+    "file": "/marketing/bk-5-done.webp",
+    "width": 1408,
+    "height": 1172,
+    "cssWidth": 704,
+    "cssHeight": 586,
+    "bytes": 48714,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "bk-request-review": {
+    "file": "/marketing/bk-request-review.webp",
+    "width": 1408,
+    "height": 1156,
+    "cssWidth": 704,
+    "cssHeight": 578,
+    "bytes": 61062,
+    "source": "/appearance/frame?scenario=physio"
+  },
+  "svc-detail": {
+    "file": "/marketing/svc-detail.webp",
+    "width": 1408,
+    "height": 800,
+    "cssWidth": 704,
+    "cssHeight": 400,
+    "bytes": 33022,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "svc-menu-barber": {
+    "file": "/marketing/svc-menu-barber.webp",
+    "width": 716,
+    "height": 724,
+    "cssWidth": 358,
+    "cssHeight": 362,
+    "bytes": 24426,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "svc-menu-physio": {
+    "file": "/marketing/svc-menu-physio.webp",
+    "width": 716,
+    "height": 1018,
+    "cssWidth": 358,
+    "cssHeight": 509,
+    "bytes": 114076,
+    "source": "/appearance/frame?scenario=physio"
+  },
+  "svc-menu-cafe": {
+    "file": "/marketing/svc-menu-cafe.webp",
+    "width": 716,
+    "height": 688,
+    "cssWidth": 358,
+    "cssHeight": 344,
+    "bytes": 26300,
+    "source": "/appearance/frame?scenario=cafe"
+  },
+  "svc-menu-gym": {
+    "file": "/marketing/svc-menu-gym.webp",
+    "width": 716,
+    "height": 1314,
+    "cssWidth": 358,
+    "cssHeight": 657,
+    "bytes": 45954,
+    "source": "/appearance/frame?scenario=gym"
+  },
+  "team-swipe": {
+    "file": "/marketing/team-swipe.webp",
+    "width": 716,
+    "height": 934,
+    "cssWidth": 358,
+    "cssHeight": 467,
+    "bytes": 32064,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "team-grid": {
+    "file": "/marketing/team-grid.webp",
+    "width": 716,
+    "height": 1634,
+    "cssWidth": 358,
+    "cssHeight": 817,
+    "bytes": 122562,
+    "source": "/appearance/frame?scenario=physio"
+  },
+  "team-list": {
+    "file": "/marketing/team-list.webp",
+    "width": 716,
+    "height": 456,
+    "cssWidth": 358,
+    "cssHeight": 228,
+    "bytes": 35958,
+    "source": "/appearance/frame?scenario=trades"
+  },
+  "team-profile": {
+    "file": "/marketing/team-profile.webp",
+    "width": 1408,
+    "height": 1116,
+    "cssWidth": 704,
+    "cssHeight": 558,
+    "bytes": 65040,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "prod-swipe": {
+    "file": "/marketing/prod-swipe.webp",
+    "width": 716,
+    "height": 1128,
+    "cssWidth": 358,
+    "cssHeight": 564,
+    "bytes": 43164,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "prod-detail-affiliate": {
+    "file": "/marketing/prod-detail-affiliate.webp",
+    "width": 1408,
+    "height": 600,
+    "cssWidth": 704,
+    "cssHeight": 300,
+    "bytes": 31146,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "veh-detail": {
+    "file": "/marketing/veh-detail.webp",
+    "width": 1408,
+    "height": 1508,
+    "cssWidth": 704,
+    "cssHeight": 754,
+    "bytes": 122732,
+    "source": "/appearance/frame?scenario=dealer"
+  },
+  "gal-lightbox": {
+    "file": "/marketing/gal-lightbox.webp",
+    "width": 1408,
+    "height": 1620,
+    "cssWidth": 704,
+    "cssHeight": 810,
+    "bytes": 360674,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "rev-quote": {
+    "file": "/marketing/rev-quote.webp",
+    "width": 716,
+    "height": 480,
+    "cssWidth": 358,
+    "cssHeight": 240,
+    "bytes": 44386,
+    "source": "/appearance/frame?scenario=trades"
+  },
+  "enq-inline": {
+    "file": "/marketing/enq-inline.webp",
+    "width": 716,
+    "height": 1346,
+    "cssWidth": 358,
+    "cssHeight": 673,
+    "bytes": 55198,
+    "source": "/appearance/frame?scenario=trades"
+  },
+  "enq-sent": {
+    "file": "/marketing/enq-sent.webp",
+    "width": 716,
+    "height": 622,
+    "cssWidth": 358,
+    "cssHeight": 311,
+    "bytes": 46614,
+    "source": "/appearance/frame?scenario=trades"
+  },
+  "share-sheet": {
+    "file": "/marketing/share-sheet.webp",
+    "width": 1024,
+    "height": 1260,
+    "cssWidth": 512,
+    "cssHeight": 630,
+    "bytes": 82540,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "look-night": {
+    "file": "/marketing/look-night.webp",
+    "width": 780,
+    "height": 1200,
+    "cssWidth": 390,
+    "cssHeight": 600,
+    "bytes": 48834,
+    "source": "/appearance/frame?scenario=barber&look=night"
+  },
+  "look-journal": {
+    "file": "/marketing/look-journal.webp",
+    "width": 780,
+    "height": 1200,
+    "cssWidth": 390,
+    "cssHeight": 600,
+    "bytes": 130140,
+    "source": "/appearance/frame?scenario=barber&look=journal"
+  },
+  "look-clay": {
+    "file": "/marketing/look-clay.webp",
+    "width": 780,
+    "height": 1200,
+    "cssWidth": 390,
+    "cssHeight": 600,
+    "bytes": 52122,
+    "source": "/appearance/frame?scenario=barber&look=clay"
+  },
+  "look-forge": {
+    "file": "/marketing/look-forge.webp",
+    "width": 780,
+    "height": 1200,
+    "cssWidth": 390,
+    "cssHeight": 600,
+    "bytes": 74274,
+    "source": "/appearance/frame?scenario=barber&look=forge"
+  },
+  "look-orchard": {
+    "file": "/marketing/look-orchard.webp",
+    "width": 780,
+    "height": 1200,
+    "cssWidth": 390,
+    "cssHeight": 600,
+    "bytes": 49900,
+    "source": "/appearance/frame?scenario=barber&look=orchard"
+  },
+  "look-showroom": {
+    "file": "/marketing/look-showroom.webp",
+    "width": 780,
+    "height": 1200,
+    "cssWidth": 390,
+    "cssHeight": 600,
+    "bytes": 78228,
+    "source": "/appearance/frame?scenario=barber&look=showroom"
   }
 }
