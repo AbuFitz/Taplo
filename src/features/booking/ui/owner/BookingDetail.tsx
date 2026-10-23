@@ -73,7 +73,8 @@ function Move({ booking, ctx, config, state, update, done }: { booking: Booking;
   const [date, setDate] = React.useState(localParts(booking.startsAt, tz).date)
   const [error, setError] = React.useState("")
   const eligible = service ? eligibleStaff(ctx, service) : [booking.staffId]
-  const day = React.useMemo(() => (service?.durationMinutes ? getAvailability({ now, config, service: { id: service.id, durationMinutes: service.durationMinutes }, eligible, staffPreference: booking.staffId, bookings: state.bookings, holds: state.holds, fromDate: date, days: 1, ignoreBookingId: booking.id })[0] : undefined), [service, now, config, eligible.join(), booking, state, date])  // eslint-disable-line react-hooks/exhaustive-deps
+  const eligibleKey = eligible.join()
+  const day = React.useMemo(() => (service?.durationMinutes ? getAvailability({ now, config, service: { id: service.id, durationMinutes: service.durationMinutes }, eligible, staffPreference: booking.staffId, bookings: state.bookings, holds: state.holds, fromDate: date, days: 1, ignoreBookingId: booking.id })[0] : undefined), [service, now, config, eligibleKey, booking, state, date])  // eslint-disable-line react-hooks/exhaustive-deps
   const move = (startsAt: number) => {
     if (!service?.durationMinutes) return
     let msg = ""
