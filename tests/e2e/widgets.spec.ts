@@ -160,6 +160,15 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
     expect(decoded?.data).toBe(url)
     const [dl] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: "Share image" }).click()])
     expect(dl.suggestedFilename()).toMatch(/marlowe-finch-share\.png$/)
+    // The downloaded share image is 1080x1350 and the QR code inside it scans to the same link.
+    const sharp = (await import("sharp")).default
+    const { data, info } = await sharp(await dl.path()).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+    expect([info.width, info.height]).toEqual([1080, 1350])
+    expect(jsQR(new Uint8ClampedArray(data), info.width, info.height)?.data).toBe(url)
+    const [qrDl] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: "QR code (PNG)" }).click()])
+    expect(qrDl.suggestedFilename()).toMatch(/marlowe-finch-qr\.png$/)
+    const qr = await sharp(await qrDl.path()).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+    expect(jsQR(new Uint8ClampedArray(qr.data), qr.info.width, qr.info.height)?.data).toBe(url)
     const [svgDl] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: /QR code \(SVG/ }).click()])
     expect(svgDl.suggestedFilename()).toMatch(/-qr\.svg$/)
   })
