@@ -122,9 +122,9 @@ export default function Home() {
               <p className="mt-6 max-w-md text-lg leading-relaxed text-white/80">Copy the link, download the code for print, or post the image. Your name, your logo and your words, ready to share.</p>
               <div className="mt-8"><Link href="/product/sharing" className="inline-flex min-h-11 items-center gap-2 font-semibold underline underline-offset-4">Sharing and QR codes<ArrowRight aria-hidden="true" className="size-4" /></Link></div>
             </Reveal>
-            <div className="relative flex items-center justify-center gap-6 lg:col-span-7 lg:justify-end">
-              <Shot id="share-image" alt="The share image: logo, name, a QR code with the Taplo mark, and the link" width={300} frame="none" className="max-w-[46%]" />
-              <div className="w-[min(46%,16rem)] rounded-[2rem] bg-white p-4 shadow-[0_40px_80px_-40px_rgb(0_0_0/0.6)] sm:-mb-10 [&>svg]:h-auto [&>svg]:w-full" aria-hidden="true" dangerouslySetInnerHTML={{ __html: qr }} />
+            <div className="mx-auto grid w-full max-w-xl grid-cols-2 items-center gap-4 sm:gap-8 lg:col-span-7 lg:mx-0 lg:ml-auto">
+              <Shot id="share-image" alt="The share image: logo, name, a QR code with the Taplo mark, and the link" width={300} frame="none" className="w-full min-w-0" />
+              <div className="min-w-0 rounded-[1.5rem] bg-white p-2.5 shadow-[0_40px_80px_-40px_rgb(0_0_0/0.6)] sm:-mb-10 sm:rounded-[2rem] sm:p-4 [&>svg]:h-auto [&>svg]:w-full" aria-hidden="true" dangerouslySetInnerHTML={{ __html: qr }} />
             </div>
           </div>
         </section>

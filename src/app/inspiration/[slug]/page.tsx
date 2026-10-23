@@ -35,7 +35,7 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
               <p className="mt-5 max-w-2xl text-xl leading-relaxed text-foreground/70">{e.hook} {f.tagline}</p>
             </div>
             <div className="lg:col-span-4 lg:text-right">
-              <UseDesign slug={e.slug} lookId={f.lookId} lookName={f.lookName} />
+              <UseDesign slug={e.slug} lookId={f.lookId} lookName={f.lookName} overrides={f.overrides} />
               <p className="mt-3 text-sm text-foreground/55">Shown with a fictional business. Every part can be changed.</p>
             </div>
           </div>

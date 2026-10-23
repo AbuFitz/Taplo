@@ -5,7 +5,7 @@
     "height": 1200,
     "cssWidth": 1280,
     "cssHeight": 800,
-    "bytes": 119006,
+    "bytes": 118020,
     "source": "/appearance/frame?scenario=dealer&look=showroom"
   },
   "hero-barber": {
@@ -14,7 +14,7 @@
     "height": 1400,
     "cssWidth": 390,
     "cssHeight": 700,
-    "bytes": 55438,
+    "bytes": 53892,
     "source": "/appearance/frame?scenario=barber&look=night"
   },
   "hero-dealer": {
@@ -23,7 +23,7 @@
     "height": 1400,
     "cssWidth": 390,
     "cssHeight": 700,
-    "bytes": 83320,
+    "bytes": 81108,
     "source": "/appearance/frame?scenario=dealer&look=showroom"
   },
   "hero-trades": {
@@ -32,7 +32,7 @@
     "height": 1400,
     "cssWidth": 390,
     "cssHeight": 700,
-    "bytes": 74142,
+    "bytes": 72174,
     "source": "/appearance/frame?scenario=trades&look=colour"
   },
   "yours-1-clean": {
@@ -41,7 +41,7 @@
     "height": 1520,
     "cssWidth": 390,
     "cssHeight": 760,
-    "bytes": 56254,
+    "bytes": 56364,
     "source": "/appearance/frame?scenario=barber&look=clean"
   },
   "yours-2-colour": {
@@ -50,7 +50,7 @@
     "height": 1520,
     "cssWidth": 390,
     "cssHeight": 760,
-    "bytes": 56514,
+    "bytes": 56444,
     "source": "/appearance/frame?scenario=barber&look=clean"
   },
   "yours-3-type": {
@@ -59,7 +59,7 @@
     "height": 1520,
     "cssWidth": 390,
     "cssHeight": 760,
-    "bytes": 88094,
+    "bytes": 87356,
     "source": "/appearance/frame?scenario=barber&look=clean"
   },
   "yours-4-final": {
@@ -68,52 +68,52 @@
     "height": 1520,
     "cssWidth": 390,
     "cssHeight": 760,
-    "bytes": 89480,
+    "bytes": 88542,
     "source": "/appearance/frame?scenario=barber&look=clean"
   },
   "cap-services": {
     "file": "/marketing/cap-services.webp",
     "width": 716,
-    "height": 724,
+    "height": 736,
     "cssWidth": 358,
-    "cssHeight": 362,
-    "bytes": 24426,
+    "cssHeight": 368,
+    "bytes": 25004,
     "source": "/appearance/frame?scenario=barber&look=night"
   },
   "cap-product": {
     "file": "/marketing/cap-product.webp",
     "width": 716,
-    "height": 1010,
+    "height": 1032,
     "cssWidth": 358,
-    "cssHeight": 505,
-    "bytes": 46198,
+    "cssHeight": 516,
+    "bytes": 46622,
     "source": "/appearance/frame?scenario=barber&look=night"
   },
   "cap-vehicles": {
     "file": "/marketing/cap-vehicles.webp",
     "width": 716,
-    "height": 1738,
+    "height": 1980,
     "cssWidth": 358,
-    "cssHeight": 869,
-    "bytes": 127934,
+    "cssHeight": 990,
+    "bytes": 138546,
     "source": "/appearance/frame?scenario=dealer&look=showroom"
   },
   "cap-fixed-prices": {
     "file": "/marketing/cap-fixed-prices.webp",
     "width": 716,
-    "height": 1190,
+    "height": 1224,
     "cssWidth": 358,
-    "cssHeight": 595,
-    "bytes": 59750,
+    "cssHeight": 612,
+    "bytes": 60040,
     "source": "/appearance/frame?scenario=trades&look=colour"
   },
   "cap-reviews": {
     "file": "/marketing/cap-reviews.webp",
     "width": 716,
-    "height": 480,
+    "height": 470,
     "cssWidth": 358,
-    "cssHeight": 240,
-    "bytes": 44386,
+    "cssHeight": 235,
+    "bytes": 41504,
     "source": "/appearance/frame?scenario=trades&look=colour"
   },
   "desk-barber": {
@@ -122,7 +122,7 @@
     "height": 1200,
     "cssWidth": 1280,
     "cssHeight": 800,
-    "bytes": 49318,
+    "bytes": 51164,
     "source": "/appearance/frame?scenario=barber&look=night"
   },
   "ex-marlowe-and-finch-phone": {
@@ -131,7 +131,7 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 56708,
+    "bytes": 82802,
     "source": "/appearance/frame?scenario=barber"
   },
   "ex-marlowe-and-finch-desk": {
@@ -140,7 +140,7 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 66560,
+    "bytes": 148390,
     "source": "/appearance/frame?scenario=barber"
   },
   "ex-hollin-physio-phone": {
@@ -149,7 +149,7 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 68932,
+    "bytes": 65342,
     "source": "/appearance/frame?scenario=physio"
   },
   "ex-hollin-physio-desk": {
@@ -158,7 +158,7 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 81058,
+    "bytes": 84240,
     "source": "/appearance/frame?scenario=physio"
   },
   "ex-pims-kitchen-phone": {
@@ -167,7 +167,7 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 73132,
+    "bytes": 168244,
     "source": "/appearance/frame?scenario=cafe"
   },
   "ex-pims-kitchen-desk": {
@@ -176,7 +176,7 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 94434,
+    "bytes": 311092,
     "source": "/appearance/frame?scenario=cafe"
   },
   "ex-ada-okafor-maths-phone": {
@@ -185,7 +185,7 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 66578,
+    "bytes": 75700,
     "source": "/appearance/frame?scenario=tutor"
   },
   "ex-ada-okafor-maths-desk": {
@@ -194,7 +194,7 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 122560,
+    "bytes": 137188,
     "source": "/appearance/frame?scenario=tutor"
   },
   "ex-forge-strength-phone": {
@@ -203,7 +203,7 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 61254,
+    "bytes": 99168,
     "source": "/appearance/frame?scenario=gym"
   },
   "ex-forge-strength-desk": {
@@ -212,7 +212,7 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 131106,
+    "bytes": 242660,
     "source": "/appearance/frame?scenario=gym"
   },
   "ex-northgate-heating-phone": {
@@ -221,7 +221,7 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 84556,
+    "bytes": 94704,
     "source": "/appearance/frame?scenario=trades"
   },
   "ex-northgate-heating-desk": {
@@ -230,7 +230,7 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 101110,
+    "bytes": 115886,
     "source": "/appearance/frame?scenario=trades"
   },
   "ex-aldous-motor-co-phone": {
@@ -239,7 +239,7 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 90924,
+    "bytes": 89860,
     "source": "/appearance/frame?scenario=dealer"
   },
   "ex-aldous-motor-co-desk": {
@@ -248,7 +248,7 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 160838,
+    "bytes": 156836,
     "source": "/appearance/frame?scenario=dealer"
   },
   "bk-1-service": {
@@ -257,7 +257,7 @@
     "height": 1424,
     "cssWidth": 704,
     "cssHeight": 712,
-    "bytes": 40602,
+    "bytes": 40656,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-2-time": {
@@ -266,7 +266,7 @@
     "height": 1620,
     "cssWidth": 704,
     "cssHeight": 810,
-    "bytes": 83976,
+    "bytes": 94216,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-3-details": {
@@ -275,7 +275,7 @@
     "height": 1316,
     "cssWidth": 704,
     "cssHeight": 658,
-    "bytes": 37226,
+    "bytes": 37754,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-4-review": {
@@ -284,7 +284,7 @@
     "height": 1116,
     "cssWidth": 704,
     "cssHeight": 558,
-    "bytes": 52704,
+    "bytes": 54840,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-5-done": {
@@ -293,7 +293,7 @@
     "height": 1172,
     "cssWidth": 704,
     "cssHeight": 586,
-    "bytes": 48652,
+    "bytes": 49156,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-request-review": {
@@ -302,7 +302,7 @@
     "height": 1156,
     "cssWidth": 704,
     "cssHeight": 578,
-    "bytes": 62588,
+    "bytes": 60964,
     "source": "/appearance/frame?scenario=physio"
   },
   "svc-detail": {
@@ -311,70 +311,70 @@
     "height": 800,
     "cssWidth": 704,
     "cssHeight": 400,
-    "bytes": 33022,
+    "bytes": 33852,
     "source": "/appearance/frame?scenario=barber"
   },
   "svc-menu-barber": {
     "file": "/marketing/svc-menu-barber.webp",
     "width": 716,
-    "height": 724,
+    "height": 736,
     "cssWidth": 358,
-    "cssHeight": 362,
-    "bytes": 24426,
+    "cssHeight": 368,
+    "bytes": 25004,
     "source": "/appearance/frame?scenario=barber"
   },
   "svc-menu-physio": {
     "file": "/marketing/svc-menu-physio.webp",
     "width": 716,
-    "height": 964,
+    "height": 982,
     "cssWidth": 358,
-    "cssHeight": 482,
-    "bytes": 46012,
+    "cssHeight": 491,
+    "bytes": 45466,
     "source": "/appearance/frame?scenario=physio"
   },
   "svc-menu-cafe": {
     "file": "/marketing/svc-menu-cafe.webp",
     "width": 716,
-    "height": 656,
+    "height": 666,
     "cssWidth": 358,
-    "cssHeight": 328,
-    "bytes": 32482,
+    "cssHeight": 333,
+    "bytes": 32092,
     "source": "/appearance/frame?scenario=cafe"
   },
   "svc-menu-gym": {
     "file": "/marketing/svc-menu-gym.webp",
     "width": 716,
-    "height": 1102,
+    "height": 1136,
     "cssWidth": 358,
-    "cssHeight": 551,
-    "bytes": 43312,
+    "cssHeight": 568,
+    "bytes": 42702,
     "source": "/appearance/frame?scenario=gym"
   },
   "team-swipe": {
     "file": "/marketing/team-swipe.webp",
     "width": 716,
-    "height": 834,
+    "height": 856,
     "cssWidth": 358,
-    "cssHeight": 417,
-    "bytes": 27670,
+    "cssHeight": 428,
+    "bytes": 27762,
     "source": "/appearance/frame?scenario=barber"
   },
   "team-grid": {
     "file": "/marketing/team-grid.webp",
     "width": 716,
-    "height": 1516,
+    "height": 1558,
     "cssWidth": 358,
-    "cssHeight": 758,
-    "bytes": 40510,
+    "cssHeight": 779,
+    "bytes": 39118,
     "source": "/appearance/frame?scenario=physio"
   },
   "team-list": {
     "file": "/marketing/team-list.webp",
     "width": 716,
-    "height": 388,
+    "height": 406,
     "cssWidth": 358,
-    "cssHeight": 194,
-    "bytes": 37428,
+    "cssHeight": 203,
+    "bytes": 37724,
     "source": "/appearance/frame?scenario=trades"
   },
   "team-profile": {
@@ -383,25 +383,25 @@
     "height": 1116,
     "cssWidth": 704,
     "cssHeight": 558,
-    "bytes": 65550,
+    "bytes": 67122,
     "source": "/appearance/frame?scenario=barber"
   },
   "prod-swipe": {
     "file": "/marketing/prod-swipe.webp",
     "width": 716,
-    "height": 1010,
+    "height": 1034,
     "cssWidth": 358,
-    "cssHeight": 505,
-    "bytes": 46198,
+    "cssHeight": 517,
+    "bytes": 46606,
     "source": "/appearance/frame?scenario=barber"
   },
   "prod-detail-affiliate": {
     "file": "/marketing/prod-detail-affiliate.webp",
     "width": 1408,
-    "height": 600,
+    "height": 604,
     "cssWidth": 704,
-    "cssHeight": 300,
-    "bytes": 30902,
+    "cssHeight": 302,
+    "bytes": 30776,
     "source": "/appearance/frame?scenario=barber"
   },
   "veh-detail": {
@@ -410,7 +410,7 @@
     "height": 1508,
     "cssWidth": 704,
     "cssHeight": 754,
-    "bytes": 122758,
+    "bytes": 122790,
     "source": "/appearance/frame?scenario=dealer"
   },
   "gal-lightbox": {
@@ -419,16 +419,16 @@
     "height": 1620,
     "cssWidth": 704,
     "cssHeight": 810,
-    "bytes": 360674,
+    "bytes": 361244,
     "source": "/appearance/frame?scenario=barber"
   },
   "rev-quote": {
     "file": "/marketing/rev-quote.webp",
     "width": 716,
-    "height": 480,
+    "height": 470,
     "cssWidth": 358,
-    "cssHeight": 240,
-    "bytes": 44386,
+    "cssHeight": 235,
+    "bytes": 41504,
     "source": "/appearance/frame?scenario=trades"
   },
   "enq-inline": {
@@ -437,7 +437,7 @@
     "height": 1346,
     "cssWidth": 358,
     "cssHeight": 673,
-    "bytes": 55198,
+    "bytes": 54382,
     "source": "/appearance/frame?scenario=trades"
   },
   "enq-sent": {
@@ -446,16 +446,16 @@
     "height": 622,
     "cssWidth": 358,
     "cssHeight": 311,
-    "bytes": 46614,
+    "bytes": 46654,
     "source": "/appearance/frame?scenario=trades"
   },
   "share-sheet": {
     "file": "/marketing/share-sheet.webp",
     "width": 1024,
-    "height": 1260,
+    "height": 1312,
     "cssWidth": 512,
-    "cssHeight": 630,
-    "bytes": 81724,
+    "cssHeight": 656,
+    "bytes": 80182,
     "source": "/appearance/frame?scenario=barber"
   },
   "look-night": {
@@ -464,7 +464,7 @@
     "height": 1200,
     "cssWidth": 390,
     "cssHeight": 600,
-    "bytes": 48834,
+    "bytes": 47658,
     "source": "/appearance/frame?scenario=barber&look=night"
   },
   "look-journal": {
@@ -473,7 +473,7 @@
     "height": 1200,
     "cssWidth": 390,
     "cssHeight": 600,
-    "bytes": 42608,
+    "bytes": 45910,
     "source": "/appearance/frame?scenario=barber&look=journal"
   },
   "look-clay": {
@@ -482,7 +482,7 @@
     "height": 1200,
     "cssWidth": 390,
     "cssHeight": 600,
-    "bytes": 51116,
+    "bytes": 54926,
     "source": "/appearance/frame?scenario=barber&look=clay"
   },
   "look-forge": {
@@ -491,7 +491,7 @@
     "height": 1200,
     "cssWidth": 390,
     "cssHeight": 600,
-    "bytes": 77764,
+    "bytes": 76822,
     "source": "/appearance/frame?scenario=barber&look=forge"
   },
   "look-orchard": {
@@ -500,7 +500,7 @@
     "height": 1200,
     "cssWidth": 390,
     "cssHeight": 600,
-    "bytes": 49968,
+    "bytes": 49066,
     "source": "/appearance/frame?scenario=barber&look=orchard"
   },
   "look-showroom": {
@@ -509,7 +509,7 @@
     "height": 1200,
     "cssWidth": 390,
     "cssHeight": 600,
-    "bytes": 74412,
+    "bytes": 73844,
     "source": "/appearance/frame?scenario=barber&look=showroom"
   },
   "share-image": {
@@ -518,7 +518,7 @@
     "height": 1350,
     "cssWidth": 540,
     "cssHeight": 675,
-    "bytes": 39604,
+    "bytes": 59420,
     "source": "/appearance/frame?scenario=barber"
   },
   "setup-1-name": {
@@ -527,7 +527,7 @@
     "height": 1400,
     "cssWidth": 1100,
     "cssHeight": 700,
-    "bytes": 72822,
+    "bytes": 70364,
     "source": "/onboarding"
   },
   "setup-3-start": {
@@ -536,7 +536,7 @@
     "height": 1400,
     "cssWidth": 1100,
     "cssHeight": 700,
-    "bytes": 142540,
+    "bytes": 141754,
     "source": "/onboarding"
   },
   "setup-4-contact": {
@@ -545,7 +545,7 @@
     "height": 1400,
     "cssWidth": 1100,
     "cssHeight": 700,
-    "bytes": 89278,
+    "bytes": 88062,
     "source": "/onboarding"
   }
 }

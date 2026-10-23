@@ -1,7 +1,7 @@
 import type { IndustryId } from "@/features/marketing/ia"
 import { FONT_LABELS } from "@/features/page/themes/fonts"
 import { LOOKS } from "@/features/page/themes/looks"
-import { EXAMPLE_LOOK } from "@/features/showcase/lab-state"
+import { EXAMPLE_LOOK, EXAMPLE_OVERRIDES } from "@/features/showcase/lab-state"
 import { SCENARIOS, type Scenario } from "@/features/showcase/content"
 import type { WidgetType } from "@/features/page/contracts/widgets"
 
@@ -78,7 +78,7 @@ const WIDGET_NAME: Partial<Record<WidgetType, string>> = {
 export function describe(e: Example) {
   const sc = SCENARIOS[e.scenario]
   const look = LOOKS.find((l) => l.id === EXAMPLE_LOOK[e.scenario])!
-  const o = look.overrides
+  const o = { ...look.overrides, header: { ...look.overrides.header, ...EXAMPLE_OVERRIDES[e.scenario].header }, layout: { ...look.overrides.layout, ...EXAMPLE_OVERRIDES[e.scenario].layout } }
   const stock = (sc.content.products ?? []).length > 0 && (sc.content.products ?? []).every((p) => p.kind === "vehicle")
   const content = [...new Set(sc.widgets().map((w) => (stock && w.type === "products" ? "Vehicle stock" : WIDGET_NAME[w.type as WidgetType])).filter((x): x is string => Boolean(x)))]
   const businessName = sc.content.identity.name
@@ -97,6 +97,7 @@ export function describe(e: Example) {
     content,
     bookingMode: sc.content.booking?.mode ?? "contact",
     colors: o.colors!,
+    overrides: EXAMPLE_OVERRIDES[e.scenario],
   }
 }
 export type ExampleFacts = ReturnType<typeof describe>

@@ -14,8 +14,24 @@ export interface LabConfig {
 /** The look each example was designed with. */
 export const EXAMPLE_LOOK: Record<Scenario, string> = { barber: "night", dealer: "showroom", trades: "colour", physio: "journal", cafe: "clay", tutor: "orchard", gym: "forge" }
 
-export function initialConfig(scenario: Scenario = "barber", lookId: string = EXAMPLE_LOOK[scenario]): LabConfig {
-  return { scenario, themeId: getTheme(lookId) ? lookId : DEFAULT_THEME_ID, overrides: {} }
+/**
+ * How each example is arranged on top of its look: the header, how wide the page is and what it does on a computer. These
+ * are the owner's own controls (Header and Design tabs), so anything shown in the gallery can be reproduced in the editor.
+ */
+export const EXAMPLE_OVERRIDES: Record<Scenario, StyleOverrides> = {
+  barber: { header: { layout: "poster", avatarShape: "rounded", avatarSize: "sm", align: "left", scrim: "strong" }, layout: { desktop: "split", width: "regular" } },
+  physio: { header: { align: "left" }, layout: { desktop: "split" } },
+  cafe: { header: { layout: "cover", avatarShape: "circle", avatarSize: "md", align: "center" }, layout: { desktop: "columns", width: "wide" } },
+  tutor: { header: { layout: "cover", avatarShape: "circle", avatarSize: "md", align: "left" }, layout: { desktop: "split" } },
+  gym: { header: { layout: "poster", avatarShape: "square", avatarSize: "sm", align: "left", scrim: "strong" }, layout: { desktop: "columns", width: "wide" } },
+  trades: { header: { layout: "cover", avatarShape: "circle", avatarSize: "lg", align: "center" }, layout: { desktop: "centered", width: "regular" } },
+  dealer: { layout: { desktop: "columns", width: "wide" } },
+}
+
+/** A scenario on its own look opens as the designed example; an explicit look (the looks sheet, the lab) shows that look plain. */
+export function initialConfig(scenario: Scenario = "barber", lookId?: string): LabConfig {
+  const id = lookId ?? EXAMPLE_LOOK[scenario]
+  return { scenario, themeId: getTheme(id) ? id : DEFAULT_THEME_ID, overrides: lookId === undefined ? structuredClone(EXAMPLE_OVERRIDES[scenario]) : {} }
 }
 
 /** One stable set of widgets per scenario, so changing appearance never touches content or order. */

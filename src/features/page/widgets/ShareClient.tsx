@@ -158,11 +158,9 @@ function ShareBody({ data }: { data: ShareData }) {
   const [note, setNote] = React.useState("")
   const [mark, setMark] = React.useState<QrLogo | null>(null)
   const [bizLogo, setBizLogo] = React.useState<QrLogo | null>(null)
-  const [colours, setColours] = React.useState({ bg: "#ffffff", fg: "#111111", accent: "#111111", accentText: "#ffffff" })
   const root = React.useRef<HTMLDivElement>(null)
   const themed = () => root.current?.closest<HTMLElement>("[data-taplo-theme]") ?? document.querySelector<HTMLElement>("[data-taplo-theme]")
 
-  React.useEffect(() => { setColours(readColours(themed())) }, [where])
   React.useEffect(() => { let live = true; loadQrLogo(TAPLO_MARK).then((l) => { if (live) setMark(l) }); return () => { live = false } }, [])
   React.useEffect(() => { let live = true; loadQrLogo(data.logo).then((l) => { if (live) setBizLogo(l) }); return () => { live = false } }, [data.logo])
 
@@ -174,7 +172,7 @@ function ShareBody({ data }: { data: ShareData }) {
     try { await navigator.clipboard.writeText(url); say("Link copied") }
     catch { const t = root.current?.querySelector<HTMLInputElement>("input[readonly]"); t?.select(); say("Press copy on your keyboard to copy the link") }
   }
-  const imageBlob = () => renderShareImage({ name: data.name, tagline: data.tagline, url, action: data.action ?? "Scan to open our page", logo: bizLogo, qr: style, fonts: readFonts(themed()), colours })
+  const imageBlob = () => renderShareImage({ name: data.name, tagline: data.tagline, url, action: data.action ?? "Scan to open our page", logo: bizLogo, qr: style, fonts: readFonts(themed()), colours: readColours(themed()) })
   const shareNative = async () => {
     try {
       const blob = await imageBlob()

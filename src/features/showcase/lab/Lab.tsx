@@ -12,7 +12,7 @@ import { useHistory } from "@/features/appearance/useHistory"
 import type { StyleOverrides } from "@/features/page/contracts/style"
 import "@/features/page/themes/fonts"
 import { SCENARIOS, type Scenario } from "../content"
-import { initialConfig } from "../lab-state"
+import { EXAMPLE_LOOK, initialConfig } from "../lab-state"
 import { DesktopFrame, PhoneFrame, useFrames } from "./DeviceFrames"
 
 interface Appearance { themeId: string; overrides: StyleOverrides }
@@ -23,7 +23,7 @@ interface Appearance { themeId: string; overrides: StyleOverrides }
  */
 export function Lab() {
   const [scenario, setScenario] = React.useState<Scenario>("barber")
-  const start = React.useMemo(() => initialConfig("barber"), [])
+  const start = React.useMemo(() => initialConfig("barber", EXAMPLE_LOOK.barber), [])
   const h = useHistory<Appearance>(() => ({ themeId: start.themeId, overrides: start.overrides }))
   const { themeId, overrides } = h.value
   const register = useFrames(scenario, themeId, overrides)

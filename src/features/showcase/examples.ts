@@ -1,5 +1,5 @@
 import type { BusinessContentInput } from "@/features/businesses/content"
-import { hours, newWidget, person, svc } from "./helpers"
+import { hours, newWidget, person, photo, svc } from "./helpers"
 
 /**
  * Four more fictional businesses for the inspiration gallery. They carry no photographs or illustrated people on purpose: the only artwork is each business's flat logo (scripts/marketing/logos.mjs), so no real person or place is implied. Names,
@@ -57,6 +57,7 @@ export const CAFE: BusinessContentInput = {
     slug: "pims-kitchen",
     tagline: "Breakfast, brunch and very good coffee on Chapel Street.",
     logo: logo("pim-mark", "Pim's Kitchen mark"),
+    heroImage: photo("cafe-hero", "A table of eggs, waffles, fruit and coffee seen from above", 1600, 1067, { x: 50, y: 48 }),
     industryKey: "hospitality",
     industryLabel: "Café",
   },
@@ -78,7 +79,11 @@ export const CAFE: BusinessContentInput = {
     { ...svc("c5", "Groups", "Table for four to eight", 0, 90, "Reserve a table for a group. We confirm by message.", 5, "request"), priceMode: "free" as const, priceMinor: undefined },
   ],
   staff: [],
-  gallery: [],
+  gallery: [
+    { id: "g1", image: photo("cafe-toast", "Egg on avocado toast on a white plate", 1600, 1600, { x: 50, y: 50 }), caption: "Eggs on toast" },
+    { id: "g2", image: photo("cafe-window", "A small table by a tall window with a cafetière and cups", 1600, 1067, { x: 45, y: 55 }), caption: "The window table" },
+    { id: "g3", image: photo("cafe-latte", "Two flat whites on a wooden table", 1600, 1067, { x: 55, y: 50 }), caption: "Flat whites" },
+  ],
   testimonials: [review("t1", "The shakshuka alone is worth the walk.", "Imogen P.")],
   reviewLinks: [],
   faqs: [
@@ -97,6 +102,7 @@ export const TUTOR: BusinessContentInput = {
     slug: "ada-okafor-maths",
     tagline: "GCSE and A-level maths tuition, in person in Bristol or online.",
     logo: logo("ada-mark", "Ada Okafor Maths mark"),
+    heroImage: photo("tutor-hero", "A hand writing notes beside a mug and a notebook", 1600, 1067, { x: 55, y: 50 }),
     industryKey: "tutor",
     industryLabel: "Tutoring",
   },
@@ -132,6 +138,7 @@ export const GYM: BusinessContentInput = {
     slug: "forge-strength",
     tagline: "Small-group strength classes. Coached every rep.",
     logo: logo("forge-mark", "Forge Strength mark"),
+    heroImage: photo("gym-hero", "A lifter gripping a loaded barbell on a rubber gym floor", 1600, 1067, { x: 62, y: 45 }),
     industryKey: "personal-trainer",
     industryLabel: "Fitness studio",
   },
@@ -153,7 +160,11 @@ export const GYM: BusinessContentInput = {
     person("noa", "Noa Fenwick", "Coach", "Noa leads the Saturday classes and teaches the beginners foundations.", ["g1", "g2", "g3"], ["Olympic lifting"]),
     person("kit", "Kit Osei", "Coach", "Kit programmes the one-to-one clients and runs recovery sessions.", ["g4"], ["Programming"]),
   ],
-  gallery: [],
+  gallery: [
+    { id: "g1", image: photo("gym-weights", "A rack of dumbbells in a bright gym", 1600, 1067, { x: 40, y: 50 }), caption: "The floor" },
+    { id: "g2", image: photo("gym-ropes", "Battle ropes being swung beneath a concrete bridge", 1600, 1069, { x: 55, y: 50 }), caption: "Conditioning" },
+    { id: "g3", image: photo("gym-floor", "A spacious white studio with bikes and racks", 1600, 1067, { x: 50, y: 50 }), caption: "The studio" },
+  ],
   testimonials: [review("t1", "Six in a class means the coach actually sees you.", "Dev P."), review("t2", "I came to get fitter and ended up deadlifting my bodyweight.", "Sarah L.")],
   reviewLinks: [],
   faqs: [
@@ -179,6 +190,7 @@ export const EXTRA_WIDGETS = {
   ],
   cafe: () => [
     newWidget("booking", { label: "Request a group table", variant: "button" }),
+    newWidget("gallery", { title: "From the kitchen", variant: "grid" }),
     newWidget("priceMenu", { title: "The menu" }),
     newWidget("reviews", { title: "Regulars say", variant: "quote" }),
     newWidget("hours", { title: "Opening times", variant: "compact" }),
@@ -198,6 +210,7 @@ export const EXTRA_WIDGETS = {
   gym: () => [
     newWidget("booking", { label: "Book your free intro", serviceId: "g1", variant: "button" }),
     newWidget("serviceList", { title: "Classes and coaching", variant: "cards" }),
+    newWidget("gallery", { title: "Inside Forge", variant: "swipe" }),
     newWidget("team", { title: "Your coaches", variant: "swipe" }),
     newWidget("reviews", { title: "Members", variant: "swipe" }),
     newWidget("faq", { title: "Questions" }),

@@ -140,6 +140,7 @@ export const TRADES: BusinessContentInput = {
     slug: "northgate-heating",
     tagline: "Boilers, leaks and bathrooms. Gas Safe engineers, fixed prices, same-day call-outs.",
     logo: { src: "/showcase/northgate-mark.svg", alt: "Northgate mark", width: 256, height: 256 },
+    heroImage: photo("trades-hero", "An engineer soldering a pipe fitting under a work light", 1600, 1067, { x: 52, y: 40 }),
     industryKey: "plumber",
     industryLabel: "Heating and plumbing",
   },
@@ -164,7 +165,10 @@ export const TRADES: BusinessContentInput = {
     person("tomas", "Tomas Nowak", "Gas engineer", "Tomas does most of the boiler repairs and annual services, and is the person who usually answers the emergency line.", ["n1", "n2", "n3", "n4"], ["Boilers", "Heating"], ["Gas Safe registered (fictional example)"]),
     person("kofi", "Kofi Mensah", "Plumber and bathroom fitter", "Kofi covers leaks, bathrooms and anything involving pipes, and is the one to ask about a bathroom quote.", ["n3", "n4", "n5"], ["Leaks", "Bathrooms"]),
   ],
-  gallery: [],
+  gallery: [
+    { id: "g1", image: photo("trades-tap", "Chrome bathroom taps over a basin", 1600, 1067, { x: 50, y: 50 }), caption: "A bathroom refit" },
+    { id: "g2", image: photo("trades-hero", "An engineer soldering a pipe fitting under a work light", 1600, 1067, { x: 52, y: 40 }), caption: "On a call-out" },
+  ],
   testimonials: [
     { id: "t1", quote: "Boiler failed on a Sunday night. Someone was here by ten the next morning and it was fixed within the hour.", author: "Amara O.", source: "owner_supplied", permissionConfirmed: true },
     { id: "t2", quote: "Fixed price, on time and they cleaned up after themselves.", author: "Tom H.", source: "owner_supplied", permissionConfirmed: true },
@@ -210,6 +214,7 @@ export const SCENARIOS: Record<Scenario, { label: string; content: BusinessConte
       newWidget("booking", { label: "Request a visit", variant: "button" }),
       newWidget("serviceList", { title: "Fixed prices", variant: "cards" }),
       newWidget("team", { title: "Your engineers", variant: "list" }),
+      newWidget("gallery", { title: "Recent work", variant: "grid" }),
       newWidget("reviews", { title: "What customers say", variant: "quote" }),
       newWidget("serviceArea", { title: "Where we work" }),
       newWidget("faq", { title: "Questions" }),

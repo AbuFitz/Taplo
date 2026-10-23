@@ -3,13 +3,14 @@
 import * as React from "react"
 import Link from "next/link"
 import { Shot } from "@/features/marketing/Shot"
+import type { StyleOverrides } from "@/features/page/contracts/style"
 import { UseDesign } from "./UseDesign"
 import { cn } from "@/lib/utils"
 import { CAPABILITY_TAGS, STYLE_TAGS, type CapabilityTag, type StyleTag } from "./facets"
 
 export interface GalleryItem {
   slug: string; name: string; hook: string; industry: string; industryLabel: string
-  lookId: string; lookName: string; heading: string; header: string
+  lookId: string; lookName: string; overrides: StyleOverrides; heading: string; header: string
   style: StyleTag[]; capabilities: CapabilityTag[]
 }
 export interface GalleryProps { items: GalleryItem[]; industries: { id: string; label: string }[]; initialIndustry?: string }
@@ -69,7 +70,7 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
                   <p className="mt-1 text-foreground/70">{d.hook}</p>
                   <p className="mt-2 text-sm text-foreground/55">{d.heading} · {d.header} header · shown with {d.name}</p>
                 </div>
-                <UseDesign slug={d.slug} lookId={d.lookId} lookName={d.lookName} size="sm" />
+                <UseDesign slug={d.slug} lookId={d.lookId} lookName={d.lookName} overrides={d.overrides} size="sm" />
               </div>
             </li>
           ))}

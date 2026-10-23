@@ -1,7 +1,7 @@
 import { EXAMPLES } from "./examples"
 import { LOOKS, type Look } from "@/features/page/themes/looks"
 import { SCENARIOS } from "@/features/showcase/content"
-import { EXAMPLE_LOOK } from "@/features/showcase/lab-state"
+import { EXAMPLE_LOOK, EXAMPLE_OVERRIDES } from "@/features/showcase/lab-state"
 
 import { suggestedLookIds } from "@/features/themes/presets/look-suggestions"
 
@@ -22,6 +22,7 @@ export function exampleStart(slug: string) {
     industryKey: sc.content.identity.industryKey,
     industryLabel: sc.content.identity.industryLabel ?? "",
     lookId: EXAMPLE_LOOK[e.scenario],
+    overrides: EXAMPLE_OVERRIDES[e.scenario],
     bookingMode: sc.content.booking?.mode ?? "contact",
     widgets: sc.widgets().map((w) => ({ type: w.type, settings: w.settings as Record<string, unknown> })),
   }
