@@ -68,7 +68,7 @@
     "height": 1520,
     "cssWidth": 390,
     "cssHeight": 760,
-    "bytes": 88542,
+    "bytes": 88524,
     "source": "/appearance/frame?scenario=barber&look=clean"
   },
   "cap-services": {
@@ -83,10 +83,10 @@
   "cap-product": {
     "file": "/marketing/cap-product.webp",
     "width": 716,
-    "height": 1032,
+    "height": 1034,
     "cssWidth": 358,
-    "cssHeight": 516,
-    "bytes": 46622,
+    "cssHeight": 517,
+    "bytes": 46366,
     "source": "/appearance/frame?scenario=barber&look=night"
   },
   "cap-vehicles": {
@@ -122,7 +122,7 @@
     "height": 1200,
     "cssWidth": 1280,
     "cssHeight": 800,
-    "bytes": 51164,
+    "bytes": 56808,
     "source": "/appearance/frame?scenario=barber&look=night"
   },
   "ex-marlowe-and-finch-phone": {
@@ -140,7 +140,7 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 148390,
+    "bytes": 161346,
     "source": "/appearance/frame?scenario=barber"
   },
   "ex-hollin-physio-phone": {
@@ -158,7 +158,7 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 84240,
+    "bytes": 121272,
     "source": "/appearance/frame?scenario=physio"
   },
   "ex-pims-kitchen-phone": {
@@ -257,7 +257,7 @@
     "height": 1424,
     "cssWidth": 704,
     "cssHeight": 712,
-    "bytes": 40656,
+    "bytes": 40784,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-2-time": {
@@ -266,7 +266,7 @@
     "height": 1620,
     "cssWidth": 704,
     "cssHeight": 810,
-    "bytes": 94216,
+    "bytes": 94202,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-3-details": {
@@ -275,7 +275,7 @@
     "height": 1316,
     "cssWidth": 704,
     "cssHeight": 658,
-    "bytes": 37754,
+    "bytes": 38058,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-4-review": {
@@ -284,7 +284,7 @@
     "height": 1116,
     "cssWidth": 704,
     "cssHeight": 558,
-    "bytes": 54840,
+    "bytes": 53934,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-5-done": {
@@ -293,7 +293,7 @@
     "height": 1172,
     "cssWidth": 704,
     "cssHeight": 586,
-    "bytes": 49156,
+    "bytes": 49164,
     "source": "/appearance/frame?scenario=barber"
   },
   "bk-request-review": {
@@ -302,7 +302,7 @@
     "height": 1156,
     "cssWidth": 704,
     "cssHeight": 578,
-    "bytes": 60964,
+    "bytes": 60922,
     "source": "/appearance/frame?scenario=physio"
   },
   "svc-detail": {
@@ -311,7 +311,7 @@
     "height": 800,
     "cssWidth": 704,
     "cssHeight": 400,
-    "bytes": 33852,
+    "bytes": 34046,
     "source": "/appearance/frame?scenario=barber"
   },
   "svc-menu-barber": {
@@ -353,19 +353,19 @@
   "team-swipe": {
     "file": "/marketing/team-swipe.webp",
     "width": 716,
-    "height": 856,
+    "height": 550,
     "cssWidth": 358,
-    "cssHeight": 428,
-    "bytes": 27762,
+    "cssHeight": 275,
+    "bytes": 35754,
     "source": "/appearance/frame?scenario=barber"
   },
   "team-grid": {
     "file": "/marketing/team-grid.webp",
     "width": 716,
-    "height": 1558,
+    "height": 590,
     "cssWidth": 358,
-    "cssHeight": 779,
-    "bytes": 39118,
+    "cssHeight": 295,
+    "bytes": 38340,
     "source": "/appearance/frame?scenario=physio"
   },
   "team-list": {
@@ -383,7 +383,7 @@
     "height": 1116,
     "cssWidth": 704,
     "cssHeight": 558,
-    "bytes": 67122,
+    "bytes": 66126,
     "source": "/appearance/frame?scenario=barber"
   },
   "prod-swipe": {
@@ -392,7 +392,7 @@
     "height": 1034,
     "cssWidth": 358,
     "cssHeight": 517,
-    "bytes": 46606,
+    "bytes": 46366,
     "source": "/appearance/frame?scenario=barber"
   },
   "prod-detail-affiliate": {
@@ -401,7 +401,7 @@
     "height": 604,
     "cssWidth": 704,
     "cssHeight": 302,
-    "bytes": 30776,
+    "bytes": 30494,
     "source": "/appearance/frame?scenario=barber"
   },
   "veh-detail": {
@@ -452,10 +452,10 @@
   "share-sheet": {
     "file": "/marketing/share-sheet.webp",
     "width": 1024,
-    "height": 1312,
+    "height": 1472,
     "cssWidth": 512,
-    "cssHeight": 656,
-    "bytes": 80182,
+    "cssHeight": 736,
+    "bytes": 80672,
     "source": "/appearance/frame?scenario=barber"
   },
   "look-night": {
@@ -482,7 +482,7 @@
     "height": 1200,
     "cssWidth": 390,
     "cssHeight": 600,
-    "bytes": 54926,
+    "bytes": 55006,
     "source": "/appearance/frame?scenario=barber&look=clay"
   },
   "look-forge": {
@@ -500,7 +500,7 @@
     "height": 1200,
     "cssWidth": 390,
     "cssHeight": 600,
-    "bytes": 49066,
+    "bytes": 49030,
     "source": "/appearance/frame?scenario=barber&look=orchard"
   },
   "look-showroom": {
@@ -551,28 +551,46 @@
   "setup-2-what": {
     "file": "/marketing/setup-2-what.webp",
     "width": 2200,
-    "height": 1400,
+    "height": 1720,
     "cssWidth": 1100,
-    "cssHeight": 700,
-    "bytes": 102920,
+    "cssHeight": 860,
+    "bytes": 115208,
     "source": "/onboarding"
   },
   "setup-3-design": {
     "file": "/marketing/setup-3-design.webp",
     "width": 2200,
-    "height": 1400,
+    "height": 1720,
     "cssWidth": 1100,
-    "cssHeight": 700,
-    "bytes": 138720,
+    "cssHeight": 860,
+    "bytes": 144502,
     "source": "/onboarding"
   },
   "setup-4-first": {
     "file": "/marketing/setup-4-first.webp",
     "width": 2200,
-    "height": 1400,
+    "height": 1720,
     "cssWidth": 1100,
-    "cssHeight": 700,
-    "bytes": 94122,
+    "cssHeight": 860,
+    "bytes": 99240,
     "source": "/onboarding"
+  },
+  "qr-options": {
+    "file": "/marketing/qr-options.webp",
+    "width": 1024,
+    "height": 1472,
+    "cssWidth": 512,
+    "cssHeight": 736,
+    "bytes": 87528,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "qr-standalone": {
+    "file": "/marketing/qr-standalone.webp",
+    "width": 1024,
+    "height": 1024,
+    "cssWidth": 512,
+    "cssHeight": 512,
+    "bytes": 41382,
+    "source": "/appearance/frame?scenario=barber"
   }
 }

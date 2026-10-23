@@ -50,11 +50,10 @@ export default function Home() {
               <Link href="/inspiration" className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-foreground/20 px-5 text-base font-semibold outline-none hover:border-foreground/50 focus-visible:ring-3 focus-visible:ring-ring/60">See designs<ArrowRight aria-hidden="true" className="size-4" /></Link>
             </div>
           </div>
-          <div className="relative lg:col-span-7" aria-label="Three example pages: a barber, a café and a maths tutor">
-            <div className="mx-auto flex max-w-[44rem] items-start justify-center gap-4 sm:gap-5">
-              <Shot id="ex-marlowe-and-finch-phone" alt="A barber's page: dark, with a bright Book your chair button" width={250} priority cropTo={500} frame="none" className="w-[34%] sm:w-[250px]" />
-              <Shot id="ex-pims-kitchen-phone" alt="A café's page: warm terracotta with a photograph of brunch" width={250} priority cropTo={500} frame="none" className="mt-12 w-[34%] sm:mt-16 sm:w-[250px]" />
-              <Shot id="ex-ada-okafor-maths-phone" alt="A maths tutor's page: soft green with a free trial lesson" width={250} priority cropTo={500} frame="none" className="mt-4 hidden w-[250px] sm:block" />
+          <div className="relative lg:col-span-7" aria-label="A barber's page on a phone, with a café's page behind it">
+            <div className="relative mx-auto h-[34rem] w-full max-w-[34rem] overflow-hidden [mask-image:linear-gradient(to_bottom,black_80%,transparent)] sm:h-[40rem]">
+              <Shot id="ex-pims-kitchen-phone" alt="A café's page: warm terracotta with a photograph of brunch" width={260} priority cropTo={480} frame="none" fluid className="absolute left-0 top-24 hidden w-[44%] opacity-95 sm:block" />
+              <Shot id="ex-marlowe-and-finch-phone" alt="A barber's page: dark, with a bright Book your chair button" width={380} priority cropTo={760} frame="none" fluid className="absolute right-0 top-0 w-[72%] sm:w-[66%]" />
             </div>
           </div>
         </section>
@@ -62,7 +61,7 @@ export default function Home() {
         {/* The short film. Asked for, never autoplayed. */}
         <section aria-labelledby="film-h" className="bg-foreground py-16 text-background sm:py-24">
           <div className="mx-auto w-full max-w-5xl px-5">
-            <Reveal><h2 id="film-h" className="font-display font-display-tight mb-8 text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">From a name to a shared page in fifteen seconds.</h2></Reveal>
+            <Reveal><h2 id="film-h" className="font-display font-display-tight mb-8 text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">From a name to a shared page in eighteen seconds.</h2></Reveal>
             <Film className="[&_figcaption]:text-background/60 [&_figcaption_span]:text-background" />
           </div>
         </section>

@@ -148,7 +148,7 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
         </nav>
       ) : null}
 
-      <EditorDrawer open={open} onOpenChange={(o) => { if (!o) close() }} snap={snap} onSnap={setSnap} side={short ? "right" : "bottom"} offsetTop={head} offsetBottom={short ? 0 : bar} title={title} canGoBack={stack.length > 1} onBack={back}>
+      <EditorDrawer open={open} onOpenChange={(o) => { if (!o) close() }} snap={snap} onSnap={setSnap} side={short ? "right" : "bottom"} offsetTop={head} offsetBottom={short ? 0 : bar} title={title} canGoBack={stack.length > 1} onBack={back} screenKey={`${top ?? ""}:${selection.kind === "widget" ? selection.id : selection.kind}`}>
         {stack.map((p) => (
           <div key={p} hidden={p !== top} className={p === top ? undefined : "hidden"}>
             {p === "content" ? <ContentList ed={ed} selection={selection} onSelect={fromList} notify={notify} /> : null}

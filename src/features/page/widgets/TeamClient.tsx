@@ -65,7 +65,7 @@ export function TeamMembers({ members, variant: chosen, ctx }: { members: TeamMe
   )
 
   const row = (m: TeamMemberData) => (
-    <li key={m.id} className="tp-team-row">
+    <li key={m.id} className="tp-team-row" data-testid="team-card">
       <button type="button" className="tp-team-row-open" onClick={() => setProfile(m.id)}>
         <Portrait m={m} className="tp-portrait-sm" ratio="1 / 1" />
         <span className="min-w-0 text-left"><span className="tp-team-name block">{m.name}</span>{m.role ? <span className="tp-team-role block">{m.role}</span> : null}{m.summary ? <span className="tp-team-summary block">{m.summary}</span> : null}<span className="sr-only">. View profile</span></span>

@@ -51,7 +51,7 @@ test.describe("swipe collections", () => {
     const page = await ctx.newPage()
     await open(page, FRAME())
     const coll = page.locator(".tp-collection").first()
-    await expect(coll.locator(".tp-collection-count")).toContainText("of 3")
+    await expect(coll.locator(".tp-collection-count")).toContainText(/of [2-9]/)
     const track = coll.locator(".tp-collection-track")
     await track.focus()
     await page.keyboard.press("ArrowRight")

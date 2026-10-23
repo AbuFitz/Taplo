@@ -5,6 +5,7 @@ import { Drawer } from "@base-ui/react/drawer"
 import { ArrowLeft, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { useScrollMemory } from "./scroll-memory"
 
 export type DrawerSnap = number | string
 export const PEEK = 0.46
@@ -17,13 +18,14 @@ export const TALL = 1
  * Escape handling, and keyboard-aware scrolling (VirtualKeyboardProvider). On a short landscape
  * screen it becomes a side panel so the preview keeps its height.
  */
-export function EditorDrawer({ open, onOpenChange, snap, onSnap, side, title, onBack, canGoBack, offsetTop = 0, offsetBottom = 0, children, testId = "editor-drawer" }: {
+export function EditorDrawer({ open, onOpenChange, snap, onSnap, side, title, onBack, canGoBack, screenKey = "", offsetTop = 0, offsetBottom = 0, children, testId = "editor-drawer" }: {
   open: boolean; onOpenChange: (open: boolean) => void
   snap: DrawerSnap | null; onSnap: (s: DrawerSnap | null) => void
-  side: "bottom" | "right"; title: string; /** Space left clear for the top bar / bottom toolbar so they stay tappable. */ offsetTop?: number; offsetBottom?: number; onBack?: () => void; canGoBack?: boolean
+  side: "bottom" | "right"; title: string; /** Space left clear for the top bar / bottom toolbar so they stay tappable. */ offsetTop?: number; offsetBottom?: number; onBack?: () => void; canGoBack?: boolean; /** Identifies the screen shown, so each one keeps its own scroll position. */ screenKey?: string
   children: React.ReactNode; testId?: string
 }) {
   const bottom = side === "bottom"
+  const [scrollRef, onScroll] = useScrollMemory<HTMLDivElement>(screenKey)
   return (
     <Drawer.Root
       open={open}
@@ -56,7 +58,7 @@ export function EditorDrawer({ open, onOpenChange, snap, onSnap, side, title, on
               </div>
             </div>
             <Drawer.VirtualKeyboardProvider>
-              <Drawer.Content className="min-h-0 flex-1 touch-auto overflow-y-auto overscroll-contain px-4 pt-2 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] [scrollbar-width:thin]" data-testid="drawer-body">
+              <Drawer.Content ref={scrollRef} onScroll={onScroll} className="min-h-0 flex-1 touch-auto overflow-y-auto overscroll-contain px-4 pt-2 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] [scrollbar-width:thin]" data-testid="drawer-body">
                 {children}
               </Drawer.Content>
             </Drawer.VirtualKeyboardProvider>

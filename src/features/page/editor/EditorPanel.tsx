@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { getWidget } from "../widgets/registry"
 import { ContentList } from "./ContentList"
 import { Inspector } from "./Inspector"
+import { useScrollMemory } from "./scroll-memory"
 import { CONTENT, rootOf, tabOf, type EditorTab, type Selection } from "./selection"
 import type { Editor } from "./useEditor"
 
@@ -26,10 +27,9 @@ export function EditorPanel({ ed, selection, onSelect, notify }: { ed: Editor; s
   const tab = tabOf(selection)
   const widget = selection.kind === "widget" ? ed.state.page.widgets.find((w) => w.id === selection.id) : undefined
   const widgetLabel = widget ? getWidget(widget.type)?.label ?? "Content" : "Content"
-  const body = React.useRef<HTMLDivElement>(null)
-  // A new screen starts at its top.
   const screen = selection.kind === "widget" ? selection.id : selection.kind
-  React.useEffect(() => { body.current?.scrollTo({ top: 0 }) }, [tab, screen])
+  // Back from an item returns to the same place in the list.
+  const [scrollRef, onScroll] = useScrollMemory<HTMLDivElement>(`${tab}:${screen}`)
 
   return (
     <section aria-label="Edit your page" className="flex h-[calc(100dvh-6.5rem)] min-h-[30rem] min-w-0 flex-col overflow-hidden rounded-2xl border bg-card" data-testid="editor-panel">
@@ -44,7 +44,7 @@ export function EditorPanel({ ed, selection, onSelect, notify }: { ed: Editor; s
           )
         })}
       </div>
-      <div ref={body} id="editor-tabpanel" role="tabpanel" aria-labelledby={`tab-${tab}`} className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4" data-testid="inspector">
+      <div ref={scrollRef} onScroll={onScroll} id="editor-tabpanel" role="tabpanel" aria-labelledby={`tab-${tab}`} className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4" data-testid="inspector">
         {selection.kind === "widget" ? (
           <div className="mb-3 flex items-center gap-1">
             <Button type="button" variant="ghost" size="sm" className="-ml-2 min-h-10 gap-1.5 px-2" onClick={() => onSelect(CONTENT)} data-testid="back-to-content"><ArrowLeft /> Your content</Button>

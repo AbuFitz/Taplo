@@ -167,7 +167,9 @@ test.describe("inspiration", () => {
     await page.getByLabel("Business name").fill("Ridgeway Physio")
     await page.getByRole("button", { name: "Continue" }).click()          // → what you do
     await expect(page.getByTestId("goal")).toBeVisible()
-    await page.getByRole("button", { name: "Continue" }).click()          // → look and content
+    await page.getByLabel("Phone (optional)").fill("01632 960987")
+    await page.getByLabel("Phone (optional)").blur()
+    await page.getByRole("button", { name: "Continue" }).click()          // → design
     await expect(page.getByTestId("look-picker").getByRole("radio", { name: /Mono/ })).toBeChecked()
     await expect(page.locator("section[aria-labelledby=step-title]")).not.toContainText("Hollin")
     await page.getByTestId("look-picker").getByText("Orchard").click()
@@ -202,9 +204,9 @@ test.describe("film", () => {
   test("never autoplays or loads until asked, and the story is written out beside it", async ({ page }) => {
     await page.goto("/")
     await expect(page.locator("video")).toHaveCount(0)
-    await expect(page.getByRole("button", { name: /Play the 15-second film/ })).toBeVisible()
-    await expect(page.getByText("Share it three ways")).toBeVisible()
-    await page.getByRole("button", { name: /Play the 15-second film/ }).click()
+    await expect(page.getByRole("button", { name: /Play the 18-second film/ })).toBeVisible()
+    await expect(page.getByText("Setting up is quick")).toBeVisible()
+    await page.getByRole("button", { name: /Play the 18-second film/ }).click()
     const v = page.locator("video")
     await expect(v).toHaveCount(1)
     await expect(v).toHaveAttribute("controls", "")
@@ -226,6 +228,6 @@ test.describe("home and widths", () => {
     await page.goto("/")
     const t = (await page.locator("main").innerText()).toLowerCase()
     for (const bad of ["emailed to", "we email", "pay online", "secure payments", "go live", "trusted by", "thousands of"]) expect(t, bad).not.toContain(bad)
-    await expect(page.locator("main")).toContainText("switch on when messaging is connected")
+    await expect(page.locator("main")).toContainText("switch on when you connect messaging")
   })
 })

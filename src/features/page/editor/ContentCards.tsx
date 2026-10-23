@@ -48,7 +48,7 @@ export function ContentCards({ ed, selectedId, onSelect, onDetails, onAddRecord 
               <button type="button" onClick={() => onSelect(w.id)} aria-pressed={selectedId === w.id} data-testid="select-widget" className="flex min-h-14 min-w-0 flex-1 items-center gap-3 rounded-lg px-1 py-0.5 text-left outline-none hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring">
                 <Thumb s={s} icon={def.icon} />
                 <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-2"><span className="truncate text-sm font-semibold">{s.name}</span>{main ? <span className="shrink-0 rounded bg-[var(--signal-soft)] px-1.5 py-0.5 text-[0.6875rem] font-medium text-[var(--signal)]">Main action</span> : null}</span>
+                  <span className="flex items-center gap-2"><span className="truncate text-sm font-semibold">{s.name}</span>{main ? <span className="shrink-0 rounded bg-[var(--signal-soft)] px-1.5 py-0.5 text-[0.6875rem] font-medium text-[oklch(0.38_0.19_262)]">Main action</span> : null}</span>
                   <span className="block truncate text-xs text-muted-foreground">{s.summary || (s.needs ? "Nothing to show yet" : def.description)}</span>
                   {status ? <span className={cn("mt-0.5 flex items-center gap-1 text-xs font-medium", status.tone === "warn" ? "text-amber-800" : "text-muted-foreground")}>{s.locked ? <Lock aria-hidden="true" className="size-3" /> : null}{status.text}</span> : null}
                 </span>

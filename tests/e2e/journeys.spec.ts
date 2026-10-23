@@ -21,7 +21,7 @@ test.describe("onboarding", () => {
     await expect(page.locator("main")).not.toContainText(/pick your trade/i);
   });
 
-  test("setup: name, what you do, a starting point, contact, then publish; the page takes shape as you go", async ({ page }) => {
+  test("setup: name, what you do, a design, a first service, then publish; the page takes shape as you go", async ({ page }) => {
     await page.goto("/onboarding");
 
     // 1. name first: the page appears immediately; reserved or invalid addresses are blocked
@@ -30,6 +30,8 @@ test.describe("onboarding", () => {
     await page.getByLabel("Business name").fill("Paws & Polish");
     await expect(page.getByText("taplo.co/paws-and-polish")).toBeVisible();
     await expect(preview(page).getByRole("heading", { level: 1 })).toHaveText("Paws & Polish");
+    await page.getByLabel("A line under your name").fill("Gentle grooming for dogs of every size.");
+    await expect(preview(page).getByText("Gentle grooming for dogs of every size.")).toBeVisible();
     await page.getByRole("button", { name: "Change" }).click();
     await page.getByLabel("Web address").fill("book");
     await expect(page.getByText("That address is reserved. Try another.").first()).toBeVisible();
@@ -38,19 +40,11 @@ test.describe("onboarding", () => {
     await page.getByLabel("Web address").fill("paws-and-polish");
     await page.getByRole("button", { name: "Continue" }).click();
 
-    // 2. what you do, and what people should do first
+    // 2. what you do, what people should do first, and one way to reach you
     await page.getByRole("button", { name: /^Other \/ describe/ }).click();
     await page.getByRole("button", { name: "Continue" }).click();
     await expect(page.locator("#why-disabled")).toContainText("Choose what you do");
     await page.getByLabel("Describe your business").fill("Dog groomer");
-    await page.getByRole("button", { name: "Continue" }).click();
-
-    // 3. a starting point: suggestions are opt-in, nothing is invented
-    await expect(page.getByRole("heading", { name: "Choose a starting point" })).toBeVisible();
-    await page.getByRole("button", { name: "Continue" }).click();
-
-    // 4. contact and place: at least one channel, validated; the header gains a way to reach you as soon as there is a number
-    await page.getByLabel("Town or area").fill("Harpenden");
     await page.getByRole("button", { name: "Continue" }).click();
     await expect(page.locator("#why-disabled")).toContainText("at least one way");
     await page.getByLabel("Phone").fill("12");
@@ -59,13 +53,23 @@ test.describe("onboarding", () => {
     await page.getByLabel("Phone").fill("01632 960987");
     await page.getByLabel("Phone").blur();
     await expect(preview(page).locator("a[href='tel:01632960987']").first()).toBeVisible();
-    await page.getByText("Add a line", { exact: false }).first().click();
-    await page.getByLabel("A line under your name").fill("Gentle grooming for dogs of every size.");
-    await expect(preview(page).getByText("Gentle grooming for dogs of every size.")).toBeVisible();
     await page.getByRole("button", { name: "Continue" }).click();
 
-    // 5. preview, publish and share
-    await expect(page.getByRole("heading", { name: "Preview, publish and share" })).toBeVisible();
+    // 3. a design: one choice, nothing is invented
+    await expect(page.getByRole("heading", { name: "Choose a design" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue" }).click();
+
+    // 4. the first service and where you work: a service is saved as soon as it has a name and a price, and the page fills in
+    await expect(page.getByRole("heading", { name: "Add your first service" })).toBeVisible();
+    await page.getByLabel("Service 1 name").fill("Full groom");
+    await page.getByLabel("Service 1 price").fill("45");
+    await expect(preview(page).getByText("Full groom")).toBeVisible();
+    await expect(preview(page).getByText("£45")).toBeVisible();
+    await page.getByLabel("Town or area").fill("Harpenden");
+    await page.getByRole("button", { name: "Continue" }).click();
+
+    // 5. review, publish and share
+    await expect(page.getByRole("heading", { name: "Your page is ready to look at" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Publish my page" })).toBeEnabled();
     await page.getByRole("button", { name: "Publish my page" }).click();
     await expect(page.getByRole("status")).toContainText("Saved as your page — version 1");
@@ -74,6 +78,7 @@ test.describe("onboarding", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Paws & Polish");
     await expect(page.locator("[data-taplo-page]")).toHaveAttribute("data-header", /side|centered|cover|poster/);
     await expect(page.locator("a[href='tel:01632960987']").first()).toBeVisible();
+    await expect(page.getByText("Full groom").first()).toBeVisible();
     // nothing invented: no reviews, no gallery, no rating
     await expect(page.locator('[data-widget="reviews"], [data-widget="gallery"]')).toHaveCount(0);
   });
@@ -84,7 +89,7 @@ test.describe("onboarding", () => {
     await page.getByRole("button", { name: "Continue" }).click();
     await page.getByRole("list", { name: "Kinds of business" }).getByRole("button", { name: "Barber" }).click();
     await page.reload();
-    await expect(page.getByRole("heading", { name: "What do you do, and what should people do first?" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "What do you do?" })).toBeVisible();
     await page.getByRole("button", { name: "Back" }).click();
     await expect(page.getByLabel("Business name")).toHaveValue("Olive Test Barbers");
     await expect(preview(page).getByRole("heading", { level: 1 })).toHaveText("Olive Test Barbers");
@@ -146,13 +151,13 @@ test.describe("records flow into widgets (nothing is copied)", () => {
     await expect(preview(page).locator('[data-widget="products"]')).toContainText("£8.50");
     await addWidget(page, /^Offers/);
     await openStructure(page);
-    await expect(row(page, "offers")).toContainText("Not on your page yet");        // expired offer is hidden, and explained
+    await expect(row(page, "offers")).toContainText("Needs a first entry");        // expired offer is hidden, and explained
     await expect(preview(page).locator('[data-widget="offers"]')).toHaveCount(0);
 
     await page.goto("/dashboard/products");
     await page.getByRole("button", { name: "Archive" }).first().click();
     await page.getByRole("link", { name: "My page" }).first().click();
-    await expect(row(page, "products")).toContainText("Not on your page yet");
+    await expect(row(page, "products")).toContainText("Needs a first entry");
     await expect(preview(page).locator('[data-widget="products"]')).toHaveCount(0);
   });
 
@@ -168,7 +173,7 @@ test.describe("records flow into widgets (nothing is copied)", () => {
     await expect(preview(page).locator('[data-widget="serviceList"]')).toContainText("Nail trim");
     await openRow(page, "serviceList");
     // picking a subset by reference
-    await insp(page).getByRole("checkbox", { name: /All of them/ }).uncheck();
+    await insp(page).getByRole("checkbox", { name: /Show all/ }).uncheck();
     await insp(page).getByRole("checkbox", { name: /Nail trim/ }).uncheck();
     await expect(preview(page).locator('[data-widget="serviceList"]')).not.toContainText("Nail trim");
     await expect(preview(page).locator('[data-widget="serviceList"]')).toContainText("Full groom");
@@ -193,7 +198,8 @@ test.describe("plans and page settings", () => {
     await page.goto("/dashboard/settings");
     await pickOption(page, "Simulated plan", /^Pro/);
     await page.goto("/dashboard/page");
-    await expect(row(page, "gallery")).toContainText("On your page");
+    await expect(row(page, "gallery")).toContainText("3 photos");
+    await expect(row(page, "gallery")).not.toContainText("Not on your page");
   });
 
   test("page settings: address validation, search visibility, share text and honest domain state", async ({ page }) => {

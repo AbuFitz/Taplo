@@ -10,22 +10,15 @@
   </style>
   <div id="root" data-composition-id="s3" data-width="1920" data-height="1080">
     <div id="s3-wipe" class="wipe" style="left:0; top:0; width:1920px; height:1080px;"></div>
-    <h1 id="s3-h" class="h" style="left:120px; top:90px; font-size:88px; width:1700px;">Share it <span class="sig">three ways.</span></h1>
-    <img id="s3-a" class="shot" src="assets/share-sheet.webp" style="left:120px; top:230px; width:600px; height:auto;" alt="The share panel with a link, a QR code and downloads" />
-    <img id="s3-b" class="shot" src="assets/share-image.webp" style="left:760px; top:230px; width:600px; height:auto;" alt="The share image: logo, name, QR code and link" />
-    <p id="s3-l1" class="lab" style="left:1440px; top:380px; font-size:64px; font-weight:700;">A link</p>
-    <p id="s3-l2" class="lab" style="left:1440px; top:500px; font-size:64px; font-weight:700;">A QR code</p>
-    <p id="s3-l3" class="lab" style="left:1440px; top:620px; font-size:64px; font-weight:700;">An image</p>
+    <h1 id="s3-h" class="h" style="left:120px; top:90px; font-size:88px; width:1700px;">Add a service and <span class="sig">the page fills in.</span></h1>
+    <img id="s3-a" class="shot" src="assets/setup-4-first.webp" style="left:470px; top:250px; width:980px; height:auto; border-radius:24px;" alt="Setup: a service typed on the left, the page appearing on the right" />
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
     tl.fromTo("#s3-wipe", { xPercent: 0 }, { xPercent: 100, duration: 0.55, ease: "power4.inOut" }, 0);
     tl.fromTo("#s3-h", { y: 50, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "power4.out" }, 0.4);
-    tl.fromTo("#s3-a", { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power4.out" }, 0.8);
-    tl.fromTo("#s3-b", { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power4.out" }, 1.1);
-    tl.fromTo("#s3-l1", { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 1.1);
-    tl.fromTo("#s3-l2", { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 1.3);
-    tl.fromTo("#s3-l3", { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 1.5);
+    tl.fromTo("#s3-a", { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power4.out" }, 0.8);
+    tl.to("#s3-a", { scale: 1.04, transformOrigin: "70% 40%", duration: 1.6, ease: "sine.inOut" }, 1.4);
     window.__timelines["s3"] = tl;
   </script>
 </template>
