@@ -43,4 +43,15 @@ Honest limits: jsQR is a strict decoder and loses very large images to its own t
 
 ## Results
 
-See the end of this file for the exact figures of the last run.
+Run on 23 October 2026 against a production build (`next build`, `next start`), Chromium only.
+
+| Check | Result |
+| --- | --- |
+| `next build` | passed |
+| `tsc --noEmit` | clean |
+| `eslint src tests scripts` | clean |
+| `vitest` (with real Postgres integration tests) | 207 of 207 passed, 11 files (82 are the QR renderer) |
+| Width sweep, 15 surfaces at 320 to 1536 px | 135 checks, 0 overflowing |
+| `playwright` end-to-end | 297 of 297 passed, including the control matrix, the workbench stories with axe, the gallery filters and apply-with-undo, and the share panel export and decode test |
+
+Screens for this round are in `public/marketing/` (retaken from the production build) and `docs/screens/`.
