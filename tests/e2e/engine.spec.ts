@@ -191,9 +191,6 @@ test.describe("mobile editor", () => {
 
     // the toolbar stays reachable beneath the sheet
     await page.getByTestId("tab-content").tap();
-    await page.getByTestId("organise").tap();
-    await expect(page.getByTestId("organise-panel")).toBeVisible();
-    await page.getByTestId("organise-done").tap();
     await expect(page.getByTestId("structure")).toBeVisible();
     await page.getByTestId("select-widget").first().tap();
     await expect(page.getByTestId("editor-drawer")).toBeVisible();

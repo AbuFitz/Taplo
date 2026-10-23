@@ -46,7 +46,7 @@ export function Collection({ label, children, itemClassName, compact = false }: 
   }
 
   return (
-    <div className="tp-collection" role="group" aria-roledescription="collection" aria-label={label} data-compact={compact || undefined} data-start={edge.start || undefined} data-end={edge.end || undefined}>
+    <div className="tp-collection" role="group" aria-roledescription="collection" aria-label={label} data-count={count} data-compact={compact || undefined} data-start={edge.start || undefined} data-end={edge.end || undefined}>
       <ul
         ref={ref}
         className="tp-collection-track"

@@ -72,9 +72,7 @@ test.describe("My page editor", () => {
     const pv0 = await previewOrder(page);
     expect(pv0).toEqual(start.filter((t) => pv0.includes(t)));
 
-    // -- Organise mode: handles, keyboard and pointer drag
-    await page.getByTestId("organise").click();
-    await expect(page.getByTestId("organise-panel")).toBeVisible();
+    // -- Handles, keyboard and pointer drag (no separate mode)
     // -- keyboard drag: focus the handle, space to pick up, arrow to move, space to drop
     const handle = row(page, start[0]!).getByTestId("drag-handle");
     await handle.focus();
@@ -113,8 +111,6 @@ test.describe("My page editor", () => {
     await tp.waitForURL("**/dashboard/page");
     await tp.waitForLoadState("networkidle");
     await tp.getByTestId("tab-content").tap();
-    await tp.getByTestId("organise").tap();
-    await expect(tp.getByTestId("organise-panel")).toBeVisible();
     await tp.waitForTimeout(700); // the sheet finishes sliding up before handles are measured
     const touchStart = await rowOrder(tp);
     const th = row(tp, touchStart[0]!).getByTestId("drag-handle");

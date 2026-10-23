@@ -56,8 +56,8 @@ export function BookingDetail({ booking, ctx, config, state, update, onClose, no
               {live.status === "confirmed" ? <><Button variant="outline" className="min-h-11" onClick={() => act("completed", "Marked completed.")}><Check /> Mark completed</Button><Button variant="outline" className="min-h-11" onClick={() => act("no_show", "Marked as a no-show.")}>No-show</Button></> : null}
               {live.status === "pending" || live.status === "confirmed" ? <><Button variant="outline" className="min-h-11" onClick={() => setMode("move")}><CalendarClock /> Reschedule</Button><Button variant="outline" className="min-h-11 text-destructive" onClick={() => setConfirmCancel(true)}>Cancel booking</Button></> : null}
             </div>
-            <section aria-label="History"><h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">History</h3><ol className="grid gap-1 text-sm">{live.history.map((h, i) => <li key={i} className="flex justify-between gap-3"><span>{STATUS_LABEL[h.status]}{h.note ? ` · ${h.note}` : ""}</span><span className="text-muted-foreground tabular-nums">{formatSlot(h.at, tz)}</span></li>)}</ol></section>
-            <p className="text-xs text-muted-foreground">Preview mode: changes are saved in this browser. Customers are not emailed or texted.</p>
+            <section aria-label="History"><h3 className="mb-1.5 text-sm font-semibold text-muted-foreground">History</h3><ol className="grid gap-1 text-sm">{live.history.map((h, i) => <li key={i} className="flex justify-between gap-3"><span>{STATUS_LABEL[h.status]}{h.note ? ` · ${h.note}` : ""}</span><span className="text-muted-foreground tabular-nums">{formatSlot(h.at, tz)}</span></li>)}</ol></section>
+            <p className="text-xs text-muted-foreground">Changes are saved in this browser only. Customers are not emailed or texted.</p>
           </div>
         )) : null}
       </Overlay>

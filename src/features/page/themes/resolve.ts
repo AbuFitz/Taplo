@@ -36,6 +36,10 @@ const PAD = { compact: "0.75rem", comfortable: "1rem", roomy: "1.5rem" } as cons
 /** How much of a hero photograph fades into the page. Tested presets: text over the faded part always sits on the page colour. */
 const FADE = { soft: "34%", medium: "52%", strong: "74%" } as const;
 const WIDTH = { narrow: "30rem", regular: "36rem", wide: "44rem" } as const;
+/** The same choice on a computer: the page widens, it does not become a different layout. */
+const WIDTH_DESKTOP = { narrow: "38rem", regular: "48rem", wide: "60rem" } as const;
+/** Display faces with a small x-height read small at body proportions, so their headings are set larger. */
+const HEADING_SCALE: Partial<Record<string, string>> = { instrumentSerif: "1.3", fraunces: "1.08", barlowCondensed: "1.12", sourceSerif: "1.04" };
 const GAP = { compact: "0.625rem", comfortable: "0.875rem" } as const;
 const SCALE = { sm: "0.94", md: "1", lg: "1.1" } as const;
 
@@ -191,6 +195,7 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
     "--tp-heading-weight": spec.text.headingWeight === "bold" ? "700" : "500",
     "--tp-heading-tracking": spec.text.headingCase === "upper" ? "0.02em" : "-0.01em",
     "--tp-scale": SCALE[spec.text.size],
+    "--tp-heading-scale": HEADING_SCALE[spec.text.headingFont] ?? "1",
     "--tp-text-align": spec.text.align,
     "--tp-card-bg": cardBg,
     "--tp-card-radius": RADIUS[spec.cards.radius],
@@ -222,6 +227,7 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
     "--tp-btn-border-w": spec.buttons.fill === "outline" || spec.buttons.shadow === "hard" || spec.cards.border === "thick" ? "2px" : "1px",
     "--tp-fade": FADE[spec.header.scrim ?? "medium"],
     "--tp-width": WIDTH[spec.layout.width],
+    "--tp-width-desktop": WIDTH_DESKTOP[spec.layout.width],
     "--tp-gap": GAP[spec.layout.density],
     "--tp-radius": RADIUS[spec.cards.radius],
   };

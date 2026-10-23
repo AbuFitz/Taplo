@@ -6,7 +6,7 @@ import { SiteFooter, SiteHeader, primaryAction } from "@/features/marketing/Site
 import { ArrowLink } from "@/features/marketing/Scenes"
 import { Shot } from "@/features/marketing/Shot"
 import { Film } from "@/features/marketing/Film"
-import { LivePhone } from "@/features/inspiration/LivePhone"
+import { BookingStory } from "@/features/marketing/home/BookingStory"
 import { LookSwitcher } from "@/features/marketing/home/LookSwitcher"
 import { Reveal } from "@/features/marketing/home/Reveal"
 import { taploCodeSvg } from "@/features/qr/taplo-code"
@@ -40,20 +40,23 @@ export default function Home() {
     <div className="bg-background">
       <SiteHeader />
       <main>
-        {/* Hero: three real pages, three identities, at a size where the words can be read. */}
-        <section className="mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-14 px-5 pb-20 pt-12 sm:pt-20 lg:grid-cols-12">
-          <div className="lg:col-span-5">
-            <h1 className="font-display font-display-tight text-[clamp(2.5rem,4.6vw,4rem)] text-balance">Everything your customers ask, on one page.</h1>
-            <p className="mt-6 max-w-lg text-xl leading-relaxed text-foreground/70">Prices, people, products and a way to book or enquire, on a page that looks like yours. Choose a design, add what you offer, share a link.</p>
-            <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Link href={a.href} className="inline-flex min-h-12 items-center rounded-xl bg-foreground px-6 text-base font-semibold text-background outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-ring/60">{a.label}</Link>
-              <Link href="/inspiration" className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-foreground/20 px-5 text-base font-semibold outline-none hover:border-foreground/50 focus-visible:ring-3 focus-visible:ring-ring/60">See designs<ArrowRight aria-hidden="true" className="size-4" /></Link>
+        {/* Hero: a field of Taplo blue with the type at full size, and the product straddling its edge. */}
+        <section className="relative overflow-hidden">
+          <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[34rem] bg-signal lg:inset-y-0 lg:h-auto lg:w-[56%]" />
+          <div className="relative mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)] gap-10 px-5 pb-16 pt-14 sm:pt-20 lg:min-h-[41rem] lg:grid-cols-12 lg:gap-6 lg:pb-24 lg:pt-24">
+            <div className="text-white lg:col-span-6">
+              <h1 className="font-display font-display-tight text-[clamp(3.25rem,10.5vw,7.25rem)] text-balance">Your shop window, online.</h1>
+              <p className="mt-7 max-w-md text-[1.1875rem] leading-relaxed text-white/85">Prices, people and a way to book, on one page that looks like your business. Ready in minutes.</p>
+              <div className="mt-9 flex flex-wrap items-center gap-3">
+                <Link href={a.href} className="inline-flex min-h-12 items-center rounded-md bg-white px-6 text-base font-semibold text-signal outline-none hover:bg-white/90 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-signal">{a.label}</Link>
+                <Link href="/inspiration" className="inline-flex min-h-12 items-center gap-2 rounded-md border border-white/50 px-5 text-base font-semibold outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white">See designs</Link>
+              </div>
             </div>
-          </div>
-          <div className="relative lg:col-span-7" aria-label="A barber's page on a phone, with a café's page behind it">
-            <div className="relative mx-auto h-[34rem] w-full max-w-[34rem] overflow-hidden [mask-image:linear-gradient(to_bottom,black_80%,transparent)] sm:h-[40rem]">
-              <Shot id="ex-pims-kitchen-phone" alt="A café's page: warm terracotta with a photograph of brunch" width={260} priority cropTo={480} frame="none" fluid className="absolute left-0 top-24 hidden w-[44%] opacity-95 sm:block" />
-              <Shot id="ex-marlowe-and-finch-phone" alt="A barber's page: dark, with a bright Book your chair button" width={380} priority cropTo={760} frame="none" fluid className="absolute right-0 top-0 w-[72%] sm:w-[66%]" />
+            <div className="relative lg:col-span-6" aria-label="A barber's page on a phone, with a café's page beside it">
+              <div className="relative mx-auto h-[30rem] w-full max-w-[30rem] sm:h-[34rem] lg:mx-0 lg:ml-auto lg:h-[36rem] lg:max-w-[33rem]">
+                <Shot id="ex-marlowe-and-finch-phone" alt="A barber's page: dark, with a bright Book your chair button" width={360} priority cropTo={720} frame="none" fluid className="absolute left-0 top-0 w-[68%] shadow-[0_40px_80px_-30px_rgb(10_16_32/0.7)] lg:-left-24" />
+                <Shot id="ex-pims-kitchen-phone" alt="A café's page: warm terracotta with a photograph of brunch" width={270} priority cropTo={540} frame="none" fluid className="absolute right-0 top-20 w-[50%] shadow-[0_30px_60px_-30px_rgb(10_16_32/0.5)] sm:top-28 lg:right-0 lg:top-32" />
+              </div>
             </div>
           </div>
         </section>
@@ -66,16 +69,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Interactive: the real page, running. */}
-        <section className="mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-14 px-5 py-24 sm:py-32 lg:grid-cols-12">
-          <div className="lg:col-span-6">
-            <Reveal>
-              <h2 className="font-display font-display-tight text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">Customers see prices first, then pick a time.</h2>
-              <p className="mt-6 max-w-lg text-lg leading-relaxed text-foreground/70">This is a working page for an example barber. Open a service, meet the team, choose a time. Yours does the same with your own services.</p>
-              <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2"><ArrowLink href="/product/services">Services and prices</ArrowLink><ArrowLink href="/product/booking">Booking</ArrowLink></div>
-            </Reveal>
-          </div>
-          <div className="lg:col-span-6"><LivePhone scenario="barber" title="Marlowe & Finch, live" /></div>
+        {/* The art-directed story: a price becomes a booking. */}
+        <section aria-labelledby="story-h" className="mx-auto w-full max-w-7xl px-5 pb-16 pt-24 sm:pt-32">
+          <h2 id="story-h" className="font-display font-display-tight max-w-3xl text-[clamp(2.25rem,5vw,4.25rem)] text-balance">From a price on the page to a booking in the diary.</h2>
+          <div className="mt-12 lg:mt-20"><BookingStory /></div>
         </section>
 
         {/* Swipeable: what a page can hold. */}

@@ -1,0 +1,5 @@
+:root{--background:#fff;--foreground:#0a1020;--primary:#0a1020;--signal:#1530ff;--signal-soft:#e8ecff;--radius:.4rem;--border:#d5daea;--muted:#eef0f7;--secondary:#eef0f7;--accent:#e8ecff;--ring:#1530ff}
+body,button,input,textarea,select{font-family:Geist,sans-serif!important;letter-spacing:-.01em}
+header,[data-testid=my-page]>div:first-child{background:#1530ff!important;color:#fff!important}
+[data-testid=my-page]>div:first-child *{color:#fff!important}
+[data-testid=my-page]>div:first-child button[data-testid=publish]{background:#fff!important;color:#1530ff!important}

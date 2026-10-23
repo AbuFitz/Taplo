@@ -15,6 +15,22 @@ export interface Look {
 
 export const LOOKS: Look[] = [
   {
+    id: "folio",
+    name: "Folio",
+    blurb: "Editorial. A serif name, a wide photograph and hairline sections. Quiet, assured and made for a good picture.",
+    overrides: {
+      colors: { background: "#e9edf3", text: "#101722", muted: "#4d586a", surface: "#f7f9fc", accent: "#7a1f2b", accentText: "#ffffff", border: "#c3ccd9" },
+      text: { headingFont: "instrumentSerif", bodyFont: "inter", size: "md", headingCase: "normal", headingWeight: "regular", align: "left" },
+      background: { kind: "solid", color: "#e9edf3" },
+      header: { layout: "cover", avatarShape: "square", avatarSize: "md", align: "left", actions: "primary", showLocation: true, scrim: "medium" },
+      buttons: { shape: "square", fill: "solid", shadow: "none", showIcons: false },
+      cards: { surface: "transparent", opacity: 100, radius: "none", border: "thin", shadow: "none", padding: "roomy" },
+      layout: { width: "regular", density: "comfortable", desktop: "centered" },
+      decoration: "none",
+      motion: "subtle",
+    },
+  },
+  {
     id: "clean",
     name: "Clean",
     blurb: "Light, calm and precise. The dependable default for any business.",

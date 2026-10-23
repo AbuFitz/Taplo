@@ -27,7 +27,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -88,16 +88,16 @@
   --destructive: oklch(0.55 0.22 27);
   --border: oklch(0.925 0.006 264);
   --input: oklch(0.89 0.008 264);
-  --ring: oklch(0.55 0.21 262);
-  --font-display: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --signal: oklch(0.55 0.21 262);
-  --signal-soft: oklch(0.955 0.03 262);
+  --ring: #1530ff;
+  --font-display: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --signal: #1530ff;
+  --signal-soft: #e9ecff;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.75rem;
+  --radius: 0.5rem;
   --sidebar: oklch(0.985 0.003 264);
   --sidebar-foreground: oklch(0.145 0.012 264);
   --sidebar-primary: oklch(0.17 0.012 264);
@@ -214,16 +214,14 @@
   }
 }
 
-/* Taplo's own display voice: Inter at its Display optical size (opsz 32), bold and tightly set.
-   Chosen over Geist against the supplied logo and real copy (docs/platform-typography.md). Business pages never use it. */
+/* Taplo's own display voice: Geist, heavy and tightly set. It is the platform's one memorable element, so it is used large and
+   rarely. Chosen over Inter Display in round four (docs/platform-typography.md). Business pages never use it. */
 @utility font-display {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-optical-sizing: none;
-  font-variation-settings: "opsz" 32;
-  letter-spacing: -0.034em;
+  font-weight: 800;
+  letter-spacing: -0.055em;
 }
-@utility font-display-tight { letter-spacing: -0.04em; line-height: 0.98; }
+@utility font-display-tight { letter-spacing: -0.06em; line-height: 0.92; }
 @utility text-balance-pretty { text-wrap: balance; }
 @utility text-signal-ink { color: oklch(0.47 0.19 262); }
 @utility bg-signal { background-color: var(--signal); }

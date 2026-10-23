@@ -240,7 +240,7 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
           </dl>
           <p className="rounded-xl bg-tp-surface p-3 text-sm" data-testid="bk-outcome"><strong>{OUTCOME[mode].kind}.</strong> {OUTCOME[mode].detail} {mode === "request" ? `They have ${config.rules.pendingExpiryHours} hours to reply.` : ""}</p>
           {config.rules.cancellationNote || config.rules.cancelUntilHours ? <p className="text-xs text-tp-muted">{config.rules.cancellationNote ?? `You can cancel up to ${config.rules.cancelUntilHours} hours before.`}</p> : null}
-          <p className="text-xs text-tp-muted">Preview mode: this is saved in this browser only. No email or text message is sent, and no payment is taken.</p>
+          <p className="text-xs text-tp-muted">Saved in this browser only. No email or text message is sent, and no payment is taken.</p>
         </section>
       ) : null}
 
@@ -297,7 +297,7 @@ function DayStrip({ avail, date, onPick, tz, now, onMore, more }: { avail: Retur
             <li key={d.date} className="snap-start">
               <button type="button" disabled={!has} onClick={() => onPick(d.date)} aria-pressed={on} aria-label={`${formatDay(d.date)}${has ? `, ${d.slots.length} times` : ", no times"}`} data-testid="bk-day"
                 className={cn("grid min-h-[4.25rem] w-14 place-items-center rounded-2xl border px-1 py-2 text-center outline-none transition-colors focus-visible:ring-2 focus-visible:ring-tp-accent disabled:opacity-40", on ? "border-tp-accent bg-tp-accent text-tp-accent-fg" : "border-tp-border bg-tp-surface hover:border-tp-accent")}>
-                <span className="text-[0.6875rem] font-medium uppercase tracking-wide opacity-80">{new Intl.DateTimeFormat("en-GB", { weekday: "short", timeZone: "UTC" }).format(p)}</span>
+                <span className="text-xs font-medium opacity-80">{new Intl.DateTimeFormat("en-GB", { weekday: "short", timeZone: "UTC" }).format(p)}</span>
                 <span className="text-lg font-semibold tabular-nums">{p.getUTCDate()}</span>
                 <span className="text-[0.625rem] opacity-80">{new Intl.DateTimeFormat("en-GB", { month: "short", timeZone: "UTC" }).format(p)}</span>
               </button>
@@ -317,7 +317,7 @@ function SlotGrid({ slots, tz, viewerTz, pick, onPick, date }: { slots: { starts
     <div className="grid gap-4" role="group" aria-label={`Times on ${formatDay(date)}`} data-testid="bk-slots">
       {groups.map(({ g, items }) => (
         <div key={g}>
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-tp-muted">{g}</h3>
+          <h3 className="mb-2 text-sm font-semibold text-tp-muted">{g}</h3>
           <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
             {items.map((s) => {
               const on = pick === s.startsAt
@@ -368,7 +368,7 @@ function Done({ ctx, booking, tz, viewerTz, update, state, config, onClose }: { 
         {zonesDiffer(tz, viewerTz, live.startsAt) ? <div className="flex justify-between gap-3"><dt className="text-tp-muted">Your time</dt><dd className="font-medium">{formatSlot(live.startsAt, viewerTz, { withZone: true })}</dd></div> : null}
         <div className="flex justify-between gap-3"><dt className="text-tp-muted">Price</dt><dd className="font-medium">{live.priceLabel}</dd></div>
       </dl>
-      <p className="text-xs text-tp-muted">Preview mode: saved in this browser only. {ctx.businessName} was not emailed or texted.</p>
+      <p className="text-xs text-tp-muted">Saved in this browser only. {ctx.businessName} was not emailed or texted.</p>
       {!cancelled ? (
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" className="min-h-11" onClick={download}><Download /> Add to calendar</Button>

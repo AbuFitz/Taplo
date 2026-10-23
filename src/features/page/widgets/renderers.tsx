@@ -166,7 +166,7 @@ function FeaturedServiceWidget({ w, vm }: P) {
   if (!svc) return null
   return (
     <Card>
-      <p className="mb-1 text-xs font-semibold uppercase tracking-wider tp-muted">{s.headline || "Featured"}</p>
+      <p className="mb-1 text-sm font-semibold tp-muted">{s.headline || "Featured"}</p>
       <h2 style={{ fontSize: "1.375rem" }}>{svc.name}</h2>
       {svc.description ? <p className="tp-muted mb-2">{svc.description}</p> : null}
       <p className="mb-3"><span className="tp-price">{formatPrice(svc)}</span>{svc.durationMinutes ? <span className="tp-muted"> · {formatDuration(svc.durationMinutes)}</span> : null}</p>

@@ -79,7 +79,7 @@ export function TeamMembers({ members, variant: chosen, ctx }: { members: TeamMe
       {variant === "swipe" ? <Collection label="Team" compact>{members.map((m) => <React.Fragment key={m.id}>{card(m, "1 / 1")}</React.Fragment>)}</Collection>
         : variant === "grid" ? <ul className="tp-team-grid">{members.map((m) => <li key={m.id}>{card(m)}</li>)}</ul>
         : variant === "avatars" ? <ul className="tp-team-avatars">{members.map((m) => <li key={m.id}><button type="button" onClick={() => setProfile(m.id)} aria-label={`View ${m.name}'s profile`}><Portrait m={m} className="tp-portrait-sm" ratio="1 / 1" /><span className="text-sm font-semibold leading-tight">{first(m.name)}</span></button></li>)}</ul>
-        : <ul className="tp-rows">{members.map(row)}</ul>}
+        : <ul className="tp-rows tp-team-list">{members.map(row)}</ul>}
 
       <Overlay tone="page" kind="detail" open={profile !== null} onOpenChange={(o) => !o && setProfile(null)} title={member?.name ?? "Profile"} description={member?.role} testId="team-profile">
         {member ? <Profile m={member} ctx={ctx} canBook={canBook(member)} onBook={() => { setProfile(null); setBook({ staffId: member.id }) }} /> : null}
@@ -106,18 +106,19 @@ function Profile({ m, ctx, canBook, onBook }: { m: TeamMemberData; ctx?: Booking
   }, [ctx, canBook, m, now, config, state.bookings])
   void addDays
   return (
-    <div className="grid gap-5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-6">
-      <div className="mx-auto w-44 max-w-full sm:w-full"><Portrait m={m} /></div>
+    <div className={m.photo ? "grid gap-5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-6" : "grid gap-5"}>
+      {/* A large grey silhouette says nothing, so the portrait is shown only when there is one. */}
+      {m.photo ? <div className="mx-auto w-44 max-w-full sm:w-full"><Portrait m={m} /></div> : null}
       <div className="grid min-w-0 gap-4">
         {m.bio ? <p className="leading-relaxed [overflow-wrap:anywhere]">{m.bio}</p> : null}
         {m.subjects.length ? <ul className="flex flex-wrap gap-1.5" aria-label="Specialities">{m.subjects.map((x) => <li key={x} className="tp-chip">{x}</li>)}</ul> : null}
         {m.services.length ? (
           <section aria-labelledby={`svc-${m.id}`}>
-            <h3 id={`svc-${m.id}`} className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-tp-muted">Services {first(m.name)} provides</h3>
+            <h3 id={`svc-${m.id}`} className="mb-1.5 text-sm font-semibold text-tp-muted">Services {first(m.name)} provides</h3>
             <ul className="grid gap-1 text-sm">{m.services.map((s) => <li key={s.id} className="flex justify-between gap-3"><span>{s.name}{s.minutes ? <span className="text-tp-muted"> · {s.minutes} min</span> : null}</span><span className="font-semibold tabular-nums">{s.price}</span></li>)}</ul>
           </section>
         ) : null}
-        {m.credentials.length ? <section aria-label="Qualifications"><h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-tp-muted">Experience and qualifications</h3><ul className="grid gap-1 text-sm">{m.credentials.map((c) => <li key={c} className="flex gap-2"><Check aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-tp-accent" />{c}</li>)}</ul></section> : null}
+        {m.credentials.length ? <section aria-label="Qualifications"><h3 className="mb-1.5 text-sm font-semibold text-tp-muted">Experience and qualifications</h3><ul className="grid gap-1 text-sm">{m.credentials.map((c) => <li key={c} className="flex gap-2"><Check aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-tp-accent" />{c}</li>)}</ul></section> : null}
         {days.length ? <p className="text-sm text-tp-muted">Works {days.map((d) => DAY_NAMES[d]).join(", ")}{next ? <> · Next available <strong className="text-tp-fg">{formatDay(next)}</strong></> : null}</p> : null}
         {canBook ? <Button className="min-h-12 justify-self-start bg-tp-accent px-6 text-tp-accent-fg hover:bg-tp-accent/90" onClick={onBook}><CalendarCheck /> Book with {first(m.name)}</Button> : null}
       </div>

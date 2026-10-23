@@ -9,8 +9,8 @@ import { TaploLogo } from "@/components/taplo/brand"
 import { cn } from "@/lib/utils"
 import { INDUSTRY_FILTERS, PRODUCT_GROUPS } from "./ia"
 
-const ink = "rounded-lg px-3.5 py-2 text-sm font-medium text-foreground/70 outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/60 data-[state=open]:text-foreground aria-[current=page]:text-foreground"
-const primary = "inline-flex min-h-10 items-center rounded-lg bg-foreground px-4 text-sm font-semibold text-background outline-none transition-opacity hover:opacity-90 focus-visible:ring-3 focus-visible:ring-ring/60"
+const ink = "inline-flex h-10 items-center rounded-md px-3 text-[0.9375rem] font-medium text-foreground/70 outline-none transition-colors hover:bg-foreground/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:bg-foreground/[0.06] data-[state=open]:text-foreground aria-[current=page]:bg-signal-soft aria-[current=page]:text-foreground"
+const primary = "inline-flex min-h-10 items-center rounded-md bg-signal px-4 text-[0.9375rem] font-semibold text-white outline-none transition-colors hover:bg-[#0f25d6] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 
 /**
  * Compact floating navigation. Product opens a real menu whose entries are real pages; Pricing and
@@ -25,24 +25,29 @@ export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: str
   const at = (p: string) => (path === p || path.startsWith(p + "/") ? "page" : undefined)
 
   return (
-    <header className="sticky top-0 z-40 px-3 pt-3 sm:px-5">
-      <div className="mx-auto flex h-14 w-full max-w-5xl items-center gap-2 rounded-2xl border border-foreground/10 bg-background/90 pl-4 pr-2 shadow-[0_8px_30px_-12px_rgb(0_0_0/0.25)] backdrop-blur-xl">
-        <Link href="/" aria-label="Taplo home" className="mr-1 rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo className="h-9 -ml-1" /></Link>
+    <header className="sticky top-0 z-40 border-b border-foreground/10 bg-background/92 backdrop-blur-md">
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-1 px-5">
+        <Link href="/" aria-label="Taplo home" className="mr-5 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring"><TaploLogo className="h-9 -ml-1" /></Link>
 
         <NavigationMenu.Root className="relative hidden md:block" aria-label="Primary">
           <NavigationMenu.List className="flex items-center">
             <NavigationMenu.Item>
               <NavigationMenu.Trigger className={cn(ink, "group inline-flex items-center gap-1")} aria-current={at("/product")}>Product<ChevronDown aria-hidden="true" className="size-3.5 transition-transform group-data-[state=open]:rotate-180" /></NavigationMenu.Trigger>
-              <NavigationMenu.Content className="absolute left-0 top-0 w-[44rem] max-w-[calc(100vw-2rem)] p-5">
-                <div className="grid grid-cols-2 gap-x-8 gap-y-5">
+              <NavigationMenu.Content className="absolute left-0 top-0 w-[52rem] max-w-[calc(100vw-2rem)] p-5">
+                <div className="grid grid-cols-[1fr_1fr_13rem] gap-x-8 gap-y-5">
                   {PRODUCT_GROUPS.map((g) => (
                     <div key={g.title}>
                       <p className="px-3 text-sm font-semibold text-foreground/50">{g.title}</p>
                       <ul className="mt-1.5">{g.links.map((l) => (
-                        <li key={l.href}><NavigationMenu.Link asChild><Link href={l.href} className="block rounded-xl px-3 py-2 outline-none hover:bg-foreground/5 focus-visible:ring-3 focus-visible:ring-ring/60"><span className="block text-sm font-semibold">{l.label}</span><span className="block text-[0.8125rem] leading-snug text-foreground/60">{l.blurb}</span></Link></NavigationMenu.Link></li>
+                        <li key={l.href}><NavigationMenu.Link asChild><Link href={l.href} className="block rounded-lg px-3 py-2 outline-none hover:bg-foreground/[0.05] focus-visible:ring-2 focus-visible:ring-ring"><span className="block text-sm font-semibold">{l.label}</span><span className="block text-[0.8125rem] leading-snug text-foreground/60">{l.blurb}</span></Link></NavigationMenu.Link></li>
                       ))}</ul>
                     </div>
                   ))}
+                  <NavigationMenu.Link asChild><Link href="/inspiration" className="row-span-2 row-start-1 col-start-3 flex flex-col overflow-hidden rounded-lg bg-signal text-white outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/marketing/ex-marlowe-and-finch-phone.webp" alt="" width={780} height={1600} className="h-44 w-full object-cover object-top" />
+                    <span className="p-3.5"><span className="block text-sm font-semibold">See finished pages</span><span className="mt-0.5 block text-[0.8125rem] leading-snug text-white/80">Designs to start from, each shown on a real business.</span></span>
+                  </Link></NavigationMenu.Link>
                 </div>
                 <div className="mt-4 flex items-center justify-between border-t border-foreground/10 pt-3 text-sm">
                   <NavigationMenu.Link asChild><Link href="/product" className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-semibold outline-none hover:bg-foreground/5 focus-visible:ring-3 focus-visible:ring-ring/60">Everything Taplo does<ArrowRight aria-hidden="true" className="size-4" /></Link></NavigationMenu.Link>
@@ -54,7 +59,7 @@ export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: str
             <NavigationMenu.Item><NavigationMenu.Link asChild><Link href="/pricing" className={ink} aria-current={at("/pricing")}>Pricing</Link></NavigationMenu.Link></NavigationMenu.Item>
           </NavigationMenu.List>
           <div className="absolute left-0 top-full flex pt-3">
-            <NavigationMenu.Viewport className="relative h-[var(--radix-navigation-menu-viewport-height)] w-[var(--radix-navigation-menu-viewport-width)] origin-top-left overflow-hidden rounded-3xl border border-foreground/10 bg-background shadow-[0_24px_60px_-20px_rgb(0_0_0/0.35)] transition-[width,height] duration-200 motion-reduce:transition-none data-[state=closed]:hidden" />
+            <NavigationMenu.Viewport className="relative h-[var(--radix-navigation-menu-viewport-height)] w-[var(--radix-navigation-menu-viewport-width)] origin-top-left overflow-hidden rounded-xl border border-foreground/10 bg-background shadow-[0_16px_40px_-16px_rgb(0_0_0/0.3)] transition-[width,height] duration-200 motion-reduce:transition-none data-[state=closed]:hidden" />
           </div>
         </NavigationMenu.Root>
 

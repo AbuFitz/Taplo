@@ -28,22 +28,27 @@ const FOOTER_PRODUCT = [
 export function SiteFooter() {
   const a = primaryAction()
   return (
-    <footer className="mt-24 bg-[oklch(0.15_0.012_264)] text-white/80">
-      <div className="mx-auto grid w-full max-w-7xl gap-12 px-5 pb-14 pt-16 lg:grid-cols-[1fr_auto] lg:gap-24">
+    <footer className="mt-24 overflow-hidden bg-[#0a1020] text-white/80">
+      <div className="mx-auto grid w-full max-w-7xl gap-14 px-5 pb-16 pt-16 lg:grid-cols-[1.2fr_2fr] lg:gap-24">
         <div className="max-w-sm">
-          <TaploLogo variant="lockup" tone="light" className="-ml-4 h-14" />
-          <p className="mt-5 text-[1.0625rem] leading-relaxed text-white/70">One page for your business: what you do, what it costs, and a clear way to book or ask.</p>
-          <Link href={a.href} className="mt-6 inline-flex min-h-11 items-center rounded-xl bg-white px-5 text-sm font-semibold text-black outline-none hover:bg-white/90 focus-visible:ring-3 focus-visible:ring-white/50">{a.label}</Link>
+          <p className="font-display font-display-tight text-[2.25rem] text-white">One page for your business.</p>
+          <p className="mt-4 text-[1.0625rem] leading-relaxed text-white/65">Prices, people and a way to book, shared as a link or a QR code.</p>
+          <Link href={a.href} className="mt-7 inline-flex min-h-11 items-center rounded-md bg-signal px-5 text-[0.9375rem] font-semibold text-white outline-none hover:bg-[#2b44ff] focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a1020]">{a.label}</Link>
         </div>
-        <div className="grid gap-x-16 gap-y-10 sm:grid-cols-3">
+        <div className="grid gap-x-10 gap-y-10 sm:grid-cols-3">
           <FooterColumn title="Product" links={FOOTER_PRODUCT} />
           <FooterColumn title="Explore" links={[{ href: "/inspiration", label: "Designs" }, { href: "/pricing", label: "Pricing" }, { href: "/how-it-works", label: "How setup works" }, { href: "/dashboard", label: "Log in" }]} />
           <FooterColumn title="Legal" links={[{ href: "/legal/privacy", label: "Privacy notice" }, { href: "/legal/terms", label: "Terms of service" }]} />
         </div>
       </div>
-      <div className="border-t border-white/10">
-        <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-6 text-xs text-white/50">
+      {/* The wordmark at the width of the page, cut by the footer's edge: the footer's one large gesture. */}
+      <div aria-hidden="true" className="relative mx-auto aspect-[1000/312] w-[min(100%,84rem)] overflow-hidden px-0">
+        <div className="aspect-[1000/390] w-full bg-signal [mask:url(/logo/taplo-wordmark-white.svg)_center_top/100%_100%_no-repeat] [-webkit-mask:url(/logo/taplo-wordmark-white.svg)_center_top/100%_100%_no-repeat]" />
+      </div>
+      <div className="relative border-t border-white/10 bg-[#0a1020]">
+        <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-5 text-sm text-white/50">
           <p>Businesses shown on this site are examples.</p>
+          <p className="flex gap-5"><Link href="/legal/privacy" className="hover:text-white">Privacy</Link><Link href="/legal/terms" className="hover:text-white">Terms</Link></p>
         </div>
       </div>
     </footer>
@@ -53,9 +58,9 @@ export function SiteFooter() {
 function FooterColumn({ title, links }: { title: string; links: { href: string; label: string }[] }) {
   return (
     <nav aria-label={title}>
-      <h2 className="text-sm font-semibold text-white">{title}</h2>
+      <h2 className="text-[0.9375rem] font-semibold text-white">{title}</h2>
       <ul className="mt-3 grid gap-0.5">
-        {links.map((l) => <li key={l.href}><Link href={l.href} className="inline-flex min-h-9 items-center rounded text-sm text-white/65 outline-none hover:text-white focus-visible:ring-3 focus-visible:ring-white/50">{l.label}</Link></li>)}
+        {links.map((l) => <li key={l.href}><Link href={l.href} className="inline-flex min-h-9 items-center rounded text-[0.9375rem] text-white/65 outline-none hover:text-white focus-visible:ring-2 focus-visible:ring-white">{l.label}</Link></li>)}
       </ul>
     </nav>
   )

@@ -48,7 +48,7 @@ export function EnquiryForm({ slug, businessName, services, serviceId, submitLab
         <div className="grid size-11 place-items-center rounded-full bg-tp-accent text-tp-accent-fg"><Check aria-hidden="true" className="size-5" /></div>
         <h3 ref={sent} tabIndex={-1} className="font-tp-heading text-xl outline-none">Enquiry sent</h3>
         <p className="text-sm text-tp-muted">{businessName} will reply to the contact details you gave. No time was reserved.</p>
-        <p className="text-xs text-tp-muted">Preview mode: saved in this browser only. {businessName} was not emailed or texted.</p>
+        <p className="text-xs text-tp-muted">Saved in this browser only. {businessName} was not emailed or texted.</p>
       </div>
     )
 

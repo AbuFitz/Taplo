@@ -20,98 +20,23 @@ function useSummaries(ed: Editor) {
 
 function Thumb({ s, icon }: { s: ReturnType<typeof summarise>; icon: string }) {
   return (
-    <span className="grid size-14 shrink-0 place-items-center overflow-hidden rounded-xl bg-muted text-muted-foreground">
+    <span className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-lg bg-muted text-muted-foreground">
       {s.thumb ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={s.thumb.src} alt="" className="size-full object-cover" /> : <WidgetIcon name={icon} className="size-6" />}
     </span>
   )
 }
 
 /**
- * Browse mode: what is on the page, as cards that say what each one holds. Tap a card to edit it. There are no
- * drag handles here (ordering is its own mode), and a card with nothing to show offers the one step that fixes it,
- * in place, instead of a link to another page.
+ * What is on the page, as rows that say what each one holds. Tap a row to edit it. Every row has a handle: drag it (or
+ * focus it and use the arrow keys) to move it, with the other rows making room as it goes; there is no separate mode
+ * for ordering. The row's menu offers the same moves as plain choices, and any move is one undo. A row with nothing to
+ * show offers the one step that fixes it, in place, instead of a link to another page.
  */
 export function ContentCards({ ed, selectedId, onSelect, onDetails, onAddRecord }: { ed: Editor; selectedId: string | null; onSelect: (id: string) => void; onDetails: () => void; onAddRecord: (kind: RecordKind) => void }) {
   const sums = useSummaries(ed)
   const widgets = ed.state.page.widgets
-  return (
-    <ul className="min-w-0 divide-y overflow-hidden rounded-2xl border bg-card" aria-label="Content on your page" data-testid="content-list">
-      {widgets.map((w) => {
-        const s = sums.get(w.id)!
-        const def = getWidget(w.type)!
-        const main = w.type === "booking" && ed.vm?.promotedWidgetId === w.id
-        // What is on the page is the normal state and says nothing; only the exceptions get a line.
-        const status = w.hidden ? { text: "Hidden from your page", tone: "muted" } : s.locked ? { text: "Not on your page", tone: "warn" } : s.needs ? { text: "Needs a first entry", tone: "warn" } : null
-        return (
-          <li key={w.id} data-widget-row={w.type} data-widget-row-id={w.id} className={cn("transition-colors", selectedId === w.id && "bg-[var(--signal-soft)]", w.hidden && "opacity-75")}>
-            <div className="flex items-center gap-1 px-2 py-1.5">
-              <button type="button" onClick={() => onSelect(w.id)} aria-pressed={selectedId === w.id} data-testid="select-widget" className="flex min-h-14 min-w-0 flex-1 items-center gap-3 rounded-lg px-1 py-0.5 text-left outline-none hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring">
-                <Thumb s={s} icon={def.icon} />
-                <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-2"><span className="truncate text-sm font-semibold">{s.name}</span>{main ? <span className="shrink-0 rounded bg-[var(--signal-soft)] px-1.5 py-0.5 text-[0.6875rem] font-medium text-[oklch(0.38_0.19_262)]">Main action</span> : null}</span>
-                  <span className="block truncate text-xs text-muted-foreground">{s.summary || (s.needs ? "Nothing to show yet" : def.description)}</span>
-                  {status ? <span className={cn("mt-0.5 flex items-center gap-1 text-xs font-medium", status.tone === "warn" ? "text-amber-800" : "text-muted-foreground")}>{s.locked ? <Lock aria-hidden="true" className="size-3" /> : null}{status.text}</span> : null}
-                </span>
-                <ChevronRight aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
-              </button>
-              <Button type="button" variant="ghost" size="icon" className="size-11 shrink-0" aria-pressed={!w.hidden} aria-label={w.hidden ? `Show ${s.name} on your page` : `Hide ${s.name} from your page`} onClick={() => ed.updateWidget(w.id, { hidden: !w.hidden })}>
-                {w.hidden ? <EyeOff /> : <Eye />}
-              </Button>
-            </div>
-            {s.needs ? (
-              <div className="px-3 pb-3">
-                {s.needs.kind === "details" ? <Button variant="outline" className="min-h-11 w-full justify-start" onClick={onDetails}>{s.needs.cta}</Button> : s.needs.kind === "self" ? <Button variant="outline" className="min-h-11 w-full justify-start" onClick={() => onSelect(w.id)} data-testid="needs-cta">{s.needs.cta}</Button> : <Button variant="outline" className="min-h-11 w-full justify-start" onClick={() => onAddRecord(s.needs!.kind as RecordKind)} data-testid="needs-cta">{s.needs.cta}</Button>}
-              </div>
-            ) : null}
-            {s.locked ? <p className="mx-3 mb-3 flex items-start gap-2 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground"><Lock aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />{s.locked} Your content is kept.</p> : null}
-          </li>
-        )
-      })}
-    </ul>
-  )
-}
-
-function OrganiseRow({ w, name, summary, index, count, others, move, ed }: {
-  w: StoredWidget; name: string; summary: string; index: number; count: number; others: { id: string; name: string }[]
-  move: (to: number) => void; ed: Editor
-}) {
-  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({ id: w.id })
-  const def = getWidget(w.type)!
-  return (
-    <li ref={setNodeRef} style={{ transform: CSS.Transform.toString(transform), transition }} data-widget-row={w.type} data-widget-row-id={w.id}
-      className={cn("rounded-2xl border bg-card", isDragging && "relative z-10 shadow-xl ring-2 ring-primary", w.hidden && "opacity-70")}>
-      <div className="flex items-center gap-1 p-1.5">
-        <button type="button" ref={setActivatorNodeRef} {...attributes} {...listeners} data-testid="drag-handle" data-base-ui-swipe-ignore="" style={{ touchAction: "none" }}
-          aria-label={`Reorder ${name}. Position ${index + 1} of ${count}. Press space, then the arrow keys.`}
-          className="grid size-12 shrink-0 cursor-grab place-items-center rounded-xl bg-muted text-muted-foreground outline-none hover:bg-muted/70 focus-visible:ring-2 focus-visible:ring-ring active:cursor-grabbing"><GripVertical aria-hidden="true" className="size-5" /></button>
-        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-muted/60 text-muted-foreground"><WidgetIcon name={def.icon} className="size-4" /></span>
-        <span className="min-w-0 flex-1 px-1"><span className="block truncate text-sm font-semibold">{index + 1}. {name}</span><span className="block truncate text-xs text-muted-foreground">{w.hidden ? "Hidden · " : ""}{summary}</span></span>
-        <Button type="button" variant="ghost" size="icon" className="size-11" disabled={index === 0} aria-label={`Move ${name} up`} data-testid="move-up" onClick={() => ed.moveWidget(w.id, -1)}><ArrowUp /></Button>
-        <Button type="button" variant="ghost" size="icon" className="size-11" disabled={index === count - 1} aria-label={`Move ${name} down`} data-testid="move-down" onClick={() => ed.moveWidget(w.id, 1)}><ArrowDown /></Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild><Button type="button" variant="ghost" size="icon" className="size-11" aria-label={`More ways to move ${name}`}><MoreHorizontal /></Button></DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="max-h-72 w-60 overflow-y-auto">
-            <DropdownMenuItem disabled={index === 0} onSelect={() => move(0)}><ArrowUpToLine /> Move to the top</DropdownMenuItem>
-            <DropdownMenuItem disabled={index === count - 1} onSelect={() => move(count - 1)}><ArrowDownToLine /> Move to the bottom</DropdownMenuItem>
-            <DropdownMenuSeparator /><DropdownMenuLabel>Move to just after</DropdownMenuLabel>
-            {others.map((o) => <DropdownMenuItem key={o.id} onSelect={() => { const to = ed.state.page.widgets.findIndex((x) => x.id === o.id); const from = index; move(from < to ? to : to + 1) }}>{o.name}</DropdownMenuItem>)}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </li>
-  )
-}
-
-/**
- * Organise mode: an explicit mode for ordering, with large handles, buttons and a "move to" menu as alternatives
- * to dragging, auto-scroll while dragging, keyboard support, and Cancel to put everything back. Each completed
- * move is one undo step, and ordering never touches the main action, which is set separately.
- */
-export function OrganiseList({ ed, onDone }: { ed: Editor; onDone: () => void }) {
-  const widgets = ed.state.page.widgets
-  const sums = useSummaries(ed)
-  const [startOrder] = React.useState<string[]>(() => widgets.map((w) => w.id))
   const [msg, setMsg] = React.useState("")
+  // Mouse: a few pixels of movement. Touch: only from the handle, after a short press, so the list scrolls normally everywhere else. Keyboard: the handle.
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 4 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 8 } }),
@@ -125,36 +50,75 @@ export function OrganiseList({ ed, onDone }: { ed: Editor; onDone: () => void })
     onDragEnd: ({ active, over }) => (over ? `Dropped ${nm(active.id)} at position ${pos(over.id)} of ${widgets.length}.` : `Dropped ${nm(active.id)}. Order unchanged.`),
     onDragCancel: ({ active }) => `Move cancelled. ${nm(active.id)} stays where it was.`,
   }
-  const onDragEnd = (e: DragEndEvent) => {
-    const { active, over } = e
-    if (!over || active.id === over.id) return
-    const from = widgets.findIndex((w) => w.id === active.id), to = widgets.findIndex((w) => w.id === over.id)
-    if (from < 0 || to < 0) return
-    ed.reorderWidgets(arrayMove(widgets, from, to).map((w) => w.id))
-    setMsg(`${nm(active.id)} moved to position ${to + 1}.`)
-  }
   const moveTo = (id: string, to: number) => {
     const from = widgets.findIndex((w) => w.id === id)
-    if (from < 0 || from === to) return
+    if (from < 0 || from === to || to < 0 || to >= widgets.length) return
     ed.reorderWidgets(arrayMove(widgets, from, to).map((w) => w.id))
     setMsg(`${nm(id)} moved to position ${to + 1}.`)
   }
-  const changed = widgets.map((w) => w.id).join() !== startOrder.join()
+  const onDragEnd = (e: DragEndEvent) => {
+    const { active, over } = e
+    if (!over || active.id === over.id) return
+    moveTo(String(active.id), widgets.findIndex((w) => w.id === over.id))
+  }
   return (
-    <div className="grid gap-3" data-testid="organise-panel">
-      <p className="text-xs text-muted-foreground">Drag a handle, or use the arrows and the menu. The first item is at the top of your page. Which action is highlighted is a separate choice and does not change when you reorder.</p>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd} autoScroll={{ threshold: { x: 0, y: 0.18 }, acceleration: 14 }} accessibility={{ announcements, screenReaderInstructions: { draggable: "To pick up an item, press space or enter. Use the up and down arrow keys to move it, then press space or enter to drop it. Press escape to cancel." } }}>
+    <>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd} autoScroll={{ threshold: { x: 0, y: 0.18 }, acceleration: 14 }} accessibility={{ announcements, screenReaderInstructions: { draggable: "To pick up a row, press space or enter on its handle. Use the up and down arrow keys to move it, then space or enter to drop it. Press escape to cancel." } }}>
         <SortableContext items={widgets.map((w) => w.id)} strategy={verticalListSortingStrategy}>
-          <ul className="grid grid-cols-[minmax(0,1fr)] gap-2" aria-label="Order of content on your page" data-testid="widget-list">
-            {widgets.map((w, i) => <OrganiseRow key={w.id} w={w} name={sums.get(w.id)?.name ?? "Content"} summary={sums.get(w.id)?.summary ?? ""} index={i} count={widgets.length} ed={ed} move={(to) => moveTo(w.id, to)} others={widgets.filter((x) => x.id !== w.id).map((x) => ({ id: x.id, name: sums.get(x.id)?.name ?? "Content" }))} />)}
+          <ul className="min-w-0 divide-y overflow-hidden rounded-xl border bg-card" aria-label="Content on your page" data-testid="content-list">
+            {widgets.map((w, i) => <Row key={w.id} w={w} i={i} count={widgets.length} ed={ed} sum={sums.get(w.id)!} selected={selectedId === w.id} onSelect={onSelect} onDetails={onDetails} onAddRecord={onAddRecord} moveTo={(to) => moveTo(w.id, to)} />)}
           </ul>
         </SortableContext>
       </DndContext>
-      <p role="status" aria-live="polite" className="min-h-5 text-xs font-medium text-muted-foreground">{msg}</p>
-      <div className="sticky bottom-0 -mx-1 flex gap-2 bg-background/95 px-1 py-2 backdrop-blur">
-        <Button variant="outline" className="min-h-11 flex-1" disabled={!changed} onClick={() => { ed.reorderWidgets(startOrder); setMsg("Order put back."); }} data-testid="organise-cancel">Cancel changes</Button>
-        <Button className="min-h-11 flex-1" onClick={onDone} data-testid="organise-done">Done</Button>
+      <p role="status" aria-live="polite" className="sr-only">{msg}</p>
+    </>
+  )
+}
+
+function Row({ w, i, count, ed, sum: s, selected, onSelect, onDetails, onAddRecord, moveTo }: {
+  w: StoredWidget; i: number; count: number; ed: Editor; sum: ReturnType<typeof summarise>; selected: boolean
+  onSelect: (id: string) => void; onDetails: () => void; onAddRecord: (kind: RecordKind) => void; moveTo: (to: number) => void
+}) {
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({ id: w.id })
+  const def = getWidget(w.type)!
+  const main = w.type === "booking" && ed.vm?.promotedWidgetId === w.id
+  // What is on the page is the normal state and says nothing; only the exceptions get a line.
+  const status = w.hidden ? { text: "Hidden from your page", tone: "muted" } : s.locked ? { text: "Not on your page", tone: "warn" } : s.needs ? { text: "Needs a first entry", tone: "warn" } : null
+  return (
+    <li ref={setNodeRef} style={{ transform: CSS.Transform.toString(transform), transition }} data-widget-row={w.type} data-widget-row-id={w.id}
+      className={cn("bg-card transition-colors", selected && "bg-[var(--signal-soft)]", w.hidden && "opacity-75", isDragging && "relative z-10 shadow-[0_12px_32px_-8px_rgb(10_16_32/0.35)] ring-2 ring-signal")}>
+      <div className="flex items-center pr-1">
+        <button type="button" ref={setActivatorNodeRef} {...attributes} {...listeners} data-testid="drag-handle" data-base-ui-swipe-ignore="" style={{ touchAction: "none" }}
+          aria-label={`Reorder ${s.name}. Position ${i + 1} of ${count}. Press space, then the arrow keys.`}
+          className="grid h-14 w-11 shrink-0 cursor-grab place-items-center text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring active:cursor-grabbing"><GripVertical aria-hidden="true" className="size-4" /></button>
+        <button type="button" onClick={() => onSelect(w.id)} aria-pressed={selected} data-testid="select-widget" className="flex min-h-16 min-w-0 flex-1 items-center gap-3 rounded-md py-1 pr-1 text-left outline-none hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring">
+          <Thumb s={s} icon={def.icon} />
+          <span className="min-w-0 flex-1">
+            <span className="flex items-center gap-2"><span className="truncate text-sm font-semibold">{s.name}</span>{main ? <span className="shrink-0 rounded bg-[var(--signal-soft)] px-1.5 py-0.5 text-[0.6875rem] font-medium text-[oklch(0.38_0.19_262)]">Main action</span> : null}</span>
+            <span className="block truncate text-xs text-muted-foreground">{s.summary || (s.needs ? "Nothing to show yet" : def.description)}</span>
+            {status ? <span className={cn("mt-0.5 flex items-center gap-1 text-xs font-medium", status.tone === "warn" ? "text-amber-800" : "text-muted-foreground")}>{s.locked ? <Lock aria-hidden="true" className="size-3" /> : null}{status.text}</span> : null}
+          </span>
+        </button>
+        <Button type="button" variant="ghost" size="icon" className="size-11 shrink-0" aria-pressed={!w.hidden} aria-label={w.hidden ? `Show ${s.name} on your page` : `Hide ${s.name} from your page`} onClick={() => ed.updateWidget(w.id, { hidden: !w.hidden })}>
+          {w.hidden ? <EyeOff /> : <Eye />}
+        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild><Button type="button" variant="ghost" size="icon" className="size-11 shrink-0" aria-label={`More for ${s.name}`} data-testid="row-menu"><MoreHorizontal /></Button></DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-52">
+            <DropdownMenuLabel>Move</DropdownMenuLabel>
+            <DropdownMenuItem disabled={i === 0} onSelect={() => moveTo(i - 1)} data-testid="move-up"><ArrowUp /> Up one</DropdownMenuItem>
+            <DropdownMenuItem disabled={i === count - 1} onSelect={() => moveTo(i + 1)} data-testid="move-down"><ArrowDown /> Down one</DropdownMenuItem>
+            <DropdownMenuItem disabled={i === 0} onSelect={() => moveTo(0)}><ArrowUpToLine /> To the top</DropdownMenuItem>
+            <DropdownMenuItem disabled={i === count - 1} onSelect={() => moveTo(count - 1)}><ArrowDownToLine /> To the bottom</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
-    </div>
+      {s.needs ? (
+        <div className="px-3 pb-3 pl-11">
+          {s.needs.kind === "details" ? <Button variant="outline" className="min-h-11 w-full justify-start" onClick={onDetails}>{s.needs.cta}</Button> : s.needs.kind === "self" ? <Button variant="outline" className="min-h-11 w-full justify-start" onClick={() => onSelect(w.id)} data-testid="needs-cta">{s.needs.cta}</Button> : <Button variant="outline" className="min-h-11 w-full justify-start" onClick={() => onAddRecord(s.needs!.kind as RecordKind)} data-testid="needs-cta">{s.needs.cta}</Button>}
+        </div>
+      ) : null}
+      {s.locked ? <p className="mx-3 mb-3 ml-11 flex items-start gap-2 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground"><Lock aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />{s.locked} Your content is kept.</p> : null}
+    </li>
   )
 }

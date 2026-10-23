@@ -131,7 +131,7 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 82802,
+    "bytes": 87848,
     "source": "/appearance/frame?scenario=barber"
   },
   "ex-marlowe-and-finch-desk": {
@@ -140,7 +140,7 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 161346,
+    "bytes": 188640,
     "source": "/appearance/frame?scenario=barber"
   },
   "ex-hollin-physio-phone": {
@@ -591,6 +591,42 @@
     "cssWidth": 512,
     "cssHeight": 512,
     "bytes": 41382,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "story-1-menu": {
+    "file": "/marketing/story-1-menu.webp",
+    "width": 780,
+    "height": 1688,
+    "cssWidth": 390,
+    "cssHeight": 844,
+    "bytes": 71616,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "story-2-detail": {
+    "file": "/marketing/story-2-detail.webp",
+    "width": 780,
+    "height": 1688,
+    "cssWidth": 390,
+    "cssHeight": 844,
+    "bytes": 30936,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "story-3-time": {
+    "file": "/marketing/story-3-time.webp",
+    "width": 780,
+    "height": 1688,
+    "cssWidth": 390,
+    "cssHeight": 844,
+    "bytes": 64802,
+    "source": "/appearance/frame?scenario=barber"
+  },
+  "story-4-done": {
+    "file": "/marketing/story-4-done.webp",
+    "width": 780,
+    "height": 1688,
+    "cssWidth": 390,
+    "cssHeight": 844,
+    "bytes": 45658,
     "source": "/appearance/frame?scenario=barber"
   }
 }

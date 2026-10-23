@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import { cn } from "@/lib/utils"
 
 const LOOKS = [
+  { id: "folio", name: "Folio", note: "A serif name over a wide photograph", swatch: "#e9edf3", ink: "#7a1f2b" },
   { id: "night", name: "Night", note: "Dark, with one bright action", swatch: "#0d0e11", ink: "#c6f432" },
   { id: "clean", name: "Clean", note: "Light, calm and dependable", swatch: "#f5f5f5", ink: "#1f56ff" },
   { id: "colour", name: "Colour", note: "A saturated page that stands out", swatch: "#3a3af5", ink: "#ffd23f" },

@@ -247,12 +247,10 @@ test.describe("editing on a phone", () => {
       await insp(page).getByRole("textbox", { name: "Message" }).fill("Closed on Monday");
       expect(await overflow()).toBeLessThanOrEqual(0);
       await openStructure(page);
-      await page.getByTestId("organise").tap();
       await page.waitForTimeout(700);
       const handle = await row(page, "announcement").getByTestId("drag-handle").boundingBox();
       expect(handle!.width).toBeGreaterThanOrEqual(44);
       expect(handle!.height).toBeGreaterThanOrEqual(44);
-      await page.getByTestId("organise-done").tap();
 
       // reorder with the move buttons (the touch-friendly alternative)
       const start = await rowOrder(page);

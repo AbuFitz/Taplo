@@ -385,7 +385,7 @@ const showcase = (key: string, label: string, content: BusinessContentInput, sce
   key, label, plan: "business", content,
   page: { schemaVersion: 2, themeId, appearance: {}, meta: { searchVisible: true, primaryAction: "auto" }, widgets: SCENARIOS[scenario].widgets(), savedLooks: [], savedStyles: [] },
 });
-FIXTURES.push(showcase("showcase-barber", "Barber", BARBER, "barber", "night"), showcase("showcase-dealer", "Car dealer", DEALER, "dealer", "showroom"));
+FIXTURES.push(showcase("showcase-barber", "Barber", BARBER, "barber", "folio"), showcase("showcase-dealer", "Car dealer", DEALER, "dealer", "showroom"));
 
 export const INDUSTRY_FIXTURE_KEYS = ["showcase-barber", "showcase-dealer", "mechanic", "tutor", "cafe", "consultant", "unlisted"];
 

@@ -3,7 +3,7 @@
  * hides one. The first is where a new page starts if the owner changes nothing. Pure data (no UI), so the page model can use it.
  */
 const GROUPS: { ids: string[]; looks: string[] }[] = [
-  { ids: ["barber", "hairdresser", "nails", "lashes-brows", "beauty-therapist", "massage", "makeup", "tattoo", "photographer"], looks: ["night", "photo", "clay", "clean"] },
+  { ids: ["barber", "hairdresser", "nails", "lashes-brows", "beauty-therapist", "massage", "makeup", "tattoo", "photographer"], looks: ["folio", "night", "photo", "clay"] },
   { ids: ["plumber", "electrician", "builder", "landscaper", "cleaner", "locksmith", "removals", "handyman", "pest-control", "mechanic", "detailer"], looks: ["colour", "clean", "showroom", "forge"] },
   { ids: ["tutor", "music-teacher", "language-teacher", "coach", "driving-instructor"], looks: ["orchard", "clean", "journal", "colour"] },
   { ids: ["personal-trainer", "sports-coach"], looks: ["forge", "orchard", "night", "clean"] },

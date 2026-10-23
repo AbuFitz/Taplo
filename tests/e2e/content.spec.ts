@@ -76,39 +76,44 @@ test.describe("adding content is one journey", () => {
   })
 })
 
-test.describe("organise", () => {
-  test("move buttons and the menu reorder, each move is one undo, Cancel puts everything back, the preview follows", async ({ page }) => {
+test.describe("ordering", () => {
+  // Ordering has no mode of its own: every row has a handle and a menu of plain moves.
+  const menuMove = async (page: import("@playwright/test").Page, n: number, item: RegExp) => {
+    await page.locator("[data-widget-row-id]").nth(n).getByTestId("row-menu").click()
+    await page.getByRole("menuitem", { name: item }).click()
+  }
+  test("the row menu moves a row, each move is one undo, and the preview follows", async ({ page }) => {
     await openEditorWithSample(page, "Mechanic")
-    await page.getByTestId("organise").click()
     const start = await rowOrder(page)
-    const list = page.getByTestId("widget-list")
-    await list.locator("[data-widget-row-id]").nth(2).getByTestId("move-up").click()
+    await menuMove(page, 2, /Up one/)
     const one = await rowOrder(page)
     expect(one).not.toEqual(start)
-    await list.locator("[data-widget-row-id]").nth(3).getByRole("button", { name: /More ways to move/ }).click()
-    await page.getByRole("menuitem", { name: "Move to the top" }).click()
+    expect(one[1]).toBe(start[2])
+    await menuMove(page, 3, /To the top/)
     const two = await rowOrder(page)
-    expect(two[0]).toBe(start[3])
-    await page.getByTestId("organise-cancel").click()
-    expect(await rowOrder(page)).toEqual(start)
-    await page.getByTestId("organise-done").click()
-    await expect(page.getByTestId("organise-panel")).toBeHidden()
+    expect(two[0]).toBe(one[3])
     // One move = one undo step.
-    await page.getByTestId("organise").click()
-    await page.locator("[data-widget-row-id]").nth(1).getByTestId("move-down").click()
-    const moved = await rowOrder(page)
+    await page.getByTestId("undo").click()
+    expect(await rowOrder(page)).toEqual(one)
     await page.getByTestId("undo").click()
     expect(await rowOrder(page)).toEqual(start)
-    expect(moved).not.toEqual(start)
     await page.getByTestId("redo").click()
-    expect(await rowOrder(page)).toEqual(moved)
+    expect(await rowOrder(page)).toEqual(one)
     const visible = await previewOrder(page)
-    expect(visible).toEqual(moved.filter((t) => visible.includes(t)))
+    expect(visible).toEqual(one.filter((t) => visible.includes(t)))
+  })
+
+  test("the first row cannot move up and the last cannot move down", async ({ page }) => {
+    await openEditorWithSample(page, "Mechanic")
+    await page.locator("[data-widget-row-id]").first().getByTestId("row-menu").click()
+    await expect(page.getByRole("menuitem", { name: /Up one/ })).toHaveAttribute("aria-disabled", "true")
+    await page.keyboard.press("Escape")
+    await page.locator("[data-widget-row-id]").last().getByTestId("row-menu").click()
+    await expect(page.getByRole("menuitem", { name: /Down one/ })).toHaveAttribute("aria-disabled", "true")
   })
 
   test("keyboard: the handle picks up, arrows move, space drops, and it is announced", async ({ page }) => {
     await openEditorWithSample(page, "Mechanic")
-    await page.getByTestId("organise").click()
     const start = await rowOrder(page)
     const handle = page.locator("[data-widget-row-id]").first().getByTestId("drag-handle")
     await handle.focus()
@@ -117,29 +122,51 @@ test.describe("organise", () => {
     await page.keyboard.press("Space")
     await expect.poll(() => rowOrder(page)).not.toEqual(start)
     expect((await rowOrder(page))[1]).toBe(start[0])
-    await expect(page.getByRole("status").filter({ hasText: /moved to position 2/ })).toBeVisible()
+    await expect(page.getByRole("status").filter({ hasText: /moved to position 2/ })).toBeAttached()
+  })
+
+  test("Escape during a pick-up cancels it and nothing moves", async ({ page }) => {
+    await openEditorWithSample(page, "Mechanic")
+    const start = await rowOrder(page)
+    const handle = page.locator("[data-widget-row-id]").first().getByTestId("drag-handle")
+    await handle.focus()
+    await page.keyboard.press("Space"); await page.waitForTimeout(120)
+    await page.keyboard.press("ArrowDown"); await page.waitForTimeout(120)
+    await page.keyboard.press("Escape"); await page.waitForTimeout(200)
+    expect(await rowOrder(page)).toEqual(start)
+  })
+
+  test("a mouse drag from the handle reorders, and a click on the row still selects it", async ({ page }) => {
+    await openEditorWithSample(page, "Mechanic")
+    const start = await rowOrder(page)
+    const a = (await page.locator("[data-widget-row-id]").nth(0).getByTestId("drag-handle").boundingBox())!
+    const t = (await page.locator("[data-widget-row-id]").nth(2).getByTestId("drag-handle").boundingBox())!
+    await page.mouse.move(a.x + a.width / 2, a.y + a.height / 2)
+    await page.mouse.down()
+    await page.mouse.move(a.x + a.width / 2, a.y + a.height / 2 + 12, { steps: 4 })
+    await page.mouse.move(t.x + t.width / 2, t.y + t.height / 2 + 10, { steps: 12 })
+    await page.mouse.up()
+    await expect.poll(() => rowOrder(page)).not.toEqual(start)
+    await page.locator("[data-widget-row-id]").first().getByTestId("select-widget").click()
+    await expect(page.getByTestId("inspector-widget")).toBeVisible()
   })
 
   test("the main action is separate from the order: reordering does not change which action is promoted", async ({ page }) => {
     await openEditorWithSample(page, "Mechanic")
     const main = async () => (await records(page)).page.meta.primaryAction
     const before = await main()
-    await page.getByTestId("organise").click()
-    await page.locator("[data-widget-row-id]").nth(2).getByTestId("move-up").click()
+    await menuMove(page, 2, /Up one/)
     expect(await main()).toBe(before)
   })
 })
 
 test.describe("content editing on a phone", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true })
-  test("Content shows cards and Add content; Organise has handles and alternatives; touch drag reorders", async ({ page }) => {
+  test("Content shows rows with handles and Add content; a touch drag from the handle reorders", async ({ page }) => {
     await openEditorWithSample(page, "Mechanic")
     await page.getByTestId("tab-content").tap()
     await expect(page.getByTestId("content-list")).toBeVisible()
-    expect(await page.locator('[data-testid="content-list"] [data-testid="drag-handle"]').count()).toBe(0)   // no handles while just editing
     await expect(page.getByTestId("add-widget")).toBeVisible()
-    await page.getByTestId("organise").tap()
-    await expect(page.getByTestId("organise-panel")).toBeVisible()
     await page.waitForTimeout(700)
     const start = await rowOrder(page)
     const a = (await page.locator("[data-widget-row-id]").nth(0).getByTestId("drag-handle").boundingBox())!
