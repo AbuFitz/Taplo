@@ -72,23 +72,21 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 3. The wording: the idea nobody else says out loud. */}
+        {/* 3. Sharing: the page leaves the browser as a link, a code for the counter and an image. */}
         <section className="bg-foreground py-24 text-background sm:py-32">
-          <div className="mx-auto grid grid-cols-[minmax(0,1fr)] w-full max-w-7xl gap-14 px-5 lg:grid-cols-12">
+          <div className="mx-auto grid grid-cols-[minmax(0,1fr)] w-full max-w-7xl items-center gap-16 px-5 lg:grid-cols-12">
             <div className="lg:col-span-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-signal">Booking, said precisely</p>
-              <h2 className="font-display font-display-tight mt-4 text-[clamp(2rem,4.2vw,3.5rem)] text-balance">Confirmed, requested or asked. It always says which.</h2>
-              <p className="mt-6 text-lg leading-relaxed text-background/70">Most booking tools call everything a booking. Taplo does not. A request stays a request until you accept it, and an enquiry never pretends to reserve a time.</p>
-              <div className="mt-8"><Link href="/product/booking" className="inline-flex items-center gap-2 font-semibold underline-offset-4 hover:underline">See the whole journey<ArrowRight aria-hidden="true" className="size-4" /></Link></div>
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-signal">Share it</p>
+              <h2 className="font-display font-display-tight mt-4 text-[clamp(2rem,4.2vw,3.5rem)] text-balance">On the door, in your bio, on the flyer.</h2>
+              <p className="mt-6 text-lg leading-relaxed text-background/70">Copy the link, print the QR code, or post the image. All three come from your page, in your colours and your fonts.</p>
+              <div className="mt-8"><Link href="/product/sharing" className="inline-flex items-center gap-2 font-semibold underline-offset-4 hover:underline">How sharing works<ArrowRight aria-hidden="true" className="size-4" /></Link></div>
             </div>
-            <dl className="grid grid-cols-[minmax(0,1fr)] gap-px overflow-hidden rounded-3xl bg-background/15 lg:col-span-7">
-              {[["Confirmed appointment", "Book this time", "Confirm booking", "The time is reserved the moment it is confirmed."], ["Pending request", "Request this time", "Send request", "The business accepts or declines. Nothing is called booked."], ["Enquiry", "Send a message", "Send message", "No time is reserved, and the form says so."]].map(([t, b1, b2, d]) => (
-                <div key={t} className="grid grid-cols-[minmax(0,1fr)] gap-3 bg-foreground p-7 sm:grid-cols-[1fr_auto] sm:items-center">
-                  <div><dt className="text-xl font-semibold tracking-[-0.02em]">{t}</dt><dd className="mt-1 text-background/65">{d}</dd></div>
-                  <dd className="flex flex-wrap gap-2 text-sm"><span className="rounded-full bg-background/12 px-3 py-1.5">{b1}</span><span className="rounded-full bg-signal px-3 py-1.5 font-semibold text-foreground">{b2}</span></dd>
-                </div>
-              ))}
-            </dl>
+            <div className="relative lg:col-span-7">
+              <div className="flex flex-wrap items-start justify-center gap-6 sm:flex-nowrap sm:justify-end">
+                <Shot id="share-image" alt="The share image: the business's logo, name and line, a QR code and its link" width={320} frame="none" className="max-w-full sm:mt-12" />
+                <Shot id="share-sheet" alt="The share panel with the link, a QR code, and downloads for the image and the code" width={400} frame="none" className="max-w-full" />
+              </div>
+            </div>
           </div>
         </section>
 

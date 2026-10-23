@@ -51,11 +51,12 @@ export function TeamMembers({ members, variant, ctx }: { members: TeamMemberData
 
   const card = (m: TeamMemberData, ratio = "4 / 5") => (
     <article className="tp-team-card" data-testid="team-card">
-      <button type="button" className="tp-team-open" onClick={() => setProfile(m.id)} aria-label={`View ${m.name}'s profile`}>
+      <button type="button" className="tp-team-open" onClick={() => setProfile(m.id)}>
         <Portrait m={m} ratio={ratio} />
         <span className="tp-team-name">{m.name}</span>
         {m.role ? <span className="tp-team-role">{m.role}</span> : null}
         {m.summary ? <span className="tp-team-summary">{m.summary}</span> : null}
+        <span className="sr-only">. View profile</span>
       </button>
       {canBook(m) ? <button type="button" className="tp-btn" data-variant="compact" onClick={() => setBook({ staffId: m.id })}><span className="tp-btn-main"><span className="tp-btn-label">Book with {first(m.name)}</span></span><ArrowRight aria-hidden="true" className="size-4" /></button> : null}
     </article>
@@ -63,9 +64,9 @@ export function TeamMembers({ members, variant, ctx }: { members: TeamMemberData
 
   const row = (m: TeamMemberData) => (
     <li key={m.id} className="tp-team-row">
-      <button type="button" className="tp-team-row-open" onClick={() => setProfile(m.id)} aria-label={`View ${m.name}'s profile`}>
+      <button type="button" className="tp-team-row-open" onClick={() => setProfile(m.id)}>
         <Portrait m={m} className="tp-portrait-sm" ratio="1 / 1" />
-        <span className="min-w-0 text-left"><span className="tp-team-name block">{m.name}</span>{m.role ? <span className="tp-team-role block">{m.role}</span> : null}{m.summary ? <span className="tp-team-summary block">{m.summary}</span> : null}</span>
+        <span className="min-w-0 text-left"><span className="tp-team-name block">{m.name}</span>{m.role ? <span className="tp-team-role block">{m.role}</span> : null}{m.summary ? <span className="tp-team-summary block">{m.summary}</span> : null}<span className="sr-only">. View profile</span></span>
         <ArrowRight aria-hidden="true" className="size-4 shrink-0 opacity-60" />
       </button>
     </li>

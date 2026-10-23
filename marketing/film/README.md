@@ -6,7 +6,7 @@ Editable source of the marketing film. 1920×1080, 30 fps, silent, 15 s.
 | --- | --- | --- |
 | 0–3 s | `compositions/s1.html` | Prices, up front (a real service detail) |
 | 3–6 s | `compositions/s2.html` | Pick a time (the real booking journey) |
-| 6–9 s | `compositions/s3.html` | Confirmed, or requested: the two real review screens |
+| 6–9 s | `compositions/s3.html` | Share it three ways: the real share panel and share image |
 | 9–12 s | `compositions/s4.html` | Nine looks, every one changeable (one business, six looks) |
 | 12–15 s | `compositions/s5.html` | End card with the Taplo logo and the action |
 

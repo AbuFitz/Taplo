@@ -1,23 +1,20 @@
 <template>
   <style>
-    #root { background: #f6f1e7; color: #14110f; position: absolute; inset: 0; overflow: hidden; font-family: "Inter", sans-serif; letter-spacing: -0.035em; }
+    #root { background: #f3f4f8; color: #0f1218; position: absolute; inset: 0; overflow: hidden; font-family: "Inter", sans-serif; letter-spacing: -0.035em; }
     .h { position: absolute; font-weight: 700; line-height: 0.98; }
-    .sig { color: #ff5a36; }
+    .sig { color: #3f5bf5; }
     .shot { position: absolute; border-radius: 28px; box-shadow: 0 40px 90px -30px rgba(0,0,0,.55); }
-    .wipe { position: absolute; background: #ff5a36; z-index: 9; }
+    .wipe { position: absolute; background: #3f5bf5; z-index: 9; }
     .lab { position: absolute; font-size: 34px; font-weight: 600; letter-spacing: -0.02em; }
     .note { position: absolute; left: 120px; bottom: 84px; font-size: 28px; font-weight: 500; opacity: .6; letter-spacing: -0.01em; }
   </style>
   <div id="root" data-composition-id="s1" data-width="1920" data-height="1080">
     <h1 id="s1-h" class="h" style="left:120px; top:300px; font-size:132px; width:760px;">Prices,<br /><span class="sig">up front.</span></h1>
-    <p id="s1-p" class="lab" style="left:124px; top:640px; width:700px; font-weight:500; opacity:.7;">Every service, with what it costs and how long it takes.</p>
     <img id="s1-shot" class="shot" src="assets/svc-detail.webp" style="left:830px; top:250px; width:1000px; height:auto;" alt="A service detail: Signature cut, £34, 45 minutes" />
-    <p class="note">Fictional business.</p>
   </div>
   <script>
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo("#s1-h", { y: 60, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "power4.out" }, 0.1);
-    tl.fromTo("#s1-p", { y: 30, opacity: 0 }, { y: 0, opacity: 0.7, duration: 0.5, ease: "power3.out" }, 0.45);
+    tl.fromTo("#s1-h", { y: 24 }, { y: 0, duration: 0.7, ease: "power4.out" }, 0);
     tl.fromTo("#s1-shot", { x: 220, opacity: 0, scale: 0.94 }, { x: 0, opacity: 1, scale: 1, duration: 0.8, ease: "power4.out" }, 0.25);
     tl.to("#s1-shot", { scale: 1.06, duration: 1.8, ease: "none" }, 1.1);
     window.__timelines["s1"] = tl;

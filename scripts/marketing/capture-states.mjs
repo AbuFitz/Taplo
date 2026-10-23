@@ -42,6 +42,8 @@ const jobs = [
   { id: "enq-inline", url: frame("trades"), vp: [390, 900], shot: '[data-widget="enquiry"]' },
   { id: "enq-sent", url: frame("trades"), vp: [390, 900], run: async (p) => { const f = p.locator('[data-widget="enquiry"]'); await f.getByRole("textbox", { name: "Your name" }).fill("Ruth"); await f.getByRole("textbox", { name: "Phone (optional)" }).fill("07700 900123"); await f.getByRole("textbox", { name: "Your message" }).fill("My boiler is leaking. Can you come tomorrow?"); await f.getByRole("button", { name: /Send message/ }).click(); await p.getByTestId("enquiry-sent").waitFor() }, shot: '[data-widget="enquiry"]' },
   { id: "share-sheet", origin: "https://taplo.example", url: frame("barber"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Share Marlowe/ }).click(); await p.getByTestId("share-panel").waitFor() }, shot: '[data-testid="share-panel"]' },
+  // The downloadable share image, exactly as a customer would save it.
+  { id: "share-image", origin: "https://taplo.example", url: frame("barber"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Share Marlowe/ }).click(); await p.getByTestId("share-panel").waitFor() }, download: async (p) => { const [dl] = await Promise.all([p.waitForEvent("download"), p.getByRole("button", { name: "Share image" }).click()]); return readFileSync(await dl.path()) } },
   // ---- Design: one business, six starting looks
   ...["night", "journal", "clay", "forge", "orchard", "showroom"].map((l) => ({ id: `look-${l}`, url: frame("barber", l), vp: [390, 844], clip: [0, 0, 390, 600] })),
 ]
@@ -72,7 +74,8 @@ for (const j of jobs.filter((x) => !only.length || only.includes(x.id))) {
     if (j.run) await j.run(page)
     await page.waitForTimeout(500)
     let buf
-    if (j.shot) { const el = page.locator(j.shot).first(); await el.scrollIntoViewIfNeeded().catch(() => {}); await page.waitForTimeout(300); buf = await el.screenshot({ type: "png" }) }
+    if (j.download) buf = await j.download(page)
+    else if (j.shot) { const el = page.locator(j.shot).first(); await el.scrollIntoViewIfNeeded().catch(() => {}); await page.waitForTimeout(300); buf = await el.screenshot({ type: "png" }) }
     else { const [x, y, w, h] = j.clip; buf = await page.screenshot({ type: "png", clip: { x, y, width: w, height: h } }) }
     const info = await sharp(buf).webp({ quality: 90, effort: 5 }).toFile(`${out}${j.id}.webp`)
     manifest[j.id] = { file: `/marketing/${j.id}.webp`, width: info.width, height: info.height, cssWidth: Math.round(info.width / 2), cssHeight: Math.round(info.height / 2), bytes: info.size, source: j.url }

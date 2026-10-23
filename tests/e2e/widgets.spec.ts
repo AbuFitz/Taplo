@@ -9,7 +9,7 @@ test.describe("team", () => {
     await open(page, FRAME())
     const cards = page.getByTestId("team-card")
     await expect(cards).toHaveCount(3)
-    await cards.first().getByRole("button", { name: /View .* profile/ }).click()
+    await cards.first().getByRole("button", { name: /View profile/ }).click()
     const profile = page.getByTestId("team-profile")
     await expect(profile).toBeVisible()
     await expect(profile).toContainText("Jonah Marlowe")

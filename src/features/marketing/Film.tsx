@@ -11,8 +11,8 @@ import { Play } from "lucide-react"
 export const FILM_BEATS = [
   "Prices, up front: a service opens with its price and how long it takes.",
   "Pick a time: choose a day and time in the booking journey.",
-  "Confirmed, or requested. It says which: a confirmed appointment and a pending request are worded differently.",
-  "Nine looks, every one changeable: the same business, the same words and prices, only the look changes.",
+  "Share it three ways: a link, a QR code and an image, all made from the page.",
+  "Nine looks, every one changeable: the same words and prices in different looks.",
   "One page for your business. Make your Taplo.",
 ] as const
 
@@ -34,7 +34,7 @@ export function Film({ className }: { className?: string }) {
         )}
       </div>
       <figcaption id="film-text" className="mt-4 text-sm text-foreground/60">
-        <span className="font-semibold text-foreground">15 seconds, no sound.</span> The film shows fictional businesses.
+        <span className="font-semibold text-foreground">15 seconds, no sound.</span>
         <ol className="mt-3 grid list-decimal gap-1 pl-5">{FILM_BEATS.map((b) => <li key={b}>{b}</li>)}</ol>
       </figcaption>
     </figure>
