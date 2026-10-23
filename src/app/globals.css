@@ -27,7 +27,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Geist Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -88,7 +88,7 @@
   --border: oklch(0.9 0.008 85);
   --input: oklch(0.88 0.009 85);
   --ring: oklch(0.64 0.19 38);
-  --font-display: "Geist Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --signal: oklch(0.64 0.19 38);
   --signal-soft: oklch(0.95 0.04 50);
   --chart-1: oklch(0.87 0 0);
@@ -158,6 +158,8 @@
 
 /* ---- Taplo profile surface (scoped; never applied to dashboard/marketing) ---- */
 [data-taplo-theme] {
+  /* Customer fonts keep their text design even though the shared Inter file carries an optical-size axis. */
+  font-optical-sizing: none;
   background: var(--tp-background);
   color: var(--tp-foreground);
   font-family: var(--tp-font-body);
@@ -211,14 +213,16 @@
   }
 }
 
-/* Taplo's own display voice: bold, tight, confident sans. Business pages never use it. */
+/* Taplo's own display voice: Inter at its Display optical size (opsz 32), bold and tightly set.
+   Chosen over Geist against the supplied logo and real copy (docs/platform-typography.md). Business pages never use it. */
 @utility font-display {
   font-family: var(--font-display);
-  font-weight: 760;
-  letter-spacing: -0.045em;
-  font-feature-settings: "ss01", "tnum" 0;
+  font-weight: 700;
+  font-optical-sizing: none;
+  font-variation-settings: "opsz" 32;
+  letter-spacing: -0.034em;
 }
-@utility font-display-tight { letter-spacing: -0.055em; line-height: 0.94; }
+@utility font-display-tight { letter-spacing: -0.04em; line-height: 0.98; }
 @utility text-balance-pretty { text-wrap: balance; }
 @utility text-signal-ink { color: oklch(0.5 0.17 38); }
 @utility bg-signal { background-color: var(--signal); }

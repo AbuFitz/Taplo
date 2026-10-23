@@ -1,7 +1,7 @@
 import type { FontKey } from "@/features/themes/contracts/tokens";
 
 // Approved fonts, self-hosted via Fontsource (no third-party requests at runtime).
-import "@fontsource-variable/inter";
+import "@fontsource-variable/inter/opsz.css";
 import "@fontsource-variable/fraunces";
 import "@fontsource-variable/source-serif-4";
 import "@fontsource-variable/manrope";
