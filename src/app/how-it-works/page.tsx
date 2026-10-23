@@ -1,9 +1,7 @@
 import Link from "next/link"
 import type { Metadata } from "next"
-import { Button } from "@/components/ui/button"
-import { demoModeEnabled } from "@/lib/env"
 import { STEPS } from "@/features/marketing/content"
-import { SiteFooter, SiteHeader } from "@/features/marketing/Site"
+import { SiteFooter, SiteHeader, primaryAction } from "@/features/marketing/Site"
 
 export const metadata: Metadata = { title: "How it works | Taplo", description: "From a business name to a published page in a few minutes." }
 export const dynamic = "force-dynamic"
@@ -16,7 +14,7 @@ const FAQ = [
 ]
 
 export default function HowItWorks() {
-  const demo = demoModeEnabled()
+  const a = primaryAction()
   return (
     <div className="bg-background">
       <SiteHeader />
@@ -30,7 +28,7 @@ export default function HowItWorks() {
         <dl className="mt-8 divide-y divide-foreground/10 border-y border-foreground/10">
           {FAQ.map((f) => <div key={f.q} className="grid gap-2 py-6 md:grid-cols-[2fr_3fr] md:gap-10"><dt className="font-semibold tracking-[-0.02em]">{f.q}</dt><dd className="leading-relaxed text-foreground/70">{f.a}</dd></div>)}
         </dl>
-        <div className="mt-12"><Button asChild size="lg" className="h-13 px-7 text-base"><Link href={demo ? "/onboarding" : "/pricing"}>Create your page</Link></Button></div>
+        <div className="mt-12"><Link href={a.href} className="inline-flex min-h-13 items-center rounded-full bg-foreground px-7 text-base font-semibold text-background hover:opacity-90">{a.label}</Link></div>
       </main>
       <SiteFooter />
     </div>

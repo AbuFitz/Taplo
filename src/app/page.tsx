@@ -6,6 +6,7 @@ import { SiteFooter, SiteHeader, primaryAction } from "@/features/marketing/Site
 import { ArrowLink } from "@/features/marketing/Scenes"
 import { Shot } from "@/features/marketing/Shot"
 import { YoursScene } from "@/features/marketing/YoursScene"
+import { Film } from "@/features/marketing/Film"
 import { EXAMPLES, describe } from "@/features/inspiration/examples"
 import { cn } from "@/lib/utils"
 
@@ -42,6 +43,12 @@ export default function Home() {
             <Shot id="ex-hollin-physio-desk" alt="A physiotherapy clinic's Taplo page on a laptop screen" width={700} frame="browser" priority className="w-[88%] max-w-full" />
             <Shot id="ex-marlowe-and-finch-phone" alt="A barber's Taplo page on a phone" width={250} priority cropTo={470} className="absolute -bottom-6 right-0 hidden sm:block" />
           </div>
+        </section>
+
+        {/* 1b. The film: asked for, never autoplayed, with its story written out. */}
+        <section aria-labelledby="film-h" className="mx-auto w-full max-w-5xl px-5 pb-24">
+          <h2 id="film-h" className="font-display font-display-tight mb-6 text-[clamp(1.5rem,3vw,2.25rem)]">Fifteen seconds, start to finish</h2>
+          <Film />
         </section>
 
         {/* 2. What a visitor does: an editorial list, not a card grid. */}

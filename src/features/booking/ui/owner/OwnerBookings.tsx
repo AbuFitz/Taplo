@@ -33,7 +33,7 @@ export function OwnerBookings() {
   const [block, setBlock] = React.useState<{ date: string; start: string; end: string; who: string; reason: string } | null>(null)
   const [note, setNote] = React.useState("")
   const say = React.useCallback((m: string) => { setNote(m); window.setTimeout(() => setNote((x) => (x === m ? "" : x)), 6000) }, [])
-  if (!o.ctx || !o.records) return <p className="text-sm text-muted-foreground">Create your page first and your bookings will appear here.</p>
+  if (!o.ctx || !o.records) return <p className="text-sm text-muted-foreground">Make your Taplo first and your bookings will appear here.</p>
   const { ctx, config, state, update } = o
   const tz = config.timezone
   const today = localParts(now, tz).date

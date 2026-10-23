@@ -1,0 +1,27 @@
+<template>
+  <style>
+    #root { background: #14110f; color: #f6f1e7; position: absolute; inset: 0; overflow: hidden; font-family: "Inter", sans-serif; letter-spacing: -0.035em; }
+    .h { position: absolute; font-weight: 700; line-height: 0.98; }
+    .sig { color: #ff5a36; }
+    .shot { position: absolute; border-radius: 28px; box-shadow: 0 40px 90px -30px rgba(0,0,0,.55); }
+    .wipe { position: absolute; background: #ff5a36; z-index: 9; }
+    .lab { position: absolute; font-size: 34px; font-weight: 600; letter-spacing: -0.02em; }
+    .note { position: absolute; left: 120px; bottom: 84px; font-size: 28px; font-weight: 500; opacity: .6; letter-spacing: -0.01em; }
+  </style>
+  <div id="root" data-composition-id="s5" data-width="1920" data-height="1080">
+    <div id="s5-fill" class="wipe" style="left:0; bottom:0; width:1920px; height:1080px;"></div>
+    <img id="s5-logo" src="assets/taplo-white.svg" style="position:absolute; left:700px; top:300px; width:520px; height:auto;" alt="Taplo" />
+    <p id="s5-line" class="h" style="left:0; width:1920px; top:520px; text-align:center; font-size:84px;">One page for your business.</p>
+    <div id="s5-cta" style="position:absolute; left:760px; top:690px; width:400px; height:96px; border-radius:999px; background:#f6f1e7; color:#14110f; display:flex; align-items:center; justify-content:center; font-size:38px; font-weight:700; letter-spacing:-0.02em;">Make your Taplo</div>
+    <p class="note" style="left:0; width:1920px; text-align:center;">Fictional businesses. Taplo is in preview.</p>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#s5-fill", { yPercent: 100 }, { yPercent: 0, duration: 0.6, ease: "power4.inOut" }, 0);
+    tl.to("#s5-fill", { yPercent: -100, duration: 0.6, ease: "power4.inOut" }, 0.7);
+    tl.fromTo("#s5-logo", { scale: 0.8, opacity: 0, filter: "blur(12px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.7, ease: "power4.out" }, 1.1);
+    tl.fromTo("#s5-line", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 1.5);
+    tl.fromTo("#s5-cta", { y: 30, opacity: 0, scale: 0.92 }, { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, 1.9);
+    window.__timelines["s5"] = tl;
+  </script>
+</template>

@@ -39,7 +39,7 @@ export default function SampleProfiles() {
       <ul className="mt-3 flex flex-wrap gap-2 text-sm">
         {THEMES.map((t) => <li key={t.id}><Link className="rounded-full border px-3 py-1.5" href={`/demo-barber?theme=${t.id}`}>{t.name}</Link></li>)}
       </ul>
-      <p className="mt-10 text-sm text-neutral-600">Build your own: <Link className="underline" href="/onboarding">Create your page</Link> · <Link className="underline" href="/dashboard/page">My page editor</Link></p>
+      <p className="mt-10 text-sm text-neutral-600">Build your own: <Link className="underline" href="/onboarding">Make your Taplo</Link> · <Link className="underline" href="/dashboard/page">My page editor</Link></p>
     </main>
   )
 }

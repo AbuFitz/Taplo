@@ -43,3 +43,7 @@ next-env.d.ts
 # test output
 /test-results/
 /playwright-report/
+
+# HyperFrames working files
+/marketing/film/.hyperframes/
+/marketing/film/renders/
