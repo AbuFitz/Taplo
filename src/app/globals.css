@@ -68,43 +68,44 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Taplo identity: warm paper, ink, and one signal colour. The page engine never reads these. */
+/* Taplo identity: crisp white, cool light grey, near-black ink and one controlled accent (cobalt). Hue 264 throughout so
+   neutrals stay cool. The page engine never reads these; customer pages keep their own palettes. */
 :root {
-  --background: oklch(0.972 0.005 85);
-  --foreground: oklch(0.18 0.012 70);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0.012 264);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.012 70);
+  --card-foreground: oklch(0.145 0.012 264);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.012 70);
-  --primary: oklch(0.2 0.012 70);
-  --primary-foreground: oklch(0.985 0.004 85);
-  --secondary: oklch(0.945 0.007 85);
-  --secondary-foreground: oklch(0.2 0.012 70);
-  --muted: oklch(0.945 0.007 85);
-  --muted-foreground: oklch(0.47 0.012 75);
-  --accent: oklch(0.945 0.007 85);
-  --accent-foreground: oklch(0.2 0.012 70);
+  --popover-foreground: oklch(0.145 0.012 264);
+  --primary: oklch(0.17 0.012 264);
+  --primary-foreground: oklch(0.99 0.002 264);
+  --secondary: oklch(0.968 0.004 264);
+  --secondary-foreground: oklch(0.17 0.012 264);
+  --muted: oklch(0.968 0.004 264);
+  --muted-foreground: oklch(0.46 0.014 264);
+  --accent: oklch(0.955 0.006 264);
+  --accent-foreground: oklch(0.17 0.012 264);
   --destructive: oklch(0.55 0.22 27);
-  --border: oklch(0.9 0.008 85);
-  --input: oklch(0.88 0.009 85);
-  --ring: oklch(0.64 0.19 38);
+  --border: oklch(0.925 0.006 264);
+  --input: oklch(0.89 0.008 264);
+  --ring: oklch(0.55 0.21 262);
   --font-display: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --signal: oklch(0.64 0.19 38);
-  --signal-soft: oklch(0.95 0.04 50);
+  --signal: oklch(0.55 0.21 262);
+  --signal-soft: oklch(0.955 0.03 262);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
   --radius: 0.75rem;
-  --sidebar: oklch(0.985 0.004 85);
-  --sidebar-foreground: oklch(0.18 0.012 70);
-  --sidebar-primary: oklch(0.2 0.012 70);
-  --sidebar-primary-foreground: oklch(0.985 0.004 85);
-  --sidebar-accent: oklch(0.945 0.007 85);
-  --sidebar-accent-foreground: oklch(0.2 0.012 70);
-  --sidebar-border: oklch(0.9 0.008 85);
-  --sidebar-ring: oklch(0.64 0.19 38);
+  --sidebar: oklch(0.985 0.003 264);
+  --sidebar-foreground: oklch(0.145 0.012 264);
+  --sidebar-primary: oklch(0.17 0.012 264);
+  --sidebar-primary-foreground: oklch(0.99 0.002 264);
+  --sidebar-accent: oklch(0.955 0.006 264);
+  --sidebar-accent-foreground: oklch(0.17 0.012 264);
+  --sidebar-border: oklch(0.925 0.006 264);
+  --sidebar-ring: oklch(0.55 0.21 262);
 }
 
 .dark {
@@ -224,7 +225,7 @@
 }
 @utility font-display-tight { letter-spacing: -0.04em; line-height: 0.98; }
 @utility text-balance-pretty { text-wrap: balance; }
-@utility text-signal-ink { color: oklch(0.5 0.17 38); }
+@utility text-signal-ink { color: oklch(0.47 0.19 262); }
 @utility bg-signal { background-color: var(--signal); }
 @utility text-signal { color: var(--signal); }
 @utility bg-signal-soft { background-color: var(--signal-soft); }

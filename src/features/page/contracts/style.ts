@@ -63,12 +63,15 @@ export const backgroundSchema = z.discriminatedUnion("kind", [
 export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal"] as const;
 export const headerSchema = z.object({
   layout: z.enum(HEADER_LAYOUTS),
-  avatarShape: z.enum(["circle", "rounded", "square", "arch", "none"]),
+  /** "logo" shows the picture uncropped at its own proportions (for wide wordmarks); a wide logo is never cropped to a face shape regardless. */
+  avatarShape: z.enum(["circle", "rounded", "square", "arch", "none", "logo"]),
   avatarSize: z.enum(["sm", "md", "lg"]),
   align: z.enum(["left", "center"]),
   /** How the primary contact actions appear under the name. */
   actions: z.enum(["primary", "buttons", "icons", "none"]),
   showLocation: z.boolean(),
+  /** How far the cover or hero photograph fades into the page: tested presets, not a free slider. */
+  scrim: z.enum(["soft", "medium", "strong"]).default("medium"),
 });
 
 export const buttonsSchema = z.object({

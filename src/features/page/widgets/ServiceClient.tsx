@@ -61,7 +61,7 @@ export function ServiceCollection({ groups, variant, options, ctx, businessName,
         {groups.map((g) => (
           <div key={g.name ?? "all"}>
             {g.name ? <h3 className="tp-group-title">{g.name}</h3> : null}
-            {variant === "cards" ? <ul className="grid gap-2 sm:grid-cols-2">{g.items.map((s) => <li key={s.id} className="tp-subcard">{row(s)}</li>)}</ul>
+            {variant === "cards" ? <ul className="tp-rows tp-cards-grid">{g.items.map((s) => <li key={s.id} className="tp-subcard">{row(s)}</li>)}</ul>
               : variant === "menu" ? <ul className="grid gap-2.5">{g.items.map((s) => <li key={s.id}>{row(s)}</li>)}</ul>
               : <ul className="tp-rows">{g.items.map((s) => <li key={s.id}>{row(s)}</li>)}</ul>}
           </div>

@@ -27,7 +27,7 @@ export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: str
   return (
     <header className="sticky top-0 z-40 px-3 pt-3 sm:px-5">
       <div className="mx-auto flex h-14 w-full max-w-5xl items-center gap-2 rounded-full border border-foreground/10 bg-background/85 pl-4 pr-2 shadow-[0_8px_30px_-12px_rgb(0_0_0/0.25)] backdrop-blur-xl">
-        <Link href="/" aria-label="Taplo home" className="mr-1 rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo className="h-10 -my-1 -ml-3" /></Link>
+        <Link href="/" aria-label="Taplo home" className="mr-1 rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo className="h-9 -ml-1" /></Link>
 
         <NavigationMenu.Root className="relative hidden md:block" aria-label="Primary">
           <NavigationMenu.List className="flex items-center">
@@ -80,7 +80,7 @@ export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: str
               <Dialog.Content className="fixed inset-x-0 top-0 z-50 flex h-[100dvh] flex-col bg-background px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 outline-none">
                 <Dialog.Title className="sr-only">Menu</Dialog.Title>
                 <Dialog.Description className="sr-only">Site navigation</Dialog.Description>
-                <div className="flex h-14 items-center justify-between"><TaploLogo className="h-10 -my-1 -ml-3" /><Dialog.Close aria-label="Close menu" className="grid size-11 place-items-center rounded-full outline-none hover:bg-foreground/5 focus-visible:ring-3 focus-visible:ring-ring/60"><X aria-hidden="true" className="size-5" /></Dialog.Close></div>
+                <div className="flex h-14 items-center justify-between"><TaploLogo className="h-9 -ml-1" /><Dialog.Close aria-label="Close menu" className="grid size-11 place-items-center rounded-full outline-none hover:bg-foreground/5 focus-visible:ring-3 focus-visible:ring-ring/60"><X aria-hidden="true" className="size-5" /></Dialog.Close></div>
                 <nav aria-label="Menu" className="mt-2 grid flex-1 content-start gap-1 overflow-y-auto overscroll-contain">
                   <MobileSection title="Product" href="/product" all="Everything Taplo does">
                     {PRODUCT_GROUPS.flatMap((g) => g.links).map((l) => <MobileLink key={l.href} href={l.href}>{l.label}</MobileLink>)}

@@ -1,5 +1,6 @@
 "use client"
 
+import { WHEN_UNAVAILABLE } from "@/lib/capabilities"
 import * as React from "react"
 import Link from "next/link"
 import { Check, Copy } from "lucide-react"
@@ -46,7 +47,7 @@ export function Overview() {
               ) : null}
             </div>
             {!canPublish(s) ? <p className="mt-3 text-sm text-muted-foreground">To publish you still need: {checks.filter((c) => c.required && !c.done).map((c) => c.label.toLowerCase()).join(", ")}.</p> : null}
-            <p className="mt-3 text-xs text-muted-foreground">Demo pages open at /demo/p/&lt;address&gt; and only work in this browser. On a connected environment the address is taplo.co/&lt;address&gt;.</p>
+            <p className="mt-3 text-xs text-muted-foreground">{WHEN_UNAVAILABLE.publicPublishing}</p>
           </Panel>
 
           <Panel title={`Set-up progress · ${requiredDone}/${requiredTotal} required`}>

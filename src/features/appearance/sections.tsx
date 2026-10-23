@@ -10,6 +10,7 @@ import { FONT_KEYS, type FontKey } from "@/features/themes/contracts/tokens"
 import { cn } from "@/lib/utils"
 import { ChoiceGrid, Disclosure, Field, Segment, Slider, Toggle } from "./controls"
 import { FONT_PAIRS, SHADER_DEFAULT_COLOURS, type AppearanceModel } from "./model"
+import { LookThumb } from "@/components/taplo/look-thumb"
 import { ButtonTile, FontTile, HeaderTile, LookTile, PaletteTile, SurfaceTile, WallpaperTile, backgroundPreview } from "./previews"
 
 type M = { m: AppearanceModel }
@@ -21,9 +22,9 @@ export function LookPicker({ m }: M) {
       <ChoiceGrid
         label="Look"
         value={m.look.id}
-        columns={3}
+        columns={2}
         onChange={(id) => m.applyLook(id)}
-        options={m.looks.map((l) => ({ value: l.id, label: l.name, disabled: !m.canSwitchLook && l.id !== m.look.id, preview: <LookTile o={l.style} /> }))}
+        options={m.looks.map((l) => ({ value: l.id, label: l.name, disabled: !m.canSwitchLook && l.id !== m.look.id, preview: <LookThumb id={l.id} /> }))}
       />
       {!m.canSwitchLook ? <p className="flex items-center gap-1.5 text-xs text-neutral-500"><Lock className="size-3.5" aria-hidden="true" />Choosing a different theme is included from the Core plan.</p> : null}
       <p className="text-xs text-neutral-500">{m.look.description} Everything below stays editable.</p>
@@ -116,15 +117,16 @@ export function TypeControls({ m }: M) {
 }
 
 /* ------------------------------------------------------------------ header */
-const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] = [["poster", "Poster"], ["cover", "Cover"], ["centered", "Centred"], ["side", "Side by side"], ["minimal", "Text only"]]
+const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] = [["side", "Compact"], ["cover", "Cover"], ["poster", "Image hero"], ["centered", "Text-led"]]
 export function HeaderControls({ m }: M) {
   const { spec } = m
   return (
     <div className="grid gap-4">
       <ChoiceGrid label="Header arrangement" value={spec.header.layout} columns={3} onChange={(v) => m.patch("header", "layout", v)}
-        options={HEADER_OPTIONS.map(([v, l]) => ({ value: v, label: l, preview: <HeaderTile layout={v} /> }))} />
+        options={(spec.header.layout === "minimal" ? [...HEADER_OPTIONS, ["minimal", "Text only (earlier)"] as [StyleSpec["header"]["layout"], string]] : HEADER_OPTIONS).map(([v, l]) => ({ value: v, label: l, preview: <HeaderTile layout={v} /> }))} />
+      {spec.header.layout === "poster" || spec.header.layout === "cover" ? <Field label="Photo fade" dirty={m.has("header", "scrim")} onReset={() => m.reset("header", "scrim")} hint="How far the photograph fades into the page. Text always sits on the page colour."><Segment label="Photo fade" value={spec.header.scrim ?? "medium"} options={[{ value: "soft", label: "Soft" }, { value: "medium", label: "Medium" }, { value: "strong", label: "Strong" }]} onChange={(v) => m.patch("header", "scrim", v)} /></Field> : null}
       <div className="grid gap-3">
-        <Field label="Logo shape" dirty={m.has("header", "avatarShape")} onReset={() => m.reset("header", "avatarShape")}><Segment label="Logo shape" value={spec.header.avatarShape} options={[{ value: "circle", label: "Circle" }, { value: "rounded", label: "Rounded" }, { value: "square", label: "Square" }, { value: "arch", label: "Arch" }, { value: "none", label: "No picture" }]} onChange={(v) => m.patch("header", "avatarShape", v)} /></Field>
+        <Field label="Logo shape" dirty={m.has("header", "avatarShape")} onReset={() => m.reset("header", "avatarShape")}><Segment label="Logo shape" value={spec.header.avatarShape} options={[{ value: "circle", label: "Circle" }, { value: "rounded", label: "Rounded" }, { value: "square", label: "Square" }, { value: "arch", label: "Arch" }, { value: "logo", label: "Uncropped" }, { value: "none", label: "No picture" }]} onChange={(v) => m.patch("header", "avatarShape", v)} /></Field>
         <Field label="Logo size" dirty={m.has("header", "avatarSize")} onReset={() => m.reset("header", "avatarSize")}><Segment label="Logo size" value={spec.header.avatarSize} options={[{ value: "sm", label: "Small" }, { value: "md", label: "Medium" }, { value: "lg", label: "Large" }]} onChange={(v) => m.patch("header", "avatarSize", v)} /></Field>
         <Field label="Alignment" dirty={m.has("header", "align")} onReset={() => m.reset("header", "align")}><Segment label="Header alignment" value={spec.header.align} options={[{ value: "left", label: "Left" }, { value: "center", label: "Centre" }]} onChange={(v) => m.patch("header", "align", v)} /></Field>
         <Field label="Contact actions" dirty={m.has("header", "actions")} onReset={() => m.reset("header", "actions")} hint="Call, WhatsApp and Email you’ve added. If you add one as a widget, it isn’t repeated here."><Segment label="Contact actions" value={spec.header.actions} options={[{ value: "primary", label: "Main + icons" }, { value: "buttons", label: "Buttons" }, { value: "icons", label: "Icons" }, { value: "none", label: "Hidden" }]} onChange={(v) => m.patch("header", "actions", v)} /></Field>

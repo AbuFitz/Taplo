@@ -20,7 +20,7 @@ export function Film({ className }: { className?: string }) {
   const [started, setStarted] = React.useState(false)
   return (
     <figure className={className}>
-      <div className="relative aspect-video w-full overflow-hidden rounded-3xl bg-[#14110f] shadow-[0_30px_70px_-30px_rgb(0_0_0/0.5)]">
+      <div className="relative aspect-video w-full overflow-hidden rounded-3xl bg-[#0b0d12] shadow-[0_30px_70px_-30px_rgb(0_0_0/0.5)]">
         {started ? (
           <video className="absolute inset-0 size-full" src="/marketing/film/taplo-intro.mp4" poster="/marketing/film/poster.webp" controls autoPlay playsInline muted preload="auto" aria-describedby="film-text">
             Your browser cannot play this video. The same story is written out below it.

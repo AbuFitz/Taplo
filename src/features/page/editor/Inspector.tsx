@@ -23,7 +23,7 @@ function Head({ title, hint, icon, onBack }: { title: string; hint?: string; ico
   if (compact) return hint ? <p className="mb-3 text-xs text-muted-foreground">{hint}</p> : null
   return (
     <div className="mb-3 flex items-start gap-2">
-      {onBack ? <Button type="button" variant="ghost" size="icon" className="-ml-2 size-10 shrink-0" onClick={onBack} aria-label="Back to page style"><ArrowLeft /></Button> : null}
+      {onBack ? <Button type="button" variant="ghost" size="icon" className="-ml-2 size-10 shrink-0" onClick={onBack} aria-label="Back to your content"><ArrowLeft /></Button> : null}
       {icon}
       <div className="min-w-0"><h2 className="truncate text-base font-semibold" data-testid="inspector-title">{title}</h2>{hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}</div>
     </div>
@@ -38,7 +38,7 @@ export function Inspector(props: InspectorProps) {
 interface InspectorProps { ed: Editor; selection: Selection; onSelect: (s: Selection) => void; notify: (msg: string, undoable?: boolean) => void; /** Inside a sheet that already shows the title and a back button. */ compact?: boolean }
 
 function InspectorBody({ ed, selection, onSelect, notify }: InspectorProps) {
-  const back = () => onSelect({ kind: "page" })
+  const back = () => onSelect({ kind: "content" })
 
   if (selection.kind === "widget") {
     const stored = ed.state.page.widgets.find((w) => w.id === selection.id)
@@ -108,7 +108,7 @@ function WidgetInspector({ ed, stored, onBack, onSelect, notify }: { ed: Editor;
         <Button type="button" variant="outline" className="min-h-11" data-testid="move-up" disabled={index <= 0} onClick={() => ed.moveWidget(stored.id, -1)}><ArrowUp /> Move up</Button>
         <Button type="button" variant="outline" className="min-h-11" data-testid="move-down" disabled={index >= ed.state.page.widgets.length - 1} onClick={() => ed.moveWidget(stored.id, 1)}><ArrowDown /> Move down</Button>
         {def.multiple ? <Button type="button" variant="outline" className="min-h-11" data-testid="duplicate-widget" onClick={() => { const id = ed.duplicateWidget(stored.id); if (id) onSelect({ kind: "widget", id }) }}><Copy /> Duplicate</Button> : null}
-        <Button type="button" variant="outline" className="min-h-11" data-testid="remove-widget" onClick={() => { const w = ed.removeWidget(stored.id); if (w) { onSelect({ kind: "page" }); notify(`Removed “${def.label}” from your page. Your records are kept.`, true) } }}><Trash2 /> Remove from page</Button>
+        <Button type="button" variant="outline" className="min-h-11" data-testid="remove-widget" onClick={() => { const w = ed.removeWidget(stored.id); if (w) { onSelect({ kind: "content" }); notify(`Removed “${def.label}” from your page. Your records are kept.`, true) } }}><Trash2 /> Remove from page</Button>
         <p className="basis-full text-xs text-muted-foreground">Removing a widget only takes it off your page. Your services, team, photos and other records are kept.</p>
       </div>
     </div>

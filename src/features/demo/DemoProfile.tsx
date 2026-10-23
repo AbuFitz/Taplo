@@ -45,7 +45,7 @@ export function DemoProfile({ mode, slug, editing = false }: { mode: "draft" | "
     <>
       {mode === "published" ? (
         <div role="note" className="relative z-10 bg-amber-300 px-4 py-2 text-center text-sm font-medium text-black">
-          Demo page — stored in this browser only, not a public website.
+          Preview of your published page. It opens in this browser only; a public address needs publishing, which is not connected yet.
         </div>
       ) : null}
       <PageRenderer vm={vm} />

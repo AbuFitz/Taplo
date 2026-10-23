@@ -12,6 +12,13 @@ function Avatar({ vm }: { vm: PageViewModel }) {
   const { spec } = vm.style
   const { identity } = vm.business
   if (spec.header.avatarShape === "none") return null
+  const logo = identity.logo
+  // A wide logo (a wordmark) is shown whole, at its own proportions. Cropping it to a face shape is always wrong.
+  const wide = logo?.width && logo?.height ? logo.width / logo.height > 1.5 : false
+  if (logo && (spec.header.avatarShape === "logo" || wide)) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img className="tp-logo" data-size={spec.header.avatarSize} src={logo.src} alt={logo.alt} width={logo.width} height={logo.height} />
+  }
   return (
     <span className="tp-avatar" data-shape={spec.header.avatarShape} data-size={spec.header.avatarSize}>
       {identity.logo ? <ProfileImage image={identity.logo} sizes="160px" priority /> : <span aria-hidden="true">{initialsOf(identity.name)}</span>}
@@ -96,18 +103,19 @@ function Text({ vm }: { vm: PageViewModel }) {
   )
 }
 
-/** One header component, five treatments chosen by the page style (not by industry). */
+/** One header component, four arrangements chosen by the page style (not by industry): compact identity, cover, image hero, and text-led. */
 export function PageHeader({ vm }: { vm: PageViewModel }) {
   const { spec } = vm.style
   const h = spec.header
   const cover = vm.business.identity.heroImage
 
   if (h.layout === "poster") {
+    // Image hero: the photograph runs to the edges and fades into the page colour, so the text below always sits on the page colour.
     return (
-      <header className="tp-header" data-layout="poster" data-align={h.align}>
-        <div className="tp-poster">
-          {cover ? <ProfileImage image={cover} sizes="(min-width:900px) 24rem, 100vw" priority /> : null}
-          <div className="tp-posterbody">
+      <header className="tp-header" data-layout="poster" data-align={h.align} data-cover={cover ? "" : undefined}>
+        <div className="tp-hero">
+          <div className="tp-hero-media">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : null}</div>
+          <div className="tp-herobody">
             <Avatar vm={vm} />
             <Text vm={vm} />
             <Actions vm={vm} />
@@ -118,9 +126,9 @@ export function PageHeader({ vm }: { vm: PageViewModel }) {
   }
   if (h.layout === "cover") {
     return (
-      <header className="tp-header" data-layout="cover" data-align={h.align}>
-        <div className="tp-cover">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : null}</div>
-        <div style={{ paddingInline: "0.25rem" }} className="grid w-full gap-2.5 justify-items-[var(--tp-header-justify)]">
+      <header className="tp-header" data-layout="cover" data-align={h.align} data-cover={cover ? "" : undefined}>
+        {cover ? <div className="tp-cover"><ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /></div> : null}
+        <div style={{ paddingInline: "0.25rem", justifyItems: "var(--tp-header-justify)" }} className="grid w-full gap-2.5">
           <Avatar vm={vm} />
           <Text vm={vm} />
           <Actions vm={vm} />

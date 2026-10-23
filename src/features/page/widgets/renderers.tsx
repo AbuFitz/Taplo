@@ -210,7 +210,7 @@ function ProductCard({ p, vm }: { p: ProductContent; vm: PageViewModel }) {
   const facts = p.facts.filter((f) => f.label.trim() && f.value.trim())
   const open = (children: React.ReactNode) => (
     <ItemDetail
-      trigger={<button type="button" className="tp-product-open" aria-label={`View details: ${p.name}`}>{children}</button>}
+      trigger={<button type="button" className="tp-product-open" data-testid="product-open" aria-label={`View details: ${p.name}`}>{children}</button>}
       title={p.name} price={price} status={statusText ?? undefined} facts={facts} description={p.description}
       images={images.map((m) => ({ src: m.src, alt: m.alt, focal: m.focal }))} cta={<ItemAction p={p} vm={vm} />}
     />

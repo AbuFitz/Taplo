@@ -48,7 +48,7 @@ export default function PricingPage() {
   const start = (id: PlanId) => (demo ? `/onboarding?plan=${id}` : "/how-it-works")
   return (
     <div className="bg-background">
-      <SiteHeader active="/pricing" />
+      <SiteHeader />
       <main className="mx-auto w-full max-w-7xl px-5 py-16 sm:py-24">
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-signal-ink">Pricing</p>
         <h1 className="font-display font-display-tight mt-4 max-w-4xl text-[clamp(2.5rem,7vw,5.5rem)] text-balance">Start free. Pay when you need more.</h1>

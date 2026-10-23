@@ -221,7 +221,7 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
         </ul>
       ) : null}
       {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
-      <p className="text-xs text-muted-foreground">Demo: pictures are resized and kept in this browser only. On a connected environment they upload to secure storage.</p>
+      <p className="text-xs text-muted-foreground">Pictures are resized to a sensible size automatically.</p>
     </div>
   )
 }

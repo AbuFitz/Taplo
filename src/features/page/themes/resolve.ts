@@ -33,6 +33,8 @@ const RADIUS = { none: "0px", sm: "0.375rem", md: "0.75rem", lg: "1.25rem", xl: 
 const BTN_RADIUS = { square: "0px", rounded: "0.75rem", pill: "999px" } as const;
 const BORDER_W = { none: "0px", thin: "1px", thick: "2.5px" } as const;
 const PAD = { compact: "0.75rem", comfortable: "1rem", roomy: "1.5rem" } as const;
+/** How much of a hero photograph fades into the page. Tested presets: text over the faded part always sits on the page colour. */
+const FADE = { soft: "34%", medium: "52%", strong: "74%" } as const;
 const WIDTH = { narrow: "30rem", regular: "36rem", wide: "44rem" } as const;
 const GAP = { compact: "0.625rem", comfortable: "0.875rem" } as const;
 const SCALE = { sm: "0.94", md: "1", lg: "1.1" } as const;
@@ -218,6 +220,7 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
     "--tp-btn-radius": BTN_RADIUS[spec.buttons.shape],
     "--tp-btn-shadow": spec.buttons.shadow === "soft" ? el.e1 : spec.buttons.shadow === "hard" ? hardShadow : "0 0 0 0 transparent",
     "--tp-btn-border-w": spec.buttons.fill === "outline" || spec.buttons.shadow === "hard" || spec.cards.border === "thick" ? "2px" : "1px",
+    "--tp-fade": FADE[spec.header.scrim ?? "medium"],
     "--tp-width": WIDTH[spec.layout.width],
     "--tp-gap": GAP[spec.layout.density],
     "--tp-radius": RADIUS[spec.cards.radius],

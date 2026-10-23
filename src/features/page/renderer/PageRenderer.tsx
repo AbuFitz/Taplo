@@ -10,15 +10,18 @@ import type { PageViewModel } from "./view-model"
  * THE renderer. The editor preview, the published page and every demo/fixture route call
  * this with a view-model; they differ only in which data they pass in.
  */
-export function PageRenderer({ vm }: { vm: PageViewModel }) {
+/** Widgets whose items are cards in their own right: they get no outer panel. */
+const BARE = new Set(["team", "products", "gallery"])
+
+export function PageRenderer({ vm, bare = false }: { vm: PageViewModel; /** Component workbench only: render the widgets without the page header. */ bare?: boolean }) {
   return (
     <ThemeRoot family="page" cssVars={vm.style.cssVars} attrs={vm.style.attrs}>
       <Background vm={vm} />
       <div className="tp-frame">
-        <PageHeader vm={vm} />
+        {bare ? null : <PageHeader vm={vm} />}
         <main className="tp-widgets" aria-label="Page content">
           {vm.visible.map((w, i) => (
-            <section key={w.id} className="tp-widget" data-widget={w.type} data-widget-id={w.id} {...w.style.attrs} style={{ ...w.style.vars, "--i": i } as React.CSSProperties}>
+            <section key={w.id} className="tp-widget" data-widget={w.type} data-bare={BARE.has(w.type) ? "" : undefined} data-widget-id={w.id} {...w.style.attrs} style={{ ...w.style.vars, "--i": i } as React.CSSProperties}>
               {renderWidgetBody(w, vm)}
             </section>
           ))}

@@ -79,7 +79,7 @@ function Lead({ slug }: { slug: string }) {
   const f = describe(e)
   return (
     <section className="mx-auto w-full max-w-7xl px-5 py-10">
-      <div className="relative overflow-hidden rounded-[2rem] bg-[oklch(0.955_0.012_85)] px-5 pb-0 pt-10 sm:px-12 sm:pt-14">
+      <div className="relative overflow-hidden rounded-[2rem] bg-muted px-5 pb-0 pt-10 sm:px-12 sm:pt-14">
         <div className="grid grid-cols-[minmax(0,1fr)] items-end gap-10 lg:grid-cols-12">
           <div className="pb-10 lg:col-span-5 lg:pb-16">
             <p className="text-sm font-semibold text-foreground/55">{f.industryLabel}</p>

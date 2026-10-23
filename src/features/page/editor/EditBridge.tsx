@@ -44,7 +44,7 @@ export function EditBridge() {
       // The editor owns every click in the page while editing.
       e.preventDefault()
       e.stopPropagation()
-      send({ type: "taplo:select", selection: pick(e) ?? { kind: "page" } })
+      send({ type: "taplo:select", selection: pick(e) ?? { kind: "content" } })
     }
     const onMessage = (e: MessageEvent<ToPreview>) => {
       if (e.origin !== window.location.origin || e.data?.type !== "taplo:selected") return

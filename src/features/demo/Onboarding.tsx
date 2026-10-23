@@ -13,17 +13,18 @@ import { newWidget } from "@/features/page/starter"
 import { ImageField } from "@/features/page/editor/controls"
 import { getWidget } from "@/features/page/widgets/registry"
 import { buildPageViewModel } from "@/features/page/renderer"
-import { resolveEntitlements } from "@/features/subscriptions/entitlements"
 import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures"
 import { OTHER_INDUSTRY_ID, getIndustryPreset, searchIndustries } from "@/features/themes/presets/industries"
 import { cn } from "@/lib/utils"
 import { exampleStart, suggestedLooks } from "@/features/inspiration/suggest"
-import { FONT_STACKS } from "@/features/page/themes/fonts"
+import { LookThumb } from "@/components/taplo/look-thumb"
 import { applyIndustry, blankService, canPublish, hasContactChannel, loadSample, newId, normService, publish, readiness, setName, setSlug, slugProblems } from "./actions"
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans"
 import { ONBOARDING_STEPS, initialState, parseContent, useDemo, type OnboardingStep } from "./store"
 import { ServiceForm, serviceErrors } from "./ServiceForm"
-import { DemoNotice, EmailField, PhoneField, PreviewFrame } from "./ui"
+import { WHEN_UNAVAILABLE } from "@/lib/capabilities"
+import { SandboxBadge } from "@/components/taplo/sandbox-badge"
+import { EmailField, PhoneField, PreviewFrame } from "./ui"
 import type { WidgetType } from "@/features/page/contracts/widgets"
 
 const STEP_LABEL: Record<OnboardingStep, string> = {
@@ -34,7 +35,7 @@ const STEP_LABEL: Record<OnboardingStep, string> = {
   publish: "Preview and share",
 }
 const STEP_TITLE: Record<OnboardingStep, string> = {
-  business: "Let’s start with your name",
+  business: "What is your business called?",
   industry: "What do you do, and what should people do first?",
   widgets: "Choose a starting point",
   contacts: "How can people reach you?",
@@ -60,14 +61,15 @@ function applyGoal<T extends ReturnType<typeof initialState>>(s: T, g: Goal): T 
   return { ...s, content: { ...s.content, booking: { ...s.content.booking, mode } }, page: { ...s.page, meta: { ...s.page.meta, primaryAction: g === "call" ? "call" : g === "message" ? "auto" : "book" } } }
 }
 
-const LOCATION_LABEL = { premises: "A place customers visit", service_area: "I travel to customers (service area)", online: "Online only" } as const
+const LOCATION_LABEL = { premises: "A place customers visit", service_area: "I travel to customers", online: "Online only" } as const
 
 export function Onboarding() {
   const router = useRouter()
   const { ready, state, update } = useDemo()
   const [showErrors, setShowErrors] = React.useState(false)
   const [query, setQuery] = React.useState("")
-  const [showAll, setShowAll] = React.useState(false)
+  const [editSlug, setEditSlug] = React.useState(false)
+  const [otherOpen, setOtherOpen] = React.useState(false)
   const [mobilePreview, setMobilePreview] = React.useState(false)
   const s = state ?? initialState()
   const step: OnboardingStep = (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "widgets"
@@ -134,12 +136,11 @@ export function Onboarding() {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:py-10">
-      <DemoNotice className="mb-6" />
       {fromName ? <p className="mb-4 rounded-xl bg-black/[0.04] px-4 py-2.5 text-sm" data-testid="from-example">Starting from the look and content types of <strong>{fromName}</strong>. It is a fictional business: none of its words, prices or pictures are copied, and you can change everything.</p> : null}
-      {intent ? <p className="mb-4 rounded-xl bg-black/[0.04] px-4 py-2.5 text-sm" data-testid="plan-intent">You are setting up on the <strong>{PLANS[intent].name}</strong> plan. In preview mode nothing is charged, and you can switch plans in Settings.</p> : null}
+      {intent ? <p className="mb-4 rounded-xl bg-black/[0.04] px-4 py-2.5 text-sm" data-testid="plan-intent">You are setting up on the <strong>{PLANS[intent].name}</strong> plan. Nothing is charged: payments are not connected. You can switch plans in Settings.</p> : null}
       <header className="mb-8 flex flex-wrap items-center justify-between gap-3">
         <Link href="/" aria-label="Taplo home" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo /></Link>
-        <Link href="/dashboard/page" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip to the page editor</Link>
+        <div className="flex items-center gap-2"><SandboxBadge /><Link href="/dashboard/page" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip to the editor</Link></div>
       </header>
 
       <nav aria-label="Progress" className="mb-10">
@@ -159,91 +160,89 @@ export function Onboarding() {
           <h1 id="step-title" className="font-display mb-3 text-[clamp(2.25rem,5vw,3.25rem)] leading-[1.02]">{STEP_TITLE[step]}</h1>
 
           {step === "industry" ? (
-            <div className="grid gap-6">
-              <p className="text-muted-foreground">Pick the closest match. It only suggests which sections to start with; you can change anything later.</p>
-              <TaploInput label="Search (e.g. barber, tutor, café, plumber)" value={query} onChange={(e) => setQuery(e.target.value)} />
-              <ul className="grid gap-2 sm:grid-cols-2" aria-label="Types of business">
-                {searchIndustries(query).filter((p) => query.trim() || showAll || POPULAR.includes(p.id) || (state !== null && c.identity.industryKey === p.id)).map((p) => {
-                  const selected = state !== null && c.identity.industryKey === p.id
-                  return (
-                    <li key={p.id}>
-                      <button type="button" aria-pressed={selected} onClick={() => update((x) => applyIndustry(x, p.id, p.id === OTHER_INDUSTRY_ID ? "" : p.label))}
-                        className={cn("min-h-12 w-full rounded-xl bg-white px-4 py-2.5 text-left text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] transition-[box-shadow,transform] duration-150 hover:shadow-[0_0_0_1px_rgb(0_0_0/0.22)] active:scale-[0.99]", selected && "font-semibold shadow-[0_0_0_2px_var(--primary),0_8px_20px_-12px_rgb(0_0_0/0.4)]")}>
-                        {p.label}
-                      </button>
-                    </li>
-                  )
-                })}
-              </ul>
-              {!query.trim() && !showAll ? <button type="button" onClick={() => setShowAll(true)} className="justify-self-start rounded-lg px-1 py-2 text-sm font-medium underline underline-offset-4">Show every kind of business</button> : null}
-              {state !== null ? (
-                <TaploInput
-                  label={c.identity.industryKey === OTHER_INDUSTRY_ID ? "Describe your business" : "How should we describe you? (shown on your page)"}
-                  hint={c.identity.industryKey === OTHER_INDUSTRY_ID ? "e.g. Dog groomer, Wedding florist, Piano restorer" : undefined}
-                  value={c.identity.industryLabel}
-                  maxLength={80}
-                  onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }), { coalesce: "ind-label" })}
-                />
-              ) : null}
+            <div className="grid gap-7">
+              <div className="grid gap-3">
+                <TaploInput label="What do you do?" placeholder="Search: barber, tutor, café, plumber…" value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
+                <ul className="flex flex-wrap gap-2" aria-label="Kinds of business">
+                  {searchIndustries(query).filter((p) => query.trim() ? true : POPULAR.includes(p.id) || (state !== null && c.identity.industryKey === p.id)).slice(0, query.trim() ? 14 : 20).map((p) => {
+                    const selected = state !== null && (p.id === OTHER_INDUSTRY_ID ? otherOpen || c.identity.industryLabel !== "" && c.identity.industryKey === OTHER_INDUSTRY_ID : c.identity.industryKey === p.id)
+                    return (
+                      <li key={p.id}>
+                        <button type="button" aria-pressed={selected} onClick={() => { setOtherOpen(p.id === OTHER_INDUSTRY_ID); update((x) => applyIndustry(x, p.id, p.id === OTHER_INDUSTRY_ID ? "" : p.label)) }}
+                          className={cn("inline-flex min-h-11 items-center gap-1.5 rounded-full border bg-card px-4 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring hover:border-foreground/40", selected && "border-foreground bg-foreground text-background hover:border-foreground")}>
+                          {selected ? <Check aria-hidden="true" className="size-3.5" /> : null}{p.label}
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ul>
+                {state !== null && (otherOpen || c.identity.industryKey === OTHER_INDUSTRY_ID && c.identity.industryLabel !== "") ? (
+                  <TaploInput label="Describe your business" hint="e.g. Dog groomer, Wedding florist, Piano restorer" value={c.identity.industryLabel} maxLength={80} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }), { coalesce: "ind-label" })} />
+                ) : null}
+              </div>
               {state !== null ? (
                 <fieldset className="grid gap-2" data-testid="goal">
-                  <legend className="mb-1 text-sm font-medium">What should people do first on your page?</legend>
+                  <legend className="mb-1 text-sm font-semibold">What should people do first on your page?</legend>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {GOALS.map((g) => (
-                      <label key={g.id} className={cn("flex min-h-14 cursor-pointer items-start gap-3 rounded-xl bg-white p-3 text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] has-[:checked]:shadow-[0_0_0_2px_var(--primary)]")}>
-                        <input type="radio" name="goal" className="mt-0.5 size-4 accent-[var(--primary)]" checked={goalOf(s) === g.id} onChange={() => update((x) => applyGoal(x, g.id))} />
+                      <label key={g.id} className="flex min-h-14 cursor-pointer items-start gap-3 rounded-xl bg-card p-3 text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] has-[:checked]:shadow-[0_0_0_2px_var(--foreground)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring">
+                        <input type="radio" name="goal" className="mt-0.5 size-4 accent-[var(--foreground)]" checked={goalOf(s) === g.id} onChange={() => update((x) => applyGoal(x, g.id))} />
                         <span><span className="block font-semibold">{g.label}</span><span className="text-muted-foreground">{g.hint}</span></span>
                       </label>
                     ))}
                   </div>
                 </fieldset>
               ) : null}
-              <div className="rounded-lg border border-dashed p-4">
-                <p className="text-sm font-medium">Just looking around?</p>
-                <p className="mb-3 text-sm text-muted-foreground">Open a sample business with content already in place, or see them all on the <Link className="underline" href="/demo/profiles">sample profiles</Link> page.</p>
-                <div className="flex flex-wrap gap-2">
+              <details className="text-sm">
+                <summary className="inline-flex min-h-10 cursor-pointer list-none items-center rounded-lg text-muted-foreground underline underline-offset-4 hover:text-foreground [&::-webkit-details-marker]:hidden">Just looking? Open a sample business</summary>
+                <div className="mt-3 flex flex-wrap gap-2">
                   {INDUSTRY_FIXTURE_KEYS.map((k) => (
                     <Button key={k} size="sm" variant="outline" onClick={() => { update((x) => loadSample(x, k), { resetHistory: true }); router.push("/dashboard/page") }}>{getFixture(k)!.label}</Button>
                   ))}
                 </div>
-              </div>
+              </details>
             </div>
           ) : null}
 
           {step === "business" ? (
             <div className="grid gap-5">
-              <p className="text-muted-foreground">Add your name and, if you have one, your logo. Your page appears on the right as you type.</p>
-              <TaploInput label="Business name" value={c.identity.name} maxLength={100} autoComplete="off" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
-              <div>
-                <TaploInput label="Your web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />
-                <p className="mt-1.5 text-sm text-muted-foreground">
-                  taplo.co/<strong>{c.identity.slug || "your-name"}</strong>
-                  {slugErrs.length && c.identity.slug ? <span className="block text-destructive">{SLUG_PROBLEM_MESSAGE[slugErrs[0]!]}</span> : null}
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">Demo note: whether an address is already taken is checked against the database when you publish on a connected environment. Reserved and invalid addresses are blocked now.</p>
+              <TaploInput label="Business name" value={c.identity.name} maxLength={100} autoComplete="off" autoFocus onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
+              <div className="-mt-2 text-sm text-muted-foreground">
+                Your link: <span className="font-medium text-foreground">taplo.co/{c.identity.slug || "your-name"}</span>{" "}
+                <button type="button" onClick={() => setEditSlug((v) => !v)} aria-expanded={editSlug || (showErrors && slugErrs.length > 0)} className="rounded px-1 font-medium text-foreground underline underline-offset-4">{editSlug ? "Done" : "Change"}</button>
+                {slugErrs.length && c.identity.slug ? <span className="block text-destructive">{SLUG_PROBLEM_MESSAGE[slugErrs[0]!]}</span> : null}
               </div>
+              {editSlug || (showErrors && slugErrs.length) ? (
+                <TaploInput label="Web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />
+              ) : null}
               <ImageField label="Logo or profile picture (optional)" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
             </div>
           ) : null}
 
           {step === "contacts" ? (
             <div className="grid gap-5">
-              <p className="text-muted-foreground">Customers act on these straight from your page. Only the ones you fill in appear. You can add a logo, description and more afterwards.</p>
-              <PhoneField label="Phone" value={c.contacts.phone} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, phone: v } } }), { coalesce: "phone" })} hint="Used for the Call button." />
-              <PhoneField label="WhatsApp number" value={c.contacts.whatsapp} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, whatsapp: v } } }), { coalesce: "wa" })} hint="Include the country code, e.g. +44." />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <PhoneField label="Phone" value={c.contacts.phone} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, phone: v } } }), { coalesce: "phone" })} hint="For the Call button." />
+                <PhoneField label="WhatsApp" value={c.contacts.whatsapp} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, whatsapp: v } } }), { coalesce: "wa" })} hint="With country code, e.g. +44." />
+              </div>
               <EmailField value={c.contacts.email} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }), { coalesce: "email" })} />
-              <TaploInput label="A line about you (optional)" hint="Shown under your name." value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
+              <p className="-mt-3 text-sm text-muted-foreground">One is enough. Only the ones you fill in appear on your page.</p>
               <fieldset className="grid gap-2">
-                <legend className="mb-1 text-sm font-medium">Where do you work?</legend>
-                {LOCATION_MODES.map((m) => (
-                  <label key={m} className="flex min-h-11 items-center gap-3 rounded-lg border px-3 text-sm">
-                    <input type="radio" name="loc" className="size-4 accent-[var(--primary)]" checked={c.location.mode === m} onChange={() => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, mode: m } } }))} />
-                    {LOCATION_LABEL[m]}
-                  </label>
-                ))}
+                <legend className="mb-1 text-sm font-semibold">Where do you work?</legend>
+                <div className="flex flex-wrap gap-2">
+                  {LOCATION_MODES.map((m) => (
+                    <label key={m} className={cn("inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border bg-card px-4 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring", c.location.mode === m && "border-foreground bg-foreground text-background")}>
+                      <input type="radio" name="loc" className="sr-only" checked={c.location.mode === m} onChange={() => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, mode: m } } }))} />
+                      {LOCATION_LABEL[m]}
+                    </label>
+                  ))}
+                </div>
               </fieldset>
-              <TaploInput label={c.location.mode === "service_area" ? "Areas you cover" : c.location.mode === "online" ? "Where you’re based (optional)" : "Town or area"} value={c.location.locality ?? ""} maxLength={120} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, locality: e.target.value || undefined } } }), { coalesce: "loc" })} />
-              {c.location.mode === "premises" ? null : <p className="text-sm text-muted-foreground">Your private address is never published for travelling or online businesses.</p>}
+              <TaploInput label={c.location.mode === "service_area" ? "Areas you cover" : c.location.mode === "online" ? "Where you’re based (optional)" : "Town or area"} value={c.location.locality ?? ""} maxLength={120} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, locality: e.target.value || undefined } } }), { coalesce: "loc" })} hint={c.location.mode === "premises" ? undefined : "Your private address is never shown."} />
+              <details>
+                <summary className="inline-flex min-h-10 cursor-pointer list-none items-center rounded-lg text-sm font-medium underline underline-offset-4 [&::-webkit-details-marker]:hidden">Add a line about your business (optional)</summary>
+                <div className="mt-3"><TaploInput label="A line under your name" value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} /></div>
+              </details>
             </div>
           ) : null}
 
@@ -273,30 +272,28 @@ export function Onboarding() {
   )
 }
 
-/** Suggested looks for this kind of business. A look is a starting point: every colour, font and shape can be changed afterwards. */
+/** Suggested looks for this kind of business, each shown as a real page. A look is a starting point: every colour, font and shape can be changed afterwards. */
 function LookPicker({ industryKey, themeId, onPick }: { industryKey: string; themeId: string; onPick: (id: string) => void }) {
   const looks = React.useMemo(() => suggestedLooks(industryKey), [industryKey])
+  const card = (l: (typeof looks)[number], i: number) => {
+    const active = themeId === l.id
+    return (
+      <label key={l.id} className={cn("relative grid cursor-pointer gap-2 overflow-hidden rounded-2xl bg-card p-1.5 text-left text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] transition-shadow has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring hover:shadow-[0_0_0_1px_rgb(0_0_0/0.25)]", active && "shadow-[0_0_0_2px_var(--foreground)]")}>
+        <input type="radio" name="look" value={l.id} checked={active} onChange={() => onPick(l.id)} className="sr-only" />
+        <span className="block overflow-hidden rounded-xl"><LookThumb id={l.id} /></span>
+        <span className="px-1 pb-1"><span className="flex items-center gap-1.5 font-semibold">{l.name}{i === 0 ? <span className="rounded-full bg-muted px-1.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground">Suggested</span> : null}{active ? <Check aria-hidden="true" className="ml-auto size-4" /> : null}</span><span className="block text-xs leading-snug text-muted-foreground">{l.blurb}</span></span>
+      </label>
+    )
+  }
   return (
     <fieldset className="grid gap-3" data-testid="look-picker">
       <legend className="mb-1 text-lg font-semibold">Pick a look</legend>
-      <p className="-mt-1 text-muted-foreground">Your page on the right changes as you choose. This is only a start: you can change every colour, font and shape later, and no look is tied to a kind of business.</p>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-        {looks.map((l, i) => {
-          const o = l.overrides
-          const c = o.colors!
-          const active = themeId === l.id
-          return (
-            <label key={l.id} className={cn("relative grid cursor-pointer gap-2 rounded-xl p-2.5 text-left text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring", active && "shadow-[0_0_0_2px_var(--primary)]")}>
-              <input type="radio" name="look" value={l.id} checked={active} onChange={() => onPick(l.id)} className="sr-only" />
-              <span aria-hidden="true" className="flex h-14 items-end justify-between rounded-lg p-2" style={{ background: c.background }}>
-                <span className="text-xl leading-none" style={{ color: c.text, fontFamily: FONT_STACKS[o.text!.headingFont!], fontWeight: o.text!.headingWeight === "bold" ? 700 : 400, textTransform: o.text!.headingCase === "upper" ? "uppercase" : "none" }}>Aa</span>
-                <span className="flex gap-1">{[c.surface, c.accent, c.text].map((x, n) => <i key={n} className="block size-3.5 rounded-full border border-black/10" style={{ background: x }} />)}</span>
-              </span>
-              <span><span className="block font-semibold">{l.name}{i === 0 ? <span className="ml-1.5 rounded-full bg-black/[0.06] px-1.5 py-0.5 text-[0.6875rem] font-medium">Suggested</span> : null}</span><span className="block text-xs leading-snug text-muted-foreground">{l.blurb}</span></span>
-            </label>
-          )
-        })}
-      </div>
+      <p className="-mt-1 text-sm text-muted-foreground">Shown on an example business. Your page, on the right, changes as you choose. You can change every colour, font and shape later.</p>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">{looks.slice(0, 3).map(card)}</div>
+      <details className="group">
+        <summary className="inline-flex min-h-10 cursor-pointer list-none items-center rounded-lg text-sm font-medium underline underline-offset-4 [&::-webkit-details-marker]:hidden">More looks</summary>
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">{looks.slice(3).map((l, i) => card(l, i + 3))}</div>
+      </details>
     </fieldset>
   )
 }
@@ -306,8 +303,6 @@ function WidgetsStep() {
   const { state, update } = useDemo()
   const s = state ?? initialState()
   const industry = getIndustryPreset(s.content.identity.industryKey)
-  const parsed = parseContent(s.content)
-  const vm = React.useMemo(() => (parsed.success && parsed.data.identity.name ? buildPageViewModel(parsed.data, s.page, { plan: s.plan }) : null), [parsed, s.page, s.plan])
   const have = new Set(s.page.widgets.map((w) => w.type as string))
   const [svc, setSvc] = React.useState(() => (s.content.services ?? []).find((x) => !x.archived) ?? null)
   const [showErr, setShowErr] = React.useState(false)
@@ -318,30 +313,27 @@ function WidgetsStep() {
     ...x,
     page: { ...x.page, widgets: on ? [...x.page.widgets, newWidget(type, {})] : x.page.widgets.filter((w) => w.type !== type) },
   }))
-  const ent = resolveEntitlements(s.plan, "active")
-  void ent
 
   return (
     <div className="grid gap-8">
       <LookPicker industryKey={s.content.identity.industryKey} themeId={s.page.themeId} onPick={(id) => update((x) => ({ ...x, page: { ...x.page, themeId: id, appearance: {} } }))} />
       <div className="grid gap-3">
-      <h2 className="text-lg font-semibold">Content to start with</h2>
-      <p className="text-muted-foreground">Tick what you want on your page. Anything you have not added yet stays hidden from visitors until you do, so there is nothing to fill in now.</p>
-      <ul className="grid gap-2" aria-label="Suggested content">
-        {[...new Set([...industry.starterWidgets, ...s.page.widgets.map((w) => w.type as WidgetType)])].map((type) => {
-          const def = getWidget(type)!
-          const st = vm?.widgets.find((w) => w.type === type)?.status
-          return (
-            <li key={type}>
-              <label className="flex min-h-12 items-start gap-3 rounded-lg border p-3 text-sm">
-                <input type="checkbox" className="mt-0.5 size-4 accent-[var(--primary)]" checked={have.has(type)} onChange={(e) => toggle(type, e.target.checked)} />
-                <span><span className="font-semibold">{def.label}</span> <span className="text-muted-foreground">— {def.description}</span>
-                  {have.has(type) && st && st.state !== "ready" ? <span className="block text-xs text-muted-foreground">Needs: {st.reason}</span> : null}</span>
-              </label>
-            </li>
-          )
-        })}
-      </ul>
+        <h2 className="text-lg font-semibold">What to show</h2>
+        <p className="-mt-1 text-sm text-muted-foreground">Tick what belongs on your page. Anything you have not added yet stays hidden from visitors until you do, so there is nothing to fill in now.</p>
+        <ul className="flex flex-wrap gap-2" aria-label="Suggested content">
+          {[...new Set([...industry.starterWidgets, ...s.page.widgets.map((w) => w.type as WidgetType)])].map((type) => {
+            const def = getWidget(type)!
+            const on = have.has(type)
+            return (
+              <li key={type}>
+                <label title={def.description} className={cn("inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full border bg-card px-4 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring hover:border-foreground/40", on && "border-foreground bg-foreground text-background hover:border-foreground")}>
+                  <input type="checkbox" className="sr-only" checked={on} onChange={(e) => toggle(type, e.target.checked)} />
+                  {on ? <Check aria-hidden="true" className="size-3.5" /> : null}{def.label}
+                </label>
+              </li>
+            )
+          })}
+        </ul>
       </div>
       <details className="group rounded-xl border p-4" open={Boolean(first)}>
         <summary className="flex cursor-pointer list-none items-center justify-between font-semibold [&::-webkit-details-marker]:hidden">
@@ -405,7 +397,13 @@ function PublishStep({ onEditor }: { onEditor: () => void }) {
           </li>
         ))}
       </ul>
-      <p className="text-sm text-muted-foreground">Optional and can wait: logo and cover picture, photos, services, reviews, team, payments.</p>
+      {checks.some((c) => !c.required && !c.done) ? (
+        <div className="rounded-xl border p-4 text-sm" data-testid="finish-later">
+          <p className="font-semibold">Finish later</p>
+          <p className="mb-2 text-muted-foreground">None of this blocks publishing. It stays on your dashboard as a checklist.</p>
+          <ul className="grid gap-1 text-muted-foreground">{checks.filter((c) => !c.required && !c.done && c.id !== "published").map((c) => <li key={c.id}>· {c.label}</li>)}</ul>
+        </div>
+      ) : null}
       {s.published ? (
         <div role="status" className="rounded-lg border border-green-600/40 bg-green-50 p-4 text-sm text-green-950">
           <p className="font-semibold">Published (demo) — version {s.published.version}</p>
@@ -420,7 +418,7 @@ function PublishStep({ onEditor }: { onEditor: () => void }) {
         <Button size="lg" disabled={!ok} onClick={() => update((x) => ({ ...publish(x), onboarded: true }))}>{s.published ? "Publish changes" : "Publish my page"}</Button>
         <Button size="lg" variant="outline" onClick={() => { update((x) => ({ ...x, onboarded: true })); onEditor() }}>Customise my page</Button>
       </div>
-      {!ok ? <p className="text-sm text-destructive" role="alert">Finish the steps marked missing to publish.</p> : null}
+      {!ok ? <p className="text-sm text-destructive" role="alert">Finish the steps marked missing to publish.</p> : <p className="text-xs text-muted-foreground">{WHEN_UNAVAILABLE.publicPublishing}</p>}
     </div>
   )
 }

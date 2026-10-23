@@ -1,5 +1,6 @@
 import type { IndustryPreset } from "@/features/themes/contracts/industry";
 import { getIndustryPreset } from "@/features/themes/presets/industries";
+import { suggestedLookIds } from "@/features/themes/presets/look-suggestions";
 import type { PageDoc } from "./contracts/page";
 import type { WidgetType } from "./contracts/widgets";
 import { defaultSettings, getWidget } from "./widgets/registry";
@@ -48,7 +49,7 @@ export function newPage(industryKey: string): PageDoc {
   const industry = getIndustryPreset(industryKey);
   return {
     schemaVersion: 2,
-    themeId: getTheme(industry.suggestedThemeId) ? industry.suggestedThemeId : DEFAULT_THEME_ID,
+    themeId: getTheme(suggestedLookIds(industryKey)[0]!) ? suggestedLookIds(industryKey)[0]! : DEFAULT_THEME_ID,
     appearance: {},
     meta: { searchVisible: true, primaryAction: "auto" },
     widgets: starterWidgets(industryKey),

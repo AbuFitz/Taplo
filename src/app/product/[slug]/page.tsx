@@ -31,7 +31,7 @@ export default async function ProductPageRoute({ params }: { params: Promise<{ s
         </section>
         <section className="mx-auto w-full max-w-7xl px-5 pb-20"><Scene /></section>
 
-        <section className="border-y border-foreground/10 bg-[oklch(0.955_0.012_85)] py-16">
+        <section className="border-y border-foreground/10 bg-muted py-16">
           <div className="mx-auto grid grid-cols-[minmax(0,1fr)] w-full max-w-7xl gap-10 px-5 lg:grid-cols-[1fr_2fr]">
             <div><h2 className="font-display font-display-tight text-[clamp(1.5rem,3vw,2.25rem)]">What works today</h2><p className="mt-3 text-[0.9375rem] text-foreground/65">Taplo is in preview. This is exactly what you can use now, and what still needs a connection.</p></div>
             <ul className="divide-y divide-foreground/10" data-testid="status">

@@ -11,7 +11,7 @@ export function primaryAction() {
 }
 
 /** Header for every Taplo marketing page. `active` is accepted for older callers; the nav reads the path itself. */
-export function SiteHeader(_props: { active?: string } = {}) {
+export function SiteHeader() {
   const a = primaryAction()
   return <SiteNav cta={a.label} ctaHref={a.href} loginHref="/dashboard" />
 }
@@ -19,10 +19,10 @@ export function SiteHeader(_props: { active?: string } = {}) {
 export function SiteFooter() {
   const a = primaryAction()
   return (
-    <footer className="mt-24 bg-[oklch(0.17_0.01_70)] text-white/80">
+    <footer className="mt-24 bg-[oklch(0.15_0.012_264)] text-white/80">
       <div className="mx-auto grid w-full max-w-7xl gap-14 px-5 pb-12 pt-16 lg:grid-cols-[1.3fr_2.2fr]">
         <div>
-          <TaploLogo tone="light" className="h-14 -ml-4" />
+          <TaploLogo variant="lockup" tone="light" className="h-14 -ml-4" />
           <p className="mt-5 max-w-xs text-[1.0625rem] leading-relaxed text-white/70">One page for your business. What you do, what it costs, and a clear way to book or ask.</p>
           <Link href={a.href} className="mt-6 inline-flex min-h-11 items-center rounded-full bg-white px-5 text-sm font-semibold text-black outline-none hover:bg-white/90 focus-visible:ring-3 focus-visible:ring-white/50">{a.label}</Link>
         </div>

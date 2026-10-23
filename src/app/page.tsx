@@ -52,7 +52,7 @@ export default function Home() {
         </section>
 
         {/* 2. What a visitor does: an editorial list, not a card grid. */}
-        <section className="border-t border-foreground/10 bg-[oklch(0.955_0.012_85)] py-24 sm:py-32">
+        <section className="border-t border-foreground/10 bg-muted py-24 sm:py-32">
           <div className="mx-auto w-full max-w-7xl px-5">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-signal-ink">What your customers do</p>
             <h2 className="font-display font-display-tight mt-4 max-w-3xl text-[clamp(2rem,4.6vw,3.75rem)] text-balance">Four things, in the order they happen.</h2>
@@ -112,7 +112,7 @@ export default function Home() {
         </section>
 
         {/* 5. Make it yours. */}
-        <section className="border-y border-foreground/10 bg-[oklch(0.955_0.012_85)] py-24 sm:py-32">
+        <section className="border-y border-foreground/10 bg-muted py-24 sm:py-32">
           <div className="mx-auto w-full max-w-7xl px-5">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-signal-ink">Make it yours</p>
             <h2 className="font-display font-display-tight mt-4 max-w-3xl text-[clamp(2rem,4.6vw,3.75rem)] text-balance">Start from a look. End up with your own.</h2>

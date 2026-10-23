@@ -2,22 +2,20 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Eye, EyeOff, LayoutGrid, Menu, Palette, Redo2, Rows3, Undo2 } from "lucide-react"
+import { Briefcase, Eye, EyeOff, LayoutTemplate, Menu, Palette, Redo2, Rows3, Undo2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { canPublish, hasUnpublishedChanges, publish } from "@/features/demo/actions"
 import { PagePreview } from "@/features/preview/PagePreview"
 import { cn } from "@/lib/utils"
 import { getWidget } from "../widgets/registry"
 import { EditorDrawer, PEEK, type DrawerSnap } from "./EditorDrawer"
-import { PageStylePanel } from "./EditorAppearance"
+import { ContentList } from "./ContentList"
+import { SettingsBody } from "./EditorPanel"
 import { Inspector } from "./Inspector"
-import { Recommendations } from "./Recommendations"
-import { Structure } from "./Structure"
-import { OrganiseList } from "./ContentCards"
-import { PAGE, type Selection } from "./selection"
+import { CONTENT, PAGE, type Selection } from "./selection"
 import type { Editor } from "./useEditor"
 
-type Panel = "content" | "design" | "organise" | "selection"
+type Panel = "content" | "header" | "design" | "settings" | "selection"
 
 const BAR = 64 // bottom toolbar height in px (excluding the safe-area inset)
 
@@ -45,6 +43,7 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
   note: { msg: string; undoable: boolean } | null; clearNote: () => void
 }) {
   const [stack, setStack] = React.useState<Panel[]>([])
+  void CONTENT
   const [snap, setSnap] = React.useState<DrawerSnap | null>(PEEK)
   const [customer, setCustomer] = React.useState(false)
   const vp = useViewportSize()
@@ -70,17 +69,23 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
   }
   const close = () => setStack([])
   const back = () => setStack((st) => st.slice(0, -1))
-  const toggleTab = (p: Panel) => (top === p && stack.length === 1 ? close() : openPanel(p, "replace", p === "design" ? PEEK : 0.62))
+  const toggleTab = (p: Panel) => (top === p && stack.length === 1 ? close() : openPanel(p, "replace", 0.62))
 
-  const fromPreview = (sel: Selection) => { setSelection(sel); openPanel("selection", "replace", PEEK) }
+  const fromPreview = (sel: Selection) => {
+    setSelection(sel)
+    if (sel.kind === "content") close()
+    else if (sel.kind === "header") openPanel("header", "replace", 0.62)
+    else openPanel("selection", "replace", PEEK)
+  }
   const fromList = (sel: Selection) => { setSelection(sel); openPanel("selection", "push", PEEK) }
 
   const title = (() => {
-    if (top === "content") return "Content"
+    if (top === "content") return "Your content"
+    if (top === "header") return "Header"
     if (top === "design") return "Design"
-    if (top === "organise") return "Organise"
-    if (selection.kind === "widget") { const w = s.page.widgets.find((x) => x.id === selection.id); return (w && getWidget(w.type)?.label) ?? "Widget" }
-    return { page: "Page style", header: "Header", details: "Business details", settings: "Page settings" }[selection.kind]
+    if (top === "settings") return "Settings"
+    if (selection.kind === "widget") { const w = s.page.widgets.find((x) => x.id === selection.id); return (w && getWidget(w.type)?.label) ?? "Content" }
+    return { content: "Your content", page: "Design", header: "Header", details: "Business details", settings: "Page settings" }[selection.kind]
   })()
 
   const room = Math.max(0, vp.h - bar - head)
@@ -89,8 +94,9 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
 
   const tabs: { id: Panel; label: string; icon: typeof Rows3 }[] = [
     { id: "content", label: "Content", icon: Rows3 },
+    { id: "header", label: "Header", icon: LayoutTemplate },
     { id: "design", label: "Design", icon: Palette },
-    { id: "organise", label: "Organise", icon: LayoutGrid },
+    { id: "settings", label: "Settings", icon: Briefcase },
   ]
   const tabButton = (t: (typeof tabs)[number], compact = false) => {
     const active = open && stack[0] === t.id && (t.id !== "selection")
@@ -145,17 +151,14 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
       <EditorDrawer open={open} onOpenChange={(o) => { if (!o) close() }} snap={snap} onSnap={setSnap} side={short ? "right" : "bottom"} offsetTop={head} offsetBottom={short ? 0 : bar} title={title} canGoBack={stack.length > 1} onBack={back}>
         {stack.map((p) => (
           <div key={p} hidden={p !== top} className={p === top ? undefined : "hidden"}>
-            {p === "content" ? <Structure ed={ed} selection={selection} onSelect={fromList} notify={notify} /> : null}
-            {p === "design" ? <div className="grid gap-3"><Recommendations ed={ed} onSelect={fromList} notify={notify} /><PageStylePanel ed={ed} notify={notify} /></div> : null}
-            {p === "organise" ? <OrganisePanel ed={ed} onDone={close} /> : null}
-            {p === "selection" ? <Inspector ed={ed} selection={selection} onSelect={(sel) => { setSelection(sel) }} notify={notify} compact /> : null}
+            {p === "content" ? <ContentList ed={ed} selection={selection} onSelect={fromList} notify={notify} /> : null}
+            {p === "header" ? <Inspector ed={ed} selection={{ kind: "header" }} onSelect={setSelection} notify={notify} compact /> : null}
+            {p === "design" ? <Inspector ed={ed} selection={PAGE} onSelect={fromList} notify={notify} compact /> : null}
+            {p === "settings" ? <SettingsBody ed={ed} selection={selection} onSelect={setSelection} notify={notify} /> : null}
+            {p === "selection" ? <Inspector ed={ed} selection={selection} onSelect={(sel) => { setSelection(sel); if (sel.kind === "content") back() }} notify={notify} compact /> : null}
           </div>
         ))}
       </EditorDrawer>
     </div>
   )
-}
-
-function OrganisePanel({ ed, onDone }: { ed: Editor; onDone: () => void }) {
-  return <OrganiseList ed={ed} onDone={onDone} />
 }

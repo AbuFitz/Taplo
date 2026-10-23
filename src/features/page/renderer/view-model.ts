@@ -60,6 +60,13 @@ export interface BuildOptions {
   now?: Date;
 }
 
+/** The booking button says what will happen: a request is never worded as a booking. */
+export function bookingLabel(term: string, mode: "instant" | "request" | "contact"): string {
+  if (mode !== "request" || /^request/i.test(term)) return term;
+  if (term === "Book") return "Request a booking";
+  return term.replace(/^Book\b/, "Request");
+}
+
 function todayIn(tz: string, now: Date): string {
   try {
     return new Intl.DateTimeFormat("en-CA", { timeZone: tz }).format(now);
@@ -110,7 +117,7 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
 
   const k = business.contacts;
   const actions: PageAction[] = [];
-  if (onlineBooking) actions.push({ kind: "book", label: industry.terminology.booking, href: `/${business.identity.slug}/book`, event: "booking_click" });
+  if (onlineBooking) actions.push({ kind: "book", label: bookingLabel(industry.terminology.booking, business.booking.mode), href: `/${business.identity.slug}/book`, event: "booking_click" });
   if (k.phone) actions.push({ kind: "call", label: "Call", href: telHref(k.phone), event: "call_click" });
   if (k.whatsapp) actions.push({ kind: "whatsapp", label: "WhatsApp", href: whatsappHref(k.whatsapp, `Hi ${business.identity.name}, I found you on Taplo.`), event: "whatsapp_click" });
   if (k.email) actions.push({ kind: "email", label: "Email", href: `mailto:${k.email}` });
@@ -125,7 +132,7 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
   let primary: PageViewModel["primary"] = null;
   if (primaryMode && chosen) {
     const found = actions.find((a) => a.kind === chosen);
-    if (chosen === "book") primary = { kind: "book", label: (bookingWidget?.settings.label as string | undefined) || industry.terminology.booking, href: found?.href ?? "", event: "booking_click" };
+    if (chosen === "book") primary = { kind: "book", label: (bookingWidget?.settings.label as string | undefined) || bookingLabel(industry.terminology.booking, business.booking.mode), href: found?.href ?? "", event: "booking_click" };
     else if (found) primary = { kind: found.kind, label: found.kind === "call" ? "Call" : found.label, href: found.href, event: found.event };
   }
   const promotedWidgetId = primary?.kind === "book" && bookingWidget ? bookingWidget.id : null;

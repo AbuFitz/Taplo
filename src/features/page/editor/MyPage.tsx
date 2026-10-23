@@ -5,14 +5,13 @@ import { Redo2, Undo2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { canPublish, hasUnpublishedChanges, publish, readiness } from "@/features/demo/actions"
 import { PreviewFrame } from "@/features/demo/ui"
-import { Inspector } from "./Inspector"
+import { EditorPanel } from "./EditorPanel"
 import { MobileEditor } from "./MobileEditor"
-import { Structure } from "./Structure"
-import { PAGE, type Selection } from "./selection"
+import { CONTENT, type Selection } from "./selection"
 import { useEditor } from "./useEditor"
 
-/** Three panes from this width up: structure, live preview, controls. Below it: an Edit/Preview switch and a controls sheet. */
-const WIDE = "(min-width: 1280px)"
+/** Panel + live preview from this width up (the panel is a fixed 26rem, so the preview keeps at least 30rem). Below it: the phone and tablet editor. */
+const WIDE = "(min-width: 960px)"
 function useWide() {
   return React.useSyncExternalStore(
     (cb) => { const m = window.matchMedia(WIDE); m.addEventListener("change", cb); return () => m.removeEventListener("change", cb) },
@@ -24,7 +23,7 @@ function useWide() {
 export function MyPage() {
   const ed = useEditor()
   const wide = useWide()
-  const [selection, setSelection] = React.useState<Selection>(PAGE)
+  const [selection, setSelection] = React.useState<Selection>(CONTENT)
   const [note, setNote] = React.useState<{ msg: string; undoable: boolean } | null>(null)
   const noteTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -58,7 +57,7 @@ export function MyPage() {
   const s = ed.state
   const missing = readiness(s).filter((c) => c.required && !c.done)
   const changed = hasUnpublishedChanges(s)
-  const effective = gone ? PAGE : selection
+  const effective = gone ? CONTENT : selection
 
   const toolbar = (
     <div className="flex flex-wrap items-center gap-2" role="toolbar" aria-label="Page actions">
@@ -90,7 +89,6 @@ export function MyPage() {
     </>
   )
 
-  const inspector = <Inspector ed={ed} selection={effective} onSelect={setSelection} notify={notify} />
   const preview = <PreviewFrame fill selection={effective} onSelect={select} />
 
   if (!wide) return <MobileEditor ed={ed} selection={effective} setSelection={setSelection} notify={notify} note={note} clearNote={() => setNote(null)} />
@@ -101,10 +99,9 @@ export function MyPage() {
       {banners}
       {missing.length ? <p className="mb-3 text-xs text-muted-foreground">To publish: {missing.map((m) => m.label.toLowerCase()).join(", ")}.</p> : null}
 
-      <div className="grid grid-cols-[18rem_minmax(0,1fr)_22rem] items-start gap-5">
-          <div className="max-h-[calc(100dvh-8rem)] overflow-y-auto pr-1"><Structure ed={ed} selection={effective} onSelect={setSelection} notify={notify} /></div>
-          <div className="sticky top-20 min-w-0">{preview}</div>
-          <div className="max-h-[calc(100dvh-8rem)] overflow-y-auto rounded-xl border bg-card p-4" data-testid="inspector">{inspector}</div>
+      <div className="grid grid-cols-[26rem_minmax(0,1fr)] items-start gap-5">
+        <div className="min-w-0"><EditorPanel ed={ed} selection={effective} onSelect={setSelection} notify={notify} /></div>
+        <div className="sticky top-20 min-w-0">{preview}</div>
       </div>
     </div>
   )

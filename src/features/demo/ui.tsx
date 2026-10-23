@@ -116,16 +116,6 @@ export function UrlField({ label, value, onCommit, validate, help }: { label: st
   )
 }
 
-/** Honest demo labelling, shown on every demo surface. */
-export function DemoNotice({ className }: { className?: string }) {
-  return (
-    <p role="note" className={cn("flex items-center gap-2 rounded-xl bg-signal-soft px-3.5 py-2 text-xs text-[oklch(0.35_0.08_45)]", className)}>
-      <span className="size-1.5 shrink-0 rounded-full bg-signal" aria-hidden="true" />
-      <span><strong className="font-semibold">Demo.</strong> Nothing is sent or stored on a server: what you enter stays in this browser. Payments, email, bookings and analytics aren’t connected.</span>
-    </p>
-  )
-}
-
 /**
  * Live preview of the draft on /demo/preview (the same renderer as the real page), shown through
  * the shared PagePreview controller. Phone shows a device-sized viewport; Desktop shows a readable

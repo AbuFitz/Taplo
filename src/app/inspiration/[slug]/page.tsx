@@ -55,7 +55,7 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
           </div>
         </section>
 
-        <section className="border-y border-foreground/10 bg-[oklch(0.955_0.012_85)] py-16">
+        <section className="border-y border-foreground/10 bg-muted py-16">
           <div className="mx-auto grid grid-cols-[minmax(0,1fr)] w-full max-w-7xl gap-12 px-5 md:grid-cols-3">
             <div>
               <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-foreground/55">What is on the page</h2>

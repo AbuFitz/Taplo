@@ -11,7 +11,8 @@ import { cn } from "@/lib/utils"
 import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures"
 import { loadSample } from "./actions"
 import { useDemo } from "./store"
-import { DemoNotice } from "./ui"
+import { SandboxBadge } from "@/components/taplo/sandbox-badge"
+import { capabilities } from "@/lib/capabilities"
 
 const NAV = [
   { href: "/dashboard/page", label: "My page", icon: Paintbrush, primary: true },
@@ -58,7 +59,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <NavList />
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center gap-3 border-b px-4 py-3 lg:px-8">
+        <header className="flex items-center gap-3 border-b px-4 py-2 lg:px-8">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className={focus ? "" : "lg:hidden"} aria-label="Open menu"><Menu /></Button>
@@ -71,10 +72,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           <p className="min-w-0 flex-1 truncate text-sm text-muted-foreground">
             {state?.content.identity.name ? <>Managing <strong className="text-foreground">{state.content.identity.name}</strong></> : "No business yet"}
           </p>
-          <span className="rounded-full border px-2.5 py-1 text-xs font-medium">Plan: {state?.plan ?? "business"} (simulated)</span>
+          {capabilities().sandbox ? <SandboxBadge /> : null}
+          <span className="rounded-full border px-2.5 py-1 text-xs font-medium capitalize">{state?.plan ?? "business"} plan</span>
         </header>
-        <main className="min-w-0 flex-1 px-4 py-6 lg:px-8">
-          <DemoNotice className="mb-6" />
+        <main className={cn("min-w-0 flex-1 px-4 lg:px-8", focus ? "py-3" : "py-6")}>
           {!ready ? <p className="text-sm text-muted-foreground">Loading…</p> : empty ? (
             <div className="max-w-xl">
               <h1 className="text-2xl font-semibold">Let’s set up your page</h1>

@@ -43,14 +43,14 @@ export function SettingsTab({ ed, notify }: { ed: Editor; notify: (m: string, un
           {url ? <Button variant="outline" asChild><a href={url} target="_blank" rel="noreferrer">View published page</a></Button> : null}
         </div>
         {!canPublish(s) ? <p className="text-sm text-muted-foreground">To publish you still need: {missing.map((m) => m.label.toLowerCase()).join(", ")}.</p> : null}
-        <p className="text-xs text-muted-foreground">Visitors only ever see the published version. Your draft can change freely until you publish. Demo pages open at /demo/p/&lt;address&gt; and only work in this browser; on a connected environment the address is taplo.co/&lt;address&gt;.</p>
+        <p className="text-xs text-muted-foreground">Visitors only ever see the published version. Your draft can change freely until you publish.</p>
       </Card>
 
       <Card title="Page address">
         <div>
           <TaploInput label="Your web address" value={s.content.identity.slug} maxLength={40} autoCapitalize="none" onBlur={() => setTouched(true)} onChange={(e) => ed.update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={touched && probs.length ? SLUG_PROBLEM_MESSAGE[probs[0]!] : undefined} />
           <p className="mt-1.5 text-sm text-muted-foreground">taplo.co/<strong>{s.content.identity.slug || "…"}</strong></p>
-          <p className="mt-1 text-xs text-muted-foreground">If you change it later, the old address keeps redirecting to the new one. Whether a name is already taken is checked when you publish on a connected environment.</p>
+          <p className="mt-1 text-xs text-muted-foreground">If you change it later, the old address keeps redirecting to the new one.</p>
         </div>
       </Card>
 
@@ -67,7 +67,7 @@ export function SettingsTab({ ed, notify }: { ed: Editor; notify: (m: string, un
 
       <Card title="Search engines">
         <SwitchField label="Let Google and others find my page" checked={meta.searchVisible} onChange={(v) => ed.setPage((p) => ({ ...p, meta: { ...p.meta, searchVisible: v } }))} hint="When off, your page asks search engines not to list it. People with your link can still open it." />
-        <p className="text-xs text-muted-foreground">Demo pages are never indexed, whatever this says.</p>
+        <p className="text-xs text-muted-foreground">Pages in the sandbox are never listed in search, whatever this says.</p>
       </Card>
 
       <Card title="Your own domain">
