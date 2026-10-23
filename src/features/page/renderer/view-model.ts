@@ -116,15 +116,16 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
   }
 
   const k = business.contacts;
+  const bookingWidget = widgets.find((w) => w.type === "booking" && !w.hidden && w.status.state === "ready");
   const actions: PageAction[] = [];
-  if (onlineBooking) actions.push({ kind: "book", label: bookingLabel(industry.terminology.booking, business.booking.mode), href: `/${business.identity.slug}/book`, event: "booking_click" });
+  // A ready booking widget is a booking action even when online booking is not set up: it opens the enquiry. Without this the widget is promoted into a header slot that has no button for it, and the action disappears.
+  if (onlineBooking || bookingWidget) actions.push({ kind: "book", label: bookingLabel(industry.terminology.booking, business.booking.mode), href: `/${business.identity.slug}/book`, event: "booking_click" });
   if (k.phone) actions.push({ kind: "call", label: "Call", href: telHref(k.phone), event: "call_click" });
   if (k.whatsapp) actions.push({ kind: "whatsapp", label: "WhatsApp", href: whatsappHref(k.whatsapp, `Hi ${business.identity.name}, I found you on Taplo.`), event: "whatsapp_click" });
   if (k.email) actions.push({ kind: "email", label: "Email", href: `mailto:${k.email}` });
 
   // ---- main action: chosen on the page, independent of widget order
   const primaryMode = effectiveStyle.spec.header.actions === "primary";
-  const bookingWidget = widgets.find((w) => w.type === "booking" && !w.hidden && w.status.state === "ready");
   const available: Record<ActionKind, boolean> = { book: Boolean(bookingWidget) || onlineBooking, call: Boolean(k.phone), whatsapp: Boolean(k.whatsapp), email: Boolean(k.email) };
   const order: ActionKind[] = ["book", "call", "whatsapp", "email"];
   const pref = page.meta.primaryAction;

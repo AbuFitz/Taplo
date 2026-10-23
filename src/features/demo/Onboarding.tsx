@@ -4,7 +4,7 @@ import { TaploLogo } from "@/components/taplo/brand"
 import * as React from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Check } from "lucide-react"
+import { Check, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { LOCATION_MODES } from "@/features/businesses/content"
@@ -21,44 +21,53 @@ import { LookThumb } from "@/components/taplo/look-thumb"
 import { applyIndustry, blankService, canPublish, hasContactChannel, loadSample, newId, normService, publish, readiness, setName, setSlug, slugProblems } from "./actions"
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans"
 import { ONBOARDING_STEPS, initialState, parseContent, useDemo, type OnboardingStep } from "./store"
-import { ServiceForm, serviceErrors } from "./ServiceForm"
+import { RecordForm, blankFor, commitRecord, validate } from "@/features/page/editor/RecordForms"
 import { WHEN_UNAVAILABLE, capabilities } from "@/lib/capabilities"
 import { SandboxBadge } from "@/components/taplo/sandbox-badge"
 import { EmailField, PhoneField, PreviewFrame } from "./ui"
 import type { WidgetType } from "@/features/page/contracts/widgets"
 
 const STEP_LABEL: Record<OnboardingStep, string> = {
-  business: "Your name",
+  business: "Your business",
   industry: "What you do",
-  widgets: "Look and content",
-  contacts: "Contact and place",
-  publish: "Preview and share",
+  widgets: "Design",
+  contacts: "First content",
+  publish: "Review",
 }
 const STEP_TITLE: Record<OnboardingStep, string> = {
   business: "What is your business called?",
-  industry: "What do you do, and what should people do first?",
-  widgets: "Choose a starting point",
-  contacts: "How can people reach you?",
-  publish: "Preview, publish and share",
+  industry: "What do you do?",
+  widgets: "Choose a design",
+  contacts: "Add your first content",
+  publish: "Your page is ready to look at",
 }
 
 const POPULAR = ["barber", "hairdresser", "beauty-therapist", "nails", "plumber", "electrician", "builder", "mechanic", "cleaner", "tutor", "personal-trainer", "physio", "hospitality", "car-dealer", "photographer", "other"]
 
-type Goal = "book" | "request" | "call" | "message"
+type Goal = "book" | "enquire" | "call" | "message"
 const GOALS: { id: Goal; label: string; hint: string }[] = [
-  { id: "book", label: "Book a time", hint: "The time is confirmed straight away." },
-  { id: "request", label: "Ask for a time", hint: "You accept or decline each request." },
-  { id: "call", label: "Call me", hint: "A big call button comes first." },
-  { id: "message", label: "Send me a message", hint: "Nothing is reserved. You reply." },
+  { id: "book", label: "Book with me", hint: "Customers choose a service and ask for a time." },
+  { id: "enquire", label: "Send an enquiry", hint: "A short form. Nothing is reserved." },
+  { id: "call", label: "Call me", hint: "A call button comes first." },
+  { id: "message", label: "Message me", hint: "WhatsApp or email comes first." },
 ]
 function goalOf(s: { content: { booking?: { mode: string } }; page: { meta: { primaryAction: string } } }): Goal {
-  if (s.page.meta.primaryAction === "call") return "call"
+  const a = s.page.meta.primaryAction
+  if (a === "call") return "call"
+  if (a === "whatsapp" || a === "email") return "message"
   const m = s.content.booking?.mode
-  return m === "instant" ? "book" : m === "request" ? "request" : "message"
+  return m === "instant" || m === "request" ? "book" : "enquire"
 }
+// Whether a booking is confirmed straight away or accepted by hand is a setting for when services and hours exist (Bookings), not a question for the first minute.
 function applyGoal<T extends ReturnType<typeof initialState>>(s: T, g: Goal): T {
-  const mode = g === "book" ? "instant" : g === "request" ? "request" : "contact"
-  return { ...s, content: { ...s.content, booking: { ...s.content.booking, mode } }, page: { ...s.page, meta: { ...s.page.meta, primaryAction: g === "call" ? "call" : g === "message" ? "auto" : "book" } } }
+  const mode = g === "book" ? "request" : "contact"
+  const primaryAction = g === "book" ? "book" : g === "call" ? "call" : g === "message" ? (s.content.contacts.whatsapp ? "whatsapp" : s.content.contacts.email ? "email" : "auto") : "auto"
+  return { ...s, content: { ...s.content, booking: { ...s.content.booking, mode } }, page: { ...s.page, meta: { ...s.page.meta, primaryAction } } }
+}
+
+/** What the first thing to add is, by kind of business. Nothing is added for them. */
+function firstKind(industryKey: string): "service" | "vehicle" | "photo" {
+  return industryKey === "car-dealer" ? "vehicle" : industryKey === "photographer" ? "photo" : "service"
 }
 
 const LOCATION_LABEL = { premises: "A place customers visit", service_area: "I travel to customers", online: "Online only" } as const
@@ -120,16 +129,16 @@ export function Onboarding() {
   const c = s.content
   const slugErrs = slugProblems(c.identity.slug)
   const valid: Record<OnboardingStep, boolean> = {
-    industry: state !== null && Boolean(c.identity.industryLabel.trim()),
+    industry: state !== null && Boolean(c.identity.industryLabel.trim()) && (goalOf(s) === "call" ? Boolean(c.contacts.phone) : hasContactChannel(c)),
     business: Boolean(c.identity.name.trim()) && slugErrs.length === 0,
-    contacts: hasContactChannel(c),
+    contacts: true,
     widgets: true,
     publish: canPublish(s),
   }
   const why: Record<OnboardingStep, string> = {
-    industry: "Choose what you do (or Other) and describe it in a few words.",
+    industry: goalOf(s) === "call" ? "Choose what you do, and add the phone number people should call." : "Choose what you do, and add at least one way to reach you.",
     business: "Add a name and a valid web address.",
-    contacts: "Add at least one way for customers to reach you.",
+    contacts: "",
     widgets: "",
     publish: "Complete the earlier steps to publish.",
   }
@@ -141,7 +150,7 @@ export function Onboarding() {
         <div className="flex flex-wrap items-center gap-2">{fromName ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="from-example" title="Only its look and the kinds of content are used. None of its words, prices or pictures are copied.">Starting from {fromName}</span> : null}{intent ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}<SandboxBadge /><Link href="/dashboard/page" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip to the editor</Link></div>
       </header>
 
-      <nav aria-label="Progress" className="mb-10">
+      <nav aria-label="Progress" className="mb-8">
         <p className="mb-3 text-xs font-medium text-muted-foreground">Step {stepIndex + 1} of {ONBOARDING_STEPS.length} · {STEP_LABEL[step]}</p>
         <ol className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${ONBOARDING_STEPS.length}, minmax(0, 1fr))` }}>
           {ONBOARDING_STEPS.map((st, i) => (
@@ -155,7 +164,7 @@ export function Onboarding() {
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_400px]">
         <section aria-labelledby="step-title" className="min-w-0">
-          <h1 id="step-title" className="font-display mb-3 text-[clamp(2.25rem,5vw,3.25rem)] leading-[1.02]">{STEP_TITLE[step]}</h1>
+          <h1 id="step-title" className="font-display mb-6 text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.08]">{step === "contacts" ? { service: "Add your first service", vehicle: "Add your first vehicle", photo: "Add your first photos" }[firstKind(c.identity.industryKey)] : STEP_TITLE[step]}</h1>
 
           {step === "industry" ? (
             <div className="grid gap-7">
@@ -180,15 +189,32 @@ export function Onboarding() {
               </div>
               {state !== null ? (
                 <fieldset className="grid gap-2" data-testid="goal">
-                  <legend className="mb-1 text-sm font-semibold">What should people do first on your page?</legend>
+                  <legend className="mb-1 text-sm font-semibold">What should people do first?</legend>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {GOALS.map((g) => (
-                      <label key={g.id} className="flex min-h-14 cursor-pointer items-start gap-3 rounded-xl bg-card p-3 text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] has-[:checked]:shadow-[0_0_0_2px_var(--foreground)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring">
-                        <input type="radio" name="goal" className="mt-0.5 size-4 accent-[var(--foreground)]" checked={goalOf(s) === g.id} onChange={() => update((x) => applyGoal(x, g.id))} />
+                      <label key={g.id} className="flex min-h-14 cursor-pointer items-start gap-3 rounded-xl bg-card p-3 text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] has-[:checked]:shadow-[0_0_0_2px_var(--signal)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring">
+                        <input type="radio" name="goal" className="mt-0.5 size-4 accent-[var(--signal)]" checked={goalOf(s) === g.id} onChange={() => update((x) => applyGoal(x, g.id))} />
                         <span><span className="block font-semibold">{g.label}</span><span className="text-muted-foreground">{g.hint}</span></span>
                       </label>
                     ))}
                   </div>
+                </fieldset>
+              ) : null}
+              {state !== null ? (
+                <fieldset className="grid gap-3" data-testid="reach">
+                  <legend className="mb-1 text-sm font-semibold">{goalOf(s) === "call" ? "The number to call" : "How can people reach you?"}</legend>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {goalOf(s) === "message" ? <>
+                      <PhoneField label="WhatsApp" value={c.contacts.whatsapp} onCommit={(v) => update((x) => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, whatsapp: v } } }, "message"), { coalesce: "wa" })} hint="With country code, e.g. +44." />
+                      <EmailField value={c.contacts.email} onCommit={(v) => update((x) => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }, "message"), { coalesce: "email" })} />
+                      <PhoneField label="Phone (optional)" value={c.contacts.phone} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, phone: v } } }), { coalesce: "phone" })} />
+                    </> : <>
+                      <PhoneField label={goalOf(s) === "call" ? "Phone" : "Phone (optional)"} value={c.contacts.phone} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, phone: v } } }), { coalesce: "phone" })} hint={goalOf(s) === "call" ? "For the Call button." : undefined} />
+                      <EmailField value={c.contacts.email} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }), { coalesce: "email" })} />
+                      <PhoneField label="WhatsApp (optional)" value={c.contacts.whatsapp} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, whatsapp: v } } }), { coalesce: "wa" })} hint="With country code, e.g. +44." />
+                    </>}
+                  </div>
+                  <p className="text-sm text-muted-foreground">One is enough. Only what you fill in appears on your page.</p>
                 </fieldset>
               ) : null}
               <details className="text-sm">
@@ -213,36 +239,12 @@ export function Onboarding() {
               {editSlug || (showErrors && slugErrs.length) ? (
                 <TaploInput label="Web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />
               ) : null}
+              <TaploInput label="A line under your name (optional)" value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
               <ImageField label="Logo or profile picture (optional)" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
             </div>
           ) : null}
 
-          {step === "contacts" ? (
-            <div className="grid gap-5">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <PhoneField label="Phone" value={c.contacts.phone} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, phone: v } } }), { coalesce: "phone" })} hint="For the Call button." />
-                <PhoneField label="WhatsApp" value={c.contacts.whatsapp} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, whatsapp: v } } }), { coalesce: "wa" })} hint="With country code, e.g. +44." />
-              </div>
-              <EmailField value={c.contacts.email} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }), { coalesce: "email" })} />
-              <p className="-mt-3 text-sm text-muted-foreground">One is enough. Only the ones you fill in appear on your page.</p>
-              <fieldset className="grid gap-2">
-                <legend className="mb-1 text-sm font-semibold">Where do you work?</legend>
-                <div className="flex flex-wrap gap-2">
-                  {LOCATION_MODES.map((m) => (
-                    <label key={m} className={cn("inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border bg-card px-4 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring", c.location.mode === m && "border-foreground bg-foreground text-background")}>
-                      <input type="radio" name="loc" className="sr-only" checked={c.location.mode === m} onChange={() => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, mode: m } } }))} />
-                      {LOCATION_LABEL[m]}
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-              <TaploInput label={c.location.mode === "service_area" ? "Areas you cover" : c.location.mode === "online" ? "Where you’re based (optional)" : "Town or area"} value={c.location.locality ?? ""} maxLength={120} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, locality: e.target.value || undefined } } }), { coalesce: "loc" })} hint={c.location.mode === "premises" ? undefined : "Your private address is never shown."} />
-              <details>
-                <summary className="inline-flex min-h-10 cursor-pointer list-none items-center rounded-lg text-sm font-medium underline underline-offset-4 [&::-webkit-details-marker]:hidden">Add a line about your business (optional)</summary>
-                <div className="mt-3"><TaploInput label="A line under your name" value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} /></div>
-              </details>
-            </div>
-          ) : null}
+          {step === "contacts" ? <FirstContent /> : null}
 
           {step === "widgets" ? <WidgetsStep /> : null}
           {step === "publish" ? <PublishStep onEditor={() => router.push("/dashboard/page")} /> : null}
@@ -259,7 +261,7 @@ export function Onboarding() {
         </section>
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="hidden lg:block"><h2 className="font-display mb-3 text-2xl">Your page, taking shape</h2><PreviewFrame height={720} /></div>
+          <div className="hidden lg:block"><p className="mb-3 text-sm font-semibold">Your page</p><PreviewFrame height={720} /></div>
           <div className="lg:hidden">
             <Button variant="outline" onClick={() => setMobilePreview((v) => !v)} aria-expanded={mobilePreview}>{mobilePreview ? "Hide preview" : "Show my page"}</Button>
             {mobilePreview ? <div className="mt-3"><PreviewFrame /></div> : null}
@@ -276,7 +278,7 @@ function LookPicker({ industryKey, themeId, onPick }: { industryKey: string; the
   const card = (l: (typeof looks)[number], i: number) => {
     const active = themeId === l.id
     return (
-      <label key={l.id} className={cn("relative grid cursor-pointer gap-2 overflow-hidden rounded-2xl bg-card p-1.5 text-left text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] transition-shadow has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring hover:shadow-[0_0_0_1px_rgb(0_0_0/0.25)]", active && "shadow-[0_0_0_2px_var(--foreground)]")}>
+      <label key={l.id} className={cn("relative grid cursor-pointer max-sm:w-[72%] max-sm:shrink-0 max-sm:snap-start gap-2 overflow-hidden rounded-2xl bg-card p-1.5 text-left text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] transition-shadow has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring hover:shadow-[0_0_0_1px_rgb(0_0_0/0.25)]", active && "shadow-[0_0_0_2px_var(--foreground)]")}>
         <input type="radio" name="look" value={l.id} checked={active} onChange={() => onPick(l.id)} className="sr-only" />
         <span className="block overflow-hidden rounded-xl"><LookThumb id={l.id} /></span>
         <span className="px-1 pb-1"><span className="flex items-center gap-1.5 font-semibold">{l.name}{i === 0 ? <span className="rounded-full bg-muted px-1.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground">Suggested</span> : null}{active ? <Check aria-hidden="true" className="ml-auto size-4" /> : null}</span><span className="block text-xs leading-snug text-muted-foreground">{l.blurb}</span></span>
@@ -287,83 +289,133 @@ function LookPicker({ industryKey, themeId, onPick }: { industryKey: string; the
     <fieldset className="grid gap-3" data-testid="look-picker">
       <legend className="mb-1 text-lg font-semibold">Pick a look</legend>
       <p className="-mt-1 text-sm text-muted-foreground">Shown on an example business. Your page, on the right, changes as you choose. You can change every colour, font and shape later.</p>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">{looks.slice(0, 3).map(card)}</div>
+      <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pb-0">{looks.slice(0, 3).map(card)}</div>
       <details className="group">
         <summary className="inline-flex min-h-10 cursor-pointer list-none items-center rounded-lg text-sm font-medium underline underline-offset-4 [&::-webkit-details-marker]:hidden">More looks</summary>
-        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">{looks.slice(3).map((l, i) => card(l, i + 3))}</div>
+        <div className="mt-3 -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pb-0">{looks.slice(3).map((l, i) => card(l, i + 3))}</div>
       </details>
     </fieldset>
   )
 }
 
-/** Suggested widgets for this kind of business: tick to include. Nothing is added silently; empty ones explain what they need. */
+/** Design: one choice, shown on an example business, applied to theirs as they pick. Everything can be changed in the editor. */
 function WidgetsStep() {
   const { state, update } = useDemo()
   const s = state ?? initialState()
+  return <LookPicker industryKey={s.content.identity.industryKey} themeId={s.page.themeId} onPick={(id) => update((x) => ({ ...x, page: { ...x.page, themeId: id, appearance: {} } }))} />
+}
+
+const toPounds = (minor?: number) => (minor === undefined ? "" : (minor / 100).toFixed(minor % 100 === 0 ? 0 : 2))
+interface Row { id: string; name: string; price: string; minutes: string }
+const validRow = (r: Row) => r.name.trim().length > 0 && /^\d{1,6}(\.\d{1,2})?$/.test(r.price.trim())
+
+/**
+ * The first content. A service is a name and a price (and a time, which is what lets people book it); rows are saved as
+ * soon as they are complete, so the page fills in while the owner types. Nothing is suggested as a price.
+ */
+function FirstServices() {
+  const { state, update } = useDemo()
+  const s = state ?? initialState()
   const industry = getIndustryPreset(s.content.identity.industryKey)
-  const have = new Set(s.page.widgets.map((w) => w.type as string))
-  const [svc, setSvc] = React.useState(() => (s.content.services ?? []).find((x) => !x.archived) ?? null)
-  const [showErr, setShowErr] = React.useState(false)
-  const first = (s.content.services ?? []).find((x) => !x.archived)
-  const current = first ? normService(first) : svc ? normService(svc) : blankService(0)
+  const [rows, setRows] = React.useState<Row[]>(() => {
+    const have = (s.content.services ?? []).filter((x) => !x.archived).map((x) => ({ id: x.id, name: x.name, price: toPounds(x.priceMinor), minutes: x.durationMinutes ? String(x.durationMinutes) : "" }))
+    return have.length ? have : [{ id: newId("svc"), name: "", price: "", minutes: "" }]
+  })
+  const [focus, setFocus] = React.useState<string | null>(null)
+  const booking = goalOf(s) === "book"
 
-  const toggle = (type: WidgetType, on: boolean) => update((x) => ({
-    ...x,
-    page: { ...x.page, widgets: on ? [...x.page.widgets, newWidget(type, {})] : x.page.widgets.filter((w) => w.type !== type) },
-  }))
-
+  const sync = (next: Row[]) => {
+    setRows(next)
+    update((st) => {
+      const kept = (st.content.services ?? []).filter((x) => x.archived)
+      const done = next.filter(validRow).map((r, i) => {
+        const prev = (st.content.services ?? []).find((x) => x.id === r.id)
+        const minutes = r.minutes ? Math.min(parseInt(r.minutes, 10), 1440) : undefined
+        return normService({ ...(prev ?? blankService(i)), id: r.id, name: r.name.trim(), priceMode: "fixed", priceMinor: Math.round(parseFloat(r.price) * 100), durationMinutes: minutes && minutes > 0 ? minutes : undefined, bookingMode: booking ? "request" : "contact", sortOrder: i + 1 })
+      })
+      return { ...st, content: { ...st.content, services: [...kept, ...done] } }
+    }, { coalesce: "first-services" })
+  }
+  const patch = (id: string, p: Partial<Row>) => sync(rows.map((r) => (r.id === id ? { ...r, ...p } : r)))
+  const used = new Set(rows.map((r) => r.name.trim().toLowerCase()))
+  const suggestions = industry.suggestedServices.filter((x) => !used.has(x.name.toLowerCase())).slice(0, 6)
+  const add = (name = "") => {
+    const row = { id: newId("svc"), name, price: "", minutes: "" }
+    setFocus(name ? `${row.id}-price` : `${row.id}-name`)
+    setRows((r) => [...r, row])
+  }
+  const anyMinutes = rows.some((r) => validRow(r) && r.minutes)
+  const field = "h-11 w-full min-w-0 rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
   return (
-    <div className="grid gap-8">
-      <LookPicker industryKey={s.content.identity.industryKey} themeId={s.page.themeId} onPick={(id) => update((x) => ({ ...x, page: { ...x.page, themeId: id, appearance: {} } }))} />
-      <div className="grid gap-3">
-        <h2 className="text-lg font-semibold">What to show</h2>
-        <p className="-mt-1 text-sm text-muted-foreground">Tick what belongs on your page. Anything you have not added yet stays hidden from visitors until you do, so there is nothing to fill in now.</p>
-        <ul className="flex flex-wrap gap-2" aria-label="Suggested content">
-          {[...new Set([...industry.starterWidgets, ...s.page.widgets.map((w) => w.type as WidgetType)])].map((type) => {
-            const def = getWidget(type)!
-            const on = have.has(type)
-            return (
-              <li key={type}>
-                <label title={def.description} className={cn("inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full border bg-card px-4 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring hover:border-foreground/40", on && "border-foreground bg-foreground text-background hover:border-foreground")}>
-                  <input type="checkbox" className="sr-only" checked={on} onChange={(e) => toggle(type, e.target.checked)} />
-                  {on ? <Check aria-hidden="true" className="size-3.5" /> : null}{def.label}
-                </label>
-              </li>
-            )
-          })}
-        </ul>
-      </div>
-      <details className="group rounded-xl border p-4" open={Boolean(first)}>
-        <summary className="flex cursor-pointer list-none items-center justify-between font-semibold [&::-webkit-details-marker]:hidden">
-          <span>Add your first service <span className="text-sm font-normal text-muted-foreground">(optional)</span></span>
-          <span aria-hidden="true" className="text-muted-foreground transition-transform group-open:rotate-180">⌄</span>
-        </summary>
-        <p className="mb-3 mt-2 text-sm text-muted-foreground">You set every price; nothing is pre-filled. Skip this and add services later.</p>
-        {industry.suggestedServices.length ? (
-          <ul className="mb-3 flex flex-wrap gap-2" aria-label="Common services">
-            {industry.suggestedServices.map((sg) => (
-              <li key={sg.name}><button type="button" className="min-h-11 rounded-full border px-4 text-sm hover:bg-muted" onClick={() => { const base = { ...current, name: sg.name }; setSvc(base); save(base) }}>{sg.name}</button></li>
-            ))}
-          </ul>
-        ) : null}
-        <ServiceForm key={current.id} service={current} showErrors={showErr} onChange={(x) => { setSvc(x); save(x) }} />
-      </details>
+    <div className="grid gap-4" data-testid="first-services">
+      {suggestions.length ? (
+        <div>
+          <p className="mb-2 text-sm text-muted-foreground">Tap one to start, then add your own price.</p>
+          <ul className="flex flex-wrap gap-2" aria-label="Common services">{suggestions.map((sg) => <li key={sg.name}><button type="button" onClick={() => { const empty = rows.find((r) => !r.name.trim() && !r.price); if (empty) { setFocus(`${empty.id}-price`); patch(empty.id, { name: sg.name }) } else add(sg.name) }} className="min-h-10 rounded-lg border bg-card px-3 text-sm hover:border-foreground/40">{sg.name}</button></li>)}</ul>
+        </div>
+      ) : null}
+      <ul className="grid gap-3">
+        {rows.map((r, i) => (
+          <li key={r.id} className="grid grid-cols-[minmax(0,1fr)_5.5rem_5.5rem_auto] items-end gap-2 max-sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+            <label className="grid gap-1 max-sm:col-span-3"><span className="text-xs font-medium text-muted-foreground">{i === 0 ? "Service" : <span className="sr-only">Service</span>}</span><input className={field} aria-label={`Service ${i + 1} name`} placeholder="e.g. Initial consultation" maxLength={120} autoFocus={focus === `${r.id}-name`} value={r.name} onChange={(e) => patch(r.id, { name: e.target.value })} /></label>
+            <label className="grid gap-1"><span className="text-xs font-medium text-muted-foreground">{i === 0 ? "Price (£)" : <span className="sr-only">Price</span>}</span><input className={field} aria-label={`Service ${i + 1} price`} inputMode="decimal" autoFocus={focus === `${r.id}-price`} value={r.price} onChange={(e) => { if (/^\d{0,6}(\.\d{0,2})?$/.test(e.target.value)) patch(r.id, { price: e.target.value }) }} /></label>
+            <label className="grid gap-1"><span className="text-xs font-medium text-muted-foreground">{i === 0 ? "Minutes" : <span className="sr-only">Minutes</span>}</span><input className={field} aria-label={`Service ${i + 1} minutes`} inputMode="numeric" value={r.minutes} onChange={(e) => patch(r.id, { minutes: e.target.value.replace(/\D/g, "").slice(0, 4) })} /></label>
+            <Button type="button" variant="ghost" size="icon" className="size-11" aria-label={`Remove service ${i + 1}`} disabled={rows.length === 1 && !r.name && !r.price} onClick={() => { const next = rows.filter((x) => x.id !== r.id); sync(next.length ? next : [{ id: newId("svc"), name: "", price: "", minutes: "" }]) }}><Trash2 /></Button>
+          </li>
+        ))}
+      </ul>
+      <Button type="button" variant="outline" className="min-h-11 justify-self-start" onClick={() => add()}><Plus /> Add another</Button>
+      {booking && !anyMinutes ? <p className="text-sm text-muted-foreground" data-testid="booking-hint">Add how long a service takes and people can ask to book it. Without a time, they send an enquiry instead.</p> : null}
     </div>
   )
+}
 
-  function save(x: ReturnType<typeof normService>) {
-    const ok = Object.keys(serviceErrors(x)).length === 0
-    setShowErr(false)
-    if (!ok) { // keep typing local until it is a valid service, so the page never shows half-finished data
-      if (!x.name.trim()) return
-    }
-    update((st) => {
-      const list = [...(st.content.services ?? [])]
-      const i = list.findIndex((q) => q.id === x.id)
-      if (ok) { if (i >= 0) list[i] = x; else list.push({ ...x, id: x.id || newId("svc") }) }
-      return { ...st, content: { ...st.content, services: list } }
-    }, { coalesce: "first-service" })
+/** A vehicle or product, entered with the same form the editor uses, so nothing is learned twice. */
+function FirstRecord({ kind }: { kind: "vehicle" | "photo" }) {
+  const { state, update } = useDemo()
+  const s = state ?? initialState()
+  const [draft, setDraft] = React.useState<unknown>(() => blankFor(kind, s.content))
+  const [show, setShow] = React.useState(false)
+  const items = kind === "vehicle" ? (s.content.products ?? []).filter((p) => !p.archived && p.kind === "vehicle").map((p) => p.name) : (s.content.gallery ?? []).map((g, i) => g.caption || `Photo ${i + 1}`)
+  const save = () => {
+    if (Object.keys(validate(kind, draft)).length) { setShow(true); return }
+    update((st) => ({ ...st, content: commitRecord(kind, draft, st.content) }))
+    setDraft(blankFor(kind, s.content)); setShow(false)
   }
+  return (
+    <div className="grid gap-4" data-testid="first-record">
+      {items.length ? <ul className="grid gap-1 text-sm" aria-label="Added"><li className="font-medium">Added so far</li>{items.map((n, i) => <li key={i} className="flex items-center gap-2"><Check aria-hidden="true" className="size-4 text-emerald-700" />{n}</li>)}</ul> : null}
+      <RecordForm key={items.length} kind={kind} value={draft} onChange={setDraft} showErrors={show} content={s.content} />
+      <Button type="button" className="min-h-11 justify-self-start" onClick={save} data-testid="first-record-save">{kind === "vehicle" ? "Add this vehicle" : "Add these photos"}</Button>
+    </div>
+  )
+}
+
+function FirstContent() {
+  const { state, update } = useDemo()
+  const s = state ?? initialState()
+  const c = s.content
+  const kind = firstKind(c.identity.industryKey)
+  return (
+    <div className="grid gap-8">
+      <div className="grid gap-3">
+        <p className="-mt-3 text-sm text-muted-foreground">Start with one. You add the rest in the editor, and nothing is added for you, so every price and photo on your page is yours.</p>
+        {kind === "service" ? <FirstServices /> : <FirstRecord kind={kind} />}
+      </div>
+      <fieldset className="grid gap-3">
+        <legend className="mb-1 text-sm font-semibold">Where do you work?</legend>
+        <div className="flex flex-wrap gap-2">
+          {LOCATION_MODES.map((m) => (
+            <label key={m} className={cn("inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border bg-card px-4 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring", c.location.mode === m && "border-foreground bg-foreground text-background")}>
+              <input type="radio" name="loc" className="sr-only" checked={c.location.mode === m} onChange={() => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, mode: m } } }))} />
+              {LOCATION_LABEL[m]}
+            </label>
+          ))}
+        </div>
+        <TaploInput label={c.location.mode === "service_area" ? "Areas you cover" : c.location.mode === "online" ? "Where you’re based (optional)" : "Town or area"} value={c.location.locality ?? ""} maxLength={120} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, locality: e.target.value || undefined } } }), { coalesce: "loc" })} hint={c.location.mode === "premises" ? undefined : "Your private address is never shown."} />
+      </fieldset>
+    </div>
+  )
 }
 
 function PublishStep({ onEditor }: { onEditor: () => void }) {
@@ -379,29 +431,22 @@ function PublishStep({ onEditor }: { onEditor: () => void }) {
   const [copied, setCopied] = React.useState(false)
   return (
     <div className="grid gap-5">
-      <p className="text-muted-foreground">Check the preview, then publish. Everything can be changed afterwards.</p>
-      {shown.length || waiting.length ? (
-        <div className="grid gap-3 rounded-xl border p-4 text-sm" data-testid="page-summary">
-          <p><span className="font-semibold">On your page now:</span> {shown.length ? shown.join(", ") : "your name and contact buttons"}.</p>
-          {waiting.length ? <p className="text-muted-foreground"><span className="font-semibold text-foreground">Hidden until you add them:</span> {waiting.join(", ")}. Visitors never see an empty section.</p> : null}
+      <p className="text-muted-foreground">Look your page over on the right. You can change anything afterwards.</p>
+      {checks.some((c) => c.required && !c.done) ? (
+        <ul className="grid gap-2" aria-label="Still needed">
+          {checks.filter((c) => c.required && !c.done).map((c) => <li key={c.id} className="flex items-center gap-2 text-sm text-destructive"><span className="size-1.5 rounded-full bg-destructive" aria-hidden="true" />{c.label}</li>)}
+        </ul>
+      ) : null}
+      {checks.some((c) => !c.required && !c.done && c.id !== "published") || waiting.length ? (
+        <div className="grid gap-2 border-t pt-4 text-sm" data-testid="finish-later">
+          <p className="font-semibold">Add next</p>
+          <ul className="grid gap-1 text-muted-foreground">
+            {checks.filter((c) => !c.required && !c.done && c.id !== "published").map((c) => <li key={c.id}>{c.label}</li>)}
+            {waiting.length ? <li>{waiting.join(", ")}</li> : null}
+          </ul>
         </div>
       ) : null}
-      <ul className="grid gap-2">
-        {checks.filter((c) => c.required).map((c) => (
-          <li key={c.id} className="flex items-center gap-2 text-sm">
-            <span className={cn("grid size-5 place-items-center rounded-full border", c.done && "bg-primary text-primary-foreground")}>{c.done ? <Check className="size-3" aria-hidden="true" /> : null}</span>
-            <span>{c.label}</span>
-            {!c.done ? <span className="text-destructive"> — missing</span> : null}
-          </li>
-        ))}
-      </ul>
-      {checks.some((c) => !c.required && !c.done) ? (
-        <div className="rounded-xl border p-4 text-sm" data-testid="finish-later">
-          <p className="font-semibold">Finish later</p>
-          <p className="mb-2 text-muted-foreground">None of this blocks publishing. It stays on your dashboard as a checklist.</p>
-          <ul className="grid gap-1 text-muted-foreground">{checks.filter((c) => !c.required && !c.done && c.id !== "published").map((c) => <li key={c.id}>· {c.label}</li>)}</ul>
-        </div>
-      ) : null}
+      <span className="sr-only" data-testid="page-summary">{shown.length ? `On your page: ${shown.join(", ")}.` : ""}</span>
       {s.published ? (
         <div role="status" className="rounded-lg border border-green-600/40 bg-green-50 p-4 text-sm text-green-950">
           <p className="font-semibold">{capabilities().publicPublishing ? "Published" : "Saved as your page"} — version {s.published.version}</p>
