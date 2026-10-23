@@ -122,7 +122,50 @@ export const DEALER: BusinessContentInput = {
   booking: { mode: "request", onlineBookingReady: false },
 }
 
-export type Scenario = "barber" | "dealer"
+export const TRADES: BusinessContentInput = {
+  identity: {
+    name: "Northgate Heating & Plumbing",
+    slug: "northgate-heating",
+    tagline: "Boilers, leaks and bathrooms. Gas Safe engineers, fixed prices, same-day call-outs.",
+    logo: { src: "/showcase/northgate-mark.svg", alt: "Northgate mark", width: 256, height: 256 },
+    industryKey: "plumber",
+    industryLabel: "Heating and plumbing",
+  },
+  location: { mode: "service_area", locality: "Watford and north-west London", timezone: "Europe/London" },
+  contacts: {
+    phone: "01923 555 0147",
+    whatsapp: "+447700900733",
+    email: "jobs@northgate-heating.example",
+    social: [{ platform: "facebook", url: "https://facebook.com/northgateheating" }],
+  },
+  about: "A small team of Gas Safe registered engineers. You get a fixed price before we start, and a tidy finish.",
+  credentials: ["Gas Safe registered", "Fully insured", "Same-day call-outs"],
+  hours: [...hours(["mon", "tue", "wed", "thu", "fri"], "07:30", "18:30"), ...hours(["sat"], "08:00", "14:00")],
+  services: [
+    svc("n1", "Heating", "Boiler service", 8500, 60, "Annual safety check and service with a written report.", 1),
+    svc("n2", "Heating", "Boiler repair", 9500, 90, "Diagnosis and repair, parts quoted before we fit them.", 2),
+    svc("n3", "Plumbing", "Leak and burst pipe call-out", 11000, 60, "Emergency visit, first hour included.", 3),
+    svc("n4", "Plumbing", "Tap, toilet or radiator fix", 7500, 60, "A straightforward fix at a fixed price.", 4),
+    svc("n5", "Bathrooms", "Bathroom design visit", 0, 45, "Free survey and written quote.", 5),
+  ],
+  staff: [],
+  gallery: [],
+  testimonials: [
+    { id: "t1", quote: "Boiler failed on a Sunday night. Someone was here by ten the next morning and it was fixed within the hour.", author: "Amara O.", source: "owner_supplied", permissionConfirmed: true },
+    { id: "t2", quote: "Fixed price, on time and they cleaned up after themselves.", author: "Tom H.", source: "owner_supplied", permissionConfirmed: true },
+  ],
+  reviewLinks: [],
+  faqs: [
+    { id: "f1", question: "Do you charge a call-out fee?", answer: "Our prices include the first hour. You always get the full price before we start." },
+    { id: "f2", question: "Which areas do you cover?", answer: "Watford, Rickmansworth, Harrow, Pinner and the surrounding postcodes." },
+  ],
+  caseStudies: [],
+  products: [],
+  offers: [],
+  booking: { mode: "request", onlineBookingReady: false },
+}
+
+export type Scenario = "barber" | "dealer" | "trades"
 export const SCENARIOS: Record<Scenario, { label: string; content: BusinessContentInput; widgets: () => PageDoc["widgets"] }> = {
   barber: {
     label: "Barber",
@@ -136,6 +179,19 @@ export const SCENARIOS: Record<Scenario, { label: string; content: BusinessConte
       newWidget("hours", { title: "Hours" }),
       newWidget("location", { title: "Find us" }),
       newWidget("social", { variant: "icons" }),
+    ],
+  },
+  trades: {
+    label: "Plumber",
+    content: TRADES,
+    widgets: () => [
+      newWidget("call", { label: "Call an engineer", variant: "button" }),
+      newWidget("booking", { label: "Request a visit", variant: "button" }),
+      newWidget("serviceList", { title: "Fixed prices", variant: "cards" }),
+      newWidget("reviews", { title: "What customers say", variant: "quote" }),
+      newWidget("serviceArea", { title: "Where we work" }),
+      newWidget("faq", { title: "Questions" }),
+      newWidget("hours", { title: "Hours" }),
     ],
   },
   dealer: {

@@ -65,10 +65,10 @@ export function Lab() {
 
       <main className="mx-auto grid max-w-[96rem] grid-cols-[minmax(0,1fr)] gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start">
         <div className="min-w-0 lg:sticky lg:top-[4.75rem]">
-          <div className="mb-4 flex justify-center xl:hidden"><div className="w-56"><Segment label="Preview" value={device} options={[{ value: "phone", label: "Phone" }, { value: "desktop", label: "Desktop" }]} onChange={setDevice} /></div></div>
-          <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-8 xl:grid-cols-[22rem_minmax(0,1fr)]">
-            <div className={device === "phone" ? "block" : "hidden xl:block"}>{phone}</div>
-            <div className={device === "desktop" ? "block" : "hidden xl:block"}>{desktop}</div>
+          <div className="mb-4 flex justify-center 2xl:hidden"><div className="w-56"><Segment label="Preview" value={device} options={[{ value: "phone", label: "Phone" }, { value: "desktop", label: "Desktop" }]} onChange={setDevice} /></div></div>
+          <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-8 2xl:grid-cols-[22rem_minmax(0,1fr)]">
+            <div className={device === "phone" ? "block" : "hidden 2xl:block"}>{phone}</div>
+            <div className={device === "desktop" ? "block" : "hidden 2xl:block"}>{desktop}</div>
           </div>
         </div>
 

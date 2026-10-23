@@ -1,0 +1,128 @@
+{
+  "desk-dealer": {
+    "file": "/marketing/desk-dealer.webp",
+    "width": 1920,
+    "height": 1200,
+    "cssWidth": 1280,
+    "cssHeight": 800,
+    "bytes": 96074,
+    "source": "/appearance/frame?scenario=dealer&look=showroom"
+  },
+  "hero-barber": {
+    "file": "/marketing/hero-barber.webp",
+    "width": 780,
+    "height": 1400,
+    "cssWidth": 390,
+    "cssHeight": 700,
+    "bytes": 55084,
+    "source": "/appearance/frame?scenario=barber&look=night"
+  },
+  "hero-dealer": {
+    "file": "/marketing/hero-dealer.webp",
+    "width": 780,
+    "height": 1400,
+    "cssWidth": 390,
+    "cssHeight": 700,
+    "bytes": 70070,
+    "source": "/appearance/frame?scenario=dealer&look=showroom"
+  },
+  "hero-trades": {
+    "file": "/marketing/hero-trades.webp",
+    "width": 780,
+    "height": 1400,
+    "cssWidth": 390,
+    "cssHeight": 700,
+    "bytes": 71766,
+    "source": "/appearance/frame?scenario=trades&look=colour"
+  },
+  "yours-1-clean": {
+    "file": "/marketing/yours-1-clean.webp",
+    "width": 780,
+    "height": 1520,
+    "cssWidth": 390,
+    "cssHeight": 760,
+    "bytes": 57876,
+    "source": "/appearance/frame?scenario=barber&look=clean"
+  },
+  "yours-2-colour": {
+    "file": "/marketing/yours-2-colour.webp",
+    "width": 780,
+    "height": 1520,
+    "cssWidth": 390,
+    "cssHeight": 760,
+    "bytes": 57108,
+    "source": "/appearance/frame?scenario=barber&look=clean"
+  },
+  "yours-3-type": {
+    "file": "/marketing/yours-3-type.webp",
+    "width": 780,
+    "height": 1520,
+    "cssWidth": 390,
+    "cssHeight": 760,
+    "bytes": 97232,
+    "source": "/appearance/frame?scenario=barber&look=clean"
+  },
+  "yours-4-final": {
+    "file": "/marketing/yours-4-final.webp",
+    "width": 780,
+    "height": 1520,
+    "cssWidth": 390,
+    "cssHeight": 760,
+    "bytes": 98744,
+    "source": "/appearance/frame?scenario=barber&look=clean"
+  },
+  "cap-services": {
+    "file": "/marketing/cap-services.webp",
+    "width": 716,
+    "height": 724,
+    "cssWidth": 358,
+    "cssHeight": 362,
+    "bytes": 24426,
+    "source": "/appearance/frame?scenario=barber&look=night"
+  },
+  "cap-product": {
+    "file": "/marketing/cap-product.webp",
+    "width": 716,
+    "height": 788,
+    "cssWidth": 358,
+    "cssHeight": 394,
+    "bytes": 30804,
+    "source": "/appearance/frame?scenario=barber&look=night"
+  },
+  "cap-vehicles": {
+    "file": "/marketing/cap-vehicles.webp",
+    "width": 716,
+    "height": 3756,
+    "cssWidth": 358,
+    "cssHeight": 1878,
+    "bytes": 233504,
+    "source": "/appearance/frame?scenario=dealer&look=showroom"
+  },
+  "cap-fixed-prices": {
+    "file": "/marketing/cap-fixed-prices.webp",
+    "width": 716,
+    "height": 1322,
+    "cssWidth": 358,
+    "cssHeight": 661,
+    "bytes": 65596,
+    "source": "/appearance/frame?scenario=trades&look=colour"
+  },
+  "cap-reviews": {
+    "file": "/marketing/cap-reviews.webp",
+    "width": 716,
+    "height": 480,
+    "cssWidth": 358,
+    "cssHeight": 240,
+    "bytes": 43302,
+    "source": "/appearance/frame?scenario=trades&look=colour"
+  },
+  "desk-barber": {
+    "file": "/marketing/desk-barber.webp",
+    "width": 1920,
+    "height": 1200,
+    "cssWidth": 1280,
+    "cssHeight": 800,
+    "bytes": 54522,
+    "source": "/appearance/frame?scenario=barber&look=night"
+  }
+}

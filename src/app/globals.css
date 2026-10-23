@@ -88,7 +88,7 @@
   --border: oklch(0.9 0.008 85);
   --input: oklch(0.88 0.009 85);
   --ring: oklch(0.64 0.19 38);
-  --font-display: "Instrument Serif", "Fraunces Variable", Georgia, serif;
+  --font-display: "Geist Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --signal: oklch(0.64 0.19 38);
   --signal-soft: oklch(0.95 0.04 50);
   --chart-1: oklch(0.87 0 0);
@@ -211,11 +211,16 @@
   }
 }
 
+/* Taplo's own display voice: bold, tight, confident sans. Business pages never use it. */
 @utility font-display {
   font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  font-weight: 760;
+  letter-spacing: -0.045em;
+  font-feature-settings: "ss01", "tnum" 0;
 }
+@utility font-display-tight { letter-spacing: -0.055em; line-height: 0.94; }
+@utility text-balance-pretty { text-wrap: balance; }
+@utility text-signal-ink { color: oklch(0.5 0.17 38); }
 @utility bg-signal { background-color: var(--signal); }
 @utility text-signal { color: var(--signal); }
 @utility bg-signal-soft { background-color: var(--signal-soft); }

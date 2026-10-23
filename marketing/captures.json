@@ -1,0 +1,23 @@
+{
+  "base": "http://localhost:3100",
+  "dsf": 2,
+  "jobs": [
+    { "id": "hero-barber", "url": "/appearance/frame?scenario=barber&look=night", "viewport": [390, 844], "clip": [0, 0, 390, 700] },
+    { "id": "hero-dealer", "url": "/appearance/frame?scenario=dealer&look=showroom", "viewport": [390, 844], "clip": [0, 0, 390, 700] },
+    { "id": "hero-trades", "url": "/appearance/frame?scenario=trades&look=colour", "viewport": [390, 844], "clip": [0, 0, 390, 700] },
+
+    { "id": "yours-1-clean", "url": "/appearance/frame?scenario=barber&look=clean", "viewport": [390, 844], "clip": [0, 0, 390, 760] },
+    { "id": "yours-2-colour", "url": "/appearance/frame?scenario=barber&look=clean", "overrides": { "colors": { "background": "#12281c", "text": "#f2efe4", "muted": "#9db8a6", "surface": "#1b3a29", "accent": "#e9c46a", "accentText": "#1b1405", "border": "#2b4d39" } }, "viewport": [390, 844], "clip": [0, 0, 390, 760] },
+    { "id": "yours-3-type", "url": "/appearance/frame?scenario=barber&look=clean", "overrides": { "colors": { "background": "#12281c", "text": "#f2efe4", "muted": "#9db8a6", "surface": "#1b3a29", "accent": "#e9c46a", "accentText": "#1b1405", "border": "#2b4d39" }, "text": { "headingFont": "fraunces", "bodyFont": "inter", "headingWeight": "bold" }, "header": { "layout": "poster" } }, "viewport": [390, 844], "clip": [0, 0, 390, 760] },
+    { "id": "yours-4-final", "url": "/appearance/frame?scenario=barber&look=clean", "overrides": { "colors": { "background": "#12281c", "text": "#f2efe4", "muted": "#9db8a6", "surface": "#1b3a29", "accent": "#e9c46a", "accentText": "#1b1405", "border": "#2b4d39" }, "text": { "headingFont": "fraunces", "bodyFont": "inter", "headingWeight": "bold" }, "header": { "layout": "poster" }, "buttons": { "shape": "pill", "fill": "solid", "shadow": "soft" }, "cards": { "surface": "glass", "radius": "xl", "border": "thin" }, "background": { "kind": "gradient", "from": "#12281c", "to": "#0a1811", "angle": 160, "motion": false } }, "viewport": [390, 844], "clip": [0, 0, 390, 760] },
+
+    { "id": "cap-services", "url": "/appearance/frame?scenario=barber&look=night", "viewport": [390, 844], "selector": "[data-widget=\"priceMenu\"]" },
+    { "id": "cap-product", "url": "/appearance/frame?scenario=barber&look=night", "viewport": [390, 844], "selector": "[data-widget=\"products\"]" },
+    { "id": "cap-vehicles", "url": "/appearance/frame?scenario=dealer&look=showroom", "viewport": [390, 844], "selector": "[data-widget=\"products\"]" },
+    { "id": "cap-fixed-prices", "url": "/appearance/frame?scenario=trades&look=colour", "viewport": [390, 844], "selector": "[data-widget=\"serviceList\"]" },
+    { "id": "cap-reviews", "url": "/appearance/frame?scenario=trades&look=colour", "viewport": [390, 844], "selector": "[data-widget=\"reviews\"]" },
+
+    { "id": "desk-barber", "url": "/appearance/frame?scenario=barber&look=night", "viewport": [1280, 800], "clip": [0, 0, 1280, 800], "dsf": 1.5 },
+    { "id": "desk-dealer", "url": "/appearance/frame?scenario=dealer&look=showroom", "viewport": [1280, 800], "clip": [0, 0, 1280, 800], "dsf": 1.5 }
+  ]
+}

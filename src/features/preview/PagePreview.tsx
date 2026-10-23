@@ -29,7 +29,7 @@ export interface PagePreviewProps {
   title: string
   mode: PreviewMode
   device?: { w: number; h: number }
-  desktopZoom?: "fit" | "actual"
+  zoom?: "fit" | "actual"
   /** Decorative bezel / browser bar. Only for `device` and `desktop`, never while editing on a phone. */
   chrome?: boolean
   /** Address shown in the desktop browser bar. */
@@ -48,10 +48,10 @@ const READABLE = 0.72
 export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, device = { w: 390, h: 844 }, zoom: "fit" | "actual" = "fit", chrome = false) {
   if (mode === "fill") return { vw: box.w, vh: box.h, scale: 1, pad: 0, bar: 0, outerW: box.w, outerH: box.h }
   if (mode === "device") {
-    const pad = chrome ? 9 : 0
+    const pad = chrome ? 6 : 0
     const outerW = device.w + pad * 2
     const outerH = device.h + pad * 2
-    const scale = Math.min(1, box.w / outerW, box.h / outerH)
+    const scale = zoom === "actual" ? 1 : Math.min(1, box.w / outerW, box.h / outerH)
     return { vw: device.w, vh: device.h, scale, pad, bar: 0, outerW, outerH }
   }
   const bar = chrome ? 38 : 0
@@ -62,7 +62,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, title, mode, device, desktopZoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId }: PagePreviewProps) {
+export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
@@ -78,7 +78,7 @@ export function PagePreview({ src, title, mode, device, desktopZoom = "fit", chr
     return () => ro.disconnect()
   }, [])
 
-  const L = box ? layoutPreview(mode, box, device, desktopZoom, chrome && mode !== "fill") : null
+  const L = box ? layoutPreview(mode, box, device, zoom, chrome && mode !== "fill") : null
   React.useEffect(() => { if (L) onViewport?.({ w: L.vw, h: L.vh, scale: L.scale }) }, [L?.vw, L?.vh, L?.scale]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const setFrame = React.useCallback((el: HTMLIFrameElement | null) => { frame.current = el; frameRef?.(el) }, [frameRef])
@@ -113,13 +113,13 @@ export function PagePreview({ src, title, mode, device, desktopZoom = "fit", chr
   ) : null
 
   return (
-    <div ref={host} className={cn("relative h-full w-full min-h-0", mode === "desktop" && desktopZoom === "actual" ? "overflow-auto" : "overflow-hidden", className)} data-preview-mode={mode}>
+    <div ref={host} className={cn("relative h-full w-full min-h-0", zoom === "actual" ? "overflow-auto" : "overflow-hidden", className)} data-preview-mode={mode}>
       {L && mode === "fill" ? <div className="absolute inset-0">{iframe}</div> : null}
       {L && mode !== "fill" ? (
-        <div className={cn("absolute inset-x-0 top-0 flex justify-center", mode === "device" && "inset-y-0 items-center")}>
+        <div className={cn("absolute inset-x-0 top-0 flex justify-center", mode === "device" && zoom !== "actual" && "inset-y-0 items-center", zoom === "actual" && "relative")}>
           <div style={{ width: L.outerW * L.scale, height: L.outerH * L.scale }} className="shrink-0">
             <div
-              className={cn("origin-top-left overflow-hidden", chrome ? (mode === "device" ? "rounded-[2.5rem] bg-[#0b0b0c] shadow-[0_30px_60px_-28px_rgb(0_0_0/0.5),0_0_0_1px_rgb(0_0_0/0.1)]" : "rounded-2xl bg-[#f3f2ef] shadow-[0_30px_60px_-28px_rgb(0_0_0/0.4),0_0_0_1px_rgb(0_0_0/0.1)]") : "")}
+              className={cn("origin-top-left overflow-hidden", chrome ? (mode === "device" ? "rounded-[2.375rem] bg-[#141416] shadow-[0_0_0_1px_rgb(0_0_0/0.14),0_28px_48px_-26px_rgb(0_0_0/0.4)]" : "rounded-2xl bg-[#f3f2ef] shadow-[0_30px_60px_-28px_rgb(0_0_0/0.4),0_0_0_1px_rgb(0_0_0/0.1)]") : "")}
               style={{ width: L.outerW, height: L.outerH, padding: L.pad, transform: `scale(${L.scale})` }}
             >
               {L.bar ? (

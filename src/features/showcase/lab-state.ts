@@ -11,7 +11,7 @@ export interface LabConfig {
   overrides: StyleOverrides
 }
 
-export function initialConfig(scenario: Scenario = "barber", lookId = scenario === "dealer" ? "showroom" : "night"): LabConfig {
+export function initialConfig(scenario: Scenario = "barber", lookId = scenario === "dealer" ? "showroom" : scenario === "trades" ? "colour" : "night"): LabConfig {
   return { scenario, themeId: getTheme(lookId) ? lookId : DEFAULT_THEME_ID, overrides: {} }
 }
 

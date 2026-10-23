@@ -3,6 +3,7 @@
 import * as React from "react"
 import { useSearchParams } from "next/navigation"
 import { PageRenderer, buildPageViewModel } from "@/features/page/renderer"
+import { styleOverridesSchema } from "@/features/page/contracts/style"
 import { SCENARIOS, type Scenario } from "./content"
 import { initialConfig, toContent, toPage, type LabConfig, type LabMessage } from "./lab-state"
 
@@ -14,7 +15,12 @@ import { initialConfig, toContent, toPage, type LabConfig, type LabMessage } fro
 export function Frame() {
   const q = useSearchParams()
   const sc = (q.get("scenario") as Scenario) in SCENARIOS ? (q.get("scenario") as Scenario) : "barber"
-  const [cfg, setCfg] = React.useState<LabConfig>(() => initialConfig(sc, q.get("look") ?? undefined))
+  const [cfg, setCfg] = React.useState<LabConfig>(() => {
+    const base = initialConfig(sc, q.get("look") ?? undefined)
+    // `o` carries a URL-encoded JSON StyleOverrides, so marketing captures and shared links can pose any configuration of the engine.
+    try { const raw = q.get("o"); if (raw) return { ...base, overrides: styleOverridesSchema.parse(JSON.parse(raw)) } } catch { /* an invalid pose falls back to the plain look */ }
+    return base
+  })
 
   React.useEffect(() => {
     const onMessage = (e: MessageEvent<LabMessage>) => {

@@ -1,3 +1,6 @@
+/* Slim scrollbars wherever a page is shown inside the editor or showcase; content stays scrollable. */
+html:has([data-taplo-page]) { scrollbar-width: thin; scrollbar-color: color-mix(in oklab, currentColor 28%, transparent) transparent; }
+
 /*
  * Taplo page surface. All appearance flows from semantic --tp-* custom properties (set by the
  * style resolver from the owner's choices) and finite data-* attributes. Nothing here reads

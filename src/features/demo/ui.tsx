@@ -151,13 +151,11 @@ export function PreviewFrame({ className, height = 640, fill = false, selection,
               <button key={d} type="button" aria-pressed={device === d} onClick={() => setDevice(d)} className={seg(device === d)}>{d === "mobile" ? "Phone" : "Desktop"}</button>
             ))}
           </div>
-          {device === "desktop" ? (
-            <div role="group" aria-label="Desktop zoom" className="inline-flex rounded-xl bg-black/[0.06] p-0.5">
+          <div role="group" aria-label="Preview zoom" className="inline-flex rounded-xl bg-black/[0.06] p-0.5">
               {(["fit", "actual"] as const).map((z) => (
                 <button key={z} type="button" aria-pressed={zoom === z} onClick={() => setZoom(z)} className={seg(zoom === z)}>{z === "fit" ? "Fit" : "Actual size"}</button>
               ))}
             </div>
-          ) : null}
         </div>
         <a className="text-xs font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline" href="/demo/preview" target="_blank" rel="noreferrer">Open full preview</a>
       </div>
@@ -165,7 +163,7 @@ export function PreviewFrame({ className, height = 640, fill = false, selection,
         <PagePreview
           mode={device === "mobile" ? "device" : "desktop"}
           device={{ w: 390, h: 844 }}
-          desktopZoom={zoom}
+          zoom={zoom}
           chrome
           src={editing ? "/demo/preview?edit=1" : "/demo/preview"}
           title="Live preview of your page"
