@@ -1,3 +1,4 @@
+import { WHEN_UNAVAILABLE, capabilities } from "@/lib/capabilities"
 import Link from "next/link"
 import type { Metadata } from "next"
 import { Check, Minus } from "lucide-react"
@@ -50,7 +51,6 @@ export default function PricingPage() {
     <div className="bg-background">
       <SiteHeader />
       <main className="mx-auto w-full max-w-7xl px-5 py-16 sm:py-24">
-        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-signal-ink">Pricing</p>
         <h1 className="font-display font-display-tight mt-4 max-w-4xl text-[clamp(2.5rem,7vw,5.5rem)] text-balance">Start free. Pay when you need more.</h1>
         <p className="mt-6 max-w-2xl text-xl leading-relaxed text-foreground/70">One price a month for each plan, no commission on your bookings and no contract. Pick a plan and it carries into setup.</p>
 
@@ -80,7 +80,7 @@ export default function PricingPage() {
             </tbody>
           </table>
         </div>
-        <p className="mt-6 max-w-3xl text-sm leading-relaxed text-foreground/60">Prices are the intended launch prices. In this preview nothing is charged and no plan can be bought, so the plan you choose only changes what you can try. Features marked “not connected yet” depend on services Taplo has not connected, and are listed so you can see where each plan is heading.</p>
+        <p className="mt-6 max-w-3xl text-sm leading-relaxed text-foreground/60">{capabilities().payments ? "Prices are per month, with no commission and no contract." : `Prices are per month, with no commission and no contract. ${WHEN_UNAVAILABLE.payments} Choosing a plan changes what you can use. Features marked “not connected yet” switch on when their service is connected.`}</p>
       </main>
       <SiteFooter />
     </div>

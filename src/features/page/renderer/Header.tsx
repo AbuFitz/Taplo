@@ -29,7 +29,9 @@ function Avatar({ vm }: { vm: PageViewModel }) {
 /** Channels the owner already placed as their own widget are not repeated in the header. */
 function headerActions(vm: PageViewModel) {
   const placed = new Set(vm.visible.map((w) => w.type as string))
-  return vm.actions.filter((a) => !(WIDGET_FOR[a.kind] && placed.has(WIDGET_FOR[a.kind]!)))
+  const icons = vm.style.spec.header.actions === "icons"
+  // In icons mode a booking link would repeat the booking widget that is still on the page.
+  return vm.actions.filter((a) => !(WIDGET_FOR[a.kind] && placed.has(WIDGET_FOR[a.kind]!)) && !(icons && a.kind === "book" && placed.has("booking")))
 }
 
 const external = (kind: PageAction["kind"]) => (kind === "whatsapp" ? { target: "_blank", rel: "noopener noreferrer" } : {})
@@ -79,6 +81,7 @@ function Actions({ vm }: { vm: PageViewModel }) {
     <div className="tp-actions">
       {actions.map((a) => {
         const I = ICON[a.kind]
+        if (a.kind === "book" && vm.promotedWidgetId) return <div key={a.kind} className="tp-primary-slot" data-widget-id={vm.promotedWidgetId} style={{ width: "auto" }}><BookingAction {...bookingProps(vm, { label: String(vm.widgets.find((w) => w.id === vm.promotedWidgetId)?.settings.label || a.label), variant: "button" })} /></div>
         return (
           <a key={a.kind} className="tp-btn" data-inline="" {...(a.kind === "book" ? { "data-primary": "" } : {})} data-event={a.event} href={a.href} {...external(a.kind)}>
             <I aria-hidden="true" className="size-4" /><span className="tp-btn-label">{a.label}</span><ArrowUpRight aria-hidden="true" className="size-3.5 opacity-70" />

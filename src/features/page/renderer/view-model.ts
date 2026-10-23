@@ -135,7 +135,9 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
     if (chosen === "book") primary = { kind: "book", label: (bookingWidget?.settings.label as string | undefined) || bookingLabel(industry.terminology.booking, business.booking.mode), href: found?.href ?? "", event: "booking_click" };
     else if (found) primary = { kind: found.kind, label: found.kind === "call" ? "Call" : found.label, href: found.href, event: found.event };
   }
-  const promotedWidgetId = primary?.kind === "book" && bookingWidget ? bookingWidget.id : null;
+  // The booking widget stands in for the header's own booking button (the main action, or one of the header's buttons) so a
+  // page never shows two booking buttons. Header icons cannot carry a booking flow, so there the widget stays in the list.
+  const promotedWidgetId = bookingWidget && (primary?.kind === "book" || effectiveStyle.spec.header.actions === "buttons") ? bookingWidget.id : null;
 
   const l = business.location;
   const locationLine = l.mode === "online" ? (l.locality ? l.locality : "Online") : l.mode === "service_area" ? (l.locality ? `Covering ${l.locality}` : "Service area") : (l.locality ?? null);

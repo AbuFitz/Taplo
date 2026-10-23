@@ -22,7 +22,7 @@ import { applyIndustry, blankService, canPublish, hasContactChannel, loadSample,
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans"
 import { ONBOARDING_STEPS, initialState, parseContent, useDemo, type OnboardingStep } from "./store"
 import { ServiceForm, serviceErrors } from "./ServiceForm"
-import { WHEN_UNAVAILABLE } from "@/lib/capabilities"
+import { WHEN_UNAVAILABLE, capabilities } from "@/lib/capabilities"
 import { SandboxBadge } from "@/components/taplo/sandbox-badge"
 import { EmailField, PhoneField, PreviewFrame } from "./ui"
 import type { WidgetType } from "@/features/page/contracts/widgets"
@@ -136,11 +136,9 @@ export function Onboarding() {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:py-10">
-      {fromName ? <p className="mb-4 rounded-xl bg-black/[0.04] px-4 py-2.5 text-sm" data-testid="from-example">Starting from the look and content types of <strong>{fromName}</strong>. It is a fictional business: none of its words, prices or pictures are copied, and you can change everything.</p> : null}
-      {intent ? <p className="mb-4 rounded-xl bg-black/[0.04] px-4 py-2.5 text-sm" data-testid="plan-intent">You are setting up on the <strong>{PLANS[intent].name}</strong> plan. Nothing is charged: payments are not connected. You can switch plans in Settings.</p> : null}
       <header className="mb-8 flex flex-wrap items-center justify-between gap-3">
         <Link href="/" aria-label="Taplo home" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo /></Link>
-        <div className="flex items-center gap-2"><SandboxBadge /><Link href="/dashboard/page" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip to the editor</Link></div>
+        <div className="flex flex-wrap items-center gap-2">{fromName ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="from-example" title="Only its look and the kinds of content are used. None of its words, prices or pictures are copied.">Starting from {fromName}</span> : null}{intent ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}<SandboxBadge /><Link href="/dashboard/page" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip to the editor</Link></div>
       </header>
 
       <nav aria-label="Progress" className="mb-10">
@@ -406,11 +404,11 @@ function PublishStep({ onEditor }: { onEditor: () => void }) {
       ) : null}
       {s.published ? (
         <div role="status" className="rounded-lg border border-green-600/40 bg-green-50 p-4 text-sm text-green-950">
-          <p className="font-semibold">Published (demo) — version {s.published.version}</p>
+          <p className="font-semibold">{capabilities().publicPublishing ? "Published" : "Saved as your page"} — version {s.published.version}</p>
           <p className="mt-1">View it at <Link className="underline" href={`/demo/p/${s.published.content.identity.slug}`} target="_blank">/demo/p/{s.published.content.identity.slug}</Link> in this browser.</p>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Button size="sm" variant="outline" onClick={() => { void navigator.clipboard?.writeText(`${window.location.origin}/demo/p/${s.published!.content.identity.slug}`).then(() => setCopied(true)).catch(() => undefined) }}>{copied ? "Link copied" : "Copy link"}</Button>
-            <span className="text-xs">Preview link: it only opens in this browser. A public link needs accounts and hosting, which are not connected yet.</span>
+            <span className="text-xs">{WHEN_UNAVAILABLE.publicPublishing}</span>
           </div>
         </div>
       ) : null}

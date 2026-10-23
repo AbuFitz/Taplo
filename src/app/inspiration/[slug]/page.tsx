@@ -1,12 +1,13 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
-import { SiteFooter, SiteHeader, primaryAction } from "@/features/marketing/Site"
+import { SiteFooter, SiteHeader } from "@/features/marketing/Site"
 import { ArrowLink } from "@/features/marketing/Scenes"
 import { Shot } from "@/features/marketing/Shot"
 import { LivePhone } from "@/features/inspiration/LivePhone"
 import { EXAMPLES, bySlug, describe } from "@/features/inspiration/examples"
 import { INDUSTRY_FILTERS } from "@/features/marketing/ia"
+import { UseDesign } from "@/features/inspiration/UseDesign"
 import { BOOKING_WORDS } from "@/features/inspiration/wording"
 
 export function generateStaticParams() { return EXAMPLES.map((e) => ({ slug: e.slug })) }
@@ -20,24 +21,22 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
   const e = bySlug((await params).slug)
   if (!e) notFound()
   const f = describe(e)
-  const a = primaryAction()
-  const industry = INDUSTRY_FILTERS.find((i) => i.id === e.industry)!
+    const industry = INDUSTRY_FILTERS.find((i) => i.id === e.industry)!
   const others = EXAMPLES.filter((x) => x.slug !== e.slug && x.industry !== e.industry).slice(0, 3)
-  const start = a.demo ? `/onboarding?from=${e.slug}` : "/pricing"
   return (
     <div className="bg-background">
       <SiteHeader />
       <main>
         <section className="mx-auto w-full max-w-7xl px-5 pb-10 pt-12 sm:pt-16">
-          <nav aria-label="Breadcrumb" className="text-sm text-foreground/55"><Link href="/inspiration" className="hover:text-foreground">Inspiration</Link> <span aria-hidden="true">/</span> <Link href={`/inspiration?industry=${e.industry}`} className="hover:text-foreground">{industry.label}</Link></nav>
+          <nav aria-label="Breadcrumb" className="text-sm text-foreground/55"><Link href="/inspiration" className="hover:text-foreground">Designs</Link> <span aria-hidden="true">/</span> <Link href={`/inspiration?industry=${e.industry}`} className="hover:text-foreground">{industry.label}</Link></nav>
           <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-12 lg:items-end">
             <div className="lg:col-span-8">
               <h1 className="font-display font-display-tight text-[clamp(2.5rem,6vw,5rem)] text-balance">{f.name}</h1>
               <p className="mt-5 max-w-2xl text-xl leading-relaxed text-foreground/70">{e.hook} {f.tagline}</p>
             </div>
             <div className="lg:col-span-4 lg:text-right">
-              <Link href={start} className="inline-flex min-h-12 items-center rounded-full bg-foreground px-6 text-base font-semibold text-background outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-ring/60">Start from this</Link>
-              <p className="mt-3 text-sm text-foreground/55">Fictional business. You can change every part of it.</p>
+              <UseDesign slug={e.slug} lookId={f.lookId} lookName={f.lookName} />
+              <p className="mt-3 text-sm text-foreground/55">Shown with a fictional business. Every part can be changed.</p>
             </div>
           </div>
         </section>
@@ -50,7 +49,7 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
             <ul className="mt-10 grid grid-cols-[minmax(0,1fr)] gap-3 border-t border-foreground/10 pt-8 sm:grid-cols-3">{e.highlights.map((h) => <li key={h} className="text-[0.9375rem] font-medium leading-snug">{h}</li>)}</ul>
           </div>
           <div className="lg:col-span-5">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-foreground/55">Try it. It is the real page.</h2>
+            <h2 className="mb-3 text-lg font-semibold">Try it. It is the real page.</h2>
             <LivePhone scenario={e.scenario} title={`${f.name}, live`} />
           </div>
         </section>
@@ -58,11 +57,11 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
         <section className="border-y border-foreground/10 bg-muted py-16">
           <div className="mx-auto grid grid-cols-[minmax(0,1fr)] w-full max-w-7xl gap-12 px-5 md:grid-cols-3">
             <div>
-              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-foreground/55">What is on the page</h2>
+              <h2 className="text-lg font-semibold">What is on the page</h2>
               <ul className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-2">{f.content.map((c) => <li key={c} className="text-lg font-medium">{c}</li>)}</ul>
             </div>
             <div>
-              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-foreground/55">What makes it different</h2>
+              <h2 className="text-lg font-semibold">What makes it different</h2>
               <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-5 gap-y-2 text-[0.9375rem]">
                 <dt className="text-foreground/55">Look</dt><dd className="font-medium">{f.lookName}. {f.lookBlurb}</dd>
                 <dt className="text-foreground/55">Headings</dt><dd className="font-medium">{f.heading}</dd>
@@ -74,7 +73,7 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
               </dl>
             </div>
             <div>
-              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-foreground/55">The thinking</h2>
+              <h2 className="text-lg font-semibold">The thinking</h2>
               <ul className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-3 text-[0.9375rem] leading-relaxed text-foreground/80">{e.notes.map((n) => <li key={n}>{n}</li>)}<li>{BOOKING_WORDS[f.bookingMode]}</li></ul>
             </div>
           </div>

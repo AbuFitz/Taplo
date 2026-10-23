@@ -136,11 +136,11 @@
   },
   "ex-marlowe-and-finch-desk": {
     "file": "/marketing/ex-marlowe-and-finch-desk.webp",
-    "width": 1920,
-    "height": 1200,
-    "cssWidth": 1280,
-    "cssHeight": 800,
-    "bytes": 49318,
+    "width": 2200,
+    "height": 1520,
+    "cssWidth": 1100,
+    "cssHeight": 760,
+    "bytes": 66560,
     "source": "/appearance/frame?scenario=barber"
   },
   "ex-hollin-physio-phone": {
@@ -154,11 +154,11 @@
   },
   "ex-hollin-physio-desk": {
     "file": "/marketing/ex-hollin-physio-desk.webp",
-    "width": 1920,
-    "height": 1200,
-    "cssWidth": 1280,
-    "cssHeight": 800,
-    "bytes": 57756,
+    "width": 2200,
+    "height": 1520,
+    "cssWidth": 1100,
+    "cssHeight": 760,
+    "bytes": 81058,
     "source": "/appearance/frame?scenario=physio"
   },
   "ex-pims-kitchen-phone": {
@@ -172,11 +172,11 @@
   },
   "ex-pims-kitchen-desk": {
     "file": "/marketing/ex-pims-kitchen-desk.webp",
-    "width": 1920,
-    "height": 1200,
-    "cssWidth": 1280,
-    "cssHeight": 800,
-    "bytes": 72050,
+    "width": 2200,
+    "height": 1520,
+    "cssWidth": 1100,
+    "cssHeight": 760,
+    "bytes": 94434,
     "source": "/appearance/frame?scenario=cafe"
   },
   "ex-ada-okafor-maths-phone": {
@@ -190,11 +190,11 @@
   },
   "ex-ada-okafor-maths-desk": {
     "file": "/marketing/ex-ada-okafor-maths-desk.webp",
-    "width": 1920,
-    "height": 1200,
-    "cssWidth": 1280,
-    "cssHeight": 800,
-    "bytes": 90076,
+    "width": 2200,
+    "height": 1520,
+    "cssWidth": 1100,
+    "cssHeight": 760,
+    "bytes": 122560,
     "source": "/appearance/frame?scenario=tutor"
   },
   "ex-forge-strength-phone": {
@@ -208,11 +208,11 @@
   },
   "ex-forge-strength-desk": {
     "file": "/marketing/ex-forge-strength-desk.webp",
-    "width": 1920,
-    "height": 1200,
-    "cssWidth": 1280,
-    "cssHeight": 800,
-    "bytes": 102428,
+    "width": 2200,
+    "height": 1520,
+    "cssWidth": 1100,
+    "cssHeight": 760,
+    "bytes": 131106,
     "source": "/appearance/frame?scenario=gym"
   },
   "ex-northgate-heating-phone": {
@@ -226,11 +226,11 @@
   },
   "ex-northgate-heating-desk": {
     "file": "/marketing/ex-northgate-heating-desk.webp",
-    "width": 1920,
-    "height": 1200,
-    "cssWidth": 1280,
-    "cssHeight": 800,
-    "bytes": 79568,
+    "width": 2200,
+    "height": 1520,
+    "cssWidth": 1100,
+    "cssHeight": 760,
+    "bytes": 101110,
     "source": "/appearance/frame?scenario=trades"
   },
   "ex-aldous-motor-co-phone": {
@@ -244,11 +244,11 @@
   },
   "ex-aldous-motor-co-desk": {
     "file": "/marketing/ex-aldous-motor-co-desk.webp",
-    "width": 1920,
-    "height": 1200,
-    "cssWidth": 1280,
-    "cssHeight": 800,
-    "bytes": 119006,
+    "width": 2200,
+    "height": 1520,
+    "cssWidth": 1100,
+    "cssHeight": 760,
+    "bytes": 160838,
     "source": "/appearance/frame?scenario=dealer"
   },
   "bk-1-service": {
@@ -520,5 +520,32 @@
     "cssHeight": 675,
     "bytes": 39604,
     "source": "/appearance/frame?scenario=barber"
+  },
+  "setup-1-name": {
+    "file": "/marketing/setup-1-name.webp",
+    "width": 2200,
+    "height": 1400,
+    "cssWidth": 1100,
+    "cssHeight": 700,
+    "bytes": 72822,
+    "source": "/onboarding"
+  },
+  "setup-3-start": {
+    "file": "/marketing/setup-3-start.webp",
+    "width": 2200,
+    "height": 1400,
+    "cssWidth": 1100,
+    "cssHeight": 700,
+    "bytes": 142540,
+    "source": "/onboarding"
+  },
+  "setup-4-contact": {
+    "file": "/marketing/setup-4-contact.webp",
+    "width": 2200,
+    "height": 1400,
+    "cssWidth": 1100,
+    "cssHeight": 700,
+    "bytes": 89278,
+    "source": "/onboarding"
   }
 }

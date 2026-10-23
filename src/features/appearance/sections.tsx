@@ -104,13 +104,15 @@ export function TypeControls({ m }: M) {
         options={FONT_PAIRS.map((p) => ({ value: p.id, label: p.label, preview: <FontTile heading={p.heading} body={p.body} /> }))} />
       <div className="grid gap-3">
         <Field label="Text size" dirty={m.has("text", "size")} onReset={() => m.reset("text", "size")}><Segment label="Text size" value={spec.text.size} options={[{ value: "sm", label: "Small" }, { value: "md", label: "Medium" }, { value: "lg", label: "Large" }]} onChange={(v) => m.patch("text", "size", v)} /></Field>
+      </div>
+      <details>
+        <summary className="inline-flex min-h-9 cursor-pointer list-none items-center text-xs font-medium text-neutral-600 underline-offset-4 hover:text-neutral-900 hover:underline [&::-webkit-details-marker]:hidden">More type options</summary>
+        <div className="mt-3 grid gap-3">
         <Field label="Headings" dirty={m.has("text", "headingWeight")} onReset={() => m.reset("text", "headingWeight")}><Segment label="Heading weight" value={spec.text.headingWeight} options={[{ value: "regular", label: "Regular" }, { value: "bold", label: "Bold" }]} onChange={(v) => m.patch("text", "headingWeight", v)} /></Field>
         <Field label="Heading case" dirty={m.has("text", "headingCase")} onReset={() => m.reset("text", "headingCase")}><Segment label="Heading case" value={spec.text.headingCase} options={[{ value: "normal", label: "Normal" }, { value: "upper", label: "Capitals" }]} onChange={(v) => m.patch("text", "headingCase", v)} /></Field>
         <Field label="Alignment" dirty={m.has("text", "align")} onReset={() => m.reset("text", "align")}><Segment label="Text alignment" value={spec.text.align} options={[{ value: "left", label: "Left" }, { value: "center", label: "Centre" }]} onChange={(v) => m.patch("text", "align", v)} /></Field>
-      </div>
-      <details>
-        <summary className="inline-flex min-h-9 cursor-pointer list-none items-center text-xs font-medium text-neutral-600 underline-offset-4 hover:text-neutral-900 hover:underline [&::-webkit-details-marker]:hidden">Choose fonts separately</summary>
-        <div className="mt-3 grid gap-3">{fontSelect("Headings font", "headingFont")}{fontSelect("Body font", "bodyFont")}</div>
+          {fontSelect("Headings font", "headingFont")}{fontSelect("Body font", "bodyFont")}
+        </div>
       </details>
     </div>
   )
@@ -175,9 +177,14 @@ export function SurfaceControls({ m }: M) {
       </Field>
       {spec.cards.surface === "glass" ? <Slider label="Frosting" value={spec.cards.opacity} min={10} max={100} step={2} unit="%" onChange={(x) => m.patch("cards", "opacity", x)} /> : null}
       <Field label="Corners" dirty={m.has("cards", "radius")} onReset={() => m.reset("cards", "radius")}><Segment label="Corners" value={spec.cards.radius} options={[{ value: "none", label: "Square" }, { value: "sm", label: "S" }, { value: "md", label: "M" }, { value: "lg", label: "L" }, { value: "xl", label: "XL" }]} onChange={(x) => m.patch("cards", "radius", x)} /></Field>
+      <details>
+        <summary className="inline-flex min-h-9 cursor-pointer list-none items-center text-xs font-medium text-neutral-600 underline-offset-4 hover:text-neutral-900 hover:underline [&::-webkit-details-marker]:hidden">More card options</summary>
+        <div className="mt-3 grid gap-4">
       <Field label="Border" dirty={m.has("cards", "border")} onReset={() => m.reset("cards", "border")}><Segment label="Border" value={spec.cards.border} options={[{ value: "none", label: "None" }, { value: "thin", label: "Thin" }, { value: "thick", label: "Thick" }]} onChange={(x) => m.patch("cards", "border", x)} /></Field>
       <Field label="Shadow" dirty={m.has("cards", "shadow")} onReset={() => m.reset("cards", "shadow")}><Segment label="Card shadow" value={spec.cards.shadow} options={[{ value: "none", label: "None" }, { value: "soft", label: "Soft" }, { value: "hard", label: "Hard" }]} onChange={(x) => m.patch("cards", "shadow", x)} /></Field>
       <Field label="Space inside" dirty={m.has("cards", "padding")} onReset={() => m.reset("cards", "padding")}><Segment label="Spacing inside" value={spec.cards.padding} options={[{ value: "compact", label: "Compact" }, { value: "comfortable", label: "Comfortable" }, { value: "roomy", label: "Roomy" }]} onChange={(x) => m.patch("cards", "padding", x)} /></Field>
+        </div>
+      </details>
       <p className="text-xs text-neutral-600">To make just one widget stand out, select it and use its Appearance tab.</p>
     </div>
   )

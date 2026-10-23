@@ -13,7 +13,7 @@ const ink = "rounded-full px-3.5 py-2 text-sm font-medium text-foreground/70 out
 const primary = "inline-flex min-h-10 items-center rounded-full bg-foreground px-4 text-sm font-semibold text-background outline-none transition-opacity hover:opacity-90 focus-visible:ring-3 focus-visible:ring-ring/60"
 
 /**
- * Compact floating navigation. Product and Inspiration open real menus whose entries are real pages; Pricing and
+ * Compact floating navigation. Product opens a real menu whose entries are real pages; Pricing and
  * Log in are plain links. On a phone the same structure becomes one full-screen sheet with the primary action visible.
  */
 export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: string; loginHref: string }) {
@@ -50,19 +50,7 @@ export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: str
                 </div>
               </NavigationMenu.Content>
             </NavigationMenu.Item>
-            <NavigationMenu.Item>
-              <NavigationMenu.Trigger className={cn(ink, "group inline-flex items-center gap-1")} aria-current={at("/inspiration")}>Inspiration<ChevronDown aria-hidden="true" className="size-3.5 transition-transform group-data-[state=open]:rotate-180" /></NavigationMenu.Trigger>
-              <NavigationMenu.Content className="absolute left-0 top-0 w-[30rem] max-w-[calc(100vw-2rem)] p-5">
-                <p className="px-3 text-xs font-semibold uppercase tracking-[0.14em] text-foreground/45">Real examples by kind of business</p>
-                <ul className="mt-1.5 grid grid-cols-2 gap-x-4">
-                  {INDUSTRY_FILTERS.map((i) => <li key={i.id}><NavigationMenu.Link asChild><Link href={`/inspiration?industry=${i.id}`} className="block rounded-xl px-3 py-2 text-sm font-medium outline-none hover:bg-foreground/5 focus-visible:ring-3 focus-visible:ring-ring/60">{i.label}</Link></NavigationMenu.Link></li>)}
-                </ul>
-                <div className="mt-4 flex items-center justify-between border-t border-foreground/10 pt-3 text-sm">
-                  <NavigationMenu.Link asChild><Link href="/inspiration" className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-semibold outline-none hover:bg-foreground/5 focus-visible:ring-3 focus-visible:ring-ring/60">Browse all examples<ArrowRight aria-hidden="true" className="size-4" /></Link></NavigationMenu.Link>
-                  <NavigationMenu.Link asChild><Link href="/appearance" className="rounded-lg px-3 py-1.5 text-foreground/70 outline-none hover:bg-foreground/5 focus-visible:ring-3 focus-visible:ring-ring/60">Try the looks</Link></NavigationMenu.Link>
-                </div>
-              </NavigationMenu.Content>
-            </NavigationMenu.Item>
+            <NavigationMenu.Item><NavigationMenu.Link asChild><Link href="/inspiration" className={ink} aria-current={at("/inspiration")}>Designs</Link></NavigationMenu.Link></NavigationMenu.Item>
             <NavigationMenu.Item><NavigationMenu.Link asChild><Link href="/pricing" className={ink} aria-current={at("/pricing")}>Pricing</Link></NavigationMenu.Link></NavigationMenu.Item>
           </NavigationMenu.List>
           <div className="absolute left-0 top-full flex pt-3">
@@ -85,9 +73,7 @@ export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: str
                   <MobileSection title="Product" href="/product" all="Everything Taplo does">
                     {PRODUCT_GROUPS.flatMap((g) => g.links).map((l) => <MobileLink key={l.href} href={l.href}>{l.label}</MobileLink>)}
                   </MobileSection>
-                  <MobileSection title="Inspiration" href="/inspiration" all="Browse all examples">
-                    {INDUSTRY_FILTERS.map((i) => <MobileLink key={i.id} href={`/inspiration?industry=${i.id}`}>{i.label}</MobileLink>)}
-                  </MobileSection>
+                  <MobileLink href="/inspiration" big>Designs</MobileLink>
                   <MobileLink href="/pricing" big>Pricing</MobileLink>
                   <MobileLink href={loginHref} big>Log in</MobileLink>
                 </nav>

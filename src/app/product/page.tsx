@@ -14,13 +14,12 @@ export default function ProductIndex() {
     <div className="bg-background">
       <SiteHeader />
       <main className="mx-auto w-full max-w-7xl px-5 py-14 sm:py-20">
-        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-signal-ink">Product</p>
         <h1 className="font-display font-display-tight mt-4 max-w-4xl text-[clamp(2.5rem,6.5vw,5.25rem)] text-balance">What goes on a Taplo page.</h1>
         <p className="mt-6 max-w-2xl text-xl leading-relaxed text-foreground/70">Nine things, each shown working. Every page says what you can use today and what still needs a connection.</p>
         <div className="mt-16 grid grid-cols-[minmax(0,1fr)] gap-16">
           {PRODUCT_GROUPS.map((g) => (
             <section key={g.title} aria-labelledby={`g-${g.title}`} className="grid grid-cols-[minmax(0,1fr)] gap-6 border-t border-foreground/10 pt-8 md:grid-cols-[14rem_1fr]">
-              <h2 id={`g-${g.title}`} className="text-sm font-semibold uppercase tracking-[0.14em] text-foreground/55">{g.title}</h2>
+              <h2 id={`g-${g.title}`} className="text-lg font-semibold">{g.title}</h2>
               <ul className="grid grid-cols-[minmax(0,1fr)] gap-1">
                 {g.links.map((l) => {
                   const p = pageBySlug(l.href.split("/").pop()!)!

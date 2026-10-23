@@ -259,16 +259,16 @@
       "id": "ex-marlowe-and-finch-desk",
       "url": "/appearance/frame?scenario=barber",
       "viewport": [
-        1280,
-        800
+        1100,
+        760
       ],
       "clip": [
         0,
         0,
-        1280,
-        800
+        1100,
+        760
       ],
-      "dsf": 1.5
+      "dsf": 2
     },
     {
       "id": "ex-hollin-physio-phone",
@@ -288,16 +288,16 @@
       "id": "ex-hollin-physio-desk",
       "url": "/appearance/frame?scenario=physio",
       "viewport": [
-        1280,
-        800
+        1100,
+        760
       ],
       "clip": [
         0,
         0,
-        1280,
-        800
+        1100,
+        760
       ],
-      "dsf": 1.5
+      "dsf": 2
     },
     {
       "id": "ex-pims-kitchen-phone",
@@ -317,16 +317,16 @@
       "id": "ex-pims-kitchen-desk",
       "url": "/appearance/frame?scenario=cafe",
       "viewport": [
-        1280,
-        800
+        1100,
+        760
       ],
       "clip": [
         0,
         0,
-        1280,
-        800
+        1100,
+        760
       ],
-      "dsf": 1.5
+      "dsf": 2
     },
     {
       "id": "ex-ada-okafor-maths-phone",
@@ -346,16 +346,16 @@
       "id": "ex-ada-okafor-maths-desk",
       "url": "/appearance/frame?scenario=tutor",
       "viewport": [
-        1280,
-        800
+        1100,
+        760
       ],
       "clip": [
         0,
         0,
-        1280,
-        800
+        1100,
+        760
       ],
-      "dsf": 1.5
+      "dsf": 2
     },
     {
       "id": "ex-forge-strength-phone",
@@ -375,16 +375,16 @@
       "id": "ex-forge-strength-desk",
       "url": "/appearance/frame?scenario=gym",
       "viewport": [
-        1280,
-        800
+        1100,
+        760
       ],
       "clip": [
         0,
         0,
-        1280,
-        800
+        1100,
+        760
       ],
-      "dsf": 1.5
+      "dsf": 2
     },
     {
       "id": "ex-northgate-heating-phone",
@@ -404,16 +404,16 @@
       "id": "ex-northgate-heating-desk",
       "url": "/appearance/frame?scenario=trades",
       "viewport": [
-        1280,
-        800
+        1100,
+        760
       ],
       "clip": [
         0,
         0,
-        1280,
-        800
+        1100,
+        760
       ],
-      "dsf": 1.5
+      "dsf": 2
     },
     {
       "id": "ex-aldous-motor-co-phone",
@@ -433,16 +433,16 @@
       "id": "ex-aldous-motor-co-desk",
       "url": "/appearance/frame?scenario=dealer",
       "viewport": [
-        1280,
-        800
+        1100,
+        760
       ],
       "clip": [
         0,
         0,
-        1280,
-        800
+        1100,
+        760
       ],
-      "dsf": 1.5
+      "dsf": 2
     }
   ]
 }

@@ -28,14 +28,13 @@ export function SiteFooter() {
         </div>
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4">
           <FooterColumn title="Product" links={[...PRODUCT_LINKS.map((l) => ({ href: l.href, label: l.label })), { href: "/product", label: "Everything Taplo does" }]} />
-          <FooterColumn title="Inspiration" links={[...INDUSTRY_FILTERS.map((i) => ({ href: `/inspiration?industry=${i.id}`, label: i.label })), { href: "/inspiration", label: "All examples" }]} />
+          <FooterColumn title="Designs" links={[{ href: "/inspiration", label: "All designs" }, { href: "/appearance", label: "Try the looks" }]} />
           <FooterColumn title="Taplo" links={[{ href: "/how-it-works", label: "How setup works" }, { href: "/pricing", label: "Pricing" }, { href: "/appearance", label: "Try the looks" }, { href: "/dashboard", label: "Log in" }]} />
           <FooterColumn title="Legal" links={[{ href: "/legal/privacy", label: "Privacy notice" }, { href: "/legal/terms", label: "Terms of service" }]} note="The approved legal text and company details will be published here before launch." />
         </div>
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-6 text-xs text-white/50">
-          <p>{a.demo ? "Taplo is in preview. Pages you make here stay in your browser and are not public." : "Taplo is in preview."}</p>
           <p>Example businesses on this site are fictional.</p>
         </div>
       </div>

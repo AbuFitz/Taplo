@@ -1,3 +1,4 @@
+import { WHEN_UNAVAILABLE } from "@/lib/capabilities"
 import Link from "next/link"
 import type { Metadata } from "next"
 import { STEPS } from "@/features/marketing/content"
@@ -8,7 +9,7 @@ export const dynamic = "force-dynamic"
 
 const FAQ = [
   { q: "Do I need a website or a domain?", a: "No. Taplo gives you one page and one link. You can add your own domain on plans that include it." },
-  { q: "What happens to my information in the preview?", a: "It stays in your browser. Nothing is sent to a server or made public until accounts and publishing are connected." },
+  { q: "Where is my page kept?", a: `${WHEN_UNAVAILABLE.accounts} ${WHEN_UNAVAILABLE.publicPublishing}` },
   { q: "Can customers pay me through Taplo?", a: "Not yet. Customers can send an enquiry or a booking request. Product purchases happen on your own shop link." },
   { q: "Can I change my look later?", a: "Any time. Every colour, font and layout choice is a control, and your content never moves when you change style." },
 ]
@@ -19,7 +20,6 @@ export default function HowItWorks() {
     <div className="bg-background">
       <SiteHeader />
       <main className="mx-auto w-full max-w-5xl px-5 py-20 sm:py-28">
-        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-signal-ink">How it works</p>
         <h1 className="font-display font-display-tight mt-4 text-[clamp(2.75rem,8vw,6rem)] text-balance">Four steps to a page you can share.</h1>
         <ol className="mt-14 grid grid-cols-[minmax(0,1fr)] gap-px overflow-hidden rounded-3xl bg-foreground/10 sm:grid-cols-2">
           {STEPS.map((s) => <li key={s.n} className="bg-background p-8"><span className="font-display text-5xl tabular-nums text-foreground/20">{s.n}</span><h2 className="mt-5 text-xl font-semibold tracking-[-0.025em]">{s.title}</h2><p className="mt-2 leading-relaxed text-foreground/70">{s.body}</p></li>)}

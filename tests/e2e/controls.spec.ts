@@ -29,7 +29,7 @@ const hex = (label: string, value: string) => async (page: Page) => {
 }
 const slider = (label: string, value: number) => async (page: Page) => { await page.getByRole("slider", { name: label }).fill(String(value)) }
 
-interface Control { id: string; part: "page" | "header"; open?: string; also?: (page: Page) => Promise<void>; run: (page: Page) => Promise<void>; probe: Probe; expect?: string }
+interface Control { id: string; part: "page" | "header"; open?: string; /** A nested "more options" disclosure to open as well. */ more?: string; also?: (page: Page) => Promise<void>; run: (page: Page) => Promise<void>; probe: Probe; expect?: string }
 
 const C: Control[] = [
   // Look and palette
@@ -46,9 +46,9 @@ const C: Control[] = [
   // Type
   { id: "type-pair", part: "page", open: "Type", run: radio("Font pair", "warm"), probe: cv("--tp-font-heading") },
   { id: "type-size", part: "page", open: "Type", run: radio("Text size", "lg"), probe: cv("--tp-scale"), expect: "1.1" },
-  { id: "type-case", part: "page", open: "Type", run: radio("Heading case", "upper"), probe: cv("--tp-heading-case"), expect: "uppercase" },
-  { id: "type-weight", part: "page", open: "Type", run: radio("Heading weight", "regular"), probe: cv("--tp-heading-weight"), expect: "500" },
-  { id: "type-align", part: "page", open: "Type", run: radio("Text alignment", "center"), probe: cv("--tp-text-align"), expect: "center" },
+  { id: "type-case", part: "page", open: "Type", more: "More type options", run: radio("Heading case", "upper"), probe: cv("--tp-heading-case"), expect: "uppercase" },
+  { id: "type-weight", part: "page", open: "Type", more: "More type options", run: radio("Heading weight", "regular"), probe: cv("--tp-heading-weight"), expect: "500" },
+  { id: "type-align", part: "page", open: "Type", more: "More type options", run: radio("Text alignment", "center"), probe: cv("--tp-text-align"), expect: "center" },
   // Wallpaper
   { id: "wallpaper-gradient", part: "page", open: "Wallpaper", run: radio("Wallpaper", "gradient"), probe: at("data-bg"), expect: "gradient" },
   { id: "wallpaper-shader", part: "page", open: "Wallpaper", run: radio("Wallpaper", "aurora"), probe: at("data-bg"), expect: "shader" },
@@ -71,9 +71,9 @@ const C: Control[] = [
   // Cards
   { id: "card-surface", part: "page", open: "Cards", run: radio("Card surface", "glass"), probe: at("data-card-surface"), expect: "glass" },
   { id: "card-corners", part: "page", open: "Cards", run: radio("Corners", "none"), probe: cv("--tp-card-radius"), expect: "0px" },
-  { id: "card-border", part: "page", open: "Cards", run: radio("Border", "thick"), probe: cv("--tp-card-border-w"), expect: "2.5px" },
-  { id: "card-shadow", part: "page", open: "Cards", run: radio("Card shadow", "hard"), probe: cv("--tp-card-shadow") },
-  { id: "card-padding", part: "page", open: "Cards", run: radio("Spacing inside", "roomy"), probe: cv("--tp-card-pad"), expect: "1.5rem" },
+  { id: "card-border", part: "page", open: "Cards", more: "More card options", run: radio("Border", "thick"), probe: cv("--tp-card-border-w"), expect: "2.5px" },
+  { id: "card-shadow", part: "page", open: "Cards", more: "More card options", run: radio("Card shadow", "hard"), probe: cv("--tp-card-shadow") },
+  { id: "card-padding", part: "page", open: "Cards", more: "More card options", run: radio("Spacing inside", "roomy"), probe: cv("--tp-card-pad"), expect: "1.5rem" },
   // Layout and motion
   { id: "layout-width", part: "page", open: "Layout and motion", run: radio("Content width", "wide"), probe: cv("--tp-width"), expect: "44rem" },
   { id: "layout-desktop", part: "page", open: "Layout and motion", run: radio("On a computer", "split"), probe: at("data-desktop"), expect: "split" },
@@ -84,6 +84,7 @@ const C: Control[] = [
 async function go(page: Page, c: Control) {
   await selectPart(page, c.part)
   if (c.open) await disclosure(page, c.open)
+  if (c.more) await disclosure(page, c.more)
   if (c.also) await c.also(page)
 }
 

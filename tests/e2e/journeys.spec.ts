@@ -68,7 +68,7 @@ test.describe("onboarding", () => {
     await expect(page.getByRole("heading", { name: "Preview, publish and share" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Publish my page" })).toBeEnabled();
     await page.getByRole("button", { name: "Publish my page" }).click();
-    await expect(page.getByRole("status")).toContainText("Published (demo) — version 1");
+    await expect(page.getByRole("status")).toContainText("Saved as your page — version 1");
 
     await page.goto("/demo/p/paws-and-polish");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Paws & Polish");
