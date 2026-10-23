@@ -18,6 +18,7 @@ import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures"
 import { OTHER_INDUSTRY_ID, getIndustryPreset, searchIndustries } from "@/features/themes/presets/industries"
 import { cn } from "@/lib/utils"
 import { applyIndustry, blankService, canPublish, hasContactChannel, loadSample, newId, normService, publish, readiness, setName, setSlug, slugProblems } from "./actions"
+import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans"
 import { ONBOARDING_STEPS, initialState, parseContent, useDemo, type OnboardingStep } from "./store"
 import { ServiceForm, serviceErrors } from "./ServiceForm"
 import { DemoNotice, EmailField, PhoneField, PreviewFrame } from "./ui"
@@ -58,6 +59,17 @@ export function Onboarding() {
   const next = () => go(ONBOARDING_STEPS[Math.min(stepIndex + 1, ONBOARDING_STEPS.length - 1)]!)
   const back = () => go(ONBOARDING_STEPS[Math.max(stepIndex - 1, 0)]!)
 
+  // A plan chosen on the pricing page carries into setup (and stays through every step) without taking payment.
+  const [intent, setIntent] = React.useState<PlanId | null>(null)
+  React.useEffect(() => {
+    if (!ready) return
+    const p = new URLSearchParams(window.location.search).get("plan")
+    if (p && (PLAN_IDS as readonly string[]).includes(p)) {
+      setIntent(p as PlanId)
+      update((x) => (x.plan === p ? x : { ...x, plan: p as PlanId }))
+    }
+  }, [ready]) // eslint-disable-line react-hooks/exhaustive-deps
+
   if (!ready) return <main className="p-8 text-sm text-muted-foreground">Loading…</main>
 
   const c = s.content
@@ -80,6 +92,7 @@ export function Onboarding() {
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:py-10">
       <DemoNotice className="mb-6" />
+      {intent ? <p className="mb-4 rounded-xl bg-black/[0.04] px-4 py-2.5 text-sm" data-testid="plan-intent">You are setting up on the <strong>{PLANS[intent].name}</strong> plan. In preview mode nothing is charged, and you can switch plans in Settings.</p> : null}
       <header className="mb-8 flex flex-wrap items-center justify-between gap-3">
         <Link href="/" aria-label="Taplo home" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo /></Link>
         <Link href="/dashboard/page" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip to the page editor</Link>
