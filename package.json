@@ -51,6 +51,10 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
+    "@fontsource/bricolage-grotesque": "^5.3.0",
+    "@fontsource/fraunces": "^5.3.0",
+    "@fontsource/lexend": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0",
     "@playwright/test": "^1.64.1",
     "@tailwindcss/turbopack": "^4",
     "@types/culori": "^4.0.1",
@@ -61,6 +65,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
     "jsqr": "1.4.0",
+    "opentype.js": "^2.0.0",
     "pg": "^8.23.1",
     "prettier": "^3.9.10",
     "tailwindcss": "^4",

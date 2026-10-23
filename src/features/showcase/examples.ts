@@ -1,12 +1,11 @@
 import type { BusinessContentInput } from "@/features/businesses/content"
-import { art, hours, newWidget, person, svc } from "./helpers"
+import { hours, newWidget, person, svc } from "./helpers"
 
 /**
- * Four more fictional businesses for the inspiration gallery. They are not photographic on purpose: the sample
- * artwork is original (scripts/marketing/illustrations.mjs), so no real person or place is implied. Names,
+ * Four more fictional businesses for the inspiration gallery. They carry no photographs or illustrated people on purpose: the only artwork is each business's flat logo (scripts/marketing/logos.mjs), so no real person or place is implied. Names,
  * numbers and reviews are invented. Each uses a different starting look and a different mix of content.
  */
-const logo = (name: string, alt: string) => ({ src: `/showcase/art/${name}.svg`, alt, width: 256, height: 256 })
+const logo = (name: string, alt: string) => ({ src: `/showcase/${name}.svg`, alt, width: 256, height: 256 })
 const review = (id: string, quote: string, author: string) => ({ id, quote, author, source: "owner_supplied" as const, permissionConfirmed: true })
 
 export const PHYSIO: BusinessContentInput = {
@@ -31,9 +30,9 @@ export const PHYSIO: BusinessContentInput = {
     { ...svc("h5", "Other", "Insurer or employer enquiry", 0, 15, "Ask us how a claim or referral works.", 5, "contact"), priceMode: "free" as const, priceMinor: undefined },
   ],
   staff: [
-    person("amara", "Amara Singh", "Lead physiotherapist", "Amara leads the clinic and sees most back and neck problems. She writes your plan in plain language and expects you to question it.", "priya", ["h1", "h2", "h4"], ["Back and neck", "Rehabilitation"], ["MSc Physiotherapy (fictional)", "Chartered physiotherapist (fictional)"]),
-    person("callum", "Callum Reid", "Sports physiotherapist", "Callum works with runners, climbers and rugby players, and is the person to see when you need to be back by a date.", "sam", ["h1", "h2", "h3"], ["Running injuries", "Return to sport"], ["Chartered physiotherapist (fictional)"]),
-    person("dani", "Dani Okoro", "Physiotherapist", "Dani looks after post-operative rehabilitation and hip and knee problems, with long, unhurried appointments.", "dan", ["h1", "h2", "h4"], ["Post-operative", "Hips and knees"]),
+    person("amara", "Amara Singh", "Lead physiotherapist", "Amara leads the clinic and sees most back and neck problems. She writes your plan in plain language and expects you to question it.", ["h1", "h2", "h4"], ["Back and neck", "Rehabilitation"], ["MSc Physiotherapy (fictional)", "Chartered physiotherapist (fictional)"]),
+    person("callum", "Callum Reid", "Sports physiotherapist", "Callum works with runners, climbers and rugby players, and is the person to see when you need to be back by a date.", ["h1", "h2", "h3"], ["Running injuries", "Return to sport"], ["Chartered physiotherapist (fictional)"]),
+    person("dani", "Dani Okoro", "Physiotherapist", "Dani looks after post-operative rehabilitation and hip and knee problems, with long, unhurried appointments.", ["h1", "h2", "h4"], ["Post-operative", "Hips and knees"]),
   ],
   gallery: [],
   testimonials: [
@@ -58,7 +57,6 @@ export const CAFE: BusinessContentInput = {
     slug: "pims-kitchen",
     tagline: "Breakfast, brunch and very good coffee on Chapel Street.",
     logo: logo("pim-mark", "Pim's Kitchen mark"),
-    heroImage: art("pim-hero", "An illustrated café front with awning and two plates", 1200, 800, { x: 50, y: 50 }),
     industryKey: "cafe",
     industryLabel: "Café",
   },
@@ -80,11 +78,7 @@ export const CAFE: BusinessContentInput = {
     { ...svc("c5", "Groups", "Table for four to eight", 0, 90, "Reserve a table for a group. We confirm by message.", 5, "request"), priceMode: "free" as const, priceMinor: undefined },
   ],
   staff: [],
-  gallery: [
-    { id: "g1", image: art("pim-shakshuka", "Illustrated baked eggs in tomato sauce", 800, 1000), caption: "Shakshuka" },
-    { id: "g2", image: art("pim-flatwhite", "Illustrated flat white from above", 800, 1000), caption: "Flat white" },
-    { id: "g3", image: art("pim-cinnamon", "Illustrated cinnamon bun from above", 800, 1000), caption: "Cinnamon bun" },
-  ],
+  gallery: [],
   testimonials: [review("t1", "The shakshuka alone is worth the walk.", "Imogen P.")],
   reviewLinks: [],
   faqs: [
@@ -138,7 +132,6 @@ export const GYM: BusinessContentInput = {
     slug: "forge-strength",
     tagline: "Small-group strength classes. Coached every rep.",
     logo: logo("forge-mark", "Forge Strength mark"),
-    heroImage: art("forge-hero", "An illustrated barbell in orange on charcoal", 1200, 800, { x: 50, y: 50 }),
     industryKey: "gym",
     industryLabel: "Fitness studio",
   },
@@ -155,12 +148,12 @@ export const GYM: BusinessContentInput = {
     { ...svc("g5", "Memberships", "Monthly membership", 6500, 30, "Unlimited classes. Cancel with 30 days' notice.", 5, "contact"), priceMode: "fixed" as const },
   ],
   staff: [
-    person("jay", "Jay Brannigan", "Head coach", "Jay founded Forge after ten years coaching powerlifters. He runs the early classes and the beginners block.", "jonah", null, ["Powerlifting", "Beginners"], ["Strength coach (fictional)"]),
-    person("sol", "Sol Martins", "Coach", "Sol coaches the evening classes and one-to-ones, with a focus on mobility and getting stronger without getting hurt.", "mira", ["g1", "g2", "g3", "g4"], ["Mobility", "Strength"]),
-    person("noa", "Noa Fenwick", "Coach", "Noa leads the Saturday classes and teaches the beginners foundations.", "reece", ["g1", "g2", "g3"], ["Olympic lifting"]),
-    person("kit", "Kit Osei", "Coach", "Kit programmes the one-to-one clients and runs recovery sessions.", "kofi", ["g4"], ["Programming"]),
+    person("jay", "Jay Brannigan", "Head coach", "Jay founded Forge after ten years coaching powerlifters. He runs the early classes and the beginners block.", null, ["Powerlifting", "Beginners"], ["Strength coach (fictional)"]),
+    person("sol", "Sol Martins", "Coach", "Sol coaches the evening classes and one-to-ones, with a focus on mobility and getting stronger without getting hurt.", ["g1", "g2", "g3", "g4"], ["Mobility", "Strength"]),
+    person("noa", "Noa Fenwick", "Coach", "Noa leads the Saturday classes and teaches the beginners foundations.", ["g1", "g2", "g3"], ["Olympic lifting"]),
+    person("kit", "Kit Osei", "Coach", "Kit programmes the one-to-one clients and runs recovery sessions.", ["g4"], ["Programming"]),
   ],
-  gallery: [{ id: "g1", image: art("forge-class", "An illustrated coach silhouette on orange", 800, 1000), caption: "Coached every rep" }],
+  gallery: [],
   testimonials: [review("t1", "Six in a class means the coach actually sees you.", "Dev P."), review("t2", "I came to get fitter and ended up deadlifting my bodyweight.", "Sarah L.")],
   reviewLinks: [],
   faqs: [
@@ -187,7 +180,6 @@ export const EXTRA_WIDGETS = {
   cafe: () => [
     newWidget("booking", { label: "Request a group table", variant: "button" }),
     newWidget("priceMenu", { title: "The menu" }),
-    newWidget("gallery", { title: "This morning", variant: "carousel" }),
     newWidget("reviews", { title: "Regulars say", variant: "quote" }),
     newWidget("hours", { title: "Opening times", variant: "compact" }),
     newWidget("location", { title: "Find us" }),
@@ -207,7 +199,6 @@ export const EXTRA_WIDGETS = {
     newWidget("booking", { label: "Book your free intro", serviceId: "g1", variant: "button" }),
     newWidget("serviceList", { title: "Classes and coaching", variant: "cards" }),
     newWidget("team", { title: "Your coaches", variant: "swipe" }),
-    newWidget("gallery", { title: "The floor", variant: "grid" }),
     newWidget("reviews", { title: "Members", variant: "swipe" }),
     newWidget("faq", { title: "Questions" }),
     newWidget("hours", { title: "Hours", variant: "compact" }),

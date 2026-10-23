@@ -32,7 +32,7 @@ function Portrait({ m, className, ratio = "4 / 5" }: { m: TeamMemberData; classN
   return (
     <div className={cn("tp-portrait", className)} style={{ aspectRatio: ratio }}>
       {m.photo ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={m.photo.src} alt={m.photo.alt} loading="lazy" draggable={false} style={m.photo.focal ? { objectPosition: `${m.photo.focal.x}% ${m.photo.focal.y}%` } : undefined} />
-        : <span aria-hidden="true" className="tp-portrait-initials">{m.name.split(/\s+/).map((x) => x[0]).slice(0, 2).join("")}</span>}
+        : <span aria-hidden="true" className="tp-portrait-blank"><svg viewBox="0 0 100 100" focusable="false"><circle cx="50" cy="38" r="17" /><path d="M14 100c0-22 16-36 36-36s36 14 36 36z" /></svg></span>}
     </div>
   )
 }

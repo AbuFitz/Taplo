@@ -36,9 +36,9 @@ export const BARBER: BusinessContentInput = {
     svc("s6", "Together", "Cut and beard", 4800, 60, "Our most-booked pairing.", 6, "request"),
   ],
   staff: [
-    person("jonah", "Jonah Marlowe", "Head barber and co-founder", "Twelve years behind the chair. Jonah does the consultations, the razor work and the long conversations about fades.", "jonah", null, ["Fades", "Razor shaves"], ["Twelve years cutting hair"]),
-    person("reece", "Reece Finch", "Barber and co-founder", "Reece is the classic-cut specialist: scissor work, tapers and the hot-towel shave regulars drive across London for.", "reece", ["s1", "s2", "s4", "s5", "s6"], ["Scissor cuts", "Beards"], ["Ten years cutting hair"]),
-    person("mira", "Mira Okoye", "Barber", "Mira looks after our younger clients and anyone new to the shop, and is the quickest in the building with a clean skin fade.", "mira", ["s1", "s2", "s3", "s5"], ["Kids' cuts", "Skin fades"]),
+    person("jonah", "Jonah Marlowe", "Head barber and co-founder", "Twelve years behind the chair. Jonah does the consultations, the razor work and the long conversations about fades.", null, ["Fades", "Razor shaves"], ["Twelve years cutting hair"]),
+    person("reece", "Reece Finch", "Barber and co-founder", "Reece is the classic-cut specialist: scissor work, tapers and the hot-towel shave regulars drive across London for.", ["s1", "s2", "s4", "s5", "s6"], ["Scissor cuts", "Beards"], ["Ten years cutting hair"]),
+    person("mira", "Mira Okoye", "Barber", "Mira looks after our younger clients and anyone new to the shop, and is the quickest in the building with a clean skin fade.", ["s1", "s2", "s3", "s5"], ["Kids' cuts", "Skin fades"]),
   ],
   gallery: [
     { id: "g1", image: photo("barber-shop", "The shop floor: brick, brass and a single leather chair", 933, 1400, { x: 50, y: 60 }), caption: "The shop" },
@@ -116,8 +116,8 @@ export const DEALER: BusinessContentInput = {
     { id: "d3", name: "Finance conversation", description: "Plain terms, any budget, no obligation.", priceMode: "free", currency: "GBP", durationMinutes: 30, delivery: [], bookingMode: "contact", sortOrder: 3 },
   ],
   staff: [
-    person("ellis", "Ellis Aldous", "Owner and sales", "Ellis started the business after fifteen years selling cars for other people and now picks every car personally.", "dan", null, ["Used cars", "Part-exchange"]),
-    person("noor", "Noor Haddad", "Sales and aftercare", "Noor handles viewings, handovers and the after-sale questions, and knows the history of every car on the forecourt.", "priya", ["d1", "d2"], ["Viewings", "Handover"]),
+    person("ellis", "Ellis Aldous", "Owner and sales", "Ellis started the business after fifteen years selling cars for other people and now picks every car personally.", null, ["Used cars", "Part-exchange"]),
+    person("noor", "Noor Haddad", "Sales and aftercare", "Noor handles viewings, handovers and the after-sale questions, and knows the history of every car on the forecourt.", ["d1", "d2"], ["Viewings", "Handover"]),
   ],
   gallery: [],
   testimonials: [{ id: "t1", quote: "Straightforward from the first call. The car was exactly as described, and ready to drive away.", author: "Helen M.", source: "owner_supplied", permissionConfirmed: true }],
@@ -161,8 +161,8 @@ export const TRADES: BusinessContentInput = {
     { ...svc("n5", "Bathrooms", "Bathroom design visit", 0, 45, "Free survey and written quote.", 5, "request"), priceMode: "free" as const, priceMinor: undefined },
   ],
   staff: [
-    person("tomas", "Tomas Nowak", "Gas engineer", "Tomas does most of the boiler repairs and annual services, and is the person who usually answers the emergency line.", "tomas", ["n1", "n2", "n3", "n4"], ["Boilers", "Heating"], ["Gas Safe registered (fictional example)"]),
-    person("kofi", "Kofi Mensah", "Plumber and bathroom fitter", "Kofi covers leaks, bathrooms and anything involving pipes, and is the one to ask about a bathroom quote.", "kofi", ["n3", "n4", "n5"], ["Leaks", "Bathrooms"]),
+    person("tomas", "Tomas Nowak", "Gas engineer", "Tomas does most of the boiler repairs and annual services, and is the person who usually answers the emergency line.", ["n1", "n2", "n3", "n4"], ["Boilers", "Heating"], ["Gas Safe registered (fictional example)"]),
+    person("kofi", "Kofi Mensah", "Plumber and bathroom fitter", "Kofi covers leaks, bathrooms and anything involving pipes, and is the one to ask about a bathroom quote.", ["n3", "n4", "n5"], ["Leaks", "Bathrooms"]),
   ],
   gallery: [],
   testimonials: [

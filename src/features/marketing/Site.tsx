@@ -1,72 +1,56 @@
 import Link from "next/link"
 import { TaploLogo } from "@/components/taplo/brand"
-import { Button } from "@/components/ui/button"
 import { demoModeEnabled } from "@/lib/env"
-import { FEATURES, INDUSTRIES } from "./content"
+import { INDUSTRY_FILTERS, PRODUCT_LINKS } from "./ia"
+import { SiteNav } from "./SiteNav"
 
-const NAV = [
-  { href: "/features/make-it-yours", label: "Features", match: "/features" },
-  { href: "/for/barbers-and-salons", label: "Industries", match: "/for" },
-  { href: "/pricing", label: "Pricing", match: "/pricing" },
-  { href: "/appearance", label: "Try the looks", match: "/appearance" },
-]
-
-/** Header for every Taplo marketing page. Server component: navigation works without JavaScript. */
-export function SiteHeader({ active }: { active?: string }) {
+/** Primary action label and destination, shared by the header, hero and footer so they never disagree. */
+export function primaryAction() {
   const demo = demoModeEnabled()
-  return (
-    <header className="sticky top-0 z-40 border-b border-foreground/10 bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-6 px-5">
-        <Link href="/" aria-label="Taplo home" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo /></Link>
-        <nav aria-label="Primary" className="ml-2 hidden items-center gap-1 md:flex">
-          {NAV.map((n) => (
-            <Link key={n.href} href={n.href} aria-current={active === n.match ? "page" : undefined} className="rounded-lg px-3 py-2 text-sm font-medium text-foreground/70 outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/60 aria-[current=page]:text-foreground">{n.label}</Link>
-          ))}
-        </nav>
-        <div className="ml-auto flex items-center gap-2">
-          {demo ? <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex"><Link href="/dashboard">Dashboard</Link></Button> : null}
-          <Button asChild size="sm"><Link href={demo ? "/onboarding" : "/pricing"}>Create your page</Link></Button>
-          <details className="group relative md:hidden">
-            <summary aria-label="Menu" className="grid size-11 cursor-pointer list-none place-items-center rounded-lg outline-none hover:bg-foreground/5 focus-visible:ring-3 focus-visible:ring-ring/60 [&::-webkit-details-marker]:hidden">
-              <span className="grid gap-[5px]" aria-hidden="true"><i className="block h-0.5 w-5 bg-foreground transition-transform group-open:translate-y-[7px] group-open:rotate-45" /><i className="block h-0.5 w-5 bg-foreground transition-opacity group-open:opacity-0" /><i className="block h-0.5 w-5 bg-foreground transition-transform group-open:-translate-y-[7px] group-open:-rotate-45" /></span>
-            </summary>
-            <nav aria-label="Menu" className="absolute right-0 top-12 z-50 grid w-64 gap-1 rounded-2xl border border-foreground/10 bg-background p-2 shadow-xl">
-              {NAV.map((n) => <Link key={n.href} href={n.href} className="flex min-h-12 items-center rounded-xl px-3 text-base font-medium hover:bg-foreground/5">{n.label}</Link>)}
-              {demo ? <Link href="/dashboard" className="flex min-h-12 items-center rounded-xl px-3 text-base font-medium hover:bg-foreground/5">Dashboard</Link> : null}
-            </nav>
-          </details>
-        </div>
-      </div>
-    </header>
-  )
+  return { label: "Make your Taplo", href: demo ? "/onboarding" : "/pricing", demo }
+}
+
+/** Header for every Taplo marketing page. `active` is accepted for older callers; the nav reads the path itself. */
+export function SiteHeader(_props: { active?: string } = {}) {
+  const a = primaryAction()
+  return <SiteNav cta={a.label} ctaHref={a.href} loginHref="/dashboard" />
 }
 
 export function SiteFooter() {
+  const a = primaryAction()
   return (
-    <footer className="bg-[oklch(0.17_0.01_70)] text-white/80">
-      <div className="mx-auto grid w-full max-w-7xl gap-12 px-5 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <footer className="mt-24 bg-[oklch(0.17_0.01_70)] text-white/80">
+      <div className="mx-auto grid w-full max-w-7xl gap-14 px-5 pb-12 pt-16 lg:grid-cols-[1.3fr_2.2fr]">
         <div>
-          <TaploLogo tone="light" />
-          <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">One page for everything your business does. Services, products, stock, reviews and a clear way to get in touch.</p>
+          <TaploLogo tone="light" className="h-14 -ml-4" />
+          <p className="mt-5 max-w-xs text-[1.0625rem] leading-relaxed text-white/70">One page for your business. What you do, what it costs, and a clear way to book or ask.</p>
+          <Link href={a.href} className="mt-6 inline-flex min-h-11 items-center rounded-full bg-white px-5 text-sm font-semibold text-black outline-none hover:bg-white/90 focus-visible:ring-3 focus-visible:ring-white/50">{a.label}</Link>
         </div>
-        <FooterColumn title="Features" links={FEATURES.map((f) => ({ href: `/features/${f.slug}`, label: f.nav }))} />
-        <FooterColumn title="Industries" links={INDUSTRIES.map((i) => ({ href: `/for/${i.slug}`, label: i.nav }))} />
-        <FooterColumn title="Taplo" links={[{ href: "/how-it-works", label: "How it works" }, { href: "/pricing", label: "Pricing" }, { href: "/appearance", label: "Try the looks" }, { href: "/legal/privacy", label: "Privacy" }, { href: "/legal/terms", label: "Terms" }]} />
+        <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4">
+          <FooterColumn title="Product" links={[...PRODUCT_LINKS.map((l) => ({ href: l.href, label: l.label })), { href: "/product", label: "Everything Taplo does" }]} />
+          <FooterColumn title="Inspiration" links={[...INDUSTRY_FILTERS.map((i) => ({ href: `/inspiration?industry=${i.id}`, label: i.label })), { href: "/inspiration", label: "All examples" }]} />
+          <FooterColumn title="Taplo" links={[{ href: "/how-it-works", label: "How setup works" }, { href: "/pricing", label: "Pricing" }, { href: "/appearance", label: "Try the looks" }, { href: "/dashboard", label: "Log in" }]} />
+          <FooterColumn title="Legal" links={[{ href: "/legal/privacy", label: "Privacy notice" }, { href: "/legal/terms", label: "Terms of service" }]} note="The approved legal text and company details will be published here before launch." />
+        </div>
       </div>
       <div className="border-t border-white/10">
-        <p className="mx-auto w-full max-w-7xl px-5 py-6 text-xs text-white/50">Taplo is in preview. Pages you build here are stored in your browser and are not public. Booking, payments and accounts are not connected yet.</p>
+        <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-6 text-xs text-white/50">
+          <p>{a.demo ? "Taplo is in preview. Pages you make here stay in your browser and are not public." : "Taplo is in preview."}</p>
+          <p>Example businesses on this site are fictional.</p>
+        </div>
       </div>
     </footer>
   )
 }
 
-function FooterColumn({ title, links }: { title: string; links: { href: string; label: string }[] }) {
+function FooterColumn({ title, links, note }: { title: string; links: { href: string; label: string }[]; note?: string }) {
   return (
     <nav aria-label={title}>
       <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-white/45">{title}</h2>
-      <ul className="mt-4 grid gap-1">
+      <ul className="mt-4 grid gap-0.5">
         {links.map((l) => <li key={l.href}><Link href={l.href} className="inline-flex min-h-9 items-center rounded text-sm text-white/80 outline-none hover:text-white focus-visible:ring-3 focus-visible:ring-white/50">{l.label}</Link></li>)}
       </ul>
+      {note ? <p className="mt-3 max-w-[14rem] text-xs leading-relaxed text-white/45">{note}</p> : null}
     </nav>
   )
 }
