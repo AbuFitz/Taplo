@@ -14,6 +14,8 @@ async function scan(page: Page, context: string, include?: string) {
 }
 
 test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", () => {
+  // Inspect the settled interface, rather than a partially transparent entrance frame.
+  test.use({ reducedMotion: "reduce" });
   for (const t of THEMES) {
     test(`public profile: every widget type in the ${t.id} theme`, async ({ page }) => {
       await page.emulateMedia({ reducedMotion: "reduce" });
@@ -67,6 +69,7 @@ test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", ()
     await scan(page, "onboarding/industry");
     await openEditorWithSample(page, "Mechanic");
     await page.getByTestId("add-widget").click();
+    await expect(page.getByTestId("add-content")).toHaveCSS("animation-name", "none");
     await scan(page, "add-widget dialog", '[role="dialog"]');
   });
 });

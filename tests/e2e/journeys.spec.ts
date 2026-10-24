@@ -290,8 +290,9 @@ test("uploading a logo in the editor flows to the published page with the owner'
   await openEditorWithSample(page, "Consultant");
   await selectPart(page, "header");
   await openSection(page, "Header");
-  // With "no picture" chosen the editor says so; choosing a shape reveals the uploaded logo
-  await page.getByRole("radio", { name: "No picture" }).locator("xpath=ancestor::label").click();
+  // Name only hides the picture; choosing a shape later reveals the uploaded logo.
+  await page.getByRole("radio", { name: "Name only", exact: true }).locator("xpath=ancestor::label").click();
+  await openSection(page, "Logo and cover");
   await page.getByLabel("Logo or profile picture: upload a picture").setInputFiles(pngFile());
   await page.getByTestId("crop-apply").click();
   await expect(page.getByText("this look shows no picture")).toBeVisible();

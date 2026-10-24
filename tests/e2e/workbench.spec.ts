@@ -2,6 +2,7 @@ import AxeBuilder from "@axe-core/playwright"
 import { expect, test, type Page } from "@playwright/test"
 import { mkdirSync } from "node:fs"
 import { STORIES, type Step, type Story } from "../../src/features/workbench/stories"
+import { SCENARIOS } from "../../src/features/showcase/content"
 
 /**
  * Walks every workbench story: opens it at its real width, plays its interaction, checks it fits the screen,
@@ -31,6 +32,14 @@ for (const story of STORIES) {
     await page.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {})
     await expect(page.locator(`[data-story="${story.id}"]`).locator(story.header ? "h1" : "[data-widget]").first()).toBeVisible()
     if (story.play) await play(page, story.play)
+    if (story.widgets.some(w => w.type === "team" && w.settings?.variant === "avatars")) {
+      const name = SCENARIOS[story.scenario].content.staff?.[0]?.name
+      const avatar = page.locator(".tp-team-avatars button").first()
+      await expect(avatar).toHaveAccessibleName(`${name}. View profile`)
+      await avatar.click()
+      await expect(page.getByTestId("team-profile")).toContainText(name!)
+      await page.getByRole("button", { name: "Close", exact: true }).click()
+    }
 
     // 1. Fits the screen (an open dialog scrolls inside itself, never the page sideways).
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), "no sideways scroll").toBe(true)

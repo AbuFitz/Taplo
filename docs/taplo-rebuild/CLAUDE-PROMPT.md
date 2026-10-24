@@ -8,6 +8,8 @@ Continue Taplo from the latest actual repository state. The owner wants a substa
 
 ## Current delivery notes — read these before the historical audits
 
+Read CURRENT-ACCEPTANCE.csv for the current evidence and next action against all 38 original requirements. ACCEPTANCE.csv and the older engine/widget audits remain historical baselines. Read BROAD-BROWSER-AUDIT.md for the 418-case audit and focused corrections; do not claim a clean all-browser or manual accessibility audit from it.
+
 This branch has moved substantially beyond the research baseline. Read these implementation notes and inspect their current code/screens before choosing work:
 
 - CONNECTED-EDITING-AND-UK-DESIGNS.md and DESIGN-EXPLORER.md: connected editor previews, UK barber/detailing designs and working visual gallery.

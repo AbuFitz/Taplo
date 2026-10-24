@@ -1,0 +1,39 @@
+id,area,current_status,current_evidence,next_action
+R01,Version reconciliation,verified,d489ccf and cd93a2d independently READY; same Claude branch; exact aliases recorded,Verify each subsequent deployed SHA
+R02,Mobile-led gallery,targeted evidence,Phone-led gallery and collapsed filters; eight primary entries; six current UK examples,Keep gallery checks with catalogue changes
+R03,Design detail,targeted evidence,Persistent phone/desktop preview; real start-design links; production UK routes pass,Retest retained older example routes when changed
+R04,Distinct catalogue,partial,Six newly authored UK examples; older physio/gym remain in primary catalogue,Bring the remaining older primary examples to the current visual/content standard
+R05,Cross-industry looks,targeted evidence,Full browser audit exercises multiple businesses through all sixteen looks,Review new pairings visually rather than relying only on overflow checks
+R06,Theme preservation,targeted evidence,"Record/widget preservation, overrides and undo checks; safe sample reference stripping",Complete explicit migration and stale-reference edge ledger
+R07,Catalogue consistency,targeted evidence,Sixteen looks; eight gallery entries; derived count copy and retained old routes tested,Keep single-source counts and thumbnail provenance current
+R08,Header quality,partial,Wide feature at390/768/1440; workbench photo/no-image/wide-logo/long-name cases,Review wide-logo picker choices and extreme text zoom
+R09,Services,partial,Exact/from/free/quote wording and real booking/enquiry paths; featured/list exclusion,Remove repeated price/time between service modal header and detail body; refresh affected media
+R10,Booking modes,targeted evidence,Instant confirmed; request pending; contact enquiry; unavailable paths exercised,Preserve those outcomes when connecting backend later
+R11,Booking context,targeted evidence,"Provider eligibility, direct service context and solo Back fixes have browser regressions",Extend explicit retry/interruption evidence before declaring every state complete
+R12,Team,partial,Current portraits and provider/service linkage; full-name avatar/profile/axe checks pass on light/dark,Keep long/empty/mixed-photo team states under review
+R13,Products,targeted evidence,Product detail and stock status checks in full audit; original current paste/vehicle images,Review affiliate/disclosure and mixed media states as catalogue expands
+R14,Vehicles,targeted evidence,Large stock cards; available/reserved/sold; enquiry retains vehicle item ID and topic,Add full stock-enquiry walkthrough
+R15,Media,targeted evidence,Gallery/lightbox and keyboard interactions exercised in full browser audit,Review failed/slow media and supported video fallback states
+R16,Reviews,partial,New UK examples contain no invented reviews or credentials; permission filtering retained,Audit all older review displays and zero-record cases
+R17,Contact,targeted evidence,Service/vehicle/general enquiry paths store context and state browser-only delivery,Complete explicit error/retry evidence; real delivery belongs to backend project
+R18,Hours location,partial,Timezone and booking availability tests pass; current cafe hours and service areas authored,Add explicit overnight/DST/exception rendered review ledger
+R19,All widgets,partial,Thirty registry types; existing workbench and full audit exercised,Nine missing explicit type declarations still need real states: see historical WIDGET-COVERAGE.csv
+R20,Overlays,targeted evidence,Focus trap/Escape/focus-return/phone overlay checks in full audit,Add physical mobile keyboard evidence when a device is available
+R21,Owner editing,targeted evidence,Actual-content choices; connected header/social/booking editing; atomic record+section undo,Complete broad owner task audit rather than only isolated controls
+R22,Touch reorder,targeted evidence,"Touch handle, mouse drag, keyboard movement and cancel checks pass in full audit",Keep non-drag alternatives
+R23,Save recovery,partial,"Undo/redo/reload, published/draft separation, saved copy semantics and bounded limits checked",Inject storage/quota failure and recovery; review saved/published wording
+R24,Setup,targeted evidence,Five-stage fresh/resumed/back setup tests and complete real setup recording,Review empty/invalid image and interrupted setup details
+R25,Customer desktop,targeted evidence,New UK phone/desktop compositions reviewed; full render matrix exercises responsive layouts,Finish saved composition migration/parity ledger
+R26,Homepage,implemented and reviewed,"Rebuilt authored homepage with current real UI, UK artwork, voluntary film and booking story",Keep actual UI captures aligned with future engine edits
+R27,Navigation footer,targeted evidence,Navigation hover/keyboard/Escape/mobile and useful footer checks in full audit,Preserve focus/sticky behaviour during further layout changes
+R28,Feature pages,targeted evidence,Product index and ten illustrated feature pages tested at390/1440,Refresh relevant state images whenever product UI changes
+R29,Marketing truth,partial,Pricing/plan gates preserved; preview outcomes and connected-service limits stated,Review owner publish/live labels; retain intended live product presentation
+R30,Films,partial,16:9/9:16/1:1/4:5 films; editable source; full setup and booking tutorials,Full design-editing and stock-enquiry tutorials remain open
+R31,Images,targeted evidence,Seventeen imported original assets validated; metadata/provenance and real-renderer captures,Review older retained assets and keep alternate crops meaningful
+R32,Share,partial,Branded share/QR export pipeline and existing tests retained,Recheck all downloaded format parity and unpublished/share error states
+R33,QR,partial,Existing independent QR decode/export checks; truthful browser-preview destination,Physical print/scan evidence is not available from Chromium tests
+R34,Accessibility,partial,412/418 broad audit; all six corrected cases and84affected+2avatar reruns pass; reduced-motion preference fixed,Complete zoom/manual screen-reader review; do not equate axe with full accessibility
+R35,Performance,open,Responsive image derivatives and lazy media implemented; no measured lab report claimed,Record representative cold mobile performance trace; field CWV needs real traffic
+R36,Browsers devices,open,Named Chromium build and full audit; no physical-device coverage claimed,Run representative WebKit/Firefox flows and state physical-device limits
+R37,Tools,targeted evidence,"Existing renderer/workbench reused; reproducible captures, films and interaction recordings; repo skills",Expand missing workbench states instead of installing redundant libraries
+R38,Completion honesty,active,This current ledger preserves every original requirement and explicit remaining action,Continue full frontend work; do not mark goal complete from a stage release

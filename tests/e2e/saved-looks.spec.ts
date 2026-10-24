@@ -59,6 +59,8 @@ for (const width of [390, 1440]) {
         shelf.getByRole("button", { name: "Apply Warm shop" }),
       ).toHaveAttribute("aria-pressed", "false");
       // The saved card stays warm while the main draft changes to Night.
+      // Shelf previews mount only while visible; the look picker scrolls the shelf away on a phone.
+      await shelf.scrollIntoViewIfNeeded();
       await expect(preview.locator("[data-taplo-page]")).toHaveAttribute(
         "data-bg",
         "gradient",

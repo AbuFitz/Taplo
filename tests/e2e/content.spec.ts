@@ -13,7 +13,7 @@ test.describe("adding content is one journey", () => {
     await expect(panel.getByText(/Suggested for/)).toBeVisible()
     await expect(panel.getByTestId("choice").first()).toBeVisible()
     // Anything is allowed for any business, including vehicles for a non-dealer.
-    await panel.getByRole("button", { name: "Vehicles", exact: true }).first().click()
+    await panel.getByRole("button", { name: /^Vehicles\b/ }).first().click()
     await expect(panel.getByTestId("record-step")).toBeVisible()
     // Validation first; the page is untouched until there is something to show.
     const before = (await records(page)).page.widgets.length
@@ -41,7 +41,7 @@ test.describe("adding content is one journey", () => {
     await openEditorWithSample(page, "Barber")
     const before = await records(page)
     await page.getByTestId("add-widget").click()
-    await page.getByRole("button", { name: "Price menu", exact: true }).first().click()
+    await page.getByRole("button", { name: /^Price menu\b/ }).first().click()
     await expect(page.getByTestId("add-content")).toBeHidden()
     const after = await records(page)
     expect(after.page.widgets.length).toBe(before.page.widgets.length + 1)
