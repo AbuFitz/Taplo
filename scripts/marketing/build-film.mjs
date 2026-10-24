@@ -1,4 +1,4 @@
-/** Regenerate the three authored formats. Assets are captured by the real renderer, not invented UI. */
+/** Regenerate the authored formats. Assets are captured by the real renderer, not invented UI. */
 import { writeFileSync, mkdirSync, copyFileSync } from "node:fs"
 const formats = [{ file: "index.html", w: 1920, h: 1080, kind: "landscape" }, { file: "formats/portrait/index.html", w: 1080, h: 1920, kind: "portrait" }, { file: "formats/square/index.html", w: 1080, h: 1080, kind: "square" }]
 let mediaIndex = 0
@@ -27,3 +27,5 @@ for(let n=1;n<=6;n++){const at=(n-1)*3;tl.set('#s'+n,{autoAlpha:1},at);tl.fromTo
 const target = new URL(`../../marketing/film/${f.file}`,import.meta.url); mkdirSync(new URL(".", target), { recursive: true }); writeFileSync(target, html); if (f.kind !== "landscape") { for (const name of new Set([...html.matchAll(/(?:src="|url\()(assets\/[^"\)]+)/g)].map(m=>m[1]))) { const dest = new URL(name,target); mkdirSync(new URL(".",dest),{recursive:true});copyFileSync(new URL(`../../marketing/film/${name}`,import.meta.url),dest) } }
 }
 console.log("Authored landscape, portrait and square film compositions")
+
+await import("./build-feed-film.mjs")

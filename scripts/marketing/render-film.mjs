@@ -8,6 +8,8 @@ import { resolve, extname, sep } from "node:path"
 import { spawn } from "node:child_process"
 import { once } from "node:events"
 import { fileURLToPath } from "node:url"
+import { selectedFormats } from "./film-formats.mjs"
+const formats = selectedFormats()
 const projectRoot = fileURLToPath(new URL("../../", import.meta.url))
 const filmRoot = resolve(projectRoot, "marketing/film")
 const mime = { ".html": "text/html", ".js": "text/javascript", ".webp": "image/webp", ".svg": "image/svg+xml", ".woff2": "font/woff2" }
@@ -22,7 +24,8 @@ const origin = `http://127.0.0.1:${server.address().port}`
 let browser
 try {
   browser = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? process.env.HYPERFRAMES_BROWSER_PATH })
-  for (const [file, name, width, height] of [["index.html", "taplo-intro", 1920, 1080], ["formats/portrait/index.html", "taplo-portrait", 1080, 1920], ["formats/square/index.html", "taplo-square", 1080, 1080]]) {
+  for (const { source: file, name, width, height, duration } of formats) {
+    const frames = duration * 30
     const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 })
     const errors = []
     page.on("pageerror", err => errors.push(err.message))
@@ -35,16 +38,16 @@ try {
     const completion = new Promise((ok,fail) => { encoder.once("error",fail);encoder.once("close",code=>code===0?ok():fail(new Error(encodingErrors))) })
     // Attach immediately so a failed encoder never produces an unhandled rejection while frames are being captured.
     completion.catch(() => {})
-    for(let frame=0; frame<540; frame++) {
+    for(let frame=0; frame<frames; frame++) {
       await page.evaluate(t => { window.__timelines.main.seek(t, false) }, frame/30)
       const bytes = await page.screenshot({ type:"jpeg", quality:95, clip:{ x:0, y:0, width, height }, animations:"allow" })
       if (!encoder.stdin.write(bytes)) await once(encoder.stdin, "drain")
-      if(frame % 180 === 0) console.log(`${name}: ${frame}/540 frames`)
+      if(frame % 180 === 0) console.log(`${name}: ${frame}/${frames} frames`)
     }
     encoder.stdin.end()
     await completion
     await page.close()
     if(errors.length) throw new Error(errors.join("\n"))
-    console.log(`${name}: ${width}×${height}, 540 frames encoded`)
+    console.log(`${name}: ${width}×${height}, ${frames} frames encoded`)
   }
 } finally { await browser?.close();server.close() }

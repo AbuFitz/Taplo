@@ -8,6 +8,46 @@
       "height": 1080,
       "source": "index.html",
       "duration": 18,
+      "sceneStarts": [
+        0,
+        3,
+        6,
+        9,
+        12,
+        15
+      ],
+      "edgeColors": [
+        [
+          241,
+          237,
+          223
+        ],
+        [
+          232,
+          236,
+          204
+        ],
+        [
+          233,
+          227,
+          238
+        ],
+        [
+          228,
+          230,
+          216
+        ],
+        [
+          52,
+          73,
+          229
+        ],
+        [
+          20,
+          45,
+          62
+        ]
+      ],
       "fps": "30/1",
       "bytes": 5727044,
       "sha256": "44dd780096c0a73f12f5905d1880e2cb3c2c930c5b2b0ac04ca7470323485a05",
@@ -19,6 +59,46 @@
       "height": 1920,
       "source": "formats/portrait/index.html",
       "duration": 18,
+      "sceneStarts": [
+        0,
+        3,
+        6,
+        9,
+        12,
+        15
+      ],
+      "edgeColors": [
+        [
+          241,
+          237,
+          223
+        ],
+        [
+          232,
+          236,
+          204
+        ],
+        [
+          233,
+          227,
+          238
+        ],
+        [
+          228,
+          230,
+          216
+        ],
+        [
+          52,
+          73,
+          229
+        ],
+        [
+          20,
+          45,
+          62
+        ]
+      ],
       "fps": "30/1",
       "bytes": 6335289,
       "sha256": "2a935279d94ecd773bf6e62ace626b7764f520e3519c9914e6b5b778259a97dc",
@@ -30,10 +110,95 @@
       "height": 1080,
       "source": "formats/square/index.html",
       "duration": 18,
+      "sceneStarts": [
+        0,
+        3,
+        6,
+        9,
+        12,
+        15
+      ],
+      "edgeColors": [
+        [
+          241,
+          237,
+          223
+        ],
+        [
+          232,
+          236,
+          204
+        ],
+        [
+          233,
+          227,
+          238
+        ],
+        [
+          228,
+          230,
+          216
+        ],
+        [
+          52,
+          73,
+          229
+        ],
+        [
+          20,
+          45,
+          62
+        ]
+      ],
       "fps": "30/1",
       "bytes": 3906842,
       "sha256": "7418b0df46260e8a2cad574b73ea01981af0fed9e9908a489e4fb7a4e475b174",
       "sourceSha256": "b6a65f0a2f968815d01cceb6f6f5c6504919aeeafbe768c16fb3296c15e5c17a"
+    },
+    {
+      "name": "taplo-feed",
+      "width": 1080,
+      "height": 1350,
+      "source": "formats/feed/index.html",
+      "duration": 20,
+      "sceneStarts": [
+        0,
+        4,
+        8,
+        12,
+        16
+      ],
+      "edgeColors": [
+        [
+          241,
+          237,
+          223
+        ],
+        [
+          232,
+          236,
+          204
+        ],
+        [
+          233,
+          227,
+          238
+        ],
+        [
+          228,
+          230,
+          216
+        ],
+        [
+          20,
+          45,
+          62
+        ]
+      ],
+      "fps": "30/1",
+      "bytes": 4460116,
+      "sha256": "0b97c8930190ba1b08add23ce128ea4a89fa0b1265f711b326fca0c6c362980a",
+      "sourceSha256": "4dfec5b86cfd041f8b0a5608746b51ec30a184ac19d35f16de5e7e2741f778c6"
     },
     {
       "name": "booking-clip",
