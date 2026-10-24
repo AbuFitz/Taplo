@@ -2,6 +2,10 @@
 
 import * as React from "react"
 import { Play } from "lucide-react"
+import { getImageProps } from "next/image"
+
+const POSTER = getImageProps({ src: "/marketing/film/poster.webp", alt: "", width: 1920, height: 1080, sizes: "(min-width:1280px) 1100px, 90vw", loading: "lazy" }).props
+const PHONE_POSTER = getImageProps({ src: "/marketing/film/taplo-portrait-poster.webp", alt: "", width: 1080, height: 1920, sizes: "90vw", loading: "lazy" }).props
 
 /**
  * The 18-second Taplo film (source: marketing/film, rendered with HyperFrames). It never autoplays and never loads
@@ -29,8 +33,8 @@ export function Film({ className }: { className?: string }) {
             Your browser cannot play this video. The same story is written out below it.
           </video>
         ) : (
-          <button type="button" onClick={() => setStarted(true)} className="group absolute inset-0 grid place-items-center outline-none focus-visible:ring-3 focus-visible:ring-ring/60" aria-label="Play the 18-second film">
-            <picture><source media="(max-width: 639px)" srcSet="/marketing/film/taplo-portrait-poster.webp" /><img src="/marketing/film/poster.webp" alt="" width={1920} height={1080} className="absolute inset-0 size-full object-cover" /></picture>
+          <button type="button" onClick={() => setStarted(true)} className="group absolute inset-0 grid place-items-center outline-none focus-visible:ring-3 focus-visible:ring-ring/60">
+            <picture><source media="(max-width: 639px)" srcSet={PHONE_POSTER.srcSet} sizes={PHONE_POSTER.sizes} width={1080} height={1920} /><img {...POSTER} alt="" className="absolute inset-0 size-full object-cover" /></picture>
             <span className="absolute bottom-4 left-4 inline-flex items-center gap-2.5 rounded-full bg-white/95 py-2 pl-2 pr-4 text-sm font-semibold text-black shadow-xl transition-transform group-hover:scale-[1.03] motion-reduce:transition-none sm:bottom-6 sm:left-6"><span className="grid size-9 place-items-center rounded-full bg-black text-white"><Play aria-hidden="true" className="size-4 translate-x-px fill-current" /></span>Play, 18 seconds</span>
           </button>
         )}

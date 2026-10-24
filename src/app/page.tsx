@@ -39,13 +39,13 @@ export default function Home() {
             <div className="relative mx-auto w-full max-w-[39rem] pb-9 pr-[20%] pt-2 sm:pb-14" aria-label="Station Road Barbers: a fictional UK business and its real Taplo page">
               <div className="relative overflow-hidden rounded-[1.5rem] bg-[#d5d4bd]">
                 {/* Original illustrative scene; the page alongside is captured from the actual engine. */}
-                <Image src="/taplo-demo/station-road-barber-work.png" alt="Illustrative barber at work in a bright local shop" width={1536} height={1024} priority sizes="(min-width: 1024px) 40vw, 80vw" className="aspect-[0.82] w-full object-cover object-[85%_center]" />
+                <Image src="/taplo-demo/station-road-barber-work.png" alt="Illustrative barber at work in a bright local shop" width={1536} height={1024} loading="eager" fetchPriority="high" sizes="(min-width: 1024px) 40vw, 80vw" className="aspect-[0.82] w-full object-cover object-[85%_center]" />
                 <div className="absolute inset-x-0 bottom-0 hidden bg-gradient-to-t from-[#102d3c]/95 to-transparent px-6 pb-7 pt-24 text-white sm:block">
                   <p className="text-sm font-medium text-white/75">A familiar face. A proper haircut.</p>
                   <p className="mt-1 font-display text-[clamp(1.8rem,3vw,2.5rem)] leading-tight">Station Road<br />Barbers</p>
                 </div>
               </div>
-              <Shot id="ex-station-road-barbers-phone" alt="Station Road's real Taplo design, with its haircut booking button and price menu" width={290} priority cropTo={610} frame="phone" fluid className="absolute -bottom-1 right-0 w-[48%] shadow-[0_28px_60px_-20px_rgb(20_45_62/0.4)]" />
+              <Shot id="ex-station-road-barbers-phone" alt="Station Road's real Taplo design, with its haircut booking button and price menu" width={290} priority sizes="(min-width:1024px) 280px, 42vw" cropTo={610} frame="phone" fluid className="absolute -bottom-1 right-0 w-[48%] shadow-[0_28px_60px_-20px_rgb(20_45_62/0.4)]" />
             </div>
           </div>
           <div className="border-t border-[#142d3e]/15">

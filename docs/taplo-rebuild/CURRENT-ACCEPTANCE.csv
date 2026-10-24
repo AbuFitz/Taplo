@@ -33,7 +33,7 @@ R31,Images,targeted evidence,Seventeen imported original assets validated; metad
 R32,Share,partial,Branded share/QR export pipeline and existing tests retained,Recheck all downloaded format parity and unpublished/share error states
 R33,QR,partial,Existing independent QR decode/export checks; truthful browser-preview destination,Physical print/scan evidence is not available from Chromium tests
 R34,Accessibility,partial,412/418 broad audit; all six corrected cases and84affected+2avatar reruns pass; reduced-motion preference fixed,Complete zoom/manual screen-reader review; do not equate axe with full accessibility
-R35,Performance,open,Responsive image derivatives and lazy media implemented; no measured lab report claimed,Record representative cold mobile performance trace; field CWV needs real traffic
-R36,Browsers devices,open,Named Chromium build and full audit; no physical-device coverage claimed,Run representative WebKit/Firefox flows and state physical-device limits
+R35,Performance,partial,Isolated mobile Lighthouse13.5 homepage83→91; LCP4.7→3.5s; retained reports/settings,Measure customer/editor mobile conditions; continue LCP work; field CWV requires real traffic
+R36,Browsers devices,partial,Matching390/1440 native journeys: Chromium6/6 Firefox6/6 WebKit6/6; versions recorded,Broaden edge-state checks as changed; manual and physical-device limits remain explicit
 R37,Tools,targeted evidence,"Existing renderer/workbench reused; reproducible captures, films and interaction recordings; repo skills",Expand missing workbench states instead of installing redundant libraries
 R38,Completion honesty,active,This current ledger preserves every original requirement and explicit remaining action,Continue full frontend work; do not mark goal complete from a stage release

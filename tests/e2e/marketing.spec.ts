@@ -335,13 +335,13 @@ test.describe("film", () => {
     await page.goto("/");
     await expect(page.locator("video")).toHaveCount(0);
     await expect(
-      page.getByRole("button", { name: /Play the 18-second film/ }),
+      page.getByRole("button", { name: /Play, 18 seconds/ }),
     ).toBeVisible();
     await page.getByText("Read the film", { exact: true }).click();
     await expect(
       page.getByText(/Same business, your own look: four designs/),
     ).toBeVisible();
-    await page.getByRole("button", { name: /Play the 18-second film/ }).click();
+    await page.getByRole("button", { name: /Play, 18 seconds/ }).click();
     const v = page.locator("video");
     await expect(v).toHaveCount(1);
     await expect(v).toHaveAttribute("controls", "");

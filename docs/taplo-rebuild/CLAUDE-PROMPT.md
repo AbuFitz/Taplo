@@ -19,6 +19,7 @@ This branch has moved substantially beyond the research baseline. Read these imp
 - OWNER-ENTRY-AND-CONTENT.md: current UK examples in the owner entry, real-content chooser, atomic creation/undo and browser storage improvements.
 - SAVED-LOOKS-AND-STYLES.md: visual reusable designs, section style previews, non-destructive saved limits and persistent appearance previews.
 - SIX-UK-EXAMPLES-AND-FEATURE-HEADER.md: six current UK starting examples, three new looks, responsive photo/identity header and safe service reference handling.
+- PERFORMANCE-AND-CROSS-BROWSER.md: responsive real-UI captures/posters, measured mobile image-delivery improvement and representative native Chromium/Firefox/WebKit journeys.
 - PRODUCT-WALKTHROUGHS.md: complete real setup and customer-booking recordings with an optional guide player and transcripts. Design/stock tutorials remain open.
 - FEED-ADVERTISEMENT.md: separately composed 4:5 advertisement, editable source, playback and export validation.
 

@@ -18,7 +18,7 @@ export function BusinessStories() {
         <div className="relative isolate aspect-[0.96] overflow-hidden rounded-2xl" style={{ background: b.colour }}>
           <Image src={b.image} alt={b.alt} width={1536} height={1024} sizes="(min-width: 768px) 29vw, 90vw" className="absolute left-0 top-0 h-[70%] w-full object-cover" style={{ objectPosition: b.position }} />
           <p className="absolute bottom-[10%] left-[7%] w-[35%] font-display text-[clamp(1.25rem,2.1vw,2rem)] leading-[1.05] tracking-tight">{b.line}</p>
-          <Shot id={b.shot} alt={`${b.name} in the Taplo page designer`} width={270} cropTo={510} frame="phone" fluid className="absolute -bottom-[6%] right-[6%] w-[48%] shadow-[0_20px_30px_-15px_rgb(0_0_0/0.4)] transition-transform duration-300 group-hover:-translate-y-2 motion-reduce:transition-none" />
+          <Shot id={b.shot} alt={`${b.name} in the Taplo page designer`} width={270} sizes="(min-width:768px) 14vw, 44vw" cropTo={510} frame="phone" fluid className="absolute -bottom-[6%] right-[6%] w-[48%] shadow-[0_20px_30px_-15px_rgb(0_0_0/0.4)] transition-transform duration-300 group-hover:-translate-y-2 motion-reduce:transition-none" />
         </div>
         <p className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-foreground/65">{b.kind}</p><h3 className="mt-2 flex items-center justify-between gap-3 text-xl font-semibold tracking-tight">{b.name}<ArrowUpRight aria-hidden="true" className="size-5 shrink-0" /></h3><p className="mt-2 max-w-sm text-[0.9375rem] leading-relaxed text-foreground/65">{b.detail}</p>
       </Link></li>)}
