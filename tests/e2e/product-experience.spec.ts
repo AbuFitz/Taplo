@@ -103,7 +103,8 @@ for (const width of [390, 1440])
     await page.goto("/how-it-works");
     const tabs = page.getByRole("tablist", { name: "See the setup steps" });
     await tabs.getByRole("tab").first().click();
-    for (let n = 0; n < 4; n++) {
+    await expect(tabs.getByRole("tab")).toHaveCount(5);
+    for (let n = 0; n < 5; n++) {
       await tabs.getByRole("tab").nth(n).click();
       const panel = page.getByRole("tabpanel");
       await expect(panel).toHaveCount(1);

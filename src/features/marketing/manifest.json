@@ -807,5 +807,27 @@
     "source": "/onboarding",
     "sha256": "ff990b3824e39aeefb23369e84c035486919cd1349354acc81b926606aaa417a",
     "capturedAt": "2026-10-24T01:49:00.701Z"
+  },
+  "setup-5-review": {
+    "file": "/marketing/setup-5-review.webp",
+    "width": 2200,
+    "height": 1720,
+    "cssWidth": 1100,
+    "cssHeight": 860,
+    "bytes": 93342,
+    "source": "/onboarding",
+    "sha256": "53d6fe7c8f44b3116e9e4fcf3ea47b8182231b3bc26d871df40bc3111c2edb5c",
+    "capturedAt": "2026-10-24T02:30:43.829Z"
+  },
+  "setup-5-review-phone": {
+    "file": "/marketing/setup-5-review-phone.webp",
+    "width": 780,
+    "height": 1688,
+    "cssWidth": 390,
+    "cssHeight": 844,
+    "bytes": 59720,
+    "source": "/onboarding",
+    "sha256": "43a5f34d5833dda4f4e2f5311d94d09eef10e823d21d4424a722458dfb7e3413",
+    "capturedAt": "2026-10-24T02:30:45.586Z"
   }
 }

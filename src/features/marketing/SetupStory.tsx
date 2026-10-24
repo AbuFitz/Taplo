@@ -7,6 +7,7 @@ const CAPTURES = [
   "setup-2-what",
   "setup-3-design",
   "setup-4-first",
+  "setup-5-review",
 ] as const;
 
 /** Voluntary setup preview, using separate real phone/desktop captures. No fake fields or automatic progression. */
@@ -24,7 +25,7 @@ export function SetupStory() {
       <div
         role="tablist"
         aria-label="See the setup steps"
-        className="grid grid-cols-2 gap-3 md:grid-cols-4"
+        className="grid grid-cols-2 gap-3 md:grid-cols-5"
       >
         {STEPS.map((s, n) => (
           <button
@@ -57,6 +58,8 @@ export function SetupStory() {
             }}
             className={cn(
               "overflow-hidden rounded-2xl border-2 p-2 text-left outline-none focus-visible:ring-3 focus-visible:ring-signal/50 focus-visible:ring-offset-2",
+              n === STEPS.length - 1 &&
+                "col-span-2 grid grid-cols-[7rem_1fr] items-center md:col-span-1 md:block",
               active === n
                 ? "border-signal bg-[#f1eddf]"
                 : "border-foreground/15 bg-white hover:border-foreground/35",

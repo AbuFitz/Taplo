@@ -65,6 +65,10 @@ const jobs = [
   ...["night", "journal", "clay", "forge", "orchard", "showroom"].map((l) => ({ id: `look-${l}`, url: frame("barber", l), vp: [390, 844], clip: [0, 0, 390, 600] })),
 ]
 
+const firstContentJob = jobs.find(j => j.id === "setup-4-first")
+if (!firstContentJob) throw new Error("Missing first-content capture")
+jobs.push({ ...firstContentJob, id: "setup-5-review", run: async p => { await firstContentJob.run(p); await p.getByRole("button", { name: "Continue", exact: true }).click(); await p.getByRole("heading", { name: "Your page is ready to look at", exact: true }).waitFor() } })
+
 // The setup story uses real mobile captures on phones, rather than shrinking desktop form text.
 for (const j of [...jobs].filter(j => j.id.startsWith("setup-"))) jobs.push({ ...j, id: `${j.id}-phone`, vp: [390, 844], clip: [0, 0, 390, 844], run: async p => { await j.run(p); await p.locator("#step-title").scrollIntoViewIfNeeded() } })
 
