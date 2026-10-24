@@ -93,7 +93,7 @@ export function deriveButton(
   return { bg: soft, text: t.color, border: mix(colors.surface, accent, 0.3) };
 }
 
-export function resolveStyle(themeId: string, rawOverrides: unknown = {}): ResolvedStyle {
+export function resolveStyle(themeId: string, rawOverrides: unknown = {}, logoAccent?: string): ResolvedStyle {
   const notices: StyleNotice[] = [];
   let theme = getTheme(themeId);
   if (!theme) {
@@ -125,6 +125,15 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
     decoration: ov.decoration ?? base.decoration,
     motion: ov.motion ?? base.motion ?? "subtle",
   };
+  if (spec.background.kind === "gradient" && spec.background.source === "logo") {
+    const dark = contrastRatio("#ffffff", spec.background.from) > contrastRatio("#000000", spec.background.from);
+    const accent = logoAccent && /^#[0-9a-fA-F]{6}$/.test(logoAccent) ? logoAccent : dark ? "#ffffff" : "#000000";
+    spec.background = { ...spec.background, from: dark ? "#000000" : "#ffffff", to: mix(dark ? "#000000" : "#ffffff", accent, dark ? .2 : .12) };
+    if (logoAccent && !ov.colors?.accent) {
+      spec.colors.accent = ensureReadable(logoAccent, spec.background.from).color;
+      spec.colors.accentText = readableOn(spec.colors.accent);
+    }
+  }
   // A "page colour" override recolours a plain-colour background (gradients/photos keep their own).
   if (!ov.background && ov.colors?.background && base.background.kind === "solid") spec.background = { kind: "solid", color: ov.colors.background };
   const contrast: ContrastCheck[] = [];

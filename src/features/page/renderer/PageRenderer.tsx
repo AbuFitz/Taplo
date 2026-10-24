@@ -30,6 +30,7 @@ export function PageRenderer({ vm, bare = false, fragment }: { vm: PageViewModel
           ))}
         </main>}
         {fragment ? null : <footer aria-label={`${vm.business.identity.name} business page footer`} className="pb-2 text-center text-sm tp-muted" style={{ gridColumn: "1 / -1" }}>
+          {[vm.business.identity.heroImage, ...vm.business.products.map(p => p.image)].some(image => image?.src.startsWith('/photography/')) ? <p className="mb-2 text-xs"><a href="/credits" target="_blank" rel="noreferrer" className="underline underline-offset-4">Photography credits</a></p> : null}
           {vm.showBranding ? <p><a className="underline underline-offset-4" href="https://taplo.co">Made with Taplo</a></p> : null}
         </footer>}
       </div>

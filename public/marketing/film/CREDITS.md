@@ -1,0 +1,3 @@
+# Film photography credits
+
+The product-film page textures incorporate the example photography credited at /credits and in /photography/credits.json. Vehicle photographs by Vauxford are CC BY-SA 4.0; the adapted vehicle photographs retain that licence. The delivered films that incorporate these adaptations are made available under CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Credit Taplo for the film composition and Vauxford for vehicle photographs. Glib Albovsky and Avenir Visuals photographs are used under the Unsplash licence. This does not grant rights to trademarks or imply endorsement.

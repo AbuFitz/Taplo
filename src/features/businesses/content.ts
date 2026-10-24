@@ -33,6 +33,8 @@ export const imageSchema = z.object({
   focal: focalSchema.optional(),
   /** Derived only for transparent identity uploads; supplies a contrasting backing without changing the pixels. */
   ink: z.enum(["dark", "light", "mixed"]).optional(),
+  /** Sampled from an uploaded identity; absent for monochrome marks. */
+  accent: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
 });
 export type ImageRef = z.infer<typeof imageSchema>;
 

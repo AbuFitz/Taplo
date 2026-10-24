@@ -19,7 +19,7 @@ for (const width of [390, 1440]) {
         if (b.scenario === "oakfield" && width === 1440) expect((await page.getByTestId("service-open").first().boundingBox())!.y).toBeLessThan(650)
         await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `${b.scenario}-${width}.png`), fullPage: true })
         await page.goto(`/inspiration/${b.route}`)
-        await expect(page.getByRole("heading", { level: 1 })).toHaveText(b.scenario === "corner" ? "Studio" : b.scenario === "oakfield" ? "Service" : "Personal")
+        await expect(page.getByRole("heading", { level: 1 })).toHaveText(b.name)
         await expect(page.getByTestId("start-design").first()).toBeVisible()
       })
     }

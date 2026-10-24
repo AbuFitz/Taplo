@@ -1,27 +1,29 @@
-"use client"
-import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react"
-import { PagePreview } from "@/features/preview/PagePreview"
+import { ArrowUpRight, Check, CalendarDays, MessageCircle, Scissors, UserRound } from "lucide-react"
 
-const FEATURES = [
-  { name: 'Show your services and prices.', detail: 'The service, the price and what’s included. Ready for a closer look.', url: '/product/services', frame: '/appearance/frame?scenario=station&widget=priceMenu', colour: '#151515', label: 'Services and prices' },
-  { name: 'Let customers book or request a visit.', detail: 'Book a slot, request a visit or start a conversation. You choose how it works.', url: '/product/booking', frame: '/appearance/frame?scenario=detailer&widget=featuredService', colour: '#151515', label: 'Booking and requests' },
-  { name: 'Turn stock browsing into enquiries.', detail: 'Big photos, the useful facts and enquiries about the right item.', url: '/product/vehicles', frame: '/appearance/frame?scenario=brookfield&widget=products&variant=catalogue', colour: '#151515', label: 'Vehicle stock' },
-  { name: 'Help customers choose their person.', detail: 'Introduce your people and the work they do. Make choosing someone personal.', url: '/product/team', frame: '/appearance/frame?scenario=station&widget=team&variant=grid', colour: '#151515', label: 'Team profiles' },
-] as const
-function FeatureScene({ item }: { item: typeof FEATURES[number] }) {
-  const host=useRef<HTMLDivElement>(null), [visible,setVisible]=useState(false)
-  useEffect(()=>{const el=host.current;if(!el)return;const observer=new IntersectionObserver(([entry])=>{if(entry.isIntersecting){setVisible(true);observer.disconnect()}},{rootMargin:'200px'});observer.observe(el);return()=>observer.disconnect()},[])
-  return <div ref={host} className="feature-spotlight-scene" style={{background:item.colour}}><div className="feature-spotlight-ui">{visible?<PagePreview src={item.frame} title={`${item.label}, actual Taplo section`} mode="device" device={{w:390,h:440}} interactive={false}/>:null}</div></div>
-}
-/** Each feature gets its own isolated, actual engine composition. Only nearby scenes load. */
+/** Marketing compositions describe the product without embedding cropped, nested scrolling pages. */
 export function FeatureSpotlights() {
-  const reel=useRef<HTMLUListElement>(null)
-  const move=(direction:number)=>reel.current?.scrollBy({left:direction*360,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})
-  return <section aria-labelledby="feature-spotlights-title" className="overflow-hidden bg-[#080808] py-20 text-white sm:py-28">
-    <div className="mx-auto max-w-[88rem] px-5 sm:px-8"><div className="mt-4 flex items-end justify-between gap-5"><h2 id="feature-spotlights-title" className="font-display max-w-3xl text-[clamp(1.8rem,3.2vw,3rem)] font-medium leading-[1.03] tracking-[-0.055em]">Show the details<br/>people ask for.</h2><Link href="/product" className="hidden min-h-11 items-center gap-2 text-sm font-semibold sm:inline-flex">Explore every feature<ArrowUpRight aria-hidden="true" className="size-4"/></Link></div></div>
-    <ul ref={reel} className="mx-auto mt-12 flex max-w-[88rem] snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-6 sm:px-8" aria-label="Taplo feature highlights">{FEATURES.map(item=><li key={item.url} className="w-[min(84vw,23rem)] shrink-0 snap-start"><FeatureScene item={item}/><p className="mt-6 text-xs font-semibold uppercase tracking-[0.12em] text-white/55">{item.label}</p><h3 className="mt-2 text-xl font-semibold tracking-tight"><Link href={item.url} className="inline-flex min-h-11 items-center gap-3 rounded outline-none focus-visible:ring-2 focus-visible:ring-[#ffffff]">{item.name}<ArrowUpRight aria-hidden="true" className="size-4 shrink-0"/></Link></h3><p className="mt-2 max-w-sm text-sm leading-relaxed text-white/65">{item.detail}</p></li>)}</ul>
-    <div className="mx-auto mt-3 flex max-w-[88rem] justify-end gap-2 px-5 sm:px-8"><button type="button" onClick={()=>move(-1)} aria-label="Previous feature" className="grid size-11 place-items-center rounded-full border border-white/25 outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white"><ArrowLeft aria-hidden="true" className="size-5"/></button><button type="button" onClick={()=>move(1)} aria-label="Next feature" className="grid size-11 place-items-center rounded-full border border-white/25 outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white"><ArrowRight aria-hidden="true" className="size-5"/></button></div>
+  return <section aria-labelledby="feature-spotlights-title" className="marketing-light relative overflow-hidden bg-white py-16 text-black sm:py-28">
+    <div className="mono-atmosphere" aria-hidden="true" />
+    <div className="relative mx-auto max-w-[88rem] px-5 sm:px-8">
+      <h2 id="feature-spotlights-title" className="font-display max-w-2xl text-[clamp(2.2rem,5vw,4rem)] font-medium leading-[1.02] tracking-[-.055em]">A little page.<br />A lot of business.</h2>
+      <div className="mt-12 grid gap-12 md:grid-cols-2 md:gap-8">
+        <Feature href="/product/services" title="Your prices. Clear from the start." detail="Put the service, price and what’s included together. Give people the detail they need to choose.">
+          <div className="feature-menu"><span className="feature-icon"><Scissors size={22} aria-hidden="true" /></span><p className="mb-6 text-2xl font-semibold tracking-tight">Cuts & prices</p>{[['Haircut','£22','Cut, wash and finish.'],['Skin fade','£25','A close, carefully blended fade.'],['Cut & beard','£32','Your regular, together.']].map(([name,price,note])=><div className="feature-menu-row" key={name}><div className="flex items-baseline justify-between gap-4"><span className="font-medium">{name}</span><span>{price}</span></div><p className="mt-1 text-xs text-black/55">{note}</p></div>)}</div>
+        </Feature>
+        <Feature href="/product/booking" title="From “when?” to a time that works." detail="Let customers choose a service and a time. Confirm straight away or approve the request first.">
+          <div className="feature-calendar"><div className="mb-7 flex items-center justify-between"><CalendarDays size={22} aria-hidden="true"/><span className="text-xs text-black/65">Appointment request</span></div><p className="text-xl font-semibold tracking-tight">Choose your time.</p><div className="my-6 flex justify-between gap-2">{['Mon','Tue','Wed','Thu','Fri'].map((day,i)=><span key={day} className={i===2?'feature-day active':'feature-day'}><small>{day}</small><strong>{12+i}</strong></span>)}</div><div className="grid grid-cols-3 gap-2">{['10:00','11:30','14:00'].map((time,i)=><span className={i===1?'feature-slot selected':'feature-slot'} key={time}>{time}{i===1?<Check size={13} aria-hidden="true"/>:null}</span>)}</div><div className="mt-6 flex items-center gap-2 text-xs text-black/60"><Check size={14} aria-hidden="true"/>A request, ready for you to review.</div></div>
+        </Feature>
+        <Feature href="/product/vehicles" title="The right enquiry, about the right car." detail="Photos, specifications, price and availability. Keep the selected vehicle attached to the conversation.">
+          <div className="feature-stock"><p className="text-xs text-white/55">HARRIS CARS · CURRENT STOCK</p><p className="mt-7 max-w-xs text-[clamp(1.7rem,3vw,2.2rem)] font-medium leading-tight tracking-tight">Volkswagen Golf<br/><span className="text-white/50">1.5 TSI Style</span></p><div className="my-6 grid grid-cols-3 gap-3 text-xs text-white/60"><span>2020</span><span>28,450 miles</span><span>Manual</span></div><div className="flex items-center justify-between"><strong className="text-2xl font-medium">£17,950</strong><span className="rounded-full bg-white/10 px-3 py-1 text-xs">Available</span></div><div className="mt-7 flex items-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm text-black"><MessageCircle size={17} aria-hidden="true"/>Ask about this car<ArrowUpRight size={17} className="ml-auto" aria-hidden="true"/></div></div>
+        </Feature>
+        <Feature href="/product/team" title="People book with people." detail="Introduce the team, explain what each person does and let customers choose who they book with.">
+          <div className="feature-team"><p className="mb-7 text-2xl font-semibold tracking-tight">Choose your barber.</p>{[['Sam Ellis','Haircuts, fades & beards'],['Lee Morgan','Scissor cuts & restyles'],['Iman Brooks','Haircuts & skin fades']].map(([name,note],i)=><div className="flex items-center gap-4 py-4" key={name}><span className={'feature-person person-'+i}><UserRound size={23} strokeWidth={1.8} aria-hidden="true"/></span><div><p className="font-medium">{name}</p><p className="mt-1 text-xs text-black/55">{note}</p></div><ArrowUpRight className="ml-auto text-black/40" size={17} aria-hidden="true"/></div>)}</div>
+        </Feature>
+      </div>
+    </div>
   </section>
+}
+function Feature({ href, title, detail, children }: { href: string; title: string; detail: string; children: React.ReactNode }) {
+  return <article><div className="feature-illustration" aria-label="Illustrative product preview">{children}</div><h3 className="mt-6 text-xl font-semibold tracking-tight"><Link href={href} className="inline-flex min-h-11 items-center gap-3 rounded focus-visible:outline-2 focus-visible:outline-offset-4">{title}<ArrowUpRight size={18} aria-hidden="true"/></Link></h3><p className="mt-2 max-w-md text-sm leading-relaxed text-black/60">{detail}</p></article>
 }

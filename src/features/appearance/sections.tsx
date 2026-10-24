@@ -227,7 +227,7 @@ export function WallpaperControls({ m }: M) {
   const shaderColours = bg.kind === "shader" ? bg.colors : SHADER_DEFAULT_COLOURS
   const choose = (k: Wall) => {
     if (k === "solid") m.setBackground({ kind: "solid", color: base })
-    else if (k === "gradient") m.setBackground({ kind: "gradient", from: base, to: spec.colors.accent, angle: 160, motion: false })
+    else if (k === "gradient") m.setBackground({ kind: "gradient", from: base, to: spec.colors.accent, angle: 160, motion: true })
     else if (k === "image") m.setBackground({ kind: "image", image: bg.kind === "image" ? bg.image : { src: "/fixtures/img-2.svg", alt: "Background picture", focal: { x: 50, y: 50 } }, overlay: 55, overlayColor: base, fallback: base })
     else m.setBackground({ kind: "shader", style: k, colors: shaderColours, base })
   }
@@ -247,7 +247,8 @@ export function WallpaperControls({ m }: M) {
         <p className="text-xs text-neutral-600">Animated wallpapers freeze, and fall back to the same colours, when motion is reduced.</p>
       </> : null}
       {bg.kind === "gradient" ? <>
-        <div className="grid grid-cols-2 gap-3"><ColorField label="From" value={bg.from} onChange={(v) => m.setBackground({ ...bg, from: v }, "wall.from")} /><ColorField label="To" value={bg.to} onChange={(v) => m.setBackground({ ...bg, to: v }, "wall.to")} /></div>
+        <Toggle label="Follow my logo" checked={bg.source === "logo"} onChange={v => m.setBackground({ ...bg, source: v ? "logo" : "manual" })} hint="Uses your uploaded logo’s colour. Black-and-white marks stay neutral. Replacing the logo updates this background automatically." />
+        <div className="grid grid-cols-2 gap-3"><ColorField label="From" value={bg.from} onChange={(v) => m.setBackground({ ...bg, source: "manual", from: v }, "wall.from")} /><ColorField label="To" value={bg.to} onChange={(v) => m.setBackground({ ...bg, source: "manual", to: v }, "wall.to")} /></div>
         <Slider label="Angle" value={bg.angle} min={0} max={360} step={5} unit="°" onChange={(v) => m.setBackground({ ...bg, angle: v }, "wall.angle")} />
         <Toggle label="Slowly drifting colours" checked={bg.motion} onChange={(v) => m.setBackground({ ...bg, motion: v })} hint="Pauses for visitors who ask their device to reduce motion." />
       </> : null}

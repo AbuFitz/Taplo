@@ -1,3 +1,5 @@
+import { dominantAccent } from "../themes/image-palette"
+
 /**
  * Demo-mode image handling. Files are decoded and downscaled in the browser and kept as a small
  * data URL so they can live in localStorage. On a connected environment this step uploads
@@ -16,6 +18,7 @@ export interface PreparedImage {
   height: number;
   bytes: number;
   ink?: "dark" | "light" | "mixed";
+  accent?: string;
 }
 
 export async function prepareImage(
@@ -51,20 +54,23 @@ export async function prepareImage(
       }
       ctx.drawImage(bitmap, 0, 0, width, height);
       let ink: PreparedImage["ink"];
+      let accent: string | undefined;
       if (options.preserveAlpha) {
         const sample = document.createElement("canvas");
         sample.width = 64; sample.height = 64;
         const sampleContext = sample.getContext("2d");
         if (sampleContext) {
           sampleContext.drawImage(canvas, 0, 0, 64, 64);
-          ink = transparentLogoInk(sampleContext.getImageData(0, 0, 64, 64).data);
+          const pixels = sampleContext.getImageData(0, 0, 64, 64).data;
+          ink = transparentLogoInk(pixels);
+          accent = dominantAccent(pixels) ?? undefined;
         }
       }
       const mime = options.preserveAlpha && file.type !== "image/jpeg" ? "image/png" : "image/jpeg";
       for (const quality of mime === "image/png" ? [undefined] : [0.82, 0.7, 0.58, 0.46]) {
         const src = canvas.toDataURL(mime, quality);
         if (src.startsWith(`data:${mime};`) && src.length <= 380_000)
-          return { src, width, height, bytes: src.length, ...(ink ? { ink } : {}) };
+          return { src, width, height, bytes: src.length, ...(ink ? { ink } : {}), ...(accent ? { accent } : {}) };
       }
       if (edge <= 160) break;
     }

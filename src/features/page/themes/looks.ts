@@ -952,11 +952,27 @@ export const LOOKS: Look[] = [
     cards: { surface: "solid", radius: "lg", border: "none", shadow: "none", padding: "comfortable" },
     layout: { desktop: "split", width: "wide", density: "comfortable", rhythm: "even" }, motion: "subtle",
   }),
+  composition("silver", "Silver", "An open white page with a slowly moving silver background. Follows your logo when you add one.", "clean", {
+    colors: { background: "#ffffff", text: "#111111", muted: "#555555", surface: "#ffffff", accent: "#111111", accentText: "#ffffff", border: "#dedede" },
+    background: { kind: "gradient", from: "#ffffff", to: "#e0e0e0", angle: 135, motion: true, source: "logo" },
+    text: { headingFont: "inter", bodyFont: "inter", headingWeight: "bold", size: "md" },
+    header: { layout: "centered", avatarShape: "logo", align: "center", actions: "primary" },
+    buttons: { shape: "pill", shadow: "none" }, cards: { surface: "solid", radius: "xl", border: "none", shadow: "none", padding: "comfortable" },
+    layout: { desktop: "centered", width: "regular", rhythm: "editorial" }, motion: "subtle",
+  }),
+  composition("smoke", "Smoke", "Ink black with a quiet, moving tonal background. A clear stage for your identity.", "night", {
+    colors: { background: "#000000", text: "#ffffff", muted: "#b0b0b0", surface: "#161616", accent: "#ffffff", accentText: "#000000", border: "#303030" },
+    background: { kind: "gradient", from: "#000000", to: "#292929", angle: 145, motion: true, source: "logo" },
+    text: { headingFont: "inter", bodyFont: "inter", headingWeight: "bold", size: "md" },
+    header: { layout: "minimal", avatarShape: "logo", align: "left", actions: "primary" },
+    buttons: { shape: "pill", shadow: "none" }, cards: { surface: "soft", radius: "xl", border: "none", shadow: "none", padding: "comfortable" },
+    layout: { desktop: "split", width: "wide", rhythm: "editorial" }, motion: "subtle",
+  }),
   ...EXISTING_LOOKS,
 ];
 
 /** Discovery uses the new direction. Earlier configurations remain resolvable for saved pages. */
-export const STARTER_LOOKS = ["open", "service", "personal", "ink"].map(id => LOOKS.find(l => l.id === id)!);
+export const STARTER_LOOKS = ["open", "service", "personal", "ink", "silver", "smoke"].map(id => LOOKS.find(l => l.id === id)!);
 export const CURRENT_LOOKS = [...STARTER_LOOKS, ...LOOKS.filter(l => ["voltage", "apex", "ultraviolet", "minted", "blueprint", "signal", "clean", "night", "colour", "photo", "journal", "forge"].includes(l.id))];
 
 /* ---- Radix-derived palettes: coordinated neutral + accent, light and dark ---- */
@@ -1003,6 +1019,8 @@ function make(
 }
 
 export const PALETTES: Palette[] = [
+  { id: "white", name: "White", mode: "light", colors: { background: "#ffffff", text: "#111111", muted: "#616161", surface: "#f5f5f5", accent: "#111111", accentText: "#ffffff", border: "#dedede" } },
+  { id: "ink", name: "Ink", mode: "dark", colors: { background: "#000000", text: "#ffffff", muted: "#ababab", surface: "#161616", accent: "#ffffff", accentText: "#000000", border: "#303030" } },
   make("sand-amber", "Sand & amber", "sand", "amber", "light"),
   make("olive-jade", "Olive & jade", "olive", "jade", "light"),
   make("slate-indigo", "Slate & indigo", "slate", "indigo", "light"),

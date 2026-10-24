@@ -103,7 +103,7 @@ function Design() {
             alt="The same Jay’s Barbers content arranged for a desktop"
             width={880}
             fluid
-            frame="browser"
+            frame="none"
             className="w-full"
           />
         </div>
@@ -459,7 +459,7 @@ function Vehicles() {
             width={1200}
             cropTo={780}
             fluid
-            frame="browser"
+            frame="none"
             className="w-full"
           />
         </div>

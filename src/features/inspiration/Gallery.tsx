@@ -67,14 +67,14 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
             <li key={d.slug} className={cn(view === "phone" && n % 2 === 1 && "xl:mt-8")} data-testid="design-card">
               <Link href={`/inspiration/${d.slug}`} aria-label={`${d.name}: open this design`} className="group block outline-none">
                 {view === "desktop"
-                  ? <Shot id={`ex-${d.assetSlug}-desk` as never} alt={`${d.name}'s page on a desktop screen`} width={720} frame="browser" priority={n < 2} className="w-full transition-transform duration-300 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 motion-reduce:transition-none" />
-                  : <Shot id={`ex-${d.assetSlug}-phone` as never} alt={`${d.name}'s page on a phone`} width={300} cropTo={560} priority={n < 4} className="mx-auto transition-transform duration-300 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 motion-reduce:transition-none" />}
+                  ? <Shot id={`ex-${d.assetSlug}-desk` as never} alt={`${d.name}'s page on a desktop screen`} width={720} frame="none" priority={n < 2} className="w-full transition-transform duration-300 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 motion-reduce:transition-none" />
+                  : <Shot id={`ex-${d.assetSlug}-phone` as never} alt={`${d.name}'s page on a phone`} width={390} cropTo={650} fluid frame="none" priority={n < 4} className="mx-auto transition-transform duration-300 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 motion-reduce:transition-none" />}
               </Link>
               <div className="mt-5 flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
                 <div className="min-w-0">
-                  <h2 className="font-display font-display-tight text-[clamp(1.5rem,2.4vw,2rem)]"><Link href={`/inspiration/${d.slug}`} className="hover:underline underline-offset-4">{d.lookName}</Link></h2>
+                  <h2 className="font-display font-display-tight text-[clamp(1.5rem,2.4vw,2rem)]"><Link href={`/inspiration/${d.slug}`} className="hover:underline underline-offset-4">{d.name}</Link></h2>
                   <p className="mt-1 text-foreground/70">{d.hook}</p>
-                  <p className="mt-2 text-sm text-foreground/60">Shown with {d.name}</p>
+                  <p className="mt-2 text-sm text-foreground/60">{d.lookName} · {d.industryLabel}</p>
                 </div>
                 <UseDesign slug={d.slug} lookId={d.lookId} lookName={d.lookName} overrides={d.overrides} size="sm" />
               </div>

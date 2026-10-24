@@ -23,12 +23,13 @@ function example(key: keyof typeof inputs, mode: "instant" | "request", logo: st
 const station = example("common-room-barbers", "instant", "station-road-mark")
 export const STATION: BusinessContentInput = {
   ...station,
-  products: (station.products ?? []).map(p => ({ ...p, image: { src: "/taplo-demo/station-paste.png", alt: "Illustrative styling paste for the fictional Jay’s Barbers shop", width: 1152, height: 768 } })),
+  products: (station.products ?? []).map(p => ({ ...p, image: undefined })),
   staff: (station.staff ?? []).map(p => ({ ...p, photo: { src: `/taplo-demo/station-${p.id.replace("cr-", "")}.png`, alt: `Illustrative portrait of ${p.name}, a fictional example barber`, width: 512, height: 768 } })),
-  identity: { ...station.identity, heroImage: { src: "/taplo-demo/station-road-barber-work.png", alt: "Illustrative barber at work in a daylit high-street shop", width: 1536, height: 1024, focal: { x: 54, y: 46 } } },
-  gallery: [{ id: "station-work", image: { src: "/taplo-demo/station-road-barber-work.png", alt: "Illustrative scene of a haircut in progress", width: 1536, height: 1024 }, caption: "In the chair" }],
+  identity: { ...station.identity, heroImage: { src: "/photography/barber.webp", alt: "Barber working with clippers; photograph by Glib Albovsky", width: 1600, height: 2000, focal: { x: 50, y: 55 } } },
+  gallery: [{ id: "station-work", image: { src: "/photography/barber.webp", alt: "Barber at work; photograph by Glib Albovsky", width: 1600, height: 2000 }, caption: "In the chair" }],
 }
-export const PARKSIDE = example("stillwater-detailing", "request", "parkside-mark")
+const parkside = example("stillwater-detailing", "request", "parkside-mark")
+export const PARKSIDE: BusinessContentInput = { ...parkside, identity: { ...parkside.identity, heroImage: { src: "/photography/valet.webp", alt: "A car being washed; photograph by Avenir Visuals", width: 1600, height: 900, focal: { x: 50, y: 50 } } } }
 
 const brookfield = example("alder-motor-house", "request", "brookfield-mark")
 const STOCK_DESCRIPTIONS: Record<string, string> = {
@@ -42,7 +43,9 @@ export const BROOKFIELD: BusinessContentInput = {
   services: [{ id: "bf-viewing", name: "Arrange a viewing", description: "Tell us which car you would like to see. We will agree the appointment before you travel.", priceMode: "free", currency: "GBP", durationMinutes: 30, delivery: [], bookingMode: "request", sortOrder: 0 }],
   products: (brookfield.products ?? []).filter((p) => STOCK_IMAGES[p.id]).map((p) => ({
     ...p, description: STOCK_DESCRIPTIONS[p.id],
-    image: { src: `/taplo-demo/brookfield-${STOCK_IMAGES[p.id]}.png`, alt: `Illustrative example of ${p.name}; not a real vehicle listing`, width: 1536, height: 1024, focal: { x: 50, y: 50 } },
+    name: p.id === "am-golf" ? "Volkswagen Golf 1.5 TSI Style" : p.id === "am-cx5" ? "Mazda CX-5 2.2 SE-L Nav+" : "MINI Cooper 1.5",
+    facts: (p.facts ?? []).map(f => f.label === "Year" ? { ...f, value: p.id === "am-golf" ? "2020" : p.id === "am-cx5" ? "2019" : "2017" } : p.id === "am-cx5" && f.label === "Fuel" ? { ...f, value: "Diesel" } : f),
+    image: { src: `/photography/${STOCK_IMAGES[p.id]}.webp`, alt: `${p.id === "am-golf" ? "Volkswagen Golf" : p.id === "am-cx5" ? "Mazda CX-5" : "MINI"}; representative model photograph by Vauxford, CC BY-SA 4.0`, width: 1600, height: p.id === "am-golf" ? 816 : p.id === "am-cx5" ? 825 : 776, focal: { x: 50, y: 50 } },
   })),
 }
 
@@ -60,13 +63,13 @@ export const OAKFIELD: BusinessContentInput = {
 }
 
 const rowan = example("rowan-learning", "request", "rowan-mark")
-const rowanPhoto = { src: "/taplo-demo/rowan-tutor.png", alt: "Portrait of Aisha, maths tutor", width: 1536, height: 1024, focal: { x: 32, y: 35 } }
+const rowanMark = { src: "/taplo-demo/rowan-mark.svg", alt: "Maths with Aisha wordmark", width: 240, height: 120 }
 export const ROWAN: BusinessContentInput = {
   ...rowan,
-  identity: { ...rowan.identity, logo: rowanPhoto },
+  identity: { ...rowan.identity, logo: rowanMark },
   about: "Maths at a pace you can follow. We work through the question, find the sticking point and leave you with something clear to practise next.",
   hours: [...hours(["tue", "wed", "thu"], "16:00", "20:00"), ...hours(["sat"], "09:00", "13:00")],
-  staff: (rowan.staff ?? []).map((p) => ({ ...p, photo: rowanPhoto, bio: "One-to-one maths support, from a first conversation to focused GCSE and A-level sessions. We start with what you would like help with." })),
+  staff: (rowan.staff ?? []).map((p) => ({ ...p, photo: undefined, bio: "One-to-one maths support, from a first conversation to focused GCSE and A-level sessions. We start with what you would like help with." })),
   services: (rowan.services ?? []).map((s) => ({ ...s, delivery: ["online", "premises"] })),
   faqs: [
     { id: "rowan-online", question: "Can we work online?", answer: "Yes. We offer online and local sessions. Mention your preference in the request." },
@@ -78,7 +81,7 @@ export const ROWAN: BusinessContentInput = {
 const corner = businessContentSchema.parse(inputs["sunday-counter"])
 export const CORNER: BusinessContentInput = {
   ...corner,
-  identity: { ...corner.identity, industryKey: "hospitality", logo: { src: "/taplo-demo/corner-table-mark.svg", alt: "No. 6 Coffee example wordmark", width: 280, height: 120 }, heroImage: { src: "/taplo-demo/corner-table-cafe.png", alt: "Illustrative neighbourhood café with mushrooms on toast and a flat white", width: 1536, height: 1024, focal: { x: 68, y: 64 } } },
+  identity: { ...corner.identity, industryKey: "hospitality", logo: { src: "/taplo-demo/corner-table-mark.svg", alt: "No. 6 Coffee example wordmark", width: 280, height: 120 }, heroImage: { src: "/photography/coffee.webp", alt: "A neighbourhood café interior; photograph by Jan Wright", width: 1600, height: 1067, focal: { x: 50, y: 50 } } },
   about: "A coffee, a proper breakfast, a little time at the table. Browse the menu, check the opening times or ask about a larger visit.",
   hours: [...hours(["tue", "wed", "thu", "fri"], "08:00", "16:00"), ...hours(["sat"], "09:00", "16:00"), ...hours(["sun"], "09:00", "15:00")],
   booking: { mode: "contact", onlineBookingReady: false },

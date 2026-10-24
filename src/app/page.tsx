@@ -36,12 +36,12 @@ export default function Home() {
 
       <FeatureSpotlights />
 
-      <section className="mx-auto max-w-[88rem] border-t border-white/15 px-5 py-16 sm:px-8 sm:py-24" aria-labelledby="looks-h"><h2 id="looks-h" className="font-display mb-9 text-[clamp(1.8rem,3.2vw,3rem)] font-medium tracking-[-.045em]">Start with the design.<br />Keep your own identity.</h2><LookSwitcher /></section>
+      <section className="marketing-light mx-auto max-w-[88rem] rounded-[2rem] bg-white px-5 py-16 text-black sm:px-8 sm:py-24" aria-labelledby="looks-h"><h2 id="looks-h" className="font-display mb-9 text-[clamp(1.8rem,3.2vw,3rem)] font-medium tracking-[-.045em]">Start with the design.<br />Keep your own identity.</h2><LookSwitcher /></section>
 
       <BusinessStories />
 
       <section aria-labelledby="setup-h" className="mx-auto grid max-w-[88rem] items-center gap-10 border-t border-white/15 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1.5fr_1fr] lg:gap-20">
-        <div className="min-w-0 overflow-hidden rounded-xl border border-white/15 bg-[#161616] p-3 sm:p-5"><Shot id="setup-3-design" alt="Your first service appears in the live page while you choose its design" width={900} frame="browser" fluid className="w-full" /></div>
+        <div className="min-w-0 overflow-hidden rounded-xl border border-white/15 bg-[#161616] p-3 sm:p-5"><Shot id="setup-3-design" alt="Your first service appears in the live page while you choose its design" width={900} frame="none" fluid className="w-full" /></div>
         <div><h2 id="setup-h" className="font-display text-[clamp(1.8rem,3.2vw,3rem)] font-medium leading-[1.08] tracking-[-.045em]">Add your first service.<br />See your page take shape.</h2><ol className="mt-7 divide-y divide-white/15 text-sm">{["Add your business and contact details.","Create your first service or stock item.","Choose a design with your content in view."].map((s,n)=><li key={s} className="flex gap-4 py-4"><span className="tabular-nums text-white/60">0{n+1}</span><span className="text-white/75">{s}</span></li>)}</ol><Link href={a.href} className={`${action} mt-7`}>Start your page<ArrowRight aria-hidden="true" className="size-4" /></Link></div>
       </section>
 

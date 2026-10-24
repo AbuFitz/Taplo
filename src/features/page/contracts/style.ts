@@ -49,6 +49,8 @@ export const backgroundSchema = z.discriminatedUnion("kind", [
     angle: z.number().min(0).max(360),
     /** Slow colour drift. Disabled for visitors who prefer reduced motion. */
     motion: z.boolean(),
+    /** Linked gradients recompute from identity metadata; manual edits detach the link. */
+    source: z.enum(["manual", "logo"]).optional(),
   }),
   z.object({
     kind: z.literal("image"),

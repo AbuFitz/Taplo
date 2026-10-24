@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test"
 import AxeBuilder from "@axe-core/playwright"
 import path from "node:path"
 
-const looks = [{ id: "open", header: "feature" }, { id: "service", header: "side" }, { id: "personal", header: "centered" }, { id: "ink", header: "minimal" }]
+const looks = [{ id: "open", header: "feature" }, { id: "service", header: "side" }, { id: "personal", header: "centered" }, { id: "ink", header: "minimal" }, { id: "silver", header: "centered" }, { id: "smoke", header: "minimal" }]
 for (const width of [320, 390, 1440]) for (const look of looks) test(`${look.id} preserves the business and readable sections at ${width}`, async ({ page }) => {
   await page.setViewportSize({ width, height: 844 })
   await page.emulateMedia({ reducedMotion: 'reduce' })

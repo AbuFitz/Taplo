@@ -165,7 +165,7 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
     setError(undefined)
     try {
       const p = await prepareImage(file, maxEdge, { preserveAlpha: purpose === "identity" })
-      onChange({ src: p.src, width: p.width, height: p.height, ...(p.ink ? { ink: p.ink } : {}), alt: value?.alt || defaultAlt, focal: { x: 50, y: 50 } })
+      onChange({ src: p.src, width: p.width, height: p.height, ...(p.ink ? { ink: p.ink } : {}), ...(p.accent ? { accent: p.accent } : {}), alt: value?.alt || defaultAlt, focal: { x: 50, y: 50 } })
     } catch (e) {
       setError(e instanceof Error ? e.message : "That picture could not be used.")
     } finally {

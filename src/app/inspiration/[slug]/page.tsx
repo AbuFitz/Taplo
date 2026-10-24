@@ -13,7 +13,7 @@ import { BOOKING_WORDS } from "@/features/inspiration/wording"
 export function generateStaticParams() { return EXAMPLES.map((e) => ({ slug: e.slug })) }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const e = bySlug((await params).slug)
-  return e ? { title: `${describe(e).lookName} — ${describe(e).name} | Taplo designs`, description: e.hook } : {}
+  return e ? { title: `${describe(e).name} — ${describe(e).lookName} | Taplo designs`, description: e.hook } : {}
 }
 export const dynamic = "force-dynamic"
 
@@ -28,12 +28,12 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
       <SiteHeader />
       <main>
         <section className="mx-auto w-full max-w-7xl px-5 pb-8 pt-8 sm:pt-12">
-          <nav aria-label="Breadcrumb" className="text-sm text-foreground/60"><Link href="/inspiration" className="underline underline-offset-4">Designs</Link> <span aria-hidden="true" className="px-2">/</span><span>{f.lookName}</span></nav>
+          <nav aria-label="Breadcrumb" className="text-sm text-foreground/60"><Link href="/inspiration" className="underline underline-offset-4">Designs</Link> <span aria-hidden="true" className="px-2">/</span><span>{f.name}</span></nav>
           <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_22rem] lg:items-end lg:gap-16">
             <div>
-              <h1 className="font-display font-display-tight text-[clamp(2.75rem,5.6vw,4.5rem)]">{f.lookName}</h1>
+              <h1 className="font-display font-display-tight text-[clamp(2.75rem,5.6vw,4.5rem)]">{f.name}</h1>
               <p className="mt-3 max-w-2xl text-lg leading-relaxed text-foreground/70">{e.hook}</p>
-              <p className="mt-3 text-sm text-foreground/60">Shown with {f.name} · <Link href={`/inspiration?industry=${e.industry}`} className="underline underline-offset-4">{industry.label}</Link></p>
+              <p className="mt-3 text-sm text-foreground/60">{f.lookName} layout · <Link href={`/inspiration?industry=${e.industry}`} className="underline underline-offset-4">{industry.label}</Link></p>
             </div>
             <UseDesign slug={e.slug} lookId={f.lookId} lookName={f.lookName} overrides={f.overrides} />
           </div>

@@ -75,7 +75,7 @@ export function SiteFooter() {
         </div>
         <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-t border-white/25 pt-6 text-sm text-white/70">
           <p>Explore our <Link href="/inspiration" className="underline underline-offset-4">design examples</Link>.</p>
-          <nav aria-label="Legal" className="flex gap-6">
+          <nav aria-label="Legal" className="flex flex-wrap gap-6"><Link href="/credits" className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">Credits</Link>
             <Link
               href="/legal/privacy"
               className="inline-flex min-h-11 items-center rounded underline-offset-4 outline-none hover:text-white hover:underline focus-visible:ring-3 focus-visible:ring-white"

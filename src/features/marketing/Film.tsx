@@ -1,47 +1,31 @@
 "use client"
-
 import * as React from "react"
-import { Play } from "lucide-react"
-import { getImageProps } from "next/image"
+import Image, { getImageProps } from "next/image"
 
-const POSTER = getImageProps({ src: "/marketing/film/poster.webp?v=20261024-mono", alt: "", width: 1920, height: 1080, sizes: "(min-width:1280px) 1100px, 90vw", loading: "lazy" }).props
-const PHONE_POSTER = getImageProps({ src: "/marketing/film/taplo-portrait-poster.webp?v=20261024-mono", alt: "", width: 1080, height: 1920, sizes: "90vw", loading: "lazy" }).props
-
-/**
- * The 18-second Taplo film (source: marketing/film, authored with Three.js). It never autoplays and never loads
- * until asked: the poster is a sharp still, the film starts on a click, and the same story is written out below it
- * for anyone who cannot or would rather not watch.
- */
-export const FILM_BEATS = [
-  "Your work, open for business: Jay’s Barbers shows services, prices and bookings on one page.",
-  "Choose a service. Book a time. Customers select an appointment from the business page.",
-  "Your photos, your colours: explore the designs for Jay’s Barbers, Detail Dept. and Harris Cars.",
-  "Show the car. Arrange a viewing. Harris Cars presents its vehicle photos, prices and specifications on desktop.",
-  "Build your business page. Start free and add your services or stock.",
-] as const
-
+/** Silent, inline film. Only plays while visible; device reduced-motion settings use the still. */
+export function SilentVideo({ sources, poster, phonePoster, label, testId }: { sources: { src: string; media?: string }[]; poster: string; phonePoster?: string; label: string; testId?: string }) {
+  const host = React.useRef<HTMLDivElement>(null)
+  const video = React.useRef<HTMLVideoElement>(null)
+  const [visible, setVisible] = React.useState(false)
+  const [reduce, setReduce] = React.useState(true)
+  React.useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const sync = () => setReduce(media.matches)
+    sync(); media.addEventListener('change', sync)
+    const observer = new IntersectionObserver(([entry]) => setVisible(Boolean(entry?.isIntersecting)), { threshold: .15 })
+    if (host.current) observer.observe(host.current)
+    return () => { observer.disconnect(); media.removeEventListener('change', sync) }
+  }, [])
+  React.useEffect(() => {
+    if (visible && !reduce) void video.current?.play().catch(() => {})
+    else video.current?.pause()
+  }, [visible, reduce])
+  return <div ref={host} className="absolute inset-0">
+    {visible && !reduce ? <video ref={video} data-testid={testId} className="absolute inset-0 size-full object-cover" autoPlay playsInline muted loop preload="metadata" poster={poster} aria-label={label} tabIndex={-1}>
+      {sources.map(source=><source key={source.src} media={source.media} src={source.src} type="video/mp4"/>)}
+    </video> : phonePoster ? <picture><source media="(max-width:639px)" srcSet={getImageProps({src:phonePoster,alt:label,width:1080,height:1920,sizes:"90vw"}).props.srcSet}/><img {...getImageProps({src:poster,alt:label,width:1920,height:1080,sizes:"90vw"}).props} alt={label} className="absolute inset-0 size-full object-cover"/></picture> : <Image src={poster} alt={label} fill sizes="(min-width:1280px) 1100px, 90vw" className="object-cover" />}
+  </div>
+}
 export function Film({ className }: { className?: string }) {
-  const [started, setStarted] = React.useState(false)
-  return (
-    <figure className={className}>
-      <div className="relative aspect-[9/16] w-full sm:aspect-video overflow-hidden rounded-3xl bg-[#0b0d12] shadow-[0_30px_70px_-30px_rgb(0_0_0/0.5)]">
-        {started ? (
-          <video className="absolute inset-0 size-full" poster="/marketing/film/poster.webp" controls autoPlay playsInline muted preload="auto" aria-describedby="film-text">
-            <source media="(max-width: 639px)" src="/marketing/film/taplo-portrait.mp4" type="video/mp4" />
-            <source src="/marketing/film/taplo-intro.mp4" type="video/mp4" />
-            Your browser cannot play this video. The same story is written out below it.
-          </video>
-        ) : (
-          <button type="button" onClick={() => setStarted(true)} className="group absolute inset-0 grid place-items-center outline-none focus-visible:ring-3 focus-visible:ring-ring/60">
-            <picture><source media="(max-width: 639px)" srcSet={PHONE_POSTER.srcSet} sizes={PHONE_POSTER.sizes} width={1080} height={1920} /><img {...POSTER} alt="" className="absolute inset-0 size-full object-cover" /></picture>
-            <span className="absolute bottom-4 left-4 inline-flex items-center gap-2.5 rounded-full bg-white/95 py-2 pl-2 pr-4 text-sm font-semibold text-black shadow-xl transition-transform group-hover:scale-[1.03] motion-reduce:transition-none sm:bottom-6 sm:left-6"><span className="grid size-9 place-items-center rounded-full bg-black text-white"><Play aria-hidden="true" className="size-4 translate-x-px fill-current" /></span>Play, 18 seconds</span>
-          </button>
-        )}
-      </div>
-      <figcaption id="film-text" className="mt-4 text-sm text-foreground/60">
-        <span className="font-semibold text-foreground">18 seconds, no sound.</span>
-        <details className="mt-3"><summary className="w-fit cursor-pointer rounded py-2 font-medium outline-none focus-visible:ring-3 focus-visible:ring-current">Read the film</summary><ol className="mt-2 grid list-decimal gap-2 pl-5">{FILM_BEATS.map((b) => <li key={b}>{b}</li>)}</ol></details>
-      </figcaption>
-    </figure>
-  )
+  return <figure className={className} aria-label="Taplo services, bookings and stock in a silent product film"><div className="relative aspect-[9/16] w-full overflow-hidden rounded-[2rem] bg-black sm:aspect-video"><SilentVideo sources={[{media:'(max-width:639px)',src:'/marketing/film/taplo-portrait.mp4'},{src:'/marketing/film/taplo-intro.mp4'}]} poster="/marketing/film/poster.webp" phonePoster="/marketing/film/taplo-portrait-poster.webp" label="Taplo business pages showing services, bookings and stock"/></div></figure>
 }

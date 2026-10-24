@@ -6,7 +6,7 @@ for (const width of [390, 1440]) {
   test(`design preview switches real responsive widths without losing a booking at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 })
     await page.goto("/inspiration/station-road-barbers")
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Service")
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Jay’s Barbers")
     const preview = page.getByTestId("design-preview")
     const frame = page.frameLocator('iframe[data-testid="design-preview-frame"]')
     await expect(frame.getByRole("heading", { level: 1 })).toHaveText("Jay’s Barbers")

@@ -98,7 +98,7 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
     const { settings } = parseSettings("featuredService", w.settings);
     return selectedService(business.services, settings.serviceId)?.id;
   }).filter((id): id is string => Boolean(id)))];
-  const style = resolveStyle(page.themeId, page.appearance);
+  const style = resolveStyle(page.themeId, page.appearance, business.identity.logo?.accent);
   // Theme choice is a Core+ capability: Free keeps the industry's suggested theme.
   const effectiveStyle = ent.themeSwitching || opts.themeOverride ? style : resolveStyle(industry.suggestedThemeId, {});
 

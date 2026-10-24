@@ -25,8 +25,8 @@ export interface Example {
 
 const CATALOGUE: Example[] = [
   { slug: "no-6-coffee", scenario: "corner", industry: "food", hook: "A neighbourhood café. The menu, the opening times and a place at the table.", notes: ["An open menu keeps drinks and food easy to scan; opening times sit on a quiet separate surface.", "Coffee and food show prices without starting appointment bookings.", "A larger visit starts an enquiry, not a confirmed reservation."], highlights: ["A proper grouped menu", "Opening times at a glance", "Group enquiries without booking menu items"] },
-  { slug: "dans-home-repairs", scenario: "oakfield", industry: "trades", hook: "Small repairs, shelves and fittings. Explain the job before agreeing the visit.", notes: ["The photograph shows the kind of work rather than a generic tool icon.", "Service cards explain from prices, estimates and first conversations.", "Requests and enquiries let the scope be agreed before the visit."], highlights: ["From and quote prices", "Visit requests", "Service area instead of a private address"] },
-  { slug: "maths-with-aisha", scenario: "rowan", industry: "learning", hook: "A familiar face and a clear first step. Maths sessions at a pace you can follow.", notes: ["The tutor’s portrait makes the introduction personal.", "A free first conversation sits before the paid sessions.", "Session requests leave room to agree the learner’s needs and delivery."], highlights: ["Free introduction", "Online and local sessions", "A personal tutor profile"] },
+  { slug: "dans-home-repairs", scenario: "oakfield", industry: "trades", hook: "Small repairs, shelves and fittings. Explain the job before agreeing the visit.", notes: ["The compact introduction puts the business and the next step before the service details.", "Service cards explain from prices, estimates and first conversations.", "Requests and enquiries let the scope be agreed before the visit."], highlights: ["From and quote prices", "Visit requests", "Service area instead of a private address"] },
+  { slug: "maths-with-aisha", scenario: "rowan", industry: "learning", hook: "A familiar face and a clear first step. Maths sessions at a pace you can follow.", notes: ["A clear personal wordmark introduces the tutor without a synthetic portrait.", "A free first conversation sits before the paid sessions.", "Session requests leave room to agree the learner’s needs and delivery."], highlights: ["Free introduction", "Online and local sessions", "A personal tutor profile"] },
   {
     slug: "jays-barbers", scenario: "station", industry: "beauty",
     hook: "A proper local barber. Clear prices, a familiar face and your next haircut sorted.",
@@ -36,7 +36,7 @@ const CATALOGUE: Example[] = [
   {
     slug: "detail-dept", scenario: "detailer", industry: "motoring",
     hook: "The work up front. Valeting packages with room to explain what is included.",
-    notes: ["True black, clear white type and generous work photography give the service list room to breathe.", "Services explain the work before asking for a booking.", "A request allows the business to agree the job and price first."],
+    notes: ["A real work photograph leads into a true-black service page with clear white type.", "Services explain the work before asking for a booking.", "A request allows the business to agree the job and price first."],
     highlights: ["From prices with proper detail", "Appointment requests", "Service area and questions"],
   },
   {

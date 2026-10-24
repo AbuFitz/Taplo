@@ -15,6 +15,7 @@ import type { FontKey } from "@/features/themes/contracts/tokens"
  */
 export interface AppearanceHost {
   themeId: string
+  logoAccent?: string
   overrides: StyleOverrides
   /** Entitlement: whether the starting look may be switched on this plan. */
   canSwitchLook: boolean
@@ -52,7 +53,7 @@ const keysOf = (o: StyleOverrides, g: Group) => Object.keys((o as Record<string,
 
 export function useAppearanceModel(host: AppearanceHost): AppearanceModel {
   const { themeId, overrides, apply, setAppearance, notify } = host
-  const resolved = React.useMemo(() => resolveStyle(themeId, overrides), [themeId, overrides])
+  const resolved = React.useMemo(() => resolveStyle(themeId, overrides, host.logoAccent), [themeId, overrides, host.logoAccent])
   const look = getTheme(resolved.theme.id) ?? THEMES[0]!
 
   return React.useMemo<AppearanceModel>(() => {

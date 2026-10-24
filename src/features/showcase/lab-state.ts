@@ -20,12 +20,12 @@ export const EXAMPLE_LOOK: Record<Scenario, string> = { corner: "open", oakfield
  * are the owner's own controls (Header and Design tabs), so anything shown in the gallery can be reproduced in the editor.
  */
 export const EXAMPLE_OVERRIDES: Record<Scenario, StyleOverrides> = {
-  corner: { header: { layout: "editorial", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
-  oakfield: { header: { layout: "editorial", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
-  rowan: { header: { layout: "side", avatarShape: "circle", avatarSize: "lg", align: "left" }, text: { align: "left" }, layout: { desktop: "split", width: "wide", rhythm: "editorial" } },
-  brookfield: { header: { layout: "editorial", avatarShape: "logo", align: "left" }, layout: { width: "wide", desktop: "columns", rhythm: "editorial" } },
+  corner: { header: { layout: "cover", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
+  oakfield: { header: { layout: "side", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
+  rowan: { header: { layout: "centered", avatarShape: "circle", avatarSize: "lg", align: "left" }, text: { align: "left" }, layout: { desktop: "split", width: "wide", rhythm: "editorial" } },
+  brookfield: { header: { layout: "minimal", avatarShape: "logo", align: "left" }, layout: { width: "wide", desktop: "columns", rhythm: "editorial" } },
   station: { header: { layout: "banner", avatarShape: "logo", align: "left" }, layout: { desktop: "split", width: "wide", rhythm: "even" } },
-  detailer: { header: { layout: "editorial", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
+  detailer: { header: { layout: "poster", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
   barber: {},
   physio: { header: { align: "left" }, layout: { desktop: "split" } },
   cafe: { header: { layout: "cover", avatarShape: "circle", avatarSize: "md", align: "center" }, layout: { desktop: "columns", width: "wide" } },

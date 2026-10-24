@@ -179,7 +179,7 @@ test.describe("inspiration", () => {
     await page.getByRole("button", { name: "Dark", exact: true }).click();
     await expect(cards).toHaveCount(1);
     await expect(
-      page.getByRole("heading", { name: "Studio", exact: true }),
+      page.getByRole("heading", { name: "Harris Cars", exact: true }),
     ).toBeVisible();
     await page.getByRole("button", { name: "Clear filters" }).click();
     await expect(cards).toHaveCount(EXAMPLES.length);
@@ -249,7 +249,7 @@ test.describe("inspiration", () => {
     });
     expect(after.content).toEqual(before.content);
     expect(after.order).toEqual(before.order);
-    expect(after.themeId).toBe("blueprint");
+    expect(after.themeId).toBe("open");
     expect(after.themeId).not.toBe(before.themeId);
     expect(after.appearance.layout.desktop).toBe("columns");
     // The change is one undo away.
@@ -285,7 +285,6 @@ test.describe("inspiration", () => {
     await page.getByRole("button", { name: "Continue" }).click(); // → what you do
     await page.getByRole("button", { name: "Continue" }).click();
     await expect(page.getByTestId("goal")).toBeVisible();
-    await page.getByRole("button", { name: "Continue" }).click();
     await page.getByRole("group", { name: "Contact method" }).getByRole("button", { name: "Phone", exact: true }).click();
     await page.getByLabel("Phone", { exact: true }).fill("01632 960987");
     await page.getByLabel("Phone", { exact: true }).blur();
@@ -297,11 +296,10 @@ test.describe("inspiration", () => {
     await expect(
       page.locator("section[aria-labelledby=step-title]"),
     ).not.toContainText("Hollin");
-    await page.getByTestId("look-picker").getByText("More looks", { exact: true }).click();
-    await page.getByTestId("look-picker").getByText("Signal", { exact: true }).click();
+    await page.getByTestId("look-picker").getByText("Silver", { exact: true }).click();
     await page.reload();
     await expect(
-      page.getByTestId("look-picker").getByRole("radio", { name: /Signal/ }),
+      page.getByTestId("look-picker").getByRole("radio", { name: /Silver/ }),
     ).toBeChecked(); // a refresh does not re-apply the example
   });
 });
@@ -336,28 +334,13 @@ test.describe("pricing", () => {
 });
 
 test.describe("film", () => {
-  test("never autoplays or loads until asked, and the story is written out beside it", async ({
-    page,
-  }) => {
-    await page.goto("/");
-    await expect(page.locator("video")).toHaveCount(0);
-    await expect(
-      page.getByRole("button", { name: /Play, 18 seconds/ }),
-    ).toBeVisible();
-    await page.getByText("Read the film", { exact: true }).click();
-    await expect(
-      page.getByText(/Your photos, your colours/),
-    ).toBeVisible();
-    await page.getByRole("button", { name: /Play, 18 seconds/ }).click();
-    const v = page.locator("video");
-    await expect(v).toHaveCount(1);
-    await expect(v).toHaveAttribute("controls", "");
-    expect(
-      (await page.request.head("/marketing/film/taplo-intro.mp4")).ok(),
-    ).toBe(true);
-    expect((await page.request.head("/marketing/film/poster.webp")).ok()).toBe(
-      true,
-    );
+  test("silent inline film autoplays when visible and has no playback controls", async ({ page }) => {
+    await page.emulateMedia({reducedMotion:"no-preference"});await page.goto("/")
+    await page.locator('section[aria-labelledby="film-h"]').scrollIntoViewIfNeeded()
+    await expect(page.locator("video")).toHaveAttribute("autoplay", "")
+    await expect(page.locator("video")).not.toHaveAttribute("controls", "")
+    await expect(page.getByText("Read the film",{exact:true})).toHaveCount(0)
+    expect((await page.request.head("/marketing/film/taplo-intro.mp4")).ok()).toBe(true)
   });
 });
 

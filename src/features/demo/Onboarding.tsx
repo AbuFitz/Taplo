@@ -1,11 +1,13 @@
 "use client"
 
+import { BusinessIcon } from "./BusinessIcon"
+import { SetupCanvas } from "./SetupCanvas"
 import { SetupLoading } from "./SetupLoading"
 import { TaploLogo } from "@/components/taplo/brand"
 import * as React from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Camera, Dumbbell, Check, Plus, Trash2, Scissors, Wrench, Car, CarFront, Coffee, GraduationCap, Building2, CalendarDays, MessageSquare, Phone, Mail } from "lucide-react"
+import { Check, Plus, Trash2, CalendarDays, MessageSquare, Phone, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { LOCATION_MODES } from "@/features/businesses/content"
@@ -26,7 +28,7 @@ import { ONBOARDING_STEPS, initialState, parseContent, useDemo, type OnboardingS
 import { RecordForm, blankFor, commitRecord, validate } from "@/features/page/editor/RecordForms"
 import { WHEN_UNAVAILABLE, capabilities } from "@/lib/capabilities"
 import { SandboxBadge } from "@/components/taplo/sandbox-badge"
-import { EmailField, PhoneField, PreviewFrame } from "./ui"
+import { EmailField, PhoneField } from "./ui"
 import type { WidgetType } from "@/features/page/contracts/widgets"
 
 const STEP_LABEL: Record<OnboardingStep, string> = {
@@ -39,14 +41,16 @@ const STEP_LABEL: Record<OnboardingStep, string> = {
   publish: "Review",
 }
 const STEP_TITLE: Record<OnboardingStep, string> = {
-  business: "What is your business called?",
+  business: "Make it yours.",
   industry: "What do you do?",
-  goal: "What should people do first?",
-  reach: "How can people reach you?",
-  widgets: "Choose a design",
+  goal: "Choose the first step.",
+  reach: "Make the next step easy.",
+  widgets: "Find your layout.",
   contacts: "Add your first content",
   publish: "Your page is ready to look at",
 }
+
+const SETUP_STEPS = ONBOARDING_STEPS.filter(step => step !== "goal")
 
 const POPULAR = ["barber", "detailer", "car-dealer", "hospitality", "tutor", "plumber", "personal-trainer", "photographer", "other"]
 
@@ -79,6 +83,18 @@ function firstKind(industryKey: string): "service" | "vehicle" | "photo" {
 const LOCATION_LABEL = { premises: "A place customers visit", service_area: "I travel to customers", online: "Online only" } as const
 
 export function Onboarding() {
+  const shell = React.useRef<HTMLElement>(null)
+  React.useEffect(() => {
+    const viewport = window.visualViewport
+    const sync = () => {
+      if (!shell.current) return
+      const height = viewport?.height ?? window.innerHeight
+      shell.current.style.setProperty("--setup-height", `${height}px`)
+      shell.current.dataset.keyboard = String(window.innerHeight - height > 180)
+    }
+    sync(); viewport?.addEventListener("resize", sync)
+    return () => viewport?.removeEventListener("resize", sync)
+  }, [])
   const router = useRouter()
   const { ready, state, update } = useDemo()
   const [showErrors, setShowErrors] = React.useState(false)
@@ -88,16 +104,16 @@ export function Onboarding() {
   const [mobilePreview, setMobilePreview] = React.useState(false)
   const [reachChoice, setReachChoice] = React.useState<"phone" | "email" | "whatsapp" | null>(null)
   const s = state ?? initialState()
-  const step: OnboardingStep = (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "widgets"
-  const stepIndex = ONBOARDING_STEPS.indexOf(step)
+  const step: OnboardingStep = s.step === "goal" ? "reach" : (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "widgets"
+  const stepIndex = SETUP_STEPS.indexOf(step as Exclude<OnboardingStep, "goal">)
 
   const go = (to: OnboardingStep) => {
     setShowErrors(false)
     update((x) => ({ ...x, step: to }))
     window.scrollTo({ top: 0 })
   }
-  const next = () => go(ONBOARDING_STEPS[Math.min(stepIndex + 1, ONBOARDING_STEPS.length - 1)]!)
-  const back = () => go(ONBOARDING_STEPS[Math.max(stepIndex - 1, 0)]!)
+  const next = () => go(SETUP_STEPS[Math.min(stepIndex + 1, SETUP_STEPS.length - 1)]!)
+  const back = () => go(SETUP_STEPS[Math.max(stepIndex - 1, 0)]!)
 
   // A plan chosen on the pricing page carries into setup (and stays through every step) without taking payment.
   // Read from the router, not window.location: on a client-side navigation (pricing → setup) the address has not changed yet when this first renders.
@@ -156,16 +172,16 @@ export function Onboarding() {
   }
 
   return (
-    <main data-step={step} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
+    <main ref={shell} data-preview-expanded={mobilePreview} data-step={step} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
       <header className="mb-12 flex flex-wrap items-center justify-between gap-3">
         <Link href="/" aria-label="Taplo home" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo /></Link>
         <div className="flex flex-wrap items-center gap-2">{fromName ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="from-example" title="Only its look and the kinds of content are used. None of its words, prices or pictures are copied.">Starting from {fromName}</span> : null}{intent ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}<SandboxBadge /><Link href="/dashboard/page" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip to the editor</Link></div>
       </header>
 
       <nav aria-label="Progress" className="mb-10 max-w-xl">
-        <p className="mb-3 text-xs font-medium text-muted-foreground">Step {stepIndex + 1} of {ONBOARDING_STEPS.length} · {STEP_LABEL[step]}</p>
-        <ol className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${ONBOARDING_STEPS.length}, minmax(0, 1fr))` }}>
-          {ONBOARDING_STEPS.map((st, i) => (
+        <p className="mb-3 text-xs font-medium text-muted-foreground">Step {stepIndex + 1} of {SETUP_STEPS.length} · {STEP_LABEL[step]}</p>
+        <ol className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${SETUP_STEPS.length}, minmax(0, 1fr))` }}>
+          {SETUP_STEPS.map((st, i) => (
             <li key={st} aria-current={st === step ? "step" : undefined} className="h-1 overflow-hidden rounded-full bg-black/[0.09]">
               <span className={cn("block h-full rounded-full bg-primary transition-[width] duration-500 ease-out", i < stepIndex ? "w-full" : i === stepIndex ? "w-1/2 bg-signal" : "w-0")} />
               <span className="sr-only">{STEP_LABEL[st]}{i < stepIndex ? " (done)" : ""}</span>
@@ -174,22 +190,23 @@ export function Onboarding() {
         </ol>
       </nav>
 
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
+      <div className="setup-workspace grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
         <section aria-labelledby="step-title" className="min-w-0">
           <h1 id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? { service: "Add your first service", vehicle: "Add your first vehicle", photo: "Add your first photos" }[firstKind(c.identity.industryKey)] : STEP_TITLE[step]}</h1>
 
+          <div className="setup-step-body" key={step}>
           {step === "industry" ? (
             <div className="grid gap-7">
               <div className="grid gap-3">
-                <TaploInput label="What do you do?" placeholder="Search: barber, tutor, café, plumber…" value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
-                <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3" aria-label="Kinds of business">
+                <TaploInput label="Search businesses" placeholder="Search: barber, tutor, café, plumber…" value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
+                <ul className="setup-industry-list grid grid-cols-2 gap-2" aria-label="Kinds of business">
                   {searchIndustries(query).filter((p) => query.trim() ? true : POPULAR.includes(p.id) || (state !== null && c.identity.industryKey === p.id)).sort((a, b) => query.trim() ? 0 : POPULAR.indexOf(a.id) - POPULAR.indexOf(b.id)).slice(0, query.trim() ? 14 : 10).map((p) => {
                     const selected = state !== null && (p.id === OTHER_INDUSTRY_ID ? otherOpen || c.identity.industryLabel !== "" && c.identity.industryKey === OTHER_INDUSTRY_ID : c.identity.industryKey === p.id)
                     return (
                       <li key={p.id}>
                         <button type="button" aria-pressed={selected} onClick={() => { setOtherOpen(p.id === OTHER_INDUSTRY_ID); update((x) => applyIndustry(x, p.id, p.id === OTHER_INDUSTRY_ID ? "" : p.label)) }}
-                          className={cn("setup-industry relative flex min-h-28 w-full flex-col items-start justify-between gap-3 rounded-2xl p-4 text-left text-sm font-semibold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", selected ? "bg-[#111111] text-white" : "bg-[#f5f5f5] hover:bg-[#ededed]")}>
-                          <IndustryIcon id={p.id} />{selected ? <Check aria-hidden="true" className="absolute right-3 top-3 size-4 text-current" /> : null}<span>{p.label}</span>
+                          className={cn("setup-industry relative flex min-h-20 w-full items-center gap-3 rounded-2xl p-3 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", selected ? "bg-[#111111] text-white" : "bg-[#f5f5f5] hover:bg-[#ededed]")}>
+                          <span className="setup-icon"><BusinessIcon id={p.id} /></span>{selected ? <Check aria-hidden="true" className="absolute right-2 top-2 size-3 text-current" /> : null}<span>{p.label}</span>
                         </button>
                       </li>
                     )
@@ -210,27 +227,23 @@ export function Onboarding() {
             </div>
           ) : null}
 
-              {step === "goal" ? (
-                <fieldset className="grid gap-2" data-testid="goal">
-                  <legend className="mb-1 text-sm font-semibold">What should people do first?</legend>
-                  <div className="grid gap-2 sm:grid-cols-2">
+              {step === "reach" ? (
+                <div className="grid gap-6"><fieldset className="grid gap-2" data-testid="goal">
+                  <legend className="mb-3 text-sm font-medium">What should people do first?</legend>
+                  <div className="grid grid-cols-2 gap-2">
                     {GOALS.map((g) => { const Icon = { book: CalendarDays, enquire: MessageSquare, call: Phone, message: Mail }[g.id]; return (
-                      <label key={g.id} className="flex min-h-14 cursor-pointer items-start gap-3 rounded-xl bg-card p-3 text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] has-[:checked]:shadow-[0_0_0_2px_var(--signal)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring">
-                        <input type="radio" name="goal" className="mt-0.5 size-4 accent-[var(--signal)]" checked={goalOf(s) === g.id} onChange={() => update((x) => applyGoal(x, g.id))} />
-                        <span><Icon aria-hidden="true" className="mb-3 size-6 text-signal" /><span className="block font-semibold">{g.label}</span><span className={cn("mt-1 text-xs text-muted-foreground", goalOf(s) !== g.id && "sr-only")}>{g.hint}</span></span>
+                      <label key={g.id} className="setup-goal flex min-h-20 cursor-pointer items-center gap-3 rounded-2xl bg-[#f5f5f5] p-4 text-sm has-[:checked]:bg-black has-[:checked]:text-white has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring">
+                        <input type="radio" name="goal" className="sr-only" checked={goalOf(s) === g.id} onChange={() => update((x) => applyGoal(x, g.id))} />
+                        <Icon aria-hidden="true" className="size-5 shrink-0" /><span><span className="block font-semibold">{g.label}</span><span className="mt-1 block text-xs opacity-70">{g.hint}</span></span>
                       </label>
                     )})}
                   </div>
-                </fieldset>
-              ) : null}
-
-              {step === "reach" ? (
-                <fieldset className="grid gap-3" data-testid="reach">
+                </fieldset><fieldset className="grid gap-3" data-testid="reach">
                   <legend className="mb-1 text-sm font-semibold">{goalOf(s) === "call" ? "The number to call" : "How can people reach you?"}</legend>
                   {goalOf(s) !== "call" ? <div className="grid grid-cols-3 gap-3" role="group" aria-label="Contact method">{(["email", "phone", "whatsapp"] as const).map(method => { const Icon = method === "email" ? Mail : method === "phone" ? Phone : MessageSquare; return <button type="button" key={method} aria-pressed={reachMethod === method} onClick={() => setReachChoice(method)} className={cn("flex min-h-24 flex-col items-center justify-center gap-3 rounded-xl border text-sm font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring", reachMethod === method ? "border-signal bg-signal-soft text-signal" : "bg-white hover:border-signal")}><Icon className="size-6" aria-hidden="true" />{method === "email" ? "Email" : method === "phone" ? "Phone" : "WhatsApp"}</button> })}</div> : null}
                   {reachMethod === "email" ? <EmailField value={c.contacts.email} onCommit={v => update(x => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }, goalOf(x)), { coalesce: "email" })} /> : <PhoneField label={reachMethod === "phone" ? "Phone" : "WhatsApp"} value={c.contacts[reachMethod]} onCommit={v => update(x => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, [reachMethod]: v } } }, goalOf(x)), { coalesce: reachMethod })} hint={reachMethod === "whatsapp" ? "With country code, e.g. +44." : undefined} />}
                   <p className="text-sm text-muted-foreground">One is enough. Only what you fill in appears on your page.</p>
-                </fieldset>
+                </fieldset></div>
               ) : null}
 
           {step === "business" ? (
@@ -257,6 +270,7 @@ export function Onboarding() {
           {step === "widgets" ? <WidgetsStep /> : null}
           {step === "publish" ? <PublishStep onEditor={() => router.push("/dashboard/page")} /> : null}
 
+          </div>
           {step !== "publish" ? (
             <div className="setup-next mt-8 flex flex-wrap items-center gap-3">
               {stepIndex > 0 ? <Button variant="outline" size="lg" onClick={back}>Back</Button> : null}
@@ -269,11 +283,8 @@ export function Onboarding() {
         </section>
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="hidden lg:block"><p className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#111111]"><span className="size-1.5 rounded-full bg-current" />Your page, taking shape</p><PreviewFrame height={650} presentation="canvas" /></div>
-          <div className={cn("lg:hidden", step === "widgets" && "setup-live-choice")}>
-            {step === "widgets" ? <PreviewFrame height={360} presentation="canvas" /> : <><Button variant="outline" onClick={() => setMobilePreview((v) => !v)} aria-expanded={mobilePreview}>{mobilePreview ? "Hide preview" : "Show my page"}</Button>
-            {mobilePreview ? <div className="mt-3"><PreviewFrame /></div> : null}</>}
-          </div>
+          <div className="setup-canvas-heading"><span className="truncate">{c.identity.name || "Your page"}</span><button type="button" onClick={() => setMobilePreview(v => !v)} aria-expanded={mobilePreview} className="min-h-9 rounded-full px-3 text-xs font-medium lg:hidden">{mobilePreview ? "Back to setup" : "Expand preview"}</button><a href="/demo/preview" target="_blank" rel="noreferrer" className="hidden text-xs underline lg:block">Open preview</a></div>
+          <div className="setup-canvas"><SetupCanvas src={step === "contacts" && c.services?.length && !mobilePreview ? `/demo/preview?widget=${s.page.widgets.find(w => w.type === "serviceList" || w.type === "priceMenu")?.id ?? ""}` : "/demo/preview"} expanded={mobilePreview} showIdentity={step === "business"} look={s.page.themeId} /></div>
         </aside>
       </div>
     </main>
@@ -474,9 +485,4 @@ function PublishStep({ onEditor }: { onEditor: () => void }) {
       {!ok ? <p className="text-sm text-destructive" role="alert">Finish the steps marked missing to publish.</p> : <p className="text-xs text-muted-foreground">{WHEN_UNAVAILABLE.publicPublishing}</p>}
     </div>
   )
-}
-
-function IndustryIcon({ id }: { id: string }) {
-  const Icon = id === "barber" || id === "hairdresser" ? Scissors : id === "hospitality" ? Coffee : id === "tutor" ? GraduationCap : id === "photographer" ? Camera : id === "personal-trainer" ? Dumbbell : id === "car-dealer" ? Car : id === "detailer" ? CarFront : ["mechanic", "plumber", "electrician", "builder"].includes(id) ? Wrench : Building2
-  return <Icon aria-hidden="true" className="size-7" strokeWidth={1.6} />
 }

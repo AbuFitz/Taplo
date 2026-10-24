@@ -126,7 +126,6 @@ async function setupFirstContent(p) {
   await p.getByRole("list", { name: "Kinds of business" }).getByRole("button", { name: "Barber", exact: true }).click()
   await p.getByRole("button", { name: "Continue", exact: true }).click()
   await p.getByRole("radio", { name: /Book with me/ }).check()
-  await p.getByRole("button", { name: "Continue", exact: true }).click()
   await p.getByRole("group", { name: "Contact method" }).getByRole("button", { name: "Phone", exact: true }).click()
   await p.getByLabel("Phone", { exact: true }).fill("01632 960123")
   await p.getByRole("button", { name: "Continue", exact: true }).click()

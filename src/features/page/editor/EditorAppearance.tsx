@@ -17,6 +17,7 @@ function useEditorAppearance(ed: Editor, notify: (m: string, undoable?: boolean)
   const page = ed.state.page
   const host = React.useMemo<AppearanceHost>(() => ({
     themeId: page.themeId,
+    logoAccent: ed.state.content.identity.logo?.accent,
     overrides: page.appearance,
     canSwitchLook: ed.vm?.ent.themeSwitching ?? true,
     apply: (fn, coalesce) => setAppearance(fn, coalesce ? `ap:${coalesce}` : undefined),
@@ -29,7 +30,7 @@ function useEditorAppearance(ed: Editor, notify: (m: string, undoable?: boolean)
       apply: (id) => { setPage((p) => { const l = p.savedLooks.find((x) => x.id === id); return l ? { ...p, themeId: l.themeId, appearance: structuredClone(l.overrides) } : p }); notify("Look applied.", true) },
       remove: (id) => setPage((p) => ({ ...p, savedLooks: p.savedLooks.filter((l) => l.id !== id) })),
     },
-  }), [page.themeId, page.appearance, page.savedLooks, ed.vm?.ent.themeSwitching, setAppearance, setPage, notify])
+  }), [ed.state.content.identity.logo?.accent, page.themeId, page.appearance, page.savedLooks, ed.vm?.ent.themeSwitching, setAppearance, setPage, notify])
   return useAppearanceModel(host)
 }
 
