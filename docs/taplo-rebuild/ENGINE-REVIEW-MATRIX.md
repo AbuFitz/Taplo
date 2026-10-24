@@ -4,7 +4,7 @@
 
 The existing contracts already separate BusinessContent, PageDoc v2, StyleSpec, partial page overrides, widget references and widget appearance. Keep that useful structure. The style contract declares five header layouts; three widths; centered/split/columns desktop modes; solid/gradient/image/shader backgrounds; page and per-widget surfaces; and saved looks/styles. These are current capabilities to assess, not a demand for hundreds more controls. Reconfirm the current schema before implementation.
 
-**The status column below records the audit baseline, not the latest shipping state. Later implementation notes (CONNECTED-EDITING-AND-UK-DESIGNS.md, DESIGN-EXPLORER.md, STOCK-ENGINE-AND-FORMS.md, HOME-AND-MEDIA.md and PRODUCT-AND-SETUP-STORIES.md) record subsequent work. Recheck current source and runtime before treating a baseline failure or open item as current.**
+**The status column below records the audit baseline, not the latest shipping state. Later implementation notes (CONNECTED-EDITING-AND-UK-DESIGNS.md, DESIGN-EXPLORER.md, STOCK-ENGINE-AND-FORMS.md, HOME-AND-MEDIA.md and PRODUCT-AND-SETUP-STORIES.md, OWNER-ENTRY-AND-CONTENT.md and SAVED-LOOKS-AND-STYLES.md) record subsequent work. Recheck current source and runtime before treating a baseline failure or open item as current.**
 
 ## Required review matrix
 

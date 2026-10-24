@@ -22,8 +22,8 @@ interface Appearance { themeId: string; overrides: StyleOverrides }
  * host, on the same appearance model; only the surrounding page and the history store differ.
  */
 export function Lab() {
-  const [scenario, setScenario] = React.useState<Scenario>("barber")
-  const start = React.useMemo(() => initialConfig("barber", EXAMPLE_LOOK.barber), [])
+  const [scenario, setScenario] = React.useState<Scenario>("station")
+  const start = React.useMemo(() => initialConfig("station", EXAMPLE_LOOK.station), [])
   const h = useHistory<Appearance>(() => ({ themeId: start.themeId, overrides: start.overrides }))
   const { themeId, overrides } = h.value
   const register = useFrames(scenario, themeId, overrides)
@@ -34,8 +34,9 @@ export function Lab() {
   const host = React.useMemo<AppearanceHost>(() => ({
     themeId, overrides, canSwitchLook: true,
     saved: {
-      items: savedLooks.map((l) => ({ id: l.id, name: l.name })),
-      save: (name) => setSavedLooks((s) => [...s.slice(-11), { id: `look-${Date.now().toString(36)}`, name, themeId, overrides: structuredClone(overrides) }]),
+      limit: 12,
+      items: savedLooks.map((l) => ({ ...l, active: l.themeId === themeId && JSON.stringify(l.overrides) === JSON.stringify(overrides) })),
+      save: (name) => setSavedLooks((s) => s.length >= 12 ? s : [...s, { id: `look-${Date.now().toString(36)}`, name, themeId, overrides: structuredClone(overrides) }]),
       apply: (id) => { const l = savedLooks.find((x) => x.id === id); if (l) set({ themeId: l.themeId, overrides: structuredClone(l.overrides) }) },
       remove: (id) => setSavedLooks((s) => s.filter((l) => l.id !== id)),
     },
@@ -44,7 +45,7 @@ export function Lab() {
   }), [themeId, overrides, set, savedLooks])
   const m = useAppearanceModel(host)
 
-  const frameSrc = (s: Scenario) => `/appearance/frame?scenario=${s}&look=${themeId}`
+  const frameSrc = (s: Scenario) => `/appearance/frame?scenario=${s}&look=${EXAMPLE_LOOK[s]}`
   const url = `taplo.co/${SCENARIOS[scenario].content.identity.slug}`
   const phone = <PhoneFrame register={register} src={frameSrc(scenario)} title="Mobile preview" />
   const desktop = <DesktopFrame register={register} src={frameSrc(scenario)} title="Desktop preview" url={url} />
@@ -56,7 +57,7 @@ export function Lab() {
           <Link href="/" aria-label="Taplo home" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo /></Link>
           <span className="hidden text-sm text-neutral-400 sm:inline">/</span>
           <h1 className="hidden text-sm font-medium sm:block">Appearance</h1>
-          <div className="order-last w-full sm:order-none sm:ml-6 sm:mr-auto sm:w-52"><Segment label="Business" value={scenario} options={(Object.keys(SCENARIOS) as Scenario[]).map((s) => ({ value: s, label: SCENARIOS[s].label }))} onChange={setScenario} /></div>
+          <label className="order-last flex w-full items-center gap-3 text-xs font-medium sm:order-none sm:ml-6 sm:mr-auto sm:w-auto"><span className="text-neutral-600">Business</span><select aria-label="Business" value={scenario} onChange={(e) => { if (Object.hasOwn(SCENARIOS, e.target.value)) setScenario(e.target.value as Scenario) }} className="min-h-11 min-w-0 flex-1 rounded-xl border bg-white px-3 text-sm sm:w-56">{(Object.keys(SCENARIOS) as Scenario[]).map((s) => <option key={s} value={s}>{SCENARIOS[s].label}</option>)}</select></label>
           <div className="ml-auto flex items-center gap-1 sm:ml-0" role="toolbar" aria-label="History">
             <Button variant="ghost" size="icon" onClick={h.undo} disabled={!h.canUndo} aria-label="Undo" data-testid="lab-undo"><Undo2 /></Button>
             <Button variant="ghost" size="icon" onClick={h.redo} disabled={!h.canRedo} aria-label="Redo" data-testid="lab-redo"><Redo2 /></Button>

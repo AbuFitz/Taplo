@@ -23,8 +23,9 @@ function useEditorAppearance(ed: Editor, notify: (m: string, undoable?: boolean)
     setAppearance: (themeId, appearance) => setPage((p) => ({ ...p, themeId, appearance })),
     notify,
     saved: {
-      items: page.savedLooks.map((l) => ({ id: l.id, name: l.name })),
-      save: (name) => { setPage((p) => ({ ...p, savedLooks: [...p.savedLooks.slice(-11), { id: newId("look"), name, themeId: p.themeId, overrides: structuredClone(p.appearance) }] })); notify("Saved to My looks.") },
+      limit: 12,
+      items: page.savedLooks.map((l) => ({ ...l, previewSrc: `/demo/preview?savedLook=${encodeURIComponent(l.id)}`, active: l.themeId === page.themeId && JSON.stringify(l.overrides) === JSON.stringify(page.appearance) })),
+      save: (name) => { setPage((p) => ({ ...p, savedLooks: p.savedLooks.length >= 12 ? p.savedLooks : [...p.savedLooks, { id: newId("look"), name, themeId: p.themeId, overrides: structuredClone(p.appearance) }] })); notify("Saved to My looks.") },
       apply: (id) => { setPage((p) => { const l = p.savedLooks.find((x) => x.id === id); return l ? { ...p, themeId: l.themeId, appearance: structuredClone(l.overrides) } : p }); notify("Look applied.", true) },
       remove: (id) => setPage((p) => ({ ...p, savedLooks: p.savedLooks.filter((l) => l.id !== id) })),
     },

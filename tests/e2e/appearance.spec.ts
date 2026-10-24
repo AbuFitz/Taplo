@@ -19,7 +19,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
   test("looks are configurations of the same engine; content never changes", async ({ page }) => {
     await page.goto("/appearance");
     const f = frame(page);
-    await expect(f.getByRole("heading", { level: 1 })).toHaveText("Marlowe & Finch");
+    await expect(f.getByRole("heading", { level: 1 })).toHaveText("Station Road Barbers");
     const name = await f.getByRole("heading", { level: 1 }).textContent();
     const services = await f.locator('[data-widget="priceMenu"] li').count();
 
@@ -38,7 +38,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
   test("every demonstrated choice is editable; undo, redo and reset work", async ({ page }) => {
     await page.goto("/appearance");
     const f = frame(page);
-    // The lab opens on the barber's own design (Folio). This walk-through starts from the Night look so every step changes something.
+    // The lab opens on the barber's own design (High Street). This walk-through starts from the Night look so every step changes something.
     await choice(page, "Look", "Night");
     await expect.poll(() => attr(page, "data-header")).toBe("side");
     await expect(page.getByTestId("lab-reset")).toBeDisabled();                             // untouched look
@@ -84,7 +84,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
     expect(await accent()).not.toBe(before);
     await page.keyboard.press("Escape");
     await page.getByTestId("lab-undo").click();
-    expect(await accent()).toBe(before);
+    await expect.poll(accent).toBe(before);
 
     // an unreadable pairing is corrected and explained, never silently shipped
     await page.getByRole("textbox", { name: "Text hex value", exact: true }).fill("#1a1816");
@@ -94,7 +94,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
   test("the same appearance renders a car dealer's stock; phone and desktop both reflect it", async ({ page }) => {
     await page.goto("/appearance");
     await choice(page, "Look", "Showroom");
-    await page.getByRole("radiogroup", { name: "Business" }).locator("label", { hasText: "Car dealer" }).click();
+    await page.getByRole("combobox", { name: "Business", exact: true }).selectOption("dealer");
     const d = frame(page);
     await expect(d.getByRole("heading", { level: 1 })).toHaveText("Aldous Motor Co.");
     await expect(d.locator(".tp-product")).toHaveCount(4);
@@ -131,3 +131,18 @@ test.describe("appearance lab on a phone", () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 });
+
+test("changing a look keeps the current example preview and open customer content in place", async ({ page }) => {
+  await page.setViewportSize({ width: 1600, height: 1000 })
+  await page.goto("/appearance")
+  const preview = frame(page)
+  await expect(preview.getByRole("heading", { level: 1 })).toHaveText("Station Road Barbers")
+  const faq = preview.locator("summary").filter({ hasText: "Can I choose a barber?" })
+  await faq.click()
+  await expect(faq.locator("xpath=parent::details")).toHaveAttribute("open", "")
+  const stamp = await preview.locator("body").evaluate(() => performance.timeOrigin)
+  await choice(page, "Look", "Night")
+  await expect.poll(() => preview.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-accent").trim())).toBe("#c6f432")
+  expect(await preview.locator("body").evaluate(() => performance.timeOrigin)).toBe(stamp)
+  await expect(faq.locator("xpath=parent::details")).toHaveAttribute("open", "")
+})

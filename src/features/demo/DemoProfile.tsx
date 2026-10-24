@@ -7,12 +7,13 @@ import { PageRenderer, buildPageViewModel } from "@/features/page/renderer"
 import { parseContent, useDemo } from "./store"
 import type { StyleSpec } from "@/features/page/contracts/style"
 import { getWidget } from "@/features/page/widgets/registry"
+import { previewAppearance, previewWidgetStyle } from "@/features/page/preview-appearance"
 
 /**
  * Renders the draft ("preview") or the frozen published copy through the SAME
  * PageRenderer/view-model the real public route and fixture routes use.
  */
-export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetId, variant }: { mode: "draft" | "published"; slug?: string; editing?: boolean; headerLayout?: StyleSpec["header"]["layout"]; widgetId?: string; variant?: string }) {
+export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetId, variant, lookId, savedLookId, savedStyleId }: { mode: "draft" | "published"; slug?: string; editing?: boolean; headerLayout?: StyleSpec["header"]["layout"]; widgetId?: string; variant?: string; lookId?: string; savedLookId?: string; savedStyleId?: string }) {
   const { ready, state } = useDemo()
   const source = useMemo(() => {
     if (!state) return null
@@ -28,7 +29,8 @@ export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetI
     const content = mode === "draft" ? { ...source.content, identity: { ...id, name: id.name || "Your business name", industryKey: id.industryKey || "other", industryLabel: id.industryLabel || "Your business", slug: id.slug || "your-page" } } : source.content
     const parsed = parseContent(content)
     if (!parsed.success || !parsed.data.identity.name) return null
-    let page = source.page
+    let page = mode === "draft" ? previewAppearance(source.page, { lookId, savedLookId }) : source.page
+    if (mode === "draft" && savedStyleId) page = previewWidgetStyle(page, widgetId, savedStyleId)
     if (mode === "draft" && (headerLayout || widgetId)) {
       page = { ...page, appearance: { ...page.appearance, ...(headerLayout ? { header: { ...page.appearance.header, layout: headerLayout } } : {}), motion: "none" } }
       if (widgetId && variant) page = { ...page, widgets: page.widgets.map((w) => {
@@ -37,7 +39,7 @@ export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetI
       }) }
     }
     return buildPageViewModel(parsed.data, page, { plan: source.plan })
-  }, [source, mode, headerLayout, widgetId, variant])
+  }, [source, mode, headerLayout, widgetId, variant, lookId, savedLookId, savedStyleId])
 
   if (!ready) return <Message title="Loading…" />
   if (!vm) {
@@ -59,7 +61,7 @@ export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetI
         </div>
       ) : null}
       <PageRenderer vm={vm} fragment={mode !== "draft" ? undefined : headerLayout ? { kind: "header" } : widgetId ? { kind: "widget", id: widgetId } : undefined} />
-      {editing && !headerLayout && !widgetId ? <EditBridge /> : null}
+      {editing && !headerLayout && !widgetId && !lookId && !savedLookId ? <EditBridge /> : null}
     </>
   )
 }

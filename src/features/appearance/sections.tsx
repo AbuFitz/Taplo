@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Lock, RotateCcw, X } from "lucide-react"
+import { Check, Lock, RotateCcw, X } from "lucide-react"
 import { ColorField, ImageField } from "@/features/page/editor/controls"
 import { DECORATIONS, type StyleSpec } from "@/features/page/contracts/style"
 import { FONT_LABELS } from "@/features/page/themes/fonts"
@@ -15,6 +15,8 @@ import type { BusinessContent } from "@/features/businesses/content"
 import { ProfileMark } from "@/features/page/renderer/ProfileMark"
 import { PagePreview } from "@/features/preview/PagePreview"
 import { ButtonTile, FontTile, HeaderTile, PaletteTile, SurfaceTile, WallpaperTile, backgroundPreview } from "./previews"
+
+import { SavedLookPicture } from "./SavedLookPicture"
 
 type M = { m: AppearanceModel }
 
@@ -40,22 +42,27 @@ export function LookPicker({ m }: M) {
 function SavedLooks({ m }: M) {
   const [name, setName] = React.useState("")
   const saved = m.saved!
+  const full = saved.limit !== undefined && saved.items.length >= saved.limit
   return (
     <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-2 rounded-2xl bg-black/[0.035] p-3" data-testid="saved-looks">
       <p className="text-xs font-semibold">My looks</p>
       {saved.items.length ? (
-        <ul className="flex flex-wrap gap-1.5" aria-label="Saved looks">
+        <ul className="grid grid-cols-2 gap-3" aria-label="Saved looks">
           {saved.items.map((l) => (
-            <li key={l.id} className="inline-flex items-center overflow-hidden rounded-full bg-white shadow-[0_0_0_1px_rgb(0_0_0/0.1)]">
-              <button type="button" onClick={() => saved.apply(l.id)} className="min-h-9 pl-3 pr-2 text-xs font-medium hover:bg-black/[0.04]">{l.name}</button>
-              <button type="button" onClick={() => saved.remove(l.id)} aria-label={`Delete ${l.name}`} className="grid size-9 place-items-center text-neutral-600 hover:bg-black/[0.04] hover:text-neutral-900"><X className="size-3.5" aria-hidden="true" /></button>
+            <li key={l.id} className={cn("relative min-w-0 rounded-xl bg-white p-1.5 ring-1", l.active ? "ring-neutral-900" : "ring-black/10")}>
+              <button type="button" onClick={() => saved.apply(l.id)} aria-label={`Apply ${l.name}`} aria-pressed={Boolean(l.active)} className="grid w-full gap-2 rounded-lg text-left outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+                <SavedLookPicture name={l.name} src={l.previewSrc} themeId={l.themeId} overrides={l.overrides} />
+                <span className="flex min-h-10 items-center gap-1.5 pl-1 pr-9 text-xs font-semibold"><span className="min-w-0 break-words">{l.name}</span>{l.active ? <Check aria-hidden="true" className="size-3.5 shrink-0" /> : null}</span>
+              </button>
+              <button type="button" onClick={() => saved.remove(l.id)} aria-label={`Delete ${l.name}`} className="absolute bottom-1.5 right-1.5 grid size-10 place-items-center rounded-lg text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 focus-visible:ring-2 focus-visible:ring-primary"><X aria-hidden="true" className="size-3.5" /></button>
             </li>
           ))}
         </ul>
       ) : <p className="text-xs text-neutral-600">Happy with how it looks? Save it, then try other things and come back.</p>}
-      <form className="flex min-w-0 gap-2" onSubmit={(e) => { e.preventDefault(); const n = name.trim(); if (!n) return; saved.save(n); setName("") }}>
+      {full ? <p role="status" className="text-xs leading-relaxed text-neutral-600">You have {saved.limit} saved looks. Remove one to make room; your current page stays as it is.</p> : null}
+      <form className="flex min-w-0 gap-2" onSubmit={(e) => { e.preventDefault(); const n = name.trim(); if (!n || full) return; saved.save(n); setName("") }}>
         <input aria-label="Name this look" value={name} maxLength={40} onChange={(e) => setName(e.target.value)} placeholder="Name this look" className="h-10 min-w-0 flex-1 rounded-xl border border-input bg-white px-3 text-sm" />
-        <button type="submit" disabled={!name.trim()} className="h-10 shrink-0 rounded-xl bg-neutral-900 px-3.5 text-xs font-medium text-white disabled:opacity-40">Save</button>
+        <button type="submit" disabled={!name.trim() || full} className="min-h-11 shrink-0 rounded-xl bg-neutral-900 px-3.5 text-xs font-medium text-white disabled:opacity-40">Save</button>
       </form>
     </div>
   )

@@ -6,11 +6,24 @@ The owner has now authorized direct frontend implementation and using Claude spa
 
 Continue Taplo from the latest actual repository state. The owner wants a substantial improvement in product design, theme quality, editing, setup, marketing and content. Preserve good work from the latest push; identify what still falls short through rendered evidence. Do not treat prior screenshots or this pack's baseline observations as permanent facts.
 
+## Current delivery notes — read these before the historical audits
+
+This branch has moved substantially beyond the research baseline. Read these implementation notes and inspect their current code/screens before choosing work:
+
+- CONNECTED-EDITING-AND-UK-DESIGNS.md and DESIGN-EXPLORER.md: connected editor previews, UK barber/detailing designs and working visual gallery.
+- STOCK-ENGINE-AND-FORMS.md: forecourt composition, stock catalogue and contextual enquiry flows.
+- HOME-AND-MEDIA.md: rebuilt homepage narrative, authored films and repeatable capture/render pipeline.
+- PRODUCT-AND-SETUP-STORIES.md: ten feature pages, five-stage visual setup guide, pricing, navigation/footer and image delivery.
+- OWNER-ENTRY-AND-CONTENT.md: current UK examples in the owner entry, real-content chooser, atomic creation/undo and browser storage improvements.
+- SAVED-LOOKS-AND-STYLES.md: visual reusable designs, section style previews, non-destructive saved limits and persistent appearance previews.
+
+These notes are evidence pointers, not a claim that the full brief is complete. The remaining catalogue/industry work, engine matrix, media deliverables and complete journey audit stay in scope. Read the scripts' actual supported formats: landscape, portrait and square production does not by itself fulfil the requested 4:5 advertisement.
+
 ## Read the project and establish the current state
 
 Read AGENTS.md, current project instructions and the relevant installed Next documentation. Read the latest delivery/review package and requirements checklist before changing anything. Identify repository HEAD and the deployment being reviewed separately. The research baseline was `e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52`; a later Claude run reported navigation/hero/footer, booking story, Folio, desktop changes, editor handles and cover-photo setup. Confirm those claims and retain improvements that work.
 
-Read ROUND4-RECONCILIATION.md, CUSTOMER-JOURNEY-AUDIT.md and the preserved upstream checklist first. The deployed round-four reference is not completed propagation. E01–E03 persist in the actual latest-source probe; J02 is a live no-op Back control and J03 loses selected vehicle context in the in-page form. Resolve them as part of complete engine/journey work. Preserve/migrate saved composition deliberately; do not silently flatten saved split/columns documents just because the checklist proposes retiring those names.
+Read ROUND4-RECONCILIATION.md, CUSTOMER-JOURNEY-AUDIT.md and the preserved upstream checklist as historical baselines. E01–E03 and the J02/J03 booking/enquiry findings subsequently received implementation fixes and targeted regressions; verify current behaviour before declaring them open or repeating those changes. Preserve/migrate saved composition deliberately; do not silently flatten saved split/columns documents just because the checklist proposes retiring those names.
 
 Read `docs/taplo-rebuild/AUDIT.md`, `ENGINE-AND-UX.md`, `CREATIVE-BRIEF.md`, `TOOLING.md` and `ACCEPTANCE.csv`. Use the repository-local frontend-design and taplo-design-review skills if installed. Confirm the files are present before claiming skill use. Do not repeatedly install the same dependencies or assume a documented MCP connection exists.
 
@@ -50,7 +63,7 @@ Use `fixtures/businesses.json` as original editorial source material and adapt i
 
 An adapter and `fixtures/business-content-inputs.json` are now included, with six schema-valid inputs at the recorded baseline commit. Read fixtures/INTEGRATION.md and revalidate on current HEAD. Booking is deliberately disabled in those inputs; author isolated availability and actual PageDoc composition rather than pretending these content files are finished interactive demos.
 
-Develop the Stillwater, After Hours and Forecourt briefs or equally strong justified alternatives. The detailing page needs package scope, honest from/quote pricing and enquiry; the barber needs service/provider/time logic; the dealer needs matching photos/specs and clear available/reserved/sold states. Do not route café menu items through appointment booking.
+Station Road Barbers, Parkside Valeting and Brookfield Motors now implement the first three flagship directions. Assess them against the original Stillwater, After Hours and Forecourt briefs, preserve what works and extend the same standard to the remaining supported industries. The detailing page needs package scope, honest from/quote pricing and enquiry; the barber needs service/provider/time logic; the dealer needs matching photos/specs and clear available/reserved/sold states. Do not route café menu items through appointment booking.
 
 Commission or generate a coherent image set and store assets locally with provenance, meaningful filenames, alt text, dimensions and focal crops. The included Stillwater image is generated illustrative photography, not proof of an actual job or a specific vehicle for sale. Obtain matching multi-angle sets for inventory; never fabricate before/after evidence, real customer reviews or credentials.
 

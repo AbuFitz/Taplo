@@ -23,7 +23,7 @@ export interface AppearanceHost {
   setAppearance: (themeId: string, overrides: StyleOverrides) => void
   notify?: (message: string, undoable?: boolean) => void
   /** Owner-created reusable looks, when the host can store them. */
-  saved?: { items: { id: string; name: string }[]; save: (name: string) => void; apply: (id: string) => void; remove: (id: string) => void }
+  saved?: { items: { id: string; name: string; themeId?: string; overrides?: StyleOverrides; previewSrc?: string; active?: boolean }[]; limit?: number; save: (name: string) => void; apply: (id: string) => void; remove: (id: string) => void }
 }
 
 export type Group = "colors" | "text" | "header" | "buttons" | "cards" | "layout"
