@@ -219,7 +219,7 @@ export function Onboarding() {
                     )
                   })}
                 </ul>
-                <button type="button" className="min-h-11 justify-self-start text-sm underline underline-offset-4" onClick={()=>{setOtherOpen(true);update(x=>applyIndustry(x,OTHER_INDUSTRY_ID,""))}}>Use a different business type</button>
+                <button type="button" className="setup-secondary justify-self-start" onClick={()=>{setOtherOpen(true);update(x=>applyIndustry(x,OTHER_INDUSTRY_ID,""))}}>Use a different business type</button>
                 {state !== null && (otherOpen || c.identity.industryKey === OTHER_INDUSTRY_ID && c.identity.industryLabel !== "") ? (
                   <TaploInput label="Describe your business" hint="e.g. Dog groomer, Wedding florist, Piano restorer" value={c.identity.industryLabel} maxLength={80} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }), { coalesce: "ind-label" })} />
                 ) : null}

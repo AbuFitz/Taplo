@@ -20,7 +20,7 @@
 .setup-secondary:hover{color:#111!important}
 .setup-address{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:13px;color:#666;min-height:30px;margin-top:-10px}
 .setup-next{position:relative;z-index:2;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0!important;min-height:82px;padding:18px 2px max(20px,env(safe-area-inset-bottom));background:transparent;isolation:isolate}
-.setup-next::before{content:"";position:absolute;z-index:-1;inset:-20px -32px 0;pointer-events:none;background:linear-gradient(transparent,#fffffff0 40%,#fff 95%)}
+.setup-next::before{content:"";position:absolute;z-index:-1;inset:-20px -32px 0;pointer-events:none;background:linear-gradient(transparent,#fffffff0 40%,#fff 95%);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .setup-next>[data-slot=button]{min-height:46px;border-radius:8px;box-shadow:none}
 .setup-next>[data-variant=outline]{border:0;background:transparent;color:#555;padding-inline:12px}
 .setup-next>p{flex-basis:100%;font-size:13px}
@@ -78,7 +78,7 @@
  .setup-workspace #step-title{font-size:clamp(1.85rem,7vw,2.35rem);margin-bottom:24px}
  .setup-step-body{padding-bottom:24px}
  .setup-next{padding-top:14px;min-height:76px}
- .setup-next::before{inset-inline:-24px}
+ .setup-next::before{inset-inline:-24px;mask-image:none}
  .setup-next>[data-variant=default]{flex:1}
  .setup-workspace>aside{position:absolute;inset:0;visibility:hidden;pointer-events:none;height:400px;padding:0}
  .setup-flow[data-mobile-layout=preview] .setup-workspace{grid-template-rows:clamp(170px,28dvh,255px) minmax(0,1fr)}
