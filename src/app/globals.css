@@ -268,6 +268,11 @@
   .setup-flow[data-step="widgets"] .setup-next { position: static; margin-block: 0; border: 0; }
 
 }
+@media (min-width: 1024px) {
+  .setup-look-picker { max-width: 26rem; }
+  .setup-look-picker > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .setup-look-picker .theme-swatch { aspect-ratio: 4 / 3; }
+}
 .setup-loading-art { position: relative; width: 230px; height: 160px; margin-inline: auto; perspective: 600px; }
 .setup-loading-art i { position: absolute; top: 15px; left: 70px; width: 100px; height: 135px; border-radius: 12px; border: 2px solid #080808; background: #111111; transform: rotate(-14deg) translateX(-45px); animation: setup-fan 1.3s ease-in-out infinite alternate; }
 .setup-loading-art i:nth-child(2) { background: #ffffff; transform: translateY(-10px); animation-delay: -.3s; }
