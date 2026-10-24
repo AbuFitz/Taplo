@@ -2,7 +2,7 @@ import * as radix from "@radix-ui/colors"
 import type { StyleOverrides } from "../contracts/style"
 
 /**
- * Four configurations of the one appearance engine. Each is simply a complete set of owner
+ * Curated configurations of the one appearance engine. Each is simply a complete set of owner
  * choices (StyleOverrides) over the same base: nothing here is a separate stylesheet, and any
  * value can be changed afterwards through the same controls.
  */

@@ -203,6 +203,7 @@ export const SCENARIOS: Record<Scenario, { label: string; content: BusinessConte
       newWidget("booking", { label: "Book a haircut", variant: "button" }),
       newWidget("priceMenu", { title: "Cuts and prices", showDescriptions: true }),
       newWidget("team", { title: "Choose your barber", variant: "list" }),
+      newWidget("products", { title: "From the shop", variant: "swipe" }),
       newWidget("gallery", { title: "The shop", variant: "grid" }),
       newWidget("hours", { title: "When we're open" }),
       newWidget("faq", { title: "Before you visit" }),

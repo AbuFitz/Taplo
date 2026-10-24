@@ -23,6 +23,8 @@ function example(key: keyof typeof inputs, mode: "instant" | "request", logo: st
 const station = example("common-room-barbers", "instant", "station-road-mark")
 export const STATION: BusinessContentInput = {
   ...station,
+  products: (station.products ?? []).map(p => ({ ...p, image: { src: "/taplo-demo/station-paste.png", alt: "Illustrative styling paste for the fictional Station Road shop", width: 1152, height: 768 } })),
+  staff: (station.staff ?? []).map(p => ({ ...p, photo: { src: `/taplo-demo/station-${p.id.replace("cr-", "")}.png`, alt: `Illustrative portrait of ${p.name}, a fictional example barber`, width: 512, height: 768 } })),
   identity: { ...station.identity, heroImage: { src: "/taplo-demo/station-road-barber-work.png", alt: "Illustrative barber at work in a daylit high-street shop", width: 1536, height: 1024, focal: { x: 54, y: 46 } } },
   gallery: [{ id: "station-work", image: { src: "/taplo-demo/station-road-barber-work.png", alt: "Illustrative scene of a haircut in progress", width: 1536, height: 1024 }, caption: "In the chair · illustrative example" }],
 }

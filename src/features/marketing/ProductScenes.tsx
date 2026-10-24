@@ -1,224 +1,801 @@
-import { ArrowRight } from "lucide-react"
-import { Shot } from "./Shot"
-import { YoursScene } from "./YoursScene"
-import { cn } from "@/lib/utils"
-import type { ProductPage } from "./product"
-import { featureNote, featureState, type FeatureId } from "@/lib/feature-status"
+import Link from "next/link";
+import {
+  ArrowRight,
+  CalendarCheck,
+  Clock,
+  MessageSquare,
+  ExternalLink,
+  Bell,
+  Megaphone,
+  Smartphone,
+} from "lucide-react";
+import { Shot } from "./Shot";
+import { ArrowLink } from "./Scenes";
+import { LookSwitcher } from "./home/LookSwitcher";
+import { BookingStory } from "./home/BookingStory";
+import type { ProductPage } from "./product";
+import {
+  featureNote,
+  featureState,
+  type FeatureId,
+} from "@/lib/feature-status";
+import { cn } from "@/lib/utils";
 
-/**
- * One composition per product page, each built differently on purpose: a strip of looks, a journey timeline,
- * a before-and-after, a variant comparison. Every image is a real capture of the page renderer after real
- * clicks (scripts/marketing/capture-states.mjs), never a mock-up.
- */
+const heading =
+  "font-display font-display-tight text-[clamp(1.75rem,3.5vw,3rem)] leading-[1.06] tracking-[-0.035em]";
 function Label({ children }: { children: React.ReactNode }) {
-  return <p className="mt-3 text-sm font-medium text-foreground/70">{children}</p>
+  return (
+    <p className="mt-4 text-sm leading-relaxed text-foreground/65">
+      {children}
+    </p>
+  );
 }
-
-const LOOKS = [["look-night", "Night"], ["look-journal", "Journal"], ["look-clay", "Clay"], ["look-forge", "Forge"], ["look-orchard", "Orchard"], ["look-showroom", "Showroom"]] as const
-
+function Intro({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="max-w-2xl">
+      <h2 className={heading}>{title}</h2>
+      <div className="mt-5 text-lg leading-relaxed text-foreground/70">
+        {children}
+      </div>
+    </div>
+  );
+}
 function Design() {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] gap-24">
-      <div>
-        <p className="max-w-2xl text-lg text-foreground/70">The same business, six of the nine starting looks. Nothing but the look changed.</p>
-        <ul className="-mx-5 mt-8 flex snap-x snap-mandatory scroll-px-5 gap-5 overflow-x-auto px-5 pb-4 [scrollbar-width:thin]" aria-label="One business in six looks">
-          {LOOKS.map(([id, name], n) => (
-            <li key={id} className={cn("shrink-0 snap-start", n % 2 === 1 && "mt-10")}>
-              <Shot id={id} alt={`The same barber's page in the ${name} look`} width={260} cropTo={400} />
-              <Label>{name}</Label>
+    <div className="grid gap-20 sm:gap-28">
+      <section>
+        <Intro title="Start close. Make it yours.">
+          Try the same business in a different look. The name, prices and photos
+          stay put while the page changes around them.
+        </Intro>
+        <div className="mt-10">
+          <LookSwitcher />
+        </div>
+      </section>
+      <section className="grid gap-10 border-t border-foreground/15 pt-10 lg:grid-cols-[1fr_1.2fr]">
+        <Intro title="The small choices make it yours.">
+          Keep a look as it is, or change one thing at a time. Your page stays
+          in view while you make your choices.
+        </Intro>
+        <dl className="grid grid-cols-2 gap-x-8 gap-y-7">
+          {[
+            ["Your colours", "Choose the page, text, cards and accent."],
+            ["Your type", "Match the headings and everyday details."],
+            [
+              "Your first impression",
+              "A useful logo, a photo or a bigger introduction.",
+            ],
+            ["Your buttons", "A clear shape and a clear next step."],
+            ["Your sections", "Pick the layout that suits the content."],
+            ["Your backdrop", "Keep it simple or bring in a photograph."],
+          ].map(([title, body]) => (
+            <div key={title}>
+              <dt className="font-semibold">{title}</dt>
+              <dd className="mt-2 text-sm leading-relaxed text-foreground/65">
+                {body}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+      <section>
+        <Intro title="Made for the phone. Room to breathe on a bigger screen.">
+          The same content rearranges for the space available. Try both sizes on
+          an example before making a start.
+        </Intro>
+        <div className="mt-8 grid items-center gap-8 md:grid-cols-[0.4fr_1fr]">
+          <Shot
+            id="ex-station-road-barbers-phone"
+            alt="The Station Road page at a real phone width"
+            width={310}
+            cropTo={610}
+            fluid
+            className="mx-auto w-full"
+          />
+          <Shot
+            id="ex-station-road-barbers-desk"
+            alt="The same Station Road content arranged for a desktop"
+            width={880}
+            fluid
+            frame="browser"
+            className="w-full"
+          />
+        </div>
+        <div className="mt-7">
+          <ArrowLink href="/inspiration/station-road-barbers">
+            Try phone and desktop
+          </ArrowLink>
+        </div>
+      </section>
+    </div>
+  );
+}
+function Services() {
+  return (
+    <div className="grid gap-20">
+      <section className="grid items-center gap-10 lg:grid-cols-2">
+        <div>
+          <Intro title="Enough detail before they ask.">
+            What is included, how long it takes and who can help. Open a service
+            without losing the page, then book or ask a question from there.
+          </Intro>
+          <div className="mt-7">
+            <ArrowLink href="/inspiration/station-road-barbers">
+              Try a haircut on the example page
+            </ArrowLink>
+          </div>
+        </div>
+        <div>
+          <Shot
+            id="svc-detail"
+            alt="Station Road's haircut detail: £22, 30 minutes, eligible barbers and the booking action"
+            width={680}
+            fluid
+            frame="none"
+            className="w-full"
+          />
+          <Label>
+            A real service detail from the fictional Station Road page.
+          </Label>
+        </div>
+      </section>
+      <section className="grid gap-12 border-t border-foreground/15 pt-10 lg:grid-cols-[0.8fr_1.2fr]">
+        <div>
+          <Intro title="Price it the way you work.">
+            A straightforward price, a starting point or a quote after a
+            conversation. The wording makes the difference clear.
+          </Intro>
+          <dl className="mt-8 grid grid-cols-[auto_1fr] gap-x-6 gap-y-4 text-sm">
+            <dt className="font-semibold">£22</dt>
+            <dd className="text-foreground/65">One fixed price.</dd>
+            <dt className="font-semibold">From £65</dt>
+            <dd className="text-foreground/65">
+              A starting price when the work varies.
+            </dd>
+            <dt className="font-semibold">Quote on request</dt>
+            <dd className="text-foreground/65">
+              Talk about the job before agreeing a price.
+            </dd>
+            <dt className="font-semibold">Free</dt>
+            <dd className="text-foreground/65">
+              A viewing or first conversation, clearly labelled.
+            </dd>
+          </dl>
+        </div>
+        <div className="grid grid-cols-2 items-start gap-5">
+          <figure>
+            <Shot
+              id="svc-menu-barber"
+              alt="A clear grouped haircut price menu"
+              width={310}
+              fluid
+              frame="none"
+              className="w-full"
+            />
+            <Label>A quick price list.</Label>
+          </figure>
+          <figure className="mt-14">
+            <Shot
+              id="svc-cards-parkside"
+              alt="Parkside valeting packages with descriptions and starting prices"
+              width={310}
+              fluid
+              frame="none"
+              className="w-full"
+            />
+            <Label>Packages with room for the detail.</Label>
+          </figure>
+        </div>
+      </section>
+    </div>
+  );
+}
+function Booking() {
+  return (
+    <div className="grid gap-20">
+      <section>
+        <Intro title="Follow a haircut from the page to the diary.">
+          Choose a step to see what the customer sees. The example follows the
+          same booking journey used by your page.
+        </Intro>
+        <div className="mt-10">
+          <BookingStory />
+        </div>
+      </section>
+      <section className="grid items-start gap-10 border-t border-foreground/15 pt-10 lg:grid-cols-2">
+        <div>
+          <Intro title="Your business. Your way of booking.">
+            A clear answer at the end matters as much as a simple start.
+          </Intro>
+          <ul className="mt-8 grid gap-6">
+            {(
+              [
+                [
+                  CalendarCheck,
+                  "Book straight away",
+                  "The time is confirmed on screen and kept in the diary.",
+                ],
+                [
+                  Clock,
+                  "Agree the request first",
+                  "The customer knows it is waiting for your approval.",
+                ],
+                [
+                  MessageSquare,
+                  "Start with a conversation",
+                  "An enquiry asks a question without reserving a time.",
+                ],
+              ] as const
+            ).map(([Icon, title, body]) => {
+              const I = Icon;
+              return (
+                <li key={title} className="flex gap-4">
+                  <I
+                    aria-hidden="true"
+                    className="mt-1 size-5 shrink-0 text-signal"
+                  />
+                  <div>
+                    <h3 className="font-semibold">{title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-foreground/65">
+                      {body}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+        <div>
+          <Shot
+            id="bk-request-review"
+            alt="Parkside's appointment request review, clearly labelled as a pending request"
+            width={600}
+            fluid
+            frame="none"
+            className="w-full"
+          />
+          <Label>
+            A valet requested, with approval still to come. Preview actions stay
+            in this browser.
+          </Label>
+        </div>
+      </section>
+      <section>
+        <Intro title="Times that fit the working day.">
+          Set the hours, breaks and breathing room you need. Give each person
+          the right services and let the page show the times that fit.
+        </Intro>
+        <ul className="mt-8 grid gap-x-12 gap-y-4 border-y border-foreground/15 py-7 text-sm sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            "Working hours for each person",
+            "Breaks, leave and one-off dates",
+            "Time before and after appointments",
+            "Notice and how far ahead people can book",
+            "Services each person provides",
+            "Your time zone and clock changes",
+          ].map((t) => (
+            <li key={t} className="flex gap-3">
+              <span
+                aria-hidden="true"
+                className="mt-2 size-1.5 shrink-0 rounded-full bg-signal"
+              />
+              {t}
             </li>
           ))}
         </ul>
-      </div>
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-12 md:grid-cols-[1fr_1.3fr]">
-        <div>
-          <h2 className="font-display font-display-tight text-[clamp(1.75rem,3.4vw,2.75rem)]">What a look sets</h2>
-          <p className="mt-4 text-foreground/70">Each of these is its own control, so you can keep a look and change one thing, or build your own from nothing.</p>
-        </div>
-        <dl className="grid grid-cols-2 gap-x-8 gap-y-5 text-[0.9375rem]">
-          {[["Colours", "Page, text, cards, accent, borders."], ["Type", "Heading and body fonts, size, case, weight."], ["Header", "Five layouts, avatar shape and size."], ["Buttons", "Shape, fill, shadow, icons."], ["Cards", "Surface, corners, border, padding."], ["Wallpaper", "Solid, gradient, photo or a gentle animation."]].map(([t, d]) => (<div key={t}><dt className="font-semibold">{t}</dt><dd className="text-foreground/65">{d}</dd></div>))}
-        </dl>
-      </div>
-      <div>
-        <h2 className="font-display font-display-tight text-[clamp(1.75rem,3.4vw,2.75rem)]">From a look to your own</h2>
-        <div className="mt-10"><YoursScene /></div>
-      </div>
+      </section>
     </div>
-  )
+  );
 }
-
-function Services() {
-  return (
-    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-14 lg:grid-cols-12">
-      <div className="lg:col-span-7">
-        <h2 className="sr-only">A service opens a detail</h2>
-        <Shot id="svc-detail" alt="A service detail: Signature cut, £34, 45 minutes, with the booking button" width={620} frame="none" className="max-w-full" />
-        <Label>Tap a service for the detail. The price wording and the next step are exact.</Label>
-        <dl className="mt-8 grid max-w-xl grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-[0.9375rem]">
-          <dt className="font-semibold">£34</dt><dd className="text-foreground/65">A fixed price.</dd>
-          <dt className="font-semibold">From £60</dt><dd className="text-foreground/65">A starting price, when the job varies.</dd>
-          <dt className="font-semibold">Quote on request</dt><dd className="text-foreground/65">No number shown, and an enquiry is the next step.</dd>
-          <dt className="font-semibold">Free</dt><dd className="text-foreground/65">Said as it is.</dd>
-        </dl>
-      </div>
-      <div className="grid grid-cols-2 gap-5 lg:col-span-5">
-        {([["svc-menu-barber", "Menu, dark", "A barber's price menu"], ["svc-menu-cafe", "Menu, warm", "A café's menu"], ["svc-menu-physio", "List, typographic", "A clinic's appointments"], ["svc-menu-gym", "Cards, loud", "A studio's classes and memberships"]] as const).map(([id, label, alt], n) => (
-          <figure key={id} className={cn(n % 2 === 1 && "mt-12")}><Shot id={id} alt={alt} width={300} frame="none" className="w-full" /><figcaption className="mt-2 text-sm text-foreground/65">{label}</figcaption></figure>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function Booking() {
-  const steps = [["bk-1-service", "Choose a service"], ["bk-2-time", "Pick a day and time"], ["bk-3-details", "Add your details"], ["bk-4-review", "Check it"], ["bk-5-done", "Done"]] as const
-  return (
-    <div className="grid grid-cols-[minmax(0,1fr)] gap-24">
-      <ol className="-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-6 overflow-x-auto px-5 pb-4 [scrollbar-width:thin]" aria-label="The booking journey in five steps">
-        {steps.map(([id, label], n) => (
-          <li key={id} className="w-[19rem] shrink-0 snap-start">
-            <p className="mb-3 flex items-center gap-2 text-sm font-semibold"><span className="grid grid-cols-[minmax(0,1fr)] size-6 place-items-center rounded-full bg-foreground text-xs text-background">{n + 1}</span>{label}</p>
-            <Shot id={id} alt={`Booking step ${n + 1}: ${label}`} width={304} frame="none" cropTo={n === 1 ? 420 : undefined} className="w-full" />
-          </li>
-        ))}
-      </ol>
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-12 lg:grid-cols-2">
-        <div>
-          <h2 className="font-display font-display-tight text-[clamp(1.75rem,3.4vw,2.75rem)]">Three outcomes, three sets of words</h2>
-          <dl className="mt-8 grid gap-6 text-[0.9375rem]">
-            <div><dt className="font-semibold">Confirmed appointment</dt><dd className="mt-1 text-foreground/70">The time is reserved straight away. Buttons say <b>Book this time</b> and <b>Confirm booking</b>.</dd></div>
-            <div><dt className="font-semibold">Pending request</dt><dd className="mt-1 text-foreground/70">The business accepts or declines. Buttons say <b>Request this time</b> and <b>Send request</b>, and nothing is called booked.</dd></div>
-            <div><dt className="font-semibold">Enquiry</dt><dd className="mt-1 text-foreground/70">No time is reserved. It says so in the form and in the confirmation.</dd></div>
-          </dl>
-        </div>
-        <div>
-          <Shot id="bk-request-review" alt="A request review screen that says Pending request, not booked" width={520} frame="none" className="w-full" />
-          <Label>A request, reviewed. It never claims the time is booked.</Label>
-        </div>
-      </div>
-      <div>
-        <h2 className="font-display font-display-tight text-[clamp(1.75rem,3.4vw,2.75rem)]">The rules behind the times</h2>
-        <ul className="mt-8 grid gap-x-12 gap-y-3 text-[0.9375rem] text-foreground/75 sm:grid-cols-2 lg:grid-cols-3">
-          {["Working hours for each person", "Breaks, leave and one-off dates", "Time before and after each appointment", "Minimum notice and how far ahead", "Who can do which service", "Cancel and move rules, in plain words", "Your time zone, with clock changes", "The customer's own time when it differs", "No two bookings for the same time"].map((r) => <li key={r} className="flex gap-2"><span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-signal" />{r}</li>)}
-        </ul>
-      </div>
-    </div>
-  )
-}
-
 function Team() {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] gap-20">
-      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-12 md:grid-cols-3">
-        <figure><Shot id="team-swipe" alt="A team as a swipe row of portrait cards" width={300} frame="none" className="w-full" /><Label>Swipe: for a handful of people.</Label></figure>
-        <figure className="md:mt-16"><Shot id="team-grid" alt="A team as a grid of portrait cards" width={300} frame="none" className="w-full" /><Label>Grid: for a small clinic.</Label></figure>
-        <figure className="md:mt-32"><Shot id="team-list" alt="A team as a compact list" width={300} frame="none" className="w-full" /><Label>List: when space matters.</Label></figure>
-      </div>
-      <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-12 lg:grid-cols-12">
-        <div className="lg:col-span-5">
-          <h2 className="font-display font-display-tight text-[clamp(1.75rem,3.4vw,2.75rem)]">Open a card for the whole story</h2>
-          <p className="mt-4 text-lg text-foreground/70">Biography, the services they provide with prices, qualifications you supplied, the days they work and the next free day. Then book with them.</p>
-          <p className="mt-4 text-[0.9375rem] text-foreground/60">No photo yet? A plain silhouette shows until you add one. Phone numbers and email addresses are never shown on a profile.</p>
+    <div className="grid gap-20">
+      <section>
+        <Intro title="A familiar face before the first visit.">
+          A quick introduction, a row to browse or a bigger picture of the team.
+          Pick the arrangement that suits your people and your page.
+        </Intro>
+        <div className="mt-10 grid items-start gap-8 md:grid-cols-3">
+          {(
+            [
+              [
+                "team-list",
+                "A quick introduction",
+                "A compact team list with each person's portrait",
+              ],
+              [
+                "team-swipe",
+                "One person at a time",
+                "Portrait cards in a swipeable team row",
+              ],
+              [
+                "team-grid",
+                "Room for everyone",
+                "The same team in a portrait grid",
+              ],
+            ] as const
+          ).map(([id, title, alt], n) => (
+            <figure key={id} className={cn(n === 1 && "md:mt-12")}>
+              <Shot
+                id={id}
+                alt={alt}
+                width={380}
+                fluid
+                frame="none"
+                className="w-full"
+              />
+              <Label>{title}</Label>
+            </figure>
+          ))}
         </div>
-        <div className="lg:col-span-7"><Shot id="team-profile" alt="An expanded team profile with services, qualifications and a Book with button" width={680} frame="none" className="w-full" /></div>
-      </div>
+      </section>
+      <section className="grid items-center gap-10 border-t border-foreground/15 pt-10 lg:grid-cols-[0.8fr_1.2fr]">
+        <div>
+          <Intro title="The right person for the right appointment.">
+            Open a profile to see their introduction, services and working days.
+            Book with that person, with choices limited to the work they
+            actually do.
+          </Intro>
+          <p className="mt-5 text-sm leading-relaxed text-foreground/65">
+            Add the qualifications you want to share. Private staff phone
+            numbers and email addresses stay private.
+          </p>
+          <div className="mt-7">
+            <ArrowLink href="/inspiration/station-road-barbers">
+              Meet the example team
+            </ArrowLink>
+          </div>
+        </div>
+        <div>
+          <Shot
+            id="team-profile"
+            alt="Sam's actual Station Road profile, portrait, eligible services and Book with Sam action"
+            width={750}
+            fluid
+            frame="none"
+            className="w-full"
+          />
+          <Label>
+            Sam, Lee and Iman are fictional example staff with illustrative
+            portraits.
+          </Label>
+        </div>
+      </section>
     </div>
-  )
+  );
 }
-
 function Products() {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-14 lg:grid-cols-12">
-      <div className="lg:col-span-5"><Shot id="prod-swipe" alt="A row of products with prices and facts" width={420} frame="none" className="w-full" /><Label>Products in a swipe row, so a short page stays short.</Label></div>
-      <div className="lg:col-span-7">
-        <Shot id="prod-detail-affiliate" alt="A product detail that says it is an affiliate link and opens the maker's shop" width={680} frame="none" className="w-full" />
-        <Label>A product you recommend but do not sell sends people to the maker, and says so.</Label>
-        <p className="mt-8 max-w-xl text-[0.9375rem] leading-relaxed text-foreground/70">A product either takes an enquiry or opens the shop you already use, in a new tab. Checkout on Taplo needs a payment provider, which is not connected yet.</p>
-      </div>
+    <div className="grid gap-20">
+      <section className="grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+        <div>
+          <Intro title="More than a picture and a price.">
+            Give people enough to decide what to do next. A good photo, a useful
+            description, availability and a way to ask about that exact item.
+          </Intro>
+          <div className="mt-7">
+            <ArrowLink href="/inspiration/station-road-barbers">
+              Try the example shop
+            </ArrowLink>
+          </div>
+        </div>
+        <div>
+          <Shot
+            id="product-detail-station"
+            alt="Station Road's illustrative matte styling paste, £16, with details and an enquiry action"
+            width={710}
+            fluid
+            frame="none"
+            className="w-full"
+          />
+          <Label>
+            A fictional shop item, opened through the real product card.
+          </Label>
+        </div>
+      </section>
+      <section className="border-t border-foreground/15 pt-10">
+        <Intro title="Keep selling the way that suits you.">
+          Taplo can be the useful starting point for a purchase, wherever the
+          next step happens.
+        </Intro>
+        <ul className="mt-8 grid gap-8 sm:grid-cols-3">
+          {(
+            [
+              [
+                MessageSquare,
+                "Take an enquiry",
+                "Keep the product attached to the question, so you know what they mean.",
+              ],
+              [
+                ExternalLink,
+                "Link to your shop",
+                "Send people to the shop you already use. It opens in a new tab.",
+              ],
+              [
+                ArrowRight,
+                "Share a recommendation",
+                "Disclose affiliate links clearly when you recommend another business's product.",
+              ],
+            ] as const
+          ).map(([Icon, title, body]) => {
+            const I = Icon;
+            return (
+              <li key={title} className="border-t border-foreground/15 pt-5">
+                <I aria-hidden="true" className="mb-5 size-6 text-signal" />
+                <h3 className="text-lg font-semibold">{title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-foreground/65">
+                  {body}
+                </p>
+              </li>
+            );
+          })}
+        </ul>
+        <p className="mt-7 text-sm text-foreground/65">
+          Checkout on Taplo needs a payment service connected. The preview takes
+          no payments.
+        </p>
+      </section>
     </div>
-  )
+  );
 }
-
 function Vehicles() {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-14 lg:grid-cols-12">
-      <div className="lg:col-span-4"><Shot id="cap-vehicles" alt="Vehicle cards with year, mileage, fuel and gearbox" width={360} cropTo={820} frame="none" className="w-full" /><Label>The list: facts first, then the price.</Label></div>
-      <div className="lg:col-span-8">
-        <Shot id="veh-detail" alt="A vehicle detail with photos, specifications and an enquiry button" width={720} frame="none" className="w-full" />
-        <Label>The detail: every photo, every specification and a clear way to ask.</Label>
-        <ul className="mt-8 flex flex-wrap gap-2 text-sm"><li className="rounded-full border border-foreground/15 px-3 py-1">Available</li><li className="rounded-full border border-foreground/15 px-3 py-1">Reserved</li><li className="rounded-full border border-foreground/15 px-3 py-1">Sold</li></ul>
-        <p className="mt-3 max-w-xl text-[0.9375rem] text-foreground/65">A reserved or sold car stays on the page with its status, so the stock list tells the truth.</p>
-      </div>
+    <div className="grid gap-16">
+      <section>
+        <Intro title="Give the stock room to be seen.">
+          Large photographs with the year, mileage, fuel, gearbox and price
+          close by. It is easy to compare, open the detail and ask about a
+          particular car.
+        </Intro>
+        <div className="mt-10 hidden md:block">
+          <Shot
+            id="vehicle-catalogue-brookfield"
+            alt="Brookfield's large-card catalogue at desktop width, with two columns and clearly marked vehicle status"
+            width={1200}
+            cropTo={780}
+            fluid
+            frame="browser"
+            className="w-full"
+          />
+        </div>
+        <div className="mt-8 md:hidden">
+          <Shot
+            id="ex-brookfield-motors-phone"
+            alt="Brookfield's catalogue arranged as one readable column on a phone"
+            width={390}
+            cropTo={950}
+            fluid
+            className="mx-auto w-full"
+          />
+        </div>
+        <Label>
+          Illustrative stock on the fictional Brookfield page. Prices and
+          specifications are sample content.
+        </Label>
+      </section>
+      <section className="grid items-start gap-10 border-t border-foreground/15 pt-10 lg:grid-cols-2">
+        <Intro title="Keep the next step clear.">
+          Available cars take enquiries and viewing requests. A reserved car can
+          lead to a question about similar stock. A sold car keeps its status,
+          without pretending it can still be bought.
+        </Intro>
+        <div>
+          <ul className="grid gap-4">
+            {[
+              [
+                "Available",
+                "Open the detail, ask about the car or arrange a viewing.",
+              ],
+              [
+                "Reserved",
+                "Show the status and offer a useful alternative enquiry.",
+              ],
+              [
+                "Sold",
+                "Keep the listing clear for people returning to the page.",
+              ],
+            ].map(([t, b]) => (
+              <li key={t} className="border-b border-foreground/15 pb-4">
+                <h3 className="font-semibold">{t}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-foreground/65">
+                  {b}
+                </p>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-7">
+            <ArrowLink href="/inspiration/brookfield-motors">
+              Try the forecourt example
+            </ArrowLink>
+          </div>
+        </div>
+      </section>
     </div>
-  )
+  );
 }
-
 function GalleryReviews() {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-14 lg:grid-cols-12">
-      <div className="lg:col-span-8"><Shot id="gal-lightbox" alt="A photo open in the full-screen viewer with arrows and zoom" width={760} frame="none" className="w-full" /><Label>Arrow keys, swipe and zoom. Closing returns you to the photo you opened.</Label></div>
-      <div className="lg:col-span-4"><Shot id="rev-quote" alt="A customer quote shown with who supplied it" width={340} frame="none" className="w-full" /><Label>Every quote says who supplied it.</Label>
-        <p className="mt-4 text-[0.9375rem] leading-relaxed text-foreground/65">Taplo never invents a review or a rating. A star rating only appears when it comes from a real source you name.</p></div>
+    <div className="grid gap-20">
+      <section className="grid items-center gap-10 lg:grid-cols-[0.75fr_1.25fr]">
+        <Intro title="Give a good picture a closer look.">
+          Let people open a photo, browse the rest and zoom into the detail.
+          Closing the viewer brings them back to the picture they chose.
+        </Intro>
+        <div>
+          <Shot
+            id="gal-lightbox"
+            alt="The actual Taplo photo viewer displaying an illustrative Station Road barber-shop scene"
+            width={800}
+            fluid
+            frame="none"
+            className="w-full"
+          />
+          <Label>
+            Swipe, zoom or use the keyboard. The photograph is an illustrative
+            example.
+          </Label>
+        </div>
+      </section>
+      <section className="grid gap-10 border-t border-foreground/15 pt-10 lg:grid-cols-2">
+        <Intro title="Good feedback has a source.">
+          Add customer words you have permission to share, with who supplied
+          them. Link to your review pages so people can read more for
+          themselves.
+        </Intro>
+        <div>
+          <ul className="divide-y divide-foreground/15 border-y border-foreground/15">
+            {["Google", "Facebook", "Trustpilot"].map((p) => (
+              <li
+                key={p}
+                className="flex items-center justify-between gap-4 py-5"
+              >
+                <span className="text-lg font-semibold">{p}</span>
+                <span className="text-sm text-foreground/65">
+                  Your own review-page link
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-5 text-sm leading-relaxed text-foreground/65">
+            Taplo does not generate customer reviews or ratings. The fictional
+            Station Road example has no customer reviews.
+          </p>
+        </div>
+      </section>
     </div>
-  )
+  );
 }
-
 function Enquiries() {
   return (
-    <div className="flex flex-col items-center gap-10 md:flex-row md:items-start md:justify-center">
-      <figure><Shot id="enq-inline" alt="A contact form on the page" width={340} frame="none" className="w-full" /><Label>The form on the page.</Label></figure>
-      <ArrowRight aria-hidden="true" className="size-8 shrink-0 rotate-90 text-foreground/40 md:mt-40 md:rotate-0" />
-      <figure className="md:mt-10"><Shot id="enq-sent" alt="The confirmation after sending, which says no time was reserved" width={340} frame="none" className="w-full" /><Label>The confirmation: honest about what happened.</Label></figure>
+    <div className="grid gap-16">
+      <section>
+        <Intro title="A useful question. A clear next step.">
+          Ask for the details you need, let customers check what they have
+          written and explain what happens after they send it.
+        </Intro>
+        <div className="mt-10 grid items-center gap-8 md:grid-cols-[1fr_auto_1fr]">
+          <figure>
+            <Shot
+              id="enq-inline"
+              alt="Parkside's enquiry form asking about the customer's car and requested work"
+              width={390}
+              fluid
+              frame="none"
+              className="mx-auto w-full"
+            />
+            <Label>A form that feels part of your page.</Label>
+          </figure>
+          <ArrowRight
+            aria-hidden="true"
+            className="mx-auto size-8 rotate-90 text-signal md:rotate-0"
+          />
+          <figure>
+            <Shot
+              id="enq-sent"
+              alt="The actual local preview confirmation, stating that nothing has been sent to a business"
+              width={390}
+              fluid
+              frame="none"
+              className="mx-auto w-full"
+            />
+            <Label>A clear result, with no appointment reserved.</Label>
+          </figure>
+        </div>
+      </section>
+      <section className="grid gap-10 border-t border-foreground/15 pt-10 lg:grid-cols-2">
+        <Intro title="You know what they are asking about.">
+          When a question starts from a service or a product, the context comes
+          with it. Keep the conversation about the right item from the start.
+        </Intro>
+        <div>
+          <p className="text-lg font-semibold">Call, message or write</p>
+          <p className="mt-3 text-base leading-relaxed text-foreground/65">
+            Add the contact methods you actually use. Call and WhatsApp buttons
+            open the customer’s own apps; enquiries stay with their details in
+            the preview.
+          </p>
+          <div className="mt-7">
+            <ArrowLink href="/inspiration/parkside-valeting">
+              Try an enquiry on the example
+            </ArrowLink>
+          </div>
+        </div>
+      </section>
     </div>
-  )
+  );
 }
-
 function Sharing() {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-14 lg:grid-cols-12">
-      <div className="lg:col-span-5"><Shot id="share-sheet" alt="The share sheet with a link, a QR code and download buttons" width={440} frame="none" className="w-full" /></div>
-      <div className="lg:col-span-7">
-        <h2 className="font-display font-display-tight text-[clamp(1.75rem,3.4vw,2.75rem)]">Four ways to put it in front of people</h2>
-        <ol className="mt-8 grid gap-6 sm:grid-cols-2">{[["Copy the link", "For a bio, a message or an email."], ["Print the QR code", "A print-ready SVG for the window, the van or a menu."], ["Make a share image", "Your name and link in one picture for social posts."], ["Share from your phone", "Straight into any app, where your phone supports it."]].map(([t, d], n) => (<li key={t}><p className="font-display text-3xl tabular-nums text-foreground/25">{String(n + 1).padStart(2, "0")}</p><p className="mt-1 font-semibold">{t}</p><p className="text-[0.9375rem] text-foreground/65">{d}</p></li>))}</ol>
-      </div>
+    <div className="grid gap-20">
+      <section className="grid items-center gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+        <div>
+          <Intro title="Small enough for a counter. Useful enough to keep.">
+            Download a QR code for a print job or a screen. Bring your own logo,
+            choose a finish and keep the destination easy to reach.
+          </Intro>
+          <div className="mt-7">
+            <ArrowLink href="/inspiration/station-road-barbers">
+              Try the sharing controls
+            </ArrowLink>
+          </div>
+        </div>
+        <div>
+          <Shot
+            id="qr-options"
+            alt="Current QR controls showing the Station Road logo, dot style and actual download formats"
+            width={510}
+            fluid
+            frame="none"
+            className="mx-auto w-full"
+          />
+          <Label>
+            The example uses a reserved .example address. Public page links need
+            publishing connected.
+          </Label>
+        </div>
+      </section>
+      <section className="border-t border-foreground/15 pt-10">
+        <Intro title="One page. Plenty of ways to pass it on.">
+          Use what fits the moment: a quick message, a social post or a card
+          someone can scan on their way out.
+        </Intro>
+        <ol className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            ["Copy your link", "For a bio, a message or an email."],
+            [
+              "Print the code",
+              "SVG or a print-ready PNG for a counter, window or van.",
+            ],
+            [
+              "Save a share card",
+              "Your name, identity, link and code in one picture.",
+            ],
+            ["Share from your phone", "Into the apps your device supports."],
+          ].map(([t, b], n) => (
+            <li key={t} className="border-t border-foreground/15 pt-5">
+              <p className="text-sm font-semibold text-signal">0{n + 1}</p>
+              <h3 className="mt-4 text-lg font-semibold">{t}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-foreground/65">
+                {b}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </section>
     </div>
-  )
+  );
 }
-
-const MESSAGE_KINDS: { id: FeatureId; kind: string; from: string; text: string; who: string }[] = [
-  { id: "textApp", kind: "Text us", from: "Opens the customer’s own messages app", text: "Hi Marlowe & Finch, I’d like to ask about your services.", who: "The customer reads it, edits it and sends it from their own phone." },
-  { id: "enquiryInbox", kind: "Enquiry", from: "Sent from the contact form", text: "Thanks. Marlowe & Finch will reply to the number you gave. Nothing is reserved.", who: "Kept in the owner’s dashboard with the customer’s details." },
-  { id: "appointmentMessages", kind: "Appointment message", from: "Sent by the business, about one booking", text: "Confirmed: Signature cut with Jonah, Thursday 23 October at 10:30.", who: "Confirmations, changes and cancellations." },
-  { id: "reminders", kind: "Reminder", from: "Sent before the appointment", text: "Reminder: Signature cut tomorrow at 10:30. Reply to change it.", who: "A nudge that cuts missed appointments." },
-  { id: "promotions", kind: "Offer", from: "Sent only to customers who opted in", text: "Spring offer: 10% off a first cut. Reply STOP to opt out.", who: "Needs consent, and a clear way out, every time." },
-]
-
+const MESSAGE_KINDS: {
+  id: FeatureId;
+  title: string;
+  body: string;
+  icon: typeof MessageSquare;
+}[] = [
+  {
+    id: "textApp",
+    title: "A quick hello",
+    body: "Open the customer's own messages app with a useful first line. They can read, edit and send it themselves.",
+    icon: Smartphone,
+  },
+  {
+    id: "enquiryInbox",
+    title: "A proper enquiry",
+    body: "Keep the question with the person's details and what they were asking about. Preview enquiries stay in this browser.",
+    icon: MessageSquare,
+  },
+  {
+    id: "appointmentMessages",
+    title: "Appointment updates",
+    body: "Confirmations, changes and cancellations, tied to the appointment they concern.",
+    icon: CalendarCheck,
+  },
+  {
+    id: "reminders",
+    title: "A useful reminder",
+    body: "A timely nudge before the appointment, with the information the customer needs.",
+    icon: Bell,
+  },
+  {
+    id: "promotions",
+    title: "Offers people asked for",
+    body: "Send offers to people who opted in, with a clear way to opt out.",
+    icon: Megaphone,
+  },
+];
 function Messages() {
   return (
-    <ol className="grid grid-cols-[minmax(0,1fr)] gap-px overflow-hidden rounded-3xl bg-foreground/10" aria-label="The five kinds of message">
-      {MESSAGE_KINDS.map((m, n) => {
-        const live = featureState(m.id) === "works"
-        return (
-          <li key={m.id} className="grid grid-cols-[minmax(0,1fr)] items-center gap-6 bg-background p-6 sm:p-8 md:grid-cols-[3rem_1fr_1.2fr]" data-testid="message-kind" data-state={live ? "works" : "needs"}>
-            <p className="font-display text-4xl tabular-nums text-foreground/20 max-md:hidden">{n + 1}</p>
-            <div>
-              <h2 className="font-display font-display-tight text-[clamp(1.5rem,2.6vw,2.125rem)]">{m.kind}</h2>
-              <p className="mt-1 text-foreground/65">{m.from}</p>
-              <p className="mt-3 text-sm text-foreground/60">{m.who}</p>
-              <p className={cn("mt-4 inline-flex rounded-full px-3 py-1 text-sm font-medium", live ? "bg-emerald-100 text-emerald-900" : "bg-amber-100 text-amber-900")}>{live ? "Works now" : "Switches on when messaging is connected"}</p>
-              {live ? null : <p className="mt-2 max-w-sm text-sm text-foreground/60">{featureNote(m.id)}</p>}
-            </div>
-            <div className="max-w-md justify-self-start md:justify-self-end">
-              <p className={cn("rounded-3xl rounded-bl-md px-5 py-4 text-[0.9375rem] leading-relaxed", live ? "bg-signal text-white" : "bg-foreground/[0.06] text-foreground/80")}>{m.text}</p>
-              <p className="mt-2 text-xs text-foreground/50">{live ? "Sample of what the customer sees" : "Sample of what it will say. Nothing is sent yet."}</p>
-            </div>
-          </li>
-        )
-      })}
-    </ol>
-  )
+    <section>
+      <Intro title="The right kind of message for the moment.">
+        An enquiry is different from a booking update. Keep the purpose clear,
+        and be clear about what has actually been sent.
+      </Intro>
+      <ol
+        className="mt-10 divide-y divide-foreground/15 border-y border-foreground/15"
+        aria-label="The five kinds of message"
+      >
+        {MESSAGE_KINDS.map((m) => {
+          const live = featureState(m.id) === "works",
+            Icon = m.icon;
+          return (
+            <li
+              key={m.id}
+              className="grid gap-5 py-8 md:grid-cols-[3rem_1fr_0.85fr] md:gap-8"
+              data-testid="message-kind"
+              data-state={live ? "works" : "needs"}
+            >
+              <Icon aria-hidden="true" className="size-7 text-signal" />
+              <div>
+                <h3 className="text-xl font-semibold">{m.title}</h3>
+                <p className="mt-3 max-w-lg text-base leading-relaxed text-foreground/65">
+                  {m.body}
+                </p>
+              </div>
+              <div>
+                <p
+                  className={cn(
+                    "inline-flex rounded-full px-3 py-1.5 text-sm font-semibold",
+                    live
+                      ? "bg-emerald-100 text-emerald-900"
+                      : "bg-amber-100 text-amber-900",
+                  )}
+                >
+                  {live ? "Try in the preview" : "Needs messaging connected"}
+                </p>
+                {!live && (
+                  <p className="mt-3 text-sm leading-relaxed text-foreground/65">
+                    {featureNote(m.id)}
+                  </p>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+      <Link
+        href="/inspiration/parkside-valeting"
+        className="mt-8 inline-flex min-h-11 items-center gap-3 rounded font-semibold underline underline-offset-4 outline-none focus-visible:ring-3 focus-visible:ring-signal/50"
+      >
+        Try the current enquiry flow
+        <ArrowRight aria-hidden="true" className="size-4" />
+      </Link>
+    </section>
+  );
 }
-
 export const SCENES: Record<ProductPage["slug"], () => React.ReactNode> = {
-  design: Design, services: Services, booking: Booking, team: Team, products: Products, vehicles: Vehicles, "gallery-reviews": GalleryReviews, enquiries: Enquiries, sharing: Sharing, messages: Messages,
-}
+  design: Design,
+  services: Services,
+  booking: Booking,
+  team: Team,
+  products: Products,
+  vehicles: Vehicles,
+  "gallery-reviews": GalleryReviews,
+  enquiries: Enquiries,
+  sharing: Sharing,
+  messages: Messages,
+};

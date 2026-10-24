@@ -254,11 +254,13 @@
   "bk-1-service": {
     "file": "/marketing/bk-1-service.webp",
     "width": 1408,
-    "height": 1424,
+    "height": 1248,
     "cssWidth": 704,
-    "cssHeight": 712,
-    "bytes": 40784,
-    "source": "/appearance/frame?scenario=barber"
+    "cssHeight": 624,
+    "bytes": 43622,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "a1ad4b92c25bda75bc593bed2cc7e274f4c7f053886cb79147e9ae8903649bab",
+    "capturedAt": "2026-10-24T01:40:36.394Z"
   },
   "bk-2-time": {
     "file": "/marketing/bk-2-time.webp",
@@ -266,8 +268,10 @@
     "height": 1620,
     "cssWidth": 704,
     "cssHeight": 810,
-    "bytes": 94202,
-    "source": "/appearance/frame?scenario=barber"
+    "bytes": 83332,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "71fc1a3580be085c1b451abb4bf0580e1cfabb3e51c21ee81b61c1d602a6346d",
+    "capturedAt": "2026-10-24T01:40:38.408Z"
   },
   "bk-3-details": {
     "file": "/marketing/bk-3-details.webp",
@@ -275,8 +279,10 @@
     "height": 1316,
     "cssWidth": 704,
     "cssHeight": 658,
-    "bytes": 38058,
-    "source": "/appearance/frame?scenario=barber"
+    "bytes": 42776,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "9838107eaa26aa6ce34e70abfb78a9666f9d0fd4387b15ef627fe36e8b4d70a4",
+    "capturedAt": "2026-10-24T01:40:40.450Z"
   },
   "bk-4-review": {
     "file": "/marketing/bk-4-review.webp",
@@ -284,17 +290,21 @@
     "height": 1116,
     "cssWidth": 704,
     "cssHeight": 558,
-    "bytes": 53934,
-    "source": "/appearance/frame?scenario=barber"
+    "bytes": 64544,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "b3d93ddfb0f4f31dc61e050409c3ac42632593d29dcad2161dfedd4a6f88b73a",
+    "capturedAt": "2026-10-24T01:40:42.546Z"
   },
   "bk-5-done": {
     "file": "/marketing/bk-5-done.webp",
     "width": 1408,
-    "height": 1172,
+    "height": 1124,
     "cssWidth": 704,
-    "cssHeight": 586,
-    "bytes": 49164,
-    "source": "/appearance/frame?scenario=barber"
+    "cssHeight": 562,
+    "bytes": 53878,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "dbc76b72c4e3fbb41768cc4d0440881204e95a75ef79137ad57110d384bfc876",
+    "capturedAt": "2026-10-24T01:40:44.678Z"
   },
   "bk-request-review": {
     "file": "/marketing/bk-request-review.webp",
@@ -302,8 +312,10 @@
     "height": 1156,
     "cssWidth": 704,
     "cssHeight": 578,
-    "bytes": 60922,
-    "source": "/appearance/frame?scenario=physio"
+    "bytes": 68580,
+    "source": "/appearance/frame?scenario=detailer",
+    "sha256": "cb57810106a727de35ff0361c6ccc4ef63c2f26e8c263084e1df238910c854ef",
+    "capturedAt": "2026-10-24T01:41:16.714Z"
   },
   "svc-detail": {
     "file": "/marketing/svc-detail.webp",
@@ -311,17 +323,21 @@
     "height": 800,
     "cssWidth": 704,
     "cssHeight": 400,
-    "bytes": 34046,
-    "source": "/appearance/frame?scenario=barber"
+    "bytes": 36214,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "24166a763932182149aff0192e1dd2511a8c0fdb053e6c67c2e9b4b12e873888",
+    "capturedAt": "2026-10-24T01:41:18.568Z"
   },
   "svc-menu-barber": {
     "file": "/marketing/svc-menu-barber.webp",
     "width": 716,
-    "height": 736,
+    "height": 990,
     "cssWidth": 358,
-    "cssHeight": 368,
-    "bytes": 25004,
-    "source": "/appearance/frame?scenario=barber"
+    "cssHeight": 495,
+    "bytes": 56788,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "b035b833fdee349b21b3470d5404d4612cb4b0dbb112905d555f76430063c966",
+    "capturedAt": "2026-10-24T01:41:20.335Z"
   },
   "svc-menu-physio": {
     "file": "/marketing/svc-menu-physio.webp",
@@ -353,47 +369,57 @@
   "team-swipe": {
     "file": "/marketing/team-swipe.webp",
     "width": 716,
-    "height": 550,
+    "height": 828,
     "cssWidth": 358,
-    "cssHeight": 275,
-    "bytes": 35754,
-    "source": "/appearance/frame?scenario=barber"
+    "cssHeight": 414,
+    "bytes": 63392,
+    "source": "/appearance/frame?scenario=station&widget=team&variant=swipe",
+    "sha256": "705eaf2715bbf0302b2705b0d55001a810d603081f460ac4b6810624d5e8005a",
+    "capturedAt": "2026-10-24T02:18:47.377Z"
   },
   "team-grid": {
     "file": "/marketing/team-grid.webp",
-    "width": 716,
-    "height": 590,
-    "cssWidth": 358,
-    "cssHeight": 295,
-    "bytes": 38340,
-    "source": "/appearance/frame?scenario=physio"
+    "width": 1344,
+    "height": 912,
+    "cssWidth": 672,
+    "cssHeight": 456,
+    "bytes": 122946,
+    "source": "/appearance/frame?scenario=station&widget=team&variant=grid",
+    "sha256": "91842f81c04c1e4a4fc17635242091abbd6dfc43f3d0d4afdf0ee0ccdd9be399",
+    "capturedAt": "2026-10-24T02:18:49.294Z"
   },
   "team-list": {
     "file": "/marketing/team-list.webp",
     "width": 716,
-    "height": 406,
+    "height": 472,
     "cssWidth": 358,
-    "cssHeight": 203,
-    "bytes": 37724,
-    "source": "/appearance/frame?scenario=trades"
+    "cssHeight": 236,
+    "bytes": 39440,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "8061b6c8adc621deecba3319462c1b57dd15c8349568b64212587cca4868c755",
+    "capturedAt": "2026-10-24T02:18:51.067Z"
   },
   "team-profile": {
     "file": "/marketing/team-profile.webp",
     "width": 1408,
-    "height": 1116,
+    "height": 768,
     "cssWidth": 704,
-    "cssHeight": 558,
-    "bytes": 66126,
-    "source": "/appearance/frame?scenario=barber"
+    "cssHeight": 384,
+    "bytes": 65016,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "82db09573af42b3ada89dd7a6eb16732d28fe129f9ecd3e95bbb267344c49279",
+    "capturedAt": "2026-10-24T02:18:53.051Z"
   },
   "prod-swipe": {
     "file": "/marketing/prod-swipe.webp",
     "width": 716,
-    "height": 1034,
+    "height": 680,
     "cssWidth": 358,
-    "cssHeight": 517,
-    "bytes": 46366,
-    "source": "/appearance/frame?scenario=barber"
+    "cssHeight": 340,
+    "bytes": 34786,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "039f8d55ae1cbe52b486a06620dfaac3f56a238c94a86652b9de4956c4be5ebe",
+    "capturedAt": "2026-10-24T01:41:35.659Z"
   },
   "prod-detail-affiliate": {
     "file": "/marketing/prod-detail-affiliate.webp",
@@ -407,20 +433,24 @@
   "veh-detail": {
     "file": "/marketing/veh-detail.webp",
     "width": 1408,
-    "height": 1508,
+    "height": 1588,
     "cssWidth": 704,
-    "cssHeight": 754,
-    "bytes": 122790,
-    "source": "/appearance/frame?scenario=dealer"
+    "cssHeight": 794,
+    "bytes": 253950,
+    "source": "/appearance/frame?scenario=brookfield",
+    "sha256": "8dcb4fcd531f8b25f8ef86dacabb3a70cd03d2b3f191ff22d92f3ee0d6ea8f36",
+    "capturedAt": "2026-10-24T01:41:37.819Z"
   },
   "gal-lightbox": {
     "file": "/marketing/gal-lightbox.webp",
     "width": 1408,
-    "height": 1620,
+    "height": 1200,
     "cssWidth": 704,
-    "cssHeight": 810,
-    "bytes": 361244,
-    "source": "/appearance/frame?scenario=barber"
+    "cssHeight": 600,
+    "bytes": 141672,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "97cf9019364ad03b3e0fd635013f2c849186196040032f961780f9ab928f4771",
+    "capturedAt": "2026-10-24T01:41:39.919Z"
   },
   "rev-quote": {
     "file": "/marketing/rev-quote.webp",
@@ -434,20 +464,24 @@
   "enq-inline": {
     "file": "/marketing/enq-inline.webp",
     "width": 716,
-    "height": 1346,
+    "height": 1382,
     "cssWidth": 358,
-    "cssHeight": 673,
-    "bytes": 54382,
-    "source": "/appearance/frame?scenario=trades"
+    "cssHeight": 691,
+    "bytes": 38886,
+    "source": "/appearance/frame?scenario=detailer",
+    "sha256": "d128f0e8670aabe441f8745f6a78dd43e46af6f8a915779bb7d775fd546483c9",
+    "capturedAt": "2026-10-24T01:41:41.666Z"
   },
   "enq-sent": {
     "file": "/marketing/enq-sent.webp",
     "width": 716,
-    "height": 622,
+    "height": 658,
     "cssWidth": 358,
-    "cssHeight": 311,
-    "bytes": 46654,
-    "source": "/appearance/frame?scenario=trades"
+    "cssHeight": 329,
+    "bytes": 28410,
+    "source": "/appearance/frame?scenario=detailer",
+    "sha256": "ac9fe02539a6d9657ae58fb139bc236e3d72ea0c54c6dfc7c5ba6e08b544fc4e",
+    "capturedAt": "2026-10-24T01:41:43.446Z"
   },
   "share-sheet": {
     "file": "/marketing/share-sheet.webp",
@@ -455,8 +489,10 @@
     "height": 1472,
     "cssWidth": 512,
     "cssHeight": 736,
-    "bytes": 80672,
-    "source": "/appearance/frame?scenario=barber"
+    "bytes": 89018,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "e94701c881c1a9278fa7cf08887996fd3b62d91949226f2abb2dd96e22ded096",
+    "capturedAt": "2026-10-24T01:41:45.856Z"
   },
   "look-night": {
     "file": "/marketing/look-night.webp",
@@ -524,11 +560,13 @@
   "setup-1-name": {
     "file": "/marketing/setup-1-name.webp",
     "width": 2200,
-    "height": 1400,
+    "height": 1720,
     "cssWidth": 1100,
-    "cssHeight": 700,
-    "bytes": 70364,
-    "source": "/onboarding"
+    "cssHeight": 860,
+    "bytes": 81608,
+    "source": "/onboarding",
+    "sha256": "86e3a9c75c271b23d15c9b8f938e4f211e080586787fe889f049a37361cc9a1d",
+    "capturedAt": "2026-10-24T01:48:49.268Z"
   },
   "setup-3-start": {
     "file": "/marketing/setup-3-start.webp",
@@ -554,8 +592,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 115208,
-    "source": "/onboarding"
+    "bytes": 117342,
+    "source": "/onboarding",
+    "sha256": "194ff9e170a627e3d9c44f208376b91ee70eff93a37edd9ac1c6e3abf625b00d",
+    "capturedAt": "2026-10-24T01:48:50.935Z"
   },
   "setup-3-design": {
     "file": "/marketing/setup-3-design.webp",
@@ -563,8 +603,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 155118,
-    "source": "/onboarding"
+    "bytes": 157804,
+    "source": "/onboarding",
+    "sha256": "ce817ca8163c0d2678c5783cf8b19021810240be4e387a765fe651e9e4168008",
+    "capturedAt": "2026-10-24T01:48:52.697Z"
   },
   "setup-4-first": {
     "file": "/marketing/setup-4-first.webp",
@@ -572,8 +614,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 99240,
-    "source": "/onboarding"
+    "bytes": 99164,
+    "source": "/onboarding",
+    "sha256": "0e963c7039558339f0f890c747ad07ff917d0e1a963fb6d7d23e9e96872f995e",
+    "capturedAt": "2026-10-24T01:48:54.426Z"
   },
   "qr-options": {
     "file": "/marketing/qr-options.webp",
@@ -581,8 +625,10 @@
     "height": 1472,
     "cssWidth": 512,
     "cssHeight": 736,
-    "bytes": 87528,
-    "source": "/appearance/frame?scenario=barber"
+    "bytes": 95740,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "3e717d87d1ec7eeb3a72ac2546134c3d5b3442f7404f64b6ba8b7023c90e0bc8",
+    "capturedAt": "2026-10-24T01:41:48.355Z"
   },
   "qr-standalone": {
     "file": "/marketing/qr-standalone.webp",
@@ -590,8 +636,10 @@
     "height": 1024,
     "cssWidth": 512,
     "cssHeight": 512,
-    "bytes": 41382,
-    "source": "/appearance/frame?scenario=barber"
+    "bytes": 24174,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "e478caaf50baeca8dcb6a5fd96f4e5ff555776055491af6cb3a0aa86d8362041",
+    "capturedAt": "2026-10-24T01:41:50.083Z"
   },
   "story-1-menu": {
     "file": "/marketing/story-1-menu.webp",
@@ -682,5 +730,82 @@
     "cssHeight": 760,
     "bytes": 282104,
     "source": "/appearance/frame?scenario=brookfield"
+  },
+  "svc-cards-parkside": {
+    "file": "/marketing/svc-cards-parkside.webp",
+    "width": 716,
+    "height": 1246,
+    "cssWidth": 358,
+    "cssHeight": 623,
+    "bytes": 79008,
+    "source": "/appearance/frame?scenario=detailer",
+    "sha256": "12b8c0ce856feb5a97f99c2d434ab68494ec3ab7a71bc8fa62a254ea6abb10e3",
+    "capturedAt": "2026-10-24T01:41:22.131Z"
+  },
+  "vehicle-catalogue-brookfield": {
+    "file": "/marketing/vehicle-catalogue-brookfield.webp",
+    "width": 1984,
+    "height": 2326,
+    "cssWidth": 992,
+    "cssHeight": 1163,
+    "bytes": 375122,
+    "source": "/appearance/frame?scenario=brookfield",
+    "sha256": "099a867987653dfd942d962cdfa7092d1bbdfa83accbd3864a369a8a352d662b",
+    "capturedAt": "2026-10-24T01:41:24.329Z"
+  },
+  "product-detail-station": {
+    "file": "/marketing/product-detail-station.webp",
+    "width": 1408,
+    "height": 1476,
+    "cssWidth": 704,
+    "cssHeight": 738,
+    "bytes": 155890,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "a74ec480b60cf69075d520cf3910a2cc0c9ef0430c8600ca241e33f538d9c939",
+    "capturedAt": "2026-10-24T01:41:26.470Z"
+  },
+  "setup-1-name-phone": {
+    "file": "/marketing/setup-1-name-phone.webp",
+    "width": 780,
+    "height": 1688,
+    "cssWidth": 390,
+    "cssHeight": 844,
+    "bytes": 62798,
+    "source": "/onboarding",
+    "sha256": "0ce5b61ba16ecea4a53618ed0698bc706164448ae9dbc69c2c713c66e5057619",
+    "capturedAt": "2026-10-24T01:48:55.864Z"
+  },
+  "setup-2-what-phone": {
+    "file": "/marketing/setup-2-what-phone.webp",
+    "width": 780,
+    "height": 1688,
+    "cssWidth": 390,
+    "cssHeight": 844,
+    "bytes": 73502,
+    "source": "/onboarding",
+    "sha256": "5a6b1e48ae797dbacdf457b26ee9a3e2b29461f753e1b7a95a6efe5160dd6936",
+    "capturedAt": "2026-10-24T01:48:57.387Z"
+  },
+  "setup-3-design-phone": {
+    "file": "/marketing/setup-3-design-phone.webp",
+    "width": 780,
+    "height": 1688,
+    "cssWidth": 390,
+    "cssHeight": 844,
+    "bytes": 99488,
+    "source": "/onboarding",
+    "sha256": "b49934c81711b8474126f9dc5af53ef09963692efaa564f8eebf7d040889b7d1",
+    "capturedAt": "2026-10-24T01:48:59.034Z"
+  },
+  "setup-4-first-phone": {
+    "file": "/marketing/setup-4-first-phone.webp",
+    "width": 780,
+    "height": 1688,
+    "cssWidth": 390,
+    "cssHeight": 844,
+    "bytes": 59362,
+    "source": "/onboarding",
+    "sha256": "ff990b3824e39aeefb23369e84c035486919cd1349354acc81b926606aaa417a",
+    "capturedAt": "2026-10-24T01:49:00.701Z"
   }
 }

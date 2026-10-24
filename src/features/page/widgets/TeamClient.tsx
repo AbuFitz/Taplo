@@ -12,6 +12,7 @@ import { eligibleStaff, isOnlineBookable, type BookingContext } from "@/features
 import { addDays, formatDay, localParts } from "@/features/booking/time"
 import { BookingFlow } from "@/features/booking/ui/BookingFlow"
 import { Collection } from "./Collection"
+import { ProfileImage } from "../renderer/ProfileImage"
 
 export interface TeamMemberData {
   id: string
@@ -29,12 +30,11 @@ export interface TeamMemberData {
 
 const first = (name: string) => name.split(/\s+/)[0] ?? name
 
-function Portrait({ m, className, ratio = "4 / 5" }: { m: TeamMemberData; className?: string; ratio?: string }) {
+function Portrait({ m, className, ratio = "4 / 5", sizes = "(min-width:720px) 20rem, 50vw" }: { m: TeamMemberData; className?: string; ratio?: string; sizes?: string }) {
   return (
     <div className={cn("tp-portrait", className)} style={{ aspectRatio: ratio }}>
       {m.photo ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={m.photo.src} alt={m.photo.alt} loading="lazy" draggable={false} style={m.photo.focal ? { objectPosition: `${m.photo.focal.x}% ${m.photo.focal.y}%` } : undefined} />
+        <ProfileImage image={m.photo} sizes={sizes} />
       ) : <span aria-hidden="true" className="tp-portrait-blank"><span className="font-tp-heading text-xl font-semibold">{initialsOf(m.name)}</span></span>}
     </div>
   )
@@ -70,7 +70,7 @@ export function TeamMembers({ members, variant: chosen, ctx }: { members: TeamMe
   const row = (m: TeamMemberData) => (
     <li key={m.id} className="tp-team-row" data-testid="team-card">
       <button type="button" className="tp-team-row-open" onClick={() => setProfile(m.id)}>
-        <Portrait m={m} className="tp-portrait-sm" ratio="1 / 1" />
+        <Portrait m={m} className="tp-portrait-sm" ratio="1 / 1" sizes="56px" />
         <span className="min-w-0 text-left"><span className="tp-team-name block">{m.name}</span>{m.role ? <span className="tp-team-role block">{m.role}</span> : null}{m.summary ? <span className="tp-team-summary block">{m.summary}</span> : null}<span className="sr-only">. View profile</span></span>
         <ArrowRight aria-hidden="true" className="size-4 shrink-0 opacity-60" />
       </button>
@@ -81,7 +81,7 @@ export function TeamMembers({ members, variant: chosen, ctx }: { members: TeamMe
     <>
       {variant === "swipe" ? <Collection label="Team" compact>{members.map((m) => <React.Fragment key={m.id}>{card(m, "1 / 1")}</React.Fragment>)}</Collection>
         : variant === "grid" ? <ul className="tp-team-grid">{members.map((m) => <li key={m.id}>{card(m)}</li>)}</ul>
-        : variant === "avatars" ? <ul className="tp-team-avatars">{members.map((m) => <li key={m.id}><button type="button" onClick={() => setProfile(m.id)} aria-label={`View ${m.name}'s profile`}><Portrait m={m} className="tp-portrait-sm" ratio="1 / 1" /><span className="text-sm font-semibold leading-tight">{first(m.name)}</span></button></li>)}</ul>
+        : variant === "avatars" ? <ul className="tp-team-avatars">{members.map((m) => <li key={m.id}><button type="button" onClick={() => setProfile(m.id)} aria-label={`View ${m.name}'s profile`}><Portrait m={m} className="tp-portrait-sm" ratio="1 / 1" sizes="64px" /><span className="text-sm font-semibold leading-tight">{first(m.name)}</span></button></li>)}</ul>
         : <ul className="tp-rows tp-team-list">{members.map(row)}</ul>}
 
       <Overlay tone="page" kind="detail" open={profile !== null} onOpenChange={(o) => !o && setProfile(null)} title={member?.name ?? "Profile"} description={member?.role} testId="team-profile">
@@ -111,7 +111,7 @@ function Profile({ m, ctx, canBook, onBook }: { m: TeamMemberData; ctx?: Booking
   return (
     <div className={m.photo ? "grid gap-5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-6" : "grid gap-5"}>
       {/* A large grey silhouette says nothing, so the portrait is shown only when there is one. */}
-      {m.photo ? <div className="mx-auto w-44 max-w-full sm:w-full"><Portrait m={m} /></div> : null}
+      {m.photo ? <div className="mx-auto w-44 max-w-full sm:w-full"><Portrait m={m} sizes="176px" /></div> : null}
       <div className="grid min-w-0 gap-4">
         {m.bio ? <p className="leading-relaxed [overflow-wrap:anywhere]">{m.bio}</p> : null}
         {m.subjects.length ? <ul className="flex flex-wrap gap-1.5" aria-label="Specialities">{m.subjects.map((x) => <li key={x} className="tp-chip">{x}</li>)}</ul> : null}

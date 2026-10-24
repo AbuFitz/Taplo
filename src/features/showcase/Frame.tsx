@@ -4,6 +4,7 @@ import * as React from "react"
 import { useSearchParams } from "next/navigation"
 import { PageRenderer, buildPageViewModel } from "@/features/page/renderer"
 import { styleOverridesSchema } from "@/features/page/contracts/style"
+import { getWidget } from "@/features/page/widgets/registry"
 import { SCENARIOS, type Scenario } from "./content"
 import { initialConfig, toContent, toPage, type LabConfig, type LabMessage } from "./lab-state"
 
@@ -32,6 +33,16 @@ export function Frame() {
     return () => window.removeEventListener("message", onMessage)
   }, [])
 
-  const vm = React.useMemo(() => buildPageViewModel(toContent(cfg), toPage(cfg), { plan: "business" }), [cfg])
+  const widgetType = q.get("widget")
+  const variant = q.get("variant")
+  const vm = React.useMemo(() => {
+    const page = toPage(cfg)
+    // Read-only variant poses use the same validated options as the editor, never owner storage or CSS imitation.
+    const widgets = widgetType && variant ? page.widgets.map(w => {
+      const field = getWidget(w.type)?.fields.find(f => f.kind === "select" && f.key === "variant")
+      return w.type === widgetType && field?.kind === "select" && field.options.some(o => o.value === variant) ? { ...w, settings: { ...w.settings, variant } } : w
+    }) : page.widgets
+    return buildPageViewModel(toContent(cfg), { ...page, widgets }, { plan: "business" })
+  }, [cfg, widgetType, variant])
   return <PageRenderer vm={vm} />
 }

@@ -144,6 +144,86 @@
       "restrictions": [
         "Not a real business identity or endorsement"
       ]
+    },
+    {
+      "id": "station-sam",
+      "file": "/taplo-demo/station-sam.png",
+      "width": 512,
+      "height": 768,
+      "alt": "Illustrative portrait of Sam, a fictional Station Road barber",
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "generationSource": "exec-c5669122-1e94-4d74-8d5d-f3e45a6d7618.png",
+      "created": "2026-10-24 Europe/London",
+      "status": "illustrative-fictional-demo",
+      "uses": [
+        "Station Road team and eligible booking providers",
+        "Current renderer feature captures"
+      ],
+      "restrictions": [
+        "Fictional person, not a customer or real staff endorsement",
+        "No qualifications or credentials implied"
+      ]
+    },
+    {
+      "id": "station-lee",
+      "file": "/taplo-demo/station-lee.png",
+      "width": 512,
+      "height": 768,
+      "alt": "Illustrative portrait of Lee, a fictional Station Road barber",
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "generationSource": "exec-5e9e4eae-3e8c-4782-96bb-ca530d01bebc.png",
+      "created": "2026-10-24 Europe/London",
+      "status": "illustrative-fictional-demo",
+      "uses": [
+        "Station Road team and eligible booking providers",
+        "Current renderer feature captures"
+      ],
+      "restrictions": [
+        "Fictional person, not a customer or real staff endorsement",
+        "No qualifications or credentials implied"
+      ]
+    },
+    {
+      "id": "station-iman",
+      "file": "/taplo-demo/station-iman.png",
+      "width": 512,
+      "height": 768,
+      "alt": "Illustrative portrait of Iman, a fictional Station Road barber",
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "generationSource": "exec-b04fec58-c537-4aab-b7f6-e5892e2aea77.png",
+      "created": "2026-10-24 Europe/London",
+      "status": "illustrative-fictional-demo",
+      "uses": [
+        "Station Road team and eligible booking providers",
+        "Current renderer feature captures"
+      ],
+      "restrictions": [
+        "Fictional person, not a customer or real staff endorsement",
+        "No qualifications or credentials implied"
+      ]
+    },
+    {
+      "id": "station-paste",
+      "file": "/taplo-demo/station-paste.png",
+      "width": 1152,
+      "height": 768,
+      "alt": "Illustrative navy styling-paste tin on a local barber counter",
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "generationSource": "exec-5d710fbb-e14f-41de-bfd2-9f69398501b4.png",
+      "created": "2026-10-24 Europe/London",
+      "status": "illustrative-fictional-demo",
+      "uses": [
+        "Station Road example product",
+        "Current engine product captures"
+      ],
+      "restrictions": [
+        "Not a real product or branded endorsement",
+        "No ingredient or performance claims implied"
+      ]
     }
   ]
 }

@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { CalendarDays, Check, Clock, Download, MessageCircle, User, Users } from "lucide-react"
+import { ProfileImage } from "@/features/page/renderer/ProfileImage"
 import { Overlay } from "@/components/taplo/overlay"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { Button } from "@/components/ui/button"
@@ -11,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 import { getAvailability, nextAvailableDate } from "../availability"
 import { canCancel, canReschedule, holdSlot, placeBooking, setStatus } from "../engine"
-import { OUTCOME, eligibleStaff, icsFor, isOnlineBookable, modeOf, priceWording, type BookableService, type BookingContext } from "../model"
+import { OUTCOME, eligibleStaff, icsFor, isOnlineBookable, modeOf, priceWording, type BookableService, type BookableStaff, type BookingContext } from "../model"
 import { newId, newKey, newToken, useBookingState, useSchedulingConfig } from "../demo-adapter"
 import { nowMs } from "../clock"
 import { addDays, daysBetween, formatClock, formatDay, formatSlot, localParts, zonesDiffer } from "../time"
@@ -181,7 +182,7 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
           <h2 id="bk-h" ref={heading} tabIndex={-1} className="font-tp-heading text-2xl outline-none">Who would you like to see?</h2>
           <ul className="mt-4 grid gap-2">
             <li><PersonRow label="Anyone available" sub="The first free person" icon={<Users aria-hidden="true" className="size-5" />} on={() => { setStaff(null); go("time") }} /></li>
-            {people.map((p) => <li key={p.id}><PersonRow label={p.name} sub={p.role} photo={p.photo?.src} on={() => { setStaff(p.id); go("time") }} /></li>)}
+            {people.map((p) => <li key={p.id}><PersonRow label={p.name} sub={p.role} photo={p.photo} on={() => { setStaff(p.id); go("time") }} /></li>)}
           </ul>
         </section>
       ) : null}
@@ -274,12 +275,11 @@ function useCountdown(until: number | null): number | null {
   return until === null ? null : left
 }
 
-function PersonRow({ label, sub, photo, icon, on }: { label: string; sub?: string; photo?: string; icon?: React.ReactNode; on: () => void }) {
+function PersonRow({ label, sub, photo, icon, on }: { label: string; sub?: string; photo?: BookableStaff["photo"]; icon?: React.ReactNode; on: () => void }) {
   return (
     <button type="button" onClick={on} className="flex w-full items-center gap-3 rounded-2xl border border-tp-border bg-tp-surface p-3 text-left outline-none transition-colors hover:border-tp-accent focus-visible:ring-2 focus-visible:ring-tp-accent">
       {photo ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={photo} alt="" className="size-12 rounded-xl object-cover" />
+        <span aria-hidden="true" className="relative size-12 shrink-0 overflow-hidden rounded-xl"><ProfileImage image={photo} sizes="48px" /></span>
       ) : <span className="grid size-12 place-items-center rounded-xl bg-tp-bg">{icon ?? <User aria-hidden="true" className="size-5" />}</span>}
       <span><span className="block font-semibold">{label}</span>{sub ? <span className="block text-sm text-tp-muted">{sub}</span> : null}</span>
     </button>

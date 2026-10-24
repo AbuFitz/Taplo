@@ -2,8 +2,9 @@
  * Product pages. Every claim here is checked against docs/messaging.md ("Supported now").
  * `status` is shown on each page so what works today and what needs a connection are never blurred.
  */
+import { LOOKS } from "@/features/page/themes/looks"
 import { featureNote, featureState, type FeatureId } from "@/lib/feature-status"
-export type Status = { label: string; state: "works" | "needs"; note?: string; /** When set, state and note come from the central feature-status list. */ feature?: FeatureId }
+export type Status = { label: string; state: "works" | "needs"; requirement?: "connection" | "plan" | "platform"; note?: string; /** When set, state and note come from the central feature-status list. */ feature?: FeatureId }
 
 export interface ProductPage {
   slug: "design" | "services" | "enquiries" | "booking" | "team" | "products" | "vehicles" | "gallery-reviews" | "sharing" | "messages"
@@ -18,33 +19,33 @@ export interface ProductPage {
 export const PRODUCT_PAGES: ProductPage[] = [
   {
     slug: "design", label: "Looks and design", eyebrow: "Looks and design",
-    title: "Nine starting looks. Every one of them changeable.",
-    lead: "A look sets colours, type, header, buttons, cards and wallpaper in one go. Then each of those is yours to change, for the whole page or for one section.",
+    title: "A page that feels like your business.",
+    lead: "Start with a look you like. Bring your own photos, choose your colours and make the layout work for what you do. See every choice on your page as you go.",
     status: [
-      { label: "Nine starting looks, none tied to an industry", state: "works" },
+      { label: `${LOOKS.length} starting looks, each usable for any business`, state: "works" },
       { label: "Colours, fonts, header, buttons, cards, wallpaper", state: "works" },
       { label: "Changes to one section, with a reset", state: "works" },
-      { label: "Text that stays readable", state: "works", note: "Taplo adjusts unreadable colours and tells you." },
-      { label: "Switching looks on the Free plan", state: "needs", note: "Free keeps the look chosen for your kind of business. Paid plans switch freely." },
+      { label: "Contrast suggestions while you choose colours", state: "works", note: "The editor helps you spot low-contrast combinations and suggests a readable option." },
+      { label: "Switching to another starting look", state: "needs", requirement: "plan", note: "Free keeps the look chosen for your kind of business. Paid plans switch freely." },
     ],
     related: ["services", "sharing", "team"],
   },
   {
     slug: "services", label: "Services and prices", eyebrow: "Services and prices",
-    title: "Prices people can read in a glance.",
-    lead: "List what you do with a price, a duration and a description. Group it, show it as a menu or as cards, and let a tap open the detail.",
+    title: "Good work. Clear prices.",
+    lead: "Put what you offer in one useful place. A quick price list, a menu with the detail, or packages people can compare before they get in touch.",
     status: [
       { label: "Fixed, from, quote and free pricing, worded exactly", state: "works" },
       { label: "Grouped price menus, lists and cards", state: "works" },
       { label: "A detail view for every service", state: "works" },
-      { label: "Services you can list on the Free plan", state: "needs", note: "Free allows three. Paid plans are unlimited." },
+      { label: "Three services on Free; unlimited on paid plans", state: "works" },
     ],
     related: ["booking", "enquiries", "design"],
   },
   {
     slug: "enquiries", label: "Contact and enquiries", eyebrow: "Contact and enquiries",
-    title: "Enquiries that arrive as enquiries.",
-    lead: "Call, WhatsApp, email and a contact form. Customers see that nothing is reserved until you reply, and what they typed is kept if something goes wrong.",
+    title: "Make it easy to ask.",
+    lead: "A question about a car. A quote for a job. A first hello. Give customers a clear way to reach you, with the right details attached.",
     status: [
       { label: "Call, WhatsApp, email and directions buttons", state: "works" },
       { label: "A contact form with validation and clear confirmation", state: "works" },
@@ -55,14 +56,14 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "booking", label: "Booking", eyebrow: "Booking",
-    title: "Service, person, time. Done.",
-    lead: "Customers choose what they want, who with, and when. The journey says whether the time is confirmed, only requested, or just an enquiry, and means it.",
+    title: "Less back and forth. More booked in.",
+    lead: "Let customers choose a service, a person and a time. Take the booking straight away or agree the request first — whichever fits the way you work.",
     status: [
       { label: "Service, person, date and time, details, review, result", state: "works" },
       { label: "Working hours, breaks, leave, buffers, notice and booking window", state: "works" },
       { label: "Business time zone and clock changes", state: "works" },
       { label: "Owner calendar: agenda, day, week, month, blocked time", state: "works" },
-      { label: "Server-checked booking with no double-booking", state: "needs", note: "Written and tested on Postgres. Needs a connected database to run live; until then bookings stay in this browser." },
+      { label: "Bookings kept in sync across devices", state: "needs", note: "Needs the live booking service. Preview bookings stay in this browser until it is connected." },
       { label: "Email or text confirmations", state: "needs", note: "Needs an email or text provider. None is sent." },
       { label: "Deposits and payment", state: "needs", note: "Needs a payment provider. Nothing is charged." },
     ],
@@ -70,32 +71,32 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "team", label: "Team profiles", eyebrow: "Team profiles",
-    title: "Introduce the people. Book with them.",
-    lead: "A compact card for each person, a fuller profile when opened, and a booking that only offers the services they actually do.",
+    title: "Put a face to the good work.",
+    lead: "Introduce your people with a photo, a little about them and the services they offer. Let customers find someone they feel comfortable booking with.",
     status: [
       { label: "Swipe, grid, list and avatar layouts", state: "works" },
       { label: "Profiles with services, working days and qualifications you supply", state: "works" },
-      { label: "No private contact details shown", state: "works" },
-      { label: "Customers choosing a person when booking", state: "needs", note: "Needs the Business plan." },
+      { label: "Private staff contact details stay private", state: "works" },
+      { label: "Customers choosing a person when booking", state: "needs", requirement: "plan", note: "Needs the Business plan." },
     ],
     related: ["booking", "gallery-reviews", "design"],
   },
   {
     slug: "products", label: "Products and links", eyebrow: "Products and links",
-    title: "Your products, or the ones you recommend.",
-    lead: "Photos, a price and the facts that matter. Each product leads to an enquiry or to a shop you already use, and affiliate links say so.",
+    title: "From your shop to their shortlist.",
+    lead: "Show the things you sell with good photos, clear prices and useful details. Take an enquiry, link to your own shop or share a recommendation.",
     status: [
       { label: "Products with photos, facts and a clear status", state: "works" },
       { label: "Enquire, or open your own shop in a new tab", state: "works" },
       { label: "Affiliate links disclosed to the visitor", state: "works" },
-      { label: "Checkout and payment on Taplo", state: "needs", note: "Not connected. A payment provider is needed, so there is no pretend buy button." },
+      { label: "Checkout and payment on Taplo", state: "needs", note: "Needs a connected payment provider. Nothing is charged in the preview." },
     ],
     related: ["vehicles", "enquiries", "gallery-reviews"],
   },
   {
     slug: "vehicles", label: "Vehicle stock", eyebrow: "Vehicle stock",
-    title: "Every car on the forecourt, with its specifications.",
-    lead: "Photos, price and the facts buyers ask first: year, mileage, fuel, gearbox. Mark a car reserved or sold and it stays on the page, honestly.",
+    title: "A proper home for your stock.",
+    lead: "Give every car room to be seen. Big photos, the facts buyers ask for and a clear way to arrange a viewing. Keep available, reserved and sold stock easy to recognise.",
     status: [
       { label: "Vehicle cards with specifications and a detail view", state: "works" },
       { label: "Available, reserved and sold shown honestly", state: "works" },
@@ -106,33 +107,33 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "gallery-reviews", label: "Photos and reviews", eyebrow: "Photos and reviews",
-    title: "Photos that open large. Reviews that say where they came from.",
-    lead: "Photos open large, with arrows, zoom and the keyboard. Reviews always say where the words came from, and Taplo never makes one up.",
+    title: "Let your work do the talking.",
+    lead: "A good picture deserves more than a tiny thumbnail. Show your space, your people and your work, alongside customer words with a clear source.",
     status: [
       { label: "Photo grid and swipe rows, with a full-screen viewer", state: "works" },
       { label: "Quotes shown with who supplied them", state: "works" },
       { label: "Review links to Google, Facebook and Trustpilot", state: "works" },
-      { label: "Photos and review links on the Free plan", state: "needs", note: "Free has neither. Paid plans do." },
+      { label: "Photos and review links", state: "needs", requirement: "plan", note: "Free has neither. Paid plans do." },
     ],
     related: ["team", "products", "sharing"],
   },
   {
     slug: "sharing", label: "Sharing and QR codes", eyebrow: "Sharing and QR codes",
-    title: "One link, and a code for the counter.",
-    lead: "Copy the link, download a Taplo QR code, make a share image, or send it from your phone.",
+    title: "Found here. Shared everywhere.",
+    lead: "Your bio, your counter, your next message. Carry the same page wherever customers find you, with a link, a branded QR code and a share card of your own.",
     status: [
       { label: "A Taplo QR code with the Taplo mark in the middle, as PNG for screens, PNG for print and SVG", state: "works" },
       { label: "A share image with your name, your logo and the code", state: "works" },
       { label: "Share from a phone with the system share sheet", state: "works" },
       { label: "A public address for every page", state: "needs", feature: "publicLinks" },
-      { label: "Exact link previews in social apps", state: "needs", note: "Apps decide this and cache it. Taplo cannot guarantee it." },
+      { label: "Exact link previews in social apps", state: "needs", requirement: "platform", note: "Apps decide this and cache it. Taplo cannot guarantee it." },
     ],
     related: ["design", "enquiries", "gallery-reviews"],
   },
   {
     slug: "messages", label: "Messages and reminders", eyebrow: "Messages and reminders",
-    title: "Texts, enquiries, confirmations and reminders.",
-    lead: "A customer can text you in one tap, send an enquiry, get a confirmation and a reminder, and hear about an offer if they opted in. Each is its own message, so nothing is mistaken for something else.",
+    title: "Keep the conversation moving.",
+    lead: "Make it easy to ask a question now. Bring confirmations, reminders and opted-in offers into the same customer journey when your messaging service is connected.",
     status: [
       { label: "Text us: opens the customer’s own messages app with the words ready", state: "works", feature: "textApp" },
       { label: "A contact form that keeps each enquiry for the owner", state: "works", feature: "enquiryInbox" },
