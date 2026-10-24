@@ -82,3 +82,7 @@ Latest owner input, to work through after the current compact registration heade
 ## Compact registration checkpoint
 
 Shipped and independently verified as30fdc34 (READY deployment dpl_CZcuu3PcHKupinS8ERQvqXr8ACW7, exact SHA/alias confirmed). All8 public setup/media checks pass. Mobile large logo row removed; compact progress plus one information control remains.390px preview begins44px earlier. Example/plan context stays visible without disturbing the question grid. Ten setup images and five changed team/gallery images refreshed; both real browser recordings refreshed. Production25 passed, packaged smoke8 passed, native26 passed, build/lint/typecheck/unit222 passed (39 DB skipped). Portal navigation remains a separate OPEN step.
+
+## Continuous film checkpoint
+
+The rejected DOM slideshow is replaced by an authored26-second continuous3D product reveal, real interface surfaces and a page-to-plaque transformation. Native transparent compositing works in Chromium, Firefox and WebKit with one H.264 decode and no new runtime dependency. Phone and desktop cameras are separately composed. Silent autoplay, pointer/press response, click to Product, reduced-motion no-video fallback, offscreen/hidden pause, graphics-loss poster and viewport switching are implemented and tested. Local57 Chromium,10 native and222 unit pass (39DB skipped), production build/lint pass. Physical-phone verification, public deployment confirmation and square/feed propagation remain separate; implementation does not imply owner design approval.

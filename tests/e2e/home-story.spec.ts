@@ -32,9 +32,9 @@ for (const width of [390, 1440]) test(`current UK business story and voluntary k
   await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `home-business-story-${width}.png`), fullPage: false })
 })
 
-for (const width of [390, 1440]) test(`product story replaces the boxed film and respects reduced motion at ${width}`, async ({ page }) => {
+for (const width of [390, 1440]) test(`continuous product reveal respects reduced motion at ${width}`, async ({ page }) => {
   await page.setViewportSize({width,height:1000});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/')
-  const story=page.getByTestId('product-story');await story.scrollIntoViewIfNeeded();await expect(story.locator('video')).toHaveCount(0)
-  await expect(story).toHaveAttribute('data-running','false');await expect(story.locator('.product-story-action')).toHaveAttribute('href','/inspiration/detail-dept')
+  const story=page.getByTestId('cinematic-film');await story.scrollIntoViewIfNeeded();await expect(story.locator('video')).toHaveCount(0)
+  await expect(story).toHaveAttribute('data-running','false');await expect(story.getByRole('link',{name:'Explore Taplo after the product animation'})).toHaveAttribute('href','/product')
   await expect(page.getByText('Read the film',{exact:true})).toHaveCount(0)
 })

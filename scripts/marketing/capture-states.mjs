@@ -15,6 +15,8 @@ const DIALOG = '[role="dialog"]'
 
 /** Each job: where to go, how to get to the state, and what to photograph. */
 const jobs = [
+  { id: "reveal-menu", url: frame("station"), vp: [390, 844], shot: '[data-widget="priceMenu"]', transparent: true },
+  { id: "reveal-profile", url: frame("station"), vp: [390, 844], shot: ".tp-header" },
   { id: "cafe-menu", url: `${frame("corner")}&widget=priceMenu&treatment=soft`, vp: [390, 844], shot: '[data-widget="priceMenu"]' },
   // ---- Booking: a real journey, step by step
   { id: "bk-1-service", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Book (your chair|a haircut)/ }).first().click() }, shot: '[data-testid="booking-flow"]' },
@@ -99,11 +101,12 @@ for (const j of jobs.filter((x) => !only.length || only.includes(x.id))) {
     await page.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {})
     await page.evaluate(() => document.fonts.ready)
     if (j.run) await j.run(page)
+    if (j.transparent) await page.addStyleTag({content:"html,body,[data-taplo-page]{background:transparent!important}"})
     await page.evaluate(async () => { await Promise.all([...document.images].map(async img => { img.loading = "eager"; await img.decode() })) })
     await page.waitForTimeout(500)
     let buf
     if (j.download) buf = await j.download(page)
-    else if (j.shot) { const el = page.locator(j.shot).first(); await el.scrollIntoViewIfNeeded().catch(() => {}); await page.waitForTimeout(300); buf = await el.screenshot({ type: "png" }) }
+    else if (j.shot) { const el = page.locator(j.shot).first(); await el.scrollIntoViewIfNeeded().catch(() => {}); await page.waitForTimeout(300); buf = await el.screenshot({ type: "png", omitBackground: Boolean(j.transparent) }) }
     else { const [x, y, w, h] = j.clip; buf = await page.screenshot({ type: "png", clip: { x, y, width: w, height: h } }) }
     const info = await sharp(buf).webp({ quality: 90, effort: 5 }).toFile(`${out}${j.id}.webp`)
     manifest[j.id] = { file: `/marketing/${j.id}.webp`, width: info.width, height: info.height, cssWidth: Math.round(info.width / 2), cssHeight: Math.round(info.height / 2), bytes: info.size, source: j.url, sha256: createHash("sha256").update(readFileSync(`${out}${j.id}.webp`)).digest("hex"), capturedAt: new Date().toISOString() }

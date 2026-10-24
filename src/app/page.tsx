@@ -27,7 +27,7 @@ export default function Home() {
         <LiveStage />
       </section>
 
-      <section aria-labelledby="film-h" className="mx-auto max-w-[88rem] border-t border-white/15 px-5 py-16 sm:px-8 sm:py-24"><div className="mb-8 flex flex-wrap items-end justify-between gap-4"><h2 id="film-h" className="font-display text-[clamp(1.8rem,3.2vw,3rem)] font-medium tracking-[-.045em]">Different businesses.<br />Different ways to work.</h2><p className="text-sm text-white/60">See the idea. Open the demo.</p></div><Film /></section>
+      <section aria-labelledby="film-h" className="mx-auto max-w-[88rem] border-t border-white/15 px-5 py-16 sm:px-8 sm:py-24"><div className="mb-8 flex flex-wrap items-end justify-between gap-4"><h2 id="film-h" className="font-display text-[clamp(1.8rem,3.2vw,3rem)] font-medium tracking-[-.045em]">A page that takes shape.<br />Then gets to work.</h2><p className="text-sm text-white/60">Your page. Your next step. Out in the world.</p></div><Film /></section>
 
       <section aria-labelledby="story-h" className="mx-auto mt-14 max-w-[88rem] border-t border-white/15 px-5 py-16 sm:px-8 sm:py-24">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-5"><h2 id="story-h" className="font-display text-[clamp(1.8rem,3.2vw,3rem)] font-medium leading-[1.08] tracking-[-.045em]">When booking is<br />the next step.</h2><Link href="/product/booking" className="inline-flex min-h-11 items-center gap-3 rounded text-sm text-white/70 outline-none hover:text-white focus-visible:ring-2 focus-visible:ring-white">Explore booking<ArrowUpRight aria-hidden="true" className="size-4" /></Link></div>

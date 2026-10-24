@@ -967,5 +967,27 @@
     "source": "/appearance/frame?scenario=corner&widget=priceMenu&treatment=soft",
     "sha256": "74e5151f1946",
     "capturedAt": "2026-10-24T12:22:15.423Z"
+  },
+  "reveal-profile": {
+    "file": "/marketing/reveal-profile.webp",
+    "width": 780,
+    "height": 938,
+    "cssWidth": 390,
+    "cssHeight": 469,
+    "bytes": 58664,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "f1da182697c1",
+    "capturedAt": "2026-10-24T13:31:34.852Z"
+  },
+  "reveal-menu": {
+    "file": "/marketing/reveal-menu.webp",
+    "width": 716,
+    "height": 1026,
+    "cssWidth": 358,
+    "cssHeight": 513,
+    "bytes": 45974,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "329702aa2fcb",
+    "capturedAt": "2026-10-24T13:38:34.295Z"
   }
 }

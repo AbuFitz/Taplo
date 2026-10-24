@@ -335,11 +335,11 @@ test.describe("pricing", () => {
 });
 
 test.describe("film", () => {
-  test("backgroundless product story has useful demo destinations and no playback overlays", async ({ page }) => {
+  test("continuous product reveal opens Product without playback overlays", async ({ page }) => {
     await page.emulateMedia({reducedMotion:"reduce"});await page.goto("/")
-    const story=page.getByTestId("product-story");await story.scrollIntoViewIfNeeded()
+    const story=page.getByTestId("cinematic-film");await story.scrollIntoViewIfNeeded()
     await expect(story.locator("video")).toHaveCount(0)
-    await expect(story.getByRole("link",{name:"Try the detailing demo",exact:true}).first()).toHaveAttribute("href","/inspiration/detail-dept")
+    await expect(story.getByRole("link",{name:"Explore Taplo after the product animation",exact:true})).toHaveAttribute("href","/product")
     await expect(page.getByText("Read the film",{exact:true})).toHaveCount(0)
     expect((await page.request.head("/marketing/film/taplo-intro.mp4")).ok()).toBe(true)
   });

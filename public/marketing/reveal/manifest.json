@@ -1,0 +1,24 @@
+{
+  "portrait": {
+    "width": 780,
+    "height": 1040,
+    "fps": 30,
+    "duration": 26,
+    "file": "/marketing/reveal/portrait-packed.mp4",
+    "download": "/marketing/reveal/portrait.mp4",
+    "poster": "/marketing/reveal/portrait-poster.png",
+    "bytes": 5610619,
+    "sha256": "bf8401f9e20c673f50de104c8362635c4de2bac62d401f7a5899e86bbcf2f8f8"
+  },
+  "landscape": {
+    "width": 1280,
+    "height": 800,
+    "fps": 30,
+    "duration": 26,
+    "file": "/marketing/reveal/landscape-packed.mp4",
+    "download": "/marketing/reveal/landscape.mp4",
+    "poster": "/marketing/reveal/landscape-poster.png",
+    "bytes": 4160883,
+    "sha256": "e5fbac0331a31a4ed6e6fc15fc208cfd457a439def0081a318c84f46b1e4b1af"
+  }
+}
