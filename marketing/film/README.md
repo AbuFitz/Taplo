@@ -1,23 +1,27 @@
-# Taplo, 18 seconds
+# Taplo — One good page
 
-Editable source of the marketing film. 1920×1080, 30 fps, silent, 18 s. Storyboard: `docs/film-storyboard.md`.
+Three separately composed 18-second, 30fps silent films: landscape 1920×1080, portrait 1080×1920, square 1080×1080. Portrait and square use their own layout, rather than cropping the landscape file. Original illustrative UK business photography accompanies actual captures from the shared page renderer. The businesses and stock are fictional.
 
-| Scene | File | What it shows |
-| --- | --- | --- |
-| 0–3 s | `compositions/s1.html` | Customers see prices first (a real service detail) |
-| 3–6 s | `compositions/s2.html` | Then pick a time (the real booking journey) |
-| 6–9 s | `compositions/s3.html` | Add a service and the page fills in (the real setup) |
-| 9–12 s | `compositions/s4.html` | Start from a design, change anything (one business, four designs) |
-| 12–15 s | `compositions/s5.html` | A code, a card and a link (the real QR options and share card) |
-| 15–18 s | `compositions/s6.html` | End card with the Taplo logo and the action |
+The current six beats: local business → service detail/time picker → four looks on the same business → vehicle catalogue → branded sharing card → Taplo/action. Prices, content and interfaces come from the current Station Road and Brookfield scenarios. This film does not demonstrate message delivery or payment processing.
 
-Every image in `assets/` is a real capture of the page renderer, made by `scripts/marketing/capture-states.mjs` and copied here. Business names are fictional. Nothing in the film claims email, payments or public links.
+## Edit and render
+
+`node scripts/marketing/build-film.mjs` regenerates all three HTML projects from the authored composition source. Run from the repository root. Assets are local, including pinned GSAP 3.14.2 and licensed fonts, so rendering needs no live CDN requests. Font licences are in assets/fonts. GSAP's licence notice is retained in the vendor file; see https://gsap.com/standard-license/.
+
+Install FFmpeg and FFprobe locally. HyperFrames uses PATH or HYPERFRAMES_FFMPEG_PATH / HYPERFRAMES_FFPROBE_PATH. HYPERFRAMES_BROWSER_PATH can select an installed Chromium. No paid or hosted rendering service is required.
 
 ```sh
-cd marketing/film
-npx hyperframes@0.8.186 check                 # lint + contract
-npx hyperframes@0.8.186 preview               # edit in the HyperFrames desktop app / Studio
-npx hyperframes@0.8.186 render -q delivery -o ../../public/marketing/film/taplo-intro.mp4
+npx hyperframes@0.8.186 check marketing/film
+npx hyperframes@0.8.186 check marketing/film/formats/portrait
+npx hyperframes@0.8.186 check marketing/film/formats/square
+node scripts/marketing/render-film.mjs
+node scripts/marketing/finalize-film.mjs
 ```
 
-The poster (`public/marketing/film/poster.webp`) is the settled frame of scene 3 (7.9 s): `ffmpeg -ss 7.9 -i taplo-intro.mp4 -frames:v 1 poster.png`.
+The current delivery uses the local full-canvas renderer above. The local HyperFrames export wrapper left an 88px blank strip even though the source and its checks looked correct. The fallback uses Playwright to seek the same GSAP timeline frame by frame and captures the entire authored canvas. Set CHROME_PATH or HYPERFRAMES_BROWSER_PATH to the installed browser. It uses the same local assets, timing and FFmpeg delivery settings. HyperFrames remains available for editing, checks and previews. Finalization decodes settled frames and checks the bottom edge in every scene/ratio, so a clipped export cannot pass silently.
+
+Finalization probes every file for dimensions/duration and absence of audio, creates the posters and three short feature cuts, and records SHA-256 hashes for the delivered files and HTML source in public/marketing/film/manifest.json. Short clips are isolated 3-second feature beats, not complete customer tutorials.
+
+Refresh UI captures using scripts/marketing/capture-states.mjs and scripts/marketing/look-thumbs.mjs before copying them into assets and regenerating formats. Refresh the full example captures when the renderer or example changes. The capture tool exits unsuccessfully if any requested capture fails. Review settled frames and transitions in all three ratios before delivering; passing checks does not replace visual judgement.
+
+Official workflow reference: https://github.com/heygen-com/hyperframes/blob/main/docs/guides/rendering.mdx . The pinned CLI's --help is authoritative for supported flags.

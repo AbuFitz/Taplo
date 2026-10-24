@@ -518,8 +518,8 @@
     "height": 1350,
     "cssWidth": 540,
     "cssHeight": 675,
-    "bytes": 59420,
-    "source": "/appearance/frame?scenario=barber"
+    "bytes": 68594,
+    "source": "/appearance/frame?scenario=station"
   },
   "setup-1-name": {
     "file": "/marketing/setup-1-name.webp",
@@ -563,7 +563,7 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 144502,
+    "bytes": 155118,
     "source": "/onboarding"
   },
   "setup-4-first": {
@@ -599,8 +599,8 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 71616,
-    "source": "/appearance/frame?scenario=barber"
+    "bytes": 94616,
+    "source": "/appearance/frame?scenario=station"
   },
   "story-2-detail": {
     "file": "/marketing/story-2-detail.webp",
@@ -608,8 +608,8 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 30936,
-    "source": "/appearance/frame?scenario=barber"
+    "bytes": 32642,
+    "source": "/appearance/frame?scenario=station"
   },
   "story-3-time": {
     "file": "/marketing/story-3-time.webp",
@@ -617,8 +617,8 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 64802,
-    "source": "/appearance/frame?scenario=barber"
+    "bytes": 61448,
+    "source": "/appearance/frame?scenario=station"
   },
   "story-4-done": {
     "file": "/marketing/story-4-done.webp",
@@ -626,8 +626,8 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 45658,
-    "source": "/appearance/frame?scenario=barber"
+    "bytes": 52152,
+    "source": "/appearance/frame?scenario=station"
   },
   "ex-station-road-barbers-phone": {
     "file": "/marketing/ex-station-road-barbers-phone.webp",

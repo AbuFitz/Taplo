@@ -1,0 +1,72 @@
+{
+  "renderer": "Local Playwright full-canvas capture with GSAP frame seeking and FFmpeg encoding",
+  "description": "Silent authored product films; fictional UK businesses; actual shared-renderer screenshots and original illustrative photography.",
+  "outputs": [
+    {
+      "name": "taplo-intro",
+      "width": 1920,
+      "height": 1080,
+      "source": "index.html",
+      "duration": 18,
+      "fps": "30/1",
+      "bytes": 5727044,
+      "sha256": "44dd780096c0a73f12f5905d1880e2cb3c2c930c5b2b0ac04ca7470323485a05",
+      "sourceSha256": "903170f85f3646fc63e83ff12ebe08642430716fc944cb2acd29037d9f084544"
+    },
+    {
+      "name": "taplo-portrait",
+      "width": 1080,
+      "height": 1920,
+      "source": "formats/portrait/index.html",
+      "duration": 18,
+      "fps": "30/1",
+      "bytes": 6335289,
+      "sha256": "2a935279d94ecd773bf6e62ace626b7764f520e3519c9914e6b5b778259a97dc",
+      "sourceSha256": "c46157883001bfb7b442883cf02848b3cbb9ca62dd58c0a45b7e0005ffada611"
+    },
+    {
+      "name": "taplo-square",
+      "width": 1080,
+      "height": 1080,
+      "source": "formats/square/index.html",
+      "duration": 18,
+      "fps": "30/1",
+      "bytes": 3906842,
+      "sha256": "7418b0df46260e8a2cad574b73ea01981af0fed9e9908a489e4fb7a4e475b174",
+      "sourceSha256": "b6a65f0a2f968815d01cceb6f6f5c6504919aeeafbe768c16fb3296c15e5c17a"
+    },
+    {
+      "name": "booking-clip",
+      "width": 1920,
+      "height": 1080,
+      "source": "taplo-intro.mp4#t=3,6",
+      "duration": 3,
+      "fps": "30/1",
+      "bytes": 459631,
+      "sha256": "4b5c066bf39e3a2096a9a830594d9ad7f3810578b90026e59ffeb570445bed3e",
+      "sourceSha256": null
+    },
+    {
+      "name": "design-clip",
+      "width": 1920,
+      "height": 1080,
+      "source": "taplo-intro.mp4#t=6,9",
+      "duration": 3,
+      "fps": "30/1",
+      "bytes": 959030,
+      "sha256": "3ca17a7eb6d088b52a76b774c3cb0cfa654fd25afff641f5fbba71aeec71f176",
+      "sourceSha256": null
+    },
+    {
+      "name": "stock-clip",
+      "width": 1920,
+      "height": 1080,
+      "source": "taplo-intro.mp4#t=9,12",
+      "duration": 3,
+      "fps": "30/1",
+      "bytes": 901294,
+      "sha256": "8431309e37b955898e96b7ce52ea337c8738e4d011e60730f4cc6c1cd04fb968",
+      "sourceSha256": null
+    }
+  ]
+}

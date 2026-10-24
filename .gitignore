@@ -47,3 +47,5 @@ next-env.d.ts
 # HyperFrames working files
 /marketing/film/.hyperframes/
 /marketing/film/renders/
+/marketing/film/formats/**/.hyperframes/
+/marketing/film/formats/**/renders/

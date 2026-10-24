@@ -12,31 +12,15 @@ import { LookSwitcher } from "@/features/marketing/home/LookSwitcher"
 import { Reveal } from "@/features/marketing/home/Reveal"
 import { taploCodeSvg } from "@/features/qr/taplo-code"
 import { featureState } from "@/lib/feature-status"
-import { cn } from "@/lib/utils"
+import { BusinessStories } from "@/features/marketing/home/BusinessStories"
 
 // Read the demo flag per request, never frozen at build time.
 export const dynamic = "force-dynamic"
 
-/** What a customer meets, in the order a page is used: one swipeable row, each item a real capture of the page renderer. */
-const ROW = [
-  { id: "team-swipe", w: 300, title: "Meet the team", body: "Names, faces, a short bio and a button to book with each person.", href: "/product/team", alt: "Team cards in a swipeable row" },
-  { id: "cap-vehicles", w: 300, crop: 560, title: "Stock with the facts", body: "Year, mileage, fuel and gearbox first, then the price. Reserved and sold cars say so.", href: "/product/vehicles", alt: "A list of cars with specifications and prices" },
-  { id: "prod-swipe", w: 300, title: "Products and links", body: "Sell your own, or recommend one with a link that says it is an affiliate link.", href: "/product/products", alt: "Products in a swipeable row" },
-  { id: "gal-lightbox", w: 420, title: "Photos that open large", body: "Arrows, zoom and captions, on a phone or a keyboard.", href: "/product/gallery-reviews", alt: "A photo open in a full-screen viewer" },
-  { id: "svc-detail", w: 420, title: "Prices with detail", body: "Price, length and who does it, one tap from the menu.", href: "/product/services", alt: "A service detail with price, duration and the people who provide it" },
-  { id: "rev-quote", w: 300, title: "Reviews with a source", body: "Real words, with where they came from.", href: "/product/gallery-reviews", alt: "A customer review with its source" },
-] as const
-
-const BUBBLES = [
-  { live: featureState("textApp") === "works", text: "Hi Marlowe & Finch, I’d like to ask about your services.", side: "out", cap: "Text us. Opens the customer’s own messages app." },
-  { live: featureState("appointmentMessages") === "works", text: "Confirmed: Signature cut with Jonah, Thursday at 10:30.", side: "in", cap: "Appointment messages." },
-  { live: featureState("reminders") === "works", text: "Reminder: Signature cut tomorrow at 10:30. Reply to change it.", side: "in", cap: "Reminders." },
-] as const
-
 export default function Home() {
   const a = primaryAction()
-  const qr = taploCodeSvg("https://taplo.example/marlowe-and-finch", 320, "A Taplo QR code")
-  const anyPending = BUBBLES.some((b) => !b.live)
+  const qr = taploCodeSvg("https://taplo.example/common-room-barbers", 320, "A Taplo QR code")
+  const messagingPending = featureState("appointmentMessages") !== "works" || featureState("reminders") !== "works"
   return (
     <div className="bg-background">
       <SiteHeader />
@@ -69,63 +53,38 @@ export default function Home() {
           </div>
         </section>
 
-        {/* The short film. Asked for, never autoplayed. */}
-        <section aria-labelledby="film-h" className="bg-foreground py-16 text-background sm:py-24">
-          <div className="mx-auto w-full max-w-5xl px-5">
-            <Reveal><h2 id="film-h" className="font-display font-display-tight mb-8 text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">See how it comes together.</h2></Reveal>
-            <Film className="[&_figcaption]:text-background/60 [&_figcaption_span]:text-background" />
+        <BusinessStories />
+
+        <section aria-labelledby="story-h" className="bg-[#e8eccc] text-[#20372d]">
+          <div className="mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 sm:py-28">
+            <p className="text-sm font-semibold">Less back and forth. More getting on with it.</p>
+            <h2 id="story-h" className="font-display font-display-tight mt-4 max-w-3xl text-[clamp(2.25rem,5vw,4.5rem)] leading-[1.03] tracking-[-0.045em]">A price. A time.<br />You’re in the diary.</h2>
+            <div className="mt-12"><BookingStory /></div>
+            <div className="mt-10 flex flex-wrap items-center justify-between gap-6 border-t border-[#20372d]/20 pt-7">
+              <p className="max-w-xl text-sm leading-relaxed text-[#46594b]">Take bookings straight away, agree appointment requests first, or let customers ask for a quote. Choose what suits your business.</p>
+              <ArrowLink href="/product/booking">Explore booking</ArrowLink>
+            </div>
           </div>
         </section>
 
-        {/* The art-directed story: a price becomes a booking. */}
-        <section aria-labelledby="story-h" className="mx-auto w-full max-w-7xl px-5 pb-16 pt-24 sm:pt-32">
-          <h2 id="story-h" className="font-display font-display-tight max-w-3xl text-[clamp(2.25rem,5vw,4.25rem)] text-balance">From a price on the page to a booking in the diary.</h2>
-          <div className="mt-12 lg:mt-20"><BookingStory /></div>
-        </section>
-
-        {/* Swipeable: what a page can hold. */}
-        <section aria-labelledby="row-h" className="border-y border-foreground/10 bg-muted py-24 sm:py-32">
-          <div className="mx-auto w-full max-w-7xl px-5">
-            <Reveal><h2 id="row-h" className="font-display font-display-tight max-w-3xl text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">One page, whatever you sell.</h2></Reveal>
-          </div>
-          <ul className="mt-14 flex snap-x snap-mandatory scroll-px-5 gap-8 overflow-x-auto px-5 pb-6 [scrollbar-width:thin] lg:px-[max(1.25rem,calc((100vw-80rem)/2+1.25rem))]" aria-label="What a page can hold" tabIndex={0}>
-            {ROW.map((r, n) => (
-              <li key={r.id} className={cn("shrink-0 snap-start", n % 2 === 1 && "mt-12")} style={{ width: r.w }}>
-                <Link href={r.href} className="group block outline-none">
-                  <Shot id={r.id} alt={r.alt} width={r.w} frame="none" cropTo={"crop" in r ? r.crop : undefined} className="transition-transform duration-300 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 motion-reduce:transition-none" />
-                  <h3 className="mt-5 text-xl font-semibold tracking-[-0.02em]">{r.title}</h3>
-                  <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-foreground/65">{r.body}</p>
-                </Link>
-              </li>
-            ))}
+        <section className="mx-auto grid w-full max-w-7xl gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[1fr_1.2fr] lg:gap-24">
+          <div><p className="text-sm font-semibold text-signal">Everything in its place</p><h2 className="font-display font-display-tight mt-4 text-[clamp(2rem,4vw,3.75rem)] leading-[1.05] tracking-[-0.04em]">A proper home for<br />what you do.</h2><p className="mt-6 max-w-md text-lg leading-relaxed text-foreground/70">Put the useful things up front. Your services, your stock, your people and your work — with a clear next step for each.</p><div className="mt-7"><ArrowLink href="/product">See what your page can do</ArrowLink></div></div>
+          <ul className="grid gap-x-8 sm:grid-cols-2">
+            {[
+              ["Services and prices", "A simple price list or a menu with the detail. Fixed prices, starting prices and quotes.", "/product/services"],
+              ["Products and vehicles", "Big photos, useful specifications and availability. Enquiries that keep the item attached.", "/product/vehicles"],
+              ["People and pictures", "Introduce your team. Show the work you are proud of. Let customers take a closer look.", "/product/gallery-reviews"],
+              ["A way to get in touch", "Useful social links, contact details and an enquiry form, right where people need them.", "/product/enquiries"],
+            ].map(([title, body, href]) => <li key={href} className="border-t border-foreground/15 py-6"><Link href={href!} className="group block rounded outline-none focus-visible:ring-3 focus-visible:ring-signal/50"><h3 className="flex items-center justify-between gap-4 text-xl font-semibold tracking-tight">{title}<ArrowRight className="size-4 shrink-0 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" aria-hidden="true" /></h3><p className="mt-3 text-[0.9375rem] leading-relaxed text-foreground/65">{body}</p></Link></li>)}
           </ul>
-        </section>
-
-        {/* Messages, each one called what it is. */}
-        <section className="mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-14 px-5 py-24 sm:py-32 lg:grid-cols-12">
-          <div className="order-last lg:order-first lg:col-span-6">
-            <ol className="grid gap-5" aria-label="Examples of messages">
-              {BUBBLES.map((b) => (
-                <li key={b.cap} className={cn("max-w-md", b.side === "out" ? "justify-self-end" : "justify-self-start")}>
-                  <p className={cn("rounded-3xl px-5 py-4 text-[1.0625rem] leading-relaxed", b.side === "out" ? "rounded-br-md bg-signal text-white" : "rounded-bl-md bg-foreground/[0.07]")}>{b.text}</p>
-                  <p className={cn("mt-2 text-sm text-foreground/55", b.side === "out" && "text-right")}>{b.cap}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-          <Reveal className="lg:col-span-6">
-            <h2 className="font-display font-display-tight text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">Customers can text you in one tap.</h2>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-foreground/70">A Text us button opens their own messages app with a note ready to send. Questions arrive as enquiries and bookings as bookings.{anyPending ? " Confirmations and reminders switch on when you connect messaging." : " Confirmations and reminders go out on their own."}</p>
-            <div className="mt-8"><ArrowLink href="/product/messages">Messages and reminders</ArrowLink></div>
-          </Reveal>
         </section>
 
         {/* Strong static artwork: the code for the counter. */}
         <section className="bg-signal text-white">
           <div className="mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-14 px-5 py-24 sm:py-32 lg:grid-cols-12">
             <Reveal className="lg:col-span-5">
-              <h2 className="font-display font-display-tight text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">A code for the counter, the van and the window.</h2>
-              <p className="mt-6 max-w-md text-lg leading-relaxed text-white/80">Download a clean QR code for print or screen, on white or transparent, with your logo or ours in the middle. Or post a designed card with your name, link and code.</p>
+              <h2 className="font-display font-display-tight text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">Found on the counter. Kept in their pocket.</h2>
+              <p className="mt-6 max-w-md text-lg leading-relaxed text-white/80">One link for your bio, your messages and your next customer. Add a branded QR code to your counter, your van or your window, so people can get straight to your page.</p>
               <div className="mt-8"><Link href="/product/sharing" className="inline-flex min-h-11 items-center gap-2 font-semibold underline underline-offset-4">Sharing and QR codes<ArrowRight aria-hidden="true" className="size-4" /></Link></div>
             </Reveal>
             <div className="mx-auto grid w-full max-w-xl grid-cols-2 items-center gap-4 sm:gap-8 lg:col-span-7 lg:mx-0 lg:ml-auto">
@@ -141,21 +100,21 @@ export default function Home() {
           <LookSwitcher />
         </section>
 
-        {/* Setup. */}
-        <section aria-labelledby="setup-h" className="border-y border-foreground/10 bg-muted py-24 sm:py-32">
-          <div className="mx-auto w-full max-w-7xl px-5">
-            <Reveal className="max-w-2xl"><h2 id="setup-h" className="font-display font-display-tight text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">A little setup. A lot more you.</h2><p className="mt-6 text-lg leading-relaxed text-foreground/70">Name it, say what you do and how people should reach you, choose a design, add your first service. Your page takes shape beside you as you go.</p></Reveal>
-            <div className="mt-14 grid grid-cols-[minmax(0,1fr)] gap-14">
-              {(["setup-2-what", "setup-3-design", "setup-4-first"] as const).map((id, n) => (
-                <Reveal key={id} delay={n * 80} className={cn("grid grid-cols-[minmax(0,1fr)] items-center gap-6 md:grid-cols-12", n === 1 && "md:[&>*:first-child]:order-last")}>
-                  <div className="md:col-span-4"><p className="font-display text-5xl tabular-nums text-foreground/15">{n + 2}</p><p className="mt-2 text-2xl font-semibold tracking-[-0.02em]">{["Say what you do", "Choose a design", "Add your first service"][n]}</p><p className="mt-2 text-foreground/65">{["Pick your kind of business and what people should do first.", "Each one shown on a real page. Change any of it later.", "A name and a price. Your page fills in as you type."][n]}</p></div>
-                  <div className="md:col-span-8"><Shot id={id} alt={["Choosing what you do and what people should do first", "Choosing a design while your own page takes shape beside it", "Adding a first service while the page fills in beside it"][n]!} width={760} frame="none" className="w-full" /></div>
-                </Reveal>
-              ))}
+        <section aria-labelledby="setup-h" className="bg-[#f1eddf]">
+          <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+            <div><p className="text-sm font-semibold text-signal">Make a start</p><h2 id="setup-h" className="font-display font-display-tight mt-4 text-[clamp(2rem,4vw,3.75rem)] leading-[1.03] tracking-[-0.04em]">A few choices.<br />A page of your own.</h2>
+              <ol className="mt-8 grid gap-6">{[["Tell us about your business", "Your name, what you do and how people should reach you."], ["Pick a look you like", "See your page take shape. Swap colours, photos and layouts as you go."], ["Add what you offer", "A service, a product or a vehicle. Start with one and build from there."]].map(([title, body], n) => <li key={title} className="flex gap-4"><span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-foreground/25 text-sm font-semibold">{n + 1}</span><div><h3 className="text-lg font-semibold">{title}</h3><p className="mt-1 text-sm leading-relaxed text-foreground/65">{body}</p></div></li>)}</ol>
+              <Link href={a.href} className="mt-8 inline-flex min-h-12 items-center gap-5 rounded-full bg-signal px-6 font-semibold text-white outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-signal/50">{a.label}<ArrowRight aria-hidden="true" className="size-4" /></Link>
             </div>
-            <div className="mt-14"><Link href={a.href} className="inline-flex min-h-12 items-center rounded-xl bg-foreground px-6 text-base font-semibold text-background outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-ring/60">{a.label}</Link></div>
+            <div className="min-w-0"><Shot id="setup-3-design" alt="Choosing a starting design with a preview of your own page beside it" width={800} frame="browser" fluid className="w-full" /><p className="mt-4 text-sm text-foreground/60">Your preview changes as you make your choices.</p></div>
           </div>
         </section>
+
+        <section aria-labelledby="film-h" className="bg-[#142d3e] py-20 text-white sm:py-28">
+          <div className="mx-auto max-w-6xl px-5 sm:px-8"><div className="mb-10 flex flex-wrap items-end justify-between gap-5"><h2 id="film-h" className="font-display font-display-tight max-w-xl text-[clamp(2rem,4vw,3.75rem)] leading-[1.03] tracking-[-0.04em]">See the whole picture.</h2><p className="max-w-sm text-white/70">The page, the choices and the small details that bring it together.</p></div><Film className="[&_figcaption]:text-white/70 [&_figcaption_span]:text-white" /></div>
+        </section>
+
+        <div className="mx-auto max-w-7xl px-5 pt-10 sm:px-8"><p className="max-w-3xl text-sm leading-relaxed text-foreground/60">{messagingPending ? "Booking confirmations and reminders switch on when you connect messaging. " : ""}Explore the frontend now; online payments and message delivery need their services connected. <Link href="/product/messages" className="underline underline-offset-4">See messaging details</Link>.</p></div>
 
         {/* Plans, briefly. */}
         <section className="mx-auto w-full max-w-7xl px-5 py-24 sm:py-32">
