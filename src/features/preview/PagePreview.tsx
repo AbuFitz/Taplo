@@ -28,6 +28,7 @@ export interface PreviewViewport { w: number; h: number; scale: number }
 
 export interface PagePreviewProps {
   src: string
+  loading?: "eager" | "lazy"
   title: string
   mode: PreviewMode
   device?: { w: number; h: number }
@@ -75,7 +76,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, safeTop: 0, safeBottom: 0, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, resizeKey, topInset = 0, cropDevice = false }: PagePreviewProps) {
+export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, resizeKey, topInset = 0, cropDevice = false }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
@@ -162,6 +163,7 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
       aria-hidden={interactive ? undefined : true}
       inert={!interactive}
       src={src}
+      loading={loading}
       data-testid={testId ?? "preview-frame"}
       onLoad={() => { prepareDocument(); post() }}
       className="preview-document"

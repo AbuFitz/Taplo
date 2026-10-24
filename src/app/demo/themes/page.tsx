@@ -33,7 +33,7 @@ export default async function ThemeGallery({ searchParams }: { searchParams: Pro
             </div>
             <p className="mb-2 text-xs text-neutral-600">{t.description}</p>
             <div className="h-[36rem] w-full">
-              <PagePreview title={`${fixture.label} · ${t.name}`} src={`/${fixture.content.identity.slug}?theme=${t.id}`} mode={viewport === "phone" ? "device" : "desktop"} chrome />
+              <PagePreview loading="lazy" title={`${fixture.label} · ${t.name}`} src={`/${fixture.content.identity.slug}?theme=${t.id}`} mode={viewport === "phone" ? "device" : "desktop"} chrome />
             </div>
           </section>
         ))}
