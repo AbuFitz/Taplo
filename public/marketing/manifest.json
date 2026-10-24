@@ -1007,5 +1007,16 @@
     "source": "/appearance/frame?scenario=station",
     "sha256": "329702aa2fcb",
     "capturedAt": "2026-10-24T13:38:34.295Z"
+  },
+  "booking-clinic-time": {
+    "file": "/marketing/booking-clinic-time.webp",
+    "width": 780,
+    "height": 1688,
+    "cssWidth": 390,
+    "cssHeight": 844,
+    "bytes": 52378,
+    "source": "/appearance/frame?scenario=physio",
+    "sha256": "e404f153657e",
+    "capturedAt": "2026-10-24T16:58:18.171Z"
   }
 }

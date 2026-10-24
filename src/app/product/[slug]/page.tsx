@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BookingMarketingPage } from "@/features/marketing/BookingMarketingPage";
 import { PlaqueScene } from "@/features/marketing/PlaqueScene";
 import { taploCodeSvg } from "@/features/qr/taplo-code";
 import { notFound } from "next/navigation";
@@ -40,6 +41,7 @@ export default async function ProductPageRoute({
 }) {
   const p = pageBySlug((await params).slug);
   if (!p) notFound();
+  if (p.slug === "booking") return <BookingMarketingPage product={p} />;
   const Scene = SCENES[p.slug],
     a = primaryAction(),
     tone = PRODUCT_TONES[p.slug];

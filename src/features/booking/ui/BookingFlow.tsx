@@ -259,7 +259,7 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
       ) : null}
 
       {step === "done" && done ? <Done onClose={onClose} ctx={ctx} booking={done} tz={tz} viewerTz={viewerTz} onChanged={() => undefined} update={update} state={state} config={config} /> : null}
-      {footer ? <div className="sticky bottom-0 -mx-4 -mb-4 border-t border-tp-border/60 bg-tp-bg px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pt-3 sm:static sm:mx-0 sm:mb-0 sm:border-0 sm:p-0">{footer}</div> : null}
+      {footer ? <div data-testid="booking-step-action" className="sticky -bottom-4 -mx-4 -mb-4 border-t border-tp-border/60 bg-tp-bg px-4 pb-[calc(1.75rem+env(safe-area-inset-bottom,0px))] pt-3 sm:static sm:mx-0 sm:mb-0 sm:border-0 sm:p-0">{footer}</div> : null}
     </div>
   )
 }
