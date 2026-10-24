@@ -8,6 +8,7 @@ import {
 } from "@/features/marketing/Site";
 import { PRODUCT_GROUPS } from "@/features/marketing/ia";
 import { pageBySlug } from "@/features/marketing/product";
+import { ProductLead } from "@/features/marketing/ProductLead";
 import { ProductArtwork } from "@/features/marketing/ProductArtwork";
 
 export const metadata: Metadata = {
@@ -26,23 +27,22 @@ export default function ProductIndex() {
           <div className="mx-auto max-w-[88rem] px-5 pb-14 pt-12 sm:px-8 sm:pb-20 sm:pt-20">
             <div className="grid items-end gap-8 lg:grid-cols-[1.1fr_0.8fr] lg:gap-24">
               <h1 className="font-display font-display-tight max-w-4xl text-[clamp(2.75rem,6.5vw,6rem)] leading-[0.99] tracking-[-0.055em]">
-                A page that gets on with business.
+                One page. Built to do more.
               </h1>
               <div>
                 <p className="max-w-lg text-lg leading-relaxed sm:text-xl">
-                  Your services, your stock and your people. The useful details,
-                  with a clear next step. Choose what your page needs and make
-                  it your own.
+                  Show your services, menu or stock. Let customers book, enquire or get in touch. Start with the parts your business needs.
                 </p>
                 <Link
                   href={a.href}
-                  className="mt-7 inline-flex min-h-12 items-center gap-6 rounded-full bg-signal px-6 font-semibold text-white outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-signal/50"
+                  className="mt-7 inline-flex min-h-12 items-center gap-6 rounded-full bg-black px-6 font-semibold text-white outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-signal/50"
                 >
                   {a.label}
                   <ArrowRight aria-hidden="true" className="size-4" />
                 </Link>
               </div>
             </div>
+            <div className="mt-12"><ProductLead /></div>
             <nav
               aria-label="Product sections"
               className="mt-12 flex flex-wrap gap-x-7 gap-y-2 border-t border-[#080808]/20 pt-6"

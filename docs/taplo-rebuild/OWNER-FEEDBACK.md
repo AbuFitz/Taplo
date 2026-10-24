@@ -2,6 +2,14 @@
 
 24 October 2026. Keep this checklist active across runs. “Implemented” means shipped behaviour, not owner approval or finished design quality. Work one area at a time and verify actual rendered quality before moving on.
 
+## Latest owner corrections: cinematic reveal and physical sharing
+
+The owner rejected9d4f9c0's three-business story as a final film: it still feels like a slideshow. Build a continuous cinematic product reveal using the existing motion/3D production tools, with actual interface transformations, visual cause/effect, silent autoplay, integrated/clear background and tactile interaction. Do not re-label changing image cards or a paragraph-led slideshow as the requested film. Finish the current composition checkpoint, then make this the immediate next priority. Automatically continue through the remaining ordered frontend list; do not ask whether to proceed again.
+
+QR needs to be a useful physical product format: a branded plaque that will eventually be sold, and a wallet format. Current composition step implements spring-driven 3D drag/rotation/reset, scannable code and print SVG download, with Counter plaque and Wallet card previews on Home and Sharing. Physical order fulfilment and Apple/Google Wallet export are planned, not connected; no invented price, order or wallet download. Further material/branding customization and physical manufacturing remain open.
+
+Composition step restores the layered phone/desktop hero using current actual renderer captures, removes the iframe wheel trap, uses consistent phone dimensions, removes Home's repeated feature wall and separate business screenshot list, creates task-led Product and synchronized mobile plan selection/comparison, and adds pointer/focus-responsive tonal lighting. These are implementations subject to owner design review. The remaining individual product pages, broader catalogue/adoption, portal, legal facts/backend and the requested proper film remain active.
+
 ## Current implementation checkpoints (not owner design approval)
 
 Registration rebuild109b120 is publicly READY and13 public cases pass: explicit logo/framing popup, search-led category, focused contact/action, useful offerings/details, draft preservation, appearance and missing-content review, plan preference, elevated working preview, refreshed café setup captures and recording. Physical-device testing remains open.

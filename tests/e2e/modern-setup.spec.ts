@@ -59,10 +59,10 @@ for (const width of [390, 1440]) test(`visual setup keeps each decision separate
 
 for (const width of [390, 1440]) test(`homepage examples are frameless previews at ${width}`, async ({ page }) => {
   await page.setViewportSize({width,height:950});await page.goto('/')
-  await expect(page.locator('.business-stage img')).toHaveAttribute('alt','Jay’s Barbers business page')
+  await expect(page.locator('.business-stage .hero-phone img')).toHaveAttribute('alt','Jay’s Barbers business page')
   await expect(page.locator('.business-stage iframe')).toHaveCount(0)
   await page.getByRole('button',{name:'Car dealer',exact:true}).click()
-  await expect(page.locator('.business-stage img')).toHaveAttribute('alt','Harris Cars business page')
+  await expect(page.locator('.business-stage .hero-phone img')).toHaveAttribute('alt','Harris Cars business page')
   await expect(page.locator('.business-stage a')).toHaveAttribute('href','/inspiration/harris-cars')
 })
 
@@ -87,9 +87,8 @@ test('Google review setup preserves old records but never publishes them as Goog
   await expect(page.locator('[data-widget="reviews"]')).not.toContainText(/★|out of 5|Shared by the business/)
 })
 
-test('feature marketing uses readable native illustrations without cropped browsing frames',async({page})=>{
-  await page.goto('/');const section=page.locator('section[aria-labelledby="feature-spotlights-title"]')
-  await expect(section.locator('iframe')).toHaveCount(0);await expect(section.locator('article')).toHaveCount(4)
-  await expect(section.getByText('Cuts & prices',{exact:true})).toBeVisible()
-  await expect(section.locator('a[href="/product/booking"]')).toBeVisible()
+test('homepage removes the repeated feature wall and keeps direct product discovery',async({page})=>{
+ await page.goto('/');await expect(page.locator('section[aria-labelledby="feature-spotlights-title"]')).toHaveCount(0)
+ await expect(page.locator('.hero-stage iframe')).toHaveCount(0);await expect(page.locator('a[href="/product/booking"]').first()).toBeVisible()
+ await page.goto('/product');await expect(page.getByRole('navigation',{name:'Product sections'})).toBeVisible();await expect(page.getByRole('link',{name:/Services and prices/}).first()).toBeVisible()
 })

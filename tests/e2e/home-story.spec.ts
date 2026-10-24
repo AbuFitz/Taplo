@@ -5,8 +5,8 @@ import path from "node:path"
 for (const width of [390, 1440]) test(`current UK business story and voluntary keyboard walkthrough at ${width}`, async ({ page }) => {
   await page.setViewportSize({ width, height: 1000 })
   await page.goto("/")
-  const range = page.locator('section[aria-labelledby="businesses-h"]')
-  for (const slug of ["jays-barbers", "detail-dept", "harris-cars"]) await expect(range.locator(`a[href="/inspiration/${slug}"]`)).toBeVisible()
+  const range=page.locator('.hero-stage')
+  await expect(range.getByRole('link',{name:'Explore this page'})).toHaveAttribute('href','/inspiration/jays-barbers')
   const tabs = page.getByRole("tablist", { name: "From a price to a booking" })
   const first = tabs.getByRole("tab", { name: "See what it costs" })
   await first.click()

@@ -29,9 +29,19 @@ function Cell({ value }: { value: string | boolean }) {
   return <span className="font-semibold tabular-nums">{value}</span>;
 }
 /** The server supplies values from the entitlement resolver. Mobile changes the view, never the plan rules. */
-export function PlanComparison({ rows }: { rows: ComparisonRow[] }) {
-  const [selected, setSelected] = React.useState<PlanId>("free"),
+export function PlanComparison({
+  rows,
+  selectedPlan,
+  onPlanChange,
+}: {
+  rows: ComparisonRow[];
+  selectedPlan?: PlanId;
+  onPlanChange?: (id: PlanId) => void;
+}) {
+  const [ownSelected, setOwnSelected] = React.useState<PlanId>("free"),
     uid = React.useId();
+  const selected = selectedPlan ?? ownSelected;
+  const setSelected = onPlanChange ?? setOwnSelected;
   const column = (id: PlanId) =>
     cn("p-4 text-center", id !== selected && "hidden sm:table-cell");
   return (

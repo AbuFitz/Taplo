@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { PlaqueScene } from "@/features/marketing/PlaqueScene";
+import { taploCodeSvg } from "@/features/qr/taplo-code";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ArrowRight, Check, Clock, Layers, ExternalLink } from "lucide-react";
@@ -87,7 +89,7 @@ export default async function ProductPageRoute({
                   </a>
                 </div>
               </div>
-              <ProductArtwork slug={p.slug} priority />
+              {p.slug === "sharing" ? <div className="rounded-[2rem] bg-white p-5 text-black"><PlaqueScene code={taploCodeSvg("https://taplo-lilac.vercel.app/inspiration/no-6-coffee",320,"Example Taplo QR code")}/></div> : <ProductArtwork slug={p.slug} priority />}
             </div>
           </div>
         </section>

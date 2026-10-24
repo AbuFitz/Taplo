@@ -119,8 +119,8 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "sharing", label: "Sharing and QR codes", eyebrow: "Sharing and QR codes",
-    title: "Share your page with a link or QR code.",
-    lead: "Your bio, your counter, your next message. Carry the same page wherever customers find you, with a link, a branded QR code and a share card of your own.",
+    title: "Your page, out in the world.",
+    lead: "A scannable code for your printed material, a share image for messages and a link to your business page. Branded counter plaques and wallet cards are the next formats we’re developing; physical ordering and wallet export are not available yet.",
     status: [
       { label: "A Taplo QR code with the Taplo mark in the middle, as PNG for screens, PNG for print and SVG", state: "works" },
       { label: "A share image with your name, your logo and the code", state: "works" },
