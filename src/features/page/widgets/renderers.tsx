@@ -1,3 +1,4 @@
+import { SOCIAL_PLATFORMS } from "../social-platforms"
 import * as React from "react"
 import { referencedRecords as pick, selectedPlatforms, selectedService } from "./selection"
 import { serviceListItems } from "./service-list"
@@ -90,7 +91,7 @@ function ChannelWidget({ w, vm }: P) {
   return <LinkRow w={w} href={href} label={str(s.label) || c.label} subtitle={s.subtitle} icon={c.icon} external={c.external} variant={s.variant} />
 }
 
-const SOCIAL_NAME: Record<string, string> = { instagram: "Instagram", facebook: "Facebook", tiktok: "TikTok", linkedin: "LinkedIn", youtube: "YouTube", x: "X" }
+const SOCIAL_NAME: Record<string,string> = Object.fromEntries(SOCIAL_PLATFORMS.map(p=>[p.id,p.label]))
 
 function SocialWidget({ w, vm }: P) {
   const s = w.settings as S

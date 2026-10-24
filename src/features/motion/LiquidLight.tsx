@@ -10,16 +10,14 @@ class ShaderBoundary extends React.Component<{ children:React.ReactNode },{ fail
   render() { return this.state.failed ? null : this.props.children; }
 }
 
-/** A single shader/controller for setup and marketing. Input never waits on its decorative canvas. */
-export function LiquidLight({ tone="dark", phase=0, sourceSelector,contrast="content" }: { tone?:"light"|"dark";phase?:number;sourceSelector?:string;contrast?:"content"|"ambient" }) {
+/** A single shader/controller for setup and marketing. Autonomous motion never follows pointer, touch, focus or typing. */
+export function LiquidLight({ tone="dark", contrast="content" }: { tone?:"light"|"dark";phase?:number;sourceSelector?:string;contrast?:"content"|"ambient" }) {
   const host=React.useRef<HTMLDivElement>(null);
   const reduced=useReducedMotion();
-  const [source,setSource]=React.useState<HTMLElement|null>(null);
   const [available,setAvailable]=React.useState(false);
   const [active,setActive]=React.useState(false);
   React.useEffect(() => {
     const el=host.current;if(!el)return;
-    setSource((sourceSelector ? el.closest<HTMLElement>(sourceSelector) : el.parentElement) ?? el);
     let supported=false;
     try { const probe=document.createElement("canvas");const gl=probe.getContext("webgl2");supported=Boolean(gl);gl?.getExtension("WEBGL_lose_context")?.loseContext(); } catch { /* The CSS field remains. */ }
     setAvailable(supported);
@@ -28,8 +26,8 @@ export function LiquidLight({ tone="dark", phase=0, sourceSelector,contrast="con
     const io=new IntersectionObserver(([entry])=>{visible=Boolean(entry?.isIntersecting);sync();},{threshold:.01});
     io.observe(el);document.addEventListener("visibilitychange",sync);
     return ()=>{io.disconnect();document.removeEventListener("visibilitychange",sync);};
-  },[sourceSelector]);
+  },[]);
   return <div ref={host} className="liquid-light" data-tone={tone} data-contrast={contrast} data-reduced-motion={reduced} data-active={active&&!reduced} aria-hidden="true">
-    {available&&active&&!reduced&&source ? <ShaderBoundary><React.Suspense fallback={null}><Canvas tone={tone} phase={phase} source={source} contentSafe={contrast === "content"}/></React.Suspense></ShaderBoundary> : null}
+    {available&&active&&!reduced ? <ShaderBoundary><React.Suspense fallback={null}><Canvas tone={tone} contentSafe={contrast === "content"}/></React.Suspense></ShaderBoundary> : null}
   </div>;
 }

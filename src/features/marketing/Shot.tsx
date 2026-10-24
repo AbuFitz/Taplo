@@ -15,7 +15,7 @@ export function Shot({ id, alt, width, className, priority = false, frame, cropT
   const browser = presentation === "browser"
   const radius = browser ? "" : "rounded-2xl"
   return (
-    <figure data-phone-static={phone ? "true" : undefined} className={cn("relative shrink-0", phone ? "phone-shell" : "overflow-hidden", browser && "browser-shell", !phone && radius, className)} style={{ ...(fluid ? { maxWidth: width } : { width, maxWidth: "100%" }), ...(phone ? { "--phone-surface": (m as typeof m & { surface?: string }).surface ?? "#ffffff" } : {}) } as CSSProperties}>
+    <figure data-phone-static={phone ? "true" : undefined} className={cn("relative shrink-0", phone ? "phone-shell" : "overflow-hidden", browser && "browser-shell", !phone && radius, className)} style={{ ...(fluid ? { maxWidth: width, ...(phone ? {width:"calc(100% - 8px)"}: {}) } : { width, maxWidth: phone ? "calc(100% - 8px)" : "100%" }), ...(phone ? {marginInline:4}: {}), ...(phone ? { "--phone-surface": (m as typeof m & { surface?: string }).surface ?? "#ffffff" } : {}) } as CSSProperties}>
       {browser ? <BrowserChrome url={url} /> : null}
       <div className={cn("overflow-hidden", phone ? "phone-screen" : radius)} style={!phone && cropTo ? (fluid ? { aspectRatio: `${width} / ${cropTo}` } : { height: cropTo }) : undefined}>
         <Image src={`${m.file}?v=${m.sha256}`} alt={alt} width={m.width} height={m.height} sizes={sizes ?? `(max-width: ${width}px) 90vw, ${width}px`} loading={priority ? "eager" : "lazy"} className={cn("block w-full select-none", !phone && cropTo && fluid && "h-full object-cover object-top")} style={!phone && cropTo && fluid ? undefined : { aspectRatio: `${m.width} / ${m.height}`, height: "auto" }} draggable={false} />

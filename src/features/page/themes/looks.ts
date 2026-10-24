@@ -969,11 +969,24 @@ export const LOOKS: Look[] = [
     layout: { desktop: "split", width: "wide", rhythm: "editorial" }, motion: "subtle",
   }),
   ...EXISTING_LOOKS,
-];
+].map((look):Look => {
+  const curated=["open","service","personal","ink","silver","smoke","folio","showroom","journal","clay","forge","orchard"];
+  if(!curated.includes(look.id))return look;
+  const palette:Record<string,{background:string;text:string;muted:string;surface:string;accent:string;accentText:string;border:string}>={
+    folio:{background:"#faf9f6",text:"#20201f",muted:"#62625e",surface:"#ffffff",accent:"#292929",accentText:"#ffffff",border:"#deded8"},
+    showroom:{background:"#f3f5f3",text:"#16231d",muted:"#526159",surface:"#ffffff",accent:"#263e31",accentText:"#ffffff",border:"#d7dfd9"},
+    journal:{background:"#f6f6f6",text:"#111111",muted:"#616161",surface:"#ffffff",accent:"#171717",accentText:"#ffffff",border:"#dedede"},
+    clay:{background:"#f8f4ef",text:"#292421",muted:"#6a5d52",surface:"#fffdf9",accent:"#70523c",accentText:"#ffffff",border:"#e1d8ce"},
+    forge:{background:"#111111",text:"#f6f6f2",muted:"#b5b5ad",surface:"#242422",accent:"#eeeede",accentText:"#111111",border:"#3a3a36"},
+    orchard:{background:"#f4f7f2",text:"#183320",muted:"#52634e",surface:"#ffffff",accent:"#31553a",accentText:"#ffffff",border:"#d6e1d2"},
+  };
+  const colors=palette[look.id];const light=["open","personal"].includes(look.id);
+  return {...look,...(look.id==='clay'?{name:'Clay',blurb:'Warm paper, rounded layers and a clear menu.'}:look.id==='forge'?{blurb:'Graphite, titanium accents and a confident introduction.'}:look.id==='journal'?{blurb:'White space, precise typography and floating sections.'}:{}),overrides:{...look.overrides,...(colors?{colors,background:{kind:"solid",color:colors.background}}:light?{colors:{...look.overrides.colors,background:"#f6f6f6",surface:"#ffffff"},background:{kind:"solid",color:"#f6f6f6"}}:{}),cards:{...look.overrides.cards,surface:"solid",border:"none",shadow:"soft",radius:"xl"},buttons:{...look.overrides.buttons,shape:"pill",shadow:"soft"},motion:"subtle"}};
+});
 
 /** Discovery uses the new direction. Earlier configurations remain resolvable for saved pages. */
 export const STARTER_LOOKS = ["open", "service", "personal", "ink", "silver", "smoke"].map(id => LOOKS.find(l => l.id === id)!);
-export const CURRENT_LOOKS = [...STARTER_LOOKS, ...LOOKS.filter(l => ["voltage", "apex", "ultraviolet", "minted", "blueprint", "signal", "clean", "night", "colour", "photo", "journal", "forge"].includes(l.id))];
+export const CURRENT_LOOKS = [...STARTER_LOOKS, ...LOOKS.filter(l => ["folio", "showroom", "clay", "orchard", "journal", "forge"].includes(l.id))];
 
 /* ---- Radix-derived palettes: coordinated neutral + accent, light and dark ---- */
 type Scale = Record<string, string>;

@@ -66,7 +66,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
     const safeBottom = 0
     const outerW = device.w + pad * 2
     const outerH = device.h + pad * 2
-    const scale = zoom === "actual" ? 1 : Math.min(1, box.w / outerW, cropDevice ? 1 : box.h / outerH)
+    const scale = zoom === "actual" ? 1 : Math.min(1, Math.max(1,box.w - (chrome ? 8 : 0)) / outerW, cropDevice ? 1 : box.h / outerH)
     return { vw: device.w, vh: device.h - safeTop - safeBottom, scale, pad, bar: 0, safeTop, safeBottom, outerW, outerH }
   }
   const bar = chrome ? 38 : 0

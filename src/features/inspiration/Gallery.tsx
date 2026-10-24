@@ -202,6 +202,7 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
         </div>
       </div>
 
+      <div className="design-industry-rail" role="group" aria-label="Business categories"><button type="button" aria-pressed={biz===null} onClick={()=>setBiz(null)}>All businesses</button>{industries.map(i=><button type="button" key={i.id} aria-pressed={biz===i.id} onClick={()=>setBiz(biz===i.id?null:i.id)}>{i.label}</button>)}</div>
       {shown.length === 0 ? (
         <p className="py-20 text-lg text-foreground/70">
           No matching designs. Try another search or remove a filter.

@@ -55,7 +55,7 @@ test("closing a chooser does not steal focus from the next field while typing", 
   await page.getByRole("button", { name:"Barber", exact:true }).click();
   await page.getByRole("button", { name:"Continue", exact:true }).click();
   await page.getByRole("button",{name:"Phone calls",exact:true}).click();
-  await page.getByRole("button",{name:"WhatsApp & Instagram",exact:true}).click();
+  await page.getByRole("button",{name:"More ways to connect",exact:true}).click();
   await page.getByRole("button",{name:"Done",exact:true}).click();
   await page.getByLabel("Phone", { exact:true }).pressSequentially("01632 960123", { delay:60 });
   await expect(page.getByRole("dialog")).toBeHidden();

@@ -3,7 +3,6 @@ import { SiteFooter, SiteHeader } from "@/features/marketing/Site";
 import { INDUSTRY_FILTERS } from "@/features/marketing/ia";
 import { EXAMPLES, describe } from "@/features/inspiration/examples";
 import { capabilityTags, styleTags } from "@/features/inspiration/facets";
-import { MonoField } from "@/features/marketing/MonoField"
 import { Gallery, type GalleryItem } from "@/features/inspiration/Gallery";
 
 export const metadata: Metadata = {
@@ -49,15 +48,15 @@ export default async function InspirationPage({
     };
   });
   return (
-    <MonoField className="design-library bg-[#080808] text-white [--foreground:#ffffff] [--background:#080808] [--muted:#242424] [--muted-foreground:#aaaaaa]">
+    <div className="design-library bg-[#080808] text-white [--foreground:#ffffff] [--background:#080808] [--muted:#242424] [--muted-foreground:#aaaaaa]">
       <SiteHeader />
       <main className="mx-auto w-full max-w-7xl px-5 pb-24 pt-10 sm:pt-14">
         <div className="max-w-3xl pb-10 sm:pb-14">
           <h1 className="font-display font-display-tight text-[clamp(2.75rem,6vw,5rem)] text-balance">
-            Choose your business page.
+            Find your starting point.
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-foreground/65">
-            Find a page that fits the way you work.
+            Choose the structure. Make it your own. Every design opens as a working business demo.
           </p>
         </div>
         <Gallery
@@ -70,6 +69,6 @@ export default async function InspirationPage({
         />
       </main>
       <SiteFooter />
-    </MonoField>
+    </div>
   );
 }

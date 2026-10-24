@@ -88,7 +88,7 @@ for (const width of [390, 1440])
     await details.getByLabel("Tuesday", { exact: true }).check();
     await details.getByRole("button", { name: "Save details" }).click();
     await next();
-    await page.getByRole("radio",{name:"Studio",exact:true}).check();
+    await page.getByRole("radio",{name:"Editorial",exact:true}).check();
     await page.getByRole("button", { name: /Background & colours/ }).click();
     const design = page.getByTestId("setup-design-dialog");
     await design
@@ -245,7 +245,7 @@ test("partial service text survives back and reload, custom businesses work, and
     .getByLabel("Gradient end hex value")
     .fill("#cccccc");
   await page.getByRole("button", { name: "Done", exact: true }).click();
-  await page.getByRole("radio",{name:"Studio",exact:true}).check();
+  await page.getByRole("radio",{name:"Editorial",exact:true}).check();
   expect((await read(page)).page.appearance.background.to).toBe("#cccccc");
   expect((await read(page)).page.appearance.background.source).toBe("manual");
   await page.getByRole("button", { name: "Continue", exact: true }).click();

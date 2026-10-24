@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Shot } from "../Shot";
-import { MonoField } from "../MonoField";
 const SCENES = [
   {
     label: "Barber",
@@ -39,7 +38,7 @@ export function LiveStage() {
   const [selected, select] = useState(3);
   const scene = SCENES[selected];
   return (
-    <MonoField className="business-stage hero-stage">
+    <div className="business-stage hero-stage">
       <div
         className="hero-choices"
         role="group"
@@ -86,6 +85,6 @@ export function LiveStage() {
             <ArrowUpRight aria-hidden="true" size={16} />
           </Link>
         </div>
-    </MonoField>
+    </div>
   );
 }

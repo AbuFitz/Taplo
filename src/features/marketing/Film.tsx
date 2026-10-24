@@ -103,4 +103,4 @@ export function SilentVideo({
   );
 }
 /** Compatibility entry point for the continuous product reveal. Walkthroughs keep SilentVideo above. */
-export {CinematicFilm as Film} from './CinematicFilm'
+export {WidgetOrbit as Film} from './WidgetOrbit'

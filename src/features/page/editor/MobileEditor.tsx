@@ -85,7 +85,7 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
     if (top === "design") return "Design"
     if (top === "settings") return "Settings"
     if (selection.kind === "widget") { const w = s.page.widgets.find((x) => x.id === selection.id); return (w && getWidget(w.type)?.label) ?? "Content" }
-    return { content: "Your content", page: "Design", header: "Header", details: "Business details", settings: "Page settings" }[selection.kind]
+    return { content: "Your content", page: "Design", header: "Profile", details: "Business details", settings: "Page settings" }[selection.kind]
   })()
 
   const room = Math.max(0, vp.h - bar - head)
@@ -94,7 +94,7 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
 
   const tabs: { id: Panel; label: string; icon: typeof Rows3 }[] = [
     { id: "content", label: "Content", icon: Rows3 },
-    { id: "header", label: "Header", icon: LayoutTemplate },
+    { id: "header", label: "Profile", icon: LayoutTemplate },
     { id: "design", label: "Design", icon: Palette },
     { id: "settings", label: "Settings", icon: Briefcase },
   ]

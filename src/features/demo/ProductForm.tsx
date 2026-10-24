@@ -28,7 +28,7 @@ const toPounds = (m?: number) => (m === undefined ? "" : (m / 100).toFixed(m % 1
  * One form for products, vehicles and items you recommend. The dashboard and the page builder's
  * inline "add" both use it, so a record looks and behaves the same wherever it is created.
  */
-export function ProductForm({ product, onChange, showErrors }: { product: ProductContent; onChange: (p: ProductContent) => void; showErrors?: boolean }) {
+export function ProductForm({ product, onChange, showErrors, setup = false }: { product: ProductContent; onChange: (p: ProductContent) => void; showErrors?: boolean; setup?:boolean }) {
   const [price, setPrice] = React.useState(toPounds(product.priceMinor))
   const errors = showErrors ? productErrors(product) : {}
   const set = (patch: Partial<ProductContent>) => onChange({ ...product, ...patch })
@@ -44,8 +44,8 @@ export function ProductForm({ product, onChange, showErrors }: { product: Produc
 
   return (
     <div className="grid gap-5">
-      <Segment label="What is it?" value={product.kind} options={[{ value: "product", label: "Product or item" }, { value: "vehicle", label: "Vehicle" }]} onChange={setKind} />
-      <TaploInput label="Name" value={product.name} maxLength={120} error={errors.name} onChange={(e) => set({ name: e.target.value })} />
+      {!setup ? <Segment label="What is it?" value={product.kind} options={[{ value: "product", label: "Product or item" }, { value: "vehicle", label: "Vehicle" }]} onChange={setKind} /> : null}
+      <TaploInput label={setup && vehicle ? "Vehicle name" : "Name"} placeholder={vehicle ? "e.g. Volkswagen Golf 1.5 TSI" : "e.g. Handmade ceramic cup"} value={product.name} maxLength={120} error={errors.name} onChange={(e) => set({ name: e.target.value })} />
       <TaploInput label="Price (£, optional)" inputMode="decimal" value={price} hint="Leave empty to show no price." onChange={(e) => {
         const r = e.target.value
         if (!/^\d{0,7}(\.\d{0,2})?$/.test(r)) return
@@ -53,8 +53,9 @@ export function ProductForm({ product, onChange, showErrors }: { product: Produc
         set({ priceMinor: r === "" ? undefined : Math.round(Number(r) * 100) })
       }} />
       <div className="grid gap-1.5"><Label htmlFor={`${product.id}-desc`}>Description (optional)</Label><Textarea id={`${product.id}-desc`} rows={3} maxLength={800} value={product.description ?? ""} onChange={(e) => set({ description: e.target.value || undefined })} /></div>
-      <ImageField label="Main picture" value={product.image ?? null} defaultAlt={product.name || "Picture"} maxEdge={1100} onChange={(v) => set({ image: v ?? undefined })} />
+      <ImageField samples={!setup} label="Main picture" value={product.image ?? null} defaultAlt={product.name || "Picture"} maxEdge={1100} onChange={(v) => set({ image: v ?? undefined })} />
 
+      <details open={!setup} className="product-extra-details"><summary className="setup-secondary">More {vehicle ? "vehicle" : "item"} details</summary><div className="grid gap-5 pt-4">
       <fieldset className="grid gap-3">
         <legend className="mb-1 text-sm font-medium">Key facts</legend>
         <p className="-mt-2 text-xs text-muted-foreground">{vehicle ? "Year, mileage, fuel and gearbox are the facts buyers ask about first. Empty rows are not shown." : "Size, material, scent: anything that helps someone decide. Empty rows are not shown."}</p>
@@ -99,6 +100,7 @@ export function ProductForm({ product, onChange, showErrors }: { product: Produc
           </>
         )}
       </fieldset>
+      </div></details>
     </div>
   )
 }

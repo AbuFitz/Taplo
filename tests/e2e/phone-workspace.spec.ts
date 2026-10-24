@@ -51,7 +51,7 @@ for (const width of [390, 1440]) test(`theme choices show actual style samples a
   await page.getByLabel("Service 1 name").fill("Cut and finish")
   await page.getByLabel("Service 1 price").fill("28")
   await page.getByLabel("Service 1 minutes").fill("30"); await next()
-  await page.getByRole("radio",{name:"Studio",exact:true}).check()
+  await page.getByRole("radio",{name:"Editorial",exact:true}).check()
   await page.getByRole("button",{name:/Background & colours/}).click()
   await page.getByTestId("setup-design-dialog").getByRole("button",{name:"Ink",exact:true}).click()
   await page.getByTestId("setup-design-dialog").getByRole("button",{name:"Done",exact:true}).click()

@@ -103,12 +103,12 @@ export function MyPage() {
   if (!wide) return <MobileEditor ed={ed} selection={effective} setSelection={setSelection} notify={notify} note={note} clearNote={() => setNote(null)} />
 
   return (
-    <div data-testid="my-page">
-      <div className="sticky top-0 z-20 -mx-4 mb-4 border-b bg-background/95 px-4 py-2 backdrop-blur lg:-mx-8 lg:px-8">{toolbar}</div>
+    <div data-testid="my-page" data-editor="desktop" className="editor-workspace">
+      <div className="editor-workspace-toolbar">{toolbar}</div>
       {banners}
       {missing.length ? <p className="mb-3 text-xs text-muted-foreground">To publish: {missing.map((m) => m.label.toLowerCase()).join(", ")}.</p> : null}
 
-      <div className="grid grid-cols-[minmax(26rem,30rem)_minmax(0,1fr)] items-start gap-5">
+      <div className="editor-workspace-grid">
         <div className="min-w-0"><EditorPanel ed={ed} selection={effective} onSelect={setSelection} notify={notify} /></div>
         <div className="sticky top-20 min-w-0">{preview}</div>
       </div>

@@ -13,7 +13,7 @@ export interface LabConfig {
 }
 
 /** The look each example was designed with. */
-export const EXAMPLE_LOOK: Record<Scenario, string> = { corner: "open", oakfield: "service", rowan: "personal", brookfield: "open", station: "service", detailer: "ink", barber: "folio", dealer: "showroom", trades: "colour", physio: "open", cafe: "clay", tutor: "orchard", gym: "ink" }
+export const EXAMPLE_LOOK: Record<Scenario, string> = { corner: "open", oakfield: "service", rowan: "personal", brookfield: "open", station: "service", detailer: "ink", barber: "folio", dealer: "showroom", trades: "service", physio: "open", cafe: "clay", tutor: "orchard", gym: "ink" }
 
 /**
  * How each example is arranged on top of its look: the header, how wide the page is and what it does on a computer. These
@@ -23,7 +23,7 @@ export const EXAMPLE_OVERRIDES: Record<Scenario, StyleOverrides> = {
   corner: { header: { layout: "cover", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
   oakfield: { header: { layout: "side", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
   rowan: { header: { layout: "centered", avatarShape: "circle", avatarSize: "lg", align: "left" }, text: { align: "left" }, layout: { desktop: "split", width: "wide", rhythm: "editorial" } },
-  brookfield: { header: { layout: "minimal", avatarShape: "logo", align: "left" }, layout: { width: "wide", desktop: "columns", rhythm: "editorial" } },
+  brookfield: { header: { layout: "feature", avatarShape: "logo", align: "left" }, layout: { width: "wide", desktop: "columns", rhythm: "editorial" } },
   station: { header: { layout: "banner", avatarShape: "logo", align: "left" }, layout: { desktop: "split", width: "wide", rhythm: "even" } },
   detailer: { header: { layout: "poster", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
   barber: {},
@@ -46,13 +46,13 @@ const widgetCache = new Map<Scenario, PageDoc["widgets"]>()
 /** Authored hierarchy, using exactly the same section treatments offered in the editor. */
 const SECTION_COMPOSITIONS: Partial<Record<Scenario, Record<string, SectionTreatmentId>>> = {
   station: { priceMenu: "spotlight", hours: "soft", faq: "inline" },
-  detailer: { serviceList: "inline", serviceArea: "soft", faq: "inline", hours: "soft" },
+  detailer: { serviceList: "raised", serviceArea: "soft", faq: "inline", hours: "soft" },
   brookfield: { faq: "inline", hours: "soft" },
-  corner: { priceMenu: "inline", hours: "soft", faq: "inline" },
-  oakfield: { serviceList: "inline", serviceArea: "soft", faq: "inline" },
-  physio: { serviceList: "inline", team: "soft", faq: "inline", hours: "soft" },
-  gym: { featuredService: "spotlight", serviceList: "inline", team: "soft", faq: "inline" },
-  rowan: { featuredService: "soft", serviceList: "inline", faq: "inline" },
+  corner: { priceMenu: "raised", hours: "soft", faq: "inline" },
+  oakfield: { serviceList: "raised", serviceArea: "soft", faq: "inline" },
+  physio: { serviceList: "raised", team: "soft", faq: "inline", hours: "soft" },
+  gym: { featuredService: "spotlight", serviceList: "raised", team: "soft", faq: "inline" },
+  rowan: { featuredService: "raised", serviceList: "soft", faq: "inline" },
 }
 export function widgetsFor(s: Scenario) {
   if (!widgetCache.has(s)) widgetCache.set(s, SCENARIOS[s].widgets().map(w => {

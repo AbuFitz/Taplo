@@ -1,12 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { ArrowDown, ArrowUp, ArrowUpToLine, ArrowDownToLine, ChevronRight, Eye, EyeOff, GripVertical, Lock, MoreHorizontal } from "lucide-react"
+import { ArrowDown, ArrowUp, ArrowUpToLine, ArrowDownToLine, Eye, EyeOff, GripVertical, Lock, MoreHorizontal } from "lucide-react"
 import { DndContext, KeyboardSensor, MouseSensor, TouchSensor, closestCenter, useSensor, useSensors, type Announcements, type DragEndEvent } from "@dnd-kit/core"
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 import { WidgetIcon } from "../widgets/WidgetIcon"
 import { getWidget } from "../widgets/registry"
@@ -21,7 +21,11 @@ function useSummaries(ed: Editor) {
 function Thumb({ s, icon }: { s: ReturnType<typeof summarise>; icon: string }) {
   return (
     <span className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-lg bg-muted text-muted-foreground">
-      {s.thumb ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={s.thumb.src} alt="" className="size-full object-cover" /> : <WidgetIcon name={icon} className="size-6" />}
+      {s.thumb ? (
+        // Uploaded browser-only images deliberately bypass the server image optimizer.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={s.thumb.src} alt="" className="size-full object-cover" />
+      ) : <WidgetIcon name={icon} className="size-6" />}
     </span>
   )
 }
@@ -94,7 +98,7 @@ function Row({ w, i, count, ed, sum: s, selected, onSelect, onDetails, onAddReco
         <button type="button" onClick={() => onSelect(w.id)} aria-pressed={selected} data-testid="select-widget" className="flex min-h-16 min-w-0 flex-1 items-center gap-3 rounded-md py-1 pr-1 text-left outline-none hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring">
           <Thumb s={s} icon={def.icon} />
           <span className="min-w-0 flex-1">
-            <span className="flex items-center gap-2"><span className="truncate text-sm font-semibold">{s.name}</span>{main ? <span className="shrink-0 rounded bg-[var(--signal-soft)] px-1.5 py-0.5 text-[0.6875rem] font-medium text-[oklch(0.38_0.19_262)]">Main action</span> : null}</span>
+            <span className="flex flex-wrap items-center gap-1.5"><span className="text-sm font-semibold">{s.name}</span>{main ? <span className="shrink-0 rounded bg-neutral-100 px-1.5 py-0.5 text-[0.6875rem] font-medium text-neutral-600">Main action</span> : null}</span>
             <span className="block truncate text-xs text-muted-foreground">{s.summary || (s.needs ? "Nothing to show yet" : def.description)}</span>
             {status ? <span className={cn("mt-0.5 flex items-center gap-1 text-xs font-medium", status.tone === "warn" ? "text-amber-800" : "text-muted-foreground")}>{s.locked ? <Lock aria-hidden="true" className="size-3" /> : null}{status.text}</span> : null}
           </span>

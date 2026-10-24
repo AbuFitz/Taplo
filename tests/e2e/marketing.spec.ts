@@ -291,14 +291,14 @@ test.describe("inspiration", () => {
     await page.getByLabel("Phone", { exact: true }).blur();
     await page.getByRole("button", { name: "Continue" }).click(); // → first content
     await page.getByRole("button", { name: "Continue" }).click(); // → design
-    await expect(page.getByRole("radio",{name:"Simple",exact:true})).toBeAttached();
+    await expect(page.getByRole("radio",{name:"Portrait",exact:true})).toBeAttached();
     const owner = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!));
     expect(owner.content.identity.name).toBe("Ridgeway Physio");
     expect(JSON.stringify(owner.content)).not.toContain("Hollin");
-    await page.getByRole("radio",{name:"Collection",exact:true}).check();
+    await page.getByRole("radio",{name:"Compact",exact:true}).check();
     await page.reload();
     await expect(
-      page.getByRole("radio", { name: "Collection",exact:true }),
+      page.getByRole("radio", { name: "Compact",exact:true }),
     ).toBeChecked(); // a refresh does not re-apply the example
   });
 });
@@ -335,11 +335,11 @@ test.describe("pricing", () => {
 test.describe("film", () => {
   test("continuous product reveal opens Product without playback overlays", async ({ page }) => {
     await page.emulateMedia({reducedMotion:"reduce"});await page.goto("/")
-    const story=page.getByTestId("cinematic-film");await story.scrollIntoViewIfNeeded()
+    const story=page.getByTestId("widget-orbit");await story.scrollIntoViewIfNeeded()
     await expect(story.locator("video")).toHaveCount(0)
-    await expect(story.getByRole("link",{name:"Explore Taplo after the product animation",exact:true})).toHaveAttribute("href","/product")
+    await expect(story.getByRole("link",{name:"Explore Taplo widgets",exact:true})).toHaveAttribute("href","/product")
     await expect(page.getByText("Read the film",{exact:true})).toHaveCount(0)
-    expect((await page.request.head("/marketing/film/taplo-intro.mp4")).ok()).toBe(true)
+    await expect(story.locator("canvas")).toHaveCount(0)
   });
 });
 

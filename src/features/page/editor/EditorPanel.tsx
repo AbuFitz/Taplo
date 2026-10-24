@@ -13,7 +13,7 @@ import type { Editor } from "./useEditor"
 
 const TABS: { id: EditorTab; label: string; icon: typeof Palette }[] = [
   { id: "content", label: "Content", icon: Rows3 },
-  { id: "header", label: "Header", icon: LayoutTemplate },
+  { id: "header", label: "Profile", icon: LayoutTemplate },
   { id: "design", label: "Design", icon: Palette },
   { id: "settings", label: "Settings", icon: Briefcase },
 ]

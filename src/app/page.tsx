@@ -41,9 +41,9 @@ export default function Home() {
         <div><h2 id="setup-h" className="font-display text-[clamp(1.8rem,3.2vw,3rem)] font-medium leading-[1.08] tracking-[-.045em]">Add your first service.<br />See your page take shape.</h2><ol className="mt-7 divide-y divide-white/15 text-sm">{["Add your business and contact details.","Create your first service or stock item.","Choose a design with your content in view."].map((s,n)=><li key={s} className="flex gap-4 py-4"><span className="tabular-nums text-white/60">0{n+1}</span><span className="text-white/75">{s}</span></li>)}</ol><Link data-brand-action href={a.href} className={`${action} mt-7`}>Start your page<ArrowRight aria-hidden="true" className="size-4" /></Link></div>
       </section>
 
-      <MonoField className="home-design-field"><section aria-labelledby="sharing-h" className="marketing-light home-sharing-section mx-auto grid max-w-[88rem] items-center gap-10 px-5 py-16 text-black sm:px-8 sm:py-24 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
+      <div className="bg-[#f7f7f7]"><section aria-labelledby="sharing-h" className="marketing-light home-sharing-section mx-auto grid max-w-[88rem] items-center gap-10 px-5 py-16 text-black sm:px-8 sm:py-24 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
         <div><h2 id="sharing-h" className="font-display max-w-lg text-[clamp(2rem,4vw,3.8rem)] font-medium leading-[1.06] tracking-[-.045em]">Your page.<br />Out in the world.</h2><p className="mt-5 max-w-sm text-base leading-relaxed text-black/65">A branded plaque for your counter. A digital business card for Apple Wallet, Google Wallet and Samsung Wallet. One code that opens your business page.</p><p className="mt-4 max-w-sm text-sm leading-relaxed text-black/60">Physical plaques and digital wallet passes are in development.</p></div><PlaqueScene code={qr}/>
-      </section></MonoField>
+      </section></div>
 
 
 

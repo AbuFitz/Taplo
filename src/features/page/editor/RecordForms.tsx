@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { SOCIAL_PLATFORMS } from "../social-platforms"
 import { Plus, Trash2 } from "lucide-react"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { Button } from "@/components/ui/button"
@@ -99,11 +100,11 @@ export function commitRecord(kind: RecordKind, v: any, c: BusinessContentInput):
   }
 }
 
-export function RecordForm({ kind, value, onChange, showErrors, content }: FormProps<any> & { kind: RecordKind }) {  // eslint-disable-line @typescript-eslint/no-explicit-any
+export function RecordForm({ kind, value, onChange, showErrors, content, setup = false }: FormProps<any> & { kind: RecordKind; setup?:boolean }) {  // eslint-disable-line @typescript-eslint/no-explicit-any
   const err = showErrors ? validate(kind, value) : {}
   switch (kind) {
     case "service": return <ServiceForm service={value} onChange={onChange} showErrors={showErrors} />
-    case "product": case "vehicle": return <ProductForm product={value} onChange={onChange} showErrors={showErrors} />
+    case "product": case "vehicle": return <ProductForm setup={setup} product={value} onChange={onChange} showErrors={showErrors} />
     case "review": return <p className="rounded-xl bg-muted p-4 text-sm">Reviews come from Google. Add a Google reviews section to connect your business link.</p>
 
     case "staff": {
@@ -140,14 +141,14 @@ export function RecordForm({ kind, value, onChange, showErrors, content }: FormP
     )
     case "photo": return (
       <div className="grid gap-3">
-        {value.images.map((im: { src: string; alt: string }, i: number) => <ImageField key={i} label={`Photo ${i + 1}`} value={im} defaultAlt="Photo" maxEdge={1400} onChange={(v) => onChange({ ...value, images: v ? value.images.map((x: unknown, n: number) => (n === i ? v : x)) : value.images.filter((_: unknown, n: number) => n !== i) })} />)}
-        <ImageField key={`add-${value.images.length}`} label={value.images.length ? "Add another photo" : "Choose a photo"} value={null} defaultAlt="Photo" maxEdge={1400} onChange={(v) => v && onChange({ ...value, images: [...value.images, v] })} />
+        {value.images.map((im: { src: string; alt: string }, i: number) => <ImageField key={i} samples={!setup} label={`Photo ${i + 1}`} value={im} defaultAlt="Photo" maxEdge={1400} onChange={(v) => onChange({ ...value, images: v ? value.images.map((x: unknown, n: number) => (n === i ? v : x)) : value.images.filter((_: unknown, n: number) => n !== i) })} />)}
+        <ImageField key={`add-${value.images.length}`} samples={!setup} label={value.images.length ? "Add another photo" : "Choose a photo"} value={null} defaultAlt="Photo" maxEdge={1400} onChange={(v) => v && onChange({ ...value, images: [...value.images, v] })} />
         {err.images ? <p role="alert" className="text-sm text-destructive">{err.images}</p> : null}
       </div>
     )
     case "social": return (
       <div className="grid gap-4">
-        <Segment label="Which platform" value={value.platform} options={[{ value: "instagram", label: "Instagram" }, { value: "facebook", label: "Facebook" }, { value: "tiktok", label: "TikTok" }, { value: "youtube", label: "YouTube" }, { value: "x", label: "X" }, { value: "linkedin", label: "LinkedIn" }]} onChange={(v) => onChange({ ...value, platform: v })} />
+        <Segment label="Which platform" value={value.platform} options={SOCIAL_PLATFORMS.map(p=>({value:p.id,label:p.label}))} onChange={(v) => onChange({ ...value, platform: v })} />
         <UrlField label="Profile address" value={value.url} onCommit={(v) => onChange({ ...value, url: v ?? "" })} help={err.url} />
       </div>
     )

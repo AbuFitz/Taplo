@@ -31,8 +31,9 @@ export function PlaqueScene({ code }: { code: string }) {
         aria-label="No. 6 Coffee counter plaque, interactive preview"
         aria-describedby="plaque-keyboard-help"
         data-engaged="false"
+        onPointerDown={(e)=>{if(e.pointerType!=="mouse")e.currentTarget.setPointerCapture(e.pointerId)}}
         onPointerMove={(e) => {
-          if (reduce || (e.pointerType !== "mouse" && e.buttons === 0)) return;
+          if (reduce || (e.pointerType !== "mouse" && !e.currentTarget.hasPointerCapture(e.pointerId))) return;
           const rect = e.currentTarget.getBoundingClientRect();
           yaw.set(((e.clientX - rect.left) / rect.width - 0.5) * 32);
           pitch.set(-((e.clientY - rect.top) / rect.height - 0.5) * 24);
@@ -54,6 +55,7 @@ export function PlaqueScene({ code }: { code: string }) {
       >
         <div className="plaque-ground" aria-hidden="true" />
         <motion.div className="plaque-object" style={{ rotateY: yaw, rotateX: pitch, transformStyle: "preserve-3d" }}>
+          <div className="plaque-stack-layer plaque-stack-layer-far" aria-hidden="true"><span>Taplo</span></div><div className="plaque-stack-layer plaque-stack-layer-near" aria-hidden="true"><span>No. 6 Coffee</span></div>
           <div className="plaque-back" aria-hidden="true" />
           <div className="plaque-front">
             <p className="plaque-brand">No. 6 <span>Coffee</span></p>

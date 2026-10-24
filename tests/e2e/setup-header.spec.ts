@@ -3,7 +3,7 @@ import path from 'node:path'
 for(const width of [320,390,768,1440])test(`setup gives the phone canvas back to the business at ${width}`,async({page})=>{
   await page.setViewportSize({width,height:844});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/onboarding')
   const brand=page.getByRole('link',{name:'Taplo home',exact:true})
-  await expect(brand).toHaveCount(0)
+  await expect(brand).toHaveAttribute("href","/")
   await expect(page.getByRole('progressbar',{name:'Setup progress'})).toHaveAttribute('aria-valuenow','1');await expect(page.getByRole('navigation',{name:'Progress'})).not.toContainText('Step 1 of 6')
   const canvas=page.locator('.setup-workspace > aside')
   if(width<1024) { await expect(canvas).not.toBeVisible();await expect(page.getByRole("button",{name:"View full size"})).toHaveCount(0) }

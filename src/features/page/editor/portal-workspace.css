@@ -1,0 +1,23 @@
+/* Frameless authoring shell. Widget cards alone carry material depth. */
+.portal-workspace{background:#f7f7f7;color:#171717}
+.portal-workspace>aside{border:0;background:#fff}
+.portal-workspace>div>header{border:0;background:transparent;min-height:64px}
+.portal-workspace [data-slot=card]{border:0;background:transparent;box-shadow:none}
+.editor-workspace{max-width:1600px;margin-inline:auto}
+.editor-workspace-toolbar{position:sticky;top:0;z-index:20;margin:0 0 20px;padding:16px 0;background:#f7f7f7ed;backdrop-filter:blur(18px)}
+.editor-workspace-grid{display:grid;grid-template-columns:minmax(340px,420px) minmax(0,1fr);gap:clamp(24px,4vw,72px);align-items:start}
+[data-testid=editor-panel]{border:0;border-radius:0;background:transparent}
+[data-testid=editor-panel]>[role=tablist]{border:0;background:transparent;padding:0 0 18px;gap:8px}
+[data-testid=editor-panel]>[role=tablist]>button{box-shadow:none;border-radius:12px;padding-block:8px}
+[data-testid=editor-panel]>[role=tablist]>button[aria-selected=true]{background:#111;color:white;box-shadow:none}
+[data-testid=editor-panel] [data-testid=inspector]{padding:4px 4px 28px;scrollbar-width:none}
+[data-testid=content-list]{border:0;border-radius:0;background:transparent;display:grid;gap:14px;overflow:visible;padding:2px}
+[data-widget-row]{border:0!important;border-radius:18px;background:white;box-shadow:0 8px 24px -16px #0003;overflow:hidden;padding:6px 2px}
+[data-widget-row]:has([data-testid=select-widget][aria-pressed=true]){box-shadow:0 0 0 1.5px #111,0 12px 28px -18px #0004;background:white}
+[data-widget-row] [data-testid=select-widget]{border-radius:12px;min-height:76px}
+[data-editor=compact]>header{border:0;background:#fffffff2;backdrop-filter:blur(16px)}
+[data-editor=compact]>nav{border:0;box-shadow:0 -10px 25px -24px #0006;background:#fff}
+[data-testid=editor-drawer]{border:0!important;box-shadow:0 -12px 45px -26px #0006!important}
+[data-testid=drawer-body]{scrollbar-width:none!important}
+[data-testid=drawer-body]::-webkit-scrollbar,[data-testid=inspector]::-webkit-scrollbar{display:none}
+@media(max-width:1023px){.portal-workspace{background:white}}

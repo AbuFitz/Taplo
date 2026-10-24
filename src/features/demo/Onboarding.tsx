@@ -6,6 +6,8 @@ import { Overlay } from "@/components/taplo/overlay"
 import "./onboarding-mobile.css"
 import { BusinessIcon } from "./BusinessIcon"
 import { SetupDesign } from "./SetupDesign"
+import { SetupThemes, SetupMobileLayouts } from "./SetupStyles"
+import { TaploLogo } from "@/components/taplo/brand"
 import { SetupDetails } from "./SetupDetails"
 import { SetupPlans } from "./SetupPlans"
 import { SetupBackdrop } from "./SetupBackdrop"
@@ -16,7 +18,7 @@ import { SetupLoading } from "./SetupLoading"
 import * as React from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Check, Plus, Trash2, X } from "lucide-react"
+import { Check, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { SLUG_PROBLEM_MESSAGE } from "@/features/businesses/slug"
@@ -73,7 +75,10 @@ function goalOf(s: { content: { booking?: { mode: string } }; page: { meta: { pr
 function applyGoal<T extends ReturnType<typeof initialState>>(s: T, g: Goal): T {
   const mode = g === "book" ? "request" : "contact"
   const primaryAction = g === "book" ? "book" : g === "call" ? "call" : g === "message" ? (s.content.contacts.whatsapp ? "whatsapp" : "email") : "auto"
-  return { ...s, content: { ...s.content, booking: { ...s.content.booking, mode } }, page: { ...s.page, meta: { ...s.page.meta, primaryAction } } }
+  // Calling or messaging should not leave a second booking action on the page.
+  // Keep the widget so changing back restores its place and appearance.
+  const widgets = s.page.widgets.map(w => w.type === "booking" ? { ...w, hidden: g === "call" || g === "message" } : w)
+  return { ...s, content: { ...s.content, booking: { ...s.content.booking, mode } }, page: { ...s.page, widgets, meta: { ...s.page.meta, primaryAction } } }
 }
 
 /** What the first thing to add is, by kind of business. Nothing is added for them. */
@@ -100,7 +105,7 @@ export function Onboarding() {
       shell.current.dataset.keyboard = String(Math.max(window.innerHeight, initialHeight) - height > 180 && Boolean(document.activeElement?.matches("input,textarea")))
     }
     const focusSync = () => requestAnimationFrame(sync)
-    sync(); document.addEventListener("focusin",focusSync);document.addEventListener("focusout",focusSync); viewport?.addEventListener("resize", sync); viewport?.addEventListener("scroll", sync); window.addEventListener("resize", sync)
+    window.scrollTo(0,0); sync(); document.addEventListener("focusin",focusSync);document.addEventListener("focusout",focusSync); viewport?.addEventListener("resize", sync); viewport?.addEventListener("scroll", sync); window.addEventListener("resize", sync)
     return () => { document.removeEventListener("focusin",focusSync);document.removeEventListener("focusout",focusSync);viewport?.removeEventListener("resize", sync); viewport?.removeEventListener("scroll", sync); window.removeEventListener("resize", sync) }
   }, [])
   const router = useRouter()
@@ -191,15 +196,15 @@ export function Onboarding() {
     <div className="setup-scene"><SetupBackdrop phase={stepIndex} /><main ref={shell} data-preview-expanded="false" data-step={step} data-mobile-layout={step === "widgets" || step === "publish" ? "preview" : "focus"} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
       <nav aria-label="Progress" className="setup-progress mb-4">
         <div className="flex min-h-9 items-center gap-3">
-          <div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div>
-          <Link href="/" aria-label="Leave setup" className="grid size-9 shrink-0 place-items-center rounded-full focus-visible:ring-2"><X aria-hidden="true" className="size-4" /></Link>
+          <Link href="/" aria-label="Taplo home" className="setup-home"><TaploLogo className="h-5" /></Link><div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div>
+
         </div>
       </nav>
 
       <div className="setup-workspace grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
         <section aria-labelledby="step-title" className="min-w-0">
           <div className="setup-question-heading">{fromName || intent ? <p className="setup-origin">{fromName ? <span data-testid="from-example">Starting from {fromName}</span> : null}{fromName && intent ? " · " : ""}{intent ? <span data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}</p> : null}
-          <motion.h1 key={step} initial={reducedMotion ? false : { opacity:0, x:direction*10 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34 }} tabIndex={-1} id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? { service: "Add your first service", vehicle: "Add your first vehicle", photo: "Add your first photos" }[firstKind(c.identity.industryKey)] : STEP_TITLE[step]}</motion.h1></div>
+          <motion.h1 key={step} initial={reducedMotion ? false : { opacity:0, x:direction*10 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34 }} tabIndex={-1} id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? { service: c.identity.industryKey === "hospitality" ? "Add your first menu item" : /tutor|teacher/.test(c.identity.industryKey) ? "Add your first lesson" : "Add your first service", vehicle: "Add your first vehicle", photo: "Add your first photos" }[firstKind(c.identity.industryKey)] : STEP_TITLE[step]}</motion.h1></div>
 
           <motion.div className="setup-step-body" key={step} initial={reducedMotion ? false : { opacity:0, x:direction*16 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34, opacity:{duration:.16} }}>
           {step === "industry" ? (
@@ -213,12 +218,13 @@ export function Onboarding() {
                       <li key={p.id}>
                         <button type="button" aria-pressed={selected} onClick={() => { setOtherOpen(p.id === OTHER_INDUSTRY_ID); update((x) => applyIndustry(x, p.id, p.id === OTHER_INDUSTRY_ID ? "" : p.label)) }}
                           className={cn("setup-industry relative flex min-h-14 w-full items-center gap-3 rounded-2xl px-3 py-2 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", selected ? "bg-[#111111] text-white" : "bg-[#f5f5f5] hover:bg-[#ededed]")}>
-                          <span className="setup-icon"><BusinessIcon id={p.id} /></span><span className="flex-1">{p.label}</span>{selected ? <Check aria-hidden="true" className="size-4 text-current" /> : null}
+                          <span className="setup-icon"><BusinessIcon id={p.id} /></span><span className="flex-1">{p.label}</span>
                         </button>
                       </li>
                     )
                   })}
                 </ul>
+                {state !== null && Boolean(c.identity.industryLabel.trim()) ? <SetupThemes compact/> : null}
                 <button type="button" className="setup-secondary justify-self-start" onClick={()=>{setOtherOpen(true);update(x=>applyIndustry(x,OTHER_INDUSTRY_ID,""))}}>Use a different business type</button>
                 {state !== null && (otherOpen || c.identity.industryKey === OTHER_INDUSTRY_ID && c.identity.industryLabel !== "") ? (
                   <TaploInput label="Describe your business" hint="e.g. Dog groomer, Wedding florist, Piano restorer" value={c.identity.industryLabel} maxLength={80} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }), { coalesce: "ind-label" })} />
@@ -268,6 +274,7 @@ export function Onboarding() {
           </motion.div>
           {step !== "publish" ? (
             <div className="setup-next mt-8 flex flex-wrap items-center gap-3">
+              {step === "contacts" && !s.setupDrafts?.reviewEdit ? <button type="button" className="setup-skip setup-secondary" onClick={()=>go("widgets")}>Skip for now</button> : null}
               {stepIndex > 0 ? <Button variant="outline" size="lg" onClick={back}>Back</Button> : null}
               <Button className="flex-1 bg-signal text-white hover:bg-[#333333] sm:flex-none sm:min-w-40" size="lg" onClick={() => (valid[step] ? next() : setShowErrors(true))} aria-describedby={!valid[step] && showErrors ? "why-disabled" : undefined}>{s.setupDrafts?.reviewEdit?"Save changes":"Continue"}</Button>
               {!valid[step] && showErrors ? <p id="why-disabled" role="alert" className="text-sm text-destructive">{why[step]}</p> : null}
@@ -286,11 +293,9 @@ export function Onboarding() {
   )
 }
 
-/** Spatial presets change layout rules, independently of profile and colours. */
+/** Mobile page composition, starting theme and fine adjustment are separate choices. */
 function WidgetsStep() {
-  const {state,update}=useDemo();const s=state??initialState();
-  const selected=s.page.appearance.layout?.desktop??"centered";
-  return <div className="grid gap-6"><fieldset><legend className="setup-layout-heading">Page layout</legend><div className="setup-layout-options">{([{id:"centered",name:"Simple",width:"narrow",density:"comfortable"},{id:"split",name:"Studio",width:"regular",density:"comfortable"},{id:"columns",name:"Collection",width:"wide",density:"compact"}]as const).map(item=><label className="setup-layout-choice" key={item.id}><input type="radio" name="page-layout" checked={selected===item.id} onChange={()=>update(st=>({...st,page:{...st.page,appearance:{...st.page.appearance,layout:{...st.page.appearance.layout,desktop:item.id,width:item.width,density:item.density}}}}))}/><span aria-hidden="true" className="setup-layout-diagram" data-layout={item.id}><i/><i/><i/><i/></span><span>{item.name}</span></label>)}</div></fieldset><SetupDesign/></div>;
+ return <div className="grid gap-7"><SetupMobileLayouts/><SetupThemes/><SetupDesign/></div>;
 }
 
 const toPounds = (minor?: number) => (minor === undefined ? "" : (minor / 100).toFixed(minor % 100 === 0 ? 0 : 2))
@@ -314,6 +319,7 @@ function FirstServices({onValidity}:{onValidity:(valid:boolean)=>void}) {
   const [focus, setFocus] = React.useState<string | null>(null)
   const [pricing,setPricing]=React.useState<string|null>(null)
   const booking = goalOf(s) === "book"
+  const itemLabel = industry.id === "hospitality" ? "Menu item" : /tutor|teacher/.test(industry.id) ? "Lesson" : "Service"
 
   const sync = (next: Row[]) => {
     setRows(next)
@@ -348,9 +354,9 @@ function FirstServices({onValidity}:{onValidity:(valid:boolean)=>void}) {
       <ul className="grid gap-3">
         {rows.map((r, i) => (
           <li key={r.id} className="grid grid-cols-[minmax(0,1fr)_5.5rem_5.5rem_auto] items-end gap-2 max-sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-            <label className="grid gap-1 max-sm:col-span-3"><span className="text-base font-semibold text-foreground">{i === 0 ? "Service" : <span className="sr-only">Service</span>}</span><input className={field} aria-label={`Service ${i + 1} name`} placeholder={industry.suggestedServices[0]?.name ?? "e.g. Initial consultation"} maxLength={120} autoFocus={focus === `${r.id}-name`} value={r.name} onChange={(e) => patch(r.id, { name: e.target.value })} /></label>
+            <label className="grid gap-1 max-sm:col-span-3"><span className="text-base font-semibold text-foreground">{i === 0 ? itemLabel : <span className="sr-only">Service</span>}</span><input className={field} aria-label={`Service ${i + 1} name`} placeholder={industry.suggestedServices[0]?.name ?? "e.g. Initial consultation"} maxLength={120} autoFocus={focus === `${r.id}-name`} value={r.name} onChange={(e) => patch(r.id, { name: e.target.value })} /></label>
             <label className="grid gap-1"><span className="text-base font-semibold text-foreground">{i === 0 ? "Price (£)" : <span className="sr-only">Price</span>}</span><input className={field} aria-label={`Service ${i + 1} price`} inputMode="decimal" disabled={r.priceMode === "quote" || r.priceMode === "free"} placeholder={r.priceMode === "quote" ? "Quote" : r.priceMode === "free" ? "Free" : "0.00"} autoFocus={focus === `${r.id}-price`} value={r.priceMode === "quote" || r.priceMode === "free" ? "" : r.price} onChange={(e) => { if (/^\d{0,6}(\.\d{0,2})?$/.test(e.target.value)) patch(r.id, { price: e.target.value }) }} /></label>
-            <label className="grid gap-1"><span className="text-base font-semibold text-foreground">{i === 0 ? "Minutes" : <span className="sr-only">Minutes</span>}</span><input className={field} aria-label={`Service ${i + 1} minutes`} inputMode="numeric" placeholder="30" value={r.minutes} onChange={(e) => patch(r.id, { minutes: e.target.value.replace(/\D/g, "").slice(0, 4) })} /></label>
+            <label className={cn("grid gap-1", industry.id === "hospitality" && "hidden")}><span className="text-base font-semibold text-foreground">{i === 0 ? "Minutes" : <span className="sr-only">Minutes</span>}</span><input className={field} aria-label={`Service ${i + 1} minutes`} inputMode="numeric" placeholder="30" value={r.minutes} onChange={(e) => patch(r.id, { minutes: e.target.value.replace(/\D/g, "").slice(0, 4) })} /></label>
             <Button type="button" variant="ghost" size="icon" className="size-11" aria-label={`Remove service ${i + 1}`} disabled={rows.length === 1 && !r.name && !r.price} onClick={() => { const next = rows.filter((x) => x.id !== r.id); sync(next.length ? next : [{ id: newId("svc"), name: "", price: "", minutes: "" }]) }}><Trash2 /></Button>
             <button type="button" className="col-span-full min-h-8 justify-self-start setup-secondary" onClick={()=>setPricing(r.id)}>Pricing options{r.priceMode && r.priceMode!=="fixed" ? ` · ${r.priceMode}` : ""}</button>
           </li>
@@ -380,7 +386,7 @@ function FirstRecord({ kind, onValidity }: { kind: "vehicle" | "photo"; onValidi
   return (
     <div className="grid gap-4" data-testid="first-record">
       {items.length ? <ul className="grid gap-1 text-sm" aria-label="Added"><li className="font-medium">Added so far</li>{items.map((n, i) => <li key={i} className="flex items-center gap-2"><Check aria-hidden="true" className="size-4 text-foreground" />{n}</li>)}</ul> : null}
-      <RecordForm key={items.length} kind={kind} value={draft} onChange={v=>{setDraft(v);update(st=>({...st,setupDrafts:{...st.setupDrafts,record:{kind,value:v}}}))}} showErrors={show} content={s.content} />
+      <RecordForm setup key={items.length} kind={kind} value={draft} onChange={v=>{setDraft(v);update(st=>({...st,setupDrafts:{...st.setupDrafts,record:{kind,value:v}}}))}} showErrors={show} content={s.content} />
       <Button type="button" className="min-h-11 justify-self-start" onClick={save} data-testid="first-record-save">{kind === "vehicle" ? "Add this vehicle" : "Add these photos"}</Button>
     </div>
   )
@@ -394,7 +400,7 @@ function FirstContent({onValidity}:{onValidity:(valid:boolean)=>void}) {
   return (
     <div className="grid gap-8">
       <div className="grid gap-3">
-        <p className="-mt-3 text-sm text-muted-foreground">Add one to start. You can fill out the rest later.</p>
+        <p className="-mt-3 text-sm text-muted-foreground">Add what you want people to see first. You can do this later.</p>
         {kind === "service" ? <FirstServices onValidity={onValidity} /> : <FirstRecord kind={kind} onValidity={onValidity} />}
       </div>
       <SetupDetails />

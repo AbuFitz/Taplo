@@ -1,3 +1,4 @@
+import { SOCIAL_IDS } from "@/features/page/social-platforms";
 import { z } from "zod";
 import { phoneSchema, safeUrl } from "@/lib/validation";
 
@@ -194,7 +195,7 @@ export const businessContentSchema = z.object({
     email: z.string().trim().email().max(254).optional(),
     website: safeUrl.optional(),
     social: z
-      .array(z.object({ platform: z.enum(["instagram", "facebook", "tiktok", "linkedin", "youtube", "x"]), url: safeUrl }))
+      .array(z.object({ platform: z.enum(SOCIAL_IDS), url: safeUrl }))
       .max(8)
       .default([]),
   }),

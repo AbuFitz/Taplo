@@ -3,7 +3,7 @@ import sharp from "sharp";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-for(const width of [390,1440]) test(`light changes its pixels with input, without translating the canvas at ${width}`,async({page},info)=>{
+for(const width of [390,1440]) test(`light moves autonomously without following pointer or touch at ${width}`,async({page},info)=>{
  await page.setViewportSize({width,height:900});await page.emulateMedia({reducedMotion:"no-preference"});
  const errors:string[]=[];page.on("pageerror",e=>errors.push(e.message));
  await page.goto("/onboarding");
@@ -15,7 +15,7 @@ for(const width of [390,1440]) test(`light changes its pixels with input, withou
  await shader.evaluate(el=>(el as HTMLElement&{paperShaderMount:{setSpeed:(v:number)=>void;setFrame:(v:number)=>void}}).paperShaderMount.setSpeed(0));
  await page.mouse.move(8,220);await page.waitForTimeout(450);const a=await pixels();
  await page.mouse.move(width*.85,700);await page.waitForTimeout(450);const b=await pixels();
- const pointerDelta=delta(a,b);expect(pointerDelta).toBeGreaterThan(100);
+ const pointerDelta=delta(a,b);expect(pointerDelta).toBe(0);
  await expect(shader).toHaveCSS("transform","none");
  await expect(shader.locator("canvas")).toHaveCSS("transform","none");
  const size=await shader.locator("canvas").evaluate(el=>({width:(el as HTMLCanvasElement).width,height:(el as HTMLCanvasElement).height}));

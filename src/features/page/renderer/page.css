@@ -147,9 +147,9 @@ html:has([data-taplo-page]) { scrollbar-width: thin; scrollbar-color: color-mix(
 .tp-header[data-layout="editorial"] .tp-name { font-size: clamp(2rem, 9cqi, 3.4rem); line-height: 1.04; }
 .tp-header[data-layout="editorial"] .tp-logo { max-height: 2.75rem; }
 .tp-header[data-layout="banner"][data-cover] { margin: -1rem -1rem 0; width: calc(100% + 2rem); gap: 0; }
-.tp-header[data-layout="banner"] .tp-profile-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 65%, var(--tp-background) 100%); pointer-events: none; }
+.tp-header[data-layout="banner"] .tp-profile-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent calc(100% - var(--tp-fade,52%)), var(--tp-background) 100%); pointer-events: none; }
 .tp-header[data-layout="banner"] .tp-profile-photo { aspect-ratio: 16 / 10; border-radius: 0 0 1.5rem 1.5rem; }
-.tp-header[data-layout="banner"][data-cover] .tp-profile-intro { position: relative; margin: -1.75rem 1rem 0; padding: 1.25rem 1rem 0; border-radius: 1.5rem 1.5rem 0 0; background: var(--tp-background); }
+.tp-header[data-layout="banner"][data-cover] .tp-profile-intro { position: relative; margin: -1.75rem 1rem 0; padding: 1.25rem 1rem 0; border-radius: 1.5rem 1.5rem 0 0; background: transparent; }
 .tp-header[data-layout="banner"] .tp-name { font-size: clamp(1.875rem, 8cqi, 2.75rem); }
 .tp-header[data-layout="banner"] .tp-logo { max-height: 2.75rem; }
 @media (min-width: 900px) {
@@ -418,3 +418,9 @@ html[data-taplo-phone="true"] [role="dialog"][data-overlay="detail"] > header { 
 html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:preview-sheet-enter 160ms ease-out!important; }
 @keyframes preview-sheet-enter { from { opacity:0; } to { opacity:1; } }
 @media(prefers-reduced-motion:reduce) { html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:none!important; } }
+
+/* Booking uses the same floating material and avoids nested outline frames. */
+[data-testid="booking-flow"] [data-testid="bk-service"],[data-testid="booking-flow"] dl{border:0;box-shadow:var(--tp-shadow-1);border-radius:var(--tp-card-radius)}
+[data-testid="booking-flow"] [data-testid="bk-slot"], [data-testid="booking-flow"] [aria-pressed]{border-color:transparent}
+[data-testid="booking-step-action"]{border-top:0;background:linear-gradient(transparent,var(--tp-background) 24%)}
+.tp-gallery-grid img,.tp-team-card{box-shadow:var(--tp-shadow-1)}

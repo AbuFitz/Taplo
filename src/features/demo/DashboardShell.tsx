@@ -1,4 +1,5 @@
 "use client";
+import "@/features/page/editor/portal-workspace.css";
 
 import { TaploLogo } from "@/components/taplo/brand";
 import * as React from "react";
@@ -119,7 +120,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     ready && (!state || (!state.onboarded && !state.content.identity.name));
 
   return (
-    <div className="flex min-h-screen flex-col lg:flex-row">
+    <div className="portal-workspace flex min-h-screen flex-col lg:flex-row">
       <aside
         className={cn(
           "hidden w-60 shrink-0 border-r p-4",

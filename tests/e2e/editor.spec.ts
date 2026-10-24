@@ -147,7 +147,7 @@ test.describe("My page editor", () => {
     // an optional look can still be a starting point; content and widgets stay exactly as they were
     await openSection(page, /^Look/);
     const seen = new Set<string>();
-    for (const id of ["night", "clean", "colour", "photo", "ultraviolet"]) {
+    for (const id of ["forge", "open", "folio", "clay", "orchard"]) {
       await look(page, id).click();
       await expect(look(page, id).locator("input")).toBeChecked();
       await expect.poll(async () => frame.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-background").trim())).toBe(getTheme(id)!.style.colors.background);
@@ -161,14 +161,14 @@ test.describe("My page editor", () => {
     await selectPart(page, "page");
 
     // owner's custom values on top
-    await look(page, "clean").click();
+    await look(page, "open").click();
     const buttonsSection = await openSection(page, "Buttons");
     await buttonsSection.getByRole("radio", { name: "Square" }).locator("xpath=ancestor::label").click();
     await openSection(page, "Button colours");
     await page.getByRole("textbox", { name: "Button colour hex value", exact: true }).fill("#0a7a3b");
     await expect(buttonsSection.locator("summary").first()).toContainText("changed");
     await expect.poll(() => frame.locator(".tp-btn").first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
-    await look(page, "night").click();       // a different starting look replaces the owner's changes, and says so
+    await look(page, "forge").click();       // a different starting look replaces the owner's changes, and says so
     await expect(page.getByTestId("notice")).toContainText("replaced");
     await expect(buttonsSection.locator("summary").first()).not.toContainText("changed");
     await buttonsSection.getByRole("radio", { name: "Square" }).locator("xpath=ancestor::label").click();
@@ -218,7 +218,7 @@ test.describe("My page editor", () => {
     await openRow(page, start[1]!); await insp(page).getByRole("button", { name: "Move down" }).click();      // reorder
     await openStructure(page);
     const reordered = await rowOrder(page);
-    await pickLook(page, "ultraviolet");                           // theme
+    await pickLook(page, "open");                           // theme
     await selectPart(page, "header");
     await openSection(page, "Your name and description");
     const name = page.getByLabel("Business name");
@@ -252,7 +252,7 @@ test.describe("My page editor", () => {
     await page.waitForLoadState("networkidle");
     expect(await rowOrder(page)).toEqual(reordered);
     await expect(previewFrame(page).getByRole("heading", { level: 1 })).toContainText("(edited)");
-    await expect(previewFrame(page).locator("[data-taplo-page]")).toHaveAttribute("data-header", "feature"); // Current Ultraviolet header
+    await expect(previewFrame(page).locator("[data-taplo-page]")).toHaveAttribute("data-header", "feature"); // Current Studio header
   });
 
   test("publishing: draft stays private, published matches the preview, changes need an explicit publish", async ({ page }) => {
@@ -274,7 +274,7 @@ test.describe("My page editor", () => {
     expect(await pub.locator("[data-taplo-page]").evaluate((el) => ["data-header", "data-desktop", "data-decoration", "data-card-surface"].map((a) => el.getAttribute(a)))).toEqual(attrs);
 
     // a later draft edit does not change the published page until publishing again
-    await pickLook(page, "colour");
+    await pickLook(page, "clay");
     await selectPart(page, "settings");
     await expect(page.getByText("You have unpublished changes.")).toBeVisible();
     await pub.reload();
@@ -285,7 +285,7 @@ test.describe("My page editor", () => {
     await expect(pub.locator("[data-taplo-page]")).toHaveAttribute("data-header", "centered");
 
     // discard unpublished changes returns to the published copy
-    await pickLook(page, "night");
+    await pickLook(page, "ink");
     await selectPart(page, "settings");
     await page.getByRole("button", { name: "Discard unpublished changes" }).click();
     await expect(page.getByText("You have unpublished changes.")).toHaveCount(0);

@@ -9,7 +9,8 @@ import {
 import { Overlay } from "@/components/taplo/overlay";
 import { Button } from "@/components/ui/button";
 import { ColorField, ImageField } from "@/features/page/editor/controls";
-import { LOOKS } from "@/features/page/themes/looks";
+import { resolveStyle } from "@/features/page/themes/resolve";
+import { LOOKS, PALETTES } from "@/features/page/themes/looks";
 import { useDemo, initialState } from "./store";
 import type { StyleOverrides } from "@/features/page/contracts/style";
 
@@ -61,6 +62,8 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
         : { kind: "solid", color: dark ? "#000000" : "#ffffff" },
       decoration: gradient ? "grain" : "none",
     });
+  const resolved=resolveStyle(s.page.themeId,s.page.appearance,s.content.identity.logo?.accent).spec;
+  const previewBackground=resolved.background.kind === "gradient" ? `linear-gradient(${resolved.background.angle}deg,${resolved.background.from},${resolved.background.to})` : resolved.colors.background;
   return (
     <div
       className={
@@ -117,6 +120,8 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
       >
         {panel === "background" ? (
           <div className="grid gap-5">
+            <div className="setup-colour-preview" aria-hidden="true" style={{background:previewBackground,color:resolved.colors.text}}><span>{s.content.identity.name||"Your page"}</span><i style={{background:resolved.colors.surface,boxShadow:"0 8px 24px #0001"}}/><b style={{background:resolved.colors.accent,color:resolved.colors.accentText}}>Your next customer</b></div>
+            <div className="setup-colour-palettes" role="group" aria-label="Colour palettes">{PALETTES.slice(0,6).map(p=><button type="button" key={p.id} aria-label={`${p.name} palette`} onClick={()=>patch({colors:p.colors,background:{kind:"solid",color:p.colors.background??"#ffffff"}})}><span style={{background:p.colors.background}}><i style={{background:p.colors.surface}}/><i style={{background:p.colors.accent}}/></span><b>{p.name}</b></button>)}</div>
             <div className="grid grid-cols-2 gap-3">
               {[
                 { name: "White", dark: false, gradient: false },
