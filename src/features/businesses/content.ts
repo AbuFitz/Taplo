@@ -31,6 +31,8 @@ export const imageSchema = z.object({
   width: z.number().int().positive().optional(),
   height: z.number().int().positive().optional(),
   focal: focalSchema.optional(),
+  /** Derived only for transparent identity uploads; supplies a contrasting backing without changing the pixels. */
+  ink: z.enum(["dark", "light", "mixed"]).optional(),
 });
 export type ImageRef = z.infer<typeof imageSchema>;
 

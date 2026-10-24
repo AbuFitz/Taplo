@@ -15,9 +15,9 @@ export function ProfileMark({ image, name, shape, size = "md", priority = false 
   const wide = image?.width && image?.height ? image.width / image.height > 1.5 : false
   if (image && (shape === "logo" || wide)) {
     // eslint-disable-next-line @next/next/no-img-element
-    return <img className="tp-logo" data-size={size} src={image.src} alt={image.alt} width={image.width} height={image.height} />
+    return <img className="tp-logo" data-size={size} data-ink={image.ink} src={image.src} alt={image.alt} width={image.width} height={image.height} />
   }
-  return <span className="tp-avatar" data-shape={shape} data-size={size}>
+  return <span className="tp-avatar" data-shape={shape} data-size={size} data-ink={image?.ink}>
     {image ? <ProfileImage image={image} sizes="160px" priority={priority} /> : <span aria-hidden="true">{initialsOf(name)}</span>}
   </span>
 }

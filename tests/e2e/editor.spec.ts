@@ -306,7 +306,6 @@ test.describe("My page editor", () => {
     await upload.setInputFiles({ name: "notes.txt", mimeType: "text/plain", buffer: Buffer.from("hello") });
     await expect(page.getByRole("alert").filter({ hasText: "JPG, PNG or WebP" })).toBeVisible();
     await upload.setInputFiles(pngFile("logo.png"));
-    await page.getByTestId("crop-apply").click();               // frame it first
     await expect(frame.locator(".tp-avatar img")).toHaveCount(1);
     await page.getByLabel("Describe the picture (for screen readers)").first().fill("Paws & Polish paw logo");
     await expect(frame.locator(".tp-avatar img")).toHaveAttribute("alt", "Paws & Polish paw logo");
@@ -316,7 +315,7 @@ test.describe("My page editor", () => {
     await expect.poll(() => frame.locator(".tp-avatar img").evaluate((el) => (el as HTMLElement).style.objectPosition)).toBe("20% 80%");
     // stored as a small downscaled data URL, never an arbitrary script
     const src = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.identity.logo.src as string);
-    expect(src).toMatch(/^data:image\/jpeg;base64,/);
+    expect(src).toMatch(/^data:image\/png;base64,/);
     expect(src.length).toBeLessThan(400_000);
     // remove → initials again
     await page.getByRole("button", { name: "Remove" }).first().click();

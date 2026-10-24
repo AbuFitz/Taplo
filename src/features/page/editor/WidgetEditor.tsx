@@ -22,6 +22,8 @@ import { ButtonTile, SurfaceTile } from "@/features/appearance/previews"
 import { ColorField, FieldShell, ImageField, Segmented, SelectField, SwitchField } from "./controls"
 import { RecordsField } from "./RecordsField"
 import { PagePreview } from "@/features/preview/PagePreview"
+import { ChoicePreview } from "@/features/preview/ChoicePreview"
+import { SECTION_TREATMENTS, applySectionTreatment, selectedSectionTreatment, supportsSectionTreatment } from "../section-treatments"
 import type { Editor } from "./useEditor"
 import { GoogleReviewsSettings } from "./GoogleReviewsSettings"
 import { SocialLinksEditor } from "./SocialLinksEditor"
@@ -157,8 +159,12 @@ export function WidgetAppearanceForm({ stored, ed }: { stored: StoredWidget; ed:
         <p className="text-xs text-neutral-600">{count ? `${count} setting${count === 1 ? "" : "s"} differ from the page style.` : "Following your page style."}</p>
         <button type="button" disabled={!count} onClick={() => ed.updateWidget(stored.id, { appearance: null })} className="min-h-8 text-xs font-medium text-neutral-900 underline-offset-4 hover:underline disabled:pointer-events-none disabled:opacity-40">Reset to page style</button>
       </div>
+      {hasCard && supportsSectionTreatment(stored.type) ? <Field label="Section treatment" hint="Changes this section’s surface and spacing. Your content and button choices stay the same.">
+        <ChoiceGrid label="Section treatment" columns={2} value={selectedSectionTreatment(a)} onChange={id => ed.setPage(page => ({ ...page, widgets: page.widgets.map(w => w.id === stored.id ? { ...w, appearance: applySectionTreatment(w.appearance, id) } : w) }))}
+          options={SECTION_TREATMENTS.map(t => ({ value: t.id, label: t.label, preview: <ChoicePreview src={`/demo/preview?widget=${encodeURIComponent(stored.id)}&treatment=${t.id}`} title={`${t.label} section treatment preview`} height={290} /> }))} />
+      </Field> : null}
       <SavedStyles styles={page.savedStyles.map((s) => ({ ...s, previewSrc: `/demo/preview?widget=${encodeURIComponent(stored.id)}&savedStyle=${encodeURIComponent(s.id)}` }))} canSave={count > 0} onSave={saveStyle} onApply={applyStyle} onRemove={(id) => ed.setPage((p) => ({ ...p, savedStyles: p.savedStyles.filter((x) => x.id !== id) }))} typeLabel={def.label} />
-      <Field label="Emphasis" dirty={dirty("emphasis")} onReset={() => unset("emphasis")} hint="Featured is larger with an accent border.">
+      <Field label="Emphasis" dirty={dirty("emphasis")} onReset={() => unset("emphasis")} hint="Featured gives the heading and content more space. Border and surface choices remain yours.">
         <Segment label="Emphasis" value={a.emphasis ?? "normal"} options={[{ value: "normal", label: "Normal" }, { value: "featured", label: "Featured" }]} onChange={(v) => set({ emphasis: v })} />
       </Field>
       {hasCard ? (
@@ -173,7 +179,7 @@ export function WidgetAppearanceForm({ stored, ed }: { stored: StoredWidget; ed:
           <Field label="Corners" dirty={dirty("radius")} onReset={() => unset("radius")}><Segment label="Corners" value={a.radius ?? spec.cards.radius} options={[{ value: "none", label: "Square" }, { value: "sm", label: "S" }, { value: "md", label: "M" }, { value: "lg", label: "L" }, { value: "xl", label: "XL" }]} onChange={(v) => set({ radius: v })} /></Field>
           <Field label="Border" dirty={dirty("border")} onReset={() => unset("border")}><Segment label="Border" value={a.border ?? spec.cards.border} options={[{ value: "none", label: "None" }, { value: "thin", label: "Thin" }, { value: "thick", label: "Thick" }]} onChange={(v) => set({ border: v })} /></Field>
           <Field label="Shadow" dirty={dirty("shadow")} onReset={() => unset("shadow")}><Segment label="Shadow" value={a.shadow ?? spec.cards.shadow} options={[{ value: "none", label: "None" }, { value: "soft", label: "Soft" }, { value: "hard", label: "Hard" }]} onChange={(v) => set({ shadow: v })} /></Field>
-          <Field label="Space inside" dirty={dirty("padding")} onReset={() => unset("padding")}><Segment label="Spacing inside" value={a.padding ?? spec.cards.padding} options={[{ value: "compact", label: "Compact" }, { value: "comfortable", label: "Comfortable" }, { value: "roomy", label: "Roomy" }]} onChange={(v) => set({ padding: v })} /></Field>
+          <Field label="Space inside" dirty={dirty("padding")} onReset={() => unset("padding")}><Segment label="Spacing inside" value={a.padding ?? spec.cards.padding} options={[{ value: "none", label: "None" }, { value: "compact", label: "Compact" }, { value: "comfortable", label: "Comfortable" }, { value: "roomy", label: "Roomy" }]} onChange={(v) => set({ padding: v })} /></Field>
           <Field label="Text alignment" dirty={dirty("align")} onReset={() => unset("align")}><Segment label="Text alignment" value={a.align ?? spec.text.align} options={[{ value: "left", label: "Left" }, { value: "center", label: "Centre" }]} onChange={(v) => set({ align: v })} /></Field>
           <ColorField label="Card colour" value={a.background ?? spec.colors.surface} customised={dirty("background")} onReset={() => unset("background")} onChange={(v) => set({ background: v })} hint="Text colour adjusts automatically if it would be hard to read." />
           <ColorField label="Text colour" against={a.background ?? spec.colors.surface} value={a.text ?? spec.colors.text} customised={dirty("text")} onReset={() => unset("text")} onChange={(v) => set({ text: v })} />

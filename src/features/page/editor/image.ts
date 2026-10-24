@@ -1,6 +1,6 @@
 /**
  * Demo-mode image handling. Files are decoded and downscaled in the browser and kept as a small
- * JPEG data URL so they can live in localStorage. On a connected environment this step uploads
+ * data URL so they can live in localStorage. On a connected environment this step uploads
  * to Storage instead; the ImageRef the page stores is the same shape either way.
  */
 
@@ -15,11 +15,13 @@ export interface PreparedImage {
   width: number;
   height: number;
   bytes: number;
+  ink?: "dark" | "light" | "mixed";
 }
 
 export async function prepareImage(
   file: File,
   maxEdge = 1280,
+  options: { preserveAlpha?: boolean } = {},
 ): Promise<PreparedImage> {
   if (!/^image\/(jpeg|png|webp)$/.test(file.type))
     throw new Error("Choose a JPG, PNG or WebP picture.");
@@ -43,13 +45,26 @@ export async function prepareImage(
       canvas.height = height;
       const ctx = canvas.getContext("2d");
       if (!ctx) throw new Error("Your browser could not process the picture.");
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, width, height);
+      if (!options.preserveAlpha) {
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, width, height);
+      }
       ctx.drawImage(bitmap, 0, 0, width, height);
-      for (const quality of [0.82, 0.7, 0.58, 0.46]) {
-        const src = canvas.toDataURL("image/jpeg", quality);
-        if (src.startsWith("data:image/jpeg;") && src.length <= 380_000)
-          return { src, width, height, bytes: src.length };
+      let ink: PreparedImage["ink"];
+      if (options.preserveAlpha) {
+        const sample = document.createElement("canvas");
+        sample.width = 64; sample.height = 64;
+        const sampleContext = sample.getContext("2d");
+        if (sampleContext) {
+          sampleContext.drawImage(canvas, 0, 0, 64, 64);
+          ink = transparentLogoInk(sampleContext.getImageData(0, 0, 64, 64).data);
+        }
+      }
+      const mime = options.preserveAlpha && file.type !== "image/jpeg" ? "image/png" : "image/jpeg";
+      for (const quality of mime === "image/png" ? [undefined] : [0.82, 0.7, 0.58, 0.46]) {
+        const src = canvas.toDataURL(mime, quality);
+        if (src.startsWith(`data:${mime};`) && src.length <= 380_000)
+          return { src, width, height, bytes: src.length, ...(ink ? { ink } : {}) };
       }
       if (edge <= 160) break;
     }
@@ -94,4 +109,27 @@ export async function cropFile(file: File, area: CropArea): Promise<File> {
   return new File([blob], file.name.replace(/\.[^.]+$/, "") + ".jpg", {
     type: "image/jpeg",
   });
+}
+
+/** Position the contained original inside its preview; pointer/focal coordinates exclude letterboxing. */
+export function containedImageRect(box: { width: number; height: number }, image: { width?: number; height?: number }) {
+  if (!image.width || !image.height) return { x: 0, y: 0, width: box.width, height: box.height };
+  const scale = Math.min(box.width / image.width, box.height / image.height);
+  const width = image.width * scale, height = image.height * scale;
+  return { x: (box.width - width) / 2, y: (box.height - height) / 2, width, height };
+}
+
+/** Alpha-weighted brightness of a transparent mark; opaque photographs have no inferred ink treatment. */
+export function transparentLogoInk(pixels: ArrayLike<number>): PreparedImage["ink"] {
+  let transparent = false, weight = 0, luminance = 0;
+  for (let i = 0; i < pixels.length; i += 4) {
+    const alpha = pixels[i + 3]! / 255;
+    if (alpha < 0.98) transparent = true;
+    if (alpha < 0.1) continue;
+    luminance += (pixels[i]! * 0.2126 + pixels[i + 1]! * 0.7152 + pixels[i + 2]! * 0.0722) / 255 * alpha;
+    weight += alpha;
+  }
+  if (!transparent || !weight) return undefined;
+  const brightness = luminance / weight;
+  return brightness < 0.35 ? "dark" : brightness > 0.7 ? "light" : "mixed";
 }

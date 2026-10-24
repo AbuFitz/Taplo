@@ -24,8 +24,8 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
     await expect(frame.locator("[data-tp-selected]")).toHaveCount(1);
 
     // selecting in the structure list highlights it in the preview
-    await openRow(page, "reviews");
-    await expect(frame.locator('[data-widget="reviews"]')).toHaveAttribute("data-tp-selected", "");
+    await openRow(page, "hours");
+    await expect(frame.locator('[data-widget="hours"]')).toHaveAttribute("data-tp-selected", "");
     // page style when nothing is selected
     await selectPart(page, "page");
     await expect(page.getByTestId("inspector-page")).toBeVisible();
@@ -64,7 +64,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
 
   test("per-widget overrides survive page colour changes and reset to the page style", async ({ page }) => {
     await openEditorWithSample(page, "Barber");
-    await openRow(page, "reviews");
+    await openRow(page, "hours");
     await insp(page).getByRole("tab", { name: /Appearance/ }).click();
     await insp(page).getByLabel("Card colour hex value").fill("#1f2a44");
     await expect(insp(page)).toContainText("differ from the page style");
@@ -75,13 +75,13 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
     await selectPart(page, "page");
     await openSection(page, /^Colour/);
     await insp(page).getByRole("textbox", { name: "Page hex value", exact: true }).fill("#fff4e6");
-    const w = (await store(page)).page.widgets.find((x: { type: string }) => x.type === "reviews");
+    const w = (await store(page)).page.widgets.find((x: { type: string }) => x.type === "hours");
     expect(w.appearance.background).toBe("#1f2a44");             // the deliberate override is untouched
 
-    await openRow(page, "reviews");
+    await openRow(page, "hours");
     await insp(page).getByRole("tab", { name: /Appearance/ }).click();
     await insp(page).getByRole("button", { name: "Reset to page style" }).click();
-    expect((await store(page)).page.widgets.find((x: { type: string }) => x.type === "reviews").appearance).toEqual({});
+    expect((await store(page)).page.widgets.find((x: { type: string }) => x.type === "hours").appearance).toEqual({});
   });
 
   test("draft and published stay separate; public output matches the preview; reload restores the draft", async ({ page }) => {
@@ -139,16 +139,13 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
     }
   });
 
-  test("logo: crop step frames the picture before it is used; social links use real brand marks", async ({ page }) => {
+  test("logo keeps its complete image and transparency; social links use real brand marks", async ({ page }) => {
     await openEditorWithSample(page, "Barber");
     await selectPart(page, "header");
     await openSection(page, "Header");
     await insp(page).getByLabel("Logo or profile picture: upload a picture").setInputFiles(pngFile("logo.png"));
-    await expect(page.getByTestId("crop-dialog")).toBeVisible();
-    await expect(page.getByTestId("crop-apply")).toBeEnabled();
-    await page.getByTestId("crop-apply").click();
     await expect(page.getByTestId("crop-dialog")).toHaveCount(0);
-    await expect.poll(async () => (await store(page)).content.identity.logo?.src?.startsWith("data:image/jpeg")).toBe(true);
+    await expect.poll(async () => (await store(page)).content.identity.logo?.src?.startsWith("data:image/png")).toBe(true);
 
     const frame = previewFrame(page);
     const icons = frame.locator('[data-widget="social"] svg path');

@@ -102,6 +102,19 @@ export function PageHeader({ vm }: { vm: PageViewModel }) {
   const h = spec.header
   const cover = vm.business.identity.heroImage
 
+  if (h.layout === "editorial" || h.layout === "banner") {
+    return (
+      <header aria-label={`${vm.business.identity.name} business profile`} className="tp-header" data-layout={h.layout} data-align={h.align} data-cover={cover ? "" : undefined}>
+        {h.layout === "banner" && cover ? <div className="tp-profile-photo"><ProfileImage image={cover} sizes="(min-width:900px) 50vw, 100vw" priority /></div> : null}
+        <div className="tp-profile-intro">
+          <Avatar vm={vm} />
+          <Text vm={vm} />
+          <Actions vm={vm} />
+        </div>
+        {h.layout === "editorial" && cover ? <div className="tp-profile-photo"><ProfileImage image={cover} sizes="(min-width:900px) 50vw, 100vw" priority /></div> : null}
+      </header>
+    )
+  }
   if (h.layout === "poster") {
     // Image hero: the photograph runs to the edges and fades into the page colour, so the text below always sits on the page colour.
     return (

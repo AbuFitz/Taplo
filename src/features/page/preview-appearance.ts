@@ -1,3 +1,4 @@
+import { applySectionTreatment, sectionTreatment, supportsSectionTreatment } from "./section-treatments";
 import type { PageDoc } from "./contracts/page";
 import { getTheme } from "./themes/catalogue";
 
@@ -37,4 +38,11 @@ export function previewWidgetStyle(
         : w,
     ),
   };
+}
+
+/** Preview curated section surfaces without changing the owner document. */
+export function previewSectionTreatment(page: PageDoc, widgetId?: string, treatmentId?: string): PageDoc {
+  const treatment = sectionTreatment(treatmentId);
+  if (!treatment || !page.widgets.some(w => w.id === widgetId && supportsSectionTreatment(w.type))) return page;
+  return { ...page, appearance: { ...page.appearance, motion: "none" }, widgets: page.widgets.map(w => w.id === widgetId ? { ...w, appearance: applySectionTreatment(w.appearance, treatment.id) } : w) };
 }

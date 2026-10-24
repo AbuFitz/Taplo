@@ -13,7 +13,7 @@ import { Switch } from "@/components/ui/switch"
 import { cn } from "@/lib/utils"
 import type { ImageRef } from "@/features/businesses/content"
 import { CropDialog } from "./CropDialog"
-import { SAMPLE_IMAGES, prepareImage } from "./image"
+import { SAMPLE_IMAGES, prepareImage, MAX_UPLOAD_BYTES, containedImageRect } from "./image"
 
 /** A small "Customised · Reset to theme" affordance shared by every appearance control. */
 export function ResetLink({ show, onReset, label = "Reset" }: { show: boolean; onReset: () => void; label?: string }) {
@@ -143,8 +143,8 @@ export function ColorField({ label, value, onChange, customised, onReset, hint, 
 }
 
 /** Image chooser: upload (downscaled in the browser), pick a sample, remove; plus a focal-point picker so crops keep the subject. */
-export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAspect, cropRound, focalHint = "Click the picture (or use the sliders) to choose the part that should always stay in view." }: {
-  label: string; value: ImageRef | null | undefined; onChange: (v: ImageRef | null) => void; defaultAlt: string; maxEdge?: number; /** When set, a crop step frames the picture at this width/height ratio before it is used. */ cropAspect?: number; cropRound?: boolean; focalHint?: string
+export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAspect, cropRound, purpose = "photo", focalHint = "Click the picture (or use the sliders) to choose the part that should always stay in view." }: {
+  label: string; value: ImageRef | null | undefined; onChange: (v: ImageRef | null) => void; defaultAlt: string; maxEdge?: number; /** When set, a crop step frames the picture at this width/height ratio before it is used. */ cropAspect?: number; cropRound?: boolean; purpose?: "photo" | "identity" | "cover"; focalHint?: string
 }) {
   const inputId = React.useId()
   const [busy, setBusy] = React.useState(false)
@@ -156,15 +156,16 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
   function onPick(file: File | undefined) {
     if (!file) return
     if (!/^image\/(jpeg|png|webp)$/.test(file.type)) { setError("Choose a JPG, PNG or WebP picture."); return }
-    if (cropAspect) { setError(undefined); setPending(file) } else void onFile(file)
+    if (file.size > MAX_UPLOAD_BYTES) { setError("That picture is over 12 MB. Choose a smaller one."); return }
+    if (cropAspect && purpose === "photo") { setError(undefined); setPending(file) } else void onFile(file)
   }
   async function onFile(file: File | undefined) {
     if (!file) return
     setBusy(true)
     setError(undefined)
     try {
-      const p = await prepareImage(file, maxEdge)
-      onChange({ src: p.src, width: p.width, height: p.height, alt: value?.alt || defaultAlt, focal: { x: 50, y: 50 } })
+      const p = await prepareImage(file, maxEdge, { preserveAlpha: purpose === "identity" })
+      onChange({ src: p.src, width: p.width, height: p.height, ...(p.ink ? { ink: p.ink } : {}), alt: value?.alt || defaultAlt, focal: { x: 50, y: 50 } })
     } catch (e) {
       setError(e instanceof Error ? e.message : "That picture could not be used.")
     } finally {
@@ -174,6 +175,8 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
   const setFocal = (x: number, y: number) => value && onChange({ ...value, focal: { x: Math.round(Math.max(0, Math.min(100, x))), y: Math.round(Math.max(0, Math.min(100, y))) } })
   const fx = value?.focal?.x ?? 50
   const fy = value?.focal?.y ?? 50
+  const wholeLogo = purpose === "identity" && Boolean(value?.width && value?.height && value.width / value.height > 1.5)
+  const marker = containedImageRect({ width: 160, height: 100 }, value ?? {})
 
   return (
     <div className="grid gap-2">
@@ -185,17 +188,19 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
             className="relative aspect-[16/10] w-full cursor-crosshair overflow-hidden rounded-lg border bg-muted"
             onPointerDown={(e) => {
               const r = box.current!.getBoundingClientRect()
-              setFocal(((e.clientX - r.left) / r.width) * 100, ((e.clientY - r.top) / r.height) * 100)
+              if (wholeLogo) return
+              const image = containedImageRect(r, value)
+              setFocal(((e.clientX - r.left - image.x) / image.width) * 100, ((e.clientY - r.top - image.y) / image.height) * 100)
             }}
           >
             <Image src={value.src} alt={value.alt} fill sizes="400px" unoptimized className="object-contain" />
-            <span aria-hidden="true" className="pointer-events-none absolute size-6 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-[0_0_0_2px_rgba(0,0,0,.6)]" style={{ left: `${fx}%`, top: `${fy}%` }} />
+            {!wholeLogo ? <span aria-hidden="true" className="pointer-events-none absolute size-6 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-[0_0_0_2px_rgba(0,0,0,.6)]" style={{ left: `${(marker.x + marker.width * fx / 100) / 1.6}%`, top: `${marker.y + marker.height * fy / 100}%` }} /> : null}
           </div>
-          <p className="text-xs text-muted-foreground">{focalHint}</p>
-          <div className="grid grid-cols-2 gap-3">
+          <p className="text-xs text-muted-foreground">{wholeLogo ? "Your logo keeps its original proportions and transparency. It is shown whole in every profile layout." : focalHint}</p>
+          {!wholeLogo ? <div className="grid grid-cols-2 gap-3">
             <RangeField label="Focus left–right" value={fx} min={0} max={100} onChange={(v) => setFocal(v, fy)} />
             <RangeField label="Focus top–bottom" value={fy} min={0} max={100} onChange={(v) => setFocal(fx, v)} />
-          </div>
+          </div> : null}
           <div className="grid gap-1.5">
             <Label htmlFor={`${inputId}-alt`} className="text-sm font-medium">Describe the picture (for screen readers)</Label>
             <input id={`${inputId}-alt`} value={value.alt} maxLength={240} onChange={(e) => onChange({ ...value, alt: e.target.value })} className="h-11 rounded-lg border bg-transparent px-3 text-sm" />
@@ -221,7 +226,7 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
         </ul>
       ) : null}
       {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
-      <p className="text-xs text-muted-foreground">Pictures are resized to a sensible size automatically.</p>
+      <p className="text-xs text-muted-foreground">{purpose === "identity" ? "Your original proportions and transparency are preserved." : purpose === "cover" ? "Your original photo stays intact. Each layout frames it around your focal point." : "Pictures are resized to a sensible size automatically."}</p>
     </div>
   )
 }

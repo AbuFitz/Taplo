@@ -4,6 +4,7 @@ import * as React from "react"
 import { useSearchParams } from "next/navigation"
 import { PageRenderer, buildPageViewModel } from "@/features/page/renderer"
 import { styleOverridesSchema } from "@/features/page/contracts/style"
+import { previewSectionTreatment } from "@/features/page/preview-appearance"
 import { getWidget } from "@/features/page/widgets/registry"
 import { SCENARIOS, type Scenario } from "./content"
 import { initialConfig, toContent, toPage, type LabConfig, type LabMessage } from "./lab-state"
@@ -36,14 +37,16 @@ export function Frame() {
   const widgetType = q.get("widget")
   const variant = q.get("variant")
   const vm = React.useMemo(() => {
-    const page = toPage(cfg)
+    let page = toPage(cfg)
+    const poseId = page.widgets.find(w => w.type === widgetType)?.id
+    page = previewSectionTreatment(page, poseId, q.get("treatment") ?? undefined)
     // Read-only variant poses use the same validated options as the editor, never owner storage or CSS imitation.
     const widgets = widgetType && variant ? page.widgets.map(w => {
       const field = getWidget(w.type)?.fields.find(f => f.kind === "select" && f.key === "variant")
       return w.type === widgetType && field?.kind === "select" && field.options.some(o => o.value === variant) ? { ...w, settings: { ...w.settings, variant } } : w
     }) : page.widgets
     return buildPageViewModel(toContent(cfg), { ...page, widgets }, { plan: "business" })
-  }, [cfg, widgetType, variant])
+  }, [cfg, widgetType, variant, q])
   const isolated = widgetType ? vm.widgets.find(w => w.type === widgetType) : undefined
   return <PageRenderer vm={vm} fragment={isolated ? { kind: "widget", id: isolated.id } : undefined} />
 }

@@ -32,7 +32,7 @@ export interface ResolvedStyle {
 const RADIUS = { none: "0px", sm: "0.375rem", md: "0.75rem", lg: "1.25rem", xl: "1.75rem", pill: "999px" } as const;
 const BTN_RADIUS = { square: "0px", rounded: "0.75rem", pill: "999px" } as const;
 const BORDER_W = { none: "0px", thin: "1px", thick: "2.5px" } as const;
-const PAD = { compact: "0.75rem", comfortable: "1rem", roomy: "1.5rem" } as const;
+const PAD = { none: "0px", compact: "0.75rem", comfortable: "1rem", roomy: "1.5rem" } as const;
 /** How much of a hero photograph fades into the page. Tested presets: text over the faded part always sits on the page colour. */
 const FADE = { soft: "34%", medium: "52%", strong: "74%" } as const;
 const WIDTH = { narrow: "30rem", regular: "36rem", wide: "44rem" } as const;
@@ -327,6 +327,18 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
     vars["--tp-accent"] = a.accent;
     vars["--tp-accent-foreground"] = ensureReadable(spec.colors.accentText, a.accent).color;
   }
+  if (a.surface === "accent" || a.background) {
+    const background = widgetBackground(style, a);
+    const foreground = vars["--tp-foreground"] ?? spec.colors.text;
+    const roles = deriveRoles({ ...spec.colors, background, surface: background, text: foreground, muted: foreground }, background);
+    vars["--tp-line"] = roles.line;
+    vars["--tp-line-strong"] = roles.lineStrong;
+    vars["--tp-border"] = roles.lineStrong;
+    vars["--tp-muted"] = ensureReadable(mix(background, foreground, 0.68), background).color;
+    vars["--tp-ink-3"] = roles.ink3;
+    // Focus belongs to this surface, rather than an invisible page accent on an inverted panel.
+    vars["--tp-focus"] = foreground;
+  }
   if (a.radius) {
     vars["--tp-card-radius"] = RADIUS[a.radius];
     if (a.radius === "pill") vars["--tp-card-radius"] = "1.75rem";
@@ -336,20 +348,27 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
   if (a.padding) vars["--tp-card-pad"] = PAD[a.padding];
   if (a.align) vars["--tp-text-align"] = a.align;
   if (featured) {
-    vars["--tp-card-pad"] = PAD.roomy;
+    if (!a.padding) vars["--tp-card-pad"] = PAD.roomy;
     attrs["data-featured"] = "true";
+    // Emphasis supplies a default frame but must not override an explicit border choice.
+    if (a.border === undefined) vars["--tp-card-border-w"] = "1.5px";
   }
 
   const needsButton = a.buttonFill || a.buttonShape || a.accent || a.background || a.text || a.surface;
   if (needsButton) {
     // On an accent-filled card, buttons invert so they stay distinguishable.
     const inverted = a.surface === "accent";
+    const inverseInk = ensureReadable(spec.colors.accentText, accent).color;
     const btn = inverted
-      ? { bg: ensureReadable(spec.colors.accentText, accent).color, text: accent, border: ensureReadable(spec.colors.accentText, accent).color }
+      ? deriveButton({ ...spec.colors, background: accent, surface: accent, text: inverseInk, accent: inverseInk, accentText: accent }, spec.buttons, { fill: a.buttonFill, accent: inverseInk })
       : deriveButton({ ...spec.colors, background: widgetBackground(style, a), surface: widgetBackground(style, a), text: vars["--tp-foreground"] ?? spec.colors.text }, spec.buttons, { fill: a.buttonFill, accent });
     vars["--tp-btn-bg"] = btn.bg;
     vars["--tp-btn-text"] = btn.text;
     vars["--tp-btn-border"] = btn.border;
+    const local = widgetBackground(style, a);
+    const buttonRoles = deriveRoles({ ...spec.colors, background: local, surface: local, text: vars["--tp-foreground"] ?? spec.colors.text, accent: btn.bg === "transparent" ? (inverted ? inverseInk : accent) : btn.bg }, local);
+    vars["--tp-btn-hover"] = btn.bg === "transparent" ? "transparent" : buttonRoles.accentHover;
+    vars["--tp-accent-soft"] = buttonRoles.accentSoft;
     if (a.buttonFill) attrs["data-btn-fill"] = a.buttonFill;
   }
   if (a.buttonShape) vars["--tp-btn-radius"] = BTN_RADIUS[a.buttonShape];

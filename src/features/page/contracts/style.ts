@@ -60,7 +60,7 @@ export const backgroundSchema = z.discriminatedUnion("kind", [
   }),
 ]);
 
-export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal", "feature"] as const;
+export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal", "feature", "editorial", "banner"] as const;
 export const headerSchema = z.object({
   layout: z.enum(HEADER_LAYOUTS),
   /** "logo" shows the picture uncropped at its own proportions (for wide wordmarks); a wide logo is never cropped to a face shape regardless. */
@@ -146,7 +146,7 @@ export const widgetAppearanceSchema = z
     radius: z.enum(["none", "sm", "md", "lg", "xl", "pill"]),
     border: z.enum(["none", "thin", "thick"]),
     shadow: z.enum(["none", "soft", "hard"]),
-    padding: z.enum(["compact", "comfortable", "roomy"]),
+    padding: z.enum(["none", "compact", "comfortable", "roomy"]),
     align: z.enum(["left", "center"]),
     emphasis: z.enum(["normal", "featured"]),
     buttonFill: z.enum(["solid", "outline", "soft"]),

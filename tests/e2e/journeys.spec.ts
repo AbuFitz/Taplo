@@ -291,7 +291,7 @@ test.describe("editing on a phone", () => {
   });
 });
 
-test("uploading a logo in the editor flows to the published page with the owner's crop", async ({ page }) => {
+test("uploading a logo in the editor preserves the asset on the published page", async ({ page }) => {
   await openEditorWithSample(page, "Consultant");
   await selectPart(page, "header");
   await openSection(page, "Header");
@@ -299,7 +299,6 @@ test("uploading a logo in the editor flows to the published page with the owner'
   await page.getByRole("radio", { name: "Name only", exact: true }).locator("xpath=ancestor::label").click();
   await openSection(page, "Logo and cover");
   await page.getByLabel("Logo or profile picture: upload a picture").setInputFiles(pngFile());
-  await page.getByTestId("crop-apply").click();
   await expect(page.getByText("this look shows no picture")).toBeVisible();
   await page.getByRole("radio", { name: "Circle" }).locator("xpath=ancestor::label").click();
   await expect(page.getByText("this look shows no picture")).toHaveCount(0);
