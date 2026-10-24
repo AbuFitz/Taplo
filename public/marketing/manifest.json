@@ -5,9 +5,9 @@
     "height": 1200,
     "cssWidth": 1280,
     "cssHeight": 800,
-    "bytes": 119124,
-    "source": "/appearance/frame?scenario=dealer&look=showroom",
-    "sha256": "d30fe090cf51"
+    "bytes": 115822,
+    "source": "/appearance/frame?scenario=brookfield",
+    "sha256": "d9fecbd99f65"
   },
   "hero-barber": {
     "file": "/marketing/hero-barber.webp",
@@ -15,9 +15,9 @@
     "height": 1400,
     "cssWidth": 390,
     "cssHeight": 700,
-    "bytes": 52548,
-    "source": "/appearance/frame?scenario=barber&look=night",
-    "sha256": "6ddfaaa7fbce"
+    "bytes": 80854,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "4d36ce2701db"
   },
   "hero-dealer": {
     "file": "/marketing/hero-dealer.webp",
@@ -25,9 +25,9 @@
     "height": 1400,
     "cssWidth": 390,
     "cssHeight": 700,
-    "bytes": 82102,
-    "source": "/appearance/frame?scenario=dealer&look=showroom",
-    "sha256": "d49459c0ba1b"
+    "bytes": 102734,
+    "source": "/appearance/frame?scenario=brookfield",
+    "sha256": "afeca426bc72"
   },
   "hero-trades": {
     "file": "/marketing/hero-trades.webp",
@@ -35,9 +35,9 @@
     "height": 1400,
     "cssWidth": 390,
     "cssHeight": 700,
-    "bytes": 72092,
-    "source": "/appearance/frame?scenario=trades&look=colour",
-    "sha256": "5d8d01c6b73d"
+    "bytes": 88330,
+    "source": "/appearance/frame?scenario=oakfield",
+    "sha256": "959f144834a2"
   },
   "yours-1-clean": {
     "file": "/marketing/yours-1-clean.webp",
@@ -45,9 +45,9 @@
     "height": 1520,
     "cssWidth": 390,
     "cssHeight": 760,
-    "bytes": 55084,
-    "source": "/appearance/frame?scenario=barber&look=clean",
-    "sha256": "e36cb052c554"
+    "bytes": 63824,
+    "source": "/appearance/frame?scenario=station&look=service",
+    "sha256": "0bc9dc8c365e"
   },
   "yours-2-colour": {
     "file": "/marketing/yours-2-colour.webp",
@@ -55,9 +55,9 @@
     "height": 1520,
     "cssWidth": 390,
     "cssHeight": 760,
-    "bytes": 55780,
-    "source": "/appearance/frame?scenario=barber&look=clean",
-    "sha256": "7b074396a847"
+    "bytes": 87646,
+    "source": "/appearance/frame?scenario=station&look=service",
+    "sha256": "8ba8030aa7e7"
   },
   "yours-3-type": {
     "file": "/marketing/yours-3-type.webp",
@@ -65,9 +65,9 @@
     "height": 1520,
     "cssWidth": 390,
     "cssHeight": 760,
-    "bytes": 87390,
-    "source": "/appearance/frame?scenario=barber&look=clean",
-    "sha256": "e20e969a96e9"
+    "bytes": 87766,
+    "source": "/appearance/frame?scenario=station&look=service",
+    "sha256": "10dc83ca2b36"
   },
   "yours-4-final": {
     "file": "/marketing/yours-4-final.webp",
@@ -75,49 +75,49 @@
     "height": 1520,
     "cssWidth": 390,
     "cssHeight": 760,
-    "bytes": 89476,
-    "source": "/appearance/frame?scenario=barber&look=clean",
-    "sha256": "0faa3b9e3400"
+    "bytes": 81880,
+    "source": "/appearance/frame?scenario=station&look=service",
+    "sha256": "3bb02db64802"
   },
   "cap-services": {
     "file": "/marketing/cap-services.webp",
     "width": 716,
-    "height": 756,
+    "height": 1026,
     "cssWidth": 358,
-    "cssHeight": 378,
-    "bytes": 25004,
-    "source": "/appearance/frame?scenario=barber&look=night",
-    "sha256": "fc1d5285039a"
+    "cssHeight": 513,
+    "bytes": 45974,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "329702aa2fcb"
   },
   "cap-product": {
     "file": "/marketing/cap-product.webp",
     "width": 716,
-    "height": 1032,
+    "height": 676,
     "cssWidth": 358,
-    "cssHeight": 516,
-    "bytes": 46520,
-    "source": "/appearance/frame?scenario=barber&look=night",
-    "sha256": "e1a30a7e4156"
+    "cssHeight": 338,
+    "bytes": 31320,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "881d8883caa5"
   },
   "cap-vehicles": {
     "file": "/marketing/cap-vehicles.webp",
     "width": 716,
-    "height": 1980,
+    "height": 3054,
     "cssWidth": 358,
-    "cssHeight": 990,
-    "bytes": 146438,
-    "source": "/appearance/frame?scenario=dealer&look=showroom",
-    "sha256": "3cc8a09ca543"
+    "cssHeight": 1527,
+    "bytes": 292254,
+    "source": "/appearance/frame?scenario=brookfield",
+    "sha256": "ebdb66f27f80"
   },
   "cap-fixed-prices": {
     "file": "/marketing/cap-fixed-prices.webp",
     "width": 716,
-    "height": 1224,
+    "height": 730,
     "cssWidth": 358,
-    "cssHeight": 612,
-    "bytes": 59430,
-    "source": "/appearance/frame?scenario=trades&look=colour",
-    "sha256": "221f9a1ca609"
+    "cssHeight": 365,
+    "bytes": 34072,
+    "source": "/appearance/frame?scenario=oakfield",
+    "sha256": "4e7334275121"
   },
   "cap-reviews": {
     "file": "/marketing/cap-reviews.webp",
@@ -135,9 +135,9 @@
     "height": 1200,
     "cssWidth": 1280,
     "cssHeight": 800,
-    "bytes": 66178,
-    "source": "/appearance/frame?scenario=barber&look=night",
-    "sha256": "a763ef61ce0e"
+    "bytes": 109292,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "8cb2e5f36d07"
   },
   "ex-marlowe-and-finch-phone": {
     "file": "/marketing/ex-marlowe-and-finch-phone.webp",
@@ -744,9 +744,9 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 113194,
+    "bytes": 93928,
     "source": "/appearance/frame?scenario=station",
-    "sha256": "c38e8d7b5d37"
+    "sha256": "73c06ec12a1b"
   },
   "ex-station-road-barbers-desk": {
     "file": "/marketing/ex-station-road-barbers-desk.webp",
@@ -754,9 +754,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 191882,
+    "bytes": 145336,
     "source": "/appearance/frame?scenario=station",
-    "sha256": "99a83806f8d6"
+    "sha256": "0b6433715563"
   },
   "ex-parkside-valeting-phone": {
     "file": "/marketing/ex-parkside-valeting-phone.webp",
@@ -764,9 +764,9 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 110974,
+    "bytes": 129906,
     "source": "/appearance/frame?scenario=detailer",
-    "sha256": "8406df24bdf4"
+    "sha256": "69f4f438bd21"
   },
   "ex-parkside-valeting-desk": {
     "file": "/marketing/ex-parkside-valeting-desk.webp",
@@ -774,9 +774,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 164142,
+    "bytes": 230448,
     "source": "/appearance/frame?scenario=detailer",
-    "sha256": "5443437c13ed"
+    "sha256": "a1f950753598"
   },
   "ex-brookfield-motors-phone": {
     "file": "/marketing/ex-brookfield-motors-phone.webp",
@@ -784,9 +784,9 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 132708,
+    "bytes": 117882,
     "source": "/appearance/frame?scenario=brookfield",
-    "sha256": "26b408b45c02"
+    "sha256": "40086aee4f09"
   },
   "ex-brookfield-motors-desk": {
     "file": "/marketing/ex-brookfield-motors-desk.webp",
@@ -794,9 +794,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 173902,
+    "bytes": 160124,
     "source": "/appearance/frame?scenario=brookfield",
-    "sha256": "5956d87f970b"
+    "sha256": "31ea42ad8f53"
   },
   "svc-cards-parkside": {
     "file": "/marketing/svc-cards-parkside.webp",
@@ -903,9 +903,9 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 127614,
+    "bytes": 136830,
     "source": "/appearance/frame?scenario=corner",
-    "sha256": "1cdbc24409f3"
+    "sha256": "58c887f2fd26"
   },
   "ex-corner-table-cafe-desk": {
     "file": "/marketing/ex-corner-table-cafe-desk.webp",
@@ -913,9 +913,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 176216,
+    "bytes": 205052,
     "source": "/appearance/frame?scenario=corner",
-    "sha256": "9fa33e9e2878"
+    "sha256": "112ea5a4312c"
   },
   "ex-oakfield-home-repairs-phone": {
     "file": "/marketing/ex-oakfield-home-repairs-phone.webp",
@@ -923,9 +923,9 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 108396,
+    "bytes": 98760,
     "source": "/appearance/frame?scenario=oakfield",
-    "sha256": "be8bc809e500"
+    "sha256": "c6551acd16c9"
   },
   "ex-oakfield-home-repairs-desk": {
     "file": "/marketing/ex-oakfield-home-repairs-desk.webp",
@@ -933,9 +933,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 158224,
+    "bytes": 148712,
     "source": "/appearance/frame?scenario=oakfield",
-    "sha256": "0ef5e3764075"
+    "sha256": "946593849cb0"
   },
   "ex-rowan-learning-phone": {
     "file": "/marketing/ex-rowan-learning-phone.webp",
@@ -943,9 +943,9 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 95224,
+    "bytes": 76900,
     "source": "/appearance/frame?scenario=rowan",
-    "sha256": "91035e079891"
+    "sha256": "c6623ac761cd"
   },
   "ex-rowan-learning-desk": {
     "file": "/marketing/ex-rowan-learning-desk.webp",
@@ -953,8 +953,8 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 131048,
+    "bytes": 105284,
     "source": "/appearance/frame?scenario=rowan",
-    "sha256": "4063957da19f"
+    "sha256": "34840119c88b"
   }
 }

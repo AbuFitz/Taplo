@@ -1,5 +1,6 @@
 import { businessContentSchema, type BusinessContent } from "@/features/businesses/content"
 import type { PageDoc } from "@/features/page/contracts/page"
+import { applySectionTreatment, type SectionTreatmentId } from "@/features/page/section-treatments"
 import type { StyleOverrides } from "@/features/page/contracts/style"
 import { DEFAULT_THEME_ID, getTheme } from "@/features/page/themes/catalogue"
 import { SCENARIOS, type Scenario } from "./content"
@@ -12,19 +13,19 @@ export interface LabConfig {
 }
 
 /** The look each example was designed with. */
-export const EXAMPLE_LOOK: Record<Scenario, string> = { corner: "minted", oakfield: "blueprint", rowan: "signal", brookfield: "blueprint", station: "voltage", detailer: "apex", barber: "folio", dealer: "showroom", trades: "colour", physio: "journal", cafe: "clay", tutor: "orchard", gym: "forge" }
+export const EXAMPLE_LOOK: Record<Scenario, string> = { corner: "open", oakfield: "service", rowan: "personal", brookfield: "open", station: "service", detailer: "ink", barber: "folio", dealer: "showroom", trades: "colour", physio: "journal", cafe: "clay", tutor: "orchard", gym: "forge" }
 
 /**
  * How each example is arranged on top of its look: the header, how wide the page is and what it does on a computer. These
  * are the owner's own controls (Header and Design tabs), so anything shown in the gallery can be reproduced in the editor.
  */
 export const EXAMPLE_OVERRIDES: Record<Scenario, StyleOverrides> = {
-  corner: {},
-  oakfield: {},
-  rowan: {},
-  brookfield: { header: { layout: "feature", avatarShape: "logo", align: "left" }, layout: { width: "wide", desktop: "columns" }, colors: { background: "#f5f7fc", text: "#111827", surface: "#ffffff", accent: "#1645ff", accentText: "#ffffff", muted: "#526078", border: "#d6ddeb" }, background: { kind: "solid", color: "#f5f7fc" } },
-  station: {},
-  detailer: {},
+  corner: { header: { layout: "editorial", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
+  oakfield: { header: { layout: "editorial", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
+  rowan: { header: { layout: "side", avatarShape: "circle", avatarSize: "lg", align: "left" }, text: { align: "left" }, layout: { desktop: "split", width: "wide", rhythm: "editorial" } },
+  brookfield: { header: { layout: "editorial", avatarShape: "logo", align: "left" }, layout: { width: "wide", desktop: "columns", rhythm: "editorial" } },
+  station: { header: { layout: "banner", avatarShape: "logo", align: "left" }, layout: { desktop: "split", width: "wide", rhythm: "even" } },
+  detailer: { header: { layout: "editorial", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
   barber: {},
   physio: { header: { align: "left" }, layout: { desktop: "split" } },
   cafe: { header: { layout: "cover", avatarShape: "circle", avatarSize: "md", align: "center" }, layout: { desktop: "columns", width: "wide" } },
@@ -42,8 +43,20 @@ export function initialConfig(scenario: Scenario = "barber", lookId?: string): L
 
 /** One stable set of widgets per scenario, so changing appearance never touches content or order. */
 const widgetCache = new Map<Scenario, PageDoc["widgets"]>()
-function widgetsFor(s: Scenario) {
-  if (!widgetCache.has(s)) widgetCache.set(s, SCENARIOS[s].widgets())
+/** Authored hierarchy, using exactly the same section treatments offered in the editor. */
+const SECTION_COMPOSITIONS: Partial<Record<Scenario, Record<string, SectionTreatmentId>>> = {
+  station: { priceMenu: "spotlight", hours: "soft", faq: "inline" },
+  detailer: { serviceList: "inline", serviceArea: "soft", faq: "inline", hours: "soft" },
+  brookfield: { faq: "inline", hours: "soft" },
+  corner: { priceMenu: "inline", hours: "soft", faq: "inline" },
+  oakfield: { serviceList: "inline", serviceArea: "soft", faq: "inline" },
+  rowan: { featuredService: "soft", serviceList: "inline", faq: "inline" },
+}
+export function widgetsFor(s: Scenario) {
+  if (!widgetCache.has(s)) widgetCache.set(s, SCENARIOS[s].widgets().map(w => {
+    const treatment = SECTION_COMPOSITIONS[s]?.[w.type]
+    return treatment ? { ...w, appearance: applySectionTreatment(w.appearance, treatment) } : w
+  }))
   return widgetCache.get(s)!
 }
 

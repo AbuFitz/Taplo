@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test"
 import path from "node:path"
 
+test.use({ reducedMotion: "reduce" })
+
 for (const width of [390, 1440]) {
   test(`new UK examples render real layouts and working assets at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 1000 })
@@ -41,8 +43,8 @@ test("UK examples keep haircut confirmations and valet requests distinct", async
 test("homepage and phone-first gallery show the new UK designs", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.goto("/")
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("All you.")
-  await expect(page.locator('img[alt="Jay’s Barbers in the Taplo page designer"]').first()).toBeVisible()
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Show what you do.")
+  await expect(page.frameLocator('[data-testid="home-live-page"]').getByRole("heading", { level: 1 })).toHaveText("Jay’s Barbers")
   await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", "home-1440.png") })
   await page.setViewportSize({ width: 390, height: 844 })
   await page.reload()
@@ -51,6 +53,6 @@ test("homepage and phone-first gallery show the new UK designs", async ({ page }
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await page.goto("/inspiration")
   await expect(page.getByRole("radio", { name: "Phone", exact: true })).toBeChecked()
-  await expect(page.getByTestId("design-card").first()).toContainText("Voltage")
+  await expect(page.getByTestId("design-card").first()).toContainText("Service")
   await expect(page.getByTestId("design-card").nth(1)).toContainText("Detail Dept.")
 })

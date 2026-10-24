@@ -126,7 +126,7 @@ export function Onboarding() {
       return {
         ...withIndustry,
         content: { ...withIndustry.content, booking: { ...withIndustry.content.booking, mode: ex.bookingMode } },
-        page: { ...withIndustry.page, themeId: ex.lookId, appearance: structuredClone(ex.overrides), widgets: ex.widgets.map((w) => newWidget(w.type as WidgetType, w.settings)) },
+        page: { ...withIndustry.page, themeId: ex.lookId, appearance: structuredClone(ex.overrides), widgets: ex.widgets.map((w) => ({ ...newWidget(w.type as WidgetType, w.settings), appearance: structuredClone(w.appearance) })) },
       }
     })
   }, [ready, from]) // eslint-disable-line react-hooks/exhaustive-deps

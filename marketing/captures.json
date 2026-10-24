@@ -4,7 +4,7 @@
   "jobs": [
     {
       "id": "hero-barber",
-      "url": "/appearance/frame?scenario=barber&look=night",
+      "url": "/appearance/frame?scenario=station",
       "viewport": [
         390,
         844
@@ -18,7 +18,7 @@
     },
     {
       "id": "hero-dealer",
-      "url": "/appearance/frame?scenario=dealer&look=showroom",
+      "url": "/appearance/frame?scenario=brookfield",
       "viewport": [
         390,
         844
@@ -32,7 +32,7 @@
     },
     {
       "id": "hero-trades",
-      "url": "/appearance/frame?scenario=trades&look=colour",
+      "url": "/appearance/frame?scenario=oakfield",
       "viewport": [
         390,
         844
@@ -46,7 +46,7 @@
     },
     {
       "id": "yours-1-clean",
-      "url": "/appearance/frame?scenario=barber&look=clean",
+      "url": "/appearance/frame?scenario=station&look=service",
       "viewport": [
         390,
         844
@@ -60,16 +60,12 @@
     },
     {
       "id": "yours-2-colour",
-      "url": "/appearance/frame?scenario=barber&look=clean",
+      "url": "/appearance/frame?scenario=station&look=service",
       "overrides": {
-        "colors": {
-          "background": "#12281c",
-          "text": "#f2efe4",
-          "muted": "#9db8a6",
-          "surface": "#1b3a29",
-          "accent": "#e9c46a",
-          "accentText": "#1b1405",
-          "border": "#2b4d39"
+        "header": {
+          "layout": "banner",
+          "avatarShape": "logo",
+          "align": "left"
         }
       },
       "viewport": [
@@ -85,24 +81,18 @@
     },
     {
       "id": "yours-3-type",
-      "url": "/appearance/frame?scenario=barber&look=clean",
+      "url": "/appearance/frame?scenario=station&look=service",
       "overrides": {
-        "colors": {
-          "background": "#12281c",
-          "text": "#f2efe4",
-          "muted": "#9db8a6",
-          "surface": "#1b3a29",
-          "accent": "#e9c46a",
-          "accentText": "#1b1405",
-          "border": "#2b4d39"
+        "header": {
+          "layout": "banner",
+          "avatarShape": "logo",
+          "align": "left"
         },
         "text": {
-          "headingFont": "fraunces",
+          "headingFont": "inter",
           "bodyFont": "inter",
-          "headingWeight": "bold"
-        },
-        "header": {
-          "layout": "poster"
+          "headingWeight": "bold",
+          "size": "lg"
         }
       },
       "viewport": [
@@ -118,41 +108,33 @@
     },
     {
       "id": "yours-4-final",
-      "url": "/appearance/frame?scenario=barber&look=clean",
+      "url": "/appearance/frame?scenario=station&look=service",
       "overrides": {
-        "colors": {
-          "background": "#12281c",
-          "text": "#f2efe4",
-          "muted": "#9db8a6",
-          "surface": "#1b3a29",
-          "accent": "#e9c46a",
-          "accentText": "#1b1405",
-          "border": "#2b4d39"
+        "header": {
+          "layout": "banner",
+          "avatarShape": "logo",
+          "align": "left"
         },
         "text": {
-          "headingFont": "fraunces",
+          "headingFont": "inter",
           "bodyFont": "inter",
-          "headingWeight": "bold"
+          "headingWeight": "bold",
+          "size": "lg"
         },
-        "header": {
-          "layout": "poster"
+        "cards": {
+          "surface": "transparent",
+          "radius": "xl",
+          "border": "none",
+          "shadow": "none"
+        },
+        "layout": {
+          "density": "comfortable",
+          "rhythm": "editorial"
         },
         "buttons": {
           "shape": "pill",
           "fill": "solid",
-          "shadow": "soft"
-        },
-        "cards": {
-          "surface": "glass",
-          "radius": "xl",
-          "border": "thin"
-        },
-        "background": {
-          "kind": "gradient",
-          "from": "#12281c",
-          "to": "#0a1811",
-          "angle": 160,
-          "motion": false
+          "shadow": "none"
         }
       },
       "viewport": [
@@ -168,7 +150,7 @@
     },
     {
       "id": "cap-services",
-      "url": "/appearance/frame?scenario=barber&look=night",
+      "url": "/appearance/frame?scenario=station",
       "viewport": [
         390,
         844
@@ -177,7 +159,7 @@
     },
     {
       "id": "cap-product",
-      "url": "/appearance/frame?scenario=barber&look=night",
+      "url": "/appearance/frame?scenario=station",
       "viewport": [
         390,
         844
@@ -186,7 +168,7 @@
     },
     {
       "id": "cap-vehicles",
-      "url": "/appearance/frame?scenario=dealer&look=showroom",
+      "url": "/appearance/frame?scenario=brookfield",
       "viewport": [
         390,
         844
@@ -195,7 +177,7 @@
     },
     {
       "id": "cap-fixed-prices",
-      "url": "/appearance/frame?scenario=trades&look=colour",
+      "url": "/appearance/frame?scenario=oakfield",
       "viewport": [
         390,
         844
@@ -204,7 +186,7 @@
     },
     {
       "id": "desk-barber",
-      "url": "/appearance/frame?scenario=barber&look=night",
+      "url": "/appearance/frame?scenario=station",
       "viewport": [
         1280,
         800
@@ -219,7 +201,7 @@
     },
     {
       "id": "desk-dealer",
-      "url": "/appearance/frame?scenario=dealer&look=showroom",
+      "url": "/appearance/frame?scenario=brookfield",
       "viewport": [
         1280,
         800

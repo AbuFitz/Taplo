@@ -75,7 +75,7 @@ for (const width of [390,1440]) test(`section recipes update only their panel, u
   await page.waitForURL('**/dashboard/page')
   const before=await page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!))
   await openRow(page,'priceMenu')
-  await insp(page).getByRole('tab',{name:'Appearance',exact:true}).click()
+  await insp(page).getByRole('tab',{name:/^Appearance(?: · \d+)?$/}).click()
   await page.getByRole('radiogroup',{name:'Section treatment',exact:true}).locator('label[data-choice="soft"]').click()
   await page.getByRole('radiogroup',{name:'Section treatment',exact:true}).locator('label[data-choice="spotlight"]').click()
   const section=previewFrame(page).locator('[data-widget="priceMenu"]')

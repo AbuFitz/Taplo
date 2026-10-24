@@ -28,6 +28,17 @@ describe("current UK business examples", () => {
       expect(toContent(cfg).credentials).toHaveLength(0)
     })
   }
+  it("starting from an example carries its section hierarchy without sharing mutable appearance or business records", () => {
+    for (const e of EXAMPLES) {
+      const page = toPage(initialConfig(e.scenario))
+      const start = exampleStart(e.slug)!
+      expect(start.widgets.map(w => w.appearance)).toEqual(page.widgets.map(w => w.appearance))
+      const first = start.widgets.find(w => Object.keys(w.appearance).length > 0)!
+      first.appearance.surface = "glass"
+      expect(toPage(initialConfig(e.scenario)).widgets.map(w => w.appearance)).toEqual(page.widgets.map(w => w.appearance))
+      expect(exampleStart(e.slug)!.widgets.find(w => w.type === first.type)!.appearance.surface).not.toBe("glass")
+    }
+  })
   it("café menu items never start appointments", () => {
     const cfg = initialConfig("corner")
     const content = toContent(cfg)

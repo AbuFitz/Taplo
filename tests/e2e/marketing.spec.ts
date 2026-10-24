@@ -179,7 +179,7 @@ test.describe("inspiration", () => {
     await page.getByRole("button", { name: "Dark", exact: true }).click();
     await expect(cards).toHaveCount(1);
     await expect(
-      page.getByRole("heading", { name: "Blueprint" }),
+      page.getByRole("heading", { name: "Studio", exact: true }),
     ).toBeVisible();
     await page.getByRole("button", { name: "Clear filters" }).click();
     await expect(cards).toHaveCount(EXAMPLES.length);

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test"
 import path from "node:path"
 
 const businesses = [
-  { scenario: "corner", name: "No. 6 Coffee", slug: "sunday-counter", route: "corner-table-cafe", desktop: "split" },
+  { scenario: "corner", name: "No. 6 Coffee", slug: "sunday-counter", route: "corner-table-cafe", desktop: "centered" },
   { scenario: "oakfield", name: "Dan’s Home Repairs", slug: "fieldwork-home-care", route: "oakfield-home-repairs", desktop: "centered" },
   { scenario: "rowan", name: "Maths with Aisha", slug: "rowan-learning", route: "rowan-learning", desktop: "split" },
 ]
@@ -19,7 +19,7 @@ for (const width of [390, 1440]) {
         if (b.scenario === "oakfield" && width === 1440) expect((await page.getByTestId("service-open").first().boundingBox())!.y).toBeLessThan(650)
         await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `${b.scenario}-${width}.png`), fullPage: true })
         await page.goto(`/inspiration/${b.route}`)
-        await expect(page.getByRole("heading", { level: 1 })).toHaveText(b.scenario === "corner" ? "Minted" : b.scenario === "oakfield" ? "Blueprint" : "Signal")
+        await expect(page.getByRole("heading", { level: 1 })).toHaveText(b.scenario === "corner" ? "Studio" : b.scenario === "oakfield" ? "Service" : "Personal")
         await expect(page.getByTestId("start-design").first()).toBeVisible()
       })
     }
@@ -70,7 +70,7 @@ for (const width of [390, 1440]) {
 for (const width of [390, 768, 1440]) {
   test(`wide feature keeps its photo and identity useful at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 1000 })
-    await page.goto('/appearance/frame?scenario=oakfield')
+    await page.goto('/appearance/frame?scenario=oakfield&look=open')
     const header = page.locator('.tp-header[data-layout="feature"]')
     await expect(header).toBeVisible()
     const photo = await header.locator('.tp-cover').boundingBox()

@@ -865,7 +865,7 @@ const EXISTING_LOOKS: Look[] = [
 ];
 
 /** New compositions lead discovery; earlier IDs still resolve for existing saved pages. */
-export const SPOTLIGHT_LOOK_IDS = ["voltage", "apex", "ultraviolet", "minted", "blueprint", "signal"] as const;
+export const SPOTLIGHT_LOOK_IDS = ["open", "service", "personal", "ink"] as const;
 function composition(id: string, name: string, blurb: string, base: string, overrides: StyleOverrides): Look {
   const original = EXISTING_LOOKS.find(l => l.id === base)!.overrides;
   return { id, name, blurb, overrides: { ...original, ...overrides,
@@ -957,7 +957,7 @@ export const LOOKS: Look[] = [
 
 /** Discovery uses the new direction. Earlier configurations remain resolvable for saved pages. */
 export const STARTER_LOOKS = ["open", "service", "personal", "ink"].map(id => LOOKS.find(l => l.id === id)!);
-export const CURRENT_LOOKS = [...STARTER_LOOKS, ...LOOKS.filter(l => [...SPOTLIGHT_LOOK_IDS, "clean", "night", "colour", "photo", "journal", "forge"].includes(l.id))];
+export const CURRENT_LOOKS = [...STARTER_LOOKS, ...LOOKS.filter(l => ["voltage", "apex", "ultraviolet", "minted", "blueprint", "signal", "clean", "night", "colour", "photo", "journal", "forge"].includes(l.id))];
 
 /* ---- Radix-derived palettes: coordinated neutral + accent, light and dark ---- */
 type Scale = Record<string, string>;
