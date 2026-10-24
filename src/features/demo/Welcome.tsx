@@ -18,34 +18,35 @@ import { initialState, useDemo } from "./store";
 const SAMPLES: {
   scenario: Scenario;
   slug: string;
+  asset: string;
   name: string;
   category: string;
   detail: string;
 }[] = [
   {
     scenario: "station",
-    slug: "station-road-barbers",
-    name: "Station Road Barbers",
+    slug: "jays-barbers", asset: "station-road-barbers",
+    name: "Jay’s Barbers",
     category: "Barber shop",
     detail: "Prices, a familiar face and your next haircut sorted.",
   },
   {
     scenario: "detailer",
-    slug: "parkside-valeting",
-    name: "Parkside Valeting",
+    slug: "detail-dept", asset: "parkside-valeting",
+    name: "Detail Dept.",
     category: "Valeting & detailing",
     detail: "Show the work. Explain the packages. Arrange a visit.",
   },
   {
     scenario: "brookfield",
-    slug: "brookfield-motors",
-    name: "Brookfield Motors",
+    slug: "harris-cars", asset: "brookfield-motors",
+    name: "Harris Cars",
     category: "Car dealership",
     detail: "Proper stock photographs and the facts buyers need.",
   },
-  { scenario: "corner", slug: "corner-table-cafe", name: "Corner Table Café", category: "Neighbourhood café", detail: "A proper menu, opening times and a way to ask about a larger visit." },
-  { scenario: "oakfield", slug: "oakfield-home-repairs", name: "Oakfield Home Repairs", category: "Home repairs", detail: "Explain the work, agree the scope and arrange a visit." },
-  { scenario: "rowan", slug: "rowan-learning", name: "Rowan Learning", category: "Maths tutor", detail: "A personal introduction and sessions at a pace you can follow." },
+  { scenario: "corner", slug: "no-6-coffee", asset: "corner-table-cafe", name: "No. 6 Coffee", category: "Neighbourhood café", detail: "A proper menu, opening times and a way to ask about a larger visit." },
+  { scenario: "oakfield", slug: "dans-home-repairs", asset: "oakfield-home-repairs", name: "Dan’s Home Repairs", category: "Home repairs", detail: "Explain the work, agree the scope and arrange a visit." },
+  { scenario: "rowan", slug: "maths-with-aisha", asset: "rowan-learning", name: "Maths with Aisha", category: "Maths tutor", detail: "A personal introduction and sessions at a pace you can follow." },
 ];
 
 /** Only shown for an empty account. Existing drafts never enter the sample-loading flow. */
@@ -74,17 +75,17 @@ export function Welcome() {
   };
   return (
     <div className="mx-auto max-w-6xl pb-12 pt-8 sm:pt-14">
-      <div className="grid gap-8 rounded-[2rem] bg-[#eeefe6] p-7 text-[#173f39] sm:p-10 lg:grid-cols-[1fr_auto] lg:items-end">
+      <div className="grid gap-8 rounded-[2rem] bg-[#f4f4f4] p-7 text-[#111111] sm:p-10 lg:grid-cols-[1fr_auto] lg:items-end">
         <div className="max-w-2xl">
           <p className="mb-4 flex items-center gap-2 text-sm font-semibold">
             <Paintbrush aria-hidden="true" className="size-4" /> Make it yours
           </p>
           <h1 className="max-w-xl text-4xl font-semibold leading-[1.06] tracking-tight sm:text-5xl">
-            Your business. A page that feels like it.
+            Set up your business page.
           </h1>
           <p className="mt-5 max-w-lg text-base leading-relaxed">
-            Start with your name, choose a look and add what you offer. See your
-            page take shape as you go.
+            Add your services or stock, choose a design and see how customers
+            will use your page.
           </p>
           <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs font-medium">
             {[
@@ -102,7 +103,7 @@ export function Welcome() {
         <Button
           asChild
           size="lg"
-          className="min-h-12 rounded-full bg-[#173f39] px-6 text-white hover:bg-[#24564d]"
+          className="min-h-12 rounded-full bg-[#111111] px-6 text-white hover:bg-[#333333]"
         >
           <Link href="/onboarding">
             Start setup <ArrowRight aria-hidden="true" />
@@ -119,8 +120,8 @@ export function Welcome() {
               Have a look around first
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Try editing a fictional business. Bookings and messages stay in
-              this browser.
+              Explore a design example, or try the editor. Test bookings and messages
+              stay in this browser.
             </p>
           </div>
           <Link
@@ -141,7 +142,7 @@ export function Welcome() {
             >
               <div className="relative aspect-[1.35] overflow-hidden bg-muted">
                 <Image
-                  src={`/marketing/ex-${s.slug}-desk.webp`}
+                  src={`/marketing/ex-${s.asset}-desk.webp?v=20261024-brands`}
                   alt=""
                   fill
                   sizes="(min-width: 1280px) 340px, (min-width: 640px) 30vw, 100vw"

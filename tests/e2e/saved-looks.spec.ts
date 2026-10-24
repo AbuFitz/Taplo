@@ -26,59 +26,59 @@ for (const width of [390, 1440]) {
     }) => {
       await page.goto("/dashboard");
       await page
-        .getByRole("button", { name: "Try Station Road Barbers" })
+        .getByRole("button", { name: "Try Jay’s Barbers" })
         .click();
       await page.waitForURL("**/dashboard/page");
       await expect(page.getByTestId("my-page")).toBeVisible();
       const original = await draft(page);
       await selectPart(page, "page");
       await openSection(page, /^Look/);
-      await look(page, "clay").click();
+      await look(page, "apex").click();
       const shelf = page.getByTestId("saved-looks");
-      await shelf.getByLabel("Name this look").fill("Warm shop");
+      await shelf.getByLabel("Name this look").fill("Carbon shop");
       await shelf.getByRole("button", { name: "Save", exact: true }).click();
       const saved = (await draft(page)).page.savedLooks[0];
       await expect(
-        shelf.getByRole("button", { name: "Apply Warm shop" }),
+        shelf.getByRole("button", { name: "Apply Carbon shop" }),
       ).toHaveAttribute("aria-pressed", "true");
       const preview = page.frameLocator(
-        'iframe[title="Warm shop saved look preview"]',
+        'iframe[title="Carbon shop saved look preview"]',
       );
       await expect(preview.locator(".tp-name")).toHaveText(
         original.content.identity.name,
       );
       await expect(preview.locator("[data-taplo-page]")).toHaveAttribute(
         "data-bg",
-        "gradient",
+        "solid",
       );
       const beforePreview = await draft(page);
       expect(beforePreview.content).toEqual(original.content);
       expect(beforePreview.page.widgets).toEqual(original.page.widgets);
       await look(page, "night").click();
       await expect(
-        shelf.getByRole("button", { name: "Apply Warm shop" }),
+        shelf.getByRole("button", { name: "Apply Carbon shop" }),
       ).toHaveAttribute("aria-pressed", "false");
-      // The saved card stays warm while the main draft changes to Night.
+      // The saved card stays carbon while the main draft changes to Night.
       // Shelf previews mount only while visible; the look picker scrolls the shelf away on a phone.
       await shelf.scrollIntoViewIfNeeded();
       await expect(preview.locator("[data-taplo-page]")).toHaveAttribute(
         "data-bg",
-        "gradient",
+        "solid",
       );
-      await shelf.getByRole("button", { name: "Apply Warm shop" }).click();
-      expect((await draft(page)).page.themeId).toBe("clay");
+      await shelf.getByRole("button", { name: "Apply Carbon shop" }).click();
+      expect((await draft(page)).page.themeId).toBe("apex");
       await closeSheet(page);
       await page.getByTestId("undo").click();
       expect((await draft(page)).page.themeId).toBe("night");
       await page.getByTestId("redo").click();
-      expect((await draft(page)).page.themeId).toBe("clay");
+      expect((await draft(page)).page.themeId).toBe("apex");
       await page.reload();
       await expect(page.getByTestId("my-page")).toBeVisible();
       await selectPart(page, "page");
       await openSection(page, /^Look/);
       expect((await draft(page)).page.savedLooks[0]).toEqual(saved);
       await expect(
-        shelf.getByRole("button", { name: "Apply Warm shop" }),
+        shelf.getByRole("button", { name: "Apply Carbon shop" }),
       ).toBeVisible();
       await shelf.scrollIntoViewIfNeeded();
       await page.waitForTimeout(250);
@@ -89,9 +89,9 @@ for (const width of [390, 1440]) {
         ),
         fullPage: true,
       });
-      await shelf.getByRole("button", { name: "Delete Warm shop" }).click();
+      await shelf.getByRole("button", { name: "Delete Carbon shop" }).click();
       expect((await draft(page)).page.savedLooks).toHaveLength(0);
-      expect((await draft(page)).page.themeId).toBe("clay");
+      expect((await draft(page)).page.themeId).toBe("apex");
       await closeSheet(page);
       await page.getByTestId("undo").click();
       expect((await draft(page)).page.savedLooks[0]).toEqual(saved);
@@ -103,7 +103,7 @@ for (const width of [390, 1440]) {
     }) => {
       await page.goto("/dashboard");
       await page
-        .getByRole("button", { name: "Try Station Road Barbers" })
+        .getByRole("button", { name: "Try Jay’s Barbers" })
         .click();
       await page.waitForURL("**/dashboard/page");
       await expect(page.getByTestId("my-page")).toBeVisible();

@@ -27,7 +27,7 @@ export const PRODUCT_GROUPS: NavGroup[] = [
     links: [
       { href: "/product/products", label: "Products and links", blurb: "Your products, or ones you recommend." },
       { href: "/product/vehicles", label: "Vehicle stock", blurb: "Specifications, price and honest status." },
-      { href: "/product/gallery-reviews", label: "Photos and reviews", blurb: "Pictures that open large, and words with their source." },
+      { href: "/product/gallery-reviews", label: "Photos and reviews", blurb: "Pictures that open large, and your reviews on Google." },
     ],
   },
   {

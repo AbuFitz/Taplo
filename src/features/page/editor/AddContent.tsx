@@ -212,7 +212,7 @@ export function AddContent({
           disabled={cl || Boolean(c.blocked)}
           data-testid="choice"
           data-choice-id={c.id}
-          className="grid h-full w-full grid-rows-[4.25rem_auto] gap-2.5 rounded-2xl border bg-card p-2.5 text-left outline-none transition-colors enabled:hover:border-primary enabled:hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-60"
+          className="grid h-full w-full grid-rows-[6rem_auto] gap-2.5 rounded-2xl border bg-card p-2.5 shadow-[0_3px_12px_-8px_#00000055] text-left outline-none transition-colors enabled:hover:border-primary enabled:hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-60"
         >
           <span className="block overflow-hidden rounded-xl bg-neutral-100">
             <ContentPicture choice={c} content={ed.state.content} />

@@ -90,7 +90,7 @@ function Text({ vm }: { vm: PageViewModel }) {
       <p className="tp-meta">
         <span>{b.identity.industryLabel}</span>
         {h.showLocation && vm.locationLine ? <span className="inline-flex items-center gap-1"><MapPin aria-hidden="true" className="size-3.5" />{vm.locationLine}</span> : null}
-        {b.rating && vm.ent.reviewLinks ? <span><span aria-hidden="true">★</span> {b.rating.value.toFixed(1)} · {b.rating.count}</span> : null}
+
       </p>
     </>
   )
@@ -105,7 +105,7 @@ export function PageHeader({ vm }: { vm: PageViewModel }) {
   if (h.layout === "poster") {
     // Image hero: the photograph runs to the edges and fades into the page colour, so the text below always sits on the page colour.
     return (
-      <header className="tp-header" data-layout="poster" data-align={h.align} data-cover={cover ? "" : undefined}>
+      <header aria-label={`${vm.business.identity.name} business profile`} className="tp-header" data-layout="poster" data-align={h.align} data-cover={cover ? "" : undefined}>
         <div className="tp-hero">
           <div className="tp-hero-media">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : null}</div>
           <div className="tp-herobody">
@@ -119,7 +119,7 @@ export function PageHeader({ vm }: { vm: PageViewModel }) {
   }
   if (h.layout === "cover" || h.layout === "feature") {
     return (
-      <header className="tp-header" data-layout={h.layout} data-align={h.align} data-cover={cover ? "" : undefined}>
+      <header aria-label={`${vm.business.identity.name} business profile`} className="tp-header" data-layout={h.layout} data-align={h.align} data-cover={cover ? "" : undefined}>
         {cover ? <div className="tp-cover"><ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /></div> : null}
         <div style={{ paddingInline: "0.25rem", justifyItems: "var(--tp-header-justify)" }} className="tp-cover-body grid w-full gap-2.5">
           <Avatar vm={vm} />
@@ -131,7 +131,7 @@ export function PageHeader({ vm }: { vm: PageViewModel }) {
   }
   if (h.layout === "side") {
     return (
-      <header className="tp-header" data-layout="side" data-align={h.align}>
+      <header aria-label={`${vm.business.identity.name} business profile`} className="tp-header" data-layout="side" data-align={h.align}>
         <div className="tp-sidehead">
           <Avatar vm={vm} />
           <div className="grid min-w-0 gap-1.5"><Text vm={vm} /></div>
@@ -141,7 +141,7 @@ export function PageHeader({ vm }: { vm: PageViewModel }) {
     )
   }
   return (
-    <header className="tp-header" data-layout={h.layout} data-align={h.align}>
+    <header aria-label={`${vm.business.identity.name} business profile`} className="tp-header" data-layout={h.layout} data-align={h.align}>
       {h.layout === "centered" || h.layout === "minimal" ? <Avatar vm={vm} /> : null}
       <Text vm={vm} />
       <Actions vm={vm} />

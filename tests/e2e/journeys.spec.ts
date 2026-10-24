@@ -15,7 +15,7 @@ test.describe("onboarding", () => {
 
   test("home offers a real way in; the first question is the business name", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("link", { name: "Make your Taplo" }).first()).toHaveAttribute("href", "/onboarding");
+    await expect(page.getByRole("link", { name: "Start free" }).first()).toHaveAttribute("href", "/onboarding");
     await page.goto("/onboarding");
     await expect(page.getByRole("heading", { name: "What is your business called?" })).toBeVisible();
     await expect(page.locator("main")).not.toContainText(/pick your trade/i);
@@ -30,6 +30,7 @@ test.describe("onboarding", () => {
     await page.getByLabel("Business name").fill("Paws & Polish");
     await expect(page.getByText("taplo.co/paws-and-polish")).toBeVisible();
     await expect(preview(page).getByRole("heading", { level: 1 })).toHaveText("Paws & Polish");
+    await page.getByText("Add a photo or a short introduction", { exact: false }).click();
     await page.getByLabel("A line under your name").fill("Gentle grooming for dogs of every size.");
     await expect(preview(page).getByText("Gentle grooming for dogs of every size.")).toBeVisible();
     await page.getByRole("button", { name: "Change" }).click();
@@ -46,17 +47,16 @@ test.describe("onboarding", () => {
     await expect(page.locator("#why-disabled")).toContainText("Choose what you do");
     await page.getByLabel("Describe your business").fill("Dog groomer");
     await page.getByRole("button", { name: "Continue" }).click();
+    await page.getByRole("button", { name: "Continue" }).click(); // goal → contact
+    await page.getByRole("button", { name: "Continue" }).click(); // contact validation
     await expect(page.locator("#why-disabled")).toContainText("at least one way");
+    await page.getByRole("group", { name: "Contact method" }).getByRole("button", { name: "Phone", exact: true }).click();
     await page.getByLabel("Phone").fill("12");
     await page.getByLabel("Phone").blur();
     await expect(page.getByText("Enter a valid phone number")).toBeVisible();
     await page.getByLabel("Phone").fill("01632 960987");
     await page.getByLabel("Phone").blur();
     await expect(preview(page).locator("a[href='tel:01632960987']").first()).toBeVisible();
-    await page.getByRole("button", { name: "Continue" }).click();
-
-    // 3. a design: one choice, nothing is invented
-    await expect(page.getByRole("heading", { name: "Choose a design" })).toBeVisible();
     await page.getByRole("button", { name: "Continue" }).click();
 
     // 4. the first service and where you work: a service is saved as soon as it has a name and a price, and the page fills in
@@ -67,6 +67,11 @@ test.describe("onboarding", () => {
     await expect(preview(page).getByText("£45")).toBeVisible();
     await page.getByLabel("Town or area").fill("Harpenden");
     await page.getByRole("button", { name: "Continue" }).click();
+
+    // 3. a design: one choice, nothing is invented
+    await expect(page.getByRole("heading", { name: "Choose a design" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue" }).click();
+
 
     // 5. review, publish and share
     await expect(page.getByRole("heading", { name: "Your page is ready to look at" })).toBeVisible();

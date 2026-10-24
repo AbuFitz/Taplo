@@ -3,17 +3,17 @@
  * hides one. The first is where a new page starts if the owner changes nothing. Pure data (no UI), so the page model can use it.
  */
 const GROUPS: { ids: string[]; looks: string[] }[] = [
-  { ids: ["handyman"], looks: ["fieldwork", "clean", "workbay", "colour"] },
-  { ids: ["barber"], looks: ["highstreet", "night", "folio", "photo"] },
-  { ids: ["detailer"], looks: ["workbay", "showroom", "photo", "clean"] },
+  { ids: ["handyman"], looks: ["blueprint", "apex", "voltage", "clean"] },
+  { ids: ["barber"], looks: ["voltage", "apex", "photo", "journal"] },
+  { ids: ["detailer"], looks: ["apex", "ultraviolet", "blueprint", "photo"] },
   { ids: ["hairdresser", "nails", "lashes-brows", "beauty-therapist", "massage", "makeup", "tattoo", "photographer"], looks: ["folio", "night", "photo", "clay"] },
   { ids: ["plumber", "electrician", "builder", "landscaper", "cleaner", "locksmith", "removals", "handyman", "pest-control", "mechanic"], looks: ["colour", "clean", "showroom", "forge"] },
-  { ids: ["tutor", "music-teacher", "language-teacher", "coach", "driving-instructor"], looks: ["notebook", "orchard", "clean", "journal"] },
+  { ids: ["tutor", "music-teacher", "language-teacher", "coach", "driving-instructor"], looks: ["signal", "blueprint", "minted", "journal"] },
   { ids: ["personal-trainer", "sports-coach"], looks: ["forge", "orchard", "night", "clean"] },
   { ids: ["consultant", "accountant", "solicitor", "architect", "financial-adviser", "estate-agent", "web-designer"], looks: ["journal", "clean", "showroom", "night"] },
   { ids: ["dentist", "physio", "vet"], looks: ["journal", "clean", "orchard", "clay"] },
-  { ids: ["hospitality", "event-services"], looks: ["counter", "clay", "clean", "night"] },
-  { ids: ["car-dealer"], looks: ["forecourt", "showroom", "clean", "night"] },
+  { ids: ["hospitality", "event-services"], looks: ["minted", "voltage", "apex", "clean"] },
+  { ids: ["car-dealer"], looks: ["ultraviolet", "apex", "blueprint", "journal"] },
 ]
 export const DEFAULT_LOOKS = ["clean", "journal", "night", "colour"]
 

@@ -15,7 +15,7 @@ export function Shot({ id, alt, width, className, priority = false, frame = "pho
   return (
     <figure className={cn("relative shrink-0 overflow-hidden bg-neutral-900 shadow-[0_0_0_1px_rgb(0_0_0/0.12),0_30px_50px_-30px_rgb(0_0_0/0.45)]", radius, frame === "phone" && "p-[5px]", className)} style={fluid ? { maxWidth: width } : { width, maxWidth: "100%" }}>
       <div className={cn("overflow-hidden", frame === "phone" ? "rounded-[1.4rem]" : radius)} style={cropTo ? (fluid ? { aspectRatio: `${width} / ${cropTo}` } : { height: cropTo }) : undefined}>
-        <Image src={m.file} alt={alt} width={m.width} height={m.height} sizes={sizes ?? `(max-width: ${width}px) 90vw, ${width}px`} loading={priority ? "eager" : "lazy"} className={cn("block w-full select-none", cropTo && fluid && "h-full object-cover object-top")} style={cropTo && fluid ? undefined : { aspectRatio: `${m.width} / ${m.height}`, height: "auto" }} draggable={false} />
+        <Image src={`${m.file}?v=${m.sha256}`} alt={alt} width={m.width} height={m.height} sizes={sizes ?? `(max-width: ${width}px) 90vw, ${width}px`} loading={priority ? "eager" : "lazy"} className={cn("block w-full select-none", cropTo && fluid && "h-full object-cover object-top")} style={cropTo && fluid ? undefined : { aspectRatio: `${m.width} / ${m.height}`, height: "auto" }} draggable={false} />
       </div>
     </figure>
   )

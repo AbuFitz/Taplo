@@ -89,7 +89,7 @@ export function SurfaceTile({ kind, accent }: { kind: StyleSpec["cards"]["surfac
     : kind === "soft" ? { background: "rgb(0 0 0 / 0.055)" }
     : { border: "1px dashed rgb(0 0 0 / 0.25)" }
   return (
-    <span className={cn2(box, "h-[3.75rem]")} style={{ background: kind === "glass" ? `linear-gradient(135deg, ${accent}, #7a5cff 60%, #1a7fb3)` : "#ecebe7" }}>
+    <span className={cn2(box, "h-[3.75rem]")} style={{ background: kind === "glass" ? `linear-gradient(135deg, ${accent}, #7a5cff 60%, #1a7fb3)` : "#e8ecff" }}>
       <span className="grid h-9 w-[4.5rem] gap-1 rounded-lg p-1.5" style={bg}><span className="h-1 rounded-full bg-neutral-700/60" /><span className="h-1 w-2/3 rounded-full bg-neutral-500/40" /></span>
     </span>
   )

@@ -9,7 +9,7 @@ const ffprobe = process.env.HYPERFRAMES_FFPROBE_PATH ?? "ffprobe"
 const root = new URL("../../", import.meta.url)
 const file = p => new URL(p, root).pathname
 const outputs = FILM_FORMATS.map((f) => ({ ...f }))
-for (const [name, at] of [["booking", 3], ["design", 6], ["stock", 9]]) {
+for (const [name, at] of [["booking", 3], ["design", 6], ["stock", 10]]) {
   execFileSync(ffmpeg, ["-y", "-ss", String(at), "-i", file("public/marketing/film/taplo-intro.mp4"), "-t", "3", "-an", "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p", "-movflags", "+faststart", file(`public/marketing/film/${name}-clip.mp4`)], { stdio: ["ignore", "ignore", "pipe"] })
   outputs.push({ name: `${name}-clip`, width: 1920, height: 1080, source: `taplo-intro.mp4#t=${at},${at+3}`, duration: 3 })
 }
@@ -20,7 +20,7 @@ for (const out of outputs) {
   const video = info.streams.find(s => s.codec_type === "video")
   // FFprobe names full-range 8-bit 4:2:0 yuvj420p; both ranges are valid deliveries.
   if (!video || video.r_frame_rate !== "30/1" || video.codec_name !== "h264" || !["yuv420p", "yuvj420p"].includes(video.pix_fmt) || Number(video.nb_frames) !== out.duration * 30 || video.width !== out.width || video.height !== out.height || Math.abs(Number(info.format.duration) - out.duration) > 0.1 || info.streams.some(s => s.codec_type === "audio")) throw new Error(`Unexpected delivery format: ${out.name}`)
-  if (out.sceneStarts) {
+  if (out.edgeColors) {
     // Actual exported-frame check: catches a render wrapper clipping the scene and exposing the body below it.
     for (const [i, start] of out.sceneStarts.entries()) {
       const at = start + 1
@@ -37,5 +37,5 @@ for (const out of outputs) {
   await sharp(png).webp({ quality: 90 }).toFile(file(`public/marketing/film/${out.name === "taplo-intro" ? "poster" : out.name + "-poster"}.webp`))
   manifest.push({ ...out, fps: video.r_frame_rate, codec: video.codec_name, pixelFormat: video.pix_fmt, frames: Number(video.nb_frames), bytes: bytes.length, sha256: createHash("sha256").update(bytes).digest("hex"), sourceSha256: out.source.endsWith("html") ? createHash("sha256").update(readFileSync(file(`marketing/film/${out.source}`))).digest("hex") : null })
 }
-writeFileSync(file("public/marketing/film/manifest.json"), JSON.stringify({ renderer: "Local Playwright full-canvas capture with GSAP frame seeking and FFmpeg encoding", description: "Silent authored product films; fictional UK businesses; actual shared-renderer screenshots and original illustrative photography.", outputs: manifest }, null, 2) + "\n")
+writeFileSync(file("public/marketing/film/manifest.json"), JSON.stringify({ renderer: "Authored Three.js device geometry, lighting and camera motion; deterministic Playwright rendering and FFmpeg encoding", description: "Silent 3D product films; fictional UK businesses; actual shared-renderer pages mapped onto authored device geometry.", sourceSceneSha256: createHash("sha256").update(readFileSync(file("marketing/film/assets/three-scene.js"))).digest("hex"), threeVersion: JSON.parse(readFileSync(file("node_modules/three/package.json"), "utf8")).version, sourceInputs: Object.fromEntries(["station.webp","detailer.webp","dealer.webp","desktop.webp","booking.webp","display.woff2","body.woff2"].map(name => [name, createHash("sha256").update(readFileSync(file("marketing/film/assets/three/" + name))).digest("hex")])), outputs: manifest }, null, 2) + "\n")
 console.log(manifest.map(x=>`${x.name}: ${x.width}×${x.height}, ${x.duration}s, ${Math.round(x.bytes/1024)} KB`).join("\n"))

@@ -1,10 +1,11 @@
 "use client"
 
+import { SetupLoading } from "./SetupLoading"
 import { TaploLogo } from "@/components/taplo/brand"
 import * as React from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Check, Plus, Trash2 } from "lucide-react"
+import { Camera, Dumbbell, Check, Plus, Trash2, Scissors, Wrench, Car, Coffee, GraduationCap, Building2, CalendarDays, MessageSquare, Phone, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { LOCATION_MODES } from "@/features/businesses/content"
@@ -17,7 +18,8 @@ import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures"
 import { OTHER_INDUSTRY_ID, getIndustryPreset, searchIndustries } from "@/features/themes/presets/industries"
 import { cn } from "@/lib/utils"
 import { exampleStart, suggestedLooks } from "@/features/inspiration/suggest"
-import { LookThumb } from "@/components/taplo/look-thumb"
+import { LOOKS } from "@/features/page/themes/looks"
+import { ThemeSwatch } from "./ThemeSwatch"
 import { applyIndustry, blankService, canPublish, hasContactChannel, loadSample, newId, normService, publish, readiness, setName, setSlug, slugProblems } from "./actions"
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans"
 import { ONBOARDING_STEPS, initialState, parseContent, useDemo, type OnboardingStep } from "./store"
@@ -30,6 +32,8 @@ import type { WidgetType } from "@/features/page/contracts/widgets"
 const STEP_LABEL: Record<OnboardingStep, string> = {
   business: "Your business",
   industry: "What you do",
+  goal: "Your next step",
+  reach: "Get in touch",
   widgets: "Design",
   contacts: "First content",
   publish: "Review",
@@ -37,12 +41,14 @@ const STEP_LABEL: Record<OnboardingStep, string> = {
 const STEP_TITLE: Record<OnboardingStep, string> = {
   business: "What is your business called?",
   industry: "What do you do?",
+  goal: "What should people do first?",
+  reach: "How can people reach you?",
   widgets: "Choose a design",
   contacts: "Add your first content",
   publish: "Your page is ready to look at",
 }
 
-const POPULAR = ["barber", "hairdresser", "beauty-therapist", "nails", "plumber", "electrician", "builder", "mechanic", "cleaner", "tutor", "personal-trainer", "physio", "hospitality", "car-dealer", "photographer", "other"]
+const POPULAR = ["barber", "detailer", "car-dealer", "hospitality", "tutor", "plumber", "personal-trainer", "photographer", "other"]
 
 type Goal = "book" | "enquire" | "call" | "message"
 const GOALS: { id: Goal; label: string; hint: string }[] = [
@@ -80,6 +86,7 @@ export function Onboarding() {
   const [editSlug, setEditSlug] = React.useState(false)
   const [otherOpen, setOtherOpen] = React.useState(false)
   const [mobilePreview, setMobilePreview] = React.useState(false)
+  const [reachChoice, setReachChoice] = React.useState<"phone" | "email" | "whatsapp" | null>(null)
   const s = state ?? initialState()
   const step: OnboardingStep = (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "widgets"
   const stepIndex = ONBOARDING_STEPS.indexOf(step)
@@ -124,19 +131,24 @@ export function Onboarding() {
     })
   }, [ready, from]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!ready) return <main className="p-8 text-sm text-muted-foreground">Loading…</main>
+  if (!ready) return <SetupLoading />
 
   const c = s.content
+  const reachMethod = goalOf(s) === "call" ? "phone" : reachChoice ?? (goalOf(s) === "message" ? "whatsapp" : c.contacts.phone ? "phone" : "email")
   const slugErrs = slugProblems(c.identity.slug)
   const valid: Record<OnboardingStep, boolean> = {
-    industry: state !== null && Boolean(c.identity.industryLabel.trim()) && (goalOf(s) === "call" ? Boolean(c.contacts.phone) : hasContactChannel(c)),
+    industry: state !== null && Boolean(c.identity.industryLabel.trim()),
+    goal: true,
+    reach: goalOf(s) === "call" ? Boolean(c.contacts.phone) : hasContactChannel(c),
     business: Boolean(c.identity.name.trim()) && slugErrs.length === 0,
     contacts: true,
     widgets: true,
     publish: canPublish(s),
   }
   const why: Record<OnboardingStep, string> = {
-    industry: goalOf(s) === "call" ? "Choose what you do, and add the phone number people should call." : "Choose what you do, and add at least one way to reach you.",
+    industry: "Choose what you do.",
+    goal: "",
+    reach: goalOf(s) === "call" ? "Add the phone number people should call." : "Add at least one way to reach you.",
     business: "Add a name and a valid web address.",
     contacts: "",
     widgets: "",
@@ -144,13 +156,13 @@ export function Onboarding() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:py-10">
-      <header className="mb-8 flex flex-wrap items-center justify-between gap-3">
+    <main data-step={step} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
+      <header className="mb-12 flex flex-wrap items-center justify-between gap-3">
         <Link href="/" aria-label="Taplo home" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo /></Link>
         <div className="flex flex-wrap items-center gap-2">{fromName ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="from-example" title="Only its look and the kinds of content are used. None of its words, prices or pictures are copied.">Starting from {fromName}</span> : null}{intent ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}<SandboxBadge /><Link href="/dashboard/page" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip to the editor</Link></div>
       </header>
 
-      <nav aria-label="Progress" className="mb-8">
+      <nav aria-label="Progress" className="mb-10 max-w-xl">
         <p className="mb-3 text-xs font-medium text-muted-foreground">Step {stepIndex + 1} of {ONBOARDING_STEPS.length} · {STEP_LABEL[step]}</p>
         <ol className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${ONBOARDING_STEPS.length}, minmax(0, 1fr))` }}>
           {ONBOARDING_STEPS.map((st, i) => (
@@ -162,22 +174,22 @@ export function Onboarding() {
         </ol>
       </nav>
 
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_400px]">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
         <section aria-labelledby="step-title" className="min-w-0">
-          <h1 id="step-title" className="font-display mb-6 text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.08]">{step === "contacts" ? { service: "Add your first service", vehicle: "Add your first vehicle", photo: "Add your first photos" }[firstKind(c.identity.industryKey)] : STEP_TITLE[step]}</h1>
+          <h1 id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? { service: "Add your first service", vehicle: "Add your first vehicle", photo: "Add your first photos" }[firstKind(c.identity.industryKey)] : STEP_TITLE[step]}</h1>
 
           {step === "industry" ? (
             <div className="grid gap-7">
               <div className="grid gap-3">
                 <TaploInput label="What do you do?" placeholder="Search: barber, tutor, café, plumber…" value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
-                <ul className="flex flex-wrap gap-2" aria-label="Kinds of business">
-                  {searchIndustries(query).filter((p) => query.trim() ? true : POPULAR.includes(p.id) || (state !== null && c.identity.industryKey === p.id)).slice(0, query.trim() ? 14 : 20).map((p) => {
+                <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3" aria-label="Kinds of business">
+                  {searchIndustries(query).filter((p) => query.trim() ? true : POPULAR.includes(p.id) || (state !== null && c.identity.industryKey === p.id)).sort((a, b) => query.trim() ? 0 : POPULAR.indexOf(a.id) - POPULAR.indexOf(b.id)).slice(0, query.trim() ? 14 : 10).map((p) => {
                     const selected = state !== null && (p.id === OTHER_INDUSTRY_ID ? otherOpen || c.identity.industryLabel !== "" && c.identity.industryKey === OTHER_INDUSTRY_ID : c.identity.industryKey === p.id)
                     return (
                       <li key={p.id}>
                         <button type="button" aria-pressed={selected} onClick={() => { setOtherOpen(p.id === OTHER_INDUSTRY_ID); update((x) => applyIndustry(x, p.id, p.id === OTHER_INDUSTRY_ID ? "" : p.label)) }}
-                          className={cn("inline-flex min-h-11 items-center gap-1.5 rounded-full border bg-card px-4 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring hover:border-foreground/40", selected && "border-foreground bg-foreground text-background hover:border-foreground")}>
-                          {selected ? <Check aria-hidden="true" className="size-3.5" /> : null}{p.label}
+                          className={cn("setup-industry relative flex min-h-28 w-full flex-col items-start justify-between gap-3 rounded-xl border bg-card p-4 text-left text-sm font-semibold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring hover:border-signal", selected && "border-signal bg-signal-soft text-foreground")}>
+                          <IndustryPicture id={p.id} />{selected ? <Check aria-hidden="true" className="absolute right-3 top-3 size-4 text-signal" /> : null}<span>{p.label}</span>
                         </button>
                       </li>
                     )
@@ -187,36 +199,6 @@ export function Onboarding() {
                   <TaploInput label="Describe your business" hint="e.g. Dog groomer, Wedding florist, Piano restorer" value={c.identity.industryLabel} maxLength={80} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }), { coalesce: "ind-label" })} />
                 ) : null}
               </div>
-              {state !== null ? (
-                <fieldset className="grid gap-2" data-testid="goal">
-                  <legend className="mb-1 text-sm font-semibold">What should people do first?</legend>
-                  <div className="grid gap-2 sm:grid-cols-2">
-                    {GOALS.map((g) => (
-                      <label key={g.id} className="flex min-h-14 cursor-pointer items-start gap-3 rounded-xl bg-card p-3 text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] has-[:checked]:shadow-[0_0_0_2px_var(--signal)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring">
-                        <input type="radio" name="goal" className="mt-0.5 size-4 accent-[var(--signal)]" checked={goalOf(s) === g.id} onChange={() => update((x) => applyGoal(x, g.id))} />
-                        <span><span className="block font-semibold">{g.label}</span><span className="text-muted-foreground">{g.hint}</span></span>
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
-              ) : null}
-              {state !== null ? (
-                <fieldset className="grid gap-3" data-testid="reach">
-                  <legend className="mb-1 text-sm font-semibold">{goalOf(s) === "call" ? "The number to call" : "How can people reach you?"}</legend>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {goalOf(s) === "message" ? <>
-                      <PhoneField label="WhatsApp" value={c.contacts.whatsapp} onCommit={(v) => update((x) => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, whatsapp: v } } }, "message"), { coalesce: "wa" })} hint="With country code, e.g. +44." />
-                      <EmailField value={c.contacts.email} onCommit={(v) => update((x) => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }, "message"), { coalesce: "email" })} />
-                      <PhoneField label="Phone (optional)" value={c.contacts.phone} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, phone: v } } }), { coalesce: "phone" })} />
-                    </> : <>
-                      <PhoneField label={goalOf(s) === "call" ? "Phone" : "Phone (optional)"} value={c.contacts.phone} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, phone: v } } }), { coalesce: "phone" })} hint={goalOf(s) === "call" ? "For the Call button." : undefined} />
-                      <EmailField value={c.contacts.email} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }), { coalesce: "email" })} />
-                      <PhoneField label="WhatsApp (optional)" value={c.contacts.whatsapp} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, whatsapp: v } } }), { coalesce: "wa" })} hint="With country code, e.g. +44." />
-                    </>}
-                  </div>
-                  <p className="text-sm text-muted-foreground">One is enough. Only what you fill in appears on your page.</p>
-                </fieldset>
-              ) : null}
               <details className="text-sm">
                 <summary className="inline-flex min-h-10 cursor-pointer list-none items-center rounded-lg text-muted-foreground underline underline-offset-4 hover:text-foreground [&::-webkit-details-marker]:hidden">Just looking? Open a sample business</summary>
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -227,6 +209,29 @@ export function Onboarding() {
               </details>
             </div>
           ) : null}
+
+              {step === "goal" ? (
+                <fieldset className="grid gap-2" data-testid="goal">
+                  <legend className="mb-1 text-sm font-semibold">What should people do first?</legend>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {GOALS.map((g) => { const Icon = { book: CalendarDays, enquire: MessageSquare, call: Phone, message: Mail }[g.id]; return (
+                      <label key={g.id} className="flex min-h-14 cursor-pointer items-start gap-3 rounded-xl bg-card p-3 text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] has-[:checked]:shadow-[0_0_0_2px_var(--signal)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring">
+                        <input type="radio" name="goal" className="mt-0.5 size-4 accent-[var(--signal)]" checked={goalOf(s) === g.id} onChange={() => update((x) => applyGoal(x, g.id))} />
+                        <span><Icon aria-hidden="true" className="mb-3 size-6 text-signal" /><span className="block font-semibold">{g.label}</span><span className={cn("mt-1 text-xs text-muted-foreground", goalOf(s) !== g.id && "sr-only")}>{g.hint}</span></span>
+                      </label>
+                    )})}
+                  </div>
+                </fieldset>
+              ) : null}
+
+              {step === "reach" ? (
+                <fieldset className="grid gap-3" data-testid="reach">
+                  <legend className="mb-1 text-sm font-semibold">{goalOf(s) === "call" ? "The number to call" : "How can people reach you?"}</legend>
+                  {goalOf(s) !== "call" ? <div className="grid grid-cols-3 gap-3" role="group" aria-label="Contact method">{(["email", "phone", "whatsapp"] as const).map(method => { const Icon = method === "email" ? Mail : method === "phone" ? Phone : MessageSquare; return <button type="button" key={method} aria-pressed={reachMethod === method} onClick={() => setReachChoice(method)} className={cn("flex min-h-24 flex-col items-center justify-center gap-3 rounded-xl border text-sm font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring", reachMethod === method ? "border-signal bg-signal-soft text-signal" : "bg-white hover:border-signal")}><Icon className="size-6" aria-hidden="true" />{method === "email" ? "Email" : method === "phone" ? "Phone" : "WhatsApp"}</button> })}</div> : null}
+                  {reachMethod === "email" ? <EmailField value={c.contacts.email} onCommit={v => update(x => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }, goalOf(x)), { coalesce: "email" })} /> : <PhoneField label={reachMethod === "phone" ? "Phone" : "WhatsApp"} value={c.contacts[reachMethod]} onCommit={v => update(x => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, [reachMethod]: v } } }, goalOf(x)), { coalesce: reachMethod })} hint={reachMethod === "whatsapp" ? "With country code, e.g. +44." : undefined} />}
+                  <p className="text-sm text-muted-foreground">One is enough. Only what you fill in appears on your page.</p>
+                </fieldset>
+              ) : null}
 
           {step === "business" ? (
             <div className="grid gap-5">
@@ -239,9 +244,11 @@ export function Onboarding() {
               {editSlug || (showErrors && slugErrs.length) ? (
                 <TaploInput label="Web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />
               ) : null}
+              <details className="border-t pt-3"><summary className="min-h-11 cursor-pointer py-2 text-sm font-medium">Add a photo or a short introduction <span className="text-muted-foreground">(optional)</span></summary><div className="mt-4 grid gap-5">
               <TaploInput label="A line under your name (optional)" value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
               <ImageField label="Logo or profile picture (optional)" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
               <ImageField label="Cover photo (optional)" cropAspect={16 / 9} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1600} value={c.identity.heroImage ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, heroImage: v ?? undefined } } }))} />
+              </div></details>
             </div>
           ) : null}
 
@@ -251,9 +258,9 @@ export function Onboarding() {
           {step === "publish" ? <PublishStep onEditor={() => router.push("/dashboard/page")} /> : null}
 
           {step !== "publish" ? (
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="setup-next mt-8 flex flex-wrap items-center gap-3">
               {stepIndex > 0 ? <Button variant="outline" size="lg" onClick={back}>Back</Button> : null}
-              <Button size="lg" onClick={() => (valid[step] ? next() : setShowErrors(true))} aria-describedby="why-disabled">Continue</Button>
+              <Button className="flex-1 bg-signal text-white hover:bg-[#333333] sm:flex-none sm:min-w-40" size="lg" onClick={() => (valid[step] ? next() : setShowErrors(true))} aria-describedby="why-disabled">Continue</Button>
               {!valid[step] && showErrors ? <p id="why-disabled" role="alert" className="text-sm text-destructive">{why[step]}</p> : null}
             </div>
           ) : (
@@ -262,10 +269,10 @@ export function Onboarding() {
         </section>
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="hidden lg:block"><p className="mb-3 text-sm font-semibold">Your page</p><PreviewFrame height={720} /></div>
-          <div className="lg:hidden">
-            <Button variant="outline" onClick={() => setMobilePreview((v) => !v)} aria-expanded={mobilePreview}>{mobilePreview ? "Hide preview" : "Show my page"}</Button>
-            {mobilePreview ? <div className="mt-3"><PreviewFrame /></div> : null}
+          <div className="hidden rounded-2xl bg-[#ededed] p-7 lg:block"><p className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#111111]"><span className="size-1.5 rounded-full bg-current" />Your page, taking shape</p><PreviewFrame height={650} /></div>
+          <div className={cn("lg:hidden", step === "widgets" && "setup-live-choice")}>
+            {step === "widgets" ? <PreviewFrame height={360} /> : <><Button variant="outline" onClick={() => setMobilePreview((v) => !v)} aria-expanded={mobilePreview}>{mobilePreview ? "Hide preview" : "Show my page"}</Button>
+            {mobilePreview ? <div className="mt-3"><PreviewFrame /></div> : null}</>}
           </div>
         </aside>
       </div>
@@ -275,25 +282,27 @@ export function Onboarding() {
 
 /** Suggested looks for this kind of business, each shown as a real page. A look is a starting point: every colour, font and shape can be changed afterwards. */
 function LookPicker({ industryKey, themeId, onPick }: { industryKey: string; themeId: string; onPick: (id: string) => void }) {
-  const looks = React.useMemo(() => suggestedLooks(industryKey), [industryKey])
-  const card = (l: (typeof looks)[number], i: number) => {
+  const [initialLook] = React.useState(themeId)
+  const recommendedId = suggestedLooks(industryKey)[0]?.id
+  const looks = React.useMemo(() => { const list = suggestedLooks(industryKey); const current = LOOKS.find(l => l.id === initialLook); const at = list.findIndex(l => l.id === initialLook); return current && (at < 0 || at >= 6) ? [current, ...list.filter(l => l.id !== initialLook)] : list }, [industryKey, initialLook])
+  const card = (l: (typeof looks)[number]) => {
     const active = themeId === l.id
     return (
-      <label key={l.id} className={cn("relative grid cursor-pointer max-sm:w-[72%] max-sm:shrink-0 max-sm:snap-start gap-2 overflow-hidden rounded-2xl bg-card p-1.5 text-left text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] transition-shadow has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring hover:shadow-[0_0_0_1px_rgb(0_0_0/0.25)]", active && "shadow-[0_0_0_2px_var(--foreground)]")}>
+      <label key={l.id} className={cn("relative grid cursor-pointer gap-2 overflow-hidden rounded-2xl bg-card p-1.5 text-left text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] transition-shadow has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring hover:shadow-[0_0_0_1px_rgb(0_0_0/0.25)]", active && "shadow-[0_0_0_2px_var(--foreground)]")}>
         <input type="radio" name="look" value={l.id} checked={active} onChange={() => onPick(l.id)} className="sr-only" />
-        <span className="block overflow-hidden rounded-xl"><LookThumb id={l.id} /></span>
-        <span className="px-1 pb-1"><span className="flex items-center gap-1.5 font-semibold">{l.name}{i === 0 ? <span className="rounded-full bg-muted px-1.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground">Suggested</span> : null}{active ? <Check aria-hidden="true" className="ml-auto size-4" /> : null}</span><span className="block text-xs leading-snug text-muted-foreground">{l.blurb}</span></span>
+        <span className="block overflow-hidden rounded-xl"><ThemeSwatch look={l} /></span>
+        <span className="px-1 pb-1"><span className="flex items-center gap-1.5 font-semibold">{l.name}{l.id === recommendedId ? <span className="hidden rounded-full bg-muted px-1.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:inline">Suggested</span> : null}{active ? <Check aria-hidden="true" className="ml-auto size-4" /> : null}</span><span className={"sr-only"}>{l.blurb}</span></span>
       </label>
     )
   }
   return (
     <fieldset className="grid gap-3" data-testid="look-picker">
       <legend className="mb-1 text-lg font-semibold">Pick a look</legend>
-      <p className="-mt-1 text-sm text-muted-foreground">Shown on an example business. Your page, on the right, changes as you choose. You can change every colour, font and shape later.</p>
-      <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pb-0">{looks.slice(0, 3).map(card)}</div>
+      <p className="-mt-1 text-sm text-muted-foreground">Tap a design. Watch your page change. Everything can be customised later.</p>
+      <div className="grid grid-cols-3 gap-3 pb-2">{looks.slice(0, 6).map(card)}</div>
       <details className="group">
         <summary className="inline-flex min-h-10 cursor-pointer list-none items-center rounded-lg text-sm font-medium underline underline-offset-4 [&::-webkit-details-marker]:hidden">More looks</summary>
-        <div className="mt-3 -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pb-0">{looks.slice(3).map((l, i) => card(l, i + 3))}</div>
+        <div className="mt-3 grid grid-cols-3 gap-3 pb-2">{looks.slice(6).map(card)}</div>
       </details>
     </fieldset>
   )
@@ -385,7 +394,7 @@ function FirstRecord({ kind }: { kind: "vehicle" | "photo" }) {
   }
   return (
     <div className="grid gap-4" data-testid="first-record">
-      {items.length ? <ul className="grid gap-1 text-sm" aria-label="Added"><li className="font-medium">Added so far</li>{items.map((n, i) => <li key={i} className="flex items-center gap-2"><Check aria-hidden="true" className="size-4 text-emerald-700" />{n}</li>)}</ul> : null}
+      {items.length ? <ul className="grid gap-1 text-sm" aria-label="Added"><li className="font-medium">Added so far</li>{items.map((n, i) => <li key={i} className="flex items-center gap-2"><Check aria-hidden="true" className="size-4 text-foreground" />{n}</li>)}</ul> : null}
       <RecordForm key={items.length} kind={kind} value={draft} onChange={setDraft} showErrors={show} content={s.content} />
       <Button type="button" className="min-h-11 justify-self-start" onClick={save} data-testid="first-record-save">{kind === "vehicle" ? "Add this vehicle" : "Add these photos"}</Button>
     </div>
@@ -465,4 +474,10 @@ function PublishStep({ onEditor }: { onEditor: () => void }) {
       {!ok ? <p className="text-sm text-destructive" role="alert">Finish the steps marked missing to publish.</p> : <p className="text-xs text-muted-foreground">{WHEN_UNAVAILABLE.publicPublishing}</p>}
     </div>
   )
+}
+
+function IndustryPicture({ id }: { id: string }) {
+  const photo = id === "barber" || id === "hairdresser" ? "/taplo-demo/station-road-barber-work.png" : id === "detailer" || id === "mechanic" ? "/taplo-demo/stillwater-hero.png" : id === "car-dealer" ? "/taplo-demo/brookfield-golf.png" : null
+  const Icon = id === "barber" || id === "hairdresser" ? Scissors : id === "hospitality" ? Coffee : id === "tutor" ? GraduationCap : id === "photographer" ? Camera : id === "personal-trainer" ? Dumbbell : id === "car-dealer" ? Car : id === "plumber" || id === "electrician" || id === "builder" ? Wrench : Building2
+  return photo ? <span className="block h-16 w-full overflow-hidden rounded-lg">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={photo} alt="" width={160} height={80} className="size-full object-cover" /></span> : <span className="relative grid h-16 w-full place-items-center overflow-hidden rounded-lg bg-[#ededed] text-[#111111]"><span className="absolute -bottom-5 -right-4 size-20 rounded-full bg-[#ffffff]" /><span className="absolute -left-3 top-2 h-12 w-20 -rotate-12 rounded-xl bg-[#d4d4d4]" /><span className="relative grid size-12 rotate-6 place-items-center rounded-xl bg-white shadow-[4px_4px_0_#11111130]"><Icon aria-hidden="true" className="size-7" /></span></span>
 }

@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   // tenant lookup, so the Suspense-everywhere model adds friction without payoff.
   // Revisit when public profiles move to tag-based caching (docs/product-decisions.md).
   cacheComponents: false,
+  // Captured artwork uses content hashes to invalidate optimized previews.
+  images: { localPatterns: [{ pathname: "/marketing/**" }, { pathname: "/**", search: "" }] },
   partialPrefetching: false,
   devIndicators: false,
   // Earlier marketing addresses keep working.

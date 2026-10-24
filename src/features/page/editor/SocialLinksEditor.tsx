@@ -8,6 +8,7 @@ import type { BusinessContent } from "@/features/businesses/content"
 import type { Editor } from "./useEditor"
 
 type Platform = BusinessContent["contacts"]["social"][number]["platform"]
+const BADGES: Record<string, string> = { instagram: "bg-gradient-to-tr from-[#ffad4a] via-[#e33b88] to-[#753ce9] text-white", facebook: "bg-[#0866ff] text-white", tiktok: "bg-black text-white", youtube: "bg-[#ff0033] text-white", linkedin: "bg-[#0a66c2] text-white", x: "bg-black text-white" }
 const PROFILES: { id: Platform; label: string }[] = [
   { id: "instagram", label: "Instagram" }, { id: "facebook", label: "Facebook" },
   { id: "tiktok", label: "TikTok" }, { id: "linkedin", label: "LinkedIn" },
@@ -30,7 +31,7 @@ export function SocialLinksEditor({ ed }: { ed: Editor }) {
     <div className="grid divide-y divide-black/[0.08]">
       {PROFILES.filter((p) => editing === p.id || links.some((link) => link.platform === p.id)).map((p) =>
         <div key={p.id} className="flex min-w-0 items-start gap-3 py-3 first:pt-0" onFocusCapture={() => setEditing(p.id)}>
-          <span className="mt-7 grid size-10 shrink-0 place-items-center rounded-xl bg-neutral-100"><SocialIcon platform={p.id} /></span>
+          <span className={`mt-7 grid size-10 shrink-0 place-items-center rounded-xl ${BADGES[p.id]}`}><SocialIcon platform={p.id} /></span>
           <div className="min-w-0 flex-1"><UrlField label={p.label} value={links.find((link) => link.platform === p.id)?.url} autoFocus={editing === p.id && !links.some((link) => link.platform === p.id)} onCommit={(url) => update(p.id, url)} /></div>
           <button type="button" className="mt-7 grid size-10 shrink-0 place-items-center rounded-lg text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-2" aria-label={`Remove ${p.label} profile`} onClick={() => { update(p.id); setEditing(null) }}><X className="size-4" /></button>
         </div>
@@ -39,7 +40,7 @@ export function SocialLinksEditor({ ed }: { ed: Editor }) {
     {missing.length ? <div className="grid gap-2">
       <p className="text-sm font-medium">Add a profile</p>
       <div className="grid grid-cols-3 gap-2">
-        {missing.map((p) => <button key={p.id} type="button" onClick={() => setEditing(p.id)} aria-label={`Add ${p.label} profile`} className="flex min-h-16 flex-col items-center justify-center gap-1.5 rounded-xl border border-neutral-200 text-xs hover:border-neutral-400 hover:bg-neutral-50 focus-visible:outline-2"><SocialIcon platform={p.id} /><span className="inline-flex items-center gap-1"><Plus className="size-3" aria-hidden="true" />{p.label}</span></button>)}
+        {missing.map((p) => <button key={p.id} type="button" onClick={() => setEditing(p.id)} aria-label={`Add ${p.label} profile`} className="flex min-h-24 flex-col items-center justify-center gap-1.5 rounded-xl border border-neutral-200 text-xs hover:border-neutral-400 hover:bg-neutral-50 focus-visible:outline-2"><span className={`grid size-10 place-items-center rounded-xl ${BADGES[p.id]}`}><SocialIcon platform={p.id} className="size-6" /></span><span className="inline-flex items-center gap-1"><Plus className="size-3" aria-hidden="true" />{p.label}</span></button>)}
       </div>
     </div> : null}
     {!ed.vm?.ent.socialLinks ? <p className="text-xs text-muted-foreground">Your profiles are saved. They appear on your page from the Core plan.</p> : null}

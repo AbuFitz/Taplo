@@ -249,7 +249,7 @@ test("the booking person picker serves a small responsive portrait rather than t
       path.join(process.env.TAPLO_REVIEW_DIR, "portrait-delivery.json"),
       JSON.stringify(
         {
-          scenario: "Station Road booking person picker",
+          scenario: "Jay’s Barbers booking person picker",
           sourceBytes: statSync("public/taplo-demo/station-sam.png").size,
           deliveredBytes,
           intrinsicWidth: info.width,

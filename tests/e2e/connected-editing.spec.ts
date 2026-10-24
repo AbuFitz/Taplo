@@ -13,9 +13,9 @@ test("header choices render and update the owner's actual content without changi
   }
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page)).toEqual(before)
   await openSection(page, "Your name and description")
-  await page.getByLabel("Business name", { exact: true }).fill("Station Road Test")
+  await page.getByLabel("Business name", { exact: true }).fill("Jay’s Barbers Test")
   for (const label of ["Compact", "Cover", "Wide feature", "Image hero", "Text-led"]) {
-    await expect(page.frameLocator(`iframe[title="${label} header preview"]`).locator(".tp-name")).toHaveText("Station Road Test")
+    await expect(page.frameLocator(`iframe[title="${label} header preview"]`).locator(".tp-name")).toHaveText("Jay’s Barbers Test")
   }
 })
 

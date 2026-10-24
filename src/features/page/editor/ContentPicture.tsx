@@ -1,7 +1,7 @@
 import type { BusinessContentInput } from "@/features/businesses/content";
 import { formatMoney } from "@/features/services/format";
 import type { ContentChoice } from "./content-model";
-import { Miniature } from "./Miniature";
+import { ContentIllustration } from "./ContentIllustration";
 import { ProfileImage } from "../renderer/ProfileImage";
 
 /** Small, read-only choices built from the owner's content. Never writes a sample into their page. */
@@ -96,7 +96,7 @@ export function ContentPicture({
         ))}
       </span>
     );
-  return <Miniature art={choice.art} />;
+  return <ContentIllustration choice={choice} />;
 }
 
 const NOUNS: Partial<

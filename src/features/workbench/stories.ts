@@ -15,7 +15,7 @@ export type Step =
   | { click: { testid: string; nth?: number } }
   | { fill: { label: string; value: string } }
   | { press: string }
-export interface WidgetUse { type: WidgetType; settings?: Record<string, unknown> }
+export interface WidgetUse { type: WidgetType; settings?: Record<string, unknown>; /** Real local fixture resolved against this request's origin. */ assetPath?: string }
 export interface Story {
   id: string
   group: string
@@ -34,6 +34,10 @@ export interface Story {
   play?: Step[]
   /** What the screenshot should clip to after the interaction. */
   shoot?: "page" | "dialog"
+  /** Reproducible expiry fixtures; never changes a merchant's clock. */
+  now?: string
+  /** Cases where the correct public result is to hide the section. */
+  expectedState?: "empty" | "locked"
 }
 
 /** Look per surface: a light neutral, a dark graphite and a colour-led page, all real starting looks. */
@@ -107,11 +111,10 @@ for (const variant of ["grid", "carousel"]) {
 add({ id: "gallery--one", group: "Gallery", title: "One photo", scenario: barber, content: v.one, widgets: [{ type: "gallery", settings: { variant: "grid" } }] })
 add({ id: "gallery--many", group: "Gallery", title: "Twelve photos", scenario: barber, content: v.many, widgets: [{ type: "gallery", settings: { variant: "grid" } }] })
 add({ id: "gallery--lightbox", group: "Gallery", title: "Lightbox", scenario: barber, widgets: [{ type: "gallery", settings: { variant: "grid" } }], play: [{ click: { testid: "gallery-open", nth: 0 } }], shoot: "dialog" })
-for (const variant of ["cards", "quote", "compact", "swipe"]) {
-  add({ id: `reviews--${variant}`, group: "Reviews", title: `Reviews: ${variant}`, scenario: "trades", widgets: [{ type: "reviews", settings: { title: "What customers say", variant } }] })
+for (const variant of ["cards", "compact"]) {
+  both({ id: `reviews--${variant}`, group: "Reviews", title: `Google reviews: ${variant}`, scenario: "trades", content: c => ({ ...c, reviewLinks: [{ platform: "google", url: "https://www.google.com/maps" }] }), widgets: [{ type: "reviews", settings: { title: "Google reviews", variant } }] })
 }
-add({ id: "reviews--long", group: "Reviews", title: "Reviews, long quotes", scenario: "trades", content: v.long, widgets: [{ type: "reviews", settings: { variant: "cards" } }] })
-add({ id: "reviews--one-dark", group: "Reviews", title: "One review (dark)", scenario: "trades", surface: "dark", content: v.one, widgets: [{ type: "reviews", settings: { variant: "quote" } }] })
+add({ id: "reviews--legacy-only", group: "Reviews", title: "Legacy quotes and ratings are not Google reviews", scenario: "trades", content: c => ({ ...c, reviewLinks: [] }), widgets: [{ type: "reviews" }], expectedState: "empty" })
 
 // ---- Hours, place, questions, sharing, links
 for (const variant of ["list", "compact"]) both({ id: `hours--${variant}`, group: "Hours and place", title: `Opening hours: ${variant}`, scenario: "cafe", widgets: [{ type: "hours", settings: { variant } }] })
@@ -130,12 +133,8 @@ add({ id: "social--list", group: "Links", title: "Social: list", scenario: barbe
 add({ id: "credentials--chips", group: "Text", title: "Credentials", scenario: "tutor", widgets: [{ type: "credentials", settings: { title: "Experience", variant: "chips" } }] })
 add({ id: "text--about", group: "Text", title: "Text", scenario: barber, widgets: [{ type: "text", settings: ABOUT }] })
 
-export const STORIES: Story[] = stories
-export const storyById = (id: string) => STORIES.find((s) => s.id === id)
-export const GROUPS = [...new Set(STORIES.map((s) => s.group))]
-
 // ---- Profile header arrangements
-const layouts = [["side", "Compact identity"], ["cover", "Cover"], ["poster", "Image hero"], ["centered", "Text-led"]] as const
+const layouts = [["side", "Compact identity"], ["cover", "Cover"], ["feature", "Wide feature"], ["poster", "Image hero"], ["centered", "Text-led"]] as const
 for (const [layout, name] of layouts) {
   for (const surface of ["light", "dark"] as const) {
     add({ id: `header--${layout}--photo--${surface}`, group: "Header", title: `${name}, with a photo (${surface})`, scenario: "barber", surface, header: true, appearance: { header: { layout } }, widgets: [{ type: "text", settings: ABOUT }] })
@@ -149,3 +148,39 @@ for (const scrim of ["soft", "medium", "strong"] as const) {
 }
 add({ id: "header--poster--desktop", group: "Header", title: "Image hero on a laptop", scenario: "barber", vp: 1280, header: true, appearance: { header: { layout: "poster" } }, widgets: [{ type: "priceMenu" }] })
 add({ id: "header--cover--desktop", group: "Header", title: "Cover on a laptop", scenario: "barber", vp: 1280, header: true, appearance: { header: { layout: "cover" } }, widgets: [{ type: "priceMenu" }] })
+add({ id: "header--feature--desktop", group: "Header", title: "Wide feature on a laptop", scenario: "oakfield", vp: 1280, header: true, appearance: { header: { layout: "feature" } }, widgets: [{ type: "serviceList" }] })
+
+// ---- Previously uncovered types: real content, safe destinations and actual unavailable states.
+both({ id: "sms", group: "Links", title: "Text-message action", scenario: "station", content: c => ({ ...c, contacts: { ...c.contacts, phone: "07700 900123" } }), widgets: [{ type: "sms", settings: { label: "Text the shop", variant: "card", subtitle: "Opens your own messaging app" } }] })
+both({ id: "link", group: "Links", title: "Custom link", scenario: "corner", widgets: [{ type: "link", settings: { label: "See this design", variant: "card", subtitle: "The actual cafe example" }, assetPath: "/inspiration/corner-table-cafe" }] })
+both({ id: "document", group: "Downloads", title: "Real printable cafe menu", scenario: "corner", widgets: [{ type: "document", settings: { title: "No. 6 Coffee menu", description: "A real one-page PDF with the example's actual prices" }, assetPath: "/workbench/corner-table-menu.pdf" }] })
+for (const shape of ["rounded", "square", "wide"] as const) add({ id: `image--${shape}`, group: "Media", title: `Single image: ${shape}`, scenario: "corner", widgets: [{ type: "image", settings: { image: { src: "/taplo-demo/corner-table-cafe.png", alt: "Illustrative coffee and breakfast at No. 6 Coffee", width: 1536, height: 1024 }, shape, caption: "A fictional cafe, using original illustrative artwork." } }] })
+add({ id: "image--empty", group: "Media", title: "No picture selected: hidden", scenario: "corner", widgets: [{ type: "image" }], expectedState: "empty" })
+both({ id: "video", group: "Media", title: "Video: provider loads only after Play", scenario: "corner", widgets: [{ type: "video", settings: { title: "Open movie provider example", url: "https://www.youtube.com/watch?v=aqz-KE-bpKQ" } }] })
+add({ id: "video--unsupported", group: "Media", title: "Unsupported video link: hidden", scenario: "corner", widgets: [{ type: "video", settings: { title: "Unsupported link", url: "https://example.com/video" } }], expectedState: "empty" })
+both({ id: "leave-review", group: "Reviews", title: "Owner-supplied review destination", scenario: "corner", content: c => ({ ...c, reviewLinks: [{ platform: "google", url: "https://www.google.com/maps" }] }), widgets: [{ type: "leaveReview", settings: { label: "Example review link" } }] })
+add({ id: "leave-review--empty", group: "Reviews", title: "No review destination: hidden", scenario: "corner", content: c => ({ ...c, reviewLinks: [] }), widgets: [{ type: "leaveReview" }], expectedState: "empty" })
+const dated = "2026-10-24T12:00:00Z"
+const offerContent = (c: Content): Content => ({ ...c, offers: [{ id: "wb-offer", title: "Coffee at the counter", description: "An illustrative notice supplied by the fictional cafe.", endsAt: "2026-10-25", archived: false }] })
+both({ id: "offers", group: "Offers", title: "Active offer at the fixture date", scenario: "corner", now: dated, content: offerContent, widgets: [{ type: "offers", settings: { title: "At the counter" } }] })
+add({ id: "offers--expired", group: "Offers", title: "Expired offer: hidden", scenario: "corner", now: "2026-10-26T12:00:00Z", content: offerContent, widgets: [{ type: "offers" }], expectedState: "empty" })
+add({ id: "offers--missing-selection", group: "Offers", title: "Selected offer removed: hidden", scenario: "corner", now: dated, content: offerContent, widgets: [{ type: "offers", settings: { offerIds: ["removed"] } }], expectedState: "empty" })
+for (const tone of ["info", "promo", "warning"] as const) add({ id: `announcement--${tone}`, group: "Notices", title: `Announcement: ${tone}`, scenario: "corner", now: dated, widgets: [{ type: "announcement", settings: { text: "Illustrative notice: the kitchen finishes half an hour before the counter.", tone, endsAt: "2026-10-25" } }] })
+add({ id: "announcement--expired", group: "Notices", title: "Expired announcement: hidden", scenario: "corner", now: "2026-10-26T12:00:00Z", widgets: [{ type: "announcement", settings: { text: "This past notice must not appear.", endsAt: "2026-10-25" } }], expectedState: "empty" })
+add({ id: "payment--not-connected", group: "Availability", title: "Unconnected payments: hidden", scenario: "station", widgets: [{ type: "payment" }], expectedState: "locked" })
+add({ id: "payment--plan", group: "Availability", title: "Plan excludes payments: hidden", scenario: "station", plan: "free", widgets: [{ type: "payment" }], expectedState: "locked" })
+
+// A selected record can be removed without removing other records. No empty panel or silent substitute.
+for (const [type, key, scenario] of [
+  ["priceMenu", "serviceIds", "station"], ["products", "productIds", "brookfield"],
+  ["team", "staffIds", "station"], ["gallery", "itemIds", "station"],
+  ["faq", "faqIds", "oakfield"],
+  ["social", "platforms", "barber"],
+] as const) add({ id: `${type}--missing-selection`, group: "Availability", title: `${type}: selected records no longer available`, scenario, widgets: [{ type, settings: { [key]: ["removed"] } }], expectedState: "empty" })
+add({ id: "featured-service--missing-selection", group: "Availability", title: "Featured service removed: no silent replacement", scenario: "station", widgets: [{ type: "featuredService", settings: { serviceId: "removed" } }], expectedState: "empty" })
+
+add({ id: "header--minimal--saved", group: "Header", title: "Earlier saved minimal header", scenario: "station", header: true, appearance: { header: { layout: "minimal" } }, widgets: [{ type: "priceMenu" }] })
+
+export const STORIES: Story[] = stories
+export const storyById = (id: string) => STORIES.find(s => s.id === id)
+export const GROUPS = [...new Set(STORIES.map(s => s.group))]

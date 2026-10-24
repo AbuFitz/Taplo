@@ -104,14 +104,8 @@ export function RecordForm({ kind, value, onChange, showErrors, content }: FormP
   switch (kind) {
     case "service": return <ServiceForm service={value} onChange={onChange} showErrors={showErrors} />
     case "product": case "vehicle": return <ProductForm product={value} onChange={onChange} showErrors={showErrors} />
-    case "review": return (
-      <div className="grid gap-4">
-        <div className="grid gap-1.5"><Label htmlFor="rv-q">What they said</Label><Textarea id="rv-q" rows={4} maxLength={800} value={value.quote} aria-invalid={Boolean(err.quote)} onChange={(e) => onChange({ ...value, quote: e.target.value })} />{err.quote ? <p role="alert" className="text-sm text-destructive">{err.quote}</p> : null}</div>
-        <TaploInput label="Who said it" value={value.author} error={err.author} maxLength={120} hint="A first name and initial is fine." onChange={(e) => onChange({ ...value, author: e.target.value })} />
-        <label className="flex items-start gap-3 text-sm"><Checkbox checked={value.permissionConfirmed} onCheckedChange={(c) => onChange({ ...value, permissionConfirmed: c === true })} className="mt-0.5" /><span>I have permission to share this. It is shown as “Shared by the business”, never as an independent review.</span></label>
-        {err.permission ? <p role="alert" className="-mt-2 text-sm text-destructive">{err.permission}</p> : null}
-      </div>
-    )
+    case "review": return <p className="rounded-xl bg-muted p-4 text-sm">Reviews come from Google. Add a Google reviews section to connect your business link.</p>
+
     case "staff": {
       const services = content.services ?? []
       const all = value.serviceIds === null

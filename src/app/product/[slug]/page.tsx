@@ -74,7 +74,7 @@ export default async function ProductPageRoute({
                 <div className="mt-8 flex flex-wrap items-center gap-5">
                   <Link
                     href={a.href}
-                    className="inline-flex min-h-12 items-center gap-5 rounded-full bg-white px-6 font-semibold text-[#142d3e] shadow-sm outline-none transition-opacity hover:opacity-85 focus-visible:ring-3 focus-visible:ring-current"
+                    className="inline-flex min-h-12 items-center gap-5 rounded-full bg-white px-6 font-semibold text-[#080808] shadow-sm outline-none transition-opacity hover:opacity-85 focus-visible:ring-3 focus-visible:ring-current"
                   >
                     {a.label}
                     <ArrowRight aria-hidden="true" className="size-4" />
@@ -137,7 +137,7 @@ export default async function ProductPageRoute({
                   <li key={s.label} className="flex gap-4 py-5">
                     <Icon
                       aria-hidden="true"
-                      className={`mt-1 size-5 shrink-0 ${s.state === "works" ? "text-emerald-800" : "text-[#75551d]"}`}
+                      className={`mt-1 size-5 shrink-0 ${s.state === "works" ? "text-neutral-800" : "text-neutral-600"}`}
                     />
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.08em] text-foreground/65">

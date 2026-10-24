@@ -11,9 +11,9 @@ describe("current UK business examples", () => {
     for (const slug of [...EXAMPLES.map(e => e.slug), "marlowe-and-finch"]) {
       for (const w of exampleStart(slug)!.widgets.filter(w => w.type === "share")) expect(w.settings.label).toBeUndefined()
     }
-    expect(SCENARIOS.station.widgets().find(w => w.type === "share")!.settings.label).toBe("Share Station Road")
+    expect(SCENARIOS.station.widgets().find(w => w.type === "share")!.settings.label).toBe("Share Jay’s Barbers")
   })
-  for (const [slug, scenario] of [["corner-table-cafe", "corner"], ["oakfield-home-repairs", "oakfield"], ["rowan-learning", "rowan"]] as const) {
+  for (const [slug, scenario] of [["no-6-coffee", "corner"], ["dans-home-repairs", "oakfield"], ["maths-with-aisha", "rowan"]] as const) {
     it(`${slug} is a real schema-controlled page and a safe starting design`, () => {
       const cfg = initialConfig(scenario)
       expect(businessContentSchema.safeParse(toContent(cfg)).success).toBe(true)
@@ -43,7 +43,7 @@ describe("current UK business examples", () => {
     }
   })
   it("earlier business addresses remain readable without leading the current gallery", () => {
-    for (const slug of ["ada-okafor-maths", "northgate-heating", "pims-kitchen"]) {
+    for (const slug of ["ada-okafor-maths", "northgate-heating", "pims-kitchen", "station-road-barbers", "parkside-valeting", "brookfield-motors", "corner-table-cafe", "oakfield-home-repairs", "rowan-learning"]) {
       expect(bySlug(slug)).toBeDefined()
       expect(EXAMPLES.some((e) => e.slug === slug)).toBe(false)
     }

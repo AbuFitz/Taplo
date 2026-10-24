@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 const CAPTURES = [
   "setup-1-name",
   "setup-2-what",
-  "setup-3-design",
   "setup-4-first",
+  "setup-3-design",
   "setup-5-review",
 ] as const;
 
@@ -61,7 +61,7 @@ export function SetupStory() {
               n === STEPS.length - 1 &&
                 "col-span-2 grid grid-cols-[7rem_1fr] items-center md:col-span-1 md:block",
               active === n
-                ? "border-signal bg-[#f1eddf]"
+                ? "border-signal bg-[#f4f4f4]"
                 : "border-foreground/15 bg-white hover:border-foreground/35",
             )}
           >

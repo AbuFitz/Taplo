@@ -7,30 +7,30 @@ import { cn } from "@/lib/utils";
 type Slug = ProductPage["slug"];
 export const PRODUCT_TONES: Record<Slug, { background: string; ink: string }> =
   {
-    design: { background: "#e9e3ee", ink: "#34213f" },
-    services: { background: "#f1eddf", ink: "#142d3e" },
-    booking: { background: "#e8eccc", ink: "#20372d" },
-    team: { background: "#dce6ed", ink: "#142d3e" },
-    products: { background: "#eee3d2", ink: "#423226" },
-    vehicles: { background: "#e4e6d8", ink: "#163a2a" },
-    "gallery-reviews": { background: "#eadfe2", ink: "#452d38" },
-    enquiries: { background: "#dce6ed", ink: "#142d3e" },
-    sharing: { background: "#3449e5", ink: "#ffffff" },
-    messages: { background: "#e8eccc", ink: "#20372d" },
+    design: { background: "#e8e8e8", ink: "#111111" },
+    services: { background: "#f4f4f4", ink: "#080808" },
+    booking: { background: "#ffffff", ink: "#111111" },
+    team: { background: "#e6e6e6", ink: "#080808" },
+    products: { background: "#ededed", ink: "#111111" },
+    vehicles: { background: "#e3e3e3", ink: "#111111" },
+    "gallery-reviews": { background: "#ededed", ink: "#111111" },
+    enquiries: { background: "#e6e6e6", ink: "#080808" },
+    sharing: { background: "#111111", ink: "#ffffff" },
+    messages: { background: "#ffffff", ink: "#111111" },
   };
 const LABELS: Record<Slug, string> = {
-  design: "Station Road's same content in four editable looks",
+  design: "Jay’s Barbers's same content in four editable looks",
   services:
     "Illustrative local barber scene paired with the actual haircut price menu",
   booking: "The real haircut detail and booking time picker",
-  team: "Original illustrative portraits of fictional Station Road barbers Sam, Lee and Iman",
+  team: "Jay’s Barbers team profiles for Sam, Lee and Iman",
   products: "An illustrative styling-paste product and its real Taplo detail",
   vehicles:
-    "An illustrative UK forecourt photograph and the actual Brookfield vehicle detail",
+    "An illustrative UK forecourt photograph and the actual Harris Cars vehicle detail",
   "gallery-reviews":
     "An illustrative shop photograph opened in Taplo's actual photo viewer",
-  enquiries: "The actual Parkside enquiry form and local preview confirmation",
-  sharing: "Station Road's downloadable branded share card and actual page",
+  enquiries: "The actual Detail Dept. enquiry form and local preview confirmation",
+  sharing: "Jay’s Barbers's downloadable branded share card and actual page",
   messages:
     "The current enquiry interface alongside messaging and appointment symbols",
 };
@@ -83,7 +83,7 @@ export function ProductArtwork({
           {["highstreet", "journal", "workbay", "forecourt"].map((id) => (
             <div
               key={id}
-              className="min-h-0 overflow-hidden rounded-xl border-[3px] border-[#34213f] bg-white shadow-xl"
+              className="min-h-0 overflow-hidden rounded-xl border-[3px] border-[#111111] bg-white shadow-xl"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -166,7 +166,7 @@ export function ProductArtwork({
               <p className="mt-3 font-display text-[clamp(1rem,3cqw,1.5rem)] capitalize">
                 {name}
               </p>
-              <p className="mt-1 text-xs opacity-75">Station Road Barbers</p>
+              <p className="mt-1 text-xs opacity-75">Jay’s Barbers</p>
             </div>
           ))}
         </div>
@@ -302,7 +302,7 @@ export function ProductArtwork({
             {[MessageSquare, CalendarCheck, Bell].map((Icon, n) => (
               <span
                 key={n}
-                className="grid size-14 place-items-center rounded-2xl border border-[#20372d]/20 bg-white/50 sm:size-20"
+                className="grid size-14 place-items-center rounded-2xl border border-[#111111]/20 bg-white/50 sm:size-20"
               >
                 <Icon aria-hidden="true" className="size-7 sm:size-9" />
               </span>

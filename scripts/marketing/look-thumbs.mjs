@@ -11,7 +11,7 @@ const out = new URL("../../public/looks/", import.meta.url).pathname
 mkdirSync(out, { recursive: true })
 const src = readFileSync(new URL("../../src/features/page/themes/looks.ts", import.meta.url), "utf8")
 const only = process.argv.slice(2)
-const ids = [...src.matchAll(/^\s{4}id: "([a-z]+)"/gm)].map((m) => m[1]).filter((id) => !only.length || only.includes(id))
+const ids = [...new Set([...src.matchAll(/^\s{4}id: "([a-z]+)"/gm), ...src.matchAll(/composition\("([a-z]+)"/g)].map(m => m[1]))].filter(id => !only.length || only.includes(id))
 const b = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? "/opt/pw-browsers/chromium-1194/chrome-linux/chrome" })
 for (const id of ids) {
   const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, reducedMotion: "reduce" })

@@ -32,7 +32,7 @@ export function ThemeRoot({
         data-taplo-page=""
         {...attrs}
         data-family={family}
-        style={cssVars as React.CSSProperties}
+        style={{ ...cssVars, backgroundColor: "var(--tp-background)" } as React.CSSProperties}
         className={cn("relative min-h-screen", className)}
       >
         {children}

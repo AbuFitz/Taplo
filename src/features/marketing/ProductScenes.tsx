@@ -92,7 +92,7 @@ function Design() {
         <div className="mt-8 grid items-center gap-8 md:grid-cols-[0.4fr_1fr]">
           <Shot
             id="ex-station-road-barbers-phone"
-            alt="The Station Road page at a real phone width"
+            alt="The Jay’s Barbers page at a real phone width"
             width={310}
             cropTo={610}
             fluid
@@ -100,7 +100,7 @@ function Design() {
           />
           <Shot
             id="ex-station-road-barbers-desk"
-            alt="The same Station Road content arranged for a desktop"
+            alt="The same Jay’s Barbers content arranged for a desktop"
             width={880}
             fluid
             frame="browser"
@@ -108,7 +108,7 @@ function Design() {
           />
         </div>
         <div className="mt-7">
-          <ArrowLink href="/inspiration/station-road-barbers">
+          <ArrowLink href="/inspiration/jays-barbers">
             Try phone and desktop
           </ArrowLink>
         </div>
@@ -126,7 +126,7 @@ function Services() {
             without losing the page, then book or ask a question from there.
           </Intro>
           <div className="mt-7">
-            <ArrowLink href="/inspiration/station-road-barbers">
+            <ArrowLink href="/inspiration/jays-barbers">
               Try a haircut on the example page
             </ArrowLink>
           </div>
@@ -134,14 +134,14 @@ function Services() {
         <div>
           <Shot
             id="svc-detail"
-            alt="Station Road's haircut detail: £22, 30 minutes, eligible barbers and the booking action"
+            alt="Jay’s Barbers's haircut detail: £22, 30 minutes, eligible barbers and the booking action"
             width={680}
             fluid
             frame="none"
             className="w-full"
           />
           <Label>
-            A real service detail from the fictional Station Road page.
+            Haircut details, price and booking in one view.
           </Label>
         </div>
       </section>
@@ -183,7 +183,7 @@ function Services() {
           <figure className="mt-14">
             <Shot
               id="svc-cards-parkside"
-              alt="Parkside valeting packages with descriptions and starting prices"
+              alt="Detail Dept. valeting packages with descriptions and starting prices"
               width={310}
               fluid
               frame="none"
@@ -254,7 +254,7 @@ function Booking() {
         <div>
           <Shot
             id="bk-request-review"
-            alt="Parkside's appointment request review, clearly labelled as a pending request"
+            alt="Detail Dept.'s appointment request review, clearly labelled as a pending request"
             width={600}
             fluid
             frame="none"
@@ -347,7 +347,7 @@ function Team() {
             numbers and email addresses stay private.
           </p>
           <div className="mt-7">
-            <ArrowLink href="/inspiration/station-road-barbers">
+            <ArrowLink href="/inspiration/jays-barbers">
               Meet the example team
             </ArrowLink>
           </div>
@@ -355,15 +355,14 @@ function Team() {
         <div>
           <Shot
             id="team-profile"
-            alt="Sam's actual Station Road profile, portrait, eligible services and Book with Sam action"
+            alt="Sam's actual Jay’s Barbers profile, portrait, eligible services and Book with Sam action"
             width={750}
             fluid
             frame="none"
             className="w-full"
           />
           <Label>
-            Sam, Lee and Iman are fictional example staff with illustrative
-            portraits.
+            Introduce each barber with their photo, services and booking button.
           </Label>
         </div>
       </section>
@@ -380,7 +379,7 @@ function Products() {
             description, availability and a way to ask about that exact item.
           </Intro>
           <div className="mt-7">
-            <ArrowLink href="/inspiration/station-road-barbers">
+            <ArrowLink href="/inspiration/jays-barbers">
               Try the example shop
             </ArrowLink>
           </div>
@@ -388,14 +387,14 @@ function Products() {
         <div>
           <Shot
             id="product-detail-station"
-            alt="Station Road's illustrative matte styling paste, £16, with details and an enquiry action"
+            alt="Jay’s Barbers's illustrative matte styling paste, £16, with details and an enquiry action"
             width={710}
             fluid
             frame="none"
             className="w-full"
           />
           <Label>
-            A fictional shop item, opened through the real product card.
+            Product photos, price and details, opened from the page.
           </Label>
         </div>
       </section>
@@ -456,7 +455,7 @@ function Vehicles() {
         <div className="mt-10 hidden md:block">
           <Shot
             id="vehicle-catalogue-brookfield"
-            alt="Brookfield's large-card catalogue at desktop width, with two columns and clearly marked vehicle status"
+            alt="Harris Cars's large-card catalogue at desktop width, with two columns and clearly marked vehicle status"
             width={1200}
             cropTo={780}
             fluid
@@ -467,7 +466,7 @@ function Vehicles() {
         <div className="mt-8 md:hidden">
           <Shot
             id="ex-brookfield-motors-phone"
-            alt="Brookfield's catalogue arranged as one readable column on a phone"
+            alt="Harris Cars's catalogue arranged as one readable column on a phone"
             width={390}
             cropTo={950}
             fluid
@@ -475,8 +474,7 @@ function Vehicles() {
           />
         </div>
         <Label>
-          Illustrative stock on the fictional Brookfield page. Prices and
-          specifications are sample content.
+          Vehicle photos, prices and specifications stay together on a phone.
         </Label>
       </section>
       <section className="grid items-start gap-10 border-t border-foreground/15 pt-10 lg:grid-cols-2">
@@ -510,7 +508,7 @@ function Vehicles() {
             ))}
           </ul>
           <div className="mt-7">
-            <ArrowLink href="/inspiration/brookfield-motors">
+            <ArrowLink href="/inspiration/harris-cars">
               Try the forecourt example
             </ArrowLink>
           </div>
@@ -530,7 +528,7 @@ function GalleryReviews() {
         <div>
           <Shot
             id="gal-lightbox"
-            alt="The actual Taplo photo viewer displaying an illustrative Station Road barber-shop scene"
+            alt="The actual Taplo photo viewer displaying an illustrative Jay’s Barbers barber-shop scene"
             width={800}
             fluid
             frame="none"
@@ -563,8 +561,8 @@ function GalleryReviews() {
             ))}
           </ul>
           <p className="mt-5 text-sm leading-relaxed text-foreground/65">
-            Taplo does not generate customer reviews or ratings. The fictional
-            Station Road example has no customer reviews.
+            Connect your Google reviews destination. Imported ratings and reviews
+            require a Google data connection; they cannot be entered manually.
           </p>
         </div>
       </section>
@@ -583,7 +581,7 @@ function Enquiries() {
           <figure>
             <Shot
               id="enq-inline"
-              alt="Parkside's enquiry form asking about the customer's car and requested work"
+              alt="Detail Dept.'s enquiry form asking about the customer's car and requested work"
               width={390}
               fluid
               frame="none"
@@ -621,7 +619,7 @@ function Enquiries() {
             the preview.
           </p>
           <div className="mt-7">
-            <ArrowLink href="/inspiration/parkside-valeting">
+            <ArrowLink href="/inspiration/detail-dept">
               Try an enquiry on the example
             </ArrowLink>
           </div>
@@ -640,7 +638,7 @@ function Sharing() {
             choose a finish and keep the destination easy to reach.
           </Intro>
           <div className="mt-7">
-            <ArrowLink href="/inspiration/station-road-barbers">
+            <ArrowLink href="/inspiration/jays-barbers">
               Try the sharing controls
             </ArrowLink>
           </div>
@@ -648,7 +646,7 @@ function Sharing() {
         <div>
           <Shot
             id="qr-options"
-            alt="Current QR controls showing the Station Road logo, dot style and actual download formats"
+            alt="Current QR controls showing the Jay’s Barbers logo, dot style and actual download formats"
             width={510}
             fluid
             frame="none"
@@ -761,8 +759,8 @@ function Messages() {
                   className={cn(
                     "inline-flex rounded-full px-3 py-1.5 text-sm font-semibold",
                     live
-                      ? "bg-emerald-100 text-emerald-900"
-                      : "bg-amber-100 text-amber-900",
+                      ? "bg-neutral-100 text-neutral-900"
+                      : "bg-neutral-200 text-neutral-800",
                   )}
                 >
                   {live ? "Try in the preview" : "Needs messaging connected"}
@@ -778,7 +776,7 @@ function Messages() {
         })}
       </ol>
       <Link
-        href="/inspiration/parkside-valeting"
+        href="/inspiration/detail-dept"
         className="mt-8 inline-flex min-h-11 items-center gap-3 rounded font-semibold underline underline-offset-4 outline-none focus-visible:ring-3 focus-visible:ring-signal/50"
       >
         Try the current enquiry flow

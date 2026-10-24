@@ -9,7 +9,7 @@ import { PRODUCT_GROUPS } from "./ia";
 export function primaryAction() {
   const demo = demoModeEnabled();
   return {
-    label: "Make your Taplo",
+    label: "Start free",
     href: demo ? "/onboarding" : "/pricing",
     demo,
   };
@@ -21,16 +21,16 @@ export function SiteHeader() {
 export function SiteFooter() {
   const a = primaryAction();
   return (
-    <footer className="mt-16 bg-[#142d3e] text-white">
+    <footer className="mt-16 bg-[#080808] text-white">
       <div className="mx-auto max-w-[88rem] px-5 pb-7 pt-16 sm:px-8 sm:pt-20">
         <div className="flex flex-wrap items-end justify-between gap-8 border-b border-white/25 pb-14 sm:pb-20">
           <h2 className="font-display font-display-tight max-w-3xl text-[clamp(2.25rem,5vw,4.75rem)] leading-[1.03] tracking-[-0.045em]">
-            Good work deserves
-            <br />a good page.
+            Your next customer.
+            <br />One page away.
           </h2>
           <Link
             href={a.href}
-            className="inline-flex min-h-13 items-center gap-8 rounded-full bg-[#e8eccc] px-7 font-semibold text-[#20372d] outline-none hover:bg-white focus-visible:ring-3 focus-visible:ring-white/60"
+            className="inline-flex min-h-13 items-center gap-8 rounded-full bg-[#ffffff] px-7 font-semibold text-[#111111] outline-none hover:bg-white focus-visible:ring-3 focus-visible:ring-white/60"
           >
             {a.label}
             <ArrowRight aria-hidden="true" className="size-5" />
@@ -74,7 +74,7 @@ export function SiteFooter() {
           />
         </div>
         <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-t border-white/25 pt-6 text-sm text-white/70">
-          <p>Businesses, people and stock shown are illustrative examples.</p>
+          <p>Explore our <Link href="/inspiration" className="underline underline-offset-4">design examples</Link>.</p>
           <nav aria-label="Legal" className="flex gap-6">
             <Link
               href="/legal/privacy"
@@ -103,7 +103,7 @@ function FooterColumn({
 }) {
   return (
     <nav aria-label={title}>
-      <h2 className="text-sm font-semibold text-[#e8eccc]">{title}</h2>
+      <h2 className="text-sm font-semibold text-[#ffffff]">{title}</h2>
       <ul className="mt-4 grid">
         {links.map((l) => (
           <li key={l.href}>

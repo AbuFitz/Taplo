@@ -2,7 +2,7 @@
  * Product pages. Every claim here is checked against docs/messaging.md ("Supported now").
  * `status` is shown on each page so what works today and what needs a connection are never blurred.
  */
-import { LOOKS } from "@/features/page/themes/looks"
+import { CURRENT_LOOKS } from "@/features/page/themes/looks"
 import { featureNote, featureState, type FeatureId } from "@/lib/feature-status"
 export type Status = { label: string; state: "works" | "needs"; requirement?: "connection" | "plan" | "platform"; note?: string; /** When set, state and note come from the central feature-status list. */ feature?: FeatureId }
 
@@ -19,10 +19,10 @@ export interface ProductPage {
 export const PRODUCT_PAGES: ProductPage[] = [
   {
     slug: "design", label: "Looks and design", eyebrow: "Looks and design",
-    title: "A page that feels like your business.",
+    title: "Your photos. Your colours. Your page.",
     lead: "Start with a look you like. Bring your own photos, choose your colours and make the layout work for what you do. See every choice on your page as you go.",
     status: [
-      { label: `${LOOKS.length} starting looks, each usable for any business`, state: "works" },
+      { label: `${CURRENT_LOOKS.length} starting looks, each usable for any business`, state: "works" },
       { label: "Colours, fonts, header, buttons, cards, wallpaper", state: "works" },
       { label: "Changes to one section, with a reset", state: "works" },
       { label: "Contrast suggestions while you choose colours", state: "works", note: "The editor helps you spot low-contrast combinations and suggests a readable option." },
@@ -95,7 +95,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "vehicles", label: "Vehicle stock", eyebrow: "Vehicle stock",
-    title: "A proper home for your stock.",
+    title: "Show your stock. Arrange more viewings.",
     lead: "Give every car room to be seen. Big photos, the facts buyers ask for and a clear way to arrange a viewing. Keep available, reserved and sold stock easy to recognise.",
     status: [
       { label: "Vehicle cards with specifications and a detail view", state: "works" },
@@ -108,18 +108,18 @@ export const PRODUCT_PAGES: ProductPage[] = [
   {
     slug: "gallery-reviews", label: "Photos and reviews", eyebrow: "Photos and reviews",
     title: "Let your work do the talking.",
-    lead: "A good picture deserves more than a tiny thumbnail. Show your space, your people and your work, alongside customer words with a clear source.",
+    lead: "A good picture deserves more than a tiny thumbnail. Show your space, your people and your work, alongside a direct route to your Google reviews.",
     status: [
       { label: "Photo grid and swipe rows, with a full-screen viewer", state: "works" },
-      { label: "Quotes shown with who supplied them", state: "works" },
-      { label: "Review links to Google, Facebook and Trustpilot", state: "works" },
+      { label: "A Google reviews destination and a Google review invitation", state: "works" },
+      { label: "Imported Google ratings and individual reviews", state: "needs", requirement: "connection", note: "Needs a Google data connection with the required attribution. Reviews and ratings cannot be entered manually." },
       { label: "Photos and review links", state: "needs", requirement: "plan", note: "Free has neither. Paid plans do." },
     ],
     related: ["team", "products", "sharing"],
   },
   {
     slug: "sharing", label: "Sharing and QR codes", eyebrow: "Sharing and QR codes",
-    title: "Found here. Shared everywhere.",
+    title: "Share your page with a link or QR code.",
     lead: "Your bio, your counter, your next message. Carry the same page wherever customers find you, with a link, a branded QR code and a share card of your own.",
     status: [
       { label: "A Taplo QR code with the Taplo mark in the middle, as PNG for screens, PNG for print and SVG", state: "works" },

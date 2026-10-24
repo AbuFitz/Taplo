@@ -29,7 +29,7 @@ export function PageRenderer({ vm, bare = false, fragment }: { vm: PageViewModel
             </section>
           ))}
         </main>}
-        {fragment ? null : <footer className="pb-2 text-center text-sm tp-muted" style={{ gridColumn: "1 / -1" }}>
+        {fragment ? null : <footer aria-label={`${vm.business.identity.name} business page footer`} className="pb-2 text-center text-sm tp-muted" style={{ gridColumn: "1 / -1" }}>
           {vm.showBranding ? <p><a className="underline underline-offset-4" href="https://taplo.co">Made with Taplo</a></p> : null}
         </footer>}
       </div>

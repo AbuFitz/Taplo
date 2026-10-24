@@ -18,21 +18,26 @@ const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH 
 const manifestPath = `${output}manifest.json`
 const manifest = JSON.parse(await readFile(manifestPath, "utf8").catch(() => "{}"))
 const recordings = {
-  setup: { title: "Make your first page", path: "/onboarding?from=station-road-barbers", async run(f, step, pause) {
+  setup: { title: "Make your first page", path: "/onboarding?from=jays-barbers", async run(f, step, pause) {
     await step("Give it your name", "Start from a design. Use your own business details.")
-    await f.getByLabel("Business name", { exact: true }).pressSequentially("Cedar Road Barbers", { delay: 95 }); await pause(1400)
+    await f.getByLabel("Business name", { exact: true }).pressSequentially("Alex’s Barbers", { delay: 95 }); await pause(1400)
     await f.getByRole("button", { name: "Continue", exact: true }).click()
     await step("Say what you do", "The example suggests Barber. You can change it.")
     await expect(f.getByRole("button", { name: "Barber", exact: true })).toHaveAttribute("aria-pressed", "true")
-    await f.getByLabel("Phone (optional)").pressSequentially("01632 960123", { delay: 95 }); await pause(1300)
     await f.getByRole("button", { name: "Continue", exact: true }).click()
-    await step("Choose a starting look", "High Street is selected. Every look stays editable.")
-    await expect(f.getByTestId("look-picker").getByRole("radio", { name: /High Street/ })).toBeChecked(); await pause(3200)
+    await step("Choose the next step", "Booking requests fit this business. Contact and messaging are options too.")
+    await f.getByRole("button", { name: "Continue", exact: true }).click()
+    await step("Add a way to reach you", "Choose one. You can add more later.")
+    await f.getByRole("button", { name: "Phone", exact: true }).click()
+    await f.getByLabel("Phone", { exact: true }).pressSequentially("01632 960123", { delay: 95 }); await pause(1300)
     await f.getByRole("button", { name: "Continue", exact: true }).click()
     await step("Add a real offering", "A haircut, its price and the time it takes.")
     await f.getByLabel("Service 1 name").pressSequentially("Haircut", { delay: 120 })
     await f.getByLabel("Service 1 price").fill("22")
     await f.getByLabel("Service 1 minutes").fill("30"); await pause(2500)
+    await f.getByRole("button", { name: "Continue", exact: true }).click()
+    await step("Choose a starting look", "Voltage is selected. Every look stays editable.")
+    await expect(f.getByTestId("look-picker").getByRole("radio", { name: /Voltage/ })).toBeChecked(); await pause(3200)
     await f.getByRole("button", { name: "Continue", exact: true }).click()
     await step("Review before you continue", "Check your page. Publishing is still a preview.")
     await expect(f.getByRole("heading", { name: "Your page is ready to look at", exact: true })).toBeVisible(); await pause(3000)
@@ -42,7 +47,7 @@ const recordings = {
     await f.getByTestId("customer-preview").click()
     await pause(3500)
     const state = await f.locator("body").evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")))
-    expect(state.content.identity.name).toBe("Cedar Road Barbers")
+    expect(state.content.identity.name).toBe("Alex’s Barbers")
     expect(state.content.services[0]).toMatchObject({ name: "Haircut", priceMinor: 2200, durationMinutes: 30 })
     return { name: state.content.identity.name, service: state.content.services[0].name, storage: "browser-only" }
   } },
@@ -80,7 +85,7 @@ try {
     const context = await browser.newContext({ viewport: { width: 390, height: 964 }, deviceScaleFactor: 1, reducedMotion: "reduce", recordVideo: { dir: raw, size: { width: 390, height: 964 } } })
     const page = await context.newPage(), created = Date.now(), errors = [], chapters = []
     page.on("pageerror", e => errors.push(e.message))
-    await context.route(`${base}/__walkthrough`, r => r.fulfill({ contentType: "text/html", body: `<!doctype html><html lang="en"><head><meta charset="utf-8"><style>*{box-sizing:border-box}body{margin:0;background:#142d3e;font-family:Arial,sans-serif}header{height:120px;padding:16px 20px;color:#fff}header small{display:flex;justify-content:space-between;color:#e8eccc;font-size:11px;letter-spacing:1px;font-weight:700}h1{font-size:22px;line-height:1.13;letter-spacing:-.5px;margin:9px 0 5px}p{font-size:13px;line-height:1.3;margin:0;color:#e1e9ec}iframe{display:block;width:390px;height:844px;border:0;background:#fff}</style></head><body><header><small><span>TAPLO · ${job.title.toUpperCase()}</span><span id="number">1 / 6</span></small><h1 id="caption">${job.title}</h1><p id="line">A real product walkthrough · illustrative business</p></header><iframe title="Actual Taplo interface" src="${job.path}"></iframe></body></html>` }))
+    await context.route(`${base}/__walkthrough`, r => r.fulfill({ contentType: "text/html", body: `<!doctype html><html lang="en"><head><meta charset="utf-8"><style>*{box-sizing:border-box}body{margin:0;background:#080808;font-family:Arial,sans-serif}header{height:120px;padding:16px 20px;color:#fff}header small{display:flex;justify-content:space-between;color:#cccccc;font-size:11px;letter-spacing:1px;font-weight:700}h1{font-size:22px;line-height:1.13;letter-spacing:-.5px;margin:9px 0 5px}p{font-size:13px;line-height:1.3;margin:0;color:#cccccc}iframe{display:block;width:390px;height:844px;border:0;background:#fff}</style></head><body><header><small><span>TAPLO · ${job.title.toUpperCase()}</span><span id="number">1 / 6</span></small><h1 id="caption">${job.title}</h1><p id="line">A real product walkthrough · illustrative business</p></header><iframe title="Actual Taplo interface" src="${job.path}"></iframe></body></html>` }))
     await page.goto(`${base}/__walkthrough`)
     const f = page.frameLocator("iframe"), video = page.video()
     await f.locator("body").waitFor(); await page.waitForTimeout(1200)
@@ -89,7 +94,7 @@ try {
     const step = async (title, line) => {
       console.log(id, title)
       chapters.push({ seconds: Math.round((Date.now() - started) / 100) / 10, title, line })
-      await page.evaluate(({ title, line, n }) => { document.querySelector("#caption").textContent = title; document.querySelector("#line").textContent = line; document.querySelector("#number").textContent = `${n} / 6` }, { title, line, n: chapters.length })
+      await page.evaluate(({ title, line, n, total }) => { document.querySelector("#caption").textContent = title; document.querySelector("#line").textContent = line; document.querySelector("#number").textContent = `${n} / ${total}` }, { title, line, n: chapters.length, total: id === "setup" ? 8 : 6 })
       await pause(650)
     }
     let outcome, poster

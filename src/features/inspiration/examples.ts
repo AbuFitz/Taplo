@@ -1,3 +1,4 @@
+import { googleReviewUrl } from "@/features/page/widgets/google-reviews"
 import type { IndustryId } from "@/features/marketing/ia"
 import { FONT_LABELS } from "@/features/page/themes/font-metadata"
 import { LOOKS } from "@/features/page/themes/looks"
@@ -23,23 +24,23 @@ export interface Example {
 }
 
 const CATALOGUE: Example[] = [
-  { slug: "corner-table-cafe", scenario: "corner", industry: "food", hook: "A neighbourhood café. The menu, the opening times and a place at the table.", notes: ["Warm paper and serif headings make the menu easy to settle into.", "Coffee and food show prices without starting appointment bookings.", "A larger visit starts an enquiry, not a confirmed reservation."], highlights: ["A proper grouped menu", "Opening times at a glance", "Group enquiries without booking menu items"] },
-  { slug: "oakfield-home-repairs", scenario: "oakfield", industry: "trades", hook: "Small repairs, shelves and fittings. Explain the job before agreeing the visit.", notes: ["The photograph shows the kind of work rather than a generic tool icon.", "Service cards explain from prices, estimates and first conversations.", "Requests and enquiries let the scope be agreed before the visit."], highlights: ["From and quote prices", "Visit requests", "Service area instead of a private address"] },
-  { slug: "rowan-learning", scenario: "rowan", industry: "learning", hook: "A familiar face and a clear first step. Maths sessions at a pace you can follow.", notes: ["The tutor’s portrait makes the introduction personal.", "A free first conversation sits before the paid sessions.", "Session requests leave room to agree the learner’s needs and delivery."], highlights: ["Free introduction", "Online and local sessions", "A personal tutor profile"] },
+  { slug: "no-6-coffee", scenario: "corner", industry: "food", hook: "A neighbourhood café. The menu, the opening times and a place at the table.", notes: ["Ice-mint colour and strong geometric type give the menu a distinct identity.", "Coffee and food show prices without starting appointment bookings.", "A larger visit starts an enquiry, not a confirmed reservation."], highlights: ["A proper grouped menu", "Opening times at a glance", "Group enquiries without booking menu items"] },
+  { slug: "dans-home-repairs", scenario: "oakfield", industry: "trades", hook: "Small repairs, shelves and fittings. Explain the job before agreeing the visit.", notes: ["The photograph shows the kind of work rather than a generic tool icon.", "Service cards explain from prices, estimates and first conversations.", "Requests and enquiries let the scope be agreed before the visit."], highlights: ["From and quote prices", "Visit requests", "Service area instead of a private address"] },
+  { slug: "maths-with-aisha", scenario: "rowan", industry: "learning", hook: "A familiar face and a clear first step. Maths sessions at a pace you can follow.", notes: ["The tutor’s portrait makes the introduction personal.", "A free first conversation sits before the paid sessions.", "Session requests leave room to agree the learner’s needs and delivery."], highlights: ["Free introduction", "Online and local sessions", "A personal tutor profile"] },
   {
-    slug: "station-road-barbers", scenario: "station", industry: "beauty",
+    slug: "jays-barbers", scenario: "station", industry: "beauty",
     hook: "A proper local barber. Clear prices, a familiar face and your next haircut sorted.",
     notes: ["The shop photograph and blue wordmark give it a recognisable identity.", "A simple price menu works just as well on a phone as beside the counter.", "Choose a barber, see available demonstration times and try booking."],
     highlights: ["Prices and durations together", "Barber-specific service choices", "Real booking demonstration"],
   },
   {
-    slug: "parkside-valeting", scenario: "detailer", industry: "motoring",
+    slug: "detail-dept", scenario: "detailer", industry: "motoring",
     hook: "The work up front. Valeting packages with room to explain what is included.",
-    notes: ["A dark workshop palette makes the yellow booking action easy to find.", "Services explain the work before asking for a booking.", "A request allows the business to agree the job and price first."],
+    notes: ["A carbon-black composition makes the acid-green booking action easy to find.", "Services explain the work before asking for a booking.", "A request allows the business to agree the job and price first."],
     highlights: ["From prices with proper detail", "Appointment requests", "Service area and questions"],
   },
   {
-    slug: "brookfield-motors", scenario: "brookfield", industry: "motoring",
+    slug: "harris-cars", scenario: "brookfield", industry: "motoring",
     hook: "An independent forecourt, with the photographs and facts a buyer needs first.",
     notes: ["Large stock cards give each car room on a phone and pair up on a wider page.", "Available, reserved and sold stay visibly different.", "An enquiry keeps the selected car attached; a viewing is a request for the business to agree."],
     highlights: ["Readable stock cards", "Clear reserved and sold states", "Enquiries about a particular car"],
@@ -89,8 +90,9 @@ const CATALOGUE: Example[] = [
 ]
 
 // Superseded example routes remain available; the gallery leads with their new UK replacements.
-export const EXAMPLES = CATALOGUE.filter((e) => !["barber", "dealer", "cafe", "tutor", "trades"].includes(e.scenario)).sort((a, b) => (["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(a.scenario) - ["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(b.scenario)))
-export const bySlug = (slug: string) => CATALOGUE.find((e) => e.slug === slug)
+export const EXAMPLES = CATALOGUE.filter((e) => ["station", "detailer", "brookfield", "corner", "oakfield", "rowan"].includes(e.scenario)).sort((a, b) => (["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(a.scenario) - ["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(b.scenario)))
+const LEGACY_SLUGS: Record<string, string> = {"station-road-barbers": "jays-barbers", "parkside-valeting": "detail-dept", "brookfield-motors": "harris-cars", "corner-table-cafe": "no-6-coffee", "oakfield-home-repairs": "dans-home-repairs", "rowan-learning": "maths-with-aisha"}
+export const bySlug = (slug: string) => CATALOGUE.find((e) => e.slug === (LEGACY_SLUGS[slug] ?? slug))
 
 const WIDGET_NAME: Partial<Record<WidgetType, string>> = {
   booking: "Booking", priceMenu: "Price menu", serviceList: "Services", products: "Products", team: "Team", gallery: "Photos", reviews: "Reviews", hours: "Opening hours",
@@ -101,12 +103,13 @@ const WIDGET_NAME: Partial<Record<WidgetType, string>> = {
 export function describe(e: Example) {
   const sc = SCENARIOS[e.scenario]
   const look = LOOKS.find((l) => l.id === EXAMPLE_LOOK[e.scenario])!
-  const o = { ...look.overrides, header: { ...look.overrides.header, ...EXAMPLE_OVERRIDES[e.scenario].header }, layout: { ...look.overrides.layout, ...EXAMPLE_OVERRIDES[e.scenario].layout } }
+  const o = { ...look.overrides, colors: { ...look.overrides.colors, ...EXAMPLE_OVERRIDES[e.scenario].colors }, text: { ...look.overrides.text, ...EXAMPLE_OVERRIDES[e.scenario].text }, header: { ...look.overrides.header, ...EXAMPLE_OVERRIDES[e.scenario].header }, layout: { ...look.overrides.layout, ...EXAMPLE_OVERRIDES[e.scenario].layout } }
   const stock = (sc.content.products ?? []).length > 0 && (sc.content.products ?? []).every((p) => p.kind === "vehicle")
-  const content = [...new Set(sc.widgets().map((w) => (stock && w.type === "products" ? "Vehicle stock" : WIDGET_NAME[w.type as WidgetType])).filter((x): x is string => Boolean(x)))]
+  const content = [...new Set(sc.widgets().map((w) => ((w.type === "reviews" || w.type === "leaveReview") && !googleReviewUrl(sc.content) ? undefined : stock && w.type === "products" ? "Vehicle stock" : WIDGET_NAME[w.type as WidgetType])).filter((x): x is string => Boolean(x)))]
   const businessName = sc.content.identity.name
   return {
     name: businessName,
+    assetSlug: Object.keys(LEGACY_SLUGS).find(key => LEGACY_SLUGS[key] === e.slug) ?? e.slug,
     tagline: sc.content.identity.tagline ?? "",
     industryLabel: sc.content.identity.industryLabel ?? "",
     lookId: look.id,

@@ -203,15 +203,6 @@
       "selector": "[data-widget=\"serviceList\"]"
     },
     {
-      "id": "cap-reviews",
-      "url": "/appearance/frame?scenario=trades&look=colour",
-      "viewport": [
-        390,
-        844
-      ],
-      "selector": "[data-widget=\"reviews\"]"
-    },
-    {
       "id": "desk-barber",
       "url": "/appearance/frame?scenario=barber&look=night",
       "viewport": [
@@ -455,7 +446,7 @@
         0,
         0,
         390,
-        800
+        844
       ],
       "dsf": 2
     },
@@ -485,7 +476,7 @@
         0,
         0,
         390,
-        800
+        844
       ],
       "dsf": 2
     },
@@ -515,7 +506,7 @@
         0,
         0,
         390,
-        800
+        844
       ],
       "dsf": 2
     },
@@ -545,7 +536,7 @@
         0,
         0,
         390,
-        800
+        844
       ],
       "dsf": 2
     },
@@ -575,7 +566,7 @@
         0,
         0,
         390,
-        800
+        844
       ],
       "dsf": 2
     },
@@ -605,7 +596,7 @@
         0,
         0,
         390,
-        800
+        844
       ],
       "dsf": 2
     },

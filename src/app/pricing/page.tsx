@@ -87,7 +87,7 @@ export default function PricingPage() {
   const start = (id: PlanId) =>
     demo ? `/onboarding?plan=${id}` : "/how-it-works";
   return (
-    <div className="bg-[#f1eddf] text-[#142d3e]">
+    <div className="bg-[#f4f4f4] text-[#080808]">
       <SiteHeader />
       <main className="mx-auto w-full max-w-[88rem] px-5 py-14 sm:px-8 sm:py-20">
         <h1 className="font-display font-display-tight mt-4 max-w-4xl text-[clamp(2.5rem,7vw,5.5rem)] text-balance">
@@ -102,7 +102,7 @@ export default function PricingPage() {
           {PLAN_IDS.map((id) => (
             <li
               key={id}
-              className="flex flex-col rounded-2xl border border-[#142d3e]/20 bg-white p-4 sm:p-7"
+              className="flex flex-col rounded-2xl border border-[#080808]/20 bg-white p-4 sm:p-7"
             >
               <h2 className="text-lg font-semibold">{PLANS[id].name}</h2>
               <p className="font-display mt-3 text-[clamp(1.75rem,3.3vw,3rem)] tabular-nums">

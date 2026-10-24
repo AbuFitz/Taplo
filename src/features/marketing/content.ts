@@ -15,13 +15,13 @@ export const STEPS = [
   },
   {
     n: "03",
-    title: "Pick a look",
-    body: "Taplo suggests looks and what to show. Choose one and watch your page change. Nothing is locked in.",
+    title: "Add what you offer",
+    body: "Start with one service, product or vehicle. Your own content gives the preview something useful to show.",
   },
   {
     n: "04",
-    title: "Add what you offer",
-    body: "Start with a service, a product or a vehicle. See it on your page and add more when you are ready.",
+    title: "Pick a look",
+    body: "Tap a visual style and watch your own page change. Every colour, font and shape stays editable.",
   },
   {
     n: "05",

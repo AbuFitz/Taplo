@@ -27,7 +27,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -68,43 +68,42 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Taplo identity: crisp white, cool light grey, near-black ink and one controlled accent (cobalt). Hue 264 throughout so
-   neutrals stay cool. The page engine never reads these; customer pages keep their own palettes. */
+/* Taplo uses neutral black and white. Customer pages own their separate --tp-* palettes. */
 :root {
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0.012 264);
+  --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0.012 264);
+  --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0.012 264);
-  --primary: oklch(0.17 0.012 264);
-  --primary-foreground: oklch(0.99 0.002 264);
-  --secondary: oklch(0.968 0.004 264);
-  --secondary-foreground: oklch(0.17 0.012 264);
-  --muted: oklch(0.968 0.004 264);
-  --muted-foreground: oklch(0.46 0.014 264);
-  --accent: oklch(0.955 0.006 264);
-  --accent-foreground: oklch(0.17 0.012 264);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.17 0 0);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.968 0 0);
+  --secondary-foreground: oklch(0.17 0 0);
+  --muted: oklch(0.968 0 0);
+  --muted-foreground: oklch(0.46 0 0);
+  --accent: oklch(0.955 0 0);
+  --accent-foreground: oklch(0.17 0 0);
   --destructive: oklch(0.55 0.22 27);
-  --border: oklch(0.925 0.006 264);
-  --input: oklch(0.89 0.008 264);
-  --ring: #1530ff;
-  --font-display: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
-  --signal: #1530ff;
-  --signal-soft: #e9ecff;
+  --border: oklch(0.925 0 0);
+  --input: oklch(0.89 0 0);
+  --ring: #111111;
+  --font-display: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --signal: #111111;
+  --signal-soft: #eeeeee;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
   --radius: 0.5rem;
-  --sidebar: oklch(0.985 0.003 264);
-  --sidebar-foreground: oklch(0.145 0.012 264);
-  --sidebar-primary: oklch(0.17 0.012 264);
-  --sidebar-primary-foreground: oklch(0.99 0.002 264);
-  --sidebar-accent: oklch(0.955 0.006 264);
-  --sidebar-accent-foreground: oklch(0.17 0.012 264);
-  --sidebar-border: oklch(0.925 0.006 264);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.17 0 0);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.955 0 0);
+  --sidebar-accent-foreground: oklch(0.17 0 0);
+  --sidebar-border: oklch(0.925 0 0);
   --sidebar-ring: oklch(0.55 0.21 262);
 }
 
@@ -227,3 +226,60 @@
 @utility bg-signal { background-color: var(--signal); }
 @utility text-signal { color: var(--signal); }
 @utility bg-signal-soft { background-color: var(--signal-soft); }
+
+/* Perspective belongs to the presentation, never to the responsive page itself. */
+/* Product canvas: true 390 × 844 viewport inside a correctly proportioned handset. */
+.live-stage { min-width:0; position:relative; color:white; }
+.live-stage-controls { display:flex; flex-wrap:wrap; gap:.25rem; padding:.5rem 0; border-bottom:1px solid #ffffff20; }
+.live-stage-space { position:relative; display:grid; place-items:center; height:35rem; overflow:hidden; perspective:1400px; background:radial-gradient(ellipse at 50% 55%,#ffffff12,transparent 58%); }
+.live-stage-device { --phone-screen:228px; position:relative; z-index:2; box-sizing:border-box; width:calc(var(--phone-screen) + 12px); height:calc(var(--phone-screen) * 844 / 390 + 12px); border:6px solid #202020; border-radius:2.4rem; overflow:hidden; background:#fff; box-shadow:0 0 0 1px #777,12px 18px 0 -8px #333,0 30px 65px #0009; transform:rotateY(-12deg) rotateX(3deg) rotateZ(-3deg); transition:transform .5s; }
+.live-stage-device:focus-within,[data-angle="false"] .live-stage-device { transform:none; }
+.live-stage-camera { position:absolute; z-index:5; top:6px; left:36%; width:28%; height:12px; border-radius:20px; background:#111; pointer-events:none; }
+.live-stage-desktop { position:absolute; left:46%; top:9%; width:min(50%,750px); opacity:.9; transform:rotateY(-8deg) rotateZ(1deg); pointer-events:none; }
+.live-stage-space:not([data-desktop="true"]) .live-stage-device { margin-right:35%; }
+.live-stage-caption { position:absolute; bottom:8px; right:0; color:#aaa; font-size:11px; }
+.live-stage-space[data-desktop="true"] .live-stage-device { width:calc(100% - 48px); height:29rem; border-radius:12px; transform:none; }
+.live-stage-space[data-desktop="true"] .live-stage-camera,.live-stage-space[data-desktop="true"] .live-stage-desktop { display:none; }
+.stage-tool { display:grid; width:2.5rem; height:2.5rem; place-items:center; border-radius:6px; color:#aaa; outline:none; }
+.stage-tool:hover,.stage-tool[aria-pressed="true"] { background:#ffffff12; color:white; }
+.stage-tool:focus-visible { box-shadow:0 0 0 2px white; }
+@media(max-width:640px) { .live-stage-space { height:31rem; } .live-stage-device { --phone-screen:206px; } .live-stage-space:not([data-desktop="true"]) .live-stage-device { margin-right:0; } .live-stage-desktop { display:none; } .live-stage-space[data-desktop="true"] .live-stage-device { width:calc(100% - 8px); height:23rem; } }
+@media(prefers-reduced-motion:reduce) { .live-stage-device { transform:none; transition:none; } }
+.setup-flow input:not([type="radio"]):not([type="checkbox"]):not([type="file"]) { min-height: 3.25rem; border-radius: .75rem; }
+.setup-flow .setup-industry:nth-child(3n + 2) { --tile-accent: #e5e5e5; }
+@media (max-width: 1023px) {
+  .setup-flow { padding-bottom: 6rem; }
+  .setup-flow > header { margin-bottom: 2rem; }
+  .setup-next { position: sticky; bottom: 0; z-index: 20; margin-inline: -1.25rem; padding: 1rem 1.25rem max(1rem, env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: #fffffff5; backdrop-filter: blur(16px); }
+  .setup-flow[data-step="widgets"] > nav { margin-bottom: 1rem; }
+  .setup-flow[data-step="widgets"] > div > aside { order: -1; }
+  .setup-flow[data-step="widgets"] > div { gap: 0; }
+  .setup-flow[data-step="widgets"] > div > section { position: relative; z-index: 2; margin: -1.5rem -1.25rem 0; padding: 1.75rem 1.25rem 0; border-radius: 2rem 2rem 0 0; background: white; box-shadow: 0 -8px 30px #00000012; }
+  .setup-flow[data-step="widgets"] #step-title { font-size: 1.75rem; margin-bottom: 1rem; }
+  .setup-live-choice { height: 23rem; margin-inline: -1.25rem; padding: 1rem 2rem 0; overflow: hidden; background: #111111; }
+  .setup-live-choice > div > div:first-child { display: none; }
+  .setup-live-choice iframe { border-radius: 1.25rem 1.25rem 0 0; }
+}
+.setup-loading-art { position: relative; width: 230px; height: 160px; margin-inline: auto; perspective: 600px; }
+.setup-loading-art i { position: absolute; top: 15px; left: 70px; width: 100px; height: 135px; border-radius: 12px; border: 2px solid #080808; background: #111111; transform: rotate(-14deg) translateX(-45px); animation: setup-fan 1.3s ease-in-out infinite alternate; }
+.setup-loading-art i:nth-child(2) { background: #ffffff; transform: translateY(-10px); animation-delay: -.3s; }
+.setup-loading-art i:nth-child(3) { background: #f5f6fa; transform: rotate(14deg) translateX(45px); animation-delay: -.6s; }
+.setup-loading-art i::after { content: ""; position: absolute; left: 15px; right: 15px; top: 65px; height: 8px; border-radius: 3px; background: #080808; box-shadow: 0 18px 0 #08080828; }
+@keyframes setup-fan { to { translate: 0 -10px; } }
+@media (prefers-reduced-motion: reduce) { .setup-loading-art i { animation: none; } }
+.feature-spotlight-scene { height: 26rem; display: grid; place-items: center; overflow: hidden; border-radius: 1.5rem; perspective: 1000px; }
+.feature-spotlight-ui { width: 340px; height: 390px; padding: 12px; border-radius: 1.25rem; background: #fff; box-shadow: 18px 22px 0 #00000018, 0 26px 55px -20px #0005; transform: rotateY(-8deg) rotateZ(-4deg) translateY(24px); transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+li:hover > .feature-spotlight-scene .feature-spotlight-ui { transform: rotateY(0) rotateZ(0) translateY(12px); }
+@media (max-width: 640px) { .feature-spotlight-ui { width: 290px; height: 370px; } .feature-spotlight-scene { height: 25rem; } }
+@media (prefers-reduced-motion: reduce) { .feature-spotlight-ui, li:hover > .feature-spotlight-scene .feature-spotlight-ui { transform: none; transition: none; } }
+
+/* Marketing stays monochrome; colour belongs to customer content inside its own frames. */
+.marketing-shell { --background:#080808; --foreground:#fff; --muted:#171717; --muted-foreground:#aaa; --card:#121212; --card-foreground:#fff; --signal:#fff; --signal-soft:#171717; --ring:#fff; }
+.booking-object-scene { display:grid; min-height:30rem; place-items:center; border:1px solid #ffffff15; border-radius:12px; padding:1.5rem; background:radial-gradient(ellipse at center,#ffffff09,transparent 65%),#111; }
+.booking-object-scene > figure { max-width:420px!important; box-shadow:0 24px 60px #0008; }
+.feature-spotlight-scene { border:1px solid #ffffff15; border-radius:12px; }
+.feature-spotlight-ui { padding:0; border-radius:12px; background:transparent; box-shadow:0 24px 60px #0008; transform:rotateY(-5deg) rotateZ(-2deg); }
+.share-object-scene { display:grid; min-height:26rem; place-items:center; overflow:hidden; perspective:1000px; background:radial-gradient(ellipse at center,#ffffff0b,transparent 68%); }
+.share-object-card { width:280px; padding:28px; background:white; border:1px solid #ddd; border-radius:4px; transform:rotateY(-13deg) rotateZ(-7deg); text-align:center; box-shadow:1px 1px 0 #ddd,3px 3px 0 #aaa,0 28px 80px #000a; }
+@media(max-width:640px) { .booking-object-scene { min-height:24rem; padding:1rem; } .share-object-scene { min-height:24rem; } }
+@media(prefers-reduced-motion:reduce) { .share-object-card { transform:none; } }

@@ -13,7 +13,7 @@ export interface Look {
   overrides: StyleOverrides;
 }
 
-export const LOOKS: Look[] = [
+const EXISTING_LOOKS: Look[] = [
   {
     id: "forecourt",
     name: "Forecourt",
@@ -863,6 +863,64 @@ export const LOOKS: Look[] = [
     },
   },
 ];
+
+/** New compositions lead discovery; earlier IDs still resolve for existing saved pages. */
+export const SPOTLIGHT_LOOK_IDS = ["voltage", "apex", "ultraviolet", "minted", "blueprint", "signal"] as const;
+function composition(id: string, name: string, blurb: string, base: string, overrides: StyleOverrides): Look {
+  const original = EXISTING_LOOKS.find(l => l.id === base)!.overrides;
+  return { id, name, blurb, overrides: { ...original, ...overrides,
+    colors: { ...original.colors, ...overrides.colors }, text: { ...original.text, ...overrides.text },
+    header: { ...original.header, ...overrides.header }, buttons: { ...original.buttons, ...overrides.buttons },
+    cards: { ...original.cards, ...overrides.cards }, layout: { ...original.layout, ...overrides.layout },
+  } };
+}
+export const LOOKS: Look[] = [
+  composition("voltage", "Voltage", "Electric blue. Oversized type. Your work in the spotlight.", "highstreet", {
+    colors: { background: "#1645ff", text: "#ffffff", muted: "#e0e7ff", surface: "#0c31c9", accent: "#d5ff40", accentText: "#102000", border: "#6c8cff" },
+    background: { kind: "solid", color: "#1645ff" },
+    text: { headingFont: "spaceGrotesk", bodyFont: "inter", size: "lg", headingCase: "upper" },
+    header: { layout: "poster", avatarShape: "logo", scrim: "strong" },
+    buttons: { shape: "square" }, cards: { surface: "transparent", radius: "none", border: "thin", padding: "roomy" },
+    layout: { desktop: "split", width: "wide" }, motion: "lively",
+  }),
+  composition("apex", "Apex", "Carbon black. Acid green. Big photography and precise detail.", "workbay", {
+    colors: { background: "#080a0e", text: "#ffffff", muted: "#b9c0cf", surface: "#151922", accent: "#bcff3b", accentText: "#122000", border: "#353d4b" },
+    background: { kind: "solid", color: "#080a0e" },
+    text: { headingFont: "barlowCondensed", bodyFont: "inter", size: "lg", headingCase: "upper" },
+    header: { layout: "poster", scrim: "strong" }, buttons: { shape: "square", shadow: "none" },
+    cards: { radius: "sm", padding: "roomy", border: "thin" }, layout: { desktop: "columns", width: "wide" }, motion: "lively",
+  }),
+  composition("ultraviolet", "Ultraviolet", "An unmistakable violet identity, icy panels and a wide introduction.", "forecourt", {
+    colors: { background: "#6227ed", text: "#ffffff", muted: "#e6dcff", surface: "#481db8", accent: "#caffef", accentText: "#08291e", border: "#ac8bff" },
+    background: { kind: "solid", color: "#6227ed" }, text: { headingFont: "spaceGrotesk", size: "lg" },
+    header: { layout: "feature", avatarShape: "logo" }, buttons: { shape: "rounded" },
+    cards: { radius: "md", surface: "solid", padding: "roomy" }, layout: { desktop: "centered", width: "wide" }, motion: "lively",
+  }),
+  composition("minted", "Minted", "Ice mint, ink-black type and a menu with real presence.", "counter", {
+    colors: { background: "#baffeb", text: "#061d24", muted: "#315b60", surface: "#e9fff8", accent: "#183dff", accentText: "#ffffff", border: "#75c5b4" },
+    background: { kind: "solid", color: "#baffeb" },
+    text: { headingFont: "spaceGrotesk", bodyFont: "inter", headingWeight: "bold", size: "lg" },
+    header: { layout: "cover", actions: "none" }, buttons: { shape: "square" },
+    cards: { radius: "none", surface: "transparent", border: "thin", padding: "roomy" }, layout: { desktop: "split" }, motion: "lively",
+  }),
+  composition("blueprint", "Blueprint", "White space with a cobalt punch. A wide photo and clearly framed services.", "fieldwork", {
+    colors: { background: "#edf1ff", text: "#0d1738", muted: "#47547a", surface: "#ffffff", accent: "#1645ff", accentText: "#ffffff", border: "#bcc9ef" },
+    background: { kind: "solid", color: "#edf1ff" }, text: { headingFont: "spaceGrotesk", size: "lg" },
+    header: { layout: "feature" }, cards: { radius: "sm", padding: "roomy" }, buttons: { shape: "square" },
+    layout: { desktop: "centered", width: "wide" }, motion: "lively",
+  }),
+  composition("signal", "Signal", "Cyan, black and a personal introduction. Bold without getting in the way.", "notebook", {
+    colors: { background: "#60e4ff", text: "#071b35", muted: "#224c6b", surface: "#c5f5ff", accent: "#071b35", accentText: "#ffffff", border: "#2fa4c5" },
+    background: { kind: "solid", color: "#60e4ff" },
+    text: { headingFont: "manrope", bodyFont: "inter", headingWeight: "bold", size: "lg" },
+    header: { layout: "side", avatarShape: "rounded" }, cards: { radius: "md", padding: "roomy" },
+    layout: { desktop: "split", width: "wide" }, motion: "lively",
+  }),
+  ...EXISTING_LOOKS,
+];
+
+/** Discovery uses the new direction. Earlier configurations remain resolvable for saved pages. */
+export const CURRENT_LOOKS = LOOKS.filter(l => [...SPOTLIGHT_LOOK_IDS, "clean", "night", "colour", "photo", "journal", "forge"].includes(l.id));
 
 /* ---- Radix-derived palettes: coordinated neutral + accent, light and dark ---- */
 type Scale = Record<string, string>;

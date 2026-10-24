@@ -350,3 +350,7 @@ li.tp-subcard + li.tp-subcard, figure.tp-subcard + figure.tp-subcard { padding-t
   .tp-header[data-layout="feature"] > .tp-cover-body { grid-column: 2; grid-row: 1; }
   .tp-header[data-layout="feature"] .tp-name { font-size: calc(clamp(2rem, 3.8vw, 3rem) * var(--tp-heading-scale, 1)); }
 }
+.tp-google-review { display: flex; align-items: center; gap: var(--tp-s-4); padding-block: var(--tp-s-4); color: var(--tp-foreground); text-decoration: none; }
+.tp-google-mark { display: grid; flex: none; width: 3.25rem; height: 3.25rem; place-items: center; border: 1px solid var(--tp-border); border-radius: 1rem; background: white; color: #4285f4; }
+.tp-google-review[data-compact="false"] { min-height: 7rem; }
+.tp-google-review:hover strong { text-decoration: underline; text-underline-offset: .2em; }

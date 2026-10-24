@@ -5,12 +5,12 @@
     "poster": "/marketing/walkthroughs/setup-poster.webp",
     "width": 780,
     "height": 1928,
-    "duration": 25.92,
+    "duration": 26.76,
     "fps": "25/1",
-    "bytes": 1731080,
-    "sha256": "0268e6554107a8b9cd4afe31388dd2ba26dde710bcb3de82b643ae4fe5fb97e4",
-    "recordedAt": "2026-10-24T04:22:21.953Z",
-    "source": "/onboarding?from=station-road-barbers",
+    "bytes": 1257187,
+    "sha256": "6e45df144b9f195f1d0d5e28b02a5938e4c7c538a3a8784760a54bd0f5943547",
+    "recordedAt": "2026-10-24T07:26:49.427Z",
+    "source": "/onboarding?from=jays-barbers",
     "chapters": [
       {
         "seconds": 0,
@@ -18,33 +18,43 @@
         "line": "Start from a design. Use your own business details."
       },
       {
-        "seconds": 4,
+        "seconds": 3.7,
         "title": "Say what you do",
         "line": "The example suggests Barber. You can change it."
       },
       {
-        "seconds": 7.2,
-        "title": "Choose a starting look",
-        "line": "High Street is selected. Every look stays editable."
+        "seconds": 4.4,
+        "title": "Choose the next step",
+        "line": "Booking requests fit this business. Contact and messaging are options too."
       },
       {
-        "seconds": 11.2,
+        "seconds": 5.1,
+        "title": "Add a way to reach you",
+        "line": "Choose one. You can add more later."
+      },
+      {
+        "seconds": 8.5,
         "title": "Add a real offering",
         "line": "A haircut, its price and the time it takes."
       },
       {
-        "seconds": 15.3,
+        "seconds": 12.7,
+        "title": "Choose a starting look",
+        "line": "Voltage is selected. Every look stays editable."
+      },
+      {
+        "seconds": 16.7,
         "title": "Review before you continue",
         "line": "Check your page. Publishing is still a preview."
       },
       {
-        "seconds": 19.8,
+        "seconds": 20.7,
         "title": "Keep making it yours",
         "line": "Your draft is now in the editor, saved in this browser."
       }
     ],
     "outcome": {
-      "name": "Cedar Road Barbers",
+      "name": "Alex’s Barbers",
       "service": "Haircut",
       "storage": "browser-only"
     }
@@ -55,11 +65,11 @@
     "poster": "/marketing/walkthroughs/booking-poster.webp",
     "width": 780,
     "height": 1928,
-    "duration": 29.08,
+    "duration": 29.04,
     "fps": "25/1",
-    "bytes": 1540315,
-    "sha256": "0ff5158d837894043b118041cee6a86888531baf17c3f335b7a49a873b599663",
-    "recordedAt": "2026-10-24T04:22:52.630Z",
+    "bytes": 1813825,
+    "sha256": "6997b2ac6688a0db8ccbeed3d10913f0f973cd3f10c078c63954cb7390292242",
+    "recordedAt": "2026-10-24T07:27:22.177Z",
     "source": "/appearance/frame?scenario=station",
     "chapters": [
       {

@@ -44,5 +44,6 @@ export function Frame() {
     }) : page.widgets
     return buildPageViewModel(toContent(cfg), { ...page, widgets }, { plan: "business" })
   }, [cfg, widgetType, variant])
-  return <PageRenderer vm={vm} />
+  const isolated = widgetType ? vm.widgets.find(w => w.type === widgetType) : undefined
+  return <PageRenderer vm={vm} fragment={isolated ? { kind: "widget", id: isolated.id } : undefined} />
 }

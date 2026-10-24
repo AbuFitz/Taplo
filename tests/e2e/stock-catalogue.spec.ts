@@ -6,7 +6,7 @@ for (const width of [390, 1440]) {
   test(`UK stock is readable, image-backed and enquiry-ready at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 1000 })
     await page.goto("/appearance/frame?scenario=brookfield")
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Brookfield Motors")
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Harris Cars")
     const cards = page.locator('.tp-product[data-kind="vehicle"]')
     await expect(cards).toHaveCount(3)
     const a = (await cards.nth(0).boundingBox())!
@@ -69,15 +69,16 @@ test("an owner chooses Large cards with real previews, undo, redo and persistenc
 })
 
 
-test("starting from Brookfield sets up a car dealer with the owner's own stock", async ({ page }) => {
+test("starting from Harris Cars sets up a car dealer with the owner's own stock", async ({ page }) => {
   await page.goto("/onboarding?from=brookfield-motors")
-  await expect(page.getByTestId("from-example")).toContainText("Brookfield Motors")
+  await expect(page.getByTestId("from-example")).toContainText("Harris Cars")
   await page.getByLabel("Business name", { exact: true }).fill("Example Motor Sales")
   await page.getByRole("button", { name: "Continue", exact: true }).click()
   await expect(page.getByRole("button", { name: "Car dealer", exact: true })).toHaveAttribute("aria-pressed", "true")
-  await page.getByLabel("Phone (optional)").fill("01632 960123")
   await page.getByRole("button", { name: "Continue", exact: true }).click()
-  await expect(page.getByTestId("look-picker").getByRole("radio", { name: /Forecourt/ })).toBeChecked()
+  await page.getByRole("button", { name: "Continue", exact: true }).click()
+  await page.getByRole("group", { name: "Contact method" }).getByRole("button", { name: "Phone", exact: true }).click()
+  await page.getByLabel("Phone", { exact: true }).fill("01632 960123")
   await page.getByRole("button", { name: "Continue", exact: true }).click()
   await expect(page.getByRole("heading", { name: "Add your first vehicle", exact: true })).toBeVisible()
   const state = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!))

@@ -229,7 +229,7 @@ export const SCENARIOS: Record<Scenario, { label: string; content: BusinessConte
       newWidget("gallery", { title: "The shop", variant: "grid" }),
       newWidget("hours", { title: "When we're open" }),
       newWidget("faq", { title: "Before you visit" }),
-      newWidget("share", { label: "Share Station Road", variant: "button" }),
+      newWidget("share", { label: "Share Jay’s Barbers", variant: "button" }),
     ],
   },
   detailer: {

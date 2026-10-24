@@ -2,9 +2,9 @@ import { expect, test } from "@playwright/test"
 import path from "node:path"
 
 const businesses = [
-  { scenario: "corner", name: "Corner Table Café", slug: "sunday-counter", route: "corner-table-cafe", desktop: "split" },
-  { scenario: "oakfield", name: "Oakfield Home Repairs", slug: "fieldwork-home-care", route: "oakfield-home-repairs", desktop: "centered" },
-  { scenario: "rowan", name: "Rowan Learning", slug: "rowan-learning", route: "rowan-learning", desktop: "split" },
+  { scenario: "corner", name: "No. 6 Coffee", slug: "sunday-counter", route: "corner-table-cafe", desktop: "split" },
+  { scenario: "oakfield", name: "Dan’s Home Repairs", slug: "fieldwork-home-care", route: "oakfield-home-repairs", desktop: "centered" },
+  { scenario: "rowan", name: "Maths with Aisha", slug: "rowan-learning", route: "rowan-learning", desktop: "split" },
 ]
 for (const width of [390, 1440]) {
   test.describe(`${width}px new UK examples`, () => {
@@ -19,7 +19,7 @@ for (const width of [390, 1440]) {
         if (b.scenario === "oakfield" && width === 1440) expect((await page.getByTestId("service-open").first().boundingBox())!.y).toBeLessThan(650)
         await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `${b.scenario}-${width}.png`), fullPage: true })
         await page.goto(`/inspiration/${b.route}`)
-        await expect(page.getByRole("heading", { level: 1 })).toHaveText(b.scenario === "corner" ? "Counter" : b.scenario === "oakfield" ? "Fieldwork" : "Notebook")
+        await expect(page.getByRole("heading", { level: 1 })).toHaveText(b.scenario === "corner" ? "Minted" : b.scenario === "oakfield" ? "Blueprint" : "Signal")
         await expect(page.getByTestId("start-design").first()).toBeVisible()
       })
     }

@@ -1,3 +1,4 @@
+import { selectedService } from "../widgets/selection";
 import { serviceListItems } from "../widgets/service-list";
 import type { BusinessContent } from "@/features/businesses/content";
 import { formatMoney } from "@/features/services/format";
@@ -201,17 +202,16 @@ export const CHOICES: ContentChoice[] = [
   {
     id: "reviews",
     type: "reviews",
-    name: "Reviews",
-    blurb: "Words from customers who agreed to share them.",
+    name: "Google reviews",
+    blurb: "Your Google reviews, one tap away.",
     group: "trust",
     art: "stars",
-    needs: "review",
   },
   {
     id: "leave-review",
     type: "leaveReview",
     name: "Ask for a review",
-    blurb: "Link to where customers can review you.",
+    blurb: "Invite customers to review you on Google.",
     group: "trust",
     art: "button",
   },
@@ -429,7 +429,7 @@ export function summarise(
         break;
       }
       case "featuredService": {
-        const x = r.services.find((v) => v.id === s.serviceId) ?? r.services[0];
+        const x = selectedService(r.services.filter(v => !v.archived), s.serviceId);
         summary = x ? x.name : "";
         break;
       }
@@ -455,10 +455,7 @@ export function summarise(
         break;
       }
       case "reviews": {
-        const n = pickIds(r.testimonials, s.testimonialIds).length;
-        summary = r.rating
-          ? `${r.rating.value}★ from ${r.rating.count} on ${r.rating.source}`
-          : `${n} ${n === 1 ? "review" : "reviews"}`;
+        summary = r.reviewLinks.some(l => l.platform === "google") ? "Google reviews linked" : "Add your Google review link";
         break;
       }
       case "team": {

@@ -19,7 +19,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
   test("looks are configurations of the same engine; content never changes", async ({ page }) => {
     await page.goto("/appearance");
     const f = frame(page);
-    await expect(f.getByRole("heading", { level: 1 })).toHaveText("Station Road Barbers");
+    await expect(f.getByRole("heading", { level: 1 })).toHaveText("Jay’s Barbers");
     const name = await f.getByRole("heading", { level: 1 }).textContent();
     const services = await f.locator('[data-widget="priceMenu"] li').count();
 
@@ -136,7 +136,7 @@ test("changing a look keeps the current example preview and open customer conten
   await page.setViewportSize({ width: 1600, height: 1000 })
   await page.goto("/appearance")
   const preview = frame(page)
-  await expect(preview.getByRole("heading", { level: 1 })).toHaveText("Station Road Barbers")
+  await expect(preview.getByRole("heading", { level: 1 })).toHaveText("Jay’s Barbers")
   const faq = preview.locator("summary").filter({ hasText: "Can I choose a barber?" })
   await faq.click()
   await expect(faq.locator("xpath=parent::details")).toHaveAttribute("open", "")

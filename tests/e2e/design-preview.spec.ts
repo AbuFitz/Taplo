@@ -9,7 +9,7 @@ for (const width of [390, 1440]) {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("High Street")
     const preview = page.getByTestId("design-preview")
     const frame = page.frameLocator('iframe[data-testid="design-preview-frame"]')
-    await expect(frame.getByRole("heading", { level: 1 })).toHaveText("Station Road Barbers")
+    await expect(frame.getByRole("heading", { level: 1 })).toHaveText("Jay’s Barbers")
     expect(await frame.locator("body").evaluate(() => innerWidth)).toBeLessThan(450)
     await frame.getByRole("button", { name: "Book a haircut", exact: true }).click()
     const flow = frame.getByTestId("booking-flow")

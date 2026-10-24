@@ -9,6 +9,7 @@ import { WIDGET_TYPES, parseSettings, type WidgetType } from "../contracts/widge
 import type { WidgetAppearance } from "../contracts/style";
 import { migratePage } from "../migrate";
 import { resolveStyle, widgetStyle, type ResolvedStyle } from "../themes/resolve";
+import { selectedService } from "../widgets/selection";
 import { getWidget } from "../widgets/registry";
 import type { WidgetContext, WidgetStatus } from "../widgets/types";
 
@@ -95,7 +96,7 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
   const page: PageDoc = opts.themeOverride ? { ...mig.page, themeId: opts.themeOverride } : mig.page;
   ctx.featuredServiceIds = [...new Set(page.widgets.filter((w) => w.type === "featuredService" && !w.hidden).map((w) => {
     const { settings } = parseSettings("featuredService", w.settings);
-    return business.services.find((s) => s.id === settings.serviceId)?.id ?? business.services[0]?.id;
+    return selectedService(business.services, settings.serviceId)?.id;
   }).filter((id): id is string => Boolean(id)))];
   const style = resolveStyle(page.themeId, page.appearance);
   // Theme choice is a Core+ capability: Free keeps the industry's suggested theme.

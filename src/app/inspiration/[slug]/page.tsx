@@ -43,7 +43,7 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
           <DesignPreview scenario={e.scenario} name={f.name} />
         </section>
 
-        <section className="border-y border-foreground/10 bg-[#f1eddf] py-12 sm:py-16">
+        <section className="border-y border-foreground/10 bg-[#f4f4f4] py-12 sm:py-16">
           <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 md:grid-cols-[1fr_1.4fr] md:gap-20">
             <div>
               <h2 className="font-display text-3xl tracking-[-0.035em]">Make it work for you.</h2>
@@ -64,7 +64,7 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
           <ul className="mt-8 grid gap-10 sm:grid-cols-3">
             {others.map((o) => { const g = describe(o); return (
               <li key={o.slug}><Link href={`/inspiration/${o.slug}`} className="group block outline-none focus-visible:ring-3 focus-visible:ring-ring/60">
-                <div className="rounded-2xl bg-muted p-5"><Shot id={`ex-${o.slug}-phone` as never} alt={`${g.name}'s page in the ${g.lookName} design`} width={220} cropTo={320} fluid className="mx-auto transition-transform group-hover:-translate-y-1 motion-reduce:transition-none" /></div>
+                <div className="rounded-2xl bg-muted p-5"><Shot id={`ex-${g.assetSlug}-phone` as never} alt={`${g.name}'s page in the ${g.lookName} design`} width={220} cropTo={320} fluid className="mx-auto transition-transform group-hover:-translate-y-1 motion-reduce:transition-none" /></div>
                 <h3 className="mt-4 font-display text-2xl">{g.lookName}</h3><p className="mt-1 text-sm leading-relaxed text-foreground/65">{o.hook}</p>
               </Link></li>
             ) })}

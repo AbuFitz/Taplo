@@ -12,7 +12,7 @@ export interface LabConfig {
 }
 
 /** The look each example was designed with. */
-export const EXAMPLE_LOOK: Record<Scenario, string> = { corner: "counter", oakfield: "fieldwork", rowan: "notebook", brookfield: "forecourt", station: "highstreet", detailer: "workbay", barber: "folio", dealer: "showroom", trades: "colour", physio: "journal", cafe: "clay", tutor: "orchard", gym: "forge" }
+export const EXAMPLE_LOOK: Record<Scenario, string> = { corner: "minted", oakfield: "blueprint", rowan: "signal", brookfield: "blueprint", station: "voltage", detailer: "apex", barber: "folio", dealer: "showroom", trades: "colour", physio: "journal", cafe: "clay", tutor: "orchard", gym: "forge" }
 
 /**
  * How each example is arranged on top of its look: the header, how wide the page is and what it does on a computer. These
@@ -22,7 +22,7 @@ export const EXAMPLE_OVERRIDES: Record<Scenario, StyleOverrides> = {
   corner: {},
   oakfield: {},
   rowan: {},
-  brookfield: {},
+  brookfield: { header: { layout: "feature", avatarShape: "logo", align: "left" }, layout: { width: "wide", desktop: "columns" }, colors: { background: "#f5f7fc", text: "#111827", surface: "#ffffff", accent: "#1645ff", accentText: "#ffffff", muted: "#526078", border: "#d6ddeb" }, background: { kind: "solid", color: "#f5f7fc" } },
   station: {},
   detailer: {},
   barber: {},

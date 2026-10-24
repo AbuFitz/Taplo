@@ -147,7 +147,7 @@ test.describe("My page editor", () => {
     // an optional look can still be a starting point; content and widgets stay exactly as they were
     await openSection(page, /^Look/);
     const seen = new Set<string>();
-    for (const id of ["night", "clean", "colour", "photo", "showroom"]) {
+    for (const id of ["night", "clean", "colour", "photo", "ultraviolet"]) {
       await look(page, id).click();
       await expect(look(page, id).locator("input")).toBeChecked();
       await expect.poll(async () => frame.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-background").trim())).toBe(getTheme(id)!.style.colors.background);
@@ -218,7 +218,7 @@ test.describe("My page editor", () => {
     await openRow(page, start[1]!); await insp(page).getByRole("button", { name: "Move down" }).click();      // reorder
     await openStructure(page);
     const reordered = await rowOrder(page);
-    await pickLook(page, "showroom");                           // theme
+    await pickLook(page, "ultraviolet");                           // theme
     await selectPart(page, "header");
     await openSection(page, "Your name and description");
     const name = page.getByLabel("Business name");

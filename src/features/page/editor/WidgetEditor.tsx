@@ -23,6 +23,7 @@ import { ColorField, FieldShell, ImageField, Segmented, SelectField, SwitchField
 import { RecordsField } from "./RecordsField"
 import { PagePreview } from "@/features/preview/PagePreview"
 import type { Editor } from "./useEditor"
+import { GoogleReviewsSettings } from "./GoogleReviewsSettings"
 import { SocialLinksEditor } from "./SocialLinksEditor"
 
 interface Option { id: string; label: string }
@@ -85,6 +86,7 @@ export function WidgetFields({ stored, ed }: { stored: StoredWidget; ed: Editor 
         </Field>
       ) : null}
       {stored.type === "social" ? <SocialLinksEditor ed={ed} /> : null}
+      {stored.type === "reviews" || stored.type === "leaveReview" ? <GoogleReviewsSettings ed={ed} /> : null}
       {def.fields.map((f) => {
         const v = s[f.key]
         switch (f.kind) {

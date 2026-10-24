@@ -47,27 +47,26 @@ const jobs = [
   { id: "veh-detail", url: frame("brookfield"), vp: [1000, 900], run: async (p) => { await p.locator('.tp-product[data-status="available"]').first().getByRole("button", { name: /View details/ }).first().click() }, shot: DIALOG },
   // ---- Gallery, reviews, enquiry, sharing
   { id: "gal-lightbox", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByTestId("gallery-open").first().click(); await p.getByTestId("lightbox").waitFor() }, shot: '[data-testid="lightbox"]' },
-  { id: "rev-quote", url: frame("trades"), vp: [390, 900], shot: '[data-widget="reviews"]' },
   { id: "enq-inline", url: frame("detailer"), vp: [390, 900], shot: '[data-widget="enquiry"]' },
   { id: "enq-sent", url: frame("detailer"), vp: [390, 900], run: async (p) => { const f = p.locator('[data-widget="enquiry"]'); await f.getByRole("textbox", { name: "Your name" }).fill("Ruth"); await f.getByRole("textbox", { name: "Phone (optional)" }).fill("07700 900123"); await f.getByRole("textbox", { name: "Your message" }).fill("Could you quote for an interior clean for a Ford Focus?"); await f.getByRole("button", { name: /Send message/ }).click(); await p.getByTestId("enquiry-sent").waitFor() }, shot: '[data-widget="enquiry"]' },
-  { id: "share-sheet", origin: "https://taplo.example", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Share Station/ }).click(); await p.getByTestId("share-panel").waitFor(); /* the artwork shows the page as it is once it has its own address, so the workspace's preview note is left out */ await p.addStyleTag({ content: "[data-testid=share-demo-note]{display:none!important}" }); await p.waitForTimeout(400) }, shot: '[data-testid="share-panel"]' },
+  { id: "share-sheet", origin: "https://taplo.example", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Share Jay/ }).click(); await p.getByTestId("share-panel").waitFor(); /* the artwork shows the page as it is once it has its own address, so the workspace's preview note is left out */ await p.addStyleTag({ content: "[data-testid=share-demo-note]{display:none!important}" }); await p.waitForTimeout(400) }, shot: '[data-testid="share-panel"]' },
   // The downloadable share image, exactly as a customer would save it.
-  { id: "share-image", origin: "https://taplo.example", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Share Station/ }).click(); await p.getByTestId("share-panel").waitFor() }, download: async (p) => { await p.getByTestId("share-tab-card").click(); const [dl] = await Promise.all([p.waitForEvent("download"), p.getByRole("button", { name: /Share image/ }).click()]); return readFileSync(await dl.path()) } },
+  { id: "share-image", origin: "https://taplo.example", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Share Jay/ }).click(); await p.getByTestId("share-panel").waitFor() }, download: async (p) => { await p.getByTestId("share-tab-card").click(); const [dl] = await Promise.all([p.waitForEvent("download"), p.getByRole("button", { name: /Share image/ }).click()]); return readFileSync(await dl.path()) } },
   // The standalone QR code on a transparent background, set against a light surface to show it is real.
-  { id: "qr-options", origin: "https://taplo.example", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Share Station/ }).click(); await p.getByTestId("share-panel").waitFor(); await p.addStyleTag({ content: "[data-testid=share-demo-note]{display:none!important}" }); await p.getByRole("radio", { name: "Your logo" }).click(); await p.getByRole("radio", { name: "Dots" }).click(); await p.waitForTimeout(400) }, shot: '[data-testid="share-panel"]' },
-  { id: "qr-standalone", origin: "https://taplo.example", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Share Station/ }).click(); await p.getByTestId("share-panel").waitFor() }, download: async (p) => { await p.getByRole("radio", { name: "Transparent" }).click(); const [dl] = await Promise.all([p.waitForEvent("download"), p.getByRole("button", { name: /QR code · Screen/ }).click()]); return readFileSync(await dl.path()) } },
-  { id: "setup-1-name", url: "/onboarding", vp: [1100, 860], run: async p => { await p.getByLabel("Business name").fill("Your local business") }, clip: [0, 0, 1100, 860] },
+  { id: "qr-options", origin: "https://taplo.example", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Share Jay/ }).click(); await p.getByTestId("share-panel").waitFor(); await p.addStyleTag({ content: "[data-testid=share-demo-note]{display:none!important}" }); await p.getByRole("radio", { name: "Your logo" }).click(); await p.getByRole("radio", { name: "Dots" }).click(); await p.waitForTimeout(400) }, shot: '[data-testid="share-panel"]' },
+  { id: "qr-standalone", origin: "https://taplo.example", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Share Jay/ }).click(); await p.getByTestId("share-panel").waitFor() }, download: async (p) => { await p.getByRole("radio", { name: "Transparent" }).click(); const [dl] = await Promise.all([p.waitForEvent("download"), p.getByRole("button", { name: /QR code · Screen/ }).click()]); return readFileSync(await dl.path()) } },
+  { id: "setup-1-name", url: "/onboarding", vp: [1100, 860], run: async p => { await p.getByLabel("Business name").fill("Alex’s Barbers") }, clip: [0, 0, 1100, 860] },
   // ---- Setup: the first, middle and last of the short journey, on a computer
-  { id: "setup-2-what", url: "/onboarding", vp: [1100, 860], run: async (p) => { await p.getByLabel("Business name").fill("Your local business"); await p.getByRole("button", { name: "Continue" }).click(); await p.getByRole("list", { name: "Kinds of business" }).getByRole("button", { name: "Barber" }).click() }, clip: [0, 0, 1100, 860] },
-  { id: "setup-3-design", url: "/onboarding", vp: [1100, 860], run: async (p) => { await p.getByLabel("Business name").fill("Your local business"); await p.getByRole("button", { name: "Continue" }).click(); await p.getByRole("list", { name: "Kinds of business" }).getByRole("button", { name: "Barber" }).click(); await p.getByLabel("Phone (optional)").fill("020 7946 0123"); await p.getByLabel("Phone (optional)").blur(); await p.getByRole("button", { name: "Continue" }).click() }, clip: [0, 0, 1100, 860] },
-  { id: "setup-4-first", url: "/onboarding", vp: [1100, 860], run: async (p) => { await p.getByLabel("Business name").fill("Your local business"); await p.getByRole("button", { name: "Continue" }).click(); await p.getByRole("list", { name: "Kinds of business" }).getByRole("button", { name: "Barber" }).click(); await p.getByLabel("Phone (optional)").fill("020 7946 0123"); await p.getByLabel("Phone (optional)").blur(); await p.getByRole("button", { name: "Continue" }).click(); await p.getByRole("button", { name: "Continue" }).click(); await p.getByLabel("Service 1 name").fill("Haircut"); await p.getByLabel("Service 1 price").fill("22"); await p.getByLabel("Service 1 minutes").fill("30"); await p.getByRole("button", { name: "Add another" }).click(); await p.getByLabel("Service 2 name").fill("Skin fade"); await p.getByLabel("Service 2 price").fill("32") }, clip: [0, 0, 1100, 860] },
+  { id: "setup-2-what", url: "/onboarding", vp: [1100, 860], run: async (p) => { await p.getByLabel("Business name").fill("Alex’s Barbers"); await p.getByRole("button", { name: "Continue" }).click(); await p.getByRole("list", { name: "Kinds of business" }).getByRole("button", { name: "Barber" }).click() }, clip: [0, 0, 1100, 860] },
+  { id: "setup-3-design", url: "/onboarding", vp: [1100, 860], run: async p => { await setupFirstContent(p); await p.getByLabel("Service 1 name").fill("Haircut"); await p.getByLabel("Service 1 price").fill("22"); await p.getByLabel("Service 1 minutes").fill("30"); await p.getByRole("button", { name: "Continue", exact: true }).click() }, clip: [0, 0, 1100, 860] },
+  { id: "setup-4-first", url: "/onboarding", vp: [1100, 860], run: async p => { await setupFirstContent(p); await p.getByLabel("Service 1 name").fill("Haircut"); await p.getByLabel("Service 1 price").fill("22"); await p.getByLabel("Service 1 minutes").fill("30"); await p.getByRole("button", { name: "Add another" }).click(); await p.getByLabel("Service 2 name").fill("Skin fade"); await p.getByLabel("Service 2 price").fill("25") }, clip: [0, 0, 1100, 860] },
   // ---- Design: one business, six starting looks
   ...["night", "journal", "clay", "forge", "orchard", "showroom"].map((l) => ({ id: `look-${l}`, url: frame("barber", l), vp: [390, 844], clip: [0, 0, 390, 600] })),
 ]
 
 const firstContentJob = jobs.find(j => j.id === "setup-4-first")
 if (!firstContentJob) throw new Error("Missing first-content capture")
-jobs.push({ ...firstContentJob, id: "setup-5-review", run: async p => { await firstContentJob.run(p); await p.getByRole("button", { name: "Continue", exact: true }).click(); await p.getByRole("heading", { name: "Your page is ready to look at", exact: true }).waitFor() } })
+jobs.push({ ...firstContentJob, id: "setup-5-review", run: async p => { await firstContentJob.run(p); await p.getByRole("button", { name: "Continue", exact: true }).click(); await p.getByRole("button", { name: "Continue", exact: true }).click(); await p.getByRole("heading", { name: "Your page is ready to look at", exact: true }).waitFor() } })
 
 // The setup story uses real mobile captures on phones, rather than shrinking desktop form text.
 for (const j of [...jobs].filter(j => j.id.startsWith("setup-"))) jobs.push({ ...j, id: `${j.id}-phone`, vp: [390, 844], clip: [0, 0, 390, 844], run: async p => { await j.run(p); await p.locator("#step-title").scrollIntoViewIfNeeded() } })
@@ -113,8 +112,22 @@ for (const j of jobs.filter((x) => !only.length || only.includes(x.id))) {
 }
 await browser.close()
 const prior = (() => { try { return JSON.parse(readFileSync(out + "manifest.json", "utf8")) } catch { return {} } })()
-const merged = JSON.stringify({ ...prior, ...manifest }, null, 2) + "\n"
+const entries = { ...prior, ...manifest }
+for (const m of Object.values(entries)) m.sha256 = createHash("sha256").update(readFileSync(new URL("../../public" + m.file, import.meta.url))).digest("hex").slice(0,12)
+const merged = JSON.stringify(entries, null, 2) + "\n"
 writeFileSync(out + "manifest.json", merged)
 writeFileSync(new URL("../../src/features/marketing/manifest.json", import.meta.url).pathname, merged)
 
 if (failed) process.exitCode = 1
+
+async function setupFirstContent(p) {
+  await p.getByLabel("Business name", { exact: true }).fill("Alex’s Barbers")
+  await p.getByRole("button", { name: "Continue", exact: true }).click()
+  await p.getByRole("list", { name: "Kinds of business" }).getByRole("button", { name: "Barber", exact: true }).click()
+  await p.getByRole("button", { name: "Continue", exact: true }).click()
+  await p.getByRole("radio", { name: /Book with me/ }).check()
+  await p.getByRole("button", { name: "Continue", exact: true }).click()
+  await p.getByRole("group", { name: "Contact method" }).getByRole("button", { name: "Phone", exact: true }).click()
+  await p.getByLabel("Phone", { exact: true }).fill("01632 960123")
+  await p.getByRole("button", { name: "Continue", exact: true }).click()
+}

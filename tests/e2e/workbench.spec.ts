@@ -30,7 +30,26 @@ for (const story of STORIES) {
     const page = await ctx.newPage()
     await page.goto(`/workbench/${story.id}`, { waitUntil: "load" })
     await page.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {})
-    await expect(page.locator(`[data-story="${story.id}"]`).locator(story.header ? "h1" : "[data-widget]").first()).toBeVisible()
+    const root = page.locator(`[data-story="${story.id}"]`)
+    if (story.expectedState) {
+      await expect(root.getByTestId("workbench-status").first()).toHaveAttribute("data-status", story.expectedState)
+      await expect(root.locator("[data-widget]")).toHaveCount(0)
+    } else await expect(root.locator(story.header ? "h1" : "[data-widget]").first()).toBeVisible()
+    if (story.id.startsWith("document--")) {
+      const link = root.getByRole("link", { name: /No. 6 Coffee menu/ })
+      const response = await page.request.get((await link.getAttribute("href"))!)
+      expect(response.headers()["content-type"]).toContain("application/pdf")
+      expect((await response.body()).subarray(0, 5).toString()).toBe("%PDF-")
+    }
+    if (story.id === "sms--light") await expect(root.getByRole("link", { name: /Text the shop/ })).toHaveAttribute("href", /^sms:/)
+    if (story.id === "video--light" || story.id === "video--dark") {
+      await expect(root.locator("iframe")).toHaveCount(0)
+      let providerRequested = false
+      await page.route("**/www.youtube-nocookie.com/**", async route => { providerRequested = true; await route.fulfill({ contentType: "text/html", body: '<!doctype html><html lang="en"><title>Provider request fixture</title><main><h1>Provider request received</h1><p>Playback belongs to the external provider.</p></main></html>' }) })
+      await root.getByRole("button", { name: /Play video/ }).click()
+      await expect(root.locator("iframe")).toHaveAttribute("src", /youtube-nocookie\.com/)
+      await expect.poll(() => providerRequested).toBe(true)
+    }
     if (story.play) await play(page, story.play)
     if (story.widgets.some(w => w.type === "team" && w.settings?.variant === "avatars")) {
       const name = SCENARIOS[story.scenario].content.staff?.[0]?.name

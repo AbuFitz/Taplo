@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto"
 // Captures real Taplo renderer output for marketing. Build-time only: nothing here ships in the app bundle.
 // Usage: BASE_URL=http://localhost:3100 node scripts/marketing/capture.mjs [jobId ...]
 import { readFileSync, mkdirSync, writeFileSync } from "node:fs"
@@ -36,7 +37,9 @@ for (const job of cfg.jobs.filter((j) => !only.length || only.includes(j.id))) {
 }
 await browser.close()
 const prior = (() => { try { return JSON.parse(readFileSync(out + "manifest.json", "utf8")) } catch { return {} } })()
-const merged = JSON.stringify({ ...prior, ...manifest }, null, 2) + "\n"
+const entries = { ...prior, ...manifest }
+for (const m of Object.values(entries)) m.sha256 = createHash("sha256").update(readFileSync(new URL("../../public" + m.file, import.meta.url))).digest("hex").slice(0,12)
+const merged = JSON.stringify(entries, null, 2) + "\n"
 writeFileSync(out + "manifest.json", merged)
 // The app imports the same manifest so every marketing image has real intrinsic dimensions (no layout shift).
 writeFileSync(new URL("../../src/features/marketing/manifest.json", import.meta.url).pathname, merged)

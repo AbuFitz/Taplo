@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 import { CAPABILITY_TAGS, STYLE_TAGS, type CapabilityTag, type StyleTag } from "./facets"
 
 export interface GalleryItem {
-  slug: string; name: string; hook: string; industry: string; industryLabel: string
+  slug: string; assetSlug: string; name: string; hook: string; industry: string; industryLabel: string
   lookId: string; lookName: string; overrides: StyleOverrides; heading: string; header: string
   style: StyleTag[]; capabilities: CapabilityTag[]
 }
@@ -67,8 +67,8 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
             <li key={d.slug} className={cn(view === "phone" && n % 2 === 1 && "xl:mt-8")} data-testid="design-card">
               <Link href={`/inspiration/${d.slug}`} aria-label={`${d.name}: open this design`} className="group block outline-none">
                 {view === "desktop"
-                  ? <Shot id={`ex-${d.slug}-desk` as never} alt={`${d.name}'s page on a desktop screen`} width={720} frame="browser" priority={n < 2} className="w-full transition-transform duration-300 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 motion-reduce:transition-none" />
-                  : <Shot id={`ex-${d.slug}-phone` as never} alt={`${d.name}'s page on a phone`} width={300} cropTo={560} priority={n < 4} className="mx-auto transition-transform duration-300 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 motion-reduce:transition-none" />}
+                  ? <Shot id={`ex-${d.assetSlug}-desk` as never} alt={`${d.name}'s page on a desktop screen`} width={720} frame="browser" priority={n < 2} className="w-full transition-transform duration-300 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 motion-reduce:transition-none" />
+                  : <Shot id={`ex-${d.assetSlug}-phone` as never} alt={`${d.name}'s page on a phone`} width={300} cropTo={560} priority={n < 4} className="mx-auto transition-transform duration-300 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 motion-reduce:transition-none" />}
               </Link>
               <div className="mt-5 flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
                 <div className="min-w-0">

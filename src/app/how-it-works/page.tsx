@@ -43,7 +43,7 @@ export default function HowItWorks() {
     <div className="bg-background">
       <SiteHeader />
       <main>
-        <section className="bg-[#f1eddf] text-[#142d3e]">
+        <section className="bg-[#f4f4f4] text-[#080808]">
           <div className="mx-auto grid max-w-[88rem] items-end gap-8 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-[1.1fr_0.8fr] lg:gap-24">
             <div>
               <p className="text-sm font-semibold">Make a start</p>

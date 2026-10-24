@@ -52,3 +52,9 @@ next-env.d.ts
 /marketing/film/renders/
 /marketing/film/formats/**/.hyperframes/
 /marketing/film/formats/**/renders/
+
+# Intermediate 3D scene review images
+/.cache/three-review/
+
+# Atomic intermediate film encodes
+/.cache/film/

@@ -14,7 +14,7 @@
   "businesses": [
     {
       "id": "stillwater-detailing",
-      "name": "Parkside Valeting",
+      "name": "Detail Dept.",
       "industry": "detailing",
       "proposedLook": "Stillwater",
       "tagline": "Valeting and detailing in Hertfordshire.",
@@ -120,7 +120,7 @@
     },
     {
       "id": "common-room-barbers",
-      "name": "Station Road Barbers",
+      "name": "Jay’s Barbers",
       "industry": "barber",
       "proposedLook": "After Hours",
       "tagline": "Haircuts, skin fades and beard trims.",
@@ -256,7 +256,7 @@
     },
     {
       "id": "alder-motor-house",
-      "name": "Brookfield Motors",
+      "name": "Harris Cars",
       "industry": "dealer",
       "proposedLook": "Forecourt",
       "tagline": "Used cars in Hertfordshire.",
@@ -354,7 +354,7 @@
     },
     {
       "id": "fieldwork-home-care",
-      "name": "Oakfield Home Repairs",
+      "name": "Dan’s Home Repairs",
       "industry": "trades",
       "proposedLook": "Fieldwork",
       "tagline": "Small repairs, shelves and fittings.",
@@ -412,7 +412,7 @@
     },
     {
       "id": "rowan-learning",
-      "name": "Rowan Learning",
+      "name": "Maths with Aisha",
       "industry": "tutor",
       "proposedLook": "Studio Notes",
       "tagline": "GCSE and A-level maths, online and locally.",
@@ -457,7 +457,7 @@
       "team": [
         {
           "id": "rl-rowan",
-          "name": "Rowan",
+          "name": "Aisha",
           "role": "Maths tutor",
           "bio": "A fictional tutor profile demonstrating a clear, personal introduction.",
           "imageAssetId": null
@@ -482,7 +482,7 @@
     },
     {
       "id": "sunday-counter",
-      "name": "Corner Table Café",
+      "name": "No. 6 Coffee",
       "industry": "cafe",
       "proposedLook": "Counter Culture",
       "tagline": "Coffee, breakfast and lunch.",

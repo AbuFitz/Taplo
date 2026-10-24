@@ -4,21 +4,20 @@ import * as React from "react"
 import { Play } from "lucide-react"
 import { getImageProps } from "next/image"
 
-const POSTER = getImageProps({ src: "/marketing/film/poster.webp", alt: "", width: 1920, height: 1080, sizes: "(min-width:1280px) 1100px, 90vw", loading: "lazy" }).props
-const PHONE_POSTER = getImageProps({ src: "/marketing/film/taplo-portrait-poster.webp", alt: "", width: 1080, height: 1920, sizes: "90vw", loading: "lazy" }).props
+const POSTER = getImageProps({ src: "/marketing/film/poster.webp?v=20261024-mono", alt: "", width: 1920, height: 1080, sizes: "(min-width:1280px) 1100px, 90vw", loading: "lazy" }).props
+const PHONE_POSTER = getImageProps({ src: "/marketing/film/taplo-portrait-poster.webp?v=20261024-mono", alt: "", width: 1080, height: 1920, sizes: "90vw", loading: "lazy" }).props
 
 /**
- * The 18-second Taplo film (source: marketing/film, rendered with HyperFrames). It never autoplays and never loads
+ * The 18-second Taplo film (source: marketing/film, authored with Three.js). It never autoplays and never loads
  * until asked: the poster is a sharp still, the film starts on a click, and the same story is written out below it
  * for anyone who cannot or would rather not watch.
  */
 export const FILM_BEATS = [
-  "Your business, one good page: Station Road Barbers brings its work, prices and booking together.",
-  "A price, a time, you’re in: the haircut detail leads to the working booking journey.",
-  "Same business, your own look: four designs show the same name, services and photos.",
-  "Stock worth a closer look: Brookfield Motors shows large photographs, specifications and viewing requests.",
-  "One link, more places: a branded share card carries the business name and QR code.",
-  "Your business, all together. Start free and make your Taplo.",
+  "Your work, open for business: Jay’s Barbers shows services, prices and bookings on one page.",
+  "Choose a service. Book a time. Customers select an appointment from the business page.",
+  "Your photos, your colours: explore the designs for Jay’s Barbers, Detail Dept. and Harris Cars.",
+  "Show the car. Arrange a viewing. Harris Cars presents its vehicle photos, prices and specifications on desktop.",
+  "Build your business page. Start free and add your services or stock.",
 ] as const
 
 export function Film({ className }: { className?: string }) {

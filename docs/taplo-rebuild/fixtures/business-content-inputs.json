@@ -1,7 +1,7 @@
 {
   "stillwater-detailing": {
     "identity": {
-      "name": "Parkside Valeting",
+      "name": "Detail Dept.",
       "slug": "stillwater-detailing",
       "tagline": "Valeting and detailing in Hertfordshire.",
       "industryKey": "detailing",
@@ -118,7 +118,7 @@
   },
   "common-room-barbers": {
     "identity": {
-      "name": "Station Road Barbers",
+      "name": "Jay’s Barbers",
       "slug": "common-room-barbers",
       "tagline": "Haircuts, skin fades and beard trims.",
       "industryKey": "barber",
@@ -286,7 +286,7 @@
   },
   "alder-motor-house": {
     "identity": {
-      "name": "Brookfield Motors",
+      "name": "Harris Cars",
       "slug": "alder-motor-house",
       "tagline": "Used cars in Hertfordshire.",
       "industryKey": "dealer",
@@ -442,7 +442,7 @@
   },
   "fieldwork-home-care": {
     "identity": {
-      "name": "Oakfield Home Repairs",
+      "name": "Dan’s Home Repairs",
       "slug": "fieldwork-home-care",
       "tagline": "Small repairs, shelves and fittings.",
       "industryKey": "trades",
@@ -519,7 +519,7 @@
   },
   "rowan-learning": {
     "identity": {
-      "name": "Rowan Learning",
+      "name": "Maths with Aisha",
       "slug": "rowan-learning",
       "tagline": "GCSE and A-level maths, online and locally.",
       "industryKey": "tutor",
@@ -581,7 +581,7 @@
       {
         "id": "rl-rowan",
         "slug": "rl-rowan",
-        "name": "Rowan",
+        "name": "Aisha",
         "role": "Maths tutor",
         "bio": "A fictional tutor profile demonstrating a clear, personal introduction.",
         "serviceIds": null,
@@ -610,7 +610,7 @@
   },
   "sunday-counter": {
     "identity": {
-      "name": "Corner Table Café",
+      "name": "No. 6 Coffee",
       "slug": "sunday-counter",
       "tagline": "Coffee, breakfast and lunch.",
       "industryKey": "cafe",

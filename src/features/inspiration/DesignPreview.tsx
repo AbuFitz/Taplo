@@ -24,12 +24,12 @@ export function DesignPreview({ scenario, name }: { scenario: string; name: stri
         </fieldset>
         <Link href={`/appearance/frame?scenario=${scenario}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1.5 rounded-md text-sm font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-ring">Open full page<ArrowUpRight aria-hidden="true" className="size-4" /></Link>
       </div>
-      <div className="flex min-h-[30rem] items-center justify-center overflow-hidden rounded-[1.5rem] bg-[#e9e6dd] py-4 sm:px-6 sm:py-7" style={{ height: "min(50rem, 78dvh)" }}>
-        <div className={cn("h-full min-h-0 w-full", view === "phone" ? "max-w-[24.5rem] overflow-hidden rounded-[2rem] border-[6px] border-[#152a32] bg-white shadow-xl" : "px-2")}>
+      <div className="flex min-h-[30rem] items-center justify-center overflow-hidden rounded-[1.5rem] bg-[#e8ecff] py-4 sm:px-6 sm:py-7" style={{ height: "min(50rem, 78dvh)" }}>
+        <div className={cn("h-full min-h-0 w-full", view === "phone" ? "max-w-[24.5rem] overflow-hidden rounded-[2rem] border-[6px] border-[#090b10] bg-white shadow-xl" : "px-2")}>
           <PagePreview src={`/appearance/frame?scenario=${scenario}`} title={`${name}, live`} mode={view === "phone" ? "fill" : "desktop"} chrome={view === "desktop"} url={`${name} · example`} testId="design-preview-frame" />
         </div>
       </div>
-      <p className="mt-3 text-sm text-foreground/60">Scroll, open a service, try the buttons. This is a working example with fictional business details.</p>
+      <p className="mt-3 text-sm text-foreground/60">Explore the page: open a service, compare prices and try the booking flow.</p>
     </div>
   )
 }

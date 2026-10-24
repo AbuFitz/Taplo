@@ -1,10 +1,12 @@
 import * as React from "react"
+import { referencedRecords as pick, selectedPlatforms, selectedService } from "./selection"
 import { serviceListItems } from "./service-list"
 import { SocialIcon } from "./social-icons"
 import { ArrowUpRight, ChevronDown } from "lucide-react"
 import type { ProductContent, ServiceContent } from "@/features/businesses/content"
 import { formatDuration, formatMoney, formatPrice, groupServices } from "@/features/services/format"
-import { SOURCE_LABEL } from "@/components/taplo/taplo-review-card"
+import { googleReviewUrl } from "./google-reviews"
+import { siGoogle } from "simple-icons"
 import { isHttpUrl, smsHref } from "@/lib/validation"
 import { cn } from "@/lib/utils"
 import type { WidgetType } from "../contracts/widgets"
@@ -27,7 +29,6 @@ type S = Record<string, any> // eslint-disable-line @typescript-eslint/no-explic
 interface P { w: RenderWidget; vm: PageViewModel }
 
 const str = (v: unknown): string => (typeof v === "string" ? v : "")
-const pick = <T extends { id: string }>(all: T[], ids: unknown): T[] => (Array.isArray(ids) ? ids.map((id) => all.find((x) => x.id === id)).filter((x): x is T => Boolean(x)) : all)
 
 function Card({ title, children, className }: { title?: string; children: React.ReactNode; className?: string }) {
   return (
@@ -93,7 +94,7 @@ const SOCIAL_NAME: Record<string, string> = { instagram: "Instagram", facebook: 
 
 function SocialWidget({ w, vm }: P) {
   const s = w.settings as S
-  const links = vm.business.contacts.social.filter((x) => !Array.isArray(s.platforms) || s.platforms.includes(x.platform))
+  const links = selectedPlatforms(vm.business.contacts.social, s.platforms)
   if (s.variant === "list") {
     return <div className="grid gap-2">{links.map((l) => <LinkRow key={l.platform} w={w} href={l.url} label={SOCIAL_NAME[l.platform] ?? l.platform} icon="AtSign" external variant="compact" />)}</div>
   }
@@ -160,7 +161,7 @@ function PriceMenuWidget({ w, vm }: P) {
 
 function FeaturedServiceWidget({ w, vm }: P) {
   const s = w.settings as S
-  const svc = vm.business.services.find((x) => x.id === s.serviceId) ?? vm.business.services[0]
+  const svc = selectedService(vm.business.services, s.serviceId)
   if (!svc) return null
   return (
     <Card>
@@ -280,59 +281,20 @@ function PaymentWidget({ w, vm }: P) {
 }
 
 /* ------------------------------------------------------------------ trust / people */
-function RatingLine({ vm }: { vm: PageViewModel }) {
-  const r = vm.business.rating
-  if (!r) return null
-  const name = r.source[0]!.toUpperCase() + r.source.slice(1)
-  const body = <><span aria-hidden="true">★</span> {r.value.toFixed(1)} · {r.count} on {name}</>
-  return r.url ? <a className="mb-2 inline-block text-sm underline underline-offset-4" href={r.url} target="_blank" rel="noopener noreferrer" aria-label={`${r.value.toFixed(1)} out of 5 from ${r.count} ${name} reviews`}>{body}</a> : <p className="mb-2 text-sm">{body}</p>
+function GoogleMark() {
+  return <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true"><path d={siGoogle.path} /></svg>
 }
-
 function ReviewsWidget({ w, vm }: P) {
+  const url = googleReviewUrl(vm.business)
+  if (!url) return null
   const s = w.settings as S
-  const list = pick(vm.business.testimonials, s.testimonialIds)
-  const [lead, ...rest] = list
-  return (
-    <Card title={s.title || vm.industry.terminology.reviews}>
-      {s.showRating ? <RatingLine vm={vm} /> : null}
-      {s.variant === "quote" && lead ? (
-        <figure className="tp-figure">
-          <blockquote className="tp-quote tp-quote-lead">“{lead.quote}”</blockquote>
-          <figcaption className="tp-muted mt-2 text-sm"><strong className="text-[var(--tp-foreground)]">{lead.author}</strong> · {SOURCE_LABEL[lead.source]}</figcaption>
-          {rest.length ? <p className="tp-muted mt-3 text-xs">+ {rest.length} more shared by the business</p> : null}
-        </figure>
-      ) : s.variant === "swipe" && list.length > 1 ? (
-        <Collection label={s.title || "Reviews"}>
-          {list.map((t) => (
-            <figure key={t.id} className="tp-subcard m-0 h-full">
-              <blockquote className="tp-quote tp-clamp-5">“{t.quote}”</blockquote>
-              <figcaption className="tp-muted mt-2 text-sm"><strong className="text-[var(--tp-foreground)]">{t.author}</strong> · {t.sourceUrl ? <a className="underline" href={t.sourceUrl} target="_blank" rel="noopener noreferrer">{SOURCE_LABEL[t.source]}</a> : SOURCE_LABEL[t.source]}</figcaption>
-            </figure>
-          ))}
-        </Collection>
-      ) : (
-        <ul className="tp-rows">
-          {list.map((t) => (
-            <li key={t.id}>
-              <blockquote className={s.variant === "compact" ? "text-sm" : "tp-quote"}>“{t.quote}”</blockquote>
-              <p className="tp-muted mt-1 text-sm"><strong className="text-[var(--tp-foreground)]">{t.author}</strong> · {t.sourceUrl ? <a className="underline" href={t.sourceUrl} target="_blank" rel="noopener noreferrer">{SOURCE_LABEL[t.source]}</a> : SOURCE_LABEL[t.source]}</p>
-            </li>
-          ))}
-        </ul>
-      )}
-    </Card>
-  )
+  return <Card title={s.title || "Google reviews"}><a href={url} target="_blank" rel="noopener noreferrer" className="tp-google-review" data-compact={s.variant === "compact"}>
+    <span className="tp-google-mark"><GoogleMark /></span><span className="min-w-0 flex-1"><strong className="block">What customers say</strong><span className="tp-muted mt-1 block text-sm">Read our reviews on Google</span></span><ArrowUpRight className="size-5 shrink-0" aria-hidden="true" />
+  </a></Card>
 }
-
-const PLATFORM = { google: "Google", facebook: "Facebook", trustpilot: "Trustpilot" } as const
 function LeaveReviewWidget({ w, vm }: P) {
-  const s = w.settings as S
-  const links = vm.business.reviewLinks.filter((l) => !Array.isArray(s.platforms) || s.platforms.includes(l.platform))
-  return (
-    <div className="grid gap-2">
-      {links.map((l) => <LinkRow key={l.platform} w={w} href={l.url} label={str(s.label) ? `${s.label} (${PLATFORM[l.platform]})` : `Review us on ${PLATFORM[l.platform]}`} icon="ThumbsUp" external variant="button" />)}
-    </div>
-  )
+  const url = googleReviewUrl(vm.business)
+  return url ? <LinkRow w={w} href={url} label={str(w.settings.label) || "Review us on Google"} icon="ThumbsUp" external variant="button" /> : null
 }
 
 function firstSentences(text: string | undefined, max = 110): string {

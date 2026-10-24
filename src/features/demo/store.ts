@@ -17,7 +17,7 @@ import { PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
 const KEY = "taplo.demo.v2";
 const LEGACY_KEY = "taplo.demo.v1";
 
-export const ONBOARDING_STEPS = ["business", "industry", "widgets", "contacts", "publish"] as const;
+export const ONBOARDING_STEPS = ["business", "industry", "goal", "reach", "contacts", "widgets", "publish"] as const;
 export type OnboardingStep = (typeof ONBOARDING_STEPS)[number];
 
 export interface DemoState {

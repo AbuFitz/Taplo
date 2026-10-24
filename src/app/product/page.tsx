@@ -22,7 +22,7 @@ export default function ProductIndex() {
     <div className="bg-background">
       <SiteHeader />
       <main>
-        <section className="bg-[#f1eddf] text-[#142d3e]">
+        <section className="bg-[#f4f4f4] text-[#080808]">
           <div className="mx-auto max-w-[88rem] px-5 pb-14 pt-12 sm:px-8 sm:pb-20 sm:pt-20">
             <div className="grid items-end gap-8 lg:grid-cols-[1.1fr_0.8fr] lg:gap-24">
               <h1 className="font-display font-display-tight max-w-4xl text-[clamp(2.75rem,6.5vw,6rem)] leading-[0.99] tracking-[-0.055em]">
@@ -45,7 +45,7 @@ export default function ProductIndex() {
             </div>
             <nav
               aria-label="Product sections"
-              className="mt-12 flex flex-wrap gap-x-7 gap-y-2 border-t border-[#142d3e]/20 pt-6"
+              className="mt-12 flex flex-wrap gap-x-7 gap-y-2 border-t border-[#080808]/20 pt-6"
             >
               {PRODUCT_GROUPS.map((g, n) => (
                 <a

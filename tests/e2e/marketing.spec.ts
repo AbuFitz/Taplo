@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { PLAN_IDS } from "../../src/features/subscriptions/plans";
 import { resolveEntitlements } from "../../src/features/subscriptions/entitlements";
-import { EXAMPLES } from "../../src/features/inspiration/examples";
+import { EXAMPLES, bySlug } from "../../src/features/inspiration/examples";
 import { PRODUCT_LINKS } from "../../src/features/marketing/ia";
 
 const EXAMPLE_SLUGS = [
@@ -79,7 +79,7 @@ test.describe("navigation", () => {
       "/dashboard",
     );
     await expect(
-      header.getByRole("link", { name: "Make your Taplo" }),
+      header.getByRole("link", { name: "Start free" }),
     ).toHaveAttribute("href", /\/onboarding|\/pricing/);
   });
 
@@ -95,10 +95,10 @@ test.describe("navigation", () => {
     await trigger.click();
     const sheet = page.getByRole("dialog");
     await expect(sheet).toBeVisible();
-    await sheet.getByText("Product", { exact: true }).click();
+    await expect(sheet.getByRole("link", { name: /The platform/ })).toBeVisible();
     await expect(sheet.getByRole("link", { name: "Booking" })).toBeVisible();
     await expect(
-      sheet.getByRole("link", { name: "Make your Taplo" }),
+      sheet.getByRole("link", { name: "Start free" }),
     ).toBeInViewport();
     await page.keyboard.press("Escape");
     await expect(sheet).toBeHidden();
@@ -156,7 +156,7 @@ test.describe("inspiration", () => {
       await expect(page.locator("iframe")).toHaveCount(1);
       await expect(page.getByTestId("start-design")).toHaveAttribute(
         "href",
-        `/onboarding?from=${slug}`,
+        `/onboarding?from=${bySlug(slug)!.slug}`,
       );
     }
   });
@@ -175,11 +175,11 @@ test.describe("inspiration", () => {
     expect(dark).toBeGreaterThan(0);
     expect(dark).toBeLessThan(EXAMPLES.length);
     await page.getByRole("button", { name: "Vehicles", exact: true }).click();
-    await expect(cards).toHaveCount(0); // no dark design has vehicle stock
+    await expect(cards).toHaveCount(0); // both motoring examples use light stock or dark detailing themes, with no dark vehicle catalogue
     await page.getByRole("button", { name: "Dark", exact: true }).click();
     await expect(cards).toHaveCount(1);
     await expect(
-      page.getByRole("heading", { name: "Forecourt" }),
+      page.getByRole("heading", { name: "Blueprint" }),
     ).toBeVisible();
     await page.getByRole("button", { name: "Clear filters" }).click();
     await expect(cards).toHaveCount(EXAMPLES.length);
@@ -206,10 +206,12 @@ test.describe("inspiration", () => {
       .locator("img")
       .first();
     await expect(first).toHaveAttribute("src", /ex-station-road-barbers-phone/);
+    await expect.poll(() => first.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
     await page.getByRole("radio", { name: "Desktop" }).check({ force: true });
     await expect(
       page.getByTestId("design-card").first().locator("img").first(),
     ).toHaveAttribute("src", /ex-station-road-barbers-desk/);
+    await expect.poll(() => first.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
   });
   test("using a design on an existing page changes the look and arrangement only; the owner's content and widget order stay", async ({
     page,
@@ -218,7 +220,7 @@ test.describe("inspiration", () => {
     await page.evaluate(() => localStorage.clear());
     await page.reload();
     await page
-      .getByRole("button", { name: "Try Station Road Barbers" })
+      .getByRole("button", { name: "Try Jay’s Barbers" })
       .click();
     await page.waitForURL("**/dashboard/page");
     const before = await page.evaluate(() => {
@@ -232,7 +234,7 @@ test.describe("inspiration", () => {
     await page.goto("/inspiration");
     await page
       .getByTestId("design-card")
-      .filter({ hasText: "Mono" })
+      .filter({ hasText: "Harris Cars" })
       .getByTestId("apply-look")
       .click();
     await page.waitForURL("**/dashboard/page");
@@ -247,9 +249,9 @@ test.describe("inspiration", () => {
     });
     expect(after.content).toEqual(before.content);
     expect(after.order).toEqual(before.order);
-    expect(after.themeId).toBe("journal");
+    expect(after.themeId).toBe("blueprint");
     expect(after.themeId).not.toBe(before.themeId);
-    expect(after.appearance.layout.desktop).toBe("split");
+    expect(after.appearance.layout.desktop).toBe("columns");
     // The change is one undo away.
     await page.getByTestId("undo").click();
     expect(
@@ -281,9 +283,13 @@ test.describe("inspiration", () => {
     await expect(page.getByTestId("plan-intent")).toContainText("Pro");
     await page.getByLabel("Business name").fill("Ridgeway Physio");
     await page.getByRole("button", { name: "Continue" }).click(); // → what you do
+    await page.getByRole("button", { name: "Continue" }).click();
     await expect(page.getByTestId("goal")).toBeVisible();
-    await page.getByLabel("Phone (optional)").fill("01632 960987");
-    await page.getByLabel("Phone (optional)").blur();
+    await page.getByRole("button", { name: "Continue" }).click();
+    await page.getByRole("group", { name: "Contact method" }).getByRole("button", { name: "Phone", exact: true }).click();
+    await page.getByLabel("Phone", { exact: true }).fill("01632 960987");
+    await page.getByLabel("Phone", { exact: true }).blur();
+    await page.getByRole("button", { name: "Continue" }).click(); // → first content
     await page.getByRole("button", { name: "Continue" }).click(); // → design
     await expect(
       page.getByTestId("look-picker").getByRole("radio", { name: /Mono/ }),
@@ -291,10 +297,11 @@ test.describe("inspiration", () => {
     await expect(
       page.locator("section[aria-labelledby=step-title]"),
     ).not.toContainText("Hollin");
-    await page.getByTestId("look-picker").getByText("Orchard").click();
+    await page.getByTestId("look-picker").getByText("More looks", { exact: true }).click();
+    await page.getByTestId("look-picker").getByText("Signal", { exact: true }).click();
     await page.reload();
     await expect(
-      page.getByTestId("look-picker").getByRole("radio", { name: /Orchard/ }),
+      page.getByTestId("look-picker").getByRole("radio", { name: /Signal/ }),
     ).toBeChecked(); // a refresh does not re-apply the example
   });
 });
@@ -339,7 +346,7 @@ test.describe("film", () => {
     ).toBeVisible();
     await page.getByText("Read the film", { exact: true }).click();
     await expect(
-      page.getByText(/Same business, your own look: four designs/),
+      page.getByText(/Your photos, your colours/),
     ).toBeVisible();
     await page.getByRole("button", { name: /Play, 18 seconds/ }).click();
     const v = page.locator("video");
@@ -392,7 +399,7 @@ test.describe("home and widths", () => {
     ])
       expect(t, bad).not.toContain(bad);
     await expect(page.locator("main")).toContainText(
-      "switch on when you connect messaging",
+      "need their services connected",
     );
   });
 });

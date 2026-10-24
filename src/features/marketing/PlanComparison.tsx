@@ -53,8 +53,8 @@ export function PlanComparison({ rows }: { rows: ComparisonRow[] }) {
                 className={cn(
                   "flex min-h-11 items-center justify-center rounded-full border-2 px-1 text-sm font-semibold peer-focus-visible:ring-3 peer-focus-visible:ring-signal/50 peer-focus-visible:ring-offset-2",
                   selected === id
-                    ? "border-[#142d3e] bg-[#142d3e] text-white"
-                    : "border-[#142d3e]/25 bg-white text-[#142d3e]",
+                    ? "border-[#080808] bg-[#080808] text-white"
+                    : "border-[#080808]/25 bg-white text-[#080808]",
                 )}
               >
                 {PLANS[id].name}
@@ -70,7 +70,7 @@ export function PlanComparison({ rows }: { rows: ComparisonRow[] }) {
         >
           <caption className="sr-only">Plan comparison</caption>
           <thead>
-            <tr className="border-b border-foreground/15 bg-[#e8eccc]/50">
+            <tr className="border-b border-foreground/15 bg-[#ffffff]/50">
               <th scope="col" className="p-4 font-semibold">
                 Feature
               </th>

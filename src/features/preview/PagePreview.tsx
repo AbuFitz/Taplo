@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { getImageProps } from "next/image"
 import { cn } from "@/lib/utils"
 import type { FromPreview, Selection, ToPreview } from "@/features/page/editor/selection"
 
@@ -40,6 +41,7 @@ export interface PagePreviewProps {
   className?: string
   testId?: string
   /** Decorative thumbnails cannot receive clicks or keyboard focus. */
+  poster?: string
   interactive?: boolean
 }
 
@@ -64,7 +66,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, interactive = true }: PagePreviewProps) {
+export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
@@ -99,7 +101,7 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
         // A customer dialog needs the whole preview visible, including its continuation action.
         host.current?.scrollIntoView({ block: "center", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
       } else if (e.data?.type === "taplo:select") onSelect?.(e.data.selection)
-      else if (e.data?.type === "taplo:ready") { setLoaded(true); post() }
+      else if (e.data?.type === "taplo:ready" || (e.data as {type?: string})?.type === "taplo:lab-ready") { setLoaded(true); post() }
     }
     window.addEventListener("message", onMessage)
     return () => window.removeEventListener("message", onMessage)
@@ -115,7 +117,7 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
       inert={!interactive}
       src={src}
       data-testid={testId ?? "preview-frame"}
-      onLoad={() => { setLoaded(true); post() }}
+      onLoad={() => { if (!poster) setLoaded(true); post() }}
       style={{ width: mode === "fill" ? "100%" : L.vw, height: mode === "fill" ? "100%" : L.vh, border: 0, display: "block", background: "white", pointerEvents: interactive ? undefined : "none" }}
     />
   ) : null
@@ -142,7 +144,10 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
           </div>
         </div>
       ) : null}
-      {!loaded ? <div aria-hidden="true" className="pointer-events-none absolute inset-0 animate-pulse bg-black/[0.04] motion-reduce:animate-none" /> : null}
+      {!loaded && poster ? <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img {...getImageProps({ src: `${poster}?v=20261024-brands`, alt: "", width: mode === "desktop" ? 2200 : 780, height: mode === "desktop" ? 1520 : 1600, sizes: mode === "desktop" ? "550px" : "310px", loading: "eager", fetchPriority: "high" }).props} alt="" className={cn("size-full object-top", mode === "desktop" ? "object-contain" : "object-cover")} /></div> : null}
+      {!loaded && !poster ? <div aria-hidden="true" className="pointer-events-none absolute inset-0 animate-pulse bg-black/[0.04] motion-reduce:animate-none" /> : null}
     </div>
   )
 }
