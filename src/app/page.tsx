@@ -5,7 +5,7 @@ import { formatMoney } from "@/features/services/format"
 import { SiteFooter, SiteHeader, primaryAction } from "@/features/marketing/Site"
 import { Shot } from "@/features/marketing/Shot"
 import { Film } from "@/features/marketing/Film"
-import { BookingStory } from "@/features/marketing/home/BookingStory"
+import { HomeBooking } from "@/features/marketing/home/HomeBooking"
 import { LookSwitcher } from "@/features/marketing/home/LookSwitcher"
 import { PlaqueScene } from "@/features/marketing/PlaqueScene"
 import { MonoField } from "@/features/marketing/MonoField"
@@ -30,11 +30,7 @@ export default function Home() {
 
 
 
-      <MonoField className="home-widget-field"><section aria-labelledby="story-h" className="relative mx-auto max-w-[88rem] px-5 py-16 sm:px-8 sm:py-24">
-        <div className="mb-10 flex flex-wrap items-end justify-between gap-5"><h2 id="story-h" className="font-display text-[clamp(1.8rem,3.2vw,3rem)] font-medium leading-[1.08] tracking-[-.045em]">When booking is<br />the next step.</h2><Link href="/product/booking" className="inline-flex min-h-11 items-center gap-3 rounded text-sm text-white/70 outline-none hover:text-white focus-visible:ring-2 focus-visible:ring-white">Explore booking<ArrowUpRight aria-hidden="true" className="size-4" /></Link></div>
-        <BookingStory />
-        <p className="mt-8 max-w-lg text-sm leading-relaxed text-white/60">Confirm appointments straight away, approve requests first, or agree the work through an enquiry. Set the route that suits each service.</p>
-      </section></MonoField>
+      <HomeBooking />
 
 
       <MonoField className="home-design-field"><section className="marketing-light home-design-section relative mx-auto max-w-[88rem] px-5 py-16 text-black sm:px-8 sm:py-24" aria-labelledby="looks-h"><h2 id="looks-h" className="font-display mb-9 text-[clamp(1.8rem,3.2vw,3rem)] font-medium tracking-[-.045em]">Start with the design.<br />Keep your own identity.</h2><LookSwitcher /></section></MonoField>

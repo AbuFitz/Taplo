@@ -30,7 +30,7 @@ for(const width of [390,1440]) test(`light changes its pixels with input, withou
 
 test("homepage field mounts independently and reacts within its section",async({page})=>{
  await page.setViewportSize({width:390,height:844});await page.emulateMedia({reducedMotion:"no-preference"});
- await page.goto("/");const section=page.locator(".home-widget-field");await section.scrollIntoViewIfNeeded();
+ await page.goto("/");const section=page.locator(".home-design-field").first();await section.scrollIntoViewIfNeeded();
  const shader=section.getByTestId("liquid-light-canvas");await shader.locator("canvas").waitFor();
  await expect(section.locator(".liquid-light")).toHaveCSS("position","absolute");
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);

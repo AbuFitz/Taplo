@@ -26,7 +26,7 @@ const noSideScroll = async (page: Page) =>
   ).toBe(true);
 
 test.describe("navigation", () => {
-  test("Product opens a real menu from the keyboard; every entry is a real page; Escape closes and returns focus; Designs is a plain link", async ({
+  test("Product opens a real menu from the keyboard; every entry is a real page; Escape closes and returns focus; Designs opens industry categories", async ({
     page,
   }) => {
     await page.goto("/");
@@ -43,11 +43,11 @@ test.describe("navigation", () => {
     await expect(product).toHaveAttribute("aria-expanded", "false");
     await expect(product).toBeFocused();
     await page.keyboard.press("Tab");
-    await expect(nav.getByRole("link", { name: "Designs" })).toBeFocused();
-    await expect(nav.getByRole("link", { name: "Designs" })).toHaveAttribute(
-      "href",
-      "/inspiration",
-    );
+    await expect(nav.getByRole("button", { name: "Designs" })).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(nav.getByRole("link", { name: "Clinics and practitioners", exact: true })).toHaveAttribute("href", "/inspiration?industry=health");
+    await page.keyboard.press("Escape");
+    await expect(nav.getByRole("button", { name: "Designs" })).toBeFocused();
   });
 
   test("with a mouse, hovering opens a menu and moving away closes it", async ({
