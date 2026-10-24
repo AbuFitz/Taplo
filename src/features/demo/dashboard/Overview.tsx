@@ -10,6 +10,7 @@ import { canPublish, hasUnpublishedChanges, publish, readiness, unpublish } from
 import { useDraft } from "../hooks"
 import { PreviewFrame } from "../ui"
 import { Panel, PageHeader } from "./Panel"
+import { UpcomingBookings } from "./UpcomingBookings"
 
 const METRICS = ["Profile views", "Calls", "WhatsApp clicks", "Booking clicks", "Bookings made", "Revenue collected", "Review clicks"]
 
@@ -77,7 +78,7 @@ export function Overview() {
           </Panel>
 
           <Panel title="Upcoming bookings">
-            <p className="text-sm text-muted-foreground">No bookings yet. Online booking is built in a later phase; for now customers call, WhatsApp or email you from your page.</p>
+            <UpcomingBookings />
           </Panel>
         </div>
         <div className="min-w-0"><h2 className="mb-2 text-sm font-semibold">Your page</h2><PreviewFrame height={620} /></div>

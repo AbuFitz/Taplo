@@ -12,7 +12,7 @@ for (const text of [100]) {
   for (const w of widths) {
     const ctx = await b.newContext({ viewport: { width: w, height: 900 }, reducedMotion: "reduce" })
     const p = await ctx.newPage()
-    await p.goto(base + "/dashboard"); await p.evaluate(() => localStorage.clear()); await p.getByRole("button", { name: /^Barber/ }).first().click(); await p.waitForURL(/dashboard\/page/)
+    await p.goto(base + "/dashboard"); await p.evaluate(() => localStorage.clear()); await p.getByText("More sample businesses", { exact: true }).click(); await p.getByRole("button", { name: /^Barber/ }).first().click(); await p.waitForURL(/dashboard\/page/)
     for (const r of routes) {
       await p.goto(base + r, { waitUntil: "load" }); await p.waitForLoadState("networkidle", { timeout: 12000 }).catch(() => {})
       if (text !== 100) await p.addStyleTag({ content: `html { font-size: ${text}% !important; }` })

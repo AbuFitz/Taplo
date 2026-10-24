@@ -13,7 +13,7 @@ test.describe("adding content is one journey", () => {
     await expect(panel.getByText(/Suggested for/)).toBeVisible()
     await expect(panel.getByTestId("choice").first()).toBeVisible()
     // Anything is allowed for any business, including vehicles for a non-dealer.
-    await panel.getByTestId("choice").filter({ hasText: /^Vehicles/ }).first().click()
+    await panel.getByRole("button", { name: "Vehicles", exact: true }).first().click()
     await expect(panel.getByTestId("record-step")).toBeVisible()
     // Validation first; the page is untouched until there is something to show.
     const before = (await records(page)).page.widgets.length
@@ -29,13 +29,19 @@ test.describe("adding content is one journey", () => {
     await openStructure(page)
     await expect(page.getByTestId("content-list")).toContainText("Vehicles")
     await expect(previewFrame(page).getByText("Mini Cooper S")).toBeVisible()
+    await page.getByTestId("undo").click()
+    expect(((await records(page)).content.products ?? []).some((p: { name: string }) => p.name === "Mini Cooper S")).toBe(false)
+    expect((await records(page)).page.widgets.length).toBe(before)
+    await page.getByTestId("redo").click()
+    expect((await records(page)).content.products.at(-1).name).toBe("Mini Cooper S")
+    expect((await records(page)).page.widgets.length).toBe(before + 1)
   })
 
   test("content that already has records is added at once, with no form and no duplicate record", async ({ page }) => {
     await openEditorWithSample(page, "Barber")
     const before = await records(page)
     await page.getByTestId("add-widget").click()
-    await page.getByTestId("choice").filter({ hasText: /^Price menu/ }).first().click()
+    await page.getByRole("button", { name: "Price menu", exact: true }).first().click()
     await expect(page.getByTestId("add-content")).toBeHidden()
     const after = await records(page)
     expect(after.page.widgets.length).toBe(before.page.widgets.length + 1)
@@ -147,6 +153,8 @@ test.describe("ordering", () => {
     await page.mouse.move(t.x + t.width / 2, t.y + t.height / 2 + 10, { steps: 12 })
     await page.mouse.up()
     await expect.poll(() => rowOrder(page)).not.toEqual(start)
+    // dnd-kit suppresses clicks just after dropping to avoid activating the dragged card.
+    await page.waitForTimeout(150)
     await page.locator("[data-widget-row-id]").first().getByTestId("select-widget").click()
     await expect(page.getByTestId("inspector-widget")).toBeVisible()
   })

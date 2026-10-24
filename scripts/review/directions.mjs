@@ -15,7 +15,7 @@ for (const [d, cfg] of Object.entries(D)) {
   await p.goto(`file://${out}hero-${d}.html`); await p.waitForTimeout(800); await p.screenshot({ path: `${out}${d}-hero.png` })
   // The real editor
   await p.goto(base + "/dashboard", { waitUntil: "load" }); await p.evaluate(() => localStorage.clear()); await p.goto(base + "/dashboard", { waitUntil: "load" })
-  await p.getByRole("button", { name: /^Barber/ }).first().click(); await p.waitForURL(/dashboard\/page/); await p.waitForLoadState("networkidle").catch(() => {}); await p.waitForTimeout(1200)
+  await p.getByText("More sample businesses", { exact: true }).click(); await p.getByRole("button", { name: /^Barber/ }).first().click(); await p.waitForURL(/dashboard\/page/); await p.waitForLoadState("networkidle").catch(() => {}); await p.waitForTimeout(1200)
   await p.addStyleTag({ content: cfg.editorCss }); await p.waitForTimeout(500); await p.screenshot({ path: `${out}${d}-editor.png` })
   await ctx.close()
   // The real customer page: phone and desktop, same look

@@ -102,12 +102,13 @@ test.describe("My page editor", () => {
 
     // preview follows the editor order exactly
     const visibleOrder = await previewOrder(page);
-    expect(visibleOrder).toEqual(afterMouse.filter((t) => visibleOrder.includes(t)));
+    await expect.poll(() => previewOrder(page)).toEqual(afterMouse.filter((t) => visibleOrder.includes(t)));
 
     // -- touch drag on a touch-capable context
     const ctx = await browser.newContext({ hasTouch: true, viewport: { width: 390, height: 844 } });
     const tp = await ctx.newPage();
     await tp.goto("/dashboard");
+    await tp.getByText("More sample businesses", { exact: true }).click();
     await tp.getByRole("button", { name: /^Mechanic/ }).first().click();
     await tp.waitForURL("**/dashboard/page");
     await tp.waitForLoadState("networkidle");
