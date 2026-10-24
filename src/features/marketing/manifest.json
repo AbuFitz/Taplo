@@ -340,10 +340,10 @@
     "height": 1156,
     "cssWidth": 704,
     "cssHeight": 578,
-    "bytes": 62034,
+    "bytes": 59870,
     "source": "/appearance/frame?scenario=detailer",
-    "sha256": "3c9f4631663c",
-    "capturedAt": "2026-10-24T06:42:44.943Z"
+    "sha256": "06e8bb67e435",
+    "capturedAt": "2026-10-24T12:20:35.445Z"
   },
   "svc-detail": {
     "file": "/marketing/svc-detail.webp",
@@ -472,10 +472,10 @@
     "height": 1588,
     "cssWidth": 704,
     "cssHeight": 794,
-    "bytes": 253124,
+    "bytes": 170848,
     "source": "/appearance/frame?scenario=brookfield",
-    "sha256": "d078652965ba",
-    "capturedAt": "2026-10-24T06:43:26.983Z"
+    "sha256": "f792acfae686",
+    "capturedAt": "2026-10-24T12:20:37.624Z"
   },
   "gal-lightbox": {
     "file": "/marketing/gal-lightbox.webp",
@@ -956,5 +956,16 @@
     "bytes": 91140,
     "source": "/appearance/frame?scenario=rowan",
     "sha256": "04434fe0566a"
+  },
+  "cafe-menu": {
+    "file": "/marketing/cafe-menu.webp",
+    "width": 716,
+    "height": 712,
+    "cssWidth": 358,
+    "cssHeight": 356,
+    "bytes": 33818,
+    "source": "/appearance/frame?scenario=corner&widget=priceMenu&treatment=soft",
+    "sha256": "74e5151f1946",
+    "capturedAt": "2026-10-24T12:22:15.423Z"
   }
 }

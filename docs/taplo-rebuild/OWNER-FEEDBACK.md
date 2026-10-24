@@ -2,6 +2,12 @@
 
 24 October 2026. Keep this checklist active across runs. “Implemented” means shipped behaviour, not owner approval or finished design quality. Work one area at a time and verify actual rendered quality before moving on.
 
+## Current implementation checkpoints (not owner design approval)
+
+Registration rebuild109b120 is publicly READY and13 public cases pass: explicit logo/framing popup, search-led category, focused contact/action, useful offerings/details, draft preservation, appearance and missing-content review, plan preference, elevated working preview, refreshed café setup captures and recording. Physical-device testing remains open.
+
+The immediately following homepage-film step replaces the opaque MP4 wrapper with a transparent native composition: three11-second business stories, staged photo/product surface movement, maintained neutral artwork and meaningful demo destinations. Hover/focus/offscreen/reduced motion stop progression; manual choice stays selected. Standalone exported films remain available, but are not the homepage story. All larger hero/hierarchy/Product/Pricing/gradient/demo/portal/legal work remains open. Publication confirmation is recorded in PROGRESS.md.
+
 ## Current priority: complete registration before the remaining marketing work
 
 Latest owner instruction overrides the older “next marketing” order above. Finish the connected registration journey first; screenshots and passing tests alone do not establish owner approval.

@@ -32,10 +32,9 @@ for (const width of [390, 1440]) test(`current UK business story and voluntary k
   await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `home-business-story-${width}.png`), fullPage: false })
 })
 
-for (const width of [390, 1440]) test(`film autoplays silently without controls and respects reduced motion at ${width}`, async ({ page }) => {
-  await page.setViewportSize({ width, height: 1000 });await page.emulateMedia({reducedMotion:'no-preference'});await page.goto('/')
-  await page.locator('section[aria-labelledby="film-h"]').scrollIntoViewIfNeeded();const video=page.locator('video')
-  await expect(video).toHaveCount(1);await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.readyState)).toBeGreaterThanOrEqual(2)
-  expect(await video.evaluate((v:HTMLVideoElement)=>({muted:v.muted,controls:v.controls,autoplay:v.autoplay,loop:v.loop,inline:v.hasAttribute("playsinline")}))).toEqual({muted:true,controls:false,autoplay:true,loop:true,inline:true})
-  await expect(page.getByText('Read the film',{exact:true})).toHaveCount(0);await page.emulateMedia({reducedMotion:'reduce'});await expect(video).toHaveCount(0)
+for (const width of [390, 1440]) test(`product story replaces the boxed film and respects reduced motion at ${width}`, async ({ page }) => {
+  await page.setViewportSize({width,height:1000});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/')
+  const story=page.getByTestId('product-story');await story.scrollIntoViewIfNeeded();await expect(story.locator('video')).toHaveCount(0)
+  await expect(story).toHaveAttribute('data-running','false');await expect(story.locator('.product-story-action')).toHaveAttribute('href','/inspiration/detail-dept')
+  await expect(page.getByText('Read the film',{exact:true})).toHaveCount(0)
 })

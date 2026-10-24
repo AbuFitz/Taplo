@@ -335,11 +335,11 @@ test.describe("pricing", () => {
 });
 
 test.describe("film", () => {
-  test("silent inline film autoplays when visible and has no playback controls", async ({ page }) => {
-    await page.emulateMedia({reducedMotion:"no-preference"});await page.goto("/")
-    await page.locator('section[aria-labelledby="film-h"]').scrollIntoViewIfNeeded()
-    await expect(page.locator("video")).toHaveAttribute("autoplay", "")
-    await expect(page.locator("video")).not.toHaveAttribute("controls", "")
+  test("backgroundless product story has useful demo destinations and no playback overlays", async ({ page }) => {
+    await page.emulateMedia({reducedMotion:"reduce"});await page.goto("/")
+    const story=page.getByTestId("product-story");await story.scrollIntoViewIfNeeded()
+    await expect(story.locator("video")).toHaveCount(0)
+    await expect(story.getByRole("link",{name:"Try the detailing demo",exact:true}).first()).toHaveAttribute("href","/inspiration/detail-dept")
     await expect(page.getByText("Read the film",{exact:true})).toHaveCount(0)
     expect((await page.request.head("/marketing/film/taplo-intro.mp4")).ok()).toBe(true)
   });

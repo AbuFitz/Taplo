@@ -15,6 +15,7 @@ const DIALOG = '[role="dialog"]'
 
 /** Each job: where to go, how to get to the state, and what to photograph. */
 const jobs = [
+  { id: "cafe-menu", url: `${frame("corner")}&widget=priceMenu&treatment=soft`, vp: [390, 844], shot: '[data-widget="priceMenu"]' },
   // ---- Booking: a real journey, step by step
   { id: "bk-1-service", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Book (your chair|a haircut)/ }).first().click() }, shot: '[data-testid="booking-flow"]' },
   { id: "bk-2-time", url: frame("station"), vp: [1000, 900], run: async (p) => { await openBooking(p); await p.getByTestId("booking-flow").getByTestId("bk-service").first().click(); await p.getByTestId("booking-flow").getByRole("button", { name: /Anyone available/ }).click(); await p.getByTestId("bk-slots").waitFor() }, shot: '[data-testid="booking-flow"]' },
