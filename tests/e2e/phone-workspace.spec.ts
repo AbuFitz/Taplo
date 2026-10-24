@@ -58,3 +58,34 @@ for (const width of [390, 1440]) test(`theme choices show actual style samples a
   await expect.poll(() => page.locator('iframe[data-testid="setup-live-page"]').evaluate(el => getComputedStyle(el).opacity)).toBe("1")
   await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `theme-phone-${width}.png`) })
 })
+
+
+test("desktop motion preference keeps a static backdrop and working setup", async ({ page }) => {
+  await page.setViewportSize({ width:1440, height:950 })
+  await page.emulateMedia({ reducedMotion:"reduce" })
+  await page.goto("/onboarding")
+  await page.getByLabel("Business name", { exact:true }).fill("The Quiet Studio")
+  await expect(page.getByTestId("setup-backdrop")).toBeVisible()
+  await expect(page.locator(".setup-backdrop canvas")).toHaveCount(0)
+  await page.getByRole("button", { name:"Continue", exact:true }).click()
+  await expect(page.getByRole("heading", { level:1 })).toHaveText("What do you do?")
+  await expect(page.getByRole("button", { name:"Continue", exact:true })).toBeInViewport()
+})
+
+
+test("desktop motion preference changes apply without reloading or losing the profile", async ({ page }) => {
+  await page.setViewportSize({ width:1440, height:950 })
+  await page.emulateMedia({ reducedMotion:"no-preference" })
+  await page.goto("/onboarding")
+  await page.getByLabel("Business name", { exact:true }).fill("The Quiet Studio")
+  const backdrop = page.getByTestId("setup-backdrop")
+  await expect(backdrop).toHaveAttribute("data-reduced-motion", "false")
+  await page.emulateMedia({ reducedMotion:"reduce" })
+  await expect(backdrop).toHaveAttribute("data-reduced-motion", "true")
+  await expect(backdrop.locator("canvas")).toHaveCount(0)
+  await page.emulateMedia({ reducedMotion:"no-preference" })
+  await expect(backdrop).toHaveAttribute("data-reduced-motion", "false")
+  await expect(page.getByLabel("Business name", { exact:true })).toHaveValue("The Quiet Studio")
+  await page.emulateMedia({ reducedMotion:"reduce" })
+  await expect(backdrop.locator("canvas")).toHaveCount(0)
+})

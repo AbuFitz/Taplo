@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react"
+import { useReducedMotion } from "@/lib/use-reduced-motion"
+import { motion, useMotionValue, useSpring } from "motion/react"
 
 // One bounded canvas behind the desktop workspace. Mobile uses the static CSS surface.
 const Field = React.lazy(async () => {
@@ -37,9 +38,9 @@ export function SetupBackdrop() {
     window.addEventListener("pointermove", move, { passive: true }); document.addEventListener("pointerleave", reset)
     return () => { window.removeEventListener("pointermove", move); document.removeEventListener("pointerleave", reset) }
   }, [enabled, reduced, px, py])
-  return <div className="setup-backdrop" aria-hidden="true" data-testid="setup-backdrop">
+  return <div className="setup-backdrop" aria-hidden="true" data-testid="setup-backdrop" data-reduced-motion={reduced}>
     <motion.div className="setup-backdrop-field" style={{ x: reduced ? 0 : x, y: reduced ? 0 : y }}>
-      {enabled ? <React.Suspense fallback={null}><Field moving={!reduced && visible} /></React.Suspense> : null}
+      {enabled && !reduced && visible ? <React.Suspense fallback={null}><Field moving /></React.Suspense> : null}
     </motion.div>
   </div>
 }
