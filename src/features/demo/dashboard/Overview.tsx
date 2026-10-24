@@ -1,5 +1,7 @@
 "use client"
 
+import { businessAddress } from "@/lib/domains"
+
 import { WHEN_UNAVAILABLE } from "@/lib/capabilities"
 import * as React from "react"
 import Link from "next/link"
@@ -81,7 +83,7 @@ export function Overview() {
             <UpcomingBookings />
           </Panel>
         </div>
-        <div className="min-w-0"><h2 className="mb-2 text-sm font-semibold">Your page</h2><PreviewFrame height={620} /></div>
+        <div className="min-w-0"><h2 className="mb-2 text-sm font-semibold">Your page</h2><PreviewFrame url={businessAddress(s.content.identity.slug)} height={620} /></div>
       </div>
     </>
   )

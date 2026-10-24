@@ -621,10 +621,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 52718,
+    "bytes": 53330,
     "source": "/onboarding",
-    "sha256": "80e09d3c9861",
-    "capturedAt": "2026-10-24T18:01:37.829Z"
+    "sha256": "eb8ba45be227",
+    "capturedAt": "2026-10-24T19:18:10.857Z"
   },
   "setup-3-start": {
     "file": "/marketing/setup-3-start.webp",
@@ -847,10 +847,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 30834,
+    "bytes": 31436,
     "source": "/onboarding",
-    "sha256": "c8d995f11412",
-    "capturedAt": "2026-10-24T18:01:50.697Z",
+    "sha256": "5ea9e9ac861b",
+    "capturedAt": "2026-10-24T19:18:12.523Z",
     "surface": "#f3f3f3"
   },
   "setup-2-what-phone": {

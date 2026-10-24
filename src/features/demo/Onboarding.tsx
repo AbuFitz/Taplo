@@ -1,5 +1,7 @@
 "use client"
 
+import { TAPLO_DOMAINS } from "@/lib/domains"
+
 import { Overlay } from "@/components/taplo/overlay"
 import "./onboarding-mobile.css"
 import { BusinessIcon } from "./BusinessIcon"
@@ -258,7 +260,7 @@ export function Onboarding() {
               <ImageField presentation="identity" purpose="identity" samples={false} onFramingChange={shape=>update(x=>({...x,page:{...x.page,appearance:{...x.page.appearance,header:{...x.page.appearance.header,avatarShape:shape}}}}))} label="Add your logo or profile photo" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
               <TaploInput label="Business name" value={c.identity.name} maxLength={100} autoComplete="organization" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
               <div className="-mt-2 text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">taplo.co/{c.identity.slug || "your-name"}</span>{" "}
+                <span className="font-medium text-foreground">{TAPLO_DOMAINS.host}/{c.identity.slug || "your-name"}</span>{" "}
                 <button type="button" onClick={() => setEditSlug((v) => !v)} aria-expanded={editSlug || (showErrors && slugErrs.length > 0)} className="rounded px-1 font-medium text-foreground underline underline-offset-4">{editSlug ? "Done" : "Change"}</button>
                 {slugErrs.length && c.identity.slug ? <span className="block text-destructive">{SLUG_PROBLEM_MESSAGE[slugErrs[0]!]}</span> : null}
               </div>

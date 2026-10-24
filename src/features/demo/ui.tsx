@@ -122,8 +122,8 @@ export function UrlField({ label, value, onCommit, validate, help, autoFocus = f
  * the shared PagePreview controller. Phone shows a device-sized viewport; Desktop shows a readable
  * desktop viewport that fits the space, or at actual size (scrollable).
  */
-export function PreviewFrame({ className, height = 640, fill = false, selection, onSelect, initialDevice = "mobile", presentation = "device" }: {
-  className?: string; height?: number; presentation?: "device" | "canvas"
+export function PreviewFrame({ className, height = 640, fill = false, selection, onSelect, initialDevice = "mobile", presentation = "device", url }: {
+  className?: string; height?: number; presentation?: "device" | "canvas"; url?: string
   /** Take the height left in the window instead of a fixed `height`. */
   fill?: boolean
   /** When `onSelect` is given the preview opens in edit mode: clicking the page selects what was clicked. */
@@ -164,7 +164,8 @@ export function PreviewFrame({ className, height = 640, fill = false, selection,
           mode={canvas && narrow && device === "mobile" ? "fill" : device === "mobile" ? "device" : "desktop"}
           device={{ w: 390, h: 844 }}
           zoom={canvas ? "fit" : zoom}
-          chrome={!canvas || device === "mobile" && !narrow}
+          chrome={device === "desktop" || !canvas || !narrow}
+          url={url}
           src={editing ? "/demo/preview?edit=1" : "/demo/preview"}
           title="Live preview of your page"
           edit={onSelect && selection ? { selection, onSelect } : undefined}

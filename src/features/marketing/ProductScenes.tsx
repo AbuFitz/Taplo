@@ -103,7 +103,8 @@ function Design() {
             alt="The same Jay’s Barbers content arranged for a desktop"
             width={880}
             fluid
-            frame="none"
+            frame="browser"
+            url="mytaplo.com/jays-barbers"
             className="w-full"
           />
         </div>

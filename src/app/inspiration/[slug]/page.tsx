@@ -40,7 +40,7 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
         </section>
 
         <section aria-label="Try this design" className="mx-auto w-full max-w-7xl px-5 pb-14">
-          <DesignPreview scenario={e.scenario} name={f.name} />
+          <DesignPreview scenario={e.scenario} name={f.name} slug={e.slug} />
         </section>
 
         <section className="border-y border-foreground/10 bg-[#f4f4f4] py-12 sm:py-16">

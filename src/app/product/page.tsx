@@ -1,3 +1,4 @@
+import { businessAddress } from "@/lib/domains";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
@@ -37,7 +38,7 @@ export default function ProductIndex() {
         </div>
       </section>
       <section className="product-atlas-stock product-atlas-width">
-        <div className="product-atlas-stock-art"><Shot id="ex-brookfield-motors-desk" alt="Harris Cars stock on a desktop page, with vehicle photographs and details" width={1100} fluid frame="none" /></div>
+        <div className="product-atlas-stock-art"><Shot id="ex-brookfield-motors-desk" alt="Harris Cars stock on a desktop page, with vehicle photographs and details" width={1100} fluid frame="browser" url={businessAddress("harris-cars")} /></div>
         <div className="product-atlas-stock-copy"><h2>For the bigger<br />decisions, too.</h2><p>A car needs more than a link. Give each vehicle its photographs, facts and price. Keep the customer’s question with the car they asked about.</p><Link href="/product/vehicles" className="product-atlas-text-link">Explore vehicle stock<ArrowUpRight size={18} aria-hidden="true" /></Link><Link href="/inspiration/harris-cars" className="product-atlas-text-link">Open the dealer demo<ArrowUpRight size={18} aria-hidden="true" /></Link></div>
       </section>
       <section id="everything" className="product-atlas-directory product-atlas-width">

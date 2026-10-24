@@ -1,5 +1,6 @@
 "use client"
 
+import { businessAddress } from "@/lib/domains"
 import * as React from "react"
 import Link from "next/link"
 import { ArrowUpRight, Monitor, Smartphone } from "lucide-react"
@@ -7,7 +8,7 @@ import { PagePreview } from "@/features/preview/PagePreview"
 import { cn } from "@/lib/utils"
 
 /** One working page, viewed at real responsive widths. Switching size preserves the preview document. */
-export function DesignPreview({ scenario, name }: { scenario: string; name: string }) {
+export function DesignPreview({ scenario, name, slug }: { scenario: string; name: string; slug: string }) {
   const [view, setView] = React.useState<"phone" | "desktop">("phone")
   return (
     <div data-testid="design-preview" data-view={view}>
@@ -26,7 +27,7 @@ export function DesignPreview({ scenario, name }: { scenario: string; name: stri
       </div>
       <div className="flex min-h-[30rem] items-center justify-center overflow-hidden rounded-[1.5rem] bg-[#e8e8e5] py-4 sm:px-6 sm:py-7" style={{ height: "min(50rem, 78dvh)" }}>
         <div className={cn("h-full min-h-0 w-full", view === "phone" ? "max-w-[410px]" : "px-2")}>
-          <PagePreview src={`/appearance/frame?scenario=${scenario}`} title={`${name}, live`} mode={view === "phone" ? "device" : "desktop"} chrome={view === "phone"} url={`${name} · example`} testId="design-preview-frame" topInset={80} />
+          <PagePreview src={`/appearance/frame?scenario=${scenario}`} title={`${name}, live`} mode={view === "phone" ? "device" : "desktop"} chrome url={businessAddress(slug)} testId="design-preview-frame" topInset={80} />
         </div>
       </div>
       <p className="mt-3 text-sm text-foreground/60">Try the page here, or open it at full size. Demo bookings and enquiries stay in this browser.</p>

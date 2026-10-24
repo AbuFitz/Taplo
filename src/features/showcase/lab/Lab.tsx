@@ -1,5 +1,6 @@
 "use client"
 
+import { businessAddress } from "@/lib/domains"
 import Link from "next/link"
 import { TaploLogo } from "@/components/taplo/brand"
 import * as React from "react"
@@ -46,7 +47,7 @@ export function Lab() {
   const m = useAppearanceModel(host)
 
   const frameSrc = (s: Scenario) => `/appearance/frame?scenario=${s}&look=${EXAMPLE_LOOK[s]}`
-  const url = `taplo.co/${SCENARIOS[scenario].content.identity.slug}`
+  const url = businessAddress(SCENARIOS[scenario].content.identity.slug)
   const phone = <PhoneFrame register={register} src={frameSrc(scenario)} title="Mobile preview" />
   const desktop = <DesktopFrame register={register} src={frameSrc(scenario)} title="Desktop preview" url={url} />
 

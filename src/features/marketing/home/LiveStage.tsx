@@ -1,4 +1,5 @@
 "use client";
+import { businessAddress } from "@/lib/domains";
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -62,7 +63,8 @@ export function LiveStage() {
             alt=""
             width={880}
             fluid
-            frame="none"
+            frame="browser"
+            url={businessAddress(scene.slug)}
             priority
           />
         </div>

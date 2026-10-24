@@ -1,4 +1,5 @@
 "use client";
+import { businessAddress } from "@/lib/domains";
 import * as React from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -26,7 +27,7 @@ export function LookSwitcher() {
       <Link href="/inspiration" className="mt-4 inline-flex min-h-11 items-center text-sm text-black/65 underline underline-offset-4">All business designs</Link>
     </div>
     <div className="home-design-art" key={design.slug}>
-      <div className="home-design-desktop" aria-hidden="true"><Shot id={`ex-${design.asset}-desk` as never} alt="" width={800} fluid frame="none" /></div>
+      <div className="home-design-desktop" aria-hidden="true"><Shot id={`ex-${design.asset}-desk` as never} alt="" width={800} fluid frame="browser" url={businessAddress(design.slug)} /></div>
       <div className="home-design-phone"><Shot id={`ex-${design.asset}-phone` as never} alt={`${design.name} business design`} width={390} fluid frame="phone" /></div>
     </div>
   </div>;

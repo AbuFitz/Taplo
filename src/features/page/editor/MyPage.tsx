@@ -1,5 +1,7 @@
 "use client"
 
+import { businessAddress } from "@/lib/domains"
+
 import * as React from "react"
 import { Redo2, Undo2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -99,7 +101,7 @@ export function MyPage() {
     </>
   )
 
-  const preview = <PreviewFrame fill selection={effective} onSelect={select} />
+  const preview = <PreviewFrame url={businessAddress(s.content.identity.slug)} fill selection={effective} onSelect={select} />
 
   if (!wide) return <MobileEditor ed={ed} selection={effective} setSelection={setSelection} notify={notify} note={note} clearNote={() => setNote(null)} />
 

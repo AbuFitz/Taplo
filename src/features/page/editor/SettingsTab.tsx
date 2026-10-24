@@ -1,5 +1,7 @@
 "use client"
 
+import { TAPLO_DOMAINS } from "@/lib/domains"
+
 import * as React from "react"
 import { Check, Copy, Globe, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -49,7 +51,7 @@ export function SettingsTab({ ed, notify }: { ed: Editor; notify: (m: string, un
       <Card title="Page address">
         <div>
           <TaploInput label="Your web address" value={s.content.identity.slug} maxLength={40} autoCapitalize="none" onBlur={() => setTouched(true)} onChange={(e) => ed.update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={touched && probs.length ? SLUG_PROBLEM_MESSAGE[probs[0]!] : undefined} />
-          <p className="mt-1.5 text-sm text-muted-foreground">taplo.co/<strong>{s.content.identity.slug || "…"}</strong></p>
+          <p className="mt-1.5 text-sm text-muted-foreground">{TAPLO_DOMAINS.host}/<strong>{s.content.identity.slug || "…"}</strong></p>
           <p className="mt-1 text-xs text-muted-foreground">If you change it later, the old address keeps redirecting to the new one.</p>
         </div>
       </Card>
@@ -62,7 +64,7 @@ export function SettingsTab({ ed, notify }: { ed: Editor; notify: (m: string, un
         {!url ? <p className="text-xs text-muted-foreground">Publish to get a link you can share.</p> : null}
         <TaploInput label="Title when shared (optional)" value={meta.shareTitle ?? ""} maxLength={80} onChange={(e) => ed.setPage((p) => ({ ...p, meta: { ...p.meta, shareTitle: e.target.value || undefined } }), "sharetitle")} />
         <div className="grid gap-1.5"><Label htmlFor="sharedesc" className="text-sm font-medium">Description when shared (optional)</Label><Textarea id="sharedesc" rows={2} maxLength={200} value={meta.shareDescription ?? ""} onChange={(e) => ed.setPage((p) => ({ ...p, meta: { ...p.meta, shareDescription: e.target.value || undefined } }), "sharedesc")} /></div>
-        <div aria-label="Link preview" className="rounded-lg border bg-muted/50 p-3 text-sm"><p className="text-xs text-muted-foreground">taplo.co/{s.content.identity.slug || "…"}</p><p className="font-semibold">{previewTitle}</p><p className="text-muted-foreground">{previewDesc}</p></div>
+        <div aria-label="Link preview" className="rounded-lg border bg-muted/50 p-3 text-sm"><p className="text-xs text-muted-foreground">{TAPLO_DOMAINS.host}/{s.content.identity.slug || "…"}</p><p className="font-semibold">{previewTitle}</p><p className="text-muted-foreground">{previewDesc}</p></div>
       </Card>
 
       <Card title="Search engines">

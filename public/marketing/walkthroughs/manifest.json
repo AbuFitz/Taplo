@@ -5,11 +5,11 @@
     "poster": "/marketing/walkthroughs/setup-poster.webp",
     "width": 780,
     "height": 1928,
-    "duration": 33.88,
+    "duration": 33.68,
     "fps": "25/1",
-    "bytes": 2800981,
-    "sha256": "0ea5bd7ae64df9db05bd26fcad7fd287129a0d2084ff36e39cef6559706123fe",
-    "recordedAt": "2026-10-24T18:02:16.319Z",
+    "bytes": 2729023,
+    "sha256": "57b963e631d970828581db0ed8244784ab2f6ef68b186b4267ec83b853cf1b5e",
+    "recordedAt": "2026-10-24T19:19:08.073Z",
     "source": "/onboarding?from=no-6-coffee",
     "chapters": [
       {
@@ -18,37 +18,37 @@
         "line": "Your name and logo, with a crop you approve before it is added."
       },
       {
-        "seconds": 5.1,
+        "seconds": 4.9,
         "title": "Say what you do",
         "line": "Search for your business. Keep the setup relevant."
       },
       {
-        "seconds": 7.8,
+        "seconds": 7.6,
         "title": "Choose how people reach you",
         "line": "A call fits this café. The menu does not need appointment bookings."
       },
       {
-        "seconds": 11.3,
+        "seconds": 11.1,
         "title": "Add something customers can buy",
         "line": "A simple menu item and its price. No sample business records are copied."
       },
       {
-        "seconds": 15.3,
+        "seconds": 15.1,
         "title": "Add the practical details",
         "line": "Your description, location, hours and links live in a focused popup."
       },
       {
-        "seconds": 17.9,
+        "seconds": 17.7,
         "title": "Make the page yours",
         "line": "Choose a layout, then adjust the background and profile separately."
       },
       {
-        "seconds": 22.7,
+        "seconds": 22.5,
         "title": "Review the actual page",
         "line": "Check the menu, contact details and opening hours before continuing."
       },
       {
-        "seconds": 27.8,
+        "seconds": 27.6,
         "title": "Keep making it yours",
         "line": "Your draft is saved in this browser. Publishing and billing are not connected."
       }

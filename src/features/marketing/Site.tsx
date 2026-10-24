@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TAPLO_DOMAINS } from "@/lib/domains";
 import { ArrowRight } from "lucide-react";
 import { TaploLogo } from "@/components/taplo/brand";
 import { demoModeEnabled } from "@/lib/env";
@@ -50,6 +51,7 @@ export function SiteFooter() {
               <br />
               All together.
             </p>
+            <a href={`mailto:${TAPLO_DOMAINS.email}`} className="mt-4 inline-flex min-h-11 items-center text-sm text-white/80 underline underline-offset-4">{TAPLO_DOMAINS.email}</a>
             <p className="mt-4 text-sm leading-relaxed text-white/70">
               The work you do, the details people need and a useful next step.
             </p>

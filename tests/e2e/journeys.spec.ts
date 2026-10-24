@@ -158,7 +158,7 @@ test.describe("plans and page settings", () => {
     await page.getByLabel("Your web address").blur();
     await expect(page.getByText("That address is reserved. Try another.")).toBeVisible();
     await page.getByLabel("Your web address").fill("clearpath-maths");
-    await expect(page.getByText("taplo.co/clearpath-maths").first()).toBeVisible();
+    await expect(page.getByText("mytaplo.com/clearpath-maths").first()).toBeVisible();
     await page.getByLabel("Title when shared (optional)").fill("Clearpath — maths tuition");
     await expect(page.getByLabel("Link preview")).toContainText("Clearpath — maths tuition");
     const sw = page.getByRole("switch", { name: /Let Google and others find my page/ });

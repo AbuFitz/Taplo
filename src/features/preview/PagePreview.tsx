@@ -3,6 +3,7 @@
 import * as React from "react"
 import { getImageProps } from "next/image"
 import { PHONE, PhoneChrome } from "./PhoneChrome"
+import { BrowserChrome } from "./BrowserChrome"
 import { cn } from "@/lib/utils"
 import type { FromPreview, Selection, ToPreview } from "@/features/page/editor/selection"
 
@@ -179,16 +180,10 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
         <div className={cn("absolute inset-x-0 top-0 flex justify-center", mode === "device" && zoom !== "actual" && !cropDevice && "inset-y-0 items-center", zoom === "actual" && "relative")}>
           <div style={{ width: L.outerW * L.scale, height: L.outerH * L.scale }} className="shrink-0">
             <div
-              className={cn("relative origin-top-left", decorated ? (mode === "device" ? "phone-shell" : "rounded-2xl bg-[#f3f2ef] shadow-[0_30px_60px_-28px_rgb(0_0_0/0.4),0_0_0_1px_rgb(0_0_0/0.1)]") : "")}
+              className={cn("relative origin-top-left", decorated ? (mode === "device" ? "phone-shell" : "browser-shell") : "")}
               style={{ width: L.outerW, height: L.outerH, padding: L.pad, transform: L.scale === 1 ? undefined : `scale(${L.scale})` }}
             >
-              {L.bar ? (
-                <div className="flex items-center gap-3 border-b border-black/10 px-4" style={{ height: L.bar }} aria-hidden="true">
-                  <span className="flex gap-1.5">{["#ff5f57", "#febc2e", "#28c840"].map((c) => <i key={c} className="block size-2.5 rounded-full" style={{ background: c }} />)}</span>
-                  <span className="mx-auto flex h-5 w-64 items-center justify-center truncate rounded-md bg-white px-2 text-[11px] text-neutral-500 shadow-[0_0_0_1px_rgb(0_0_0/0.07)]">{url}</span>
-                  <span className="w-10" />
-                </div>
-              ) : null}
+              {L.bar ? <BrowserChrome url={url} height={L.bar} /> : null}
               <div className={cn("relative overflow-hidden bg-white", decorated && mode === "device" && "phone-screen")} style={{ width: L.vw, height: L.vh + L.safeTop + L.safeBottom, paddingTop: L.safeTop, paddingBottom: L.safeBottom }}>
                 {iframe}
                 {!loaded ? <div className="preview-screen-loading" aria-hidden="true"><span /><span /><span /></div> : null}
