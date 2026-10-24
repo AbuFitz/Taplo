@@ -403,46 +403,46 @@
   "team-swipe": {
     "file": "/marketing/team-swipe.webp",
     "width": 716,
-    "height": 848,
+    "height": 472,
     "cssWidth": 358,
-    "cssHeight": 424,
-    "bytes": 70604,
+    "cssHeight": 236,
+    "bytes": 23082,
     "source": "/appearance/frame?scenario=station&widget=team&variant=swipe",
-    "sha256": "aa92e7307067",
-    "capturedAt": "2026-10-24T06:43:13.498Z"
+    "sha256": "70e14cd97368",
+    "capturedAt": "2026-10-24T11:16:41.453Z"
   },
   "team-grid": {
     "file": "/marketing/team-grid.webp",
     "width": 1344,
-    "height": 932,
+    "height": 472,
     "cssWidth": 672,
-    "cssHeight": 466,
-    "bytes": 138232,
+    "cssHeight": 236,
+    "bytes": 23672,
     "source": "/appearance/frame?scenario=station&widget=team&variant=grid",
-    "sha256": "e8b915fedd6f",
-    "capturedAt": "2026-10-24T06:43:15.811Z"
+    "sha256": "7ef25746270a",
+    "capturedAt": "2026-10-24T11:16:43.114Z"
   },
   "team-list": {
     "file": "/marketing/team-list.webp",
     "width": 716,
-    "height": 596,
+    "height": 474,
     "cssWidth": 358,
-    "cssHeight": 298,
-    "bytes": 47570,
+    "cssHeight": 237,
+    "bytes": 23034,
     "source": "/appearance/frame?scenario=station",
-    "sha256": "cd0c26d2ea32",
-    "capturedAt": "2026-10-24T06:43:17.945Z"
+    "sha256": "b36c3a36b2e6",
+    "capturedAt": "2026-10-24T11:16:44.893Z"
   },
   "team-profile": {
     "file": "/marketing/team-profile.webp",
     "width": 1408,
-    "height": 772,
+    "height": 1160,
     "cssWidth": 704,
-    "cssHeight": 386,
-    "bytes": 67836,
+    "cssHeight": 580,
+    "bytes": 34800,
     "source": "/appearance/frame?scenario=station",
-    "sha256": "458590195458",
-    "capturedAt": "2026-10-24T06:43:20.186Z"
+    "sha256": "3d322b119e9b",
+    "capturedAt": "2026-10-24T11:16:46.803Z"
   },
   "prod-swipe": {
     "file": "/marketing/prod-swipe.webp",
@@ -480,13 +480,13 @@
   "gal-lightbox": {
     "file": "/marketing/gal-lightbox.webp",
     "width": 1408,
-    "height": 1200,
+    "height": 1620,
     "cssWidth": 704,
-    "cssHeight": 600,
-    "bytes": 137130,
+    "cssHeight": 810,
+    "bytes": 244708,
     "source": "/appearance/frame?scenario=station",
-    "sha256": "3c977aec5eca",
-    "capturedAt": "2026-10-24T06:43:29.654Z"
+    "sha256": "82caae814df6",
+    "capturedAt": "2026-10-24T11:16:48.889Z"
   },
   "rev-quote": {
     "file": "/marketing/rev-quote.webp",
@@ -614,10 +614,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 45802,
+    "bytes": 45722,
     "source": "/onboarding",
-    "sha256": "f03b1f984af7",
-    "capturedAt": "2026-10-24T10:50:16.449Z"
+    "sha256": "cd19ea5830a6",
+    "capturedAt": "2026-10-24T11:19:46.767Z"
   },
   "setup-3-start": {
     "file": "/marketing/setup-3-start.webp",
@@ -645,10 +645,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 62466,
+    "bytes": 62374,
     "source": "/onboarding",
-    "sha256": "ce43efc34893",
-    "capturedAt": "2026-10-24T10:50:18.341Z"
+    "sha256": "cc48c02c7060",
+    "capturedAt": "2026-10-24T11:19:48.581Z"
   },
   "setup-3-design": {
     "file": "/marketing/setup-3-design.webp",
@@ -656,10 +656,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 62346,
+    "bytes": 62340,
     "source": "/onboarding",
-    "sha256": "e8f06ead9052",
-    "capturedAt": "2026-10-24T10:39:52.276Z"
+    "sha256": "f5917e5da1b8",
+    "capturedAt": "2026-10-24T11:19:50.827Z"
   },
   "setup-4-first": {
     "file": "/marketing/setup-4-first.webp",
@@ -667,10 +667,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 73804,
+    "bytes": 73900,
     "source": "/onboarding",
-    "sha256": "85f2cf5018f2",
-    "capturedAt": "2026-10-24T10:39:54.526Z"
+    "sha256": "b109170bf27e",
+    "capturedAt": "2026-10-24T11:19:52.884Z"
   },
   "qr-options": {
     "file": "/marketing/qr-options.webp",
@@ -837,10 +837,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 36898,
+    "bytes": 34104,
     "source": "/onboarding",
-    "sha256": "cd6081eff6fd",
-    "capturedAt": "2026-10-24T10:50:19.882Z"
+    "sha256": "6bf44b3c8e0f",
+    "capturedAt": "2026-10-24T11:19:56.542Z"
   },
   "setup-2-what-phone": {
     "file": "/marketing/setup-2-what-phone.webp",
@@ -848,10 +848,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 48586,
+    "bytes": 45492,
     "source": "/onboarding",
-    "sha256": "7dc1f4a667d2",
-    "capturedAt": "2026-10-24T10:50:21.420Z"
+    "sha256": "e3ccd22da06c",
+    "capturedAt": "2026-10-24T11:19:58.142Z"
   },
   "setup-3-design-phone": {
     "file": "/marketing/setup-3-design-phone.webp",
@@ -859,10 +859,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 43482,
+    "bytes": 42008,
     "source": "/onboarding",
-    "sha256": "2e32da5a62ff",
-    "capturedAt": "2026-10-24T10:40:02.757Z"
+    "sha256": "23be50f880a2",
+    "capturedAt": "2026-10-24T11:19:59.959Z"
   },
   "setup-4-first-phone": {
     "file": "/marketing/setup-4-first-phone.webp",
@@ -870,10 +870,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 41048,
+    "bytes": 46050,
     "source": "/onboarding",
-    "sha256": "90d726041ed5",
-    "capturedAt": "2026-10-24T10:40:04.797Z"
+    "sha256": "784d82d05234",
+    "capturedAt": "2026-10-24T11:20:01.686Z"
   },
   "setup-5-review": {
     "file": "/marketing/setup-5-review.webp",
@@ -881,10 +881,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 86534,
+    "bytes": 85420,
     "source": "/onboarding",
-    "sha256": "e11fa7364444",
-    "capturedAt": "2026-10-24T10:39:56.821Z"
+    "sha256": "c9e3ea6621c7",
+    "capturedAt": "2026-10-24T11:19:54.970Z"
   },
   "setup-5-review-phone": {
     "file": "/marketing/setup-5-review-phone.webp",
@@ -892,10 +892,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 58388,
+    "bytes": 58394,
     "source": "/onboarding",
-    "sha256": "e12c14fd9ef8",
-    "capturedAt": "2026-10-24T10:40:07.078Z"
+    "sha256": "ff513b7daa89",
+    "capturedAt": "2026-10-24T11:20:03.644Z"
   },
   "ex-corner-table-cafe-phone": {
     "file": "/marketing/ex-corner-table-cafe-phone.webp",

@@ -1,0 +1,11 @@
+# Compact mobile setup header
+
+24 October2026. Owner supplied a Linktree setup reference and identified the large Taplo logo/header row as wasted phone space. This focused step follows the shipped customer-detail checkpoint.
+
+On phones/tablets below1024px the large brand row is removed. Compact step progress and one labelled information control remain above the actual preview. The same single Sandbox information popover remains accessible, with a mobile-safe width. Starting-example and chosen-plan context remains visible under the preview where applicable; desktop keeps the branding/entry controls. Loading uses the same compact mobile direction. Zoom is not disabled. Existing state, Back/Continue, expanded preview and sample access remain.
+
+At390px, preview start moves from108px to64px, returning44px to the working canvas. This is a focused space correction, not the entire portal navigation redesign. Production setup/redesign checks pass at320/390/768/1440; physical phone/browser-chrome testing is still outstanding. A development CSS cache did not reflect the new rules, so the fresh normal production build and native-engine checks are the release evidence.
+
+Refresh all ten setup state images, changed team/gallery images and both real setup/booking recordings. Film textures that do not show setup/navigation are unchanged. Broader hero, Product/Pricing, feature elevation, business demos/adoption, background motion, rounded-preview backing and portal navigation work remains ordered in OWNER-FEEDBACK.md. No part is treated as implicitly approved.
+
+Final evidence: normal production build, lint, typecheck and222 unit cases pass (39 DB-dependent skipped). Final affected production Chromium25 pass together; the packaged release repeats8 setup/media cases successfully. Native WebKit/Firefox26 cases pass, including reduced visual viewport and example+plan adoption. Actual mobile capture reviewed at390px. Ten setup captures and five changed team/gallery captures refreshed from the actual renderer. Both real walkthroughs re-recorded, metadata/hash checked and fully decoded by the recording script. The example/plan context was grouped with the heading after the recording exposed a grid-row overlap; added390/1440 regression cases reach review and editor without overlap. Deployment/public confirmation follows in the handoff.

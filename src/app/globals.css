@@ -308,3 +308,14 @@
   .setup-flow[data-keyboard="true"] .setup-canvas-heading { display:flex; }
   .setup-flow[data-keyboard="true"] #step-title { font-size:1.4rem; margin-bottom:.75rem; }
 }
+
+/* Setup keeps the phone canvas for the business, with only compact progress above it. */
+.setup-progress-heading { display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-bottom:.5rem; }
+.setup-flow > nav .setup-progress-heading p { margin:0; }
+.setup-origin { margin:0 0 .5rem; color:#666; font-size:11px; }
+@media(max-width:1023px) {
+  .setup-flow { grid-template-rows:auto minmax(0,1fr); padding-top:.5rem; }
+  .setup-flow > header { display:none; }
+  .setup-flow > nav { margin-bottom:.75rem; }
+  .setup-context { width:2rem; min-height:2rem; padding:0; justify-content:center; border:0; background:transparent; }
+}

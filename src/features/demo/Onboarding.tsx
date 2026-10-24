@@ -175,11 +175,11 @@ export function Onboarding() {
     <main ref={shell} data-preview-expanded={mobilePreview} data-step={step} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
       <header className="mb-12 flex flex-wrap items-center justify-between gap-3">
         <Link href="/" aria-label="Taplo home" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo /></Link>
-        <div className="flex flex-wrap items-center gap-2">{fromName ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="from-example" title="Only its look and the kinds of content are used. None of its words, prices or pictures are copied.">Starting from {fromName}</span> : null}{intent ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}<SandboxBadge /><Link href="/dashboard/page" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip to the editor</Link></div>
+        <div className="flex flex-wrap items-center gap-2">{fromName ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="from-example" title="Only its look and the kinds of content are used. None of its words, prices or pictures are copied.">Starting from {fromName}</span> : null}{intent ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}<Link href="/dashboard/page" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip to the editor</Link></div>
       </header>
 
       <nav aria-label="Progress" className="mb-10 max-w-xl">
-        <p className="mb-3 text-xs font-medium text-muted-foreground">Step {stepIndex + 1} of {SETUP_STEPS.length} · {STEP_LABEL[step]}</p>
+        <div className="setup-progress-heading"><p className="text-xs font-medium text-muted-foreground">Step {stepIndex + 1} of {SETUP_STEPS.length} · {STEP_LABEL[step]}</p><SandboxBadge compact className="setup-context" /></div>
         <ol className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${SETUP_STEPS.length}, minmax(0, 1fr))` }}>
           {SETUP_STEPS.map((st, i) => (
             <li key={st} aria-current={st === step ? "step" : undefined} className="h-1 overflow-hidden rounded-full bg-black/[0.09]">
@@ -192,7 +192,8 @@ export function Onboarding() {
 
       <div className="setup-workspace grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
         <section aria-labelledby="step-title" className="min-w-0">
-          <h1 id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? { service: "Add your first service", vehicle: "Add your first vehicle", photo: "Add your first photos" }[firstKind(c.identity.industryKey)] : STEP_TITLE[step]}</h1>
+          <div className="setup-question-heading">{fromName || intent ? <p className="setup-origin lg:hidden">{[fromName ? `Starting from ${fromName}` : "", intent ? `${PLANS[intent].name} plan` : ""].filter(Boolean).join(" · ")}</p> : null}
+          <h1 id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? { service: "Add your first service", vehicle: "Add your first vehicle", photo: "Add your first photos" }[firstKind(c.identity.industryKey)] : STEP_TITLE[step]}</h1></div>
 
           <div className="setup-step-body" key={step}>
           {step === "industry" ? (
@@ -452,7 +453,7 @@ function PublishStep({ onEditor }: { onEditor: () => void }) {
   const [copied, setCopied] = React.useState(false)
   return (
     <div className="grid gap-5">
-      <p className="text-muted-foreground">Look your page over on the right. You can change anything afterwards.</p>
+      <p className="text-muted-foreground">Check your preview. You can change everything in the editor.</p>
       {checks.some((c) => c.required && !c.done) ? (
         <ul className="grid gap-2" aria-label="Still needed">
           {checks.filter((c) => c.required && !c.done).map((c) => <li key={c.id} className="flex items-center gap-2 text-sm text-destructive"><span className="size-1.5 rounded-full bg-destructive" aria-hidden="true" />{c.label}</li>)}
