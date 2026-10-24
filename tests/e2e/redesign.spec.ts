@@ -12,7 +12,7 @@ for(const width of [320,390,768,1440])test(`mobile-led setup has six steps, a li
   await expect(page.getByRole('navigation',{name:'Progress'})).toContainText('Step 1 of 6')
   const next=()=>page.getByRole('button',{name:'Continue',exact:true}).click()
   await next();await page.getByRole('button',{name:'Barber',exact:true}).click();await next()
-  await page.getByRole('radio',{name:/Book with me/}).check()
+  await page.getByRole("button",{name:"Change main action",exact:true}).click(); await page.getByRole('radio',{name:/Book with me/}).check(); await page.getByRole("button",{name:"Done",exact:true}).click()
   await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await next()
   await page.getByLabel('Service 1 name').fill('Haircut');await page.getByLabel('Service 1 price').fill('25');await page.getByLabel('Service 1 minutes').fill('30');await next()
   await page.getByTestId('look-picker').locator('label').filter({has:page.locator('input[value="silver"]')}).click()
@@ -30,7 +30,7 @@ for(const width of [390,1440])test(`uploaded logo colours drive linked gradients
   await page.setViewportSize({width,height:950});await openEditorWithSample(page,'Barber');await selectPart(page,'page')
   await page.getByRole('radiogroup',{name:'Look',exact:true}).locator('label[data-choice="silver"]').click()
   await selectPart(page,'header')
-  const upload=async(color:string)=>{const buffer=await sharp({create:{width:240,height:120,channels:4,background:color}}).png().toBuffer();await page.locator('input[type="file"]').first().setInputFiles({name:'business-logo.png',mimeType:'image/png',buffer})}
+  const upload=async(color:string)=>{const buffer=await sharp({create:{width:240,height:120,channels:4,background:color}}).png().toBuffer();await page.locator('input[type="file"]').first().setInputFiles({name:'business-logo.png',mimeType:'image/png',buffer});await page.getByTestId('crop-dialog').getByRole('button',{name:'Use image',exact:true}).click()}
   await upload('#cc3311')
   const read=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!))
   await expect.poll(async()=>(await read()).content.identity.logo.accent).toBeTruthy()

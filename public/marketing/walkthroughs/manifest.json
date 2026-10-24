@@ -5,57 +5,57 @@
     "poster": "/marketing/walkthroughs/setup-poster.webp",
     "width": 780,
     "height": 1928,
-    "duration": 26.8,
+    "duration": 33.52,
     "fps": "25/1",
-    "bytes": 1064735,
-    "sha256": "9eab8e935e45994abc9b2eee2473b72114b5430cd00f4e9fdccfaed3edb4e5a2",
-    "recordedAt": "2026-10-24T11:19:50.910Z",
-    "source": "/onboarding?from=jays-barbers",
+    "bytes": 3093842,
+    "sha256": "9b4408045e7ac2bdf46b430483e9cc63988e8fe87e12b0c44def2f89474b0dfc",
+    "recordedAt": "2026-10-24T12:09:38.814Z",
+    "source": "/onboarding?from=no-6-coffee",
     "chapters": [
       {
         "seconds": 0,
-        "title": "Give it your name",
-        "line": "Start from a design. Use your own business details."
+        "title": "Start with your identity",
+        "line": "Your name and logo, with a crop you approve before it is added."
       },
       {
-        "seconds": 3.6,
+        "seconds": 4.8,
         "title": "Say what you do",
-        "line": "The example suggests Barber. You can change it."
+        "line": "Search for your business. Keep the setup relevant."
       },
       {
-        "seconds": 4.3,
-        "title": "Choose the next step",
-        "line": "Booking requests fit this business. Contact and messaging are options too."
+        "seconds": 7.5,
+        "title": "Choose how people reach you",
+        "line": "A call fits this café. The menu does not need appointment bookings."
       },
       {
-        "seconds": 4.9,
-        "title": "Add a way to reach you",
-        "line": "Choose one. You can add more later."
+        "seconds": 11,
+        "title": "Add something customers can buy",
+        "line": "A simple menu item and its price. No sample business records are copied."
       },
       {
-        "seconds": 8.1,
-        "title": "Add a real offering",
-        "line": "A haircut, its price and the time it takes."
+        "seconds": 14.9,
+        "title": "Add the practical details",
+        "line": "Your description, location, hours and links live in a focused popup."
       },
       {
-        "seconds": 12.3,
-        "title": "Choose a starting look",
-        "line": "Service is selected. Every look stays editable."
+        "seconds": 17.6,
+        "title": "Make the page yours",
+        "line": "Choose a layout, then adjust the background and profile separately."
       },
       {
-        "seconds": 16.2,
-        "title": "Review before you continue",
-        "line": "Check your page. Publishing is still a preview."
+        "seconds": 22.3,
+        "title": "Review the actual page",
+        "line": "Check the menu, contact details and opening hours before continuing."
       },
       {
-        "seconds": 20.7,
+        "seconds": 27.4,
         "title": "Keep making it yours",
-        "line": "Your draft is now in the editor, saved in this browser."
+        "line": "Your draft is saved in this browser. Publishing and billing are not connected."
       }
     ],
     "outcome": {
-      "name": "Alex’s Barbers",
-      "service": "Haircut",
+      "name": "No. 6 Coffee",
+      "service": "Flat white",
       "storage": "browser-only"
     }
   },

@@ -144,6 +144,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
     await selectPart(page, "header");
     await openSection(page, "Header");
     await insp(page).getByLabel("Logo or profile picture: upload a picture").setInputFiles(pngFile("logo.png"));
+  await page.getByTestId("crop-dialog").getByRole("button", {name:"Use image",exact:true}).click();
     await expect(page.getByTestId("crop-dialog")).toHaveCount(0);
     await expect.poll(async () => (await store(page)).content.identity.logo?.src?.startsWith("data:image/png")).toBe(true);
 

@@ -201,7 +201,7 @@ test.describe("My page editor", () => {
     const textColour = await card.evaluate((el) => getComputedStyle(el).color);
     expect(textColour).not.toBe("rgb(42, 32, 25)");
     // other widgets are untouched
-    await expect(frame.locator('[data-widget="reviews"] .tp-card')).not.toHaveCSS("background-color", "rgb(31, 42, 68)");
+    await expect(frame.locator('[data-widget]:not([data-widget="serviceList"]) .tp-card').first()).not.toHaveCSS("background-color", "rgb(31, 42, 68)");
     await expect(insp(page)).toContainText(/\d settings? differ/);
     await insp(page).getByRole("button", { name: "Reset to page style" }).click();
     await expect(widget).not.toHaveAttribute("data-featured", "true");
@@ -252,7 +252,7 @@ test.describe("My page editor", () => {
     await page.waitForLoadState("networkidle");
     expect(await rowOrder(page)).toEqual(reordered);
     await expect(previewFrame(page).getByRole("heading", { level: 1 })).toContainText("(edited)");
-    await expect(previewFrame(page).locator("[data-taplo-page]")).toHaveAttribute("data-header", "cover"); // Ocean
+    await expect(previewFrame(page).locator("[data-taplo-page]")).toHaveAttribute("data-header", "feature"); // Current Ultraviolet header
   });
 
   test("publishing: draft stays private, published matches the preview, changes need an explicit publish", async ({ page }) => {
@@ -306,7 +306,9 @@ test.describe("My page editor", () => {
     await upload.setInputFiles({ name: "notes.txt", mimeType: "text/plain", buffer: Buffer.from("hello") });
     await expect(page.getByRole("alert").filter({ hasText: "JPG, PNG or WebP" })).toBeVisible();
     await upload.setInputFiles(pngFile("logo.png"));
+  await page.getByTestId("crop-dialog").getByRole("button", {name:"Use image",exact:true}).click();
     await expect(frame.locator(".tp-avatar img")).toHaveCount(1);
+    await page.getByRole("button",{name:"Edit image: Logo or profile picture",exact:true}).click();
     await page.getByLabel("Describe the picture (for screen readers)").first().fill("Paws & Polish paw logo");
     await expect(frame.locator(".tp-avatar img")).toHaveAttribute("alt", "Paws & Polish paw logo");
     // focal point via the accessible sliders drives object-position
@@ -317,6 +319,7 @@ test.describe("My page editor", () => {
     const src = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.identity.logo.src as string);
     expect(src).toMatch(/^data:image\/png;base64,/);
     expect(src.length).toBeLessThan(400_000);
+    await page.getByTestId("image-edit-dialog").getByRole("button",{name:"Done",exact:true}).click();
     // remove → initials again
     await page.getByRole("button", { name: "Remove" }).first().click();
     await expect(frame.locator(".tp-avatar img")).toHaveCount(0);

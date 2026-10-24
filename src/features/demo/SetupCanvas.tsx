@@ -20,5 +20,5 @@ export function SetupCanvas({ src, expanded, showIdentity, look }: { src: string
     loaded();frame.addEventListener('load',loaded)
     return()=>{observer?.disconnect();frame.removeEventListener('load',loaded)}
   },[frame,src,expanded,showIdentity,look])
-  return <PagePreview src={src} title="Your page, live" mode="fill" chrome={false} testId="setup-live-page" frameRef={attach}/>
+  return <PagePreview src={src} title="Your page, live" mode="fill" chrome={false} resizeKey={expanded} testId="setup-live-page" frameRef={attach}/>
 }

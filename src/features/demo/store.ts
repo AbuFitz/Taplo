@@ -33,6 +33,8 @@ export interface DemoState {
   published: null | { at: string; version: number; content: BusinessContentInput; page: PageDoc; plan: PlanId };
   /** Plain-language notes for the owner (e.g. after an automatic upgrade). Dismissible. */
   notes?: string[];
+  /** Incomplete form text survives back/reload, but never enters the public renderer until valid. */
+  setupDrafts?: { planIntent?:PlanId; backgroundEdited?:boolean; services?: { id:string; name:string; price:string; minutes:string; priceMode?: "fixed"|"from"|"quote"|"free" }[]; record?: { kind:"vehicle"|"photo"; value:unknown } };
 }
 
 const stateSchema = z.object({
@@ -45,6 +47,7 @@ const stateSchema = z.object({
   slugEdited: z.boolean(),
   published: z.unknown().nullable(),
   notes: z.array(z.string()).optional(),
+  setupDrafts: z.object({planIntent:z.enum(PLAN_IDS).optional(),backgroundEdited:z.boolean().optional(),services:z.array(z.object({id:z.string(),name:z.string(),price:z.string(),minutes:z.string(),priceMode:z.enum(["fixed","from","quote","free"]).optional()})).optional(),record:z.object({kind:z.enum(["vehicle","photo"]),value:z.unknown()}).optional()}).optional(),
 });
 
 export function blankContent(): BusinessContentInput {

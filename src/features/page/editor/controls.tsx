@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Image from "next/image"
-import { ImagePlus, RotateCcw, Trash2 } from "lucide-react"
+import { ImagePlus, Pencil, RotateCcw, Trash2 } from "lucide-react"
 import { HexColorPicker } from "react-colorful"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch"
 import { cn } from "@/lib/utils"
 import type { ImageRef } from "@/features/businesses/content"
+import { Overlay } from "@/components/taplo/overlay"
 import { CropDialog } from "./CropDialog"
 import { SAMPLE_IMAGES, prepareImage, MAX_UPLOAD_BYTES, containedImageRect } from "./image"
 
@@ -143,13 +144,15 @@ export function ColorField({ label, value, onChange, customised, onReset, hint, 
 }
 
 /** Image chooser: upload (downscaled in the browser), pick a sample, remove; plus a focal-point picker so crops keep the subject. */
-export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAspect, cropRound, purpose = "photo", focalHint = "Click the picture (or use the sliders) to choose the part that should always stay in view." }: {
-  label: string; value: ImageRef | null | undefined; onChange: (v: ImageRef | null) => void; defaultAlt: string; maxEdge?: number; /** When set, a crop step frames the picture at this width/height ratio before it is used. */ cropAspect?: number; cropRound?: boolean; purpose?: "photo" | "identity" | "cover"; focalHint?: string
+export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAspect, cropRound, purpose = "photo", samples = true, onFramingChange, focalHint = "Click the picture (or use the sliders) to choose the part that should always stay in view." }: {
+  label: string; value: ImageRef | null | undefined; onChange: (v: ImageRef | null) => void; defaultAlt: string; maxEdge?: number; /** When set, a crop step frames the picture at this width/height ratio before it is used. */ cropAspect?: number; cropRound?: boolean; purpose?: "photo" | "identity" | "cover"; samples?: boolean; onFramingChange?: (shape:"logo"|"circle"|"square")=>void; focalHint?: string
 }) {
   const inputId = React.useId()
   const [busy, setBusy] = React.useState(false)
   const [error, setError] = React.useState<string>()
   const [showSamples, setShowSamples] = React.useState(false)
+  const [editing, setEditing] = React.useState(false)
+  const original = React.useRef<File | null>(null)
   const box = React.useRef<HTMLDivElement>(null)
 
   const [pending, setPending] = React.useState<File | null>(null)
@@ -157,7 +160,7 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
     if (!file) return
     if (!/^image\/(jpeg|png|webp)$/.test(file.type)) { setError("Choose a JPG, PNG or WebP picture."); return }
     if (file.size > MAX_UPLOAD_BYTES) { setError("That picture is over 12 MB. Choose a smaller one."); return }
-    if (cropAspect && purpose === "photo") { setError(undefined); setPending(file) } else void onFile(file)
+    setError(undefined); setPending(file)
   }
   async function onFile(file: File | undefined) {
     if (!file) return
@@ -181,6 +184,8 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
   return (
     <div className="grid gap-2">
       <p className="text-sm font-medium">{label}</p>
+      {value ? <button type="button" className="flex min-h-24 items-center gap-4 rounded-2xl bg-neutral-50 p-3 text-left" onClick={() => setEditing(true)} aria-label={`Edit image: ${label}`}><span className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-white"><Image src={value.src} alt="" fill sizes="64px" unoptimized className="object-contain" /></span><span className="text-sm font-medium">Edit image<span className="mt-1 block text-xs font-normal text-muted-foreground">Framing and image details</span></span><Pencil aria-hidden="true" className="ml-auto size-4"/></button> : null}
+      <Overlay open={editing} onOpenChange={setEditing} title={`Edit image: ${label}`} testId="image-edit-dialog" footer={<Button className="min-h-11 w-full" onClick={() => setEditing(false)}>Done</Button>}>
       {value ? (
         <div className="grid gap-3">
           <div
@@ -207,11 +212,16 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
           </div>
         </div>
       ) : null}
+      <Button type="button" variant="outline" className="mt-4 min-h-11 w-full" onClick={async () => {
+        if (!value) return
+        try { const file = original.current ?? new File([await (await fetch(value.src)).blob()], "profile-image.png", { type: value.src.startsWith('data:image/jpeg') ? 'image/jpeg' : 'image/png' }); setEditing(false); setPending(file) } catch { setError("Choose the original file to change its crop.") }
+      }}>Change crop or framing</Button>
+      </Overlay>
       <div className="flex flex-wrap gap-2">
         <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => document.getElementById(inputId)?.click()}><ImagePlus /> {busy ? "Preparing…" : value ? "Replace picture" : "Upload a picture"}</Button>
         <input id={inputId} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(e) => { onPick(e.target.files?.[0]); e.target.value = "" }} aria-label={`${label}: upload a picture`} />
-        {cropAspect ? <CropDialog file={pending} aspect={cropAspect} round={cropRound} title={`Frame: ${label}`} onCancel={() => setPending(null)} onDone={(f) => { setPending(null); void onFile(f) }} /> : null}
-        <Button type="button" variant="ghost" size="sm" onClick={() => setShowSamples((v) => !v)} aria-expanded={showSamples}>Use a sample picture</Button>
+        <CropDialog file={pending} aspect={cropAspect ?? 1} round={cropRound} allowOriginal={purpose !== "photo"} title={`Frame: ${label}`} onCancel={() => setPending(null)} onDone={(f,shape) => { if(shape)onFramingChange?.(shape); original.current = pending; setPending(null); void onFile(f) }} />
+        {samples ? <Button type="button" variant="ghost" size="sm" onClick={() => setShowSamples((v) => !v)} aria-expanded={showSamples}>Use a sample picture</Button> : null}
         {value ? <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null)}><Trash2 /> Remove</Button> : null}
       </div>
       {showSamples ? (
@@ -226,7 +236,7 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
         </ul>
       ) : null}
       {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
-      <p className="text-xs text-muted-foreground">{purpose === "identity" ? "Your original proportions and transparency are preserved." : purpose === "cover" ? "Your original photo stays intact. Each layout frames it around your focal point." : "Pictures are resized to a sensible size automatically."}</p>
+      {!value ? <p className="text-xs text-muted-foreground">JPG, PNG or WebP. Preview and frame it before adding.</p> : null}
     </div>
   )
 }

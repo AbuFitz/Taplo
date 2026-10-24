@@ -614,10 +614,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 45722,
+    "bytes": 61924,
     "source": "/onboarding",
-    "sha256": "cd19ea5830a6",
-    "capturedAt": "2026-10-24T11:19:46.767Z"
+    "sha256": "e82d2e28a637",
+    "capturedAt": "2026-10-24T12:09:01.700Z"
   },
   "setup-3-start": {
     "file": "/marketing/setup-3-start.webp",
@@ -645,10 +645,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 62374,
+    "bytes": 65420,
     "source": "/onboarding",
-    "sha256": "cc48c02c7060",
-    "capturedAt": "2026-10-24T11:19:48.581Z"
+    "sha256": "dc072503ab9b",
+    "capturedAt": "2026-10-24T12:09:03.568Z"
   },
   "setup-3-design": {
     "file": "/marketing/setup-3-design.webp",
@@ -656,10 +656,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 62340,
+    "bytes": 211170,
     "source": "/onboarding",
-    "sha256": "f5917e5da1b8",
-    "capturedAt": "2026-10-24T11:19:50.827Z"
+    "sha256": "7794b3efc7eb",
+    "capturedAt": "2026-10-24T12:12:10.081Z"
   },
   "setup-4-first": {
     "file": "/marketing/setup-4-first.webp",
@@ -667,10 +667,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 73900,
+    "bytes": 64912,
     "source": "/onboarding",
-    "sha256": "b109170bf27e",
-    "capturedAt": "2026-10-24T11:19:52.884Z"
+    "sha256": "2287279eb93a",
+    "capturedAt": "2026-10-24T12:09:07.885Z"
   },
   "qr-options": {
     "file": "/marketing/qr-options.webp",
@@ -837,10 +837,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 34104,
+    "bytes": 47576,
     "source": "/onboarding",
-    "sha256": "6bf44b3c8e0f",
-    "capturedAt": "2026-10-24T11:19:56.542Z"
+    "sha256": "c87e03a5767a",
+    "capturedAt": "2026-10-24T12:09:11.819Z"
   },
   "setup-2-what-phone": {
     "file": "/marketing/setup-2-what-phone.webp",
@@ -848,10 +848,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 45492,
+    "bytes": 52084,
     "source": "/onboarding",
-    "sha256": "e3ccd22da06c",
-    "capturedAt": "2026-10-24T11:19:58.142Z"
+    "sha256": "b44c68b6eb10",
+    "capturedAt": "2026-10-24T12:09:13.513Z"
   },
   "setup-3-design-phone": {
     "file": "/marketing/setup-3-design-phone.webp",
@@ -859,10 +859,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 42008,
+    "bytes": 97768,
     "source": "/onboarding",
-    "sha256": "23be50f880a2",
-    "capturedAt": "2026-10-24T11:19:59.959Z"
+    "sha256": "15e355ff3517",
+    "capturedAt": "2026-10-24T12:12:12.439Z"
   },
   "setup-4-first-phone": {
     "file": "/marketing/setup-4-first-phone.webp",
@@ -870,10 +870,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 46050,
+    "bytes": 44128,
     "source": "/onboarding",
-    "sha256": "784d82d05234",
-    "capturedAt": "2026-10-24T11:20:01.686Z"
+    "sha256": "9305f6b14ae6",
+    "capturedAt": "2026-10-24T12:09:17.589Z"
   },
   "setup-5-review": {
     "file": "/marketing/setup-5-review.webp",
@@ -881,10 +881,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 85420,
+    "bytes": 168494,
     "source": "/onboarding",
-    "sha256": "c9e3ea6621c7",
-    "capturedAt": "2026-10-24T11:19:54.970Z"
+    "sha256": "e29152c03514",
+    "capturedAt": "2026-10-24T12:09:10.137Z"
   },
   "setup-5-review-phone": {
     "file": "/marketing/setup-5-review-phone.webp",
@@ -892,10 +892,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 58394,
+    "bytes": 69574,
     "source": "/onboarding",
-    "sha256": "ff513b7daa89",
-    "capturedAt": "2026-10-24T11:20:03.644Z"
+    "sha256": "334bb2ac7906",
+    "capturedAt": "2026-10-24T12:09:19.688Z"
   },
   "ex-corner-table-cafe-phone": {
     "file": "/marketing/ex-corner-table-cafe-phone.webp",

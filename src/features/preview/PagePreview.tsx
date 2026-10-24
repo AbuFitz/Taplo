@@ -42,6 +42,8 @@ export interface PagePreviewProps {
   testId?: string
   /** Decorative thumbnails cannot receive clicks or keyboard focus. */
   poster?: string
+  /** Synchronously remeasure when a parent sheet expands, before the next paint. */
+  resizeKey?: boolean | number | string
   interactive?: boolean
 }
 
@@ -66,7 +68,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true }: PagePreviewProps) {
+export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, resizeKey }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
@@ -80,7 +82,7 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
     const ro = new ResizeObserver(measure)
     ro.observe(el)
     return () => ro.disconnect()
-  }, [mode, zoom])
+  }, [mode, zoom, resizeKey])
 
   const decorated = chrome && mode !== "fill"
   const L = box ? layoutPreview(mode, box, device, zoom, decorated) : null

@@ -1,6 +1,10 @@
 "use client"
 
+import { Overlay } from "@/components/taplo/overlay"
 import { BusinessIcon } from "./BusinessIcon"
+import { SetupDesign } from "./SetupDesign"
+import { SetupDetails } from "./SetupDetails"
+import { SetupPlans } from "./SetupPlans"
 import { SetupCanvas } from "./SetupCanvas"
 import { SetupLoading } from "./SetupLoading"
 import { TaploLogo } from "@/components/taplo/brand"
@@ -10,7 +14,6 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { Check, Plus, Trash2, CalendarDays, MessageSquare, Phone, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
-import { LOCATION_MODES } from "@/features/businesses/content"
 import { SLUG_PROBLEM_MESSAGE } from "@/features/businesses/slug"
 import { newWidget } from "@/features/page/starter"
 import { ImageField } from "@/features/page/editor/controls"
@@ -41,13 +44,13 @@ const STEP_LABEL: Record<OnboardingStep, string> = {
   publish: "Review",
 }
 const STEP_TITLE: Record<OnboardingStep, string> = {
-  business: "Make it yours.",
+  business: "Add your business",
   industry: "What do you do?",
   goal: "Choose the first step.",
-  reach: "Make the next step easy.",
-  widgets: "Find your layout.",
+  reach: "How can customers reach you?",
+  widgets: "Choose your layout.",
   contacts: "Add your first content",
-  publish: "Your page is ready to look at",
+  publish: "Review your page",
 }
 
 const SETUP_STEPS = ONBOARDING_STEPS.filter(step => step !== "goal")
@@ -80,25 +83,31 @@ function firstKind(industryKey: string): "service" | "vehicle" | "photo" {
   return industryKey === "car-dealer" ? "vehicle" : industryKey === "photographer" ? "photo" : "service"
 }
 
-const LOCATION_LABEL = { premises: "A place customers visit", service_area: "I travel to customers", online: "Online only" } as const
 
 export function Onboarding() {
   const shell = React.useRef<HTMLElement>(null)
   React.useEffect(() => {
     const viewport = window.visualViewport
+    let initialHeight = window.innerHeight
+    let initialWidth = window.innerWidth
     const sync = () => {
       if (!shell.current) return
+      if(Math.abs(window.innerWidth-initialWidth)>80){initialHeight=window.innerHeight;initialWidth=window.innerWidth}
       const height = viewport?.height ?? window.innerHeight
       shell.current.style.setProperty("--setup-height", `${height}px`)
-      shell.current.dataset.keyboard = String(window.innerHeight - height > 180)
+      shell.current.style.setProperty("--setup-top", `${viewport?.offsetTop ?? 0}px`)
+      shell.current.dataset.keyboard = String(Math.max(window.innerHeight, initialHeight) - height > 180 && Boolean(document.activeElement?.matches("input,textarea")))
     }
-    sync(); viewport?.addEventListener("resize", sync)
-    return () => viewport?.removeEventListener("resize", sync)
+    sync(); viewport?.addEventListener("resize", sync); viewport?.addEventListener("scroll", sync); window.addEventListener("resize", sync)
+    return () => { viewport?.removeEventListener("resize", sync); viewport?.removeEventListener("scroll", sync); window.removeEventListener("resize", sync) }
   }, [])
   const router = useRouter()
   const { ready, state, update } = useDemo()
   const [showErrors, setShowErrors] = React.useState(false)
+  const [contentValid,setContentValid]=React.useState(true)
   const [query, setQuery] = React.useState("")
+  const [actionOpen, setActionOpen] = React.useState(false)
+  const [profileOpen, setProfileOpen] = React.useState(false)
   const [editSlug, setEditSlug] = React.useState(false)
   const [otherOpen, setOtherOpen] = React.useState(false)
   const [mobilePreview, setMobilePreview] = React.useState(false)
@@ -123,7 +132,7 @@ export function Onboarding() {
     return p && (PLAN_IDS as readonly string[]).includes(p) ? (p as PlanId) : null
   })
   React.useEffect(() => {
-    if (ready && intent) update((x) => (x.plan === intent ? x : { ...x, plan: intent }))
+    if (ready && intent) update((x) => (x.setupDrafts?.planIntent === intent ? x : { ...x, setupDrafts:{...x.setupDrafts,planIntent:intent} }))
   }, [ready, intent]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // "Start from this" on an inspiration page: take its kind of business, look and content types. Never its sample content.
@@ -157,7 +166,7 @@ export function Onboarding() {
     goal: true,
     reach: goalOf(s) === "call" ? Boolean(c.contacts.phone) : hasContactChannel(c),
     business: Boolean(c.identity.name.trim()) && slugErrs.length === 0,
-    contacts: true,
+    contacts: contentValid,
     widgets: true,
     publish: canPublish(s),
   }
@@ -166,7 +175,7 @@ export function Onboarding() {
     goal: "",
     reach: goalOf(s) === "call" ? "Add the phone number people should call." : "Add at least one way to reach you.",
     business: "Add a name and a valid web address.",
-    contacts: "",
+    contacts: "Finish the service name and price, or choose quote/free pricing. Save any vehicle or photos you started.",
     widgets: "",
     publish: "Complete the earlier steps to publish.",
   }
@@ -199,20 +208,21 @@ export function Onboarding() {
           {step === "industry" ? (
             <div className="grid gap-7">
               <div className="grid gap-3">
-                <TaploInput label="Search businesses" placeholder="Search: barber, tutor, café, plumber…" value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
-                <ul className="setup-industry-list grid grid-cols-2 gap-2" aria-label="Kinds of business">
-                  {searchIndustries(query).filter((p) => query.trim() ? true : POPULAR.includes(p.id) || (state !== null && c.identity.industryKey === p.id)).sort((a, b) => query.trim() ? 0 : POPULAR.indexOf(a.id) - POPULAR.indexOf(b.id)).slice(0, query.trim() ? 14 : 10).map((p) => {
+                <TaploInput label="Search businesses" placeholder="Search your business type" hint="Try a trade, service or profession." value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
+                <ul className="setup-industry-list grid gap-1" aria-label="Kinds of business">
+                  {searchIndustries(query).filter((p) => query.trim() ? true : POPULAR.slice(0, 4).includes(p.id) || (state !== null && Boolean(c.identity.industryLabel.trim()) && c.identity.industryKey === p.id)).sort((a, b) => query.trim() ? 0 : POPULAR.indexOf(a.id) - POPULAR.indexOf(b.id)).slice(0, query.trim() ? 6 : 5).map((p) => {
                     const selected = state !== null && (p.id === OTHER_INDUSTRY_ID ? otherOpen || c.identity.industryLabel !== "" && c.identity.industryKey === OTHER_INDUSTRY_ID : c.identity.industryKey === p.id)
                     return (
                       <li key={p.id}>
                         <button type="button" aria-pressed={selected} onClick={() => { setOtherOpen(p.id === OTHER_INDUSTRY_ID); update((x) => applyIndustry(x, p.id, p.id === OTHER_INDUSTRY_ID ? "" : p.label)) }}
-                          className={cn("setup-industry relative flex min-h-20 w-full items-center gap-3 rounded-2xl p-3 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", selected ? "bg-[#111111] text-white" : "bg-[#f5f5f5] hover:bg-[#ededed]")}>
+                          className={cn("setup-industry relative flex min-h-14 w-full items-center gap-3 rounded-2xl px-3 py-2 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", selected ? "bg-[#111111] text-white" : "bg-[#f5f5f5] hover:bg-[#ededed]")}>
                           <span className="setup-icon"><BusinessIcon id={p.id} /></span>{selected ? <Check aria-hidden="true" className="absolute right-2 top-2 size-3 text-current" /> : null}<span>{p.label}</span>
                         </button>
                       </li>
                     )
                   })}
                 </ul>
+                <button type="button" className="min-h-11 justify-self-start text-sm underline underline-offset-4" onClick={()=>{setOtherOpen(true);update(x=>applyIndustry(x,OTHER_INDUSTRY_ID,""))}}>Use a different business type</button>
                 {state !== null && (otherOpen || c.identity.industryKey === OTHER_INDUSTRY_ID && c.identity.industryLabel !== "") ? (
                   <TaploInput label="Describe your business" hint="e.g. Dog groomer, Wedding florist, Piano restorer" value={c.identity.industryLabel} maxLength={80} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }), { coalesce: "ind-label" })} />
                 ) : null}
@@ -229,27 +239,20 @@ export function Onboarding() {
           ) : null}
 
               {step === "reach" ? (
-                <div className="grid gap-6"><fieldset className="grid gap-2" data-testid="goal">
-                  <legend className="mb-3 text-sm font-medium">What should people do first?</legend>
-                  <div className="grid grid-cols-2 gap-2">
-                    {GOALS.map((g) => { const Icon = { book: CalendarDays, enquire: MessageSquare, call: Phone, message: Mail }[g.id]; return (
-                      <label key={g.id} className="setup-goal flex min-h-20 cursor-pointer items-center gap-3 rounded-2xl bg-[#f5f5f5] p-4 text-sm has-[:checked]:bg-black has-[:checked]:text-white has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring">
-                        <input type="radio" name="goal" className="sr-only" checked={goalOf(s) === g.id} onChange={() => update((x) => applyGoal(x, g.id))} />
-                        <Icon aria-hidden="true" className="size-5 shrink-0" /><span><span className="block font-semibold">{g.label}</span><span className="mt-1 block text-xs opacity-70">{g.hint}</span></span>
-                      </label>
-                    )})}
-                  </div>
-                </fieldset><fieldset className="grid gap-3" data-testid="reach">
+                <div className="grid gap-5"><div className="setup-action-summary"><span><span className="block text-xs text-muted-foreground">Your main button</span><strong className="text-sm">{GOALS.find(g => g.id === goalOf(s))?.label}</strong></span><button type="button" className="min-h-11 px-3 text-sm font-semibold underline underline-offset-4" onClick={() => setActionOpen(true)}>Change main action</button></div>
+                <Overlay open={actionOpen} onOpenChange={setActionOpen} title="Choose your main button" description="Choose what customers can do from your page." footer={<Button className="min-h-11 w-full" onClick={() => setActionOpen(false)}>Done</Button>}>
+                  <fieldset className="grid gap-2" data-testid="goal"><legend className="sr-only">Main button</legend>{GOALS.map(g => { const Icon = { book: CalendarDays, enquire: MessageSquare, call: Phone, message: Mail }[g.id]; return <label key={g.id} className="flex min-h-16 cursor-pointer items-center gap-3 rounded-2xl bg-neutral-50 p-3 has-[:checked]:bg-black has-[:checked]:text-white"><input type="radio" className="sr-only" name="goal" checked={goalOf(s)===g.id} onChange={()=>update(x=>applyGoal(x,g.id))}/><Icon aria-hidden="true" className="size-5 shrink-0"/><span><strong className="block text-sm">{g.label}</strong><span className="mt-1 block text-xs opacity-75">{g.hint}</span></span></label>})}</fieldset>
+                </Overlay><fieldset className="grid gap-3" data-testid="reach">
                   <legend className="mb-1 text-sm font-semibold">{goalOf(s) === "call" ? "The number to call" : "How can people reach you?"}</legend>
-                  {goalOf(s) !== "call" ? <div className="grid grid-cols-3 gap-3" role="group" aria-label="Contact method">{(["email", "phone", "whatsapp"] as const).map(method => { const Icon = method === "email" ? Mail : method === "phone" ? Phone : MessageSquare; return <button type="button" key={method} aria-pressed={reachMethod === method} onClick={() => setReachChoice(method)} className={cn("flex min-h-24 flex-col items-center justify-center gap-3 rounded-xl border text-sm font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring", reachMethod === method ? "border-signal bg-signal-soft text-signal" : "bg-white hover:border-signal")}><Icon className="size-6" aria-hidden="true" />{method === "email" ? "Email" : method === "phone" ? "Phone" : "WhatsApp"}</button> })}</div> : null}
+                  {goalOf(s) !== "call" ? <div className="grid grid-cols-3 gap-3" role="group" aria-label="Contact method">{(["email", "phone", "whatsapp"] as const).map(method => { const Icon = method === "email" ? Mail : method === "phone" ? Phone : MessageSquare; return <button type="button" key={method} aria-pressed={reachMethod === method} onClick={() => setReachChoice(method)} className={cn("flex min-h-11 items-center justify-center gap-2 rounded-full border text-sm font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring", reachMethod === method ? "border-signal bg-signal-soft text-signal" : "bg-white hover:border-signal")}><Icon className="size-4" aria-hidden="true" />{method === "email" ? "Email" : method === "phone" ? "Phone" : "WhatsApp"}</button> })}</div> : null}
                   {reachMethod === "email" ? <EmailField value={c.contacts.email} onCommit={v => update(x => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }, goalOf(x)), { coalesce: "email" })} /> : <PhoneField label={reachMethod === "phone" ? "Phone" : "WhatsApp"} value={c.contacts[reachMethod]} onCommit={v => update(x => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, [reachMethod]: v } } }, goalOf(x)), { coalesce: reachMethod })} hint={reachMethod === "whatsapp" ? "With country code, e.g. +44." : undefined} />}
-                  <p className="text-sm text-muted-foreground">One is enough. Only what you fill in appears on your page.</p>
+                  <p className="text-sm text-muted-foreground">One contact method is enough.</p>
                 </fieldset></div>
               ) : null}
 
           {step === "business" ? (
             <div className="grid gap-5">
-              <TaploInput label="Business name" value={c.identity.name} maxLength={100} autoComplete="off" autoFocus onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
+              <TaploInput label="Business name" value={c.identity.name} maxLength={100} autoComplete="organization" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
               <div className="-mt-2 text-sm text-muted-foreground">
                 Your link: <span className="font-medium text-foreground">taplo.co/{c.identity.slug || "your-name"}</span>{" "}
                 <button type="button" onClick={() => setEditSlug((v) => !v)} aria-expanded={editSlug || (showErrors && slugErrs.length > 0)} className="rounded px-1 font-medium text-foreground underline underline-offset-4">{editSlug ? "Done" : "Change"}</button>
@@ -258,18 +261,20 @@ export function Onboarding() {
               {editSlug || (showErrors && slugErrs.length) ? (
                 <TaploInput label="Web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />
               ) : null}
-              <details className="border-t pt-3"><summary className="min-h-11 cursor-pointer py-2 text-sm font-medium">Add a photo or a short introduction <span className="text-muted-foreground">(optional)</span></summary><div className="mt-4 grid gap-5">
+              <ImageField purpose="identity" samples={false} onFramingChange={shape=>update(x=>({...x,page:{...x.page,appearance:{...x.page.appearance,header:{...x.page.appearance.header,avatarShape:shape}}}}))} label="Add your logo or profile photo" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
+              {!c.identity.logo ? <p className="text-xs text-muted-foreground">No image yet? Continue and add one later.</p> : null}
+              <button type="button" className="min-h-11 text-left text-sm font-medium underline underline-offset-4" onClick={()=>setProfileOpen(true)}>Add an introduction or cover</button><Overlay open={profileOpen} onOpenChange={setProfileOpen} title="Profile details" footer={<Button className="min-h-11 w-full" onClick={()=>setProfileOpen(false)}>Done</Button>}><div className="grid gap-5">
               <TaploInput label="A line under your name (optional)" value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
-              <ImageField purpose="identity" label="Logo or profile picture (optional)" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
+
               <ImageField purpose="cover" label="Cover photo (optional)" cropAspect={16 / 9} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1600} value={c.identity.heroImage ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, heroImage: v ?? undefined } } }))} />
-              </div></details>
+              </div></Overlay>
             </div>
           ) : null}
 
-          {step === "contacts" ? <FirstContent /> : null}
+          {step === "contacts" ? <FirstContent onValidity={setContentValid} /> : null}
 
           {step === "widgets" ? <WidgetsStep /> : null}
-          {step === "publish" ? <PublishStep onEditor={() => router.push("/dashboard/page")} /> : null}
+          {step === "publish" ? <PublishStep onEditor={() => router.push("/dashboard/page")} onEdit={go} /> : null}
 
           </div>
           {step !== "publish" ? (
@@ -310,8 +315,8 @@ function LookPicker({ industryKey, themeId, onPick }: { industryKey: string; the
   return (
     <fieldset className="setup-look-picker grid gap-3" data-testid="look-picker">
       <legend className="mb-1 text-lg font-semibold">Pick a look</legend>
-      <p className="-mt-1 text-sm text-muted-foreground">Tap a design. Watch your page change. Everything can be customised later.</p>
-      <div className="grid grid-cols-3 gap-3 pb-2">{looks.slice(0, 6).map(card)}</div>
+      <p className="-mt-1 text-sm text-muted-foreground">Choose a starting layout. Use the controls above to make it yours.</p>
+      <div className="grid grid-cols-3 gap-2 pb-2">{looks.slice(0, 6).map(card)}</div>
       {looks.length > 6 ? <details className="group">
         <summary className="inline-flex min-h-10 cursor-pointer list-none items-center rounded-lg text-sm font-medium underline underline-offset-4 [&::-webkit-details-marker]:hidden">More looks</summary>
         <div className="mt-3 grid grid-cols-3 gap-3 pb-2">{looks.slice(6).map(card)}</div>
@@ -324,26 +329,35 @@ function LookPicker({ industryKey, themeId, onPick }: { industryKey: string; the
 function WidgetsStep() {
   const { state, update } = useDemo()
   const s = state ?? initialState()
-  return <LookPicker industryKey={s.content.identity.industryKey} themeId={s.page.themeId} onPick={(id) => update((x) => ({ ...x, page: { ...x.page, themeId: id, appearance: {} } }))} />
+  React.useEffect(()=>{
+    if(s.page.appearance.background || s.setupDrafts?.backgroundEdited)return
+    const bg=LOOKS.find(l=>l.id===s.page.themeId)?.overrides.colors?.background??'#ffffff'
+    const dark=bg==='#000000'||bg==='#080808'
+    update(st=>({...st,page:{...st.page,appearance:{...st.page.appearance,background:{kind:'gradient',from:dark?'#000000':'#ffffff',to:dark?'#303030':'#dddddd',angle:135,motion:true,source:'logo'},decoration:'grain'}}}))
+  },[s.page.themeId,s.page.appearance.background,s.setupDrafts?.backgroundEdited,update])
+  return <div className="grid gap-4"><SetupDesign compact /><LookPicker industryKey={s.content.identity.industryKey} themeId={s.page.themeId} onPick={(id) => update((x) => ({ ...x, page: { ...x.page, themeId: id, appearance: x.setupDrafts?.backgroundEdited?{background:x.page.appearance.background,colors:x.page.appearance.colors,decoration:x.page.appearance.decoration}:{} } }))} /></div>
 }
 
 const toPounds = (minor?: number) => (minor === undefined ? "" : (minor / 100).toFixed(minor % 100 === 0 ? 0 : 2))
-interface Row { id: string; name: string; price: string; minutes: string }
-const validRow = (r: Row) => r.name.trim().length > 0 && /^\d{1,6}(\.\d{1,2})?$/.test(r.price.trim())
+interface Row { id: string; name: string; price: string; minutes: string; priceMode?: "fixed"|"from"|"quote"|"free" }
+const validRow = (r: Row) => r.name.trim().length > 0 && (r.priceMode === "quote" || r.priceMode === "free" || /^\d{1,6}(\.\d{1,2})?$/.test(r.price.trim()))
 
 /**
  * The first content. A service is a name and a price (and a time, which is what lets people book it); rows are saved as
  * soon as they are complete, so the page fills in while the owner types. Nothing is suggested as a price.
  */
-function FirstServices() {
+function FirstServices({onValidity}:{onValidity:(valid:boolean)=>void}) {
   const { state, update } = useDemo()
   const s = state ?? initialState()
   const industry = getIndustryPreset(s.content.identity.industryKey)
   const [rows, setRows] = React.useState<Row[]>(() => {
-    const have = (s.content.services ?? []).filter((x) => !x.archived).map((x) => ({ id: x.id, name: x.name, price: toPounds(x.priceMinor), minutes: x.durationMinutes ? String(x.durationMinutes) : "" }))
+    if(s.setupDrafts?.services)return s.setupDrafts.services
+    const have = (s.content.services ?? []).filter((x) => !x.archived).map((x) => ({ id: x.id, name: x.name, price: toPounds(x.priceMinor), priceMode:x.priceMode, minutes: x.durationMinutes ? String(x.durationMinutes) : "" }))
     return have.length ? have : [{ id: newId("svc"), name: "", price: "", minutes: "" }]
   })
+  React.useEffect(()=>{onValidity(rows.every(r=>(!r.name.trim()&&!r.price&&!r.minutes)||validRow(r)))},[rows,onValidity])
   const [focus, setFocus] = React.useState<string | null>(null)
+  const [pricing,setPricing]=React.useState<string|null>(null)
   const booking = goalOf(s) === "book"
 
   const sync = (next: Row[]) => {
@@ -353,18 +367,18 @@ function FirstServices() {
       const done = next.filter(validRow).map((r, i) => {
         const prev = (st.content.services ?? []).find((x) => x.id === r.id)
         const minutes = r.minutes ? Math.min(parseInt(r.minutes, 10), 1440) : undefined
-        return normService({ ...(prev ?? blankService(i)), id: r.id, name: r.name.trim(), priceMode: "fixed", priceMinor: Math.round(parseFloat(r.price) * 100), durationMinutes: minutes && minutes > 0 ? minutes : undefined, bookingMode: booking ? "request" : "contact", sortOrder: i + 1 })
+        return normService({ ...(prev ?? blankService(i)), id: r.id, name: r.name.trim(), priceMode: r.priceMode ?? "fixed", priceMinor: r.priceMode === "quote" || r.priceMode === "free" ? undefined : Math.round(parseFloat(r.price) * 100), durationMinutes: minutes && minutes > 0 ? minutes : undefined, bookingMode: booking ? "request" : "contact", sortOrder: i + 1 })
       })
-      return { ...st, content: { ...st.content, services: [...kept, ...done] } }
+      return { ...st, content: { ...st.content, services: [...kept, ...done] }, setupDrafts:{...st.setupDrafts,services:next} }
     }, { coalesce: "first-services" })
   }
   const patch = (id: string, p: Partial<Row>) => sync(rows.map((r) => (r.id === id ? { ...r, ...p } : r)))
   const used = new Set(rows.map((r) => r.name.trim().toLowerCase()))
-  const suggestions = industry.suggestedServices.filter((x) => !used.has(x.name.toLowerCase())).slice(0, 6)
+  const suggestions = industry.suggestedServices.filter((x) => !used.has(x.name.toLowerCase())).slice(0, 3)
   const add = (name = "") => {
     const row = { id: newId("svc"), name, price: "", minutes: "" }
     setFocus(name ? `${row.id}-price` : `${row.id}-name`)
-    setRows((r) => [...r, row])
+    sync([...rows,row])
   }
   const anyMinutes = rows.some((r) => validRow(r) && r.minutes)
   const field = "h-11 w-full min-w-0 rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -380,12 +394,14 @@ function FirstServices() {
         {rows.map((r, i) => (
           <li key={r.id} className="grid grid-cols-[minmax(0,1fr)_5.5rem_5.5rem_auto] items-end gap-2 max-sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
             <label className="grid gap-1 max-sm:col-span-3"><span className="text-xs font-medium text-muted-foreground">{i === 0 ? "Service" : <span className="sr-only">Service</span>}</span><input className={field} aria-label={`Service ${i + 1} name`} placeholder="e.g. Initial consultation" maxLength={120} autoFocus={focus === `${r.id}-name`} value={r.name} onChange={(e) => patch(r.id, { name: e.target.value })} /></label>
-            <label className="grid gap-1"><span className="text-xs font-medium text-muted-foreground">{i === 0 ? "Price (£)" : <span className="sr-only">Price</span>}</span><input className={field} aria-label={`Service ${i + 1} price`} inputMode="decimal" autoFocus={focus === `${r.id}-price`} value={r.price} onChange={(e) => { if (/^\d{0,6}(\.\d{0,2})?$/.test(e.target.value)) patch(r.id, { price: e.target.value }) }} /></label>
+            <label className="grid gap-1"><span className="text-xs font-medium text-muted-foreground">{i === 0 ? "Price (£)" : <span className="sr-only">Price</span>}</span><input className={field} aria-label={`Service ${i + 1} price`} inputMode="decimal" disabled={r.priceMode === "quote" || r.priceMode === "free"} placeholder={r.priceMode === "quote" ? "Quote" : r.priceMode === "free" ? "Free" : ""} autoFocus={focus === `${r.id}-price`} value={r.price} onChange={(e) => { if (/^\d{0,6}(\.\d{0,2})?$/.test(e.target.value)) patch(r.id, { price: e.target.value }) }} /></label>
             <label className="grid gap-1"><span className="text-xs font-medium text-muted-foreground">{i === 0 ? "Minutes" : <span className="sr-only">Minutes</span>}</span><input className={field} aria-label={`Service ${i + 1} minutes`} inputMode="numeric" value={r.minutes} onChange={(e) => patch(r.id, { minutes: e.target.value.replace(/\D/g, "").slice(0, 4) })} /></label>
             <Button type="button" variant="ghost" size="icon" className="size-11" aria-label={`Remove service ${i + 1}`} disabled={rows.length === 1 && !r.name && !r.price} onClick={() => { const next = rows.filter((x) => x.id !== r.id); sync(next.length ? next : [{ id: newId("svc"), name: "", price: "", minutes: "" }]) }}><Trash2 /></Button>
+            <button type="button" className="col-span-full min-h-8 justify-self-start text-xs font-medium underline underline-offset-4" onClick={()=>setPricing(r.id)}>Pricing options{r.priceMode && r.priceMode!=="fixed" ? ` · ${r.priceMode}` : ""}</button>
           </li>
         ))}
       </ul>
+      <Overlay open={pricing!==null} onOpenChange={o=>!o&&setPricing(null)} title="How is this service priced?" footer={<Button className="min-h-11 w-full" onClick={()=>setPricing(null)}>Done</Button>}><div className="grid gap-2">{([{id:"fixed",label:"A fixed price"},{id:"from",label:"Prices start from"},{id:"quote",label:"Ask for a quote"},{id:"free",label:"Free"}] as const).map(mode=><button key={mode.id} type="button" aria-pressed={(rows.find(r=>r.id===pricing)?.priceMode??"fixed")===mode.id} className="min-h-14 rounded-2xl bg-neutral-50 p-3 text-left font-medium aria-pressed:bg-black aria-pressed:text-white" onClick={()=>pricing&&patch(pricing,{priceMode:mode.id})}>{mode.label}</button>)}</div></Overlay>
       <Button type="button" variant="outline" className="min-h-11 justify-self-start" onClick={() => add()}><Plus /> Add another</Button>
       {booking && !anyMinutes ? <p className="text-sm text-muted-foreground" data-testid="booking-hint">Add how long a service takes and people can ask to book it. Without a time, they send an enquiry instead.</p> : null}
     </div>
@@ -393,54 +409,45 @@ function FirstServices() {
 }
 
 /** A vehicle or product, entered with the same form the editor uses, so nothing is learned twice. */
-function FirstRecord({ kind }: { kind: "vehicle" | "photo" }) {
+function FirstRecord({ kind, onValidity }: { kind: "vehicle" | "photo"; onValidity:(valid:boolean)=>void }) {
   const { state, update } = useDemo()
   const s = state ?? initialState()
-  const [draft, setDraft] = React.useState<unknown>(() => blankFor(kind, s.content))
+  const [draft, setDraft] = React.useState<unknown>(() => s.setupDrafts?.record?.kind===kind?s.setupDrafts.record.value:blankFor(kind, s.content))
   const [show, setShow] = React.useState(false)
+  const [blank] = React.useState(()=>JSON.stringify(blankFor(kind,s.content),(k,v)=>k==='id'?undefined:v))
+  React.useEffect(()=>onValidity(JSON.stringify(draft,(k,v)=>k==='id'?undefined:v)===blank),[draft,blank,onValidity])
   const items = kind === "vehicle" ? (s.content.products ?? []).filter((p) => !p.archived && p.kind === "vehicle").map((p) => p.name) : (s.content.gallery ?? []).map((g, i) => g.caption || `Photo ${i + 1}`)
   const save = () => {
     if (Object.keys(validate(kind, draft)).length) { setShow(true); return }
-    update((st) => ({ ...st, content: commitRecord(kind, draft, st.content) }))
+    update((st) => ({ ...st, content: commitRecord(kind, draft, st.content),setupDrafts:{...st.setupDrafts,record:undefined} }))
     setDraft(blankFor(kind, s.content)); setShow(false)
   }
   return (
     <div className="grid gap-4" data-testid="first-record">
       {items.length ? <ul className="grid gap-1 text-sm" aria-label="Added"><li className="font-medium">Added so far</li>{items.map((n, i) => <li key={i} className="flex items-center gap-2"><Check aria-hidden="true" className="size-4 text-foreground" />{n}</li>)}</ul> : null}
-      <RecordForm key={items.length} kind={kind} value={draft} onChange={setDraft} showErrors={show} content={s.content} />
+      <RecordForm key={items.length} kind={kind} value={draft} onChange={v=>{setDraft(v);update(st=>({...st,setupDrafts:{...st.setupDrafts,record:{kind,value:v}}}))}} showErrors={show} content={s.content} />
       <Button type="button" className="min-h-11 justify-self-start" onClick={save} data-testid="first-record-save">{kind === "vehicle" ? "Add this vehicle" : "Add these photos"}</Button>
     </div>
   )
 }
 
-function FirstContent() {
-  const { state, update } = useDemo()
+function FirstContent({onValidity}:{onValidity:(valid:boolean)=>void}) {
+  const { state } = useDemo()
   const s = state ?? initialState()
   const c = s.content
   const kind = firstKind(c.identity.industryKey)
   return (
     <div className="grid gap-8">
       <div className="grid gap-3">
-        <p className="-mt-3 text-sm text-muted-foreground">Start with one. You add the rest in the editor, and nothing is added for you, so every price and photo on your page is yours.</p>
-        {kind === "service" ? <FirstServices /> : <FirstRecord kind={kind} />}
+        <p className="-mt-3 text-sm text-muted-foreground">Add one to start. You can fill out the rest later.</p>
+        {kind === "service" ? <FirstServices onValidity={onValidity} /> : <FirstRecord kind={kind} onValidity={onValidity} />}
       </div>
-      <fieldset className="grid gap-3">
-        <legend className="mb-1 text-sm font-semibold">Where do you work?</legend>
-        <div className="flex flex-wrap gap-2">
-          {LOCATION_MODES.map((m) => (
-            <label key={m} className={cn("inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border bg-card px-4 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring", c.location.mode === m && "border-foreground bg-foreground text-background")}>
-              <input type="radio" name="loc" className="sr-only" checked={c.location.mode === m} onChange={() => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, mode: m } } }))} />
-              {LOCATION_LABEL[m]}
-            </label>
-          ))}
-        </div>
-        <TaploInput label={c.location.mode === "service_area" ? "Areas you cover" : c.location.mode === "online" ? "Where you’re based (optional)" : "Town or area"} value={c.location.locality ?? ""} maxLength={120} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, locality: e.target.value || undefined } } }), { coalesce: "loc" })} hint={c.location.mode === "premises" ? undefined : "Your private address is never shown."} />
-      </fieldset>
+      <SetupDetails />
     </div>
   )
 }
 
-function PublishStep({ onEditor }: { onEditor: () => void }) {
+function PublishStep({ onEditor, onEdit }: { onEditor: () => void; onEdit: (step:OnboardingStep) => void }) {
   const { state, update } = useDemo()
   const s = state ?? initialState()
   const checks = readiness(s)
@@ -453,7 +460,9 @@ function PublishStep({ onEditor }: { onEditor: () => void }) {
   const [copied, setCopied] = React.useState(false)
   return (
     <div className="grid gap-5">
-      <p className="text-muted-foreground">Check your preview. You can change everything in the editor.</p>
+      <p className="text-sm text-muted-foreground">Check the real page above. Fill any gaps before you save it.</p>
+      <div className="grid gap-1" aria-label="Page checklist">{[{label:'Business name and image',step:'business' as const,done:Boolean(s.content.identity.logo)},{label:'Description',step:'business' as const,done:Boolean(s.content.identity.tagline)},{label:'Services, stock or work',step:'contacts' as const,done:Boolean(s.content.services?.some(x=>!x.archived)||s.content.products?.some(x=>!x.archived)||s.content.gallery?.length)},{label:'Layout and colours',step:'widgets' as const,done:true}].map(item=><button key={item.label} type="button" className="setup-edit-row" onClick={()=>onEdit(item.step)}><span className="grid size-6 place-items-center rounded-full bg-neutral-100 text-xs">{item.done?<Check aria-hidden="true" className="size-3"/>:'+'}</span><span>{item.label}</span><span className="ml-auto text-xs text-muted-foreground">{item.done?'Edit':'Add'}</span></button>)}</div>
+      <SetupDetails /><SetupDesign /><SetupPlans />
       {checks.some((c) => c.required && !c.done) ? (
         <ul className="grid gap-2" aria-label="Still needed">
           {checks.filter((c) => c.required && !c.done).map((c) => <li key={c.id} className="flex items-center gap-2 text-sm text-destructive"><span className="size-1.5 rounded-full bg-destructive" aria-hidden="true" />{c.label}</li>)}

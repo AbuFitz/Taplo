@@ -55,18 +55,18 @@ const jobs = [
   // The standalone QR code on a transparent background, set against a light surface to show it is real.
   { id: "qr-options", origin: "https://taplo.example", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Share Jay/ }).click(); await p.getByTestId("share-panel").waitFor(); await p.addStyleTag({ content: "[data-testid=share-demo-note]{display:none!important}" }); await p.getByRole("radio", { name: "Your logo" }).click(); await p.getByRole("radio", { name: "Dots" }).click(); await p.waitForTimeout(400) }, shot: '[data-testid="share-panel"]' },
   { id: "qr-standalone", origin: "https://taplo.example", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Share Jay/ }).click(); await p.getByTestId("share-panel").waitFor() }, download: async (p) => { await p.getByRole("radio", { name: "Transparent" }).click(); const [dl] = await Promise.all([p.waitForEvent("download"), p.getByRole("button", { name: /QR code · Screen/ }).click()]); return readFileSync(await dl.path()) } },
-  { id: "setup-1-name", url: "/onboarding", vp: [1100, 860], run: async p => { await p.getByLabel("Business name").fill("Alex’s Barbers") }, clip: [0, 0, 1100, 860] },
+  { id: "setup-1-name", url: "/onboarding", vp: [1100, 860], run: async p => { await setupIdentity(p) }, clip: [0, 0, 1100, 860] },
   // ---- Setup: the first, middle and last of the short journey, on a computer
-  { id: "setup-2-what", url: "/onboarding", vp: [1100, 860], run: async (p) => { await p.getByLabel("Business name").fill("Alex’s Barbers"); await p.getByRole("button", { name: "Continue" }).click(); await p.getByRole("list", { name: "Kinds of business" }).getByRole("button", { name: "Barber" }).click() }, clip: [0, 0, 1100, 860] },
-  { id: "setup-3-design", url: "/onboarding", vp: [1100, 860], run: async p => { await setupFirstContent(p); await p.getByLabel("Service 1 name").fill("Haircut"); await p.getByLabel("Service 1 price").fill("22"); await p.getByLabel("Service 1 minutes").fill("30"); await p.getByRole("button", { name: "Continue", exact: true }).click() }, clip: [0, 0, 1100, 860] },
-  { id: "setup-4-first", url: "/onboarding", vp: [1100, 860], run: async p => { await setupFirstContent(p); await p.getByLabel("Service 1 name").fill("Haircut"); await p.getByLabel("Service 1 price").fill("22"); await p.getByLabel("Service 1 minutes").fill("30"); await p.getByRole("button", { name: "Add another" }).click(); await p.getByLabel("Service 2 name").fill("Skin fade"); await p.getByLabel("Service 2 price").fill("25") }, clip: [0, 0, 1100, 860] },
+  { id: "setup-2-what", url: "/onboarding", vp: [1100, 860], run: async (p) => { await setupIdentity(p); await p.getByRole("button", { name: "Continue" }).click(); await p.getByRole("list", { name: "Kinds of business" }).getByRole("button", { name: "Cafe / restaurant" }).click() }, clip: [0, 0, 1100, 860] },
+  { id: "setup-3-design", url: "/onboarding", vp: [1100, 860], run: async p => { await setupFirstContent(p); await p.getByLabel("Service 1 name").fill("Flat white"); await p.getByLabel("Service 1 price").fill("3.40"); await p.getByLabel("Service 1 minutes").fill("5"); await p.getByRole("button", { name: "Continue", exact: true }).click() }, clip: [0, 0, 1100, 860] },
+  { id: "setup-4-first", url: "/onboarding", vp: [1100, 860], run: async p => { await setupFirstContent(p); await p.getByLabel("Service 1 name").fill("Flat white"); await p.getByLabel("Service 1 price").fill("3.40"); await p.getByLabel("Service 1 minutes").fill("5"); await p.getByRole("button", { name: "Add another" }).click(); await p.getByLabel("Service 2 name").fill("Breakfast roll"); await p.getByLabel("Service 2 price").fill("6.50") }, clip: [0, 0, 1100, 860] },
   // ---- Design: one business, six starting looks
   ...["night", "journal", "clay", "forge", "orchard", "showroom"].map((l) => ({ id: `look-${l}`, url: frame("barber", l), vp: [390, 844], clip: [0, 0, 390, 600] })),
 ]
 
 const firstContentJob = jobs.find(j => j.id === "setup-4-first")
 if (!firstContentJob) throw new Error("Missing first-content capture")
-jobs.push({ ...firstContentJob, id: "setup-5-review", run: async p => { await firstContentJob.run(p); await p.getByRole("button", { name: "Continue", exact: true }).click(); await p.getByRole("button", { name: "Continue", exact: true }).click(); await p.getByRole("heading", { name: "Your page is ready to look at", exact: true }).waitFor() } })
+jobs.push({ ...firstContentJob, id: "setup-5-review", run: async p => { await firstContentJob.run(p); await p.getByRole("button", { name: "Continue", exact: true }).click(); await p.getByRole("button", { name: "Continue", exact: true }).click(); await p.getByRole("heading", { name: "Review your page", exact: true }).waitFor() } })
 
 // The setup story uses real mobile captures on phones, rather than shrinking desktop form text.
 for (const j of [...jobs].filter(j => j.id.startsWith("setup-"))) jobs.push({ ...j, id: `${j.id}-phone`, vp: [390, 844], clip: [0, 0, 390, 844], run: async p => { await j.run(p); await p.locator("#step-title").scrollIntoViewIfNeeded() } })
@@ -121,12 +121,23 @@ writeFileSync(new URL("../../src/features/marketing/manifest.json", import.meta.
 if (failed) process.exitCode = 1
 
 async function setupFirstContent(p) {
-  await p.getByLabel("Business name", { exact: true }).fill("Alex’s Barbers")
+  await setupIdentity(p)
   await p.getByRole("button", { name: "Continue", exact: true }).click()
-  await p.getByRole("list", { name: "Kinds of business" }).getByRole("button", { name: "Barber", exact: true }).click()
+  await p.getByRole("list", { name: "Kinds of business" }).getByRole("button", { name: "Cafe / restaurant", exact: true }).click()
   await p.getByRole("button", { name: "Continue", exact: true }).click()
-  await p.getByRole("radio", { name: /Book with me/ }).check()
-  await p.getByRole("group", { name: "Contact method" }).getByRole("button", { name: "Phone", exact: true }).click()
+  await p.getByRole("button",{name:"Change main action",exact:true}).click(); await p.getByText("Call me", { exact:true }).click(); await p.getByRole("button",{name:"Done",exact:true}).click()
   await p.getByLabel("Phone", { exact: true }).fill("01632 960123")
   await p.getByRole("button", { name: "Continue", exact: true }).click()
+}
+
+async function setupIdentity(p) {
+  await p.getByLabel("Business name", { exact: true }).fill("No. 6 Coffee")
+  const buffer=await sharp(readFileSync(new URL("../../public/taplo-demo/corner-table-mark.svg",import.meta.url))).png().toBuffer()
+  await p.getByLabel("Add your logo or profile photo: upload a picture").setInputFiles({name:"no-6.png",mimeType:"image/png",buffer})
+  await p.getByTestId("crop-dialog").getByRole("button",{name:"Use image",exact:true}).click()
+  await p.getByRole("button",{name:"Add an introduction or cover",exact:true}).click()
+  await p.getByLabel("A line under your name (optional)",{exact:true}).fill("Coffee, breakfast and lunch.")
+  await p.getByLabel("Cover photo (optional): upload a picture").setInputFiles(new URL("../../public/photography/coffee.webp",import.meta.url).pathname)
+  await p.getByTestId("crop-dialog").getByRole("button",{name:"Use image",exact:true}).click()
+  await p.getByRole("button",{name:"Done",exact:true}).click()
 }

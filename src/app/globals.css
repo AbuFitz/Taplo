@@ -319,3 +319,21 @@
   .setup-flow > nav { margin-bottom:.75rem; }
   .setup-context { width:2rem; min-height:2rem; padding:0; justify-content:center; border:0; background:transparent; }
 }
+/* Registration: a focused console below an elevated, clearly separate preview. */
+.setup-flow { background:#faf9f7; }
+.setup-workspace > section { background:#fff; border-radius:1.75rem 1.75rem 0 0; padding:1.25rem 1rem 0; margin-inline:-.5rem; }
+.setup-workspace > aside { border:1px solid #d4d3d0; padding:3px; background:linear-gradient(140deg,#fafafa,#dededb); box-shadow:0 8px 28px -18px #0006,inset 0 1px #fff; border-radius:1.75rem; }
+.setup-canvas { border-radius:0 0 1.4rem 1.4rem; }
+.setup-canvas-heading { padding-inline:.75rem; }
+.setup-icon { width:1.75rem; height:1.75rem; border-radius:0; background:transparent; }
+.setup-action-summary { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+.setup-edit-row { display:flex; min-height:3.5rem; align-items:center; gap:.75rem; padding:.75rem; border-radius:1rem; background:#f7f7f5; text-align:left; font-size:13px; font-weight:600; }
+.setup-edit-row:focus-visible { outline:2px solid #111; outline-offset:2px; }
+.setup-look-picker > div { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.setup-look-picker .theme-swatch { aspect-ratio:3/4; }
+.setup-next { background:#fff; }
+@media(max-width:1023px) { .setup-flow { position:fixed; inset-inline:0; top:var(--setup-top,0px); } .setup-workspace { row-gap:.75rem; } .setup-workspace > section { padding-top:1rem; } .setup-workspace #step-title { font-size:clamp(1.5rem,6vw,1.85rem); margin-bottom:1rem; } }
+@media(min-width:1024px) { .setup-workspace > section { padding:2rem; margin:0; border-radius:2rem; } .setup-next { padding-inline:0; } .setup-look-picker .theme-swatch { aspect-ratio:3/4; } }
+
+.setup-design-compact .setup-edit-row { min-height:3rem; padding:.65rem; gap:.4rem; font-size:12px; }
+.setup-design-compact .setup-edit-row span > span, .setup-design-compact .setup-edit-row > svg:last-child { display:none; }

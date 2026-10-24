@@ -21,7 +21,7 @@ for(const width of[390,1440])test(`starting-design and plan context never displa
   await page.getByRole('button',{name:'Barber',exact:true}).click();await page.getByRole('button',{name:'Continue',exact:true}).click()
   await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await page.getByRole('button',{name:'Continue',exact:true}).click()
   await page.getByLabel('Service 1 name').fill('Haircut');await page.getByLabel('Service 1 price').fill('25');await page.getByLabel('Service 1 minutes').fill('30');await page.getByRole('button',{name:'Continue',exact:true}).click();await page.getByRole('button',{name:'Continue',exact:true}).click()
-  const title=page.getByRole('heading',{name:'Your page is ready to look at',exact:true});await expect(title).toBeInViewport({ratio:1})
+  const title=page.getByRole('heading',{name:'Review your page',exact:true});await expect(title).toBeInViewport({ratio:1})
   const titleBox=(await title.boundingBox())!,bodyBox=(await page.locator('.setup-step-body').boundingBox())!;expect(bodyBox.y).toBeGreaterThanOrEqual(titleBox.y+titleBox.height)
   await page.getByRole('button',{name:'Customise my page',exact:true}).click();await expect(page.getByTestId('my-page')).toBeVisible()
 })

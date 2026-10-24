@@ -108,12 +108,13 @@ export async function cropFile(file: File, area: CropArea): Promise<File> {
     canvas.height,
   );
   bitmap.close?.();
+  const mime = file.type === "image/png" ? "image/png" : "image/jpeg";
   const blob = await new Promise<Blob | null>((r) =>
-    canvas.toBlob(r, "image/jpeg", 0.92),
+    canvas.toBlob(r, mime, 0.92),
   );
   if (!blob) throw new Error("The crop could not be saved.");
-  return new File([blob], file.name.replace(/\.[^.]+$/, "") + ".jpg", {
-    type: "image/jpeg",
+  return new File([blob], file.name.replace(/\.[^.]+$/, "") + (mime === "image/png" ? ".png" : ".jpg"), {
+    type: mime,
   });
 }
 
