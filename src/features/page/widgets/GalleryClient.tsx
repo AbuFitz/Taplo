@@ -12,7 +12,7 @@ type Side = "before" | "after"
 const pos = (f?: { x: number; y: number }) => (f ? { objectPosition: `${f.x}% ${f.y}%` } : undefined)
 
 /** Real images keep their proportions in the viewer; both halves of a comparison are accessible. */
-export function Gallery({ items, variant, title }: { items: GalleryItem[]; variant: "grid" | "carousel" | "beforeAfter"; title?: string }) {
+export function Gallery({ items, variant, title }: { items: GalleryItem[]; variant: "grid" | "carousel" | "beforeAfter" | "masonry"; title?: string }) {
   const [selection, setSelection] = React.useState<{ at: number; side: Side } | null>(null)
   const openedFrom = React.useRef<HTMLButtonElement | null>(null)
   const label = title || "Gallery"
@@ -32,7 +32,7 @@ export function Gallery({ items, variant, title }: { items: GalleryItem[]; varia
           <div className={cn("relative", !g.before && "col-span-2")}>{tile(g, i, g.before ? "4 / 5" : "4 / 3")}{g.before ? <span className="tp-ba-label pointer-events-none" data-after="">After</span> : null}</div>
         </div>{g.caption ? <p className="tp-gallery-caption">{g.caption}</p> : null}
       </li>)}</ul>
-        : <ul className="tp-gallery" aria-label={label}>{items.map((g, i) => <li key={g.id}>{tile(g, i)}{g.caption ? <p className="tp-gallery-caption">{g.caption}</p> : null}</li>)}</ul>}
+        : <ul className={variant === "masonry" ? "tp-photo-wall" : "tp-gallery"} aria-label={label}>{items.map((g, i) => <li key={g.id}>{tile(g, i, variant === "masonry" ? (i % 3 === 0 ? "4 / 5" : i % 3 === 1 ? "1 / 1" : "4 / 3") : undefined)}{g.caption ? <p className="tp-gallery-caption">{g.caption}</p> : null}</li>)}</ul>}
     <Overlay tone="page" kind="detail" open={selection !== null} onOpenChange={(o) => !o && setSelection(null)} title={selection ? `${label}: picture ${selection.at + 1} of ${items.length}` : label} hideTitle
       onCloseAutoFocus={(e) => { e.preventDefault(); openedFrom.current?.focus() }} className="tp-lightbox !border-0 !bg-black !text-white" bodyClassName="p-0" testId="lightbox">
       {selection && items[selection.at] ? <Lightbox items={items} at={selection.at} side={selection.side} select={setSelection} /> : null}

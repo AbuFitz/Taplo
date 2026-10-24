@@ -1,6 +1,7 @@
 import "../themes/fonts"
 import Link from "next/link"
 import "./page.css"
+import "./widget-layouts.css"
 import { ThemeRoot } from "@/components/taplo/theme-root"
 import { renderWidgetBody } from "../widgets/renderers"
 import { SharePanel } from "../widgets/ShareClient"
@@ -15,6 +16,10 @@ import type { PageViewModel } from "./view-model"
  */
 /** Widgets whose items are cards in their own right: they get no outer panel. */
 const BARE = new Set(["team", "products", "gallery"])
+const ITEM_SURFACES: Record<string, readonly string[]> = {
+  serviceList: ["cards", "spotlight"], priceMenu: ["panels"], faq: ["cards"], offers: ["cards"], text: ["statement"],
+}
+const hasItemSurfaces = (w: PageViewModel["widgets"][number]) => BARE.has(w.type) || ITEM_SURFACES[w.type]?.includes(String(w.settings.variant))
 
 export type PageFragment = { kind: "header" } | { kind: "widget"; id: string }
 
@@ -27,7 +32,7 @@ export function PageRenderer({ vm, bare = false, fragment }: { vm: PageViewModel
         {bare || fragment?.kind === "widget" ? null : <PageHeader vm={vm} />}
         {fragment?.kind === "header" ? null : <main className="tp-widgets" aria-label="Page content">
           {visible.map((w, i) => (
-            <section key={w.id} className="tp-widget" data-widget={w.type} data-bare={BARE.has(w.type) ? "" : undefined} data-widget-id={w.id} {...w.style.attrs} style={{ ...w.style.vars, "--i": i } as React.CSSProperties}>
+            <section key={w.id} className="tp-widget" data-widget={w.type} data-bare={hasItemSurfaces(w) ? "" : undefined} data-widget-id={w.id} {...w.style.attrs} style={{ ...w.style.vars, "--i": i } as React.CSSProperties}>
               {renderWidgetBody(w, vm)}
             </section>
           ))}

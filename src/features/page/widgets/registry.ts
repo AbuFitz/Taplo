@@ -57,7 +57,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
 
   serviceList: {
     type: "serviceList", version: 1, label: "Services", description: "A list of what you offer, with prices.", category: "sales", icon: "ListChecks", multiple: true, appearance: ["card"],
-    fields: [TITLE, { kind: "switch", key: "excludeFeatured", label: "Keep featured services out of this list" }, { kind: "refs", key: "serviceIds", label: "Which services", source: "services", help: "Leave on “All” to follow your service list automatically." }, { kind: "select", key: "variant", label: "Style", options: [{ value: "list", label: "List" }, { value: "cards", label: "Cards" }, { value: "compact", label: "Compact" }] }, { kind: "switch", key: "showPrices", label: "Show prices" }, { kind: "switch", key: "showDuration", label: "Show how long it takes" }, { kind: "switch", key: "showDescriptions", label: "Show descriptions" }],
+    fields: [TITLE, { kind: "switch", key: "excludeFeatured", label: "Keep featured services out of this list" }, { kind: "refs", key: "serviceIds", label: "Which services", source: "services", help: "Leave on “All” to follow your service list automatically." }, { kind: "select", key: "variant", label: "Style", options: [{ value: "list", label: "List" }, { value: "cards", label: "Cards" }, { value: "compact", label: "Compact" }, { value: "spotlight", label: "Spotlight" }] }, { kind: "switch", key: "showPrices", label: "Show prices" }, { kind: "switch", key: "showDuration", label: "Show how long it takes" }, { kind: "switch", key: "showDescriptions", label: "Show descriptions" }],
     status: (s, c) => (serviceListItems(c.business.services, s, c.featuredServiceIds).length ? READY : { state: "empty", reason: s.excludeFeatured && c.business.services.length ? "All selected services are already featured. Add another service or turn off the featured-service filter." : "Add a service to show it here.", fix: "services" }),
   },
   featuredService: {
@@ -67,7 +67,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
   },
   priceMenu: {
     type: "priceMenu", version: 1, label: "Price menu", description: "A tidy menu with prices, grouped.", category: "sales", icon: "ReceiptText", multiple: true, appearance: ["card"],
-    fields: [TITLE, { kind: "refs", key: "serviceIds", label: "Which services", source: "services" }, { kind: "switch", key: "showDescriptions", label: "Show descriptions" }],
+    fields: [TITLE, { kind: "select", key: "variant", label: "Style", options: [{ value: "menu", label: "Price list" }, { value: "panels", label: "Menu panels" }, { value: "compact", label: "Compact menu" }] }, { kind: "refs", key: "serviceIds", label: "Which services", source: "services" }, { kind: "switch", key: "showDescriptions", label: "Show descriptions" }],
     status: (s, c) => (pick(c.business.services, s.serviceIds).length ? READY : selectionEmpty(Boolean(c.business.services.length), "services", "services")),
   },
   booking: {
@@ -82,7 +82,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
   },
   offers: {
     type: "offers", version: 1, label: "Offers", description: "Current deals and promotions.", category: "sales", icon: "BadgePercent", multiple: false, appearance: ["card"],
-    fields: [TITLE, { kind: "refs", key: "offerIds", label: "Which offers", source: "offers" }],
+    fields: [TITLE, { kind: "select", key: "variant", label: "Style", options: [{ value: "list", label: "List" }, { value: "cards", label: "Offer cards" }] }, { kind: "refs", key: "offerIds", label: "Which offers", source: "offers" }],
     status: (s, c) => (pick(activeOffers(c), s.offerIds).length ? READY : { state: "empty", reason: activeOffers(c).length ? "Choose an available offer, or show all offers." : "Add an offer to show it. Expired offers hide themselves.", fix: "services" }),
   },
   payment: {
@@ -114,7 +114,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
 
   text: {
     type: "text", version: 1, label: "Text", description: "A short message, heading or about section.", category: "content", icon: "Type", multiple: true, appearance: ["card"],
-    fields: [TITLE, { kind: "textarea", key: "body", label: "Text", rows: 5, max: 4000 }, { kind: "select", key: "align", label: "Alignment", options: [{ value: "left", label: "Left" }, { value: "center", label: "Centred" }] }],
+    fields: [TITLE, { kind: "select", key: "variant", label: "Style", options: [{ value: "body", label: "About" }, { value: "statement", label: "Statement" }, { value: "note", label: "Note" }] }, { kind: "switch", key: "collapsible", label: "Keep extra paragraphs behind Read more" }, { kind: "textarea", key: "body", label: "Text", rows: 5, max: 4000 }, { kind: "select", key: "align", label: "Alignment", options: [{ value: "left", label: "Left" }, { value: "center", label: "Centred" }] }],
     status: (s) => (String(s.body ?? "").trim() ? READY : { state: "empty", reason: "Write some text to show this." }),
   },
   image: {
@@ -124,7 +124,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
   },
   gallery: {
     type: "gallery", version: 1, label: "Gallery", description: "A set of photos.", category: "content", icon: "Images", multiple: true, appearance: ["card"],
-    fields: [TITLE, { kind: "refs", key: "itemIds", label: "Which photos", source: "gallery" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "grid", label: "Grid" }, { value: "carousel", label: "Swipeable row" }, { value: "beforeAfter", label: "Before and after" }] }],
+    fields: [TITLE, { kind: "refs", key: "itemIds", label: "Which photos", source: "gallery" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "grid", label: "Grid" }, { value: "carousel", label: "Swipeable row" }, { value: "beforeAfter", label: "Before and after" }, { value: "masonry", label: "Photo wall" }] }],
     status: (s, c) => (!c.ent.gallery ? { state: "locked", reason: "Galleries are included from the Core plan." } : pick(c.business.gallery, s.itemIds).length ? READY : selectionEmpty(Boolean(c.business.gallery.length), "photos", "profile")),
   },
   video: {
@@ -134,7 +134,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
   },
   faq: {
     type: "faq", version: 1, label: "Questions", description: "Answers to things customers ask.", category: "content", icon: "CircleHelp", multiple: true, appearance: ["card"],
-    fields: [TITLE, { kind: "refs", key: "faqIds", label: "Which questions", source: "faqs" }],
+    fields: [TITLE, { kind: "select", key: "variant", label: "Style", options: [{ value: "list", label: "Grouped answers" }, { value: "cards", label: "Answer cards" }] }, { kind: "refs", key: "faqIds", label: "Which questions", source: "faqs" }],
     status: (s, c) => (pick(c.business.faqs, s.faqIds).length ? READY : selectionEmpty(Boolean(c.business.faqs.length), "questions and answers", "profile")),
   },
   document: {
@@ -145,12 +145,12 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
 
   hours: {
     type: "hours", version: 1, label: "Opening hours", description: "When you are open.", category: "info", icon: "Clock", multiple: false, appearance: ["card"],
-    fields: [TITLE, { kind: "select", key: "variant", label: "Style", options: [{ value: "list", label: "Full list" }, { value: "compact", label: "Compact" }] }],
+    fields: [TITLE, { kind: "select", key: "variant", label: "Style", options: [{ value: "list", label: "Full list" }, { value: "compact", label: "Today first" }, { value: "status", label: "Status capsule" }] }],
     status: (_s, c) => (c.business.hours.some((h) => h.opens && h.closes) ? READY : { state: "empty", reason: "Add your opening hours in page settings.", fix: "settings" }),
   },
   location: {
     type: "location", version: 1, label: "Location", description: "Where customers find you.", category: "info", icon: "Map", multiple: false, appearance: ["card"],
-    fields: [TITLE, { kind: "switch", key: "showDirections", label: "Show a directions button" }],
+    fields: [TITLE, { kind: "select", key: "variant", label: "Style", options: [{ value: "card", label: "Address card" }, { value: "compact", label: "Address row" }, { value: "visit", label: "Visit card" }] }, { kind: "switch", key: "showDirections", label: "Show a directions button" }],
     status: (_s, c) => (c.business.location.mode === "premises" && (c.business.location.locality || c.business.location.addressLine) ? READY : { state: "empty", reason: c.business.location.mode === "premises" ? "Add your town or address." : "Your location is set to travelling/online, so this stays hidden. Use “Areas we cover”.", fix: "profile" }),
   },
   serviceArea: {
@@ -160,7 +160,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
   },
   enquiry: {
     type: "enquiry", version: 1, label: "Contact form", description: "A form customers fill in to ask you something. It reserves no time.", category: "contact", icon: "MessageSquare", multiple: false, appearance: ["button", "card"],
-    fields: [TITLE, { kind: "textarea", key: "intro", label: "Introduction (optional)", rows: 2, max: 240 }, { kind: "text", key: "buttonLabel", label: "Button text", placeholder: "Send us a message", max: 60 }, { kind: "select", key: "variant", label: "Style", options: [{ value: "button", label: "Button that opens the form" }, { value: "inline", label: "Form shown on the page" }] }],
+    fields: [TITLE, { kind: "textarea", key: "intro", label: "Introduction (optional)", rows: 2, max: 240 }, { kind: "text", key: "buttonLabel", label: "Button text", placeholder: "Send us a message", max: 60 }, { kind: "select", key: "variant", label: "Style", options: [{ value: "button", label: "Button that opens the form" }, { value: "inline", label: "Form shown on the page" }, { value: "card", label: "Enquiry card" }] }],
     status: () => READY,
   },
   share: {

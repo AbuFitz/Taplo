@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { Check, Copy, Download, Share2 } from "lucide-react";
+import { ArrowUpRight, Check, Copy, Download, Share2 } from "lucide-react";
 import { Overlay } from "@/components/taplo/overlay";
 import { Button } from "@/components/ui/button";
 import { loadQrLogo, svgToPng } from "@/features/qr/browser";
@@ -10,7 +10,7 @@ export interface ShareData { name: string; tagline?: string; slug: string; logo?
 const noopSubscribe = () => () => {};
 
 export function ShareButton({ data, label = "Share this page", variant = "button" }: { data: ShareData; label?: string; variant?: "button" | "card" }) {
-  return <SharePanel data={data} trigger={<button type="button" className="tp-btn" data-variant={variant === "card" ? "card" : "button"}><Share2 aria-hidden="true" className="size-5" /><span className="tp-btn-main"><span className="tp-btn-label">{label}</span></span></button>} />;
+  return <SharePanel data={data} trigger={<button type="button" className={variant === "card" ? "tp-tile tp-link-tile" : "tp-btn"} data-variant={variant}><Share2 aria-hidden="true" className="size-5" /><span className="tp-btn-main"><span className="tp-btn-label">{label}</span></span>{variant === "card" ? <ArrowUpRight aria-hidden="true" /> : null}</button>} />;
 }
 export function SharePanel({ data, trigger, open, onOpenChange }: { data: ShareData; trigger?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void }) {
   return <Overlay tone="page" kind="dialog" trigger={trigger} open={open} onOpenChange={onOpenChange} title={`Share ${data.name}`} testId="share-panel"><ShareBody data={data} /></Overlay>;

@@ -186,7 +186,7 @@ export const EXTRA_WIDGETS = {
   cafe: () => [
     newWidget("booking", { label: "Request a group table", variant: "button" }),
     newWidget("gallery", { title: "From the kitchen", variant: "grid" }),
-    newWidget("priceMenu", { title: "The menu" }),
+    newWidget("priceMenu", { title: "The menu", serviceIds: ["c1", "c2", "c3", "c4"] }),
     newWidget("reviews", { title: "Regulars say", variant: "quote" }),
     newWidget("hours", { title: "Opening times", variant: "compact" }),
     newWidget("location", { title: "Find us" }),

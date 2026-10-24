@@ -50,14 +50,27 @@ const SECTION_COMPOSITIONS: Partial<Record<Scenario, Record<string, SectionTreat
   brookfield: { faq: "inline", hours: "soft" },
   corner: { priceMenu: "raised", hours: "soft", faq: "inline" },
   oakfield: { serviceList: "raised", serviceArea: "soft", faq: "inline" },
-  physio: { serviceList: "raised", team: "soft", faq: "inline", hours: "soft" },
+  physio: { serviceList: "raised", team: "soft", faq: "inline", hours: "raised" },
   gym: { featuredService: "spotlight", serviceList: "raised", team: "soft", faq: "inline" },
   rowan: { featuredService: "raised", serviceList: "soft", faq: "inline" },
+}
+/** Spatial choices are authored per business, independent of the shared surface recipes. */
+const SECTION_LAYOUTS: Partial<Record<Scenario,Record<string,Record<string,unknown>>>> = {
+  barber:{gallery:{variant:"masonry"}},
+  detailer:{serviceList:{variant:"spotlight"},enquiry:{variant:"card"},faq:{variant:"cards"},hours:{variant:"compact"}},
+  physio:{serviceList:{variant:"cards"},hours:{variant:"status"},location:{variant:"compact"}},
+  cafe:{priceMenu:{variant:"panels"},hours:{variant:"compact"},location:{variant:"visit"}},
+  corner:{priceMenu:{variant:"panels"},hours:{variant:"compact"}},
+  tutor:{serviceList:{variant:"cards"},text:{variant:"note",collapsible:true}},
+  rowan:{serviceList:{variant:"cards"},faq:{variant:"cards"}},
+  trades:{enquiry:{variant:"card"},faq:{variant:"cards"},hours:{variant:"status"}},
+  gym:{serviceList:{variant:"spotlight"},offers:{variant:"cards"}},
 }
 export function widgetsFor(s: Scenario) {
   if (!widgetCache.has(s)) widgetCache.set(s, SCENARIOS[s].widgets().map(w => {
     const treatment = SECTION_COMPOSITIONS[s]?.[w.type]
-    return treatment ? { ...w, appearance: applySectionTreatment(w.appearance, treatment) } : w
+    const settings = SECTION_LAYOUTS[s]?.[w.type]
+    return { ...w, ...(settings ? {settings:{...w.settings,...settings}} : {}), ...(treatment ? {appearance:applySectionTreatment(w.appearance,treatment)} : {}) }
   }))
   return widgetCache.get(s)!
 }

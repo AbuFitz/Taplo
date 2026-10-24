@@ -41,7 +41,14 @@ export function BookingAction(p: BookingActionProps) {
   const service = p.services.find((s) => s.id === p.preselect)
   const subject = p.topic ?? service?.name
   const message = subject ? `Hi ${p.businessName}, I'd like to ask about: ${subject}.` : `Hi ${p.businessName}, I'd like to ask about your services.`
-  const trigger = (
+  const trigger = p.variant === "card" ? (
+    <button type="button" className="tp-tile tp-booking-tile" data-variant="card">
+      <span className="tp-booking-tile-top">{p.thumbnail ?? <CalendarCheck aria-hidden="true" />}<ArrowRight aria-hidden="true" /></span>
+      <span className="tp-booking-tile-title">{p.label}</span>
+      {p.subtitle ? <span className="tp-muted tp-booking-tile-sub">{p.subtitle}</span> : null}
+      <span className="tp-booking-tile-action">{p.booking ? "Find a time" : "Get in touch"}<ArrowRight aria-hidden="true" /></span>
+    </button>
+  ) : (
     <button type="button" className="tp-btn" data-variant={p.variant ?? "button"} {...(p.hero ? { "data-primary": "", "data-hero": "" } : {})}>
       {p.thumbnail ?? <CalendarCheck aria-hidden="true" className="size-5" />}
       <span className="tp-btn-main"><span className="tp-btn-label">{p.label}</span>{p.subtitle ? <span className="tp-btn-sub">{p.subtitle}</span> : null}</span>

@@ -21,7 +21,6 @@ import { ChoiceGrid, Field, Segment } from "@/features/appearance/controls"
 import { ButtonTile, SurfaceTile } from "@/features/appearance/previews"
 import { ColorField, FieldShell, ImageField, Segmented, SelectField, SwitchField } from "./controls"
 import { RecordsField } from "./RecordsField"
-import { PagePreview } from "@/features/preview/PagePreview"
 import { ChoicePreview } from "@/features/preview/ChoicePreview"
 import { SECTION_TREATMENTS, applySectionTreatment, selectedSectionTreatment, supportsSectionTreatment } from "../section-treatments"
 import type { Editor } from "./useEditor"
@@ -84,7 +83,7 @@ export function WidgetFields({ stored, ed }: { stored: StoredWidget; ed: Editor 
       {variant ? (
         <Field label="Layout">
           <ChoiceGrid label="Layout" value={String(s.variant ?? variant.options[0]!.value)} columns={variant.options.length === 1 ? 1 : 2} onChange={(v) => set("variant", v)}
-            options={variant.options.map((o) => ({ value: o.value, label: o.label, preview: <span className="pointer-events-none relative block aspect-[390/330] overflow-hidden" aria-hidden="true"><PagePreview src={`/demo/preview?widget=${encodeURIComponent(stored.id)}&variant=${encodeURIComponent(o.value)}`} title={`${o.label} section preview`} mode="device" device={{ w: 390, h: 330 }} interactive={false} /></span> }))} />
+            options={variant.options.map((o) => ({ value: o.value, label: o.label, preview: <ChoicePreview src={`/demo/preview?widget=${encodeURIComponent(stored.id)}&variant=${encodeURIComponent(o.value)}`} title={`${o.label} section preview`} height={330} /> }))} />
         </Field>
       ) : null}
       {stored.type === "social" ? <SocialLinksEditor ed={ed} /> : null}

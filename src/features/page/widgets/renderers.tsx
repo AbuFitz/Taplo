@@ -3,7 +3,7 @@ import * as React from "react"
 import { referencedRecords as pick, selectedPlatforms, selectedService } from "./selection"
 import { serviceListItems } from "./service-list"
 import { SocialIcon } from "./social-icons"
-import { ArrowUpRight, ChevronDown } from "lucide-react"
+import { ArrowUpRight, Check, ChevronDown, MapPin, Megaphone, Quote, TriangleAlert, Tag } from "lucide-react"
 import type { ProductContent, ServiceContent } from "@/features/businesses/content"
 import { formatDuration, formatMoney, formatPrice, groupServices } from "@/features/services/format"
 import { googleReviewUrl } from "./google-reviews"
@@ -47,7 +47,7 @@ function Thumb({ w }: { w: RenderWidget }) {
 
 function LinkRow({ w, href, label, subtitle, icon, external, variant }: { w: RenderWidget; href: string; label: string; subtitle?: string; icon: string; external?: boolean; variant?: string }) {
   return (
-    <a href={href} className="tp-btn" data-variant={variant ?? "button"} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+    <a href={href} className={variant === "card" ? "tp-tile tp-link-tile" : "tp-btn"} data-variant={variant ?? "button"} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
       <Thumb w={w} />
       {!w.appearance.thumbnail ? <WidgetIcon name={icon} className="size-5" /> : null}
       <span className="tp-btn-main"><span className="tp-btn-label">{label}</span>{subtitle && variant !== "compact" ? <span className="tp-btn-sub">{subtitle}</span> : null}</span>
@@ -143,7 +143,7 @@ function ServiceListWidget({ w, vm }: P) {
   const list = serviceListItems(vm.business.services, s, vm.ctx.featuredServiceIds)
   return (
     <Card title={s.title}>
-      <ServiceCollection groups={[{ items: list.map(bookable) }]} variant={s.variant === "cards" ? "cards" : s.variant === "compact" ? "compact" : "rows"} options={{ showPrices: s.showPrices !== false, showDuration: s.showDuration !== false, showDescriptions: s.showDescriptions !== false }}
+      <ServiceCollection groups={[{ items: list.map(bookable) }]} variant={s.variant === "cards" ? "cards" : s.variant === "compact" ? "compact" : s.variant === "spotlight" ? "spotlight" : "rows"} options={{ showPrices: s.showPrices !== false, showDuration: s.showDuration !== false, showDescriptions: s.showDescriptions !== false }}
         ctx={serviceCtx(vm)} businessName={vm.business.identity.name} slug={vm.business.identity.slug} staffNames={providersByService(vm)} />
     </Card>
   )
@@ -154,7 +154,7 @@ function PriceMenuWidget({ w, vm }: P) {
   const groups = groupServices(pick(vm.business.services, s.serviceIds)).map((g) => ({ name: g.name ?? undefined, items: g.items.map(bookable) }))
   return (
     <Card title={s.title}>
-      <ServiceCollection groups={groups} variant="menu" options={{ showPrices: true, showDuration: false, showDescriptions: Boolean(s.showDescriptions) }}
+      <ServiceCollection groups={groups} variant={s.variant === "panels" ? "menu-panels" : s.variant === "compact" ? "menu-compact" : "menu"} options={{ showPrices: true, showDuration: false, showDescriptions: Boolean(s.showDescriptions) }}
         ctx={serviceCtx(vm)} businessName={vm.business.identity.name} slug={vm.business.identity.slug} staffNames={providersByService(vm)} />
     </Card>
   )
@@ -164,15 +164,13 @@ function FeaturedServiceWidget({ w, vm }: P) {
   const s = w.settings as S
   const svc = selectedService(vm.business.services, s.serviceId)
   if (!svc) return null
-  return (
-    <Card>
-      <p className="mb-1 text-sm font-semibold tp-muted">{s.headline || "Featured"}</p>
-      <h2 style={{ fontSize: "1.375rem" }}>{svc.name}</h2>
-      {svc.description ? <p className="tp-muted mb-2">{svc.description}</p> : null}
-      <p className="mb-3"><span className="tp-price">{formatPrice(svc)}</span>{svc.durationMinutes ? <span className="tp-muted"> · {formatDuration(svc.durationMinutes)}</span> : null}</p>
-      <BookingAction {...bookingProps(vm, { label: s.ctaLabel || (vm.onlineBooking && svc.bookingMode === "request" ? "Request a time" : vm.onlineBooking && svc.bookingMode === "instant" ? "Book a time" : "Ask about this"), preselect: svc.id })} />
-    </Card>
-  )
+  return <Card className="tp-featured-service">
+    {s.headline ? <p className="tp-muted tp-featured-eyebrow">{s.headline}</p> : null}
+    <h2>{svc.name}</h2>
+    {svc.description ? <p className="tp-muted tp-featured-description">{svc.description}</p> : null}
+    <div className="tp-featured-terms"><span className="tp-price">{formatPrice(svc)}</span>{svc.durationMinutes ? <span className="tp-muted">{formatDuration(svc.durationMinutes)}</span> : null}</div>
+    <BookingAction {...bookingProps(vm, { label: s.ctaLabel || (vm.onlineBooking && svc.bookingMode === "request" ? "Request a time" : vm.onlineBooking && svc.bookingMode === "instant" ? "Book a time" : "Ask about this"), preselect: svc.id })} />
+  </Card>
 }
 
 function BookingWidget({ w, vm }: P) {
@@ -261,9 +259,9 @@ function OffersWidget({ w, vm }: P) {
   const list = pick(vm.business.offers.filter((o) => !o.archived && (!o.endsAt || o.endsAt >= vm.ctx.today)), s.offerIds)
   return (
     <Card title={s.title || "Offers"}>
-      <ul className="tp-rows">
+      <ul className={s.variant === "cards" ? "tp-offer-tiles" : "tp-rows"}>
         {list.map((o) => (
-          <li key={o.id}>
+          <li key={o.id} className={s.variant === "cards" ? "tp-tile tp-offer-tile" : undefined}>
             <p className="font-semibold">{o.title}</p>
             {o.description ? <p className="tp-muted text-sm">{o.description}</p> : null}
             <p className="mt-1 flex flex-wrap gap-2 text-sm">{o.code ? <span className="tp-chip">Code: {o.code}</span> : null}{o.endsAt ? <span className="tp-muted">Until {o.endsAt}</span> : null}</p>
@@ -289,10 +287,12 @@ function ReviewsWidget({ w, vm }: P) {
   const url = googleReviewUrl(vm.business)
   if (!url) return null
   const s = w.settings as S
-  return <Card title={s.title || "Google reviews"}><a href={url} target="_blank" rel="noopener noreferrer" className="tp-google-review" data-compact={s.variant === "compact"}>
-    <span className="tp-google-mark"><GoogleMark /></span><span className="min-w-0 flex-1"><strong className="block">What customers say</strong><span className="tp-muted mt-1 block text-sm">Read our reviews on Google</span></span><ArrowUpRight className="size-5 shrink-0" aria-hidden="true" />
+  const compact = s.variant === "compact"
+  return <Card title={s.title || undefined} className="tp-review-card"><a href={url} target="_blank" rel="noopener noreferrer" className="tp-google-review" data-compact={compact}>
+    <span className="tp-google-mark"><GoogleMark /></span><span className="tp-review-copy"><strong role={s.title ? undefined : "heading"} aria-level={s.title ? undefined : 2}>{compact ? "Our Google reviews" : "A little word of mouth."}</strong><span className="tp-muted">Read our reviews on Google</span></span><ArrowUpRight className="tp-review-arrow" aria-hidden="true" />
   </a></Card>
 }
+
 function LeaveReviewWidget({ w, vm }: P) {
   const url = googleReviewUrl(vm.business)
   return url ? <LinkRow w={w} href={url} label={str(w.settings.label) || "Review us on Google"} icon="ThumbsUp" external variant="button" /> : null
@@ -328,7 +328,7 @@ function CredentialsWidget({ w, vm }: P) {
   const list = vm.business.credentials
   return (
     <Card title={s.title}>
-      {s.variant === "list" ? <ul className="grid gap-1.5 text-left">{list.map((c) => <li key={c} className="flex gap-2"><span aria-hidden="true" className="text-[var(--tp-accent)]">✓</span>{c}</li>)}</ul> : <ul className="flex flex-wrap gap-2">{list.map((c) => <li key={c} className="tp-chip">✓ {c}</li>)}</ul>}
+      {s.variant === "list" ? <ul className="grid gap-1.5 text-left">{list.map((c) => <li key={c} className="flex gap-2"><Check aria-hidden="true" className="size-4 shrink-0 mt-0.5" />{c}</li>)}</ul> : <ul className="flex flex-wrap gap-2">{list.map((c) => <li key={c} className="tp-chip gap-1.5"><Check aria-hidden="true" className="size-3.5" />{c}</li>)}</ul>}
     </Card>
   )
 }
@@ -337,7 +337,11 @@ function CredentialsWidget({ w, vm }: P) {
 function TextWidget({ w }: P) {
   const s = w.settings as S
   const paras = str(s.body).split(/\n{2,}/).map((p) => p.trim()).filter(Boolean)
-  return <Card title={s.title} className={s.align === "center" ? "text-center" : ""}><div className="grid gap-3">{paras.map((p, i) => <p key={i} className="[overflow-wrap:anywhere]">{p}</p>)}</div></Card>
+  const [first, ...rest] = paras
+  return <Card title={s.title} className={cn("tp-text-block", s.align === "center" && "text-center", `tp-text-${s.variant || "body"}`)}>
+    {s.variant === "note" ? <Quote aria-hidden="true" className="tp-note-mark" /> : null}
+    <div className="tp-text-copy"><p>{first}</p>{s.collapsible && rest.length ? <details className="tp-text-more"><summary>Read more<ChevronDown aria-hidden="true" /></summary><div>{rest.map((p, i) => <p key={i}>{p}</p>)}</div></details> : rest.map((p, i) => <p key={i}>{p}</p>)}</div>
+  </Card>
 }
 
 function ImageWidget({ w }: P) {
@@ -356,7 +360,7 @@ function GalleryWidget({ w, vm }: P) {
   const s = w.settings as S
   const items = pick(vm.business.gallery, s.itemIds).map((g) => ({ id: g.id, caption: g.caption, image: { src: g.image.src, alt: g.image.alt, width: g.image.width, height: g.image.height, focal: g.image.focal }, before: g.beforeImage ? { src: g.beforeImage.src, alt: g.beforeImage.alt, width: g.beforeImage.width, height: g.beforeImage.height, focal: g.beforeImage.focal } : undefined }))
   const title = s.title ? <h2 className="mb-2 px-1 text-[1.125rem]" style={{ fontFamily: "var(--tp-font-heading)", fontWeight: "var(--tp-heading-weight)", textTransform: "var(--tp-heading-case)" as never }}>{s.title}</h2> : null
-  return <div>{title}<Gallery items={items} variant={s.variant === "carousel" ? "carousel" : s.variant === "beforeAfter" ? "beforeAfter" : "grid"} title={s.title} /></div>
+  return <div>{title}<Gallery items={items} variant={s.variant === "carousel" ? "carousel" : s.variant === "beforeAfter" ? "beforeAfter" : s.variant === "masonry" ? "masonry" : "grid"} title={s.title} /></div>
 }
 
 function VideoWidget({ w }: P) {
@@ -367,16 +371,11 @@ function VideoWidget({ w }: P) {
 function FaqWidget({ w, vm }: P) {
   const s = w.settings as S
   const list = pick(vm.business.faqs, s.faqIds)
-  return (
-    <Card title={s.title || "Questions"}>
-      <div>{list.map((f) => (
-        <details key={f.id} className="group border-b last:border-b-0" style={{ borderColor: "var(--tp-border)" }}>
-          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 py-2 text-left font-semibold [&::-webkit-details-marker]:hidden">{f.question}<ChevronDown aria-hidden="true" className="size-4 shrink-0 transition-transform group-open:rotate-180" /></summary>
-          <p className="tp-muted pb-3 text-left">{f.answer}</p>
-        </details>
-      ))}</div>
-    </Card>
-  )
+  return <Card title={s.title || "Questions"}>
+    <div className="tp-faqs" data-faq-layout={s.variant || "list"}>{list.map(f => <details key={f.id} className={s.variant === "cards" ? "tp-tile tp-faq" : "tp-faq"}>
+      <summary><span>{f.question}</span><ChevronDown aria-hidden="true" /></summary><div className="tp-faq-answer"><p>{f.answer}</p></div>
+    </details>)}</div>
+  </Card>
 }
 
 /* ------------------------------------------------------------------ info */
@@ -384,28 +383,29 @@ const DAY_ORDER = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
 function HoursWidget({ w, vm }: P) {
   const s = w.settings as S
-  return (
-    <Card title={s.title || "Opening hours"}>
-      <Hours hours={DAY_ORDER.map((d) => vm.business.hours.find((h) => h.day === d) ?? { day: d as "mon" })} tz={vm.business.location.timezone || "Europe/London"} compact={s.variant === "compact"} />
-    </Card>
-  )
+  const hours = <Hours hours={DAY_ORDER.map((d) => vm.business.hours.find((h) => h.day === d) ?? { day: d as "mon" })} tz={vm.business.location.timezone || "Europe/London"} variant={s.variant === "compact" ? "compact" : s.variant === "status" ? "status" : "list"} />
+  return s.variant === "status" ? hours : <Card title={s.title || "Opening hours"}>{hours}</Card>
 }
 
 function LocationWidget({ w, vm }: P) {
   const s = w.settings as S
   const l = vm.business.location
-  return (
-    <Card title={s.title || "Find us"}>
-      <address className="not-italic text-left">{l.addressLine ? <p>{l.addressLine}</p> : null}{l.locality ? <p className="tp-muted">{l.locality}</p> : null}</address>
-      {s.showDirections && l.directionsUrl ? <div className="mt-3"><LinkRow w={w} href={l.directionsUrl} label="Get directions" icon="MapPin" external variant="compact" /></div> : null}
-    </Card>
-  )
+  const compact = s.variant === "compact"
+  const address = <address className="tp-visit-address">{l.addressLine ? <p>{l.addressLine}</p> : null}{l.locality ? <p className="tp-muted">{l.locality}</p> : null}</address>
+  const directions = s.showDirections && l.directionsUrl
+  return <Card title={compact ? undefined : s.title || "Find us"} className={`tp-visit tp-visit-${s.variant || "card"}`}>
+    {compact ? <div className="tp-address-row"><MapPin aria-hidden="true" />{address}{directions ? <a href={l.directionsUrl} target="_blank" rel="noopener noreferrer" className="tp-address-action" aria-label="Get directions"><ArrowUpRight aria-hidden="true" /></a> : null}</div> : <>
+      {s.variant === "visit" ? <div className="tp-visit-pin" aria-hidden="true"><MapPin /></div> : null}
+      {address}
+      {directions ? <div className="mt-4"><LinkRow w={w} href={l.directionsUrl!} label="Get directions" icon="MapPin" external variant="compact" /></div> : null}
+    </>}
+  </Card>
 }
 
 function ServiceAreaWidget({ w, vm }: P) {
   const s = w.settings as S
   const areas = (vm.business.location.locality ?? "").split(/,| and /).map((x) => x.trim()).filter(Boolean)
-  return <Card title={s.title || "Areas we cover"}><ul className="flex flex-wrap gap-2">{areas.map((a) => <li key={a} className="tp-chip">{a}</li>)}</ul><p className="tp-muted mt-2 text-xs">We travel to you. A private address is never published.</p></Card>
+  return <Card title={s.title || "Areas we cover"}><ul className="flex flex-wrap gap-2">{areas.map((a) => <li key={a} className="tp-chip">{a}</li>)}</ul><p className="tp-muted mt-2 text-xs">We come to you.</p></Card>
 }
 
 function EnquiryWidget({ w, vm }: P) {
@@ -419,7 +419,7 @@ function EnquiryWidget({ w, vm }: P) {
         <EnquiryForm slug={b.identity.slug} businessName={b.identity.name} services={services} submitLabel={str(s.buttonLabel) || "Send message"} />
       </Card>
     )
-  return <EnquiryButton label={str(s.buttonLabel) || "Send us a message"} subtitle={str(s.intro) || undefined} title={s.title || "Send us a message"} slug={b.identity.slug} businessName={b.identity.name} services={services} />
+  return <EnquiryButton variant={s.variant === "card" ? "card" : "button"} label={str(s.buttonLabel) || "Send us a message"} subtitle={str(s.intro) || undefined} title={s.title || "Send us a message"} slug={b.identity.slug} businessName={b.identity.name} services={services} />
 }
 
 function ShareWidget({ w, vm }: P) {
@@ -432,8 +432,8 @@ function AnnouncementWidget({ w }: P) {
   const link = isHttpUrl(s.linkUrl) ? s.linkUrl : null
   return (
     <div className="tp-notice" data-tone={s.tone} role="note">
-      <Card className="w-full text-left">
-        <p className={s.tone === "warning" ? "font-semibold" : ""}>{s.tone === "promo" ? "✦ " : s.tone === "warning" ? "⚠ " : ""}{s.text}</p>
+      <Card className="w-full text-left tp-notice-body">
+        {s.tone === "warning" ? <TriangleAlert aria-hidden="true" /> : s.tone === "promo" ? <Tag aria-hidden="true" /> : <Megaphone aria-hidden="true" />}<p className={s.tone === "warning" ? "font-semibold" : ""}>{s.text}</p>
         {link ? <a className="mt-1 inline-block font-semibold underline underline-offset-4" href={link} target="_blank" rel="noopener noreferrer">{s.linkLabel || "Learn more"}</a> : null}
       </Card>
     </div>

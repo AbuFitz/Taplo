@@ -24,8 +24,8 @@ function tune(type: WidgetType, industry: IndustryPreset): Record<string, unknow
   const t = industry.terminology;
   switch (type) {
     case "products": return industry.id === "car-dealer" ? { title: "Current stock", variant: "catalogue" } : {};
-    case "serviceList": return { title: t.services, variant: industry.id === "tutor" ? "cards" : "list" };
-    case "priceMenu": return { title: t.services };
+    case "serviceList": return { title: t.services, variant: industry.id === "detailer" ? "spotlight" : ["tutor","personal-trainer","consultant"].includes(industry.id) ? "cards" : "list" };
+    case "priceMenu": return { title: t.services, ...(industry.id === "hospitality" ? {variant:"panels"} : {}) };
     case "team": return { title: t.team };
     case "reviews": return { title: t.reviews };
     case "text": return { title: "About" };

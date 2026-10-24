@@ -5,11 +5,11 @@
     "poster": "/marketing/walkthroughs/setup-poster.webp",
     "width": 780,
     "height": 1928,
-    "duration": 34.2,
+    "duration": 34.32,
     "fps": "25/1",
-    "bytes": 2469254,
-    "sha256": "4de3962656e280449a8611e34dd948c971aafc6b195ec8b27d98f1564e3bec1e",
-    "recordedAt": "2026-10-24T21:44:57.619Z",
+    "bytes": 2490665,
+    "sha256": "80d8291ad323d04f2f97c741270f001a30d26f852915d0c00d39e2dbe1135974",
+    "recordedAt": "2026-10-24T22:36:10.743Z",
     "source": "/onboarding?from=no-6-coffee",
     "chapters": [
       {
@@ -18,42 +18,42 @@
         "line": "Your name and logo, with a crop you approve before it is added."
       },
       {
-        "seconds": 4.8,
+        "seconds": 4.9,
         "title": "Say what you do",
         "line": "Search for your business. Keep the setup relevant."
       },
       {
-        "seconds": 7.5,
+        "seconds": 7.6,
         "title": "Choose how people reach you",
         "line": "A call fits this café. The menu does not need appointment bookings."
       },
       {
-        "seconds": 10.8,
+        "seconds": 11,
         "title": "Add something customers can buy",
         "line": "A simple menu item and its price. No sample business records are copied."
       },
       {
-        "seconds": 14.8,
+        "seconds": 14.9,
         "title": "Add the practical details",
         "line": "Your description, location, hours and links live in a focused popup."
       },
       {
-        "seconds": 17.4,
+        "seconds": 17.5,
         "title": "Make the page yours",
         "line": "Choose a layout, then adjust the background and profile separately."
       },
       {
-        "seconds": 22.1,
+        "seconds": 22.2,
         "title": "Choose room to grow",
         "line": "Compare the plans and save a preference. No payment is taken."
       },
       {
-        "seconds": 24.6,
+        "seconds": 24.7,
         "title": "Review the actual page",
         "line": "Check the menu, contact details and opening hours before continuing."
       },
       {
-        "seconds": 28.1,
+        "seconds": 28.2,
         "title": "Keep making it yours",
         "line": "Your draft is saved in this browser. Publishing and billing are not connected."
       }

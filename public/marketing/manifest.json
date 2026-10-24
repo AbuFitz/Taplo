@@ -145,9 +145,9 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 89102,
+    "bytes": 84410,
     "source": "/appearance/frame?scenario=barber",
-    "sha256": "92ac5c5db4a4",
+    "sha256": "82c40ad53b82",
     "surface": "#fbf9f5"
   },
   "ex-marlowe-and-finch-desk": {
@@ -156,9 +156,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 191156,
+    "bytes": 191094,
     "source": "/appearance/frame?scenario=barber",
-    "sha256": "5b41a01817b6"
+    "sha256": "4954a4d997d2"
   },
   "ex-hollin-physio-phone": {
     "file": "/marketing/ex-hollin-physio-phone.webp",
@@ -166,9 +166,9 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 62218,
+    "bytes": 51006,
     "source": "/appearance/frame?scenario=physio",
-    "sha256": "13d91537958f",
+    "sha256": "48a6bd001366",
     "surface": "#f6f6f6"
   },
   "ex-hollin-physio-desk": {
@@ -177,9 +177,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 109826,
+    "bytes": 91912,
     "source": "/appearance/frame?scenario=physio",
-    "sha256": "6e01fc1fd38d"
+    "sha256": "6efe5a704c76"
   },
   "ex-pims-kitchen-phone": {
     "file": "/marketing/ex-pims-kitchen-phone.webp",
@@ -187,9 +187,9 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 176708,
+    "bytes": 176938,
     "source": "/appearance/frame?scenario=cafe",
-    "sha256": "371f2cc2fb46",
+    "sha256": "5191e566841b",
     "surface": "#f6f5ec"
   },
   "ex-pims-kitchen-desk": {
@@ -198,9 +198,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 304608,
+    "bytes": 300524,
     "source": "/appearance/frame?scenario=cafe",
-    "sha256": "7f11e3eceb11"
+    "sha256": "d4f304fab394"
   },
   "ex-ada-okafor-maths-phone": {
     "file": "/marketing/ex-ada-okafor-maths-phone.webp",
@@ -208,9 +208,9 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 77792,
+    "bytes": 72582,
     "source": "/appearance/frame?scenario=tutor",
-    "sha256": "570f3365668a",
+    "sha256": "d1526afc33fd",
     "surface": "#f4f7f4"
   },
   "ex-ada-okafor-maths-desk": {
@@ -219,9 +219,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 128832,
+    "bytes": 123076,
     "source": "/appearance/frame?scenario=tutor",
-    "sha256": "225777f9b717"
+    "sha256": "1b0d1af2e8de"
   },
   "ex-forge-strength-phone": {
     "file": "/marketing/ex-forge-strength-phone.webp",
@@ -229,9 +229,9 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 98848,
+    "bytes": 95938,
     "source": "/appearance/frame?scenario=gym",
-    "sha256": "f2565bb2a3e7",
+    "sha256": "e5f25e48cc51",
     "surface": "#000000"
   },
   "ex-forge-strength-desk": {
@@ -240,9 +240,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 250176,
+    "bytes": 310218,
     "source": "/appearance/frame?scenario=gym",
-    "sha256": "fd4646203710"
+    "sha256": "6dc478be798e"
   },
   "ex-northgate-heating-phone": {
     "file": "/marketing/ex-northgate-heating-phone.webp",
@@ -250,9 +250,9 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 74512,
+    "bytes": 74148,
     "source": "/appearance/frame?scenario=trades",
-    "sha256": "80bf035806b9",
+    "sha256": "e746e4b7a00e",
     "surface": "#ffffff"
   },
   "ex-northgate-heating-desk": {
@@ -261,9 +261,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 123938,
+    "bytes": 123850,
     "source": "/appearance/frame?scenario=trades",
-    "sha256": "5eca1838dcdf"
+    "sha256": "ed949c960542"
   },
   "ex-aldous-motor-co-phone": {
     "file": "/marketing/ex-aldous-motor-co-phone.webp",
@@ -271,9 +271,9 @@
     "height": 1600,
     "cssWidth": 390,
     "cssHeight": 800,
-    "bytes": 89490,
+    "bytes": 89484,
     "source": "/appearance/frame?scenario=dealer",
-    "sha256": "ed7e3dba818f",
+    "sha256": "9bab5fbddcb2",
     "surface": "#f3f6f2"
   },
   "ex-aldous-motor-co-desk": {
@@ -366,46 +366,46 @@
   "svc-menu-barber": {
     "file": "/marketing/svc-menu-barber.webp",
     "width": 716,
-    "height": 1026,
+    "height": 1204,
     "cssWidth": 358,
-    "cssHeight": 513,
-    "bytes": 46706,
+    "cssHeight": 602,
+    "bytes": 46540,
     "source": "/appearance/frame?scenario=station",
-    "sha256": "5f710e0e2dae",
-    "capturedAt": "2026-10-24T21:36:20.819Z"
+    "sha256": "22ad8f719bfd",
+    "capturedAt": "2026-10-24T22:33:29.002Z"
   },
   "svc-menu-physio": {
     "file": "/marketing/svc-menu-physio.webp",
     "width": 716,
-    "height": 1044,
+    "height": 1966,
     "cssWidth": 358,
-    "cssHeight": 522,
-    "bytes": 47410,
+    "cssHeight": 983,
+    "bytes": 58724,
     "source": "/appearance/frame?scenario=physio",
-    "sha256": "87ff56d1bb8d",
-    "capturedAt": "2026-10-24T21:36:22.524Z"
+    "sha256": "bc5823a31953",
+    "capturedAt": "2026-10-24T22:33:30.818Z"
   },
   "svc-menu-cafe": {
     "file": "/marketing/svc-menu-cafe.webp",
     "width": 716,
-    "height": 686,
+    "height": 798,
     "cssWidth": 358,
-    "cssHeight": 343,
-    "bytes": 24690,
+    "cssHeight": 399,
+    "bytes": 18560,
     "source": "/appearance/frame?scenario=cafe",
-    "sha256": "e4652cedabb4",
-    "capturedAt": "2026-10-24T21:36:24.247Z"
+    "sha256": "f8105f6803a7",
+    "capturedAt": "2026-10-24T22:35:33.662Z"
   },
   "svc-menu-gym": {
     "file": "/marketing/svc-menu-gym.webp",
     "width": 716,
-    "height": 1084,
+    "height": 2102,
     "cssWidth": 358,
-    "cssHeight": 542,
-    "bytes": 46240,
+    "cssHeight": 1051,
+    "bytes": 58272,
     "source": "/appearance/frame?scenario=gym",
-    "sha256": "f1d8ddb04863",
-    "capturedAt": "2026-10-24T21:36:26.023Z"
+    "sha256": "52a9d197e8d4",
+    "capturedAt": "2026-10-24T22:33:34.472Z"
   },
   "team-swipe": {
     "file": "/marketing/team-swipe.webp",
@@ -508,13 +508,13 @@
   "enq-inline": {
     "file": "/marketing/enq-inline.webp",
     "width": 716,
-    "height": 1408,
+    "height": 312,
     "cssWidth": 358,
-    "cssHeight": 704,
-    "bytes": 33372,
+    "cssHeight": 156,
+    "bytes": 10738,
     "source": "/appearance/frame?scenario=detailer",
-    "sha256": "5eb0b59a463b",
-    "capturedAt": "2026-10-24T21:36:34.721Z"
+    "sha256": "236fc1cd178e",
+    "capturedAt": "2026-10-24T22:35:35.488Z"
   },
   "enq-sent": {
     "file": "/marketing/enq-sent.webp",
@@ -555,10 +555,10 @@
     "height": 1200,
     "cssWidth": 390,
     "cssHeight": 600,
-    "bytes": 45820,
+    "bytes": 40086,
     "source": "/appearance/frame?scenario=barber&look=journal",
-    "sha256": "82b057b008a9",
-    "capturedAt": "2026-10-24T21:36:36.166Z"
+    "sha256": "8a93f00c6aef",
+    "capturedAt": "2026-10-24T22:33:47.335Z"
   },
   "look-clay": {
     "file": "/marketing/look-clay.webp",
@@ -566,10 +566,10 @@
     "height": 1200,
     "cssWidth": 390,
     "cssHeight": 600,
-    "bytes": 42908,
+    "bytes": 40996,
     "source": "/appearance/frame?scenario=barber&look=clay",
-    "sha256": "b86bbaf54237",
-    "capturedAt": "2026-10-24T21:36:37.614Z"
+    "sha256": "4a3a2a3b1b62",
+    "capturedAt": "2026-10-24T22:33:48.799Z"
   },
   "look-forge": {
     "file": "/marketing/look-forge.webp",
@@ -580,7 +580,7 @@
     "bytes": 78108,
     "source": "/appearance/frame?scenario=barber&look=forge",
     "sha256": "ea73b043160f",
-    "capturedAt": "2026-10-24T21:36:39.114Z"
+    "capturedAt": "2026-10-24T22:33:50.309Z"
   },
   "look-orchard": {
     "file": "/marketing/look-orchard.webp",
@@ -588,10 +588,10 @@
     "height": 1200,
     "cssWidth": 390,
     "cssHeight": 600,
-    "bytes": 50054,
+    "bytes": 45476,
     "source": "/appearance/frame?scenario=barber&look=orchard",
-    "sha256": "d985958d259b",
-    "capturedAt": "2026-10-24T21:36:40.527Z"
+    "sha256": "10a51a03643f",
+    "capturedAt": "2026-10-24T22:33:51.716Z"
   },
   "look-showroom": {
     "file": "/marketing/look-showroom.webp",
@@ -599,10 +599,10 @@
     "height": 1200,
     "cssWidth": 390,
     "cssHeight": 600,
-    "bytes": 74994,
+    "bytes": 74936,
     "source": "/appearance/frame?scenario=barber&look=showroom",
-    "sha256": "357874fb49e5",
-    "capturedAt": "2026-10-24T21:36:41.996Z"
+    "sha256": "7d60e925460c",
+    "capturedAt": "2026-10-24T22:33:53.213Z"
   },
   "share-image": {
     "file": "/marketing/share-image.webp",
@@ -624,7 +624,7 @@
     "bytes": 57762,
     "source": "/onboarding",
     "sha256": "d63e35761f77",
-    "capturedAt": "2026-10-24T21:38:34.644Z"
+    "capturedAt": "2026-10-24T22:33:39.826Z"
   },
   "setup-3-start": {
     "file": "/marketing/setup-3-start.webp",
@@ -655,7 +655,7 @@
     "bytes": 53920,
     "source": "/onboarding",
     "sha256": "c4e6245f1cb9",
-    "capturedAt": "2026-10-24T21:44:17.929Z"
+    "capturedAt": "2026-10-24T22:33:41.802Z"
   },
   "setup-3-design": {
     "file": "/marketing/setup-3-design.webp",
@@ -663,10 +663,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 62276,
+    "bytes": 60880,
     "source": "/onboarding",
-    "sha256": "2dcfa6931dbf",
-    "capturedAt": "2026-10-24T21:44:19.981Z"
+    "sha256": "f6f0d0dbd7e1",
+    "capturedAt": "2026-10-24T22:33:43.862Z"
   },
   "setup-4-first": {
     "file": "/marketing/setup-4-first.webp",
@@ -674,10 +674,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 75192,
+    "bytes": 72998,
     "source": "/onboarding",
-    "sha256": "3a2704d10205",
-    "capturedAt": "2026-10-24T21:44:22.021Z"
+    "sha256": "c30dd56eb1ad",
+    "capturedAt": "2026-10-24T22:33:45.885Z"
   },
   "qr-options": {
     "file": "/marketing/qr-options.webp",
@@ -751,9 +751,9 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 88738,
+    "bytes": 85948,
     "source": "/appearance/frame?scenario=station",
-    "sha256": "7aa410562b74",
+    "sha256": "9e37abc80d80",
     "surface": "#bb5f01"
   },
   "ex-station-road-barbers-desk": {
@@ -762,9 +762,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 135784,
+    "bytes": 128690,
     "source": "/appearance/frame?scenario=station",
-    "sha256": "44318b2584b0"
+    "sha256": "44ae93f3c886"
   },
   "ex-parkside-valeting-phone": {
     "file": "/marketing/ex-parkside-valeting-phone.webp",
@@ -772,9 +772,9 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 87222,
+    "bytes": 70798,
     "source": "/appearance/frame?scenario=detailer",
-    "sha256": "2a645e26913f",
+    "sha256": "4576c019c9c6",
     "surface": "#101717"
   },
   "ex-parkside-valeting-desk": {
@@ -783,9 +783,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 128182,
+    "bytes": 111788,
     "source": "/appearance/frame?scenario=detailer",
-    "sha256": "bac8b86b299c"
+    "sha256": "47895fe9ae8d"
   },
   "ex-brookfield-motors-phone": {
     "file": "/marketing/ex-brookfield-motors-phone.webp",
@@ -804,20 +804,20 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 122670,
+    "bytes": 118134,
     "source": "/appearance/frame?scenario=brookfield",
-    "sha256": "d373c72b93c0"
+    "sha256": "b60e4dbcfe28"
   },
   "svc-cards-parkside": {
     "file": "/marketing/svc-cards-parkside.webp",
     "width": 716,
-    "height": 1240,
+    "height": 1714,
     "cssWidth": 358,
-    "cssHeight": 620,
-    "bytes": 69404,
+    "cssHeight": 857,
+    "bytes": 66342,
     "source": "/appearance/frame?scenario=detailer",
-    "sha256": "73ae2787fce5",
-    "capturedAt": "2026-10-24T21:36:27.809Z"
+    "sha256": "7b4e59aaae86",
+    "capturedAt": "2026-10-24T22:33:36.217Z"
   },
   "vehicle-catalogue-brookfield": {
     "file": "/marketing/vehicle-catalogue-brookfield.webp",
@@ -850,7 +850,7 @@
     "bytes": 34570,
     "source": "/onboarding",
     "sha256": "5702cbc37311",
-    "capturedAt": "2026-10-24T21:38:46.839Z",
+    "capturedAt": "2026-10-24T22:33:59.123Z",
     "surface": "#fdfdfd"
   },
   "setup-2-what-phone": {
@@ -862,7 +862,7 @@
     "bytes": 30706,
     "source": "/onboarding",
     "sha256": "0b2f61235c6d",
-    "capturedAt": "2026-10-24T21:44:25.972Z",
+    "capturedAt": "2026-10-24T22:34:00.883Z",
     "surface": "#fdfdfd"
   },
   "setup-3-design-phone": {
@@ -871,10 +871,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 38896,
+    "bytes": 37996,
     "source": "/onboarding",
-    "sha256": "45f29923f988",
-    "capturedAt": "2026-10-24T21:44:27.890Z",
+    "sha256": "a6549e50fc00",
+    "capturedAt": "2026-10-24T22:34:02.821Z",
     "surface": "#fdfdfd"
   },
   "setup-4-first-phone": {
@@ -886,7 +886,7 @@
     "bytes": 35782,
     "source": "/onboarding",
     "sha256": "bd26cc350bd9",
-    "capturedAt": "2026-10-24T21:44:29.833Z",
+    "capturedAt": "2026-10-24T22:34:04.711Z",
     "surface": "#fdfdfd"
   },
   "setup-5-review": {
@@ -895,10 +895,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 78922,
+    "bytes": 76692,
     "source": "/onboarding",
-    "sha256": "d47936cce22f",
-    "capturedAt": "2026-10-24T21:44:24.173Z"
+    "sha256": "53d150cfc3d3",
+    "capturedAt": "2026-10-24T22:33:55.328Z"
   },
   "setup-5-review-phone": {
     "file": "/marketing/setup-5-review-phone.webp",
@@ -906,10 +906,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 46878,
+    "bytes": 45274,
     "source": "/onboarding",
-    "sha256": "6abf069e0b86",
-    "capturedAt": "2026-10-24T21:44:31.878Z",
+    "sha256": "8597f44625e2",
+    "capturedAt": "2026-10-24T22:34:06.737Z",
     "surface": "#fdfdfd"
   },
   "ex-corner-table-cafe-phone": {
@@ -918,9 +918,9 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 89342,
+    "bytes": 81476,
     "source": "/appearance/frame?scenario=corner",
-    "sha256": "eecda103a5b7",
+    "sha256": "d9f5278057f3",
     "surface": "#f6f6f6"
   },
   "ex-corner-table-cafe-desk": {
@@ -929,9 +929,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 163326,
+    "bytes": 163850,
     "source": "/appearance/frame?scenario=corner",
-    "sha256": "6df71f6d536f"
+    "sha256": "8c46e8650efe"
   },
   "ex-oakfield-home-repairs-phone": {
     "file": "/marketing/ex-oakfield-home-repairs-phone.webp",
@@ -939,9 +939,9 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 56548,
+    "bytes": 55744,
     "source": "/appearance/frame?scenario=oakfield",
-    "sha256": "f89226234d93",
+    "sha256": "497575bd3e02",
     "surface": "#ffffff"
   },
   "ex-oakfield-home-repairs-desk": {
@@ -950,9 +950,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 72252,
+    "bytes": 66804,
     "source": "/appearance/frame?scenario=oakfield",
-    "sha256": "f4397ee74786"
+    "sha256": "a743377aed93"
   },
   "ex-rowan-learning-phone": {
     "file": "/marketing/ex-rowan-learning-phone.webp",
@@ -960,9 +960,9 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 61218,
+    "bytes": 56744,
     "source": "/appearance/frame?scenario=rowan",
-    "sha256": "b966721e58df",
+    "sha256": "03ff83903c93",
     "surface": "#f6f6f6"
   },
   "ex-rowan-learning-desk": {
@@ -971,20 +971,20 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 88200,
+    "bytes": 80544,
     "source": "/appearance/frame?scenario=rowan",
-    "sha256": "ccecb9fcdc17"
+    "sha256": "b05f58630966"
   },
   "cafe-menu": {
     "file": "/marketing/cafe-menu.webp",
     "width": 716,
-    "height": 712,
+    "height": 940,
     "cssWidth": 358,
-    "cssHeight": 356,
-    "bytes": 34136,
+    "cssHeight": 470,
+    "bytes": 33602,
     "source": "/appearance/frame?scenario=corner&widget=priceMenu&treatment=soft",
-    "sha256": "fe1b7a29217c",
-    "capturedAt": "2026-10-24T21:36:17.033Z"
+    "sha256": "ee540c9e64b1",
+    "capturedAt": "2026-10-24T22:35:31.854Z"
   },
   "reveal-profile": {
     "file": "/marketing/reveal-profile.webp",
@@ -1025,10 +1025,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 74940,
+    "bytes": 69106,
     "source": "/onboarding",
-    "sha256": "0a00910c4e6e",
-    "capturedAt": "2026-10-24T21:38:45.167Z"
+    "sha256": "26e54a9d744b",
+    "capturedAt": "2026-10-24T22:33:57.449Z"
   },
   "setup-6-plan-phone": {
     "file": "/marketing/setup-6-plan-phone.webp",
@@ -1039,7 +1039,7 @@
     "bytes": 41948,
     "source": "/onboarding",
     "sha256": "732ef51673c4",
-    "capturedAt": "2026-10-24T21:38:56.504Z",
+    "capturedAt": "2026-10-24T22:34:08.684Z",
     "surface": "#fdfdfd"
   }
 }
