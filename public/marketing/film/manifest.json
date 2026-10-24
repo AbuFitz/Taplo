@@ -49,6 +49,9 @@
         ]
       ],
       "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuvj420p",
+      "frames": 540,
       "bytes": 5727044,
       "sha256": "44dd780096c0a73f12f5905d1880e2cb3c2c930c5b2b0ac04ca7470323485a05",
       "sourceSha256": "903170f85f3646fc63e83ff12ebe08642430716fc944cb2acd29037d9f084544"
@@ -100,6 +103,9 @@
         ]
       ],
       "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuvj420p",
+      "frames": 540,
       "bytes": 6335289,
       "sha256": "2a935279d94ecd773bf6e62ace626b7764f520e3519c9914e6b5b778259a97dc",
       "sourceSha256": "c46157883001bfb7b442883cf02848b3cbb9ca62dd58c0a45b7e0005ffada611"
@@ -151,6 +157,9 @@
         ]
       ],
       "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuvj420p",
+      "frames": 540,
       "bytes": 3906842,
       "sha256": "7418b0df46260e8a2cad574b73ea01981af0fed9e9908a489e4fb7a4e475b174",
       "sourceSha256": "b6a65f0a2f968815d01cceb6f6f5c6504919aeeafbe768c16fb3296c15e5c17a"
@@ -196,6 +205,9 @@
         ]
       ],
       "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuvj420p",
+      "frames": 600,
       "bytes": 4460116,
       "sha256": "0b97c8930190ba1b08add23ce128ea4a89fa0b1265f711b326fca0c6c362980a",
       "sourceSha256": "4dfec5b86cfd041f8b0a5608746b51ec30a184ac19d35f16de5e7e2741f778c6"
@@ -207,6 +219,9 @@
       "source": "taplo-intro.mp4#t=3,6",
       "duration": 3,
       "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuvj420p",
+      "frames": 90,
       "bytes": 459631,
       "sha256": "4b5c066bf39e3a2096a9a830594d9ad7f3810578b90026e59ffeb570445bed3e",
       "sourceSha256": null
@@ -218,6 +233,9 @@
       "source": "taplo-intro.mp4#t=6,9",
       "duration": 3,
       "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuvj420p",
+      "frames": 90,
       "bytes": 959030,
       "sha256": "3ca17a7eb6d088b52a76b774c3cb0cfa654fd25afff641f5fbba71aeec71f176",
       "sourceSha256": null
@@ -229,6 +247,9 @@
       "source": "taplo-intro.mp4#t=9,12",
       "duration": 3,
       "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuvj420p",
+      "frames": 90,
       "bytes": 901294,
       "sha256": "8431309e37b955898e96b7ce52ea337c8738e4d011e60730f4cc6c1cd04fb968",
       "sourceSha256": null

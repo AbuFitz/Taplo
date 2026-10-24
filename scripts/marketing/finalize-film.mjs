@@ -18,7 +18,8 @@ for (const out of outputs) {
   const path = `public/marketing/film/${out.name}.mp4`
   const info = JSON.parse(execFileSync(ffprobe, ["-v", "error", "-show_streams", "-show_format", "-of", "json", file(path)], { encoding: "utf8" }))
   const video = info.streams.find(s => s.codec_type === "video")
-  if (!video || video.r_frame_rate !== "30/1" || video.codec_name !== "h264" || video.pix_fmt !== "yuv420p" || Number(video.nb_frames) !== out.duration * 30 || video.width !== out.width || video.height !== out.height || Math.abs(Number(info.format.duration) - out.duration) > 0.1 || info.streams.some(s => s.codec_type === "audio")) throw new Error(`Unexpected delivery format: ${out.name}`)
+  // FFprobe names full-range 8-bit 4:2:0 yuvj420p; both ranges are valid deliveries.
+  if (!video || video.r_frame_rate !== "30/1" || video.codec_name !== "h264" || !["yuv420p", "yuvj420p"].includes(video.pix_fmt) || Number(video.nb_frames) !== out.duration * 30 || video.width !== out.width || video.height !== out.height || Math.abs(Number(info.format.duration) - out.duration) > 0.1 || info.streams.some(s => s.codec_type === "audio")) throw new Error(`Unexpected delivery format: ${out.name}`)
   if (out.sceneStarts) {
     // Actual exported-frame check: catches a render wrapper clipping the scene and exposing the body below it.
     for (const [i, start] of out.sceneStarts.entries()) {
