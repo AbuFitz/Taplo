@@ -1,8 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import path from "node:path";
-import { statSync, writeFileSync } from "node:fs";
 import { PRODUCT_PAGES } from "../../src/features/marketing/product";
+import { CURRENT_LOOKS, SPOTLIGHT_LOOK_IDS } from "../../src/features/page/themes/looks";
 import { PRODUCT_LINKS } from "../../src/features/marketing/ia";
 const routes = [
   "/product",
@@ -132,9 +132,9 @@ test("feature copy follows the real look count and distinguishes plans, connecti
 }) => {
   await page.goto("/product/design");
   const count = await page.getByRole("radio").count();
-  expect(count).toBeGreaterThan(9);
+  expect(count).toBe(SPOTLIGHT_LOOK_IDS.length);
   const status = page.getByTestId("status");
-  await expect(status).toContainText(`${count} starting looks`);
+  await expect(status).toContainText(`${CURRENT_LOOKS.length} starting looks`);
   const plan = status
     .getByRole("listitem")
     .filter({ hasText: "Switching to another starting look" });
@@ -147,7 +147,7 @@ test("feature copy follows the real look count and distinguishes plans, connecti
     .filter({ hasText: "Exact link previews" });
   await expect(platform).toContainText("Depends on the other platform");
 });
-test("team portraits belong to the right fictional people and booking offers that person's actual services", async ({
+test("team profiles avoid invented portraits and booking offers that person's actual services", async ({
   page,
 }) => {
   await page.goto("/appearance/frame?scenario=station");
@@ -157,10 +157,8 @@ test("team portraits belong to the right fictional people and booking offers tha
     .getByRole("button", { name: /View profile/ })
     .click();
   const profile = page.getByTestId("team-profile");
-  await expect(profile.getByRole("img")).toHaveAttribute(
-    "src",
-    /station-sam\.png/,
-  );
+  await expect(profile.getByRole("img")).toHaveCount(0);
+  await expect(profile.getByRole("heading", { name: "Sam Ellis" })).toBeVisible();
   await profile.getByRole("button", { name: "Book with Sam" }).click();
   const flow = page.getByTestId("booking-flow");
   await expect(flow).toBeVisible();
@@ -178,16 +176,16 @@ test("validated capture poses never change owner content and an unknown variant 
   );
   expect(before).not.toBeNull();
   await page.goto(
-    "/appearance/frame?scenario=station&widget=team&variant=grid",
+    "/appearance/frame?scenario=station&widget=team&variant=avatars",
   );
-  await expect(page.locator(".tp-team-grid")).toHaveCount(1);
+  await expect(page.locator(".tp-team-avatars")).toHaveCount(1);
   expect(await page.evaluate(() => localStorage.getItem("taplo.demo.v2"))).toBe(
     before,
   );
   await page.goto(
     "/appearance/frame?scenario=station&widget=team&variant=invalid",
   );
-  await expect(page.locator(".tp-team-grid")).toHaveCount(0);
+  await expect(page.locator(".tp-team-avatars")).toHaveCount(0);
   await expect(page.getByTestId("team-card")).toHaveCount(3);
   expect(await page.evaluate(() => localStorage.getItem("taplo.demo.v2"))).toBe(
     before,
@@ -221,46 +219,13 @@ test("phone pricing comparison changes visible plan values while the complete de
   await expect(bookings.getByRole("cell")).toHaveCount(4);
 });
 
-test("the booking person picker serves a small responsive portrait rather than the full source image", async ({
-  page,
-}) => {
+test("the booking person picker stays usable without supplied staff photographs", async ({page}) => {
   await page.goto("/appearance/frame?scenario=station");
-  await page
-    .getByRole("button", { name: "Book a haircut", exact: true })
-    .first()
-    .click();
-  const flow = page.getByTestId("booking-flow");
+  await page.getByRole("button", {name:"Book a haircut",exact:true}).first().click();
+  const flow=page.getByTestId("booking-flow");
   await flow.getByTestId("bk-service").first().click();
-  const avatar = flow.locator('img[src*="station-sam.png"]');
-  await expect(avatar).toHaveAttribute("sizes", "48px");
-  const info = await avatar.evaluate(async (img: HTMLImageElement) => {
-    await img.decode();
-    return { width: img.naturalWidth, src: img.currentSrc };
-  });
-  expect(info.width).toBeGreaterThan(0);
-  expect(info.width).toBeLessThan(512);
-  expect(info.src).toContain("/_next/image?");
-  const response = await page.request.get(info.src);
-  expect(response.ok()).toBe(true);
-  const deliveredBytes = (await response.body()).length;
-  expect(deliveredBytes).toBeLessThan(100_000);
-  if (process.env.TAPLO_REVIEW_DIR)
-    writeFileSync(
-      path.join(process.env.TAPLO_REVIEW_DIR, "portrait-delivery.json"),
-      JSON.stringify(
-        {
-          scenario: "Jay’s Barbers booking person picker",
-          sourceBytes: statSync("public/taplo-demo/station-sam.png").size,
-          deliveredBytes,
-          intrinsicWidth: info.width,
-          requestedPixelWidth: Number(new URL(info.src).searchParams.get("w")),
-          measurement:
-            "Image optimization API response for the browser-selected URL",
-          requestPath: new URL(info.src).pathname + new URL(info.src).search,
-          environment: "Local production build, Chromium",
-        },
-        null,
-        2,
-      ) + "\n",
-    );
+  await expect(flow.getByRole("button",{name:/Sam Ellis/})).toBeVisible();
+  await expect(flow.getByRole("img")).toHaveCount(0);
+  await flow.getByRole("button",{name:/Sam Ellis/}).click();
+  await expect(flow.getByRole("heading",{name:/Choose a time/})).toBeVisible();
 });

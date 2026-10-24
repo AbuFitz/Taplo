@@ -15,17 +15,24 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
  */
 export function Collection({ label, children, itemClassName, compact = false }: { label: string; children: React.ReactNode[]; itemClassName?: string; compact?: boolean }) {
   const ref = React.useRef<HTMLUListElement>(null)
-  const [edge, setEdge] = React.useState({ start: true, end: false, first: 1, last: 1 })
+  const [edge, setEdge] = React.useState({ start: true, end: false, overflow: false, first: 1, last: 1 })
   const count = React.Children.count(children)
 
   const measure = React.useCallback(() => {
     const el = ref.current
     if (!el) return
     const kids = Array.from(el.children) as HTMLElement[]
-    const left = el.scrollLeft
-    const right = left + el.clientWidth
-    const visible = kids.map((k, i) => ({ i, on: k.offsetLeft + k.offsetWidth * 0.5 >= left && k.offsetLeft + k.offsetWidth * 0.5 <= right })).filter((x) => x.on)
-    setEdge({ start: left <= 2, end: left + el.clientWidth >= el.scrollWidth - 2, first: (visible[0]?.i ?? 0) + 1, last: (visible[visible.length - 1]?.i ?? 0) + 1 })
+    const bounds = el.getBoundingClientRect()
+    const visible = kids.map((k, i) => ({ i, box: k.getBoundingClientRect() }))
+      .filter(({ box }) => box.left + box.width / 2 >= bounds.left && box.left + box.width / 2 <= bounds.right)
+    const next = {
+      start: el.scrollLeft <= 2,
+      end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 2,
+      overflow: el.scrollWidth > el.clientWidth + 2,
+      first: (visible[0]?.i ?? 0) + 1,
+      last: (visible.at(-1)?.i ?? 0) + 1,
+    }
+    setEdge((old) => Object.keys(next).every((k) => old[k as keyof typeof old] === next[k as keyof typeof next]) ? old : next)
   }, [])
 
   React.useEffect(() => {
@@ -34,27 +41,37 @@ export function Collection({ label, children, itemClassName, compact = false }: 
     if (!el) return
     const ro = new ResizeObserver(measure)
     ro.observe(el)
+    Array.from(el.children).forEach((child) => ro.observe(child))
     return () => ro.disconnect()
   }, [measure, count])
 
   const step = (dir: -1 | 1) => {
     const el = ref.current
     if (!el) return
-    const first = el.children[0] as HTMLElement | undefined
-    const gap = first ? first.offsetWidth + 12 : el.clientWidth * 0.8
-    el.scrollBy({ left: dir * gap, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
+    const padding = parseFloat(getComputedStyle(el).scrollPaddingInlineStart) || 0
+    const left = el.getBoundingClientRect().left + padding
+    const kids = Array.from(el.children) as HTMLElement[]
+    const target = dir === 1
+      ? kids.find((k) => k.getBoundingClientRect().left > left + 2)
+      : kids.findLast((k) => k.getBoundingClientRect().left < left - 2)
+    el.scrollTo({
+      left: target ? el.scrollLeft + target.getBoundingClientRect().left - left : dir === 1 ? el.scrollWidth : 0,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+    })
   }
 
   return (
-    <div className="tp-collection" role="group" aria-roledescription="collection" aria-label={label} data-count={count} data-compact={compact || undefined} data-start={edge.start || undefined} data-end={edge.end || undefined}>
+    <div className="tp-collection" role="group" aria-roledescription="collection" aria-label={label} data-overflow={edge.overflow || undefined} data-count={count} data-compact={compact || undefined} data-start={edge.start || undefined} data-end={edge.end || undefined}>
       <ul
         ref={ref}
         className="tp-collection-track"
-        tabIndex={0}
+        tabIndex={edge.overflow ? 0 : -1}
         aria-label={`${label}, scrollable. Use the left and right arrow keys, or the previous and next buttons.`}
         onScroll={measure}
         onKeyDown={(e) => {
-          if (e.key === "ArrowRight") { e.preventDefault(); step(1) }
+          if (e.target !== e.currentTarget) return
+          if (e.key === "Home" || e.key === "End") { e.preventDefault(); e.currentTarget.scrollTo({ left: e.key === "Home" ? 0 : e.currentTarget.scrollWidth, behavior: "instant" }) }
+          else if (e.key === "ArrowRight") { e.preventDefault(); step(1) }
           else if (e.key === "ArrowLeft") { e.preventDefault(); step(-1) }
         }}
       >

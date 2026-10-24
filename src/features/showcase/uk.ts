@@ -24,7 +24,7 @@ const station = example("common-room-barbers", "instant", "station-road-mark")
 export const STATION: BusinessContentInput = {
   ...station,
   products: (station.products ?? []).map(p => ({ ...p, image: undefined })),
-  staff: (station.staff ?? []).map(p => ({ ...p, photo: { src: `/taplo-demo/station-${p.id.replace("cr-", "")}.png`, alt: `Illustrative portrait of ${p.name}, a fictional example barber`, width: 512, height: 768 } })),
+  staff: (station.staff ?? []).map(p => ({ ...p, photo: undefined })),
   identity: { ...station.identity, heroImage: { src: "/photography/barber.webp", alt: "Barber working with clippers; photograph by Glib Albovsky", width: 1600, height: 2000, focal: { x: 50, y: 55 } } },
   gallery: [{ id: "station-work", image: { src: "/photography/barber.webp", alt: "Barber at work; photograph by Glib Albovsky", width: 1600, height: 2000 }, caption: "In the chair" }],
 }

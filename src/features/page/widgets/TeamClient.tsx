@@ -3,13 +3,12 @@
 import * as React from "react"
 import { ArrowRight, CalendarCheck, Check } from "lucide-react"
 import { Overlay } from "@/components/taplo/overlay"
-import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { initialsOf } from "@/lib/validation"
 import { nextAvailableDate } from "@/features/booking/availability"
 import { useBookingState, useSchedulingConfig } from "@/features/booking/demo-adapter"
 import { eligibleStaff, isOnlineBookable, type BookingContext } from "@/features/booking/model"
-import { addDays, formatDay, localParts } from "@/features/booking/time"
+import { formatDay, localParts } from "@/features/booking/time"
 import { BookingFlow } from "@/features/booking/ui/BookingFlow"
 import { Collection } from "./Collection"
 import { ProfileImage } from "../renderer/ProfileImage"
@@ -84,8 +83,8 @@ export function TeamMembers({ members, variant: chosen, ctx }: { members: TeamMe
         : variant === "avatars" ? <ul className="tp-team-avatars">{members.map((m) => <li key={m.id}><button type="button" onClick={() => setProfile(m.id)}><Portrait m={m} className="tp-portrait-sm" ratio="1 / 1" sizes="64px" decorative /><span className="text-sm font-semibold leading-tight">{first(m.name)}</span><span className="sr-only">{m.name.slice(first(m.name).length)}. View profile</span></button></li>)}</ul>
         : <ul className="tp-rows tp-team-list">{members.map(row)}</ul>}
 
-      <Overlay tone="page" kind="detail" open={profile !== null} onOpenChange={(o) => !o && setProfile(null)} title={member?.name ?? "Profile"} description={member?.role} testId="team-profile">
-        {member ? <Profile m={member} ctx={ctx} canBook={canBook(member)} onBook={() => { setProfile(null); setBook({ staffId: member.id }) }} /> : null}
+      <Overlay tone="page" kind="detail" open={profile !== null} onOpenChange={(o) => !o && setProfile(null)} title={member?.name ?? "Profile"} description={member?.role} testId="team-profile" footer={member && canBook(member) ? <button type="button" className="tp-btn tp-profile-book" onClick={() => { setProfile(null); setBook({ staffId: member.id }) }}><CalendarCheck aria-hidden="true" className="size-4"/><span>Book with {first(member.name)}</span><ArrowRight aria-hidden="true" className="size-4"/></button> : undefined}>
+        {member ? <Profile m={member} ctx={ctx} canBook={canBook(member)} /> : null}
       </Overlay>
       {ctx ? <BookingFlow ctx={ctx} staffId={book?.staffId} open={book !== null} onOpenChange={(o) => !o && setBook(null)} title={book ? `Book with ${first(ctx.staff.find((s) => s.id === book.staffId)?.name ?? "")}` : undefined} key={book?.staffId ?? "none"} /> : null}
     </>
@@ -95,7 +94,7 @@ export function TeamMembers({ members, variant: chosen, ctx }: { members: TeamMe
 const DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const
 const DAY_NAMES = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun" }
 
-function Profile({ m, ctx, canBook, onBook }: { m: TeamMemberData; ctx?: BookingContext; canBook: boolean; onBook: () => void }) {
+function Profile({ m, ctx, canBook }: { m: TeamMemberData; ctx?: BookingContext; canBook: boolean }) {
   const config = useSchedulingConfig(ctx?.slug ?? "-", ctx?.config ?? ({ timezone: "Europe/London", rules: {}, staff: [], exceptions: [], blocks: [], serviceOverrides: [] } as never))
   const { state } = useBookingState(ctx?.slug ?? "-")
   const [now] = React.useState(() => Date.now())
@@ -107,7 +106,6 @@ function Profile({ m, ctx, canBook, onBook }: { m: TeamMemberData; ctx?: Booking
     if (!svc) return null
     return nextAvailableDate({ now, config, service: { id: svc.id, durationMinutes: svc.durationMinutes! }, eligible: eligibleStaff(ctx, svc), staffPreference: m.id, bookings: state.bookings, holds: [], fromDate: localParts(now, config.timezone).date })
   }, [ctx, canBook, m, now, config, state.bookings])
-  void addDays
   return (
     <div className={m.photo ? "grid gap-5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-6" : "grid gap-5"}>
       {/* A large grey silhouette says nothing, so the portrait is shown only when there is one. */}
@@ -118,12 +116,11 @@ function Profile({ m, ctx, canBook, onBook }: { m: TeamMemberData; ctx?: Booking
         {m.services.length ? (
           <section aria-labelledby={`svc-${m.id}`}>
             <h3 id={`svc-${m.id}`} className="mb-1.5 text-sm font-semibold text-tp-muted">Services {first(m.name)} provides</h3>
-            <ul className="grid gap-1 text-sm">{m.services.map((s) => <li key={s.id} className="flex justify-between gap-3"><span>{s.name}{s.minutes ? <span className="text-tp-muted"> · {s.minutes} min</span> : null}</span><span className="font-semibold tabular-nums">{s.price}</span></li>)}</ul>
+            <ul className="tp-team-detail-services text-sm">{m.services.map((s) => <li key={s.id}><span className="min-w-0 [overflow-wrap:anywhere]"><span className="block font-medium">{s.name}</span>{s.minutes ? <span className="text-tp-muted">{s.minutes} min</span> : null}</span><span className="tp-price">{s.price}</span></li>)}</ul>
           </section>
         ) : null}
         {m.credentials.length ? <section aria-label="Qualifications"><h3 className="mb-1.5 text-sm font-semibold text-tp-muted">Experience and qualifications</h3><ul className="grid gap-1 text-sm">{m.credentials.map((c) => <li key={c} className="flex gap-2"><Check aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-tp-accent" />{c}</li>)}</ul></section> : null}
         {days.length ? <p className="text-sm text-tp-muted">Works {days.map((d) => DAY_NAMES[d]).join(", ")}{next ? <> · Next available <strong className="text-tp-fg">{formatDay(next)}</strong></> : null}</p> : null}
-        {canBook ? <Button className="min-h-12 justify-self-start bg-tp-accent px-6 text-tp-accent-fg hover:bg-tp-accent/90" onClick={onBook}><CalendarCheck /> Book with {first(m.name)}</Button> : null}
       </div>
     </div>
   )
