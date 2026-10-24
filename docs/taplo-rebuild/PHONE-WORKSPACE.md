@@ -1,0 +1,19 @@
+# Shared handset and registration workspace
+
+Owner direction, 24 October 2026: one thin properly proportioned phone preview everywhere. Mobile first, with stable keyboard positioning, concise headings and minimal secondary copy. Desktop setup sits in one rounded workspace above a moving monochrome background; its larger phone is deliberately cropped rather than shrunk to fit vertically. Full-size remains a separate working page view.
+
+Implementation thesis: one hardware silhouette and screen geometry for captured and live pages. Four-pixel physical rim, small reflective edge, restrained side keys, camera capsule and home indicator. Safe screen space keeps hardware clear of content. Preview scrollbars are hidden only inside embedded documents, preserving all scrolling and keyboard access. The same iframe survives viewport changes and form steps.
+
+The profile begins with a direct logo affordance, name and optional short description. Crop/framing remains a pre-apply popup; choosing/cancelling never commits an unapproved image. Layout tiles show actual theme background, typography and button tokens, not tiny business screenshots or repeated explanations.
+
+Motion: existing Motion springs handle step and progress changes without an artificial loading stage. A real hydration skeleton shares the final layout. Preview readiness is based on the actual rendered page. The existing Paper Shaders package supplies a bounded monochrome desktop MeshGradient with visibility/reduced-motion handling, pointer parallax, a static CSS fallback and no added package. Mobile uses the uninterrupted white app surface.
+
+Sources reviewed: https://shaders.paper.design/mesh-gradient and https://motion.dev/docs/react-transitions. Paper exposes pixel bounds, monochrome colour uniforms and speed; Motion springs expose stiffness/damping and preserve interaction continuity. No benchmark or physical-device keyboard claim is inferred from these docs.
+
+Completion evidence will record actual mobile/desktop captures, form/crop/back/forward/full-size/booking tests, native-browser results and exact public deployment. Full marketing art direction, feature pages, replacement film, complete adoption, legal facts and backend work remain open.
+
+Native-browser finding: sliding a full-screen overlay inside a transformed iframe can leave its first hit targets moving relative to the parent fixed navigation. Embedded sheets now reveal in place with opacity only, while standalone customer sheets keep their spatial slide. This is a deliberate stable geometry decision, not a skipped assertion. A short-lived CSS zoom experiment was discarded after native testing; the shipped renderer retains its established responsive iframe viewport and scale.
+
+Verified locally: normal Turbopack production build/typecheck and affected ESLint pass; all 222 unit tests pass with 39 database-dependent tests skipped. All 41 affected Chromium checks passed together. All 34 Firefox/WebKit checks passed together after the embedded sheet geometry correction. Tests cover 320, 390, 768 and 1440 widths, concise profile input, phone proportions and rim, hidden embedded scrollbars, deliberate desktop crop, preserved iframe state through setup and device switching, complete booking, crop confirmation/cancellation/re-edit, form scroll and anchored Continue, full-size view, theme colours, gallery, marketing and automated accessibility.
+
+Actual final review images: outputs/Taplo-handoff/review/phone-workspace-final/ and phone-native-final/. Ten setup captures refreshed, with the two design captures updated again for the final actual theme typography. The setup walkthrough was re-recorded from real interactions, probed and fully decoded. Physical iOS/Android keyboard, touch, orientation, haptics and performance measurements remain unverified. This is an implementation checkpoint, not owner approval or completion of the broader frontend.

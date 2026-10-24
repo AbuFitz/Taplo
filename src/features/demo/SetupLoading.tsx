@@ -1,5 +1,10 @@
-import { TaploLogo } from "@/components/taplo/brand"
-/** Actual hydration state, with the same composition as setup; never an artificial wait. */
+/** Real hydration only. The skeleton shares setup's final geometry, without a timed artificial wait. */
 export function SetupLoading() {
-  return <main className="min-h-dvh bg-white p-6"><TaploLogo className="hidden h-8 lg:block"/><div className="setup-load-line" role="status" aria-label="Opening your page"/><div className="mx-auto mt-4 grid lg:mt-16 max-w-5xl gap-10 lg:grid-cols-2" aria-hidden="true"><div className="grid content-start gap-5"><div className="h-9 w-3/4 rounded-xl bg-neutral-100"/><div className="h-14 rounded-2xl bg-neutral-100"/><div className="h-14 rounded-2xl bg-neutral-50"/></div><div className="h-80 rounded-3xl bg-neutral-50"/></div></main>
+  return <div className="setup-scene"><div className="setup-backdrop" aria-hidden="true" /><main className="setup-flow setup-skeleton" aria-busy="true" aria-label="Opening setup">
+    <div className="setup-progress"><div className="setup-load-line" role="status" aria-label="Opening your page" /></div>
+    <div className="setup-workspace" aria-hidden="true">
+      <section><div className="h-9 w-2/3 rounded-xl bg-neutral-100" /><div className="grid content-start gap-5 pt-8"><div className="size-20 rounded-3xl bg-neutral-100" /><div className="h-12 rounded-2xl bg-neutral-100" /><div className="h-12 rounded-2xl bg-neutral-50" /></div><div className="my-4 h-12 rounded-full bg-neutral-100" /></section>
+      <aside><div className="setup-canvas-heading" /><div className="setup-canvas"><div className="setup-phone-skeleton" /></div></aside>
+    </div>
+  </main></div>
 }

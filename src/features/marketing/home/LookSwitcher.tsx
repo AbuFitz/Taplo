@@ -27,7 +27,7 @@ export function LookSwitcher() {
     </div>
     <div className="home-design-art" key={design.slug}>
       <div className="home-design-desktop" aria-hidden="true"><Shot id={`ex-${design.asset}-desk` as never} alt="" width={800} fluid frame="none" /></div>
-      <div className="home-design-phone"><Shot id={`ex-${design.asset}-phone` as never} alt={`${design.name} business design`} width={390} fluid frame="none" /></div>
+      <div className="home-design-phone"><Shot id={`ex-${design.asset}-phone` as never} alt={`${design.name} business design`} width={390} fluid frame="phone" /></div>
     </div>
   </div>;
 }

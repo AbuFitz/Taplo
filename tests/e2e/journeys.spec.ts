@@ -17,7 +17,7 @@ test.describe("onboarding", () => {
     await page.goto("/");
     await expect(page.getByRole("link", { name: "Start free" }).first()).toHaveAttribute("href", "/onboarding");
     await page.goto("/onboarding");
-    await expect(page.getByRole("heading", { name: "Add your business" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Make it yours." })).toBeVisible();
     await expect(page.locator("main")).not.toContainText(/pick your trade/i);
   });
 

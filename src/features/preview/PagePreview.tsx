@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { getImageProps } from "next/image"
+import { PHONE, PhoneChrome } from "./PhoneChrome"
 import { cn } from "@/lib/utils"
 import type { FromPreview, Selection, ToPreview } from "@/features/page/editor/selection"
 
@@ -56,20 +57,22 @@ const MAX_DESKTOP = 1440
 const READABLE = 0.72
 
 export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, device = { w: 390, h: 844 }, zoom: "fit" | "actual" = "fit", chrome = false, cropDevice = false) {
-  if (mode === "fill") return { vw: box.w, vh: box.h, scale: 1, pad: 0, bar: 0, outerW: box.w, outerH: box.h }
+  if (mode === "fill") return { vw: box.w, vh: box.h, scale: 1, pad: 0, bar: 0, safeTop: 0, safeBottom: 0, outerW: box.w, outerH: box.h }
   if (mode === "device") {
-    const pad = chrome ? 6 : 0
+    const pad = chrome ? PHONE.bezel : 0
+    const safeTop = 0
+    const safeBottom = 0
     const outerW = device.w + pad * 2
     const outerH = device.h + pad * 2
     const scale = zoom === "actual" ? 1 : Math.min(1, box.w / outerW, cropDevice ? 1 : box.h / outerH)
-    return { vw: device.w, vh: device.h, scale, pad, bar: 0, outerW, outerH }
+    return { vw: device.w, vh: device.h - safeTop - safeBottom, scale, pad, bar: 0, safeTop, safeBottom, outerW, outerH }
   }
   const bar = chrome ? 38 : 0
-  if (zoom === "actual") return { vw: 1280, vh: Math.max(720, box.h - bar), scale: 1, pad: 0, bar, outerW: 1280, outerH: Math.max(720, box.h) }
+  if (zoom === "actual") return { vw: 1280, vh: Math.max(720, box.h - bar), scale: 1, pad: 0, bar, safeTop: 0, safeBottom: 0, outerW: 1280, outerH: Math.max(720, box.h) }
   const vw = Math.round(Math.min(MAX_DESKTOP, Math.max(MIN_DESKTOP, box.w / READABLE)))
   const scale = Math.min(1, box.w / vw)
   const vh = Math.max(560, Math.round(box.h / scale) - bar)
-  return { vw, vh, scale, pad: 0, bar, outerW: vw, outerH: vh + bar }
+  return { vw, vh, scale, pad: 0, bar, safeTop: 0, safeBottom: 0, outerW: vw, outerH: vh + bar }
 }
 
 export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, resizeKey, topInset = 0, cropDevice = false }: PagePreviewProps) {
@@ -77,6 +80,39 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
   const [loaded, setLoaded] = React.useState(false)
+  const isPhone = chrome && mode === "device"
+  const stopWatching = React.useRef<(() => void) | null>(null)
+  React.useEffect(() => () => stopWatching.current?.(), [])
+
+  const prepareDocument = React.useCallback(() => {
+    stopWatching.current?.()
+    const doc = frame.current?.contentDocument
+    if (!doc?.body) return
+    doc.documentElement.dataset.taploEmbedded = "true"
+    doc.documentElement.setAttribute("data-taplo-phone", String(isPhone))
+    let page: Element | null = null
+    const sync = () => {
+      const next = doc.querySelector("[data-taplo-page]")
+      if (!next) return
+      const color = doc.defaultView?.getComputedStyle(next).getPropertyValue("--tp-background").trim()
+      if (color) host.current?.style.setProperty("--phone-surface", color)
+      setLoaded(true)
+      if (page !== next) {
+        page = next
+        observer.disconnect()
+        observer.observe(next, { attributes: true, attributeFilter: ["style"] })
+      }
+    }
+    const observer = new MutationObserver(sync)
+    observer.observe(doc.body, { childList: true, subtree: true })
+    sync()
+    stopWatching.current = () => observer.disconnect()
+  }, [isPhone])
+
+  React.useEffect(() => {
+    const doc = frame.current?.contentDocument
+    if (doc) doc.documentElement.setAttribute("data-taplo-phone", String(isPhone))
+  }, [isPhone])
 
   React.useLayoutEffect(() => {
     const el = host.current
@@ -111,11 +147,11 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
           window.scrollBy({ top: rect.top - top, behavior: "instant" })
         }
       } else if (e.data?.type === "taplo:select") onSelect?.(e.data.selection)
-      else if (e.data?.type === "taplo:ready" || (e.data as {type?: string})?.type === "taplo:lab-ready") { setLoaded(true); post() }
+      else if (e.data?.type === "taplo:ready" || (e.data as {type?: string})?.type === "taplo:lab-ready") { prepareDocument(); post() }
     }
     window.addEventListener("message", onMessage)
     return () => window.removeEventListener("message", onMessage)
-  }, [onSelect, post, topInset])
+  }, [onSelect, post, topInset, prepareDocument])
   React.useEffect(post, [post, L?.vw, L?.vh])
 
   const iframe = L ? (
@@ -127,7 +163,9 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
       inert={!interactive}
       src={src}
       data-testid={testId ?? "preview-frame"}
-      onLoad={() => { if (!poster) setLoaded(true); post() }}
+      onLoad={() => { prepareDocument(); post() }}
+      className="preview-document"
+      data-loaded={loaded}
       style={{ width: mode === "fill" ? "100%" : L.vw, height: mode === "fill" ? "100%" : L.vh, border: 0, display: "block", background: "white", pointerEvents: interactive ? undefined : "none" }}
     />
   ) : null
@@ -139,7 +177,7 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
         <div className={cn("absolute inset-x-0 top-0 flex justify-center", mode === "device" && zoom !== "actual" && !cropDevice && "inset-y-0 items-center", zoom === "actual" && "relative")}>
           <div style={{ width: L.outerW * L.scale, height: L.outerH * L.scale }} className="shrink-0">
             <div
-              className={cn("origin-top-left overflow-hidden", decorated ? (mode === "device" ? "rounded-[2.375rem] bg-[#141416] shadow-[0_0_0_1px_rgb(0_0_0/0.14),0_28px_48px_-26px_rgb(0_0_0/0.4)]" : "rounded-2xl bg-[#f3f2ef] shadow-[0_30px_60px_-28px_rgb(0_0_0/0.4),0_0_0_1px_rgb(0_0_0/0.1)]") : "")}
+              className={cn("relative origin-top-left", decorated ? (mode === "device" ? "phone-shell" : "rounded-2xl bg-[#f3f2ef] shadow-[0_30px_60px_-28px_rgb(0_0_0/0.4),0_0_0_1px_rgb(0_0_0/0.1)]") : "")}
               style={{ width: L.outerW, height: L.outerH, padding: L.pad, transform: L.scale === 1 ? undefined : `scale(${L.scale})` }}
             >
               {L.bar ? (
@@ -149,7 +187,11 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
                   <span className="w-10" />
                 </div>
               ) : null}
-              <div className={cn("overflow-hidden bg-white", decorated && mode === "device" && "rounded-[2rem]")} style={{ width: L.vw, height: L.vh }}>{iframe}</div>
+              <div className={cn("relative overflow-hidden bg-white", decorated && mode === "device" && "phone-screen")} style={{ width: L.vw, height: L.vh + L.safeTop + L.safeBottom, paddingTop: L.safeTop, paddingBottom: L.safeBottom }}>
+                {iframe}
+                {!loaded ? <div className="preview-screen-loading" aria-hidden="true"><span /><span /><span /></div> : null}
+              </div>
+              {decorated && mode === "device" ? <PhoneChrome /> : null}
             </div>
           </div>
         </div>
@@ -157,7 +199,6 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
       {!loaded && poster ? <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img {...getImageProps({ src: `${poster}?v=20261024-brands`, alt: "", width: mode === "desktop" ? 2200 : 780, height: mode === "desktop" ? 1520 : 1600, sizes: mode === "desktop" ? "550px" : "310px", loading: "eager", fetchPriority: "high" }).props} alt="" className={cn("size-full object-top", mode === "desktop" ? "object-contain" : "object-cover")} /></div> : null}
-      {!loaded && !poster ? <div aria-hidden="true" className="pointer-events-none absolute inset-0 animate-pulse bg-black/[0.04] motion-reduce:animate-none" /> : null}
     </div>
   )
 }

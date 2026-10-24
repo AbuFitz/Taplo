@@ -5,11 +5,11 @@
     "poster": "/marketing/walkthroughs/setup-poster.webp",
     "width": 780,
     "height": 1928,
-    "duration": 33.64,
+    "duration": 33.72,
     "fps": "25/1",
-    "bytes": 2884202,
-    "sha256": "0d8cc18b756db64919670c43dd66c416cb34f5376e28137f1fc7d8d018f809d4",
-    "recordedAt": "2026-10-24T15:15:45.356Z",
+    "bytes": 3099647,
+    "sha256": "b5ce138f1ab873e0131cba253b4decd1df569d2ff70fd3286a4718b1b2ec0dc8",
+    "recordedAt": "2026-10-24T16:25:44.807Z",
     "source": "/onboarding?from=no-6-coffee",
     "chapters": [
       {
@@ -23,12 +23,12 @@
         "line": "Search for your business. Keep the setup relevant."
       },
       {
-        "seconds": 7.5,
+        "seconds": 7.6,
         "title": "Choose how people reach you",
         "line": "A call fits this café. The menu does not need appointment bookings."
       },
       {
-        "seconds": 11,
+        "seconds": 11.1,
         "title": "Add something customers can buy",
         "line": "A simple menu item and its price. No sample business records are copied."
       },
@@ -43,12 +43,12 @@
         "line": "Choose a layout, then adjust the background and profile separately."
       },
       {
-        "seconds": 22.4,
+        "seconds": 22.5,
         "title": "Review the actual page",
         "line": "Check the menu, contact details and opening hours before continuing."
       },
       {
-        "seconds": 27.5,
+        "seconds": 27.6,
         "title": "Keep making it yours",
         "line": "Your draft is saved in this browser. Publishing and billing are not connected."
       }

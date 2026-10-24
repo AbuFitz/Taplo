@@ -249,7 +249,7 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
                       width={390}
                       cropTo={650}
                       fluid
-                      frame="none"
+                      frame="phone"
                       priority={n < 2}
                       className="mx-auto"
                     />

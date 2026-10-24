@@ -39,6 +39,11 @@ await browser.close()
 const prior = (() => { try { return JSON.parse(readFileSync(out + "manifest.json", "utf8")) } catch { return {} } })()
 const entries = { ...prior, ...manifest }
 for (const m of Object.values(entries)) m.sha256 = createHash("sha256").update(readFileSync(new URL("../../public" + m.file, import.meta.url))).digest("hex").slice(0,12)
+for (const [id, m] of Object.entries(entries)) {
+  if (!id.endsWith("-phone")) continue
+  const pixel = await sharp(new URL("../../public" + m.file, import.meta.url).pathname).extract({ left: 0, top: 0, width: 1, height: 1 }).removeAlpha().raw().toBuffer()
+  m.surface = "#" + [...pixel].map(n => n.toString(16).padStart(2, "0")).join("")
+}
 const merged = JSON.stringify(entries, null, 2) + "\n"
 writeFileSync(out + "manifest.json", merged)
 // The app imports the same manifest so every marketing image has real intrinsic dimensions (no layout shift).

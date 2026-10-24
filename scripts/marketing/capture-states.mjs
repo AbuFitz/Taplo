@@ -114,6 +114,11 @@ await browser.close()
 const prior = (() => { try { return JSON.parse(readFileSync(out + "manifest.json", "utf8")) } catch { return {} } })()
 const entries = { ...prior, ...manifest }
 for (const m of Object.values(entries)) m.sha256 = createHash("sha256").update(readFileSync(new URL("../../public" + m.file, import.meta.url))).digest("hex").slice(0,12)
+for (const [id, m] of Object.entries(entries)) {
+  if (!id.endsWith("-phone")) continue
+  const pixel = await sharp(new URL("../../public" + m.file, import.meta.url).pathname).extract({ left: 0, top: 0, width: 1, height: 1 }).removeAlpha().raw().toBuffer()
+  m.surface = "#" + [...pixel].map(n => n.toString(16).padStart(2, "0")).join("")
+}
 const merged = JSON.stringify(entries, null, 2) + "\n"
 writeFileSync(out + "manifest.json", merged)
 writeFileSync(new URL("../../src/features/marketing/manifest.json", import.meta.url).pathname, merged)
@@ -135,8 +140,8 @@ async function setupIdentity(p) {
   const buffer=await sharp(readFileSync(new URL("../../public/taplo-demo/corner-table-mark.svg",import.meta.url))).png().toBuffer()
   await p.getByLabel("Add your logo or profile photo: upload a picture").setInputFiles({name:"no-6.png",mimeType:"image/png",buffer})
   await p.getByTestId("crop-dialog").getByRole("button",{name:"Use image",exact:true}).click()
-  await p.getByRole("button",{name:"Add an introduction or cover",exact:true}).click()
-  await p.getByLabel("A line under your name (optional)",{exact:true}).fill("Coffee, breakfast and lunch.")
+  await p.getByLabel("Short description (optional)",{exact:true}).fill("Coffee, breakfast and lunch.")
+  await p.getByRole("button",{name:"Add a cover photo",exact:true}).click()
   await p.getByLabel("Cover photo (optional): upload a picture").setInputFiles(new URL("../../public/photography/coffee.webp",import.meta.url).pathname)
   await p.getByTestId("crop-dialog").getByRole("button",{name:"Use image",exact:true}).click()
   await p.getByRole("button",{name:"Done",exact:true}).click()

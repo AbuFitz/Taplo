@@ -164,7 +164,7 @@ export function PreviewFrame({ className, height = 640, fill = false, selection,
           mode={canvas && narrow && device === "mobile" ? "fill" : device === "mobile" ? "device" : "desktop"}
           device={{ w: 390, h: 844 }}
           zoom={canvas ? "fit" : zoom}
-          chrome={!canvas}
+          chrome={!canvas || device === "mobile" && !narrow}
           src={editing ? "/demo/preview?edit=1" : "/demo/preview"}
           title="Live preview of your page"
           edit={onSelect && selection ? { selection, onSelect } : undefined}

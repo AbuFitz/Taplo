@@ -5,6 +5,8 @@ import { BusinessIcon } from "./BusinessIcon"
 import { SetupDesign } from "./SetupDesign"
 import { SetupDetails } from "./SetupDetails"
 import { SetupPlans } from "./SetupPlans"
+import { SetupBackdrop } from "./SetupBackdrop"
+import { motion, useReducedMotion } from "motion/react"
 import { SetupCanvas } from "./SetupCanvas"
 import { SetupLoading } from "./SetupLoading"
 import * as React from "react"
@@ -43,7 +45,7 @@ const STEP_LABEL: Record<OnboardingStep, string> = {
   publish: "Review",
 }
 const STEP_TITLE: Record<OnboardingStep, string> = {
-  business: "Add your business",
+  business: "Make it yours.",
   industry: "What do you do?",
   goal: "Choose the first step.",
   reach: "How can customers reach you?",
@@ -85,6 +87,9 @@ function firstKind(industryKey: string): "service" | "vehicle" | "photo" {
 
 export function Onboarding() {
   const shell = React.useRef<HTMLElement>(null)
+  const reducedMotion = useReducedMotion()
+  const [direction, setDirection] = React.useState(1)
+  const navigated = React.useRef(false)
   React.useEffect(() => {
     const viewport = window.visualViewport
     let initialHeight = window.innerHeight
@@ -117,9 +122,15 @@ export function Onboarding() {
 
   const go = (to: OnboardingStep) => {
     setShowErrors(false)
+    setDirection(SETUP_STEPS.indexOf(to as Exclude<OnboardingStep, "goal">) >= stepIndex ? 1 : -1)
+    navigated.current = true
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
     update((x) => ({ ...x, step: to }))
-    window.scrollTo({ top: 0 })
   }
+  React.useEffect(() => {
+    if (!navigated.current) return
+    shell.current?.querySelector<HTMLElement>("#step-title")?.focus({ preventScroll: true })
+  }, [step])
   const next = () => go(SETUP_STEPS[Math.min(stepIndex + 1, SETUP_STEPS.length - 1)]!)
   const back = () => go(SETUP_STEPS[Math.max(stepIndex - 1, 0)]!)
 
@@ -180,10 +191,10 @@ export function Onboarding() {
   }
 
   return (
-    <main ref={shell} data-preview-expanded="false" data-step={step} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
+    <div className="setup-scene"><SetupBackdrop /><main ref={shell} data-preview-expanded="false" data-step={step} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
       <nav aria-label="Progress" className="setup-progress mb-4">
         <div className="flex min-h-9 items-center gap-3">
-          <div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><span className="block h-full rounded-full bg-black transition-[width] duration-300 motion-reduce:transition-none" style={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} /></div>
+          <div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div>
           <SandboxBadge compact className="setup-context" /><Link href="/" aria-label="Leave setup" className="grid size-9 shrink-0 place-items-center rounded-full focus-visible:ring-2"><X aria-hidden="true" className="size-4" /></Link>
         </div>
       </nav>
@@ -191,13 +202,13 @@ export function Onboarding() {
       <div className="setup-workspace grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
         <section aria-labelledby="step-title" className="min-w-0">
           <div className="setup-question-heading">{fromName || intent ? <p className="setup-origin">{fromName ? <span data-testid="from-example">Starting from {fromName}</span> : null}{fromName && intent ? " · " : ""}{intent ? <span data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}</p> : null}
-          <h1 id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? { service: "Add your first service", vehicle: "Add your first vehicle", photo: "Add your first photos" }[firstKind(c.identity.industryKey)] : STEP_TITLE[step]}</h1></div>
+          <motion.h1 key={step} initial={reducedMotion ? false : { opacity:0, x:direction*10 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34 }} tabIndex={-1} id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? { service: "Add your first service", vehicle: "Add your first vehicle", photo: "Add your first photos" }[firstKind(c.identity.industryKey)] : STEP_TITLE[step]}</motion.h1></div>
 
-          <div className="setup-step-body" key={step}>
+          <motion.div className="setup-step-body" key={step} initial={reducedMotion ? false : { opacity:0, x:direction*16 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34, opacity:{duration:.16} }}>
           {step === "industry" ? (
             <div className="grid gap-7">
               <div className="grid gap-3">
-                <TaploInput label="Search businesses" placeholder="Search your business type" hint="Try a trade, service or profession." value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
+                <TaploInput label="Search businesses" placeholder="Search your business type" value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
                 <ul className="setup-industry-list grid gap-1" aria-label="Kinds of business">
                   {searchIndustries(query).filter((p) => query.trim() ? true : POPULAR.slice(0, 4).includes(p.id) || (state !== null && Boolean(c.identity.industryLabel.trim()) && c.identity.industryKey === p.id)).sort((a, b) => query.trim() ? 0 : POPULAR.indexOf(a.id) - POPULAR.indexOf(b.id)).slice(0, query.trim() ? 6 : 5).map((p) => {
                     const selected = state !== null && (p.id === OTHER_INDUSTRY_ID ? otherOpen || c.identity.industryLabel !== "" && c.identity.industryKey === OTHER_INDUSTRY_ID : c.identity.industryKey === p.id)
@@ -241,19 +252,20 @@ export function Onboarding() {
 
           {step === "business" ? (
             <div className="grid gap-5">
+              <ImageField presentation="identity" purpose="identity" samples={false} onFramingChange={shape=>update(x=>({...x,page:{...x.page,appearance:{...x.page.appearance,header:{...x.page.appearance.header,avatarShape:shape}}}}))} label="Add your logo or profile photo" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
               <TaploInput label="Business name" value={c.identity.name} maxLength={100} autoComplete="organization" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
               <div className="-mt-2 text-sm text-muted-foreground">
-                Your link: <span className="font-medium text-foreground">taplo.co/{c.identity.slug || "your-name"}</span>{" "}
+                <span className="font-medium text-foreground">taplo.co/{c.identity.slug || "your-name"}</span>{" "}
                 <button type="button" onClick={() => setEditSlug((v) => !v)} aria-expanded={editSlug || (showErrors && slugErrs.length > 0)} className="rounded px-1 font-medium text-foreground underline underline-offset-4">{editSlug ? "Done" : "Change"}</button>
                 {slugErrs.length && c.identity.slug ? <span className="block text-destructive">{SLUG_PROBLEM_MESSAGE[slugErrs[0]!]}</span> : null}
               </div>
               {editSlug || (showErrors && slugErrs.length) ? (
                 <TaploInput label="Web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />
               ) : null}
-              <ImageField purpose="identity" samples={false} onFramingChange={shape=>update(x=>({...x,page:{...x.page,appearance:{...x.page.appearance,header:{...x.page.appearance.header,avatarShape:shape}}}}))} label="Add your logo or profile photo" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
-              {!c.identity.logo ? <p className="text-xs text-muted-foreground">No image yet? Continue and add one later.</p> : null}
-              <button type="button" className="min-h-11 text-left text-sm font-medium underline underline-offset-4" onClick={()=>setProfileOpen(true)}>Add an introduction or cover</button><Overlay open={profileOpen} onOpenChange={setProfileOpen} title="Profile details" footer={<Button className="min-h-11 w-full" onClick={()=>setProfileOpen(false)}>Done</Button>}><div className="grid gap-5">
-              <TaploInput label="A line under your name (optional)" value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
+
+              <TaploInput label="Short description (optional)" value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
+              <button type="button" className="min-h-11 text-left text-sm font-medium underline underline-offset-4" onClick={()=>setProfileOpen(true)}>Add a cover photo</button><Overlay open={profileOpen} onOpenChange={setProfileOpen} title="Cover photo" footer={<Button className="min-h-11 w-full" onClick={()=>setProfileOpen(false)}>Done</Button>}><div className="grid gap-5">
+
 
               <ImageField purpose="cover" label="Cover photo (optional)" cropAspect={16 / 9} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1600} value={c.identity.heroImage ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, heroImage: v ?? undefined } } }))} />
               </div></Overlay>
@@ -265,7 +277,7 @@ export function Onboarding() {
           {step === "widgets" ? <WidgetsStep /> : null}
           {step === "publish" ? <PublishStep onEditor={() => router.push("/dashboard/page")} onEdit={go} /> : null}
 
-          </div>
+          </motion.div>
           {step !== "publish" ? (
             <div className="setup-next mt-8 flex flex-wrap items-center gap-3">
               {stepIndex > 0 ? <Button variant="outline" size="lg" onClick={back}>Back</Button> : null}
@@ -284,29 +296,27 @@ export function Onboarding() {
         </aside>
       </div>
       <Overlay open={mobilePreview} onOpenChange={setMobilePreview} kind="detail" title="Full-size preview" testId="setup-full-preview" className="sm:h-[90dvh] sm:max-h-[90dvh] sm:w-[min(96vw,90rem)] sm:max-w-none" bodyClassName="p-0! overflow-hidden!"><div className="h-full min-h-0"><SetupCanvas src="/demo/preview" expanded /></div></Overlay>
-    </main>
+    </main></div>
   )
 }
 
 /** Suggested looks for this kind of business, each shown as a real page. A look is a starting point: every colour, font and shape can be changed afterwards. */
 function LookPicker({ industryKey, themeId, onPick }: { industryKey: string; themeId: string; onPick: (id: string) => void }) {
   const [initialLook] = React.useState(themeId)
-  const recommendedId = suggestedLooks(industryKey)[0]?.id
   const looks = React.useMemo(() => { const list = suggestedLooks(industryKey); const current = LOOKS.find(l => l.id === initialLook); const at = list.findIndex(l => l.id === initialLook); return current && (at < 0 || at >= 6) ? [current, ...list.filter(l => l.id !== initialLook)] : list }, [industryKey, initialLook])
   const card = (l: (typeof looks)[number]) => {
     const active = themeId === l.id
     return (
-      <label key={l.id} className={cn("relative grid cursor-pointer gap-2 overflow-hidden rounded-2xl bg-card p-1.5 text-left text-sm shadow-[0_0_0_1px_rgb(0_0_0/0.09)] transition-shadow has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring hover:shadow-[0_0_0_1px_rgb(0_0_0/0.25)]", active && "shadow-[0_0_0_2px_var(--foreground)]")}>
+      <label key={l.id} className="setup-look-choice" data-selected={active}>
         <input type="radio" name="look" value={l.id} checked={active} onChange={() => onPick(l.id)} className="sr-only" />
         <span className="block overflow-hidden rounded-xl"><ThemeSwatch look={l} /></span>
-        <span className="px-1 pb-1"><span className="flex items-center gap-1.5 font-semibold">{l.name}{l.id === recommendedId ? <span className="hidden rounded-full bg-muted px-1.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:inline">Suggested</span> : null}{active ? <Check aria-hidden="true" className="ml-auto size-4" /> : null}</span><span className={"sr-only"}>{l.blurb}</span></span>
+        <span className="setup-look-name">{l.name}{active ? <Check aria-hidden="true" className="size-3" /> : null}</span>
       </label>
     )
   }
   return (
     <fieldset className="setup-look-picker grid gap-3" data-testid="look-picker">
-      <legend className="mb-1 text-lg font-semibold">Pick a look</legend>
-      <p className="-mt-1 text-sm text-muted-foreground">Choose a starting layout. Use the controls above to make it yours.</p>
+      <legend className="sr-only">Pick a look</legend>
       <div className="grid grid-cols-3 gap-2 pb-2">{looks.slice(0, 6).map(card)}</div>
       {looks.length > 6 ? <details className="group">
         <summary className="inline-flex min-h-10 cursor-pointer list-none items-center rounded-lg text-sm font-medium underline underline-offset-4 [&::-webkit-details-marker]:hidden">More looks</summary>

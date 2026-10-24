@@ -144,8 +144,8 @@ export function ColorField({ label, value, onChange, customised, onReset, hint, 
 }
 
 /** Image chooser: upload (downscaled in the browser), pick a sample, remove; plus a focal-point picker so crops keep the subject. */
-export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAspect, cropRound, purpose = "photo", samples = true, onFramingChange, focalHint = "Click the picture (or use the sliders) to choose the part that should always stay in view." }: {
-  label: string; value: ImageRef | null | undefined; onChange: (v: ImageRef | null) => void; defaultAlt: string; maxEdge?: number; /** When set, a crop step frames the picture at this width/height ratio before it is used. */ cropAspect?: number; cropRound?: boolean; purpose?: "photo" | "identity" | "cover"; samples?: boolean; onFramingChange?: (shape:"logo"|"circle"|"square")=>void; focalHint?: string
+export function ImageField({ presentation = "standard", label, value, onChange, defaultAlt, maxEdge, cropAspect, cropRound, purpose = "photo", samples = true, onFramingChange, focalHint = "Click the picture (or use the sliders) to choose the part that should always stay in view." }: {
+  presentation?: "standard" | "identity"; label: string; value: ImageRef | null | undefined; onChange: (v: ImageRef | null) => void; defaultAlt: string; maxEdge?: number; /** When set, a crop step frames the picture at this width/height ratio before it is used. */ cropAspect?: number; cropRound?: boolean; purpose?: "photo" | "identity" | "cover"; samples?: boolean; onFramingChange?: (shape:"logo"|"circle"|"square")=>void; focalHint?: string
 }) {
   const inputId = React.useId()
   const [busy, setBusy] = React.useState(false)
@@ -182,9 +182,12 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
   const marker = containedImageRect({ width: 160, height: 100 }, value ?? {})
 
   return (
-    <div className="grid gap-2">
-      <p className="text-sm font-medium">{label}</p>
-      {value ? <button type="button" className="flex min-h-24 items-center gap-4 rounded-2xl bg-neutral-50 p-3 text-left" onClick={() => setEditing(true)} aria-label={`Edit image: ${label}`}><span className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-white"><Image src={value.src} alt="" fill sizes="64px" unoptimized className="object-contain" /></span><span className="text-sm font-medium">Edit image<span className="mt-1 block text-xs font-normal text-muted-foreground">Framing and image details</span></span><Pencil aria-hidden="true" className="ml-auto size-4"/></button> : null}
+    <div className={cn("grid gap-2", presentation === "identity" && "setup-identity-upload")}>
+      {presentation === "identity" ? <button type="button" disabled={busy} className="setup-avatar-control" onClick={() => value ? setEditing(true) : document.getElementById(inputId)?.click()} aria-label={value ? `Edit image: ${label}` : label}>
+        <span className="setup-avatar-picture">{value ? <Image src={value.src} alt="" fill sizes="96px" unoptimized className="object-contain p-2" /> : <ImagePlus aria-hidden="true" className="size-7" />}<span className="setup-avatar-plus">{value ? <Pencil aria-hidden="true" className="size-3" /> : "+"}</span></span>
+        <span>{busy ? "Preparing…" : value ? "Edit logo" : "Add your logo"}</span>
+      </button> : <p className="text-sm font-medium">{label}</p>}
+      {value && presentation !== "identity" ? <button type="button" className="flex min-h-24 items-center gap-4 rounded-2xl bg-neutral-50 p-3 text-left" onClick={() => setEditing(true)} aria-label={`Edit image: ${label}`}><span className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-white"><Image src={value.src} alt="" fill sizes="64px" unoptimized className="object-contain" /></span><span className="text-sm font-medium">Edit image<span className="mt-1 block text-xs font-normal text-muted-foreground">Framing and image details</span></span><Pencil aria-hidden="true" className="ml-auto size-4"/></button> : null}
       <Overlay open={editing} onOpenChange={setEditing} title={`Edit image: ${label}`} testId="image-edit-dialog" footer={<Button className="min-h-11 w-full" onClick={() => setEditing(false)}>Done</Button>}>
       {value ? (
         <div className="grid gap-3">
@@ -216,13 +219,14 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
         if (!value) return
         try { const file = original.current ?? new File([await (await fetch(value.src)).blob()], "profile-image.png", { type: value.src.startsWith('data:image/jpeg') ? 'image/jpeg' : 'image/png' }); setEditing(false); setPending(file) } catch { setError("Choose the original file to change its crop.") }
       }}>Change crop or framing</Button>
+      {presentation === "identity" ? <div className="mt-3 flex gap-2"><Button variant="outline" onClick={() => { setEditing(false); document.getElementById(inputId)?.click() }}>Replace picture</Button><Button variant="ghost" onClick={() => { onChange(null); setEditing(false) }}><Trash2 aria-hidden="true" />Remove</Button></div> : null}
       </Overlay>
       <div className="flex flex-wrap gap-2">
-        <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => document.getElementById(inputId)?.click()}><ImagePlus /> {busy ? "Preparing…" : value ? "Replace picture" : "Upload a picture"}</Button>
+        {presentation !== "identity" ? <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => document.getElementById(inputId)?.click()}><ImagePlus /> {busy ? "Preparing…" : value ? "Replace picture" : "Upload a picture"}</Button> : null}
         <input id={inputId} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(e) => { onPick(e.target.files?.[0]); e.target.value = "" }} aria-label={`${label}: upload a picture`} />
         <CropDialog file={pending} aspect={cropAspect ?? 1} round={cropRound} allowOriginal={purpose !== "photo"} title={`Frame: ${label}`} onCancel={() => setPending(null)} onDone={(f,shape) => { if(shape)onFramingChange?.(shape); original.current = pending; setPending(null); void onFile(f) }} />
         {samples ? <Button type="button" variant="ghost" size="sm" onClick={() => setShowSamples((v) => !v)} aria-expanded={showSamples}>Use a sample picture</Button> : null}
-        {value ? <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null)}><Trash2 /> Remove</Button> : null}
+        {value && presentation !== "identity" ? <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null)}><Trash2 /> Remove</Button> : null}
       </div>
       {showSamples ? (
         <ul className="grid grid-cols-4 gap-2" aria-label="Sample pictures">
@@ -236,7 +240,7 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
         </ul>
       ) : null}
       {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
-      {!value ? <p className="text-xs text-muted-foreground">JPG, PNG or WebP. Preview and frame it before adding.</p> : null}
+      {!value && presentation !== "identity" ? <p className="text-xs text-muted-foreground">JPG, PNG or WebP. Preview and frame it before adding.</p> : null}
     </div>
   )
 }

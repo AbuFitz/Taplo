@@ -25,8 +25,8 @@ export function DesignPreview({ scenario, name }: { scenario: string; name: stri
         <Link href={`/appearance/frame?scenario=${scenario}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1.5 rounded-md text-sm font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-ring">Open full page<ArrowUpRight aria-hidden="true" className="size-4" /></Link>
       </div>
       <div className="flex min-h-[30rem] items-center justify-center overflow-hidden rounded-[1.5rem] bg-[#e8e8e5] py-4 sm:px-6 sm:py-7" style={{ height: "min(50rem, 78dvh)" }}>
-        <div className={cn("h-full min-h-0 w-full", view === "phone" ? "max-w-[390px] overflow-hidden rounded-[2rem] shadow-[0_2px_3px_#00000014,0_24px_42px_-18px_#00000047]" : "px-2")}>
-          <PagePreview src={`/appearance/frame?scenario=${scenario}`} title={`${name}, live`} mode={view === "phone" ? "fill" : "desktop"} chrome={false} url={`${name} · example`} testId="design-preview-frame" topInset={80} />
+        <div className={cn("h-full min-h-0 w-full", view === "phone" ? "max-w-[410px]" : "px-2")}>
+          <PagePreview src={`/appearance/frame?scenario=${scenario}`} title={`${name}, live`} mode={view === "phone" ? "device" : "desktop"} chrome={view === "phone"} url={`${name} · example`} testId="design-preview-frame" topInset={80} />
         </div>
       </div>
       <p className="mt-3 text-sm text-foreground/60">Try the page here, or open it at full size. Demo bookings and enquiries stay in this browser.</p>

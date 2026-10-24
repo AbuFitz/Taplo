@@ -72,7 +72,7 @@ export function LiveStage() {
             alt={`${scene.name} business page`}
             width={390}
             fluid
-            frame="none"
+            frame="phone"
             priority
           />
         </div>
