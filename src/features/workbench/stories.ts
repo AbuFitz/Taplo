@@ -72,7 +72,7 @@ add({ id: "enquiry--sent", group: "Forms", title: "Contact form: sent", scenario
 add({ id: "enquiry--button", group: "Forms", title: "Contact button opens a dialog", scenario: "dealer", widgets: [{ type: "enquiry", settings: { title: "Ask about a car", buttonLabel: "Ask about a car", variant: "button" } }], play: [{ click: { role: "button", name: "Ask about a car" } }], shoot: "dialog" })
 
 // ---- Products, vehicles
-for (const variant of ["grid", "list", "swipe"]) {
+for (const variant of ["grid", "list", "swipe", "catalogue"]) {
   both({ id: `products--${variant}`, group: "Products", title: `Products: ${variant}`, scenario: barber, widgets: [{ type: "products", settings: { title: "From the shop", variant } }] })
 }
 add({ id: "products--one", group: "Products", title: "One product", scenario: barber, content: v.one, widgets: [{ type: "products", settings: { variant: "swipe" } }] })
@@ -83,6 +83,9 @@ add({ id: "products--detail-affiliate", group: "Products", title: "Affiliate pro
 for (const variant of ["list", "swipe"]) {
   add({ id: `vehicles--${variant}`, group: "Vehicles", title: `Vehicles: ${variant}`, scenario: "dealer", widgets: [{ type: "products", settings: { title: "In stock", variant } }] })
 }
+both({ id: "vehicles--catalogue", group: "Vehicles", title: "Large vehicle cards", scenario: "brookfield", widgets: [{ type: "products", settings: { title: "Current stock", variant: "catalogue" } }] })
+add({ id: "vehicles--catalogue-desktop", group: "Vehicles", title: "Large stock cards on desktop", scenario: "brookfield", vp: 1280, widgets: [{ type: "products", settings: { title: "Current stock", variant: "catalogue" } }] })
+add({ id: "vehicles--catalogue-one", group: "Vehicles", title: "One large vehicle card", scenario: "brookfield", widgets: [{ type: "products", settings: { variant: "catalogue", productIds: ["am-golf"] } }] })
 add({ id: "vehicles--statuses", group: "Vehicles", title: "Vehicle statuses", scenario: "dealer", content: v.statuses, widgets: [{ type: "products", settings: { variant: "list" } }] })
 add({ id: "vehicles--desktop", group: "Vehicles", title: "Vehicles on a laptop", scenario: "dealer", vp: 1280, widgets: [{ type: "products", settings: { variant: "list" } }] })
 add({ id: "vehicles--detail", group: "Vehicles", title: "Vehicle detail", scenario: "dealer", widgets: [{ type: "products", settings: { variant: "list" } }], play: [{ click: { testid: "product-open", nth: 0 } }], shoot: "dialog" })

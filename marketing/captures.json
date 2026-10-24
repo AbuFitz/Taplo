@@ -503,6 +503,36 @@
         760
       ],
       "dsf": 2
+    },
+    {
+      "id": "ex-brookfield-motors-phone",
+      "url": "/appearance/frame?scenario=brookfield",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        800
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-brookfield-motors-desk",
+      "url": "/appearance/frame?scenario=brookfield",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
     }
   ]
 }

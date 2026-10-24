@@ -23,6 +23,7 @@ export function newWidget(type: WidgetType, settings: Record<string, unknown> = 
 function tune(type: WidgetType, industry: IndustryPreset): Record<string, unknown> {
   const t = industry.terminology;
   switch (type) {
+    case "products": return industry.id === "car-dealer" ? { title: "Current stock", variant: "catalogue" } : {};
     case "serviceList": return { title: t.services, variant: industry.id === "tutor" ? "cards" : "list" };
     case "priceMenu": return { title: t.services };
     case "team": return { title: t.team };
@@ -46,7 +47,6 @@ export function starterWidgets(industryKey: string): StoredWidget[] {
 }
 
 export function newPage(industryKey: string): PageDoc {
-  const industry = getIndustryPreset(industryKey);
   return {
     schemaVersion: 2,
     themeId: getTheme(suggestedLookIds(industryKey)[0]!) ? suggestedLookIds(industryKey)[0]! : DEFAULT_THEME_ID,

@@ -1,5 +1,5 @@
 import type { IndustryId } from "@/features/marketing/ia"
-import { FONT_LABELS } from "@/features/page/themes/fonts"
+import { FONT_LABELS } from "@/features/page/themes/font-metadata"
 import { LOOKS } from "@/features/page/themes/looks"
 import { EXAMPLE_LOOK, EXAMPLE_OVERRIDES } from "@/features/showcase/lab-state"
 import { SCENARIOS, type Scenario } from "@/features/showcase/content"
@@ -22,7 +22,7 @@ export interface Example {
   highlights: string[]
 }
 
-export const EXAMPLES: Example[] = [
+const CATALOGUE: Example[] = [
   {
     slug: "station-road-barbers", scenario: "station", industry: "beauty",
     hook: "A proper local barber. Clear prices, a familiar face and your next haircut sorted.",
@@ -34,6 +34,12 @@ export const EXAMPLES: Example[] = [
     hook: "The work up front. Valeting packages with room to explain what is included.",
     notes: ["A dark workshop palette makes the yellow booking action easy to find.", "Services explain the work before asking for a booking.", "A request allows the business to agree the job and price first."],
     highlights: ["From prices with proper detail", "Appointment requests", "Service area and questions"],
+  },
+  {
+    slug: "brookfield-motors", scenario: "brookfield", industry: "motoring",
+    hook: "An independent forecourt, with the photographs and facts a buyer needs first.",
+    notes: ["Large stock cards give each car room on a phone and pair up on a wider page.", "Available, reserved and sold stay visibly different.", "An enquiry keeps the selected car attached; a viewing is a request for the business to agree."],
+    highlights: ["Readable stock cards", "Clear reserved and sold states", "Enquiries about a particular car"],
   },
   {
     slug: "marlowe-and-finch", scenario: "barber", industry: "beauty",
@@ -79,7 +85,9 @@ export const EXAMPLES: Example[] = [
   },
 ]
 
-export const bySlug = (slug: string) => EXAMPLES.find((e) => e.slug === slug)
+// Superseded example routes remain available; the gallery leads with their new UK replacements.
+export const EXAMPLES = CATALOGUE.filter((e) => e.scenario !== "barber" && e.scenario !== "dealer")
+export const bySlug = (slug: string) => CATALOGUE.find((e) => e.slug === slug)
 
 const WIDGET_NAME: Partial<Record<WidgetType, string>> = {
   booking: "Booking", priceMenu: "Price menu", serviceList: "Services", products: "Products", team: "Team", gallery: "Photos", reviews: "Reviews", hours: "Opening hours",

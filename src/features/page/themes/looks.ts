@@ -15,6 +15,20 @@ export interface Look {
 
 export const LOOKS: Look[] = [
   {
+    id: "forecourt", name: "Forecourt",
+    blurb: "A clear identity, generous photographs and room for the facts. Practical, calm and easy to scan.",
+    overrides: {
+      colors: { background: "#edf2ef", text: "#18332f", muted: "#50635e", surface: "#ffffff", accent: "#123d3a", accentText: "#ffffff", border: "#ccd8d1" },
+      text: { headingFont: "manrope", bodyFont: "inter", size: "md", headingCase: "normal", headingWeight: "bold", align: "left" },
+      background: { kind: "solid", color: "#edf2ef" },
+      header: { layout: "side", avatarShape: "logo", avatarSize: "md", align: "left", actions: "primary", showLocation: true, scrim: "soft" },
+      buttons: { shape: "rounded", fill: "solid", shadow: "none", showIcons: true },
+      cards: { surface: "solid", opacity: 100, radius: "sm", border: "thin", shadow: "none", padding: "comfortable" },
+      layout: { width: "wide", density: "comfortable", desktop: "centered" },
+      decoration: "none", motion: "subtle",
+    },
+  },
+  {
     id: "highstreet", name: "High Street",
     blurb: "Warm paper, inky blue and a picture of the work. Clear prices with a friendly, practical feel.",
     overrides: {

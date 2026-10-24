@@ -19,6 +19,10 @@ type Field = "name" | "email" | "phone" | "message"
  * and in preview mode the confirmation says it was saved in this browser, not sent.
  */
 export function EnquiryForm({ slug, businessName, services, serviceId, topic, item, submitLabel = "Send enquiry", onDone }: { slug: string; businessName: string; services: { id: string; name: string }[]; serviceId?: string; topic?: string; item?: { id: string; kind: "product" | "vehicle" }; submitLabel?: string; onDone?: () => void }) {
+  const formId = React.useId()
+  const serviceFieldId = `${formId}-service`
+  const messageFieldId = `${formId}-message`
+  const messageErrorId = `${formId}-message-error`
   const { update } = useBookingState(slug)
   const [form, setForm] = React.useState({ name: "", email: "", phone: "", message: "", serviceId: serviceId ?? "" })
   const [errors, setErrors] = React.useState<Partial<Record<Field, string>>>({})
@@ -60,17 +64,17 @@ export function EnquiryForm({ slug, businessName, services, serviceId, topic, it
       <TaploInput label="Phone (optional)" type="tel" autoComplete="tel" inputMode="tel" value={form.phone} error={errors.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
       {services.length > 0 && !serviceId && !topic ? (
         <div className="grid gap-1.5">
-          <Label htmlFor="enq-service">About (optional)</Label>
+          <Label htmlFor={serviceFieldId}>About (optional)</Label>
           <Select value={form.serviceId} onValueChange={(v) => setForm({ ...form, serviceId: v === "_" ? "" : v })}>
-            <SelectTrigger id="enq-service" className="min-h-11 w-full"><SelectValue placeholder="Anything in general" /></SelectTrigger>
+            <SelectTrigger id={serviceFieldId} className="min-h-11 w-full"><SelectValue placeholder="Anything in general" /></SelectTrigger>
             <SelectContent position="popper"><SelectItem value="_">Anything in general</SelectItem>{services.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}</SelectContent>
           </Select>
         </div>
       ) : null}
       <div className="grid gap-1.5">
-        <Label htmlFor="enq-message">Your message</Label>
-        <Textarea id="enq-message" rows={4} maxLength={1200} value={form.message} aria-invalid={errors.message ? true : undefined} aria-describedby={errors.message ? "enq-message-err" : undefined} onChange={(e) => setForm({ ...form, message: e.target.value })} />
-        {errors.message ? <p id="enq-message-err" role="alert" className="text-sm text-destructive">{errors.message}</p> : null}
+        <Label htmlFor={messageFieldId}>Your message</Label>
+        <Textarea id={messageFieldId} rows={4} maxLength={1200} value={form.message} aria-invalid={errors.message ? true : undefined} aria-describedby={errors.message ? messageErrorId : undefined} onChange={(e) => setForm({ ...form, message: e.target.value })} />
+        {errors.message ? <p id={messageErrorId} role="alert" className="text-sm text-destructive">{errors.message}</p> : null}
       </div>
       <Button type="submit" className="min-h-12" disabled={status === "sending"}>{status === "sending" ? "Sending…" : submitLabel}</Button>
       <p className="text-xs text-tp-muted">This preview saves the enquiry in this browser. No time is reserved.</p>

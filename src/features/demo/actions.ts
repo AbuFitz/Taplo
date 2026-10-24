@@ -3,6 +3,8 @@ import { normalizeSlug, validateSlug, type SlugProblem } from "@/features/busine
 import { newPage, starterWidgets } from "@/features/page/starter";
 import { getIndustryPreset } from "@/features/themes/presets/industries";
 import { getFixture } from "@/features/themes/fixtures";
+import { DEFAULT_THEME_ID, getTheme } from "@/features/page/themes/catalogue";
+import { suggestedLookIds } from "@/features/themes/presets/look-suggestions";
 import { initialState, parseContent, type DemoState } from "./store";
 
 /**
@@ -12,8 +14,9 @@ import { initialState, parseContent, type DemoState } from "./store";
 export function applyIndustry(s: DemoState, industryKey: string, label?: string): DemoState {
   const prev = getIndustryPreset(s.content.identity.industryKey);
   const next = getIndustryPreset(industryKey);
-  const untouchedWidgets = JSON.stringify(s.page.widgets.map((w) => [w.type, w.hidden, w.appearance])) === JSON.stringify(starterWidgets(prev.id).map((w) => [w.type, w.hidden, w.appearance]));
-  const untouchedTheme = s.page.themeId === prev.suggestedThemeId && Object.keys(s.page.appearance).length === 0;
+  const untouchedWidgets = JSON.stringify(s.page.widgets.map((w) => [w.type, w.hidden, w.appearance, w.settings])) === JSON.stringify(starterWidgets(prev.id).map((w) => [w.type, w.hidden, w.appearance, w.settings]));
+  const previousDefaultLook = getTheme(suggestedLookIds(prev.id)[0]!)?.id ?? DEFAULT_THEME_ID;
+  const untouchedTheme = s.page.themeId === previousDefaultLook && Object.keys(s.page.appearance).length === 0;
   const fresh = newPage(next.id);
   return {
     ...s,

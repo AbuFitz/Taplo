@@ -199,10 +199,10 @@ function ItemAction({ p, vm, compact }: { p: ProductContent; vm: PageViewModel; 
       </div>
     )
   }
-  return <BookingAction {...bookingProps(vm, { label: p.kind === "vehicle" ? "Enquire about this car" : "Ask about this", topic: p.name, item: { id: p.id, kind: p.kind === "vehicle" ? "vehicle" : "product" }, variant: compact ? "compact" : "button" })} />
+  return <BookingAction {...bookingProps(vm, { label: p.kind === "vehicle" ? (p.availability === "reserved" ? "Ask about similar cars" : "Enquire about this car") : "Ask about this", topic: p.name, item: { id: p.id, kind: p.kind === "vehicle" ? "vehicle" : "product" }, variant: compact ? "compact" : "button" })} />
 }
 
-function ProductCard({ p, vm }: { p: ProductContent; vm: PageViewModel }) {
+function ProductCard({ p, vm, large = false }: { p: ProductContent; vm: PageViewModel; large?: boolean }) {
   const images = [p.image, ...p.images].filter((x): x is NonNullable<typeof p.image> => Boolean(x))
   const statusText = p.availability !== "available" ? STATUS_LABEL[p.availability] : null
   const badge = statusText ?? p.badge
@@ -217,7 +217,7 @@ function ProductCard({ p, vm }: { p: ProductContent; vm: PageViewModel }) {
   )
   return (
     <div className="tp-product" data-status={p.availability} data-kind={p.kind}>
-      {p.image ? <div className="tp-media">{badge ? <span className="tp-badge" data-status={statusText ? p.availability : undefined}>{badge}</span> : null}{open(<ProfileImage image={p.image} sizes="(min-width:900px) 20rem, 90vw" />)}</div> : null}
+      {p.image ? <div className="tp-media">{badge ? <span className="tp-badge" data-status={statusText ? p.availability : undefined}>{badge}</span> : null}{open(<ProfileImage image={p.image} sizes={large ? "(min-width:900px) 40vw, 90vw" : "(min-width:900px) 20rem, 90vw"} />)}</div> : null}
       <div className="tp-product-body">
         <p className="tp-product-name">{!p.image && badge ? <span className="tp-badge tp-badge-inline" data-status={statusText ? p.availability : undefined}>{badge}</span> : null}{p.image ? p.name : open(<span>{p.name}</span>)}</p>
         {price ? <p className="tp-product-price">{price}</p> : null}
@@ -247,8 +247,8 @@ function ProductsWidget({ w, vm }: P) {
         <div key={g.name} className={grouped ? "tp-product-group" : undefined}>
           {grouped && g.name ? <h3 className="tp-group-title">{g.name}</h3> : null}
           {s.variant === "swipe" && g.items.length > 1
-            ? <Collection label={g.name || s.title || "Products"}>{g.items.map((p) => <ProductCard key={p.id} p={p} vm={vm} />)}</Collection>
-            : <ul className="tp-products" data-variant={s.variant === "grid" ? "grid" : "list"} data-count={Math.min(g.items.length, 3)}>{g.items.map((p) => <li key={p.id}><ProductCard p={p} vm={vm} /></li>)}</ul>}
+            ? <Collection label={g.name || s.title || "Products"}>{g.items.map((p) => <ProductCard key={p.id} p={p} vm={vm} large={s.variant === "catalogue"} />)}</Collection>
+            : <ul className="tp-products" data-variant={s.variant === "catalogue" ? "catalogue" : s.variant === "grid" ? "grid" : "list"} data-count={Math.min(g.items.length, 3)}>{g.items.map((p) => <li key={p.id}><ProductCard p={p} vm={vm} /></li>)}</ul>}
         </div>
       ))}
     </Card>

@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test"
 import path from "node:path"
+import { EXAMPLES } from "../../src/features/inspiration/examples"
 
 for (const width of [390, 1440]) {
   test(`design preview switches real responsive widths without losing a booking at ${width}px`, async ({ page }) => {
@@ -44,7 +45,7 @@ test("phone gallery leads with designs while filters stay available on demand", 
   await expect(firstImage).toBeInViewport()
   await filters.click()
   await page.getByRole("button", { name: "Dark", exact: true }).click()
-  await expect(page.getByTestId("gallery-count")).toContainText("of 9 designs")
+  await expect(page.getByTestId("gallery-count")).toContainText(`of ${EXAMPLES.length} designs`)
   await page.getByRole("button", { name: "Clear filters", exact: true }).click()
-  await expect(page.getByTestId("design-card")).toHaveCount(9)
+  await expect(page.getByTestId("design-card")).toHaveCount(EXAMPLES.length)
 })

@@ -1,9 +1,10 @@
 import { expect, test, type Page } from "@playwright/test"
 import { PLAN_IDS } from "../../src/features/subscriptions/plans"
 import { resolveEntitlements } from "../../src/features/subscriptions/entitlements"
+import { EXAMPLES } from "../../src/features/inspiration/examples"
 import { PRODUCT_LINKS } from "../../src/features/marketing/ia"
 
-const EXAMPLE_SLUGS = ["station-road-barbers", "parkside-valeting", "marlowe-and-finch", "hollin-physio", "pims-kitchen", "ada-okafor-maths", "forge-strength", "northgate-heating", "aldous-motor-co"]
+const EXAMPLE_SLUGS = ["brookfield-motors", "station-road-barbers", "parkside-valeting", "marlowe-and-finch", "hollin-physio", "pims-kitchen", "ada-okafor-maths", "forge-strength", "northgate-heating", "aldous-motor-co"]
 
 // The marketing site: navigation, product pages, inspiration, pricing, the film and "start from this".
 const noSideScroll = async (page: Page) => expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
@@ -101,7 +102,7 @@ test.describe("inspiration", () => {
   test("the gallery leads with large previews, and filters narrow it by style and by what the page has", async ({ page }) => {
     await page.goto("/inspiration")
     const cards = page.getByTestId("design-card")
-    await expect(cards).toHaveCount(EXAMPLE_SLUGS.length)
+    await expect(cards).toHaveCount(EXAMPLES.length)
     // The first preview is above the fold, not behind an introduction.
     const top = (await cards.first().locator("img").first().boundingBox())!.y
     expect(top).toBeLessThan(900)
@@ -109,14 +110,14 @@ test.describe("inspiration", () => {
     await page.getByRole("button", { name: "Dark", exact: true }).click()
     const dark = await cards.count()
     expect(dark).toBeGreaterThan(0)
-    expect(dark).toBeLessThan(EXAMPLE_SLUGS.length)
+    expect(dark).toBeLessThan(EXAMPLES.length)
     await page.getByRole("button", { name: "Vehicles", exact: true }).click()
     await expect(cards).toHaveCount(0)             // no dark design has vehicle stock
     await page.getByRole("button", { name: "Dark", exact: true }).click()
     await expect(cards).toHaveCount(1)
-    await expect(page.getByRole("heading", { name: "Showroom" })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Forecourt" })).toBeVisible()
     await page.getByRole("button", { name: "Clear filters" }).click()
-    await expect(cards).toHaveCount(EXAMPLE_SLUGS.length)
+    await expect(cards).toHaveCount(EXAMPLES.length)
   })
   test("industry never locks a design: 'Shown with' only changes the example business, and a deep link preselects it", async ({ page }) => {
     await page.goto("/inspiration?industry=food")
@@ -124,7 +125,7 @@ test.describe("inspiration", () => {
     await expect(page.getByTestId("design-card")).toHaveCount(1)
     await expect(page.getByText("Every design works for any business.")).toBeVisible()
     await page.goto("/inspiration?industry=nonsense")
-    await expect(page.getByTestId("design-card")).toHaveCount(EXAMPLE_SLUGS.length)
+    await expect(page.getByTestId("design-card")).toHaveCount(EXAMPLES.length)
   })
   test("phone and desktop previews are two real captures of each page", async ({ page }) => {
     await page.goto("/inspiration")

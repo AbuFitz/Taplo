@@ -79,14 +79,14 @@
       "generator": "built-in image generation tool",
       "generationSource": "exec-d57765d9-7026-4050-b20e-a7b5177d4862.png",
       "created": "2026-10-24 Europe/London",
-      "status": "illustrative-fictional-stock-candidate",
+      "status": "illustrative-fictional-demo",
       "uses": [
-        "Planned Brookfield Motors example stock"
+        "Brookfield Motors fictional stock example",
+        "Current renderer gallery captures"
       ],
       "restrictions": [
         "Not a real vehicle, condition report or active listing",
-        "Generated details do not establish trim or specifications",
-        "Not yet bound to runtime stock"
+        "Generated details do not establish trim or specifications"
       ],
       "brief": "Natural eye-level front three-quarter listing photograph of an ordinary grey Mk8-style Golf at a small UK brick-workshop forecourt, overcast light, blank front plate, no sales overlays or dramatic CGI styling."
     },
@@ -101,14 +101,14 @@
       "generationSource": "exec-b8bfbe78-c211-48ff-af84-ff82dd98c457.png",
       "referenceAsset": "brookfield-golf",
       "created": "2026-10-24 Europe/London",
-      "status": "illustrative-fictional-stock-candidate",
+      "status": "illustrative-fictional-demo",
       "uses": [
-        "Planned Brookfield Motors example stock"
+        "Brookfield Motors fictional stock example",
+        "Current renderer gallery captures"
       ],
       "restrictions": [
         "Not a real vehicle, condition report or active listing",
-        "Generated details do not establish trim or specifications",
-        "Not yet bound to runtime stock"
+        "Generated details do not establish trim or specifications"
       ],
       "brief": "Replace only the reference car while preserving the same ordinary UK forecourt, natural cloudy light, sensible listing-photo perspective and blank front plate."
     },
@@ -123,16 +123,27 @@
       "generationSource": "exec-99b04abb-a3de-4903-ac16-164d979ea798.png",
       "referenceAsset": "brookfield-golf",
       "created": "2026-10-24 Europe/London",
-      "status": "illustrative-fictional-stock-candidate",
+      "status": "illustrative-fictional-demo",
       "uses": [
-        "Planned Brookfield Motors example stock"
+        "Brookfield Motors fictional stock example",
+        "Current renderer gallery captures"
       ],
       "restrictions": [
         "Not a real vehicle, condition report or active listing",
-        "Generated details do not establish trim or specifications",
-        "Not yet bound to runtime stock"
+        "Generated details do not establish trim or specifications"
       ],
       "brief": "Replace only the reference car while preserving the same ordinary UK forecourt, natural cloudy light, sensible listing-photo perspective and blank front plate."
+    },
+    {
+      "id": "brookfield-mark",
+      "file": "/taplo-demo/brookfield-mark.svg",
+      "width": 240,
+      "height": 120,
+      "sourceType": "original-code-native-svg",
+      "status": "fictional-demo-wordmark",
+      "restrictions": [
+        "Not a real business identity or endorsement"
+      ]
     }
   ]
 }

@@ -7,7 +7,7 @@ import { Dialog, NavigationMenu } from "radix-ui"
 import { ArrowRight, ChevronDown, Menu, X } from "lucide-react"
 import { TaploLogo } from "@/components/taplo/brand"
 import { cn } from "@/lib/utils"
-import { INDUSTRY_FILTERS, PRODUCT_GROUPS } from "./ia"
+import { PRODUCT_GROUPS } from "./ia"
 
 const ink = "inline-flex h-10 items-center rounded-md px-3 text-[0.9375rem] font-medium text-foreground/70 outline-none transition-colors hover:bg-foreground/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:bg-foreground/[0.06] data-[state=open]:text-foreground aria-[current=page]:bg-signal-soft aria-[current=page]:text-foreground"
 const primary = "inline-flex min-h-10 items-center rounded-md bg-signal px-4 text-[0.9375rem] font-semibold text-white outline-none transition-colors hover:bg-[#0f25d6] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -45,7 +45,7 @@ export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: str
                   ))}
                   <NavigationMenu.Link asChild><Link href="/inspiration" className="row-span-2 row-start-1 col-start-3 flex flex-col overflow-hidden rounded-lg bg-signal text-white outline-none focus-visible:ring-2 focus-visible:ring-ring">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/marketing/ex-marlowe-and-finch-phone.webp" alt="" width={780} height={1600} className="h-44 w-full object-cover object-top" />
+                    <img src="/marketing/ex-station-road-barbers-phone.webp" alt="" width={780} height={1600} className="h-44 w-full object-cover object-top" />
                     <span className="p-3.5"><span className="block text-sm font-semibold">See finished pages</span><span className="mt-0.5 block text-[0.8125rem] leading-snug text-white/80">Designs to start from, each shown on a real business.</span></span>
                   </Link></NavigationMenu.Link>
                 </div>

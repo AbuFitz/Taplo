@@ -1,7 +1,7 @@
 import type { BusinessContentInput } from "@/features/businesses/content"
 import type { PageDoc } from "@/features/page/contracts/page"
 
-import { PARKSIDE, STATION } from "./uk"
+import { BROOKFIELD, PARKSIDE, STATION } from "./uk"
 import { hours, newWidget, person, photo, svc } from "./helpers"
 import { CAFE, EXTRA_WIDGETS, GYM, PHYSIO, TUTOR } from "./examples"
 
@@ -185,8 +185,18 @@ export const TRADES: BusinessContentInput = {
   booking: { mode: "instant", onlineBookingReady: true },
 }
 
-export type Scenario = "station" | "detailer" | "barber" | "dealer" | "trades" | "physio" | "cafe" | "tutor" | "gym"
+export type Scenario = "brookfield" | "station" | "detailer" | "barber" | "dealer" | "trades" | "physio" | "cafe" | "tutor" | "gym"
 export const SCENARIOS: Record<Scenario, { label: string; content: BusinessContentInput; widgets: () => PageDoc["widgets"] }> = {
+  brookfield: {
+    label: "Independent car dealer", content: BROOKFIELD,
+    widgets: () => [
+      newWidget("booking", { label: "Arrange a viewing", variant: "button" }),
+      newWidget("products", { title: "Current stock", variant: "catalogue" }),
+      newWidget("faq", { title: "Before you visit" }),
+      newWidget("hours", { title: "Opening hours" }),
+      newWidget("enquiry", { title: "Ask about a car", intro: "Tell us which car you have in mind and what you would like to know.", variant: "inline" }),
+    ],
+  },
   station: {
     label: "High-street barber", content: STATION,
     widgets: () => [

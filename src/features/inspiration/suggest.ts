@@ -1,4 +1,4 @@
-import { EXAMPLES } from "./examples"
+import { bySlug } from "./examples"
 import { LOOKS, type Look } from "@/features/page/themes/looks"
 import { SCENARIOS } from "@/features/showcase/content"
 import { EXAMPLE_LOOK, EXAMPLE_OVERRIDES } from "@/features/showcase/lab-state"
@@ -14,7 +14,7 @@ export function suggestedLooks(industryKey: string): Look[] {
 
 /** What "Start from this" needs from an example: the business kind, the look and the content types, never the sample content itself. */
 export function exampleStart(slug: string) {
-  const e = EXAMPLES.find((x) => x.slug === slug)
+  const e = bySlug(slug)
   if (!e) return null
   const sc = SCENARIOS[e.scenario]
   return {

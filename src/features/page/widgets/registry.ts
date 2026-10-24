@@ -73,7 +73,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
   },
   products: {
     type: "products", version: 1, label: "Products", description: "Things you sell.", category: "sales", icon: "ShoppingBag", multiple: true, appearance: ["card"],
-    fields: [TITLE, { kind: "refs", key: "productIds", label: "Which products", source: "products" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "swipe", label: "Swipe sideways" }, { value: "grid", label: "Grid" }, { value: "list", label: "Compact list" }] }],
+    fields: [TITLE, { kind: "refs", key: "productIds", label: "Which products", source: "products" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "catalogue", label: "Large cards" }, { value: "swipe", label: "Swipe sideways" }, { value: "grid", label: "Grid" }, { value: "list", label: "Compact list" }] }],
     status: (_s, c) => (c.business.products.some((p) => !p.archived) ? READY : { state: "empty", reason: "Add a product to show it here.", fix: "products" }),
   },
   offers: {

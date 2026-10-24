@@ -44,7 +44,7 @@ export const settingsSchemas = {
   featuredService: z.object({ serviceId: z.string().max(64).nullable().default(null), headline: label, ctaLabel: label }),
   priceMenu: z.object({ title, serviceIds: ids, showDescriptions: z.boolean().default(false) }),
   booking: z.object({ label, serviceId: z.string().max(64).nullable().default(null), variant: z.enum(["button", "card"]).default("button") }),
-  products: z.object({ title, productIds: ids, variant: z.enum(["grid", "list", "swipe"]).default("grid") }),
+  products: z.object({ title, productIds: ids, variant: z.enum(["grid", "list", "swipe", "catalogue"]).default("grid") }),
   offers: z.object({ title, offerIds: ids }),
   payment: z.object({ label: z.string().trim().max(60).default("Pay a deposit"), serviceId: z.string().max(64).nullable().default(null), kind: z.enum(["deposit", "full", "pay"]).default("deposit") }),
   reviews: z.object({ title, testimonialIds: ids, variant: z.enum(["cards", "quote", "compact", "swipe"]).default("cards"), showRating: z.boolean().default(true) }),

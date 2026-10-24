@@ -664,5 +664,23 @@
     "cssHeight": 760,
     "bytes": 201148,
     "source": "/appearance/frame?scenario=detailer"
+  },
+  "ex-brookfield-motors-phone": {
+    "file": "/marketing/ex-brookfield-motors-phone.webp",
+    "width": 780,
+    "height": 1600,
+    "cssWidth": 390,
+    "cssHeight": 800,
+    "bytes": 130716,
+    "source": "/appearance/frame?scenario=brookfield"
+  },
+  "ex-brookfield-motors-desk": {
+    "file": "/marketing/ex-brookfield-motors-desk.webp",
+    "width": 2200,
+    "height": 1520,
+    "cssWidth": 1100,
+    "cssHeight": 760,
+    "bytes": 282104,
+    "source": "/appearance/frame?scenario=brookfield"
   }
 }
