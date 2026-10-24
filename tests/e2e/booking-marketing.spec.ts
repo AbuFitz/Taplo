@@ -53,7 +53,7 @@ test("reduced motion and keyboard selection retain the real demo", async ({ page
   await page.keyboard.press("ArrowRight");
   await expect(page.getByRole("radio", { name: "Coaching" })).toBeChecked();
   await expect(page.locator(".booking-hero-phone")).toHaveCSS("animation-name", "none");
-  await expect(page.locator(".booking-demo-field .mono-field-light")).toHaveCSS("animation-name", "none");
+  await expect(page.locator(".booking-demo-field .liquid-light")).toHaveAttribute("data-reduced-motion", "true");
   await page.getByRole("button", { name: "Try a booking" }).click();
   await expect(page.getByTestId("booking-flow")).toBeVisible();
   await page.keyboard.press("Escape");

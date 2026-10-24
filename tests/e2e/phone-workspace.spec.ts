@@ -1,22 +1,26 @@
 import { expect, test } from "@playwright/test"
 import path from "node:path"
 
-for (const width of [320, 390, 768, 1440]) test(`shared phone and concise profile keep working through setup at ${width}`, async ({ page }) => {
+for (const width of [320, 390, 768, 1440]) test(`focused profile and shared preview retain state through setup at ${width}`, async ({ page }) => {
   await page.setViewportSize({ width, height: 900 })
   await page.goto("/onboarding")
   const phone = page.locator(".setup-canvas .phone-shell")
   const frame = page.frameLocator('iframe[data-testid="setup-live-page"]')
   await page.getByLabel("Business name", { exact: true }).fill("North Street Studio")
   await page.getByLabel("Short description (optional)", { exact: true }).fill("Independent hair studio in St Albans.")
-  await expect(frame.getByRole("heading", { level: 1 })).toHaveText("North Street Studio")
+  await expect(frame.getByRole("heading", { level: 1, includeHidden:true })).toHaveText("North Street Studio")
   await expect(phone.locator(".phone-island")).toHaveCount(1)
-  const hardware = await phone.boundingBox(), screen = await phone.locator(".phone-screen").boundingBox()
+  const hardware = await phone.evaluate(el=>el.getBoundingClientRect().toJSON()), screen = await phone.locator(".phone-screen").evaluate(el=>el.getBoundingClientRect().toJSON())
   expect(hardware!.width / hardware!.height).toBeCloseTo(402 / 856, 2)
   expect((hardware!.width - screen!.width) / 2).toBeLessThanOrEqual(6.1)
   expect(await frame.locator("html").evaluate(el => getComputedStyle(el).scrollbarWidth)).toBe("none")
   await frame.locator("body").evaluate(el => el.dataset.previewContinuity = "same-page")
   await expect.poll(() => page.locator('iframe[data-testid="setup-live-page"]').evaluate(el => getComputedStyle(el).opacity)).toBe("1")
   await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `profile-phone-${width}.png`) })
+  if (width < 1024) {
+    await expect(page.locator(".setup-workspace>aside")).not.toBeVisible()
+    await expect(page.getByRole("button",{name:"View full size"})).toBeVisible()
+  }
   if (width >= 1024) {
     const workspace = await page.locator("main.setup-flow").boundingBox()
     expect(workspace!.x).toBeGreaterThanOrEqual(30)

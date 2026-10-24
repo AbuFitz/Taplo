@@ -1,21 +1,20 @@
 import { test, expect } from "@playwright/test";
 
-for (const width of [320, 390, 768]) test(`mobile setup has a continuous preview-to-form surface at ${width}`, async ({ page }) => {
+for (const width of [320, 390, 768]) test(`mobile setup gives early decisions the canvas at ${width}`, async ({ page }) => {
   await page.setViewportSize({ width, height: 900 });
+  await page.emulateMedia({ reducedMotion:"reduce" });
   await page.goto("/onboarding");
   await page.getByLabel("Business name", { exact: true }).fill("North Street Studio");
   const form = page.locator(".setup-workspace>section");
-  const preview = page.locator(".setup-workspace>aside");
-  const f = await form.boundingBox(), p = await preview.boundingBox();
-  expect(p!.y + p!.height - f!.y).toBeGreaterThanOrEqual(19);
-  expect(f!.x).toBe(0);
-  expect(f!.width).toBe(width);
-  await expect(form).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  const f = await form.boundingBox();
+  expect(f!.y).toBeLessThan(100);
+  expect(f!.width).toBe(width-40);
+  await expect(page.locator(".setup-workspace>aside")).not.toBeVisible();
+  await expect(page.getByRole("button",{name:"View full size"})).toBeInViewport();
   await expect(page.getByTestId("setup-backdrop")).toBeVisible();
   await expect(page.getByTestId("setup-backdrop").locator("canvas")).toHaveCount(0);
-  await expect(page.getByLabel("Business name", { exact: true })).toHaveCSS("border-top-color", "rgba(0, 0, 0, 0)");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await expect(page.getByTestId("setup-backdrop")).toHaveCSS("--setup-phase", "34%");
+  await expect(page.getByTestId("setup-backdrop")).toHaveAttribute("data-phase", "1");
   await expect(page.getByRole("button", { name: "Continue", exact: true })).toBeInViewport();
 });
 
@@ -43,11 +42,10 @@ test("mobile motion preference changes keep setup intact and stop tonal motion",
   await page.goto("/onboarding");
   await page.getByLabel("Business name", { exact: true }).fill("North Street Studio");
   const field = page.getByTestId("setup-backdrop");
-  await expect(field).toHaveAttribute("data-moving", "true");
-  expect(await field.evaluate(el => getComputedStyle(el, "::before").animationName)).toBe("setup-light-flow");
+  await expect(field.locator(".liquid-light")).toHaveAttribute("data-active", "true");
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(field).toHaveAttribute("data-reduced-motion", "true");
-  expect(await field.evaluate(el => getComputedStyle(el, "::before").animationName)).toBe("none");
+  await expect(field.locator("canvas")).toHaveCount(0);
   await expect(page.getByLabel("Business name", { exact: true })).toHaveValue("North Street Studio");
 });
 

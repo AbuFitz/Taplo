@@ -1,6 +1,7 @@
 "use client"
 
 import { Overlay } from "@/components/taplo/overlay"
+import "./onboarding-mobile.css"
 import { BusinessIcon } from "./BusinessIcon"
 import { SetupDesign } from "./SetupDesign"
 import { SetupDetails } from "./SetupDetails"
@@ -104,8 +105,9 @@ export function Onboarding() {
       shell.current.style.setProperty("--setup-top", `${viewport?.offsetTop ?? 0}px`)
       shell.current.dataset.keyboard = String(Math.max(window.innerHeight, initialHeight) - height > 180 && Boolean(document.activeElement?.matches("input,textarea")))
     }
-    sync(); viewport?.addEventListener("resize", sync); viewport?.addEventListener("scroll", sync); window.addEventListener("resize", sync)
-    return () => { viewport?.removeEventListener("resize", sync); viewport?.removeEventListener("scroll", sync); window.removeEventListener("resize", sync) }
+    const focusSync = () => requestAnimationFrame(sync)
+    sync(); document.addEventListener("focusin",focusSync);document.addEventListener("focusout",focusSync); viewport?.addEventListener("resize", sync); viewport?.addEventListener("scroll", sync); window.addEventListener("resize", sync)
+    return () => { document.removeEventListener("focusin",focusSync);document.removeEventListener("focusout",focusSync);viewport?.removeEventListener("resize", sync); viewport?.removeEventListener("scroll", sync); window.removeEventListener("resize", sync) }
   }, [])
   const router = useRouter()
   const { ready, state, update } = useDemo()
@@ -193,11 +195,11 @@ export function Onboarding() {
   }
 
   return (
-    <div className="setup-scene"><SetupBackdrop phase={stepIndex} /><main ref={shell} data-preview-expanded="false" data-step={step} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
+    <div className="setup-scene"><SetupBackdrop phase={stepIndex} /><main ref={shell} data-preview-expanded="false" data-step={step} data-mobile-layout={step === "widgets" || step === "publish" ? "preview" : "focus"} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
       <nav aria-label="Progress" className="setup-progress mb-4">
         <div className="flex min-h-9 items-center gap-3">
           <div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div>
-          <SandboxBadge compact className="setup-context" /><Link href="/" aria-label="Leave setup" className="grid size-9 shrink-0 place-items-center rounded-full focus-visible:ring-2"><X aria-hidden="true" className="size-4" /></Link>
+          <button type="button" className="setup-mobile-preview" aria-label="View full size" onClick={event => { previewTrigger.current=event.currentTarget;setMobilePreview(true) }}>View full size<ArrowUpRight aria-hidden="true" className="size-3" /></button><SandboxBadge compact className="setup-context" /><Link href="/" aria-label="Leave setup" className="grid size-9 shrink-0 place-items-center rounded-full focus-visible:ring-2"><X aria-hidden="true" className="size-4" /></Link>
         </div>
       </nav>
 
@@ -229,7 +231,7 @@ export function Onboarding() {
                   <TaploInput label="Describe your business" hint="e.g. Dog groomer, Wedding florist, Piano restorer" value={c.identity.industryLabel} maxLength={80} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }), { coalesce: "ind-label" })} />
                 ) : null}
               </div>
-              <details className="text-sm">
+              <details className="setup-sample-businesses text-sm">
                 <summary className="inline-flex min-h-10 cursor-pointer list-none items-center rounded-lg text-muted-foreground underline underline-offset-4 hover:text-foreground [&::-webkit-details-marker]:hidden">Just looking? Open a sample business</summary>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {INDUSTRY_FIXTURE_KEYS.map((k) => (
@@ -291,7 +293,7 @@ export function Onboarding() {
         </section>
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="setup-canvas-heading"><button ref={previewTrigger} type="button" onClick={() => setMobilePreview(true)} className="inline-flex min-h-9 items-center gap-1 rounded-full px-3 text-xs font-medium">View full size<ArrowUpRight aria-hidden="true" className="size-3" /></button></div>
+          <div className="setup-canvas-heading"><button type="button" onClick={event => { previewTrigger.current=event.currentTarget;setMobilePreview(true) }} className="inline-flex min-h-9 items-center gap-1 rounded-full px-3 text-xs font-medium">View full size<ArrowUpRight aria-hidden="true" className="size-3" /></button></div>
           <div className="setup-canvas"><SetupCanvas src="/demo/preview" expanded={false} /></div>
 
         </aside>

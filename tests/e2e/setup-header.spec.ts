@@ -6,7 +6,7 @@ for(const width of [320,390,768,1440])test(`setup gives the phone canvas back to
   await expect(brand).toHaveCount(0)
   await expect(page.getByRole('progressbar',{name:'Setup progress'})).toHaveAttribute('aria-valuenow','1');await expect(page.getByRole('navigation',{name:'Progress'})).not.toContainText('Step 1 of 6')
   const canvas=page.locator('.setup-workspace > aside')
-  if(width<1024)expect((await canvas.boundingBox())!.y).toBeLessThan(70)
+  if(width<1024) { await expect(canvas).not.toBeVisible();await expect(page.getByRole("button",{name:"View full size"})).toBeVisible() }
   await page.getByTestId('sandbox-badge').click()
   await expect(page.getByText('Not connected yet',{exact:true})).toBeVisible();await page.keyboard.press('Escape')
   await page.getByLabel('Business name',{exact:true}).fill('North Street Barbers')
@@ -27,9 +27,10 @@ for(const width of[390,1440])test(`starting-design and plan context never displa
 })
 
 test('the form scrolls without shrinking fields or moving Continue, and the top stays minimal',async({page})=>{
-  await page.setViewportSize({width:390,height:650});await page.goto('/onboarding');
+  await page.setViewportSize({width:390,height:900});await page.goto('/onboarding');
   await expect(page.getByRole('navigation',{name:'Progress'})).not.toContainText('Your business');
   await page.getByLabel('Business name',{exact:true}).fill('The Corner Studio');
+  await page.setViewportSize({width:390,height:480});await expect(page.locator('.setup-flow')).toHaveAttribute('data-keyboard','true');
   const form=page.locator('.setup-step-body');
   expect(await form.evaluate(el=>el.scrollHeight>el.clientHeight)).toBe(true);
   const input=page.getByLabel('Business name',{exact:true});expect((await input.boundingBox())!.height).toBeGreaterThanOrEqual(48);

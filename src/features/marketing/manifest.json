@@ -621,10 +621,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 53608,
+    "bytes": 52718,
     "source": "/onboarding",
-    "sha256": "aa22492dcf47",
-    "capturedAt": "2026-10-24T17:20:38.798Z"
+    "sha256": "80e09d3c9861",
+    "capturedAt": "2026-10-24T18:01:37.829Z"
   },
   "setup-3-start": {
     "file": "/marketing/setup-3-start.webp",
@@ -652,10 +652,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 59244,
+    "bytes": 58376,
     "source": "/onboarding",
-    "sha256": "8cda9d85598a",
-    "capturedAt": "2026-10-24T17:20:40.646Z"
+    "sha256": "991dce633e96",
+    "capturedAt": "2026-10-24T18:01:39.973Z"
   },
   "setup-3-design": {
     "file": "/marketing/setup-3-design.webp",
@@ -663,10 +663,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 120832,
+    "bytes": 119074,
     "source": "/onboarding",
-    "sha256": "c05e6fbf2cdb",
-    "capturedAt": "2026-10-24T17:20:42.863Z"
+    "sha256": "fec4f4dc9333",
+    "capturedAt": "2026-10-24T18:01:42.863Z"
   },
   "setup-4-first": {
     "file": "/marketing/setup-4-first.webp",
@@ -674,10 +674,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 81838,
+    "bytes": 80852,
     "source": "/onboarding",
-    "sha256": "1e18a4bb380f",
-    "capturedAt": "2026-10-24T17:20:44.952Z"
+    "sha256": "56947eb6dbcf",
+    "capturedAt": "2026-10-24T18:01:45.394Z"
   },
   "qr-options": {
     "file": "/marketing/qr-options.webp",
@@ -847,11 +847,11 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 38826,
+    "bytes": 30834,
     "source": "/onboarding",
-    "sha256": "94583a9eaa6a",
-    "capturedAt": "2026-10-24T17:20:48.822Z",
-    "surface": "#fefefe"
+    "sha256": "c8d995f11412",
+    "capturedAt": "2026-10-24T18:01:50.697Z",
+    "surface": "#f3f3f3"
   },
   "setup-2-what-phone": {
     "file": "/marketing/setup-2-what-phone.webp",
@@ -859,11 +859,11 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 43406,
+    "bytes": 32046,
     "source": "/onboarding",
-    "sha256": "37b372a3d275",
-    "capturedAt": "2026-10-24T17:20:50.565Z",
-    "surface": "#fdfdfd"
+    "sha256": "198b0fe9660f",
+    "capturedAt": "2026-10-24T18:01:52.572Z",
+    "surface": "#f3f3f3"
   },
   "setup-3-design-phone": {
     "file": "/marketing/setup-3-design-phone.webp",
@@ -871,11 +871,11 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 53926,
+    "bytes": 62016,
     "source": "/onboarding",
-    "sha256": "799ac6041f75",
-    "capturedAt": "2026-10-24T17:20:52.558Z",
-    "surface": "#f5f5f5"
+    "sha256": "6325295cf09e",
+    "capturedAt": "2026-10-24T18:01:54.727Z",
+    "surface": "#fafafa"
   },
   "setup-4-first-phone": {
     "file": "/marketing/setup-4-first-phone.webp",
@@ -883,11 +883,11 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 45428,
+    "bytes": 45632,
     "source": "/onboarding",
-    "sha256": "c8f68172a1f1",
-    "capturedAt": "2026-10-24T17:20:54.497Z",
-    "surface": "#f6f6f6"
+    "sha256": "a511f39a7caf",
+    "capturedAt": "2026-10-24T18:01:56.744Z",
+    "surface": "#f3f3f3"
   },
   "setup-5-review": {
     "file": "/marketing/setup-5-review.webp",
@@ -895,10 +895,10 @@
     "height": 1720,
     "cssWidth": 1100,
     "cssHeight": 860,
-    "bytes": 132370,
+    "bytes": 131426,
     "source": "/onboarding",
-    "sha256": "2646167ada1d",
-    "capturedAt": "2026-10-24T17:20:47.217Z"
+    "sha256": "b494c6a0b968",
+    "capturedAt": "2026-10-24T18:01:48.602Z"
   },
   "setup-5-review-phone": {
     "file": "/marketing/setup-5-review-phone.webp",
@@ -906,11 +906,11 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 55034,
+    "bytes": 59472,
     "source": "/onboarding",
-    "sha256": "2dedf366e381",
-    "capturedAt": "2026-10-24T17:20:56.531Z",
-    "surface": "#f5f5f5"
+    "sha256": "67ec787b6b90",
+    "capturedAt": "2026-10-24T18:01:58.830Z",
+    "surface": "#fafafa"
   },
   "ex-corner-table-cafe-phone": {
     "file": "/marketing/ex-corner-table-cafe-phone.webp",

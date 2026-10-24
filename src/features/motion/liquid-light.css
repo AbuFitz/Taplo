@@ -1,0 +1,6 @@
+.liquid-light { position:absolute; inset:0; overflow:hidden; pointer-events:none; background:radial-gradient(ellipse at 35% 35%,#eee,#858585 50%,#151515); }
+.liquid-light[data-tone="light"] { background:radial-gradient(ellipse at 30% 30%,#fff,#eee 60%,#ddd); }
+.liquid-light>div,.liquid-light canvas { display:block; width:100%; height:100%; }
+.mono-field>.liquid-light { z-index:-1; }
+.mono-field:has(>.liquid-light)>.mono-field-light { animation:none; opacity:0; }
+.liquid-light[data-tone="dark"][data-contrast="content"] { background:radial-gradient(ellipse at 35% 35%,#383838,#151515 55%,#080808); }
