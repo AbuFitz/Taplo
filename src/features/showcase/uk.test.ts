@@ -7,6 +7,12 @@ import { SCENARIOS, type Scenario } from "./content"
 import { initialConfig, toContent, toPage } from "./lab-state"
 
 describe("current UK business examples", () => {
+  it("new owners never inherit a fictional business's share-button name", () => {
+    for (const slug of [...EXAMPLES.map(e => e.slug), "marlowe-and-finch"]) {
+      for (const w of exampleStart(slug)!.widgets.filter(w => w.type === "share")) expect(w.settings.label).toBeUndefined()
+    }
+    expect(SCENARIOS.station.widgets().find(w => w.type === "share")!.settings.label).toBe("Share Station Road")
+  })
   for (const [slug, scenario] of [["corner-table-cafe", "corner"], ["oakfield-home-repairs", "oakfield"], ["rowan-learning", "rowan"]] as const) {
     it(`${slug} is a real schema-controlled page and a safe starting design`, () => {
       const cfg = initialConfig(scenario)

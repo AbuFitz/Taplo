@@ -8,6 +8,7 @@ import {
   primaryAction,
 } from "@/features/marketing/Site";
 import { SetupStory } from "@/features/marketing/SetupStory";
+import { Walkthroughs } from "@/features/marketing/Walkthroughs";
 export const metadata: Metadata = {
   title: "How it works | Taplo",
   description:
@@ -81,6 +82,9 @@ export default function HowItWorks() {
             phone layout.
           </p>
           <SetupStory />
+        </section>
+        <section aria-label="Product walkthroughs" className="mx-auto max-w-6xl px-5 pb-16 sm:px-8 sm:pb-24">
+          <Walkthroughs />
         </section>
         <section className="border-y border-foreground/15 bg-[#f6f4ec]">
           <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-24">

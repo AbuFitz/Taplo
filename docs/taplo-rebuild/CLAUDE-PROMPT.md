@@ -17,9 +17,10 @@ This branch has moved substantially beyond the research baseline. Read these imp
 - OWNER-ENTRY-AND-CONTENT.md: current UK examples in the owner entry, real-content chooser, atomic creation/undo and browser storage improvements.
 - SAVED-LOOKS-AND-STYLES.md: visual reusable designs, section style previews, non-destructive saved limits and persistent appearance previews.
 - SIX-UK-EXAMPLES-AND-FEATURE-HEADER.md: six current UK starting examples, three new looks, responsive photo/identity header and safe service reference handling.
+- PRODUCT-WALKTHROUGHS.md: complete real setup and customer-booking recordings with an optional guide player and transcripts. Design/stock tutorials remain open.
 - FEED-ADVERTISEMENT.md: separately composed 4:5 advertisement, editable source, playback and export validation.
 
-These notes are evidence pointers, not a claim that the full brief is complete. The remaining catalogue/industry work, engine matrix, media deliverables and complete journey audit stay in scope. The delivery now includes landscape, portrait, square and a separately authored 4:5 feed advertisement. Review their current outputs; short creative beats still do not fulfil the separate full walkthrough requirement.
+These notes are evidence pointers, not a claim that the full brief is complete. The remaining catalogue/industry work, engine matrix, media deliverables and complete journey audit stay in scope. The delivery now includes landscape, portrait, square and a separately authored 4:5 feed advertisement. Review their current outputs; the guide now includes complete setup and booking walkthroughs. Design-editing and stock-enquiry walkthroughs remain open.
 
 ## Read the project and establish the current state
 

@@ -29,6 +29,8 @@ export function exampleStart(slug: string) {
       // References belong to the fictional business. A new owner's sections follow their own records.
       const settings = { ...w.settings } as Record<string, unknown>
       for (const field of getWidget(w.type)?.fields ?? []) if (field.kind === "refs" || field.kind === "record") delete settings[field.key]
+      // A sample may name itself in its share button; a new owner starts with the neutral label.
+      if (w.type === "share") delete settings.label
       return { type: w.type, settings }
     }),
   }

@@ -1,0 +1,102 @@
+{
+  "setup": {
+    "title": "Make your first page",
+    "file": "/marketing/walkthroughs/setup.mp4",
+    "poster": "/marketing/walkthroughs/setup-poster.webp",
+    "width": 780,
+    "height": 1928,
+    "duration": 25.92,
+    "fps": "25/1",
+    "bytes": 1731080,
+    "sha256": "0268e6554107a8b9cd4afe31388dd2ba26dde710bcb3de82b643ae4fe5fb97e4",
+    "recordedAt": "2026-10-24T04:22:21.953Z",
+    "source": "/onboarding?from=station-road-barbers",
+    "chapters": [
+      {
+        "seconds": 0,
+        "title": "Give it your name",
+        "line": "Start from a design. Use your own business details."
+      },
+      {
+        "seconds": 4,
+        "title": "Say what you do",
+        "line": "The example suggests Barber. You can change it."
+      },
+      {
+        "seconds": 7.2,
+        "title": "Choose a starting look",
+        "line": "High Street is selected. Every look stays editable."
+      },
+      {
+        "seconds": 11.2,
+        "title": "Add a real offering",
+        "line": "A haircut, its price and the time it takes."
+      },
+      {
+        "seconds": 15.3,
+        "title": "Review before you continue",
+        "line": "Check your page. Publishing is still a preview."
+      },
+      {
+        "seconds": 19.8,
+        "title": "Keep making it yours",
+        "line": "Your draft is now in the editor, saved in this browser."
+      }
+    ],
+    "outcome": {
+      "name": "Cedar Road Barbers",
+      "service": "Haircut",
+      "storage": "browser-only"
+    }
+  },
+  "booking": {
+    "title": "From a service to a booking",
+    "file": "/marketing/walkthroughs/booking.mp4",
+    "poster": "/marketing/walkthroughs/booking-poster.webp",
+    "width": 780,
+    "height": 1928,
+    "duration": 29.08,
+    "fps": "25/1",
+    "bytes": 1540315,
+    "sha256": "0ff5158d837894043b118041cee6a86888531baf17c3f335b7a49a873b599663",
+    "recordedAt": "2026-10-24T04:22:52.630Z",
+    "source": "/appearance/frame?scenario=station",
+    "chapters": [
+      {
+        "seconds": 0,
+        "title": "Start with the service",
+        "line": "See the actual price and what the haircut includes."
+      },
+      {
+        "seconds": 6.2,
+        "title": "Choose who you see",
+        "line": "Pick a barber, or use anyone available."
+      },
+      {
+        "seconds": 8.9,
+        "title": "Find a time",
+        "line": "Choose from the working preview calendar."
+      },
+      {
+        "seconds": 12.9,
+        "title": "Leave your details",
+        "line": "A name and email. No payment is taken here."
+      },
+      {
+        "seconds": 17.3,
+        "title": "Check before confirming",
+        "line": "The service, person, time and price are together."
+      },
+      {
+        "seconds": 22,
+        "title": "See the actual outcome",
+        "line": "This example booking is saved only in this browser."
+      }
+    ],
+    "outcome": {
+      "service": "Haircut",
+      "status": "confirmed",
+      "storage": "browser-only"
+    }
+  }
+}
