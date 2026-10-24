@@ -244,6 +244,7 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
       "data-header": spec.header.layout,
       "data-desktop": spec.layout.desktop,
       "data-density": spec.layout.density,
+      "data-rhythm": spec.layout.rhythm ?? "even",
       "data-card-surface": spec.cards.surface,
       "data-btn-fill": spec.buttons.fill,
       "data-btn-icons": spec.buttons.showIcons ? "on" : "off",

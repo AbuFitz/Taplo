@@ -5,7 +5,7 @@ import { TaploLogo } from "@/components/taplo/brand"
 import * as React from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Camera, Dumbbell, Check, Plus, Trash2, Scissors, Wrench, Car, Coffee, GraduationCap, Building2, CalendarDays, MessageSquare, Phone, Mail } from "lucide-react"
+import { Camera, Dumbbell, Check, Plus, Trash2, Scissors, Wrench, Car, CarFront, Coffee, GraduationCap, Building2, CalendarDays, MessageSquare, Phone, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { LOCATION_MODES } from "@/features/businesses/content"
@@ -188,8 +188,8 @@ export function Onboarding() {
                     return (
                       <li key={p.id}>
                         <button type="button" aria-pressed={selected} onClick={() => { setOtherOpen(p.id === OTHER_INDUSTRY_ID); update((x) => applyIndustry(x, p.id, p.id === OTHER_INDUSTRY_ID ? "" : p.label)) }}
-                          className={cn("setup-industry relative flex min-h-28 w-full flex-col items-start justify-between gap-3 rounded-xl border bg-card p-4 text-left text-sm font-semibold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring hover:border-signal", selected && "border-signal bg-signal-soft text-foreground")}>
-                          <IndustryPicture id={p.id} />{selected ? <Check aria-hidden="true" className="absolute right-3 top-3 size-4 text-signal" /> : null}<span>{p.label}</span>
+                          className={cn("setup-industry relative flex min-h-28 w-full flex-col items-start justify-between gap-3 rounded-2xl p-4 text-left text-sm font-semibold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", selected ? "bg-[#111111] text-white" : "bg-[#f5f5f5] hover:bg-[#ededed]")}>
+                          <IndustryIcon id={p.id} />{selected ? <Check aria-hidden="true" className="absolute right-3 top-3 size-4 text-current" /> : null}<span>{p.label}</span>
                         </button>
                       </li>
                     )
@@ -269,9 +269,9 @@ export function Onboarding() {
         </section>
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="hidden rounded-2xl bg-[#ededed] p-7 lg:block"><p className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#111111]"><span className="size-1.5 rounded-full bg-current" />Your page, taking shape</p><PreviewFrame height={650} /></div>
+          <div className="hidden lg:block"><p className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#111111]"><span className="size-1.5 rounded-full bg-current" />Your page, taking shape</p><PreviewFrame height={650} presentation="canvas" /></div>
           <div className={cn("lg:hidden", step === "widgets" && "setup-live-choice")}>
-            {step === "widgets" ? <PreviewFrame height={360} /> : <><Button variant="outline" onClick={() => setMobilePreview((v) => !v)} aria-expanded={mobilePreview}>{mobilePreview ? "Hide preview" : "Show my page"}</Button>
+            {step === "widgets" ? <PreviewFrame height={360} presentation="canvas" /> : <><Button variant="outline" onClick={() => setMobilePreview((v) => !v)} aria-expanded={mobilePreview}>{mobilePreview ? "Hide preview" : "Show my page"}</Button>
             {mobilePreview ? <div className="mt-3"><PreviewFrame /></div> : null}</>}
           </div>
         </aside>
@@ -296,14 +296,14 @@ function LookPicker({ industryKey, themeId, onPick }: { industryKey: string; the
     )
   }
   return (
-    <fieldset className="grid gap-3" data-testid="look-picker">
+    <fieldset className="setup-look-picker grid gap-3" data-testid="look-picker">
       <legend className="mb-1 text-lg font-semibold">Pick a look</legend>
       <p className="-mt-1 text-sm text-muted-foreground">Tap a design. Watch your page change. Everything can be customised later.</p>
       <div className="grid grid-cols-3 gap-3 pb-2">{looks.slice(0, 6).map(card)}</div>
-      <details className="group">
+      {looks.length > 6 ? <details className="group">
         <summary className="inline-flex min-h-10 cursor-pointer list-none items-center rounded-lg text-sm font-medium underline underline-offset-4 [&::-webkit-details-marker]:hidden">More looks</summary>
         <div className="mt-3 grid grid-cols-3 gap-3 pb-2">{looks.slice(6).map(card)}</div>
-      </details>
+      </details> : null}
     </fieldset>
   )
 }
@@ -476,8 +476,7 @@ function PublishStep({ onEditor }: { onEditor: () => void }) {
   )
 }
 
-function IndustryPicture({ id }: { id: string }) {
-  const photo = id === "barber" || id === "hairdresser" ? "/taplo-demo/station-road-barber-work.png" : id === "detailer" || id === "mechanic" ? "/taplo-demo/stillwater-hero.png" : id === "car-dealer" ? "/taplo-demo/brookfield-golf.png" : null
-  const Icon = id === "barber" || id === "hairdresser" ? Scissors : id === "hospitality" ? Coffee : id === "tutor" ? GraduationCap : id === "photographer" ? Camera : id === "personal-trainer" ? Dumbbell : id === "car-dealer" ? Car : id === "plumber" || id === "electrician" || id === "builder" ? Wrench : Building2
-  return photo ? <span className="block h-16 w-full overflow-hidden rounded-lg">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={photo} alt="" width={160} height={80} className="size-full object-cover" /></span> : <span className="relative grid h-16 w-full place-items-center overflow-hidden rounded-lg bg-[#ededed] text-[#111111]"><span className="absolute -bottom-5 -right-4 size-20 rounded-full bg-[#ffffff]" /><span className="absolute -left-3 top-2 h-12 w-20 -rotate-12 rounded-xl bg-[#d4d4d4]" /><span className="relative grid size-12 rotate-6 place-items-center rounded-xl bg-white shadow-[4px_4px_0_#11111130]"><Icon aria-hidden="true" className="size-7" /></span></span>
+function IndustryIcon({ id }: { id: string }) {
+  const Icon = id === "barber" || id === "hairdresser" ? Scissors : id === "hospitality" ? Coffee : id === "tutor" ? GraduationCap : id === "photographer" ? Camera : id === "personal-trainer" ? Dumbbell : id === "car-dealer" ? Car : id === "detailer" ? CarFront : ["mechanic", "plumber", "electrician", "builder"].includes(id) ? Wrench : Building2
+  return <Icon aria-hidden="true" className="size-7" strokeWidth={1.6} />
 }

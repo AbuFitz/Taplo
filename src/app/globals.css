@@ -251,14 +251,22 @@
   .setup-flow { padding-bottom: 6rem; }
   .setup-flow > header { margin-bottom: 2rem; }
   .setup-next { position: sticky; bottom: 0; z-index: 20; margin-inline: -1.25rem; padding: 1rem 1.25rem max(1rem, env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: #fffffff5; backdrop-filter: blur(16px); }
+  /* One bounded design workspace: the chooser scrolls independently of the live canvas. */
+  .setup-flow[data-step="widgets"] { height: 100dvh; min-height: 36rem; display: grid; grid-template-rows: auto auto minmax(0, 1fr); padding-block: 1rem 0; overflow: hidden; }
+  .setup-flow[data-step="widgets"] > header { margin-bottom: 1rem; }
   .setup-flow[data-step="widgets"] > nav { margin-bottom: 1rem; }
-  .setup-flow[data-step="widgets"] > div > aside { order: -1; }
-  .setup-flow[data-step="widgets"] > div { gap: 0; }
-  .setup-flow[data-step="widgets"] > div > section { position: relative; z-index: 2; margin: -1.5rem -1.25rem 0; padding: 1.75rem 1.25rem 0; border-radius: 2rem 2rem 0 0; background: white; box-shadow: 0 -8px 30px #00000012; }
-  .setup-flow[data-step="widgets"] #step-title { font-size: 1.75rem; margin-bottom: 1rem; }
-  .setup-live-choice { height: 23rem; margin-inline: -1.25rem; padding: 1rem 2rem 0; overflow: hidden; background: #111111; }
+  .setup-flow[data-step="widgets"] > div { min-height: 0; grid-template-rows: minmax(8rem, 32%) minmax(0, 1fr); gap: 0; }
+  .setup-flow[data-step="widgets"] > div > aside { order: -1; min-height: 0; overflow: hidden; }
+  .setup-flow[data-step="widgets"] > div > section { min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; padding-top: 1rem; background: white; }
+  .setup-flow[data-step="widgets"] #step-title { font-size: 1.75rem; margin-bottom: .75rem; }
+  .setup-look-picker { min-height: 0; display: block; overflow-y: auto; overscroll-behavior-y: contain; padding: .25rem; scroll-padding-block: 1rem; }
+  .setup-look-picker > legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .setup-look-picker > p { margin-bottom: 1rem; }
+  .setup-live-choice { height: 100%; overflow: hidden; }
+  .setup-live-choice > div, .setup-live-choice [data-preview-stage] { height: 100% !important; }
   .setup-live-choice > div > div:first-child { display: none; }
-  .setup-live-choice iframe { border-radius: 1.25rem 1.25rem 0 0; }
+  .setup-flow[data-step="widgets"] .setup-next { position: static; margin-block: 0; border: 0; }
+
 }
 .setup-loading-art { position: relative; width: 230px; height: 160px; margin-inline: auto; perspective: 600px; }
 .setup-loading-art i { position: absolute; top: 15px; left: 70px; width: 100px; height: 135px; border-radius: 12px; border: 2px solid #080808; background: #111111; transform: rotate(-14deg) translateX(-45px); animation: setup-fan 1.3s ease-in-out infinite alternate; }

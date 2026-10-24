@@ -916,11 +916,48 @@ export const LOOKS: Look[] = [
     header: { layout: "side", avatarShape: "rounded" }, cards: { radius: "md", padding: "roomy" },
     layout: { desktop: "split", width: "wide" }, motion: "lively",
   }),
+  composition("open", "Studio", "Photography first. An open introduction and generous space between sections.", "clean", {
+    colors: { background: "#ffffff", text: "#111111", muted: "#616161", surface: "#f5f5f5", accent: "#111111", accentText: "#ffffff", border: "#dedede" },
+    background: { kind: "solid", color: "#ffffff" },
+    text: { headingFont: "inter", bodyFont: "inter", headingCase: "normal", headingWeight: "bold", size: "md", align: "left" },
+    header: { layout: "feature", avatarShape: "logo", align: "left", actions: "primary" },
+    buttons: { shape: "pill", shadow: "none" },
+    cards: { surface: "transparent", radius: "lg", border: "none", shadow: "none", padding: "comfortable" },
+    layout: { desktop: "centered", width: "wide", density: "comfortable", rhythm: "editorial" }, motion: "subtle",
+  }),
+  composition("service", "Service", "A compact profile, clear prices and the next action within reach.", "clean", {
+    colors: { background: "#ffffff", text: "#111111", muted: "#616161", surface: "#f5f5f5", accent: "#111111", accentText: "#ffffff", border: "#dedede" },
+    background: { kind: "solid", color: "#ffffff" },
+    text: { headingFont: "inter", bodyFont: "inter", headingCase: "normal", headingWeight: "bold", size: "md", align: "left" },
+    header: { layout: "side", avatarShape: "rounded", avatarSize: "sm", align: "left", actions: "primary" },
+    buttons: { shape: "pill", shadow: "none" },
+    cards: { surface: "soft", radius: "lg", border: "none", shadow: "none", padding: "comfortable" },
+    layout: { desktop: "split", width: "wide", density: "compact", rhythm: "tight" }, motion: "subtle",
+  }),
+  composition("personal", "Personal", "A centred introduction with a clear, focused flow through your page.", "clean", {
+    colors: { background: "#ffffff", text: "#111111", muted: "#616161", surface: "#f5f5f5", accent: "#111111", accentText: "#ffffff", border: "#dedede" },
+    background: { kind: "solid", color: "#ffffff" },
+    text: { headingFont: "inter", bodyFont: "inter", headingCase: "normal", headingWeight: "bold", size: "md", align: "center" },
+    header: { layout: "centered", avatarShape: "circle", avatarSize: "md", align: "center", actions: "primary" },
+    buttons: { shape: "pill", shadow: "none" },
+    cards: { surface: "solid", radius: "lg", border: "none", shadow: "none", padding: "comfortable" },
+    layout: { desktop: "centered", width: "regular", density: "comfortable", rhythm: "even" }, motion: "subtle",
+  }),
+  composition("ink", "Midnight", "Neutral black, a quiet profile and softly separated sections.", "night", {
+    colors: { background: "#000000", text: "#ffffff", muted: "#ababab", surface: "#161616", accent: "#ffffff", accentText: "#000000", border: "#303030" },
+    background: { kind: "solid", color: "#000000" },
+    text: { headingFont: "inter", bodyFont: "inter", headingCase: "normal", headingWeight: "bold", size: "md", align: "left" },
+    header: { layout: "minimal", avatarShape: "logo", align: "left", actions: "primary" },
+    buttons: { shape: "pill", shadow: "none" },
+    cards: { surface: "solid", radius: "lg", border: "none", shadow: "none", padding: "comfortable" },
+    layout: { desktop: "split", width: "wide", density: "comfortable", rhythm: "even" }, motion: "subtle",
+  }),
   ...EXISTING_LOOKS,
 ];
 
 /** Discovery uses the new direction. Earlier configurations remain resolvable for saved pages. */
-export const CURRENT_LOOKS = LOOKS.filter(l => [...SPOTLIGHT_LOOK_IDS, "clean", "night", "colour", "photo", "journal", "forge"].includes(l.id));
+export const STARTER_LOOKS = ["open", "service", "personal", "ink"].map(id => LOOKS.find(l => l.id === id)!);
+export const CURRENT_LOOKS = [...STARTER_LOOKS, ...LOOKS.filter(l => [...SPOTLIGHT_LOOK_IDS, "clean", "night", "colour", "photo", "journal", "forge"].includes(l.id))];
 
 /* ---- Radix-derived palettes: coordinated neutral + accent, light and dark ---- */
 type Scale = Record<string, string>;

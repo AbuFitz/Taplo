@@ -1,22 +1,10 @@
-/**
- * Looks worth showing first for a kind of business. Suggestions only: every look stays available, and the order never
- * hides one. The first is where a new page starts if the owner changes nothing. Pure data (no UI), so the page model can use it.
- */
+/** New pages start from a neutral composition. Saved designs remain available by their existing IDs. */
 const GROUPS: { ids: string[]; looks: string[] }[] = [
-  { ids: ["handyman"], looks: ["blueprint", "apex", "voltage", "clean"] },
-  { ids: ["barber"], looks: ["voltage", "apex", "photo", "journal"] },
-  { ids: ["detailer"], looks: ["apex", "ultraviolet", "blueprint", "photo"] },
-  { ids: ["hairdresser", "nails", "lashes-brows", "beauty-therapist", "massage", "makeup", "tattoo", "photographer"], looks: ["folio", "night", "photo", "clay"] },
-  { ids: ["plumber", "electrician", "builder", "landscaper", "cleaner", "locksmith", "removals", "handyman", "pest-control", "mechanic"], looks: ["colour", "clean", "showroom", "forge"] },
-  { ids: ["tutor", "music-teacher", "language-teacher", "coach", "driving-instructor"], looks: ["signal", "blueprint", "minted", "journal"] },
-  { ids: ["personal-trainer", "sports-coach"], looks: ["forge", "orchard", "night", "clean"] },
-  { ids: ["consultant", "accountant", "solicitor", "architect", "financial-adviser", "estate-agent", "web-designer"], looks: ["journal", "clean", "showroom", "night"] },
-  { ids: ["dentist", "physio", "vet"], looks: ["journal", "clean", "orchard", "clay"] },
-  { ids: ["hospitality", "event-services"], looks: ["minted", "voltage", "apex", "clean"] },
-  { ids: ["car-dealer"], looks: ["ultraviolet", "apex", "blueprint", "journal"] },
+  { ids: ["barber", "plumber", "electrician", "builder", "handyman", "mechanic", "cleaner", "locksmith"], looks: ["service", "open", "personal", "ink"] },
+  { ids: ["detailer", "car-dealer", "photographer", "architect", "hospitality"], looks: ["open", "service", "personal", "ink"] },
+  { ids: ["tutor", "music-teacher", "coach", "personal-trainer", "consultant"], looks: ["personal", "service", "open", "ink"] },
 ]
-export const DEFAULT_LOOKS = ["clean", "journal", "night", "colour"]
-
+export const DEFAULT_LOOKS = ["service", "open", "personal", "ink"]
 export function suggestedLookIds(industryKey: string): string[] {
   return GROUPS.find((x) => x.ids.includes(industryKey))?.looks ?? DEFAULT_LOOKS
 }

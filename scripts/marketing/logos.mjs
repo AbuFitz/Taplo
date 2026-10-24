@@ -43,7 +43,7 @@ console.log(Object.keys(out).length, "logos")
 // Lead design examples: compact, outlined wordmarks coordinated with each page.
 const wide = (bg, body, width = 240) => `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="120" viewBox="0 0 ${width} 120"><rect width="${width}" height="120" fill="${bg}"/>${body}</svg>\n`
 const lead = {
-  'station-road-mark': wide('#1645ff', text(F.grotesk, 'JAY’S', 49, 120, 61, '#ffffff', -.035) + text(F.lexend, 'BARBERS', 16, 120, 91, '#ffffff', .22)),
+  'station-road-mark': wide('#111111', text(F.grotesk, 'JAY’S', 49, 120, 61, '#ffffff', -.035) + text(F.lexend, 'BARBERS', 16, 120, 91, '#ffffff', .22)),
   'parkside-mark': wide('#080a0e', text(F.grotesk, 'DETAIL', 38, 120, 53, '#bcff3b', -.025) + text(F.grotesk, 'DEPT.', 38, 120, 91, '#ffffff', -.025)),
   'brookfield-mark': wide('#ffffff', text(F.grotesk, 'HARRIS', 40, 120, 55, '#111827', -.03) + rule(37, 70, 166, '#1645ff', 4) + text(F.grotesk, 'CARS', 18, 120, 100, '#111827', .32)),
   'corner-table-mark': wide('#baffeb', text(F.grotesk, 'No. 6', 61, 140, 65, '#061d24', -.045) + text(F.grotesk, 'COFFEE', 17, 140, 98, '#1645ff', .22), 280),

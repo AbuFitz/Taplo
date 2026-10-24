@@ -97,7 +97,7 @@ export function useAppearanceModel(host: AppearanceHost): AppearanceModel {
     }
     const totalChanges = (["colors", "text", "header", "buttons", "cards", "layout"] as Group[]).reduce((n, g) => n + keysOf(overrides, g).length, 0) + count("background", "decoration", "motion")
     return {
-      ...host, resolved, spec: resolved.spec, look, looks: THEMES.filter(t => CURRENT_LOOKS.some(l => l.id === t.id) || t.id === look.id), has, count, reset, resetGroup, patch, setBackground, setPageColour, applyLook,
+      ...host, resolved, spec: resolved.spec, look, looks: [...CURRENT_LOOKS.map(l => THEMES.find(t => t.id === l.id)!), ...(!CURRENT_LOOKS.some(l => l.id === look.id) ? [look] : [])], has, count, reset, resetGroup, patch, setBackground, setPageColour, applyLook,
       resetAll: () => setAppearance(themeId, {}), totalChanges,
     }
   }, [host, resolved, look, overrides, themeId, apply, setAppearance, notify])

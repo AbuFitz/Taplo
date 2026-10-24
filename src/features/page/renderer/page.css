@@ -63,6 +63,12 @@ html:has([data-taplo-page]) { scrollbar-width: thin; scrollbar-color: color-mix(
 /* ---------- page frame: one column on phones; three considered desktop arrangements ---------- */
 .tp-frame { width: 100%; margin-inline: auto; max-width: var(--tp-width); padding: 1rem 1rem 3.5rem; display: grid; gap: calc(var(--tp-gap) * 1.75); }
 .tp-widgets { display: grid; gap: var(--tp-gap); align-content: start; min-width: 0; }
+/* Rhythm belongs to the page; individual section surfaces and overrides remain independent. */
+[data-rhythm="editorial"] .tp-frame { row-gap: var(--tp-s-7); }
+[data-rhythm="editorial"] .tp-widgets { gap: var(--tp-s-7); }
+[data-rhythm="editorial"] .tp-widget:is([data-widget="gallery"], [data-widget="team"], [data-widget="products"]) + .tp-widget { margin-top: var(--tp-s-3); }
+[data-rhythm="tight"] .tp-frame { row-gap: var(--tp-s-5); }
+[data-rhythm="tight"] .tp-widgets { gap: var(--tp-s-3); }
 @media (min-width: 900px) {
   [data-desktop="centered"] .tp-frame { padding-top: 3rem; max-width: calc(var(--tp-width-desktop) + 4rem); }
   /* The same page, wider: people sit two across and the cover widens; nothing is reordered. */
@@ -91,6 +97,7 @@ html:has([data-taplo-page]) { scrollbar-width: thin; scrollbar-color: color-mix(
 .tp-avatar[data-size="lg"] { width: 8rem; height: 8rem; font-size: 2.4rem; }
 .tp-avatar[data-shape="circle"] { border-radius: 999px; }
 .tp-avatar[data-shape="rounded"] { border-radius: 28%; }
+.tp-avatar[data-shape="logo"] { border-radius: 1rem; box-shadow: none; }
 .tp-avatar[data-shape="square"] { border-radius: 0.25rem; }
 .tp-avatar[data-shape="arch"] { border-radius: 999px 999px 0.75rem 0.75rem; height: calc(var(--av-h, 8rem) * 1.2); }
 .tp-avatar[data-shape="arch"][data-size="sm"] { --av-h: 4.25rem; } .tp-avatar[data-shape="arch"][data-size="md"] { --av-h: 6rem; }

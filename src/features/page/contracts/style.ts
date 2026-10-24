@@ -97,6 +97,7 @@ export const cardsSchema = z.object({
 export const layoutSchema = z.object({
   width: z.enum(["narrow", "regular", "wide"]),
   density: z.enum(["compact", "comfortable"]),
+  rhythm: z.enum(["even", "editorial", "tight"]).optional(),
   /** Phones are always a single column. */
   desktop: z.enum(["centered", "split", "columns"]),
 });

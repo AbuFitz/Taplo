@@ -122,8 +122,8 @@ export function UrlField({ label, value, onCommit, validate, help, autoFocus = f
  * the shared PagePreview controller. Phone shows a device-sized viewport; Desktop shows a readable
  * desktop viewport that fits the space, or at actual size (scrollable).
  */
-export function PreviewFrame({ className, height = 640, fill = false, selection, onSelect, initialDevice = "mobile" }: {
-  className?: string; height?: number
+export function PreviewFrame({ className, height = 640, fill = false, selection, onSelect, initialDevice = "mobile", presentation = "device" }: {
+  className?: string; height?: number; presentation?: "device" | "canvas"
   /** Take the height left in the window instead of a fixed `height`. */
   fill?: boolean
   /** When `onSelect` is given the preview opens in edit mode: clicking the page selects what was clicked. */
@@ -131,6 +131,15 @@ export function PreviewFrame({ className, height = 640, fill = false, selection,
 }) {
   const [device, setDevice] = React.useState<"mobile" | "desktop">(initialDevice)
   const [zoom, setZoom] = React.useState<"fit" | "actual">("fit")
+  const [narrow, setNarrow] = React.useState(false)
+  React.useEffect(() => {
+    const media = window.matchMedia("(max-width: 1023px)")
+    const sync = () => setNarrow(media.matches)
+    sync()
+    media.addEventListener("change", sync)
+    return () => media.removeEventListener("change", sync)
+  }, [])
+  const canvas = presentation === "canvas"
   const editing = Boolean(onSelect)
   const seg = (on: boolean) => cn("min-h-8 rounded-[0.625rem] px-3 text-xs font-medium transition-colors", on ? "bg-white text-foreground shadow-[0_1px_2px_rgb(0_0_0/0.16)]" : "text-muted-foreground hover:text-foreground")
   return (
@@ -142,20 +151,20 @@ export function PreviewFrame({ className, height = 640, fill = false, selection,
               <button key={d} type="button" aria-pressed={device === d} onClick={() => setDevice(d)} className={seg(device === d)}>{d === "mobile" ? "Phone" : "Desktop"}</button>
             ))}
           </div>
-          <div role="group" aria-label="Preview zoom" className="inline-flex rounded-xl bg-black/[0.06] p-0.5">
+          {!canvas ? <div role="group" aria-label="Preview zoom" className="inline-flex rounded-xl bg-black/[0.06] p-0.5">
               {(["fit", "actual"] as const).map((z) => (
                 <button key={z} type="button" aria-pressed={zoom === z} onClick={() => setZoom(z)} className={seg(zoom === z)}>{z === "fit" ? "Fit" : "Actual size"}</button>
               ))}
-            </div>
+            </div> : null}
         </div>
         <a className="text-xs font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline" href="/demo/preview" target="_blank" rel="noreferrer">Open full preview</a>
       </div>
-      <div style={fill ? { height: "max(32rem, calc(100dvh - 9rem))" } : { height }}>
+      <div data-preview-stage style={fill ? { height: "max(32rem, calc(100dvh - 9rem))" } : { height }}>
         <PagePreview
-          mode={device === "mobile" ? "device" : "desktop"}
+          mode={canvas && narrow && device === "mobile" ? "fill" : device === "mobile" ? "device" : "desktop"}
           device={{ w: 390, h: 844 }}
-          zoom={zoom}
-          chrome
+          zoom={canvas ? "fit" : zoom}
+          chrome={!canvas}
           src={editing ? "/demo/preview?edit=1" : "/demo/preview"}
           title="Live preview of your page"
           edit={onSelect && selection ? { selection, onSelect } : undefined}
