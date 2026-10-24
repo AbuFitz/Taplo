@@ -39,6 +39,8 @@ export interface PagePreviewProps {
   onViewport?: (v: PreviewViewport) => void
   className?: string
   testId?: string
+  /** Decorative thumbnails cannot receive clicks or keyboard focus. */
+  interactive?: boolean
 }
 
 const MIN_DESKTOP = 1024
@@ -62,7 +64,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId }: PagePreviewProps) {
+export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, interactive = true }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
@@ -105,10 +107,13 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
     <iframe
       ref={setFrame}
       title={title}
+      tabIndex={interactive ? undefined : -1}
+      aria-hidden={interactive ? undefined : true}
+      inert={!interactive}
       src={src}
       data-testid={testId ?? "preview-frame"}
       onLoad={() => { setLoaded(true); post() }}
-      style={{ width: mode === "fill" ? "100%" : L.vw, height: mode === "fill" ? "100%" : L.vh, border: 0, display: "block", background: "white" }}
+      style={{ width: mode === "fill" ? "100%" : L.vw, height: mode === "fill" ? "100%" : L.vh, border: 0, display: "block", background: "white", pointerEvents: interactive ? undefined : "none" }}
     />
   ) : null
 

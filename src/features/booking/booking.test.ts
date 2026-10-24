@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 import { getAvailability, windowInstants } from "./availability"
 import { canCancel, canReschedule, emptyState, expirePending, holdSlot, placeBooking, reschedule, setStatus, submitEnquiry, type BookingState } from "./engine"
 import { localParts, localToInstant, offsetMinutes } from "./time"
-import { schedulingConfig, type SchedulingConfig } from "./types"
+import { enquiryInput, schedulingConfig, type SchedulingConfig } from "./types"
 
 const TZ = "Europe/London"
 const at = (date: string, time: string, tz = TZ) => localToInstant(date, time, tz)!
@@ -212,6 +212,12 @@ describe("status, cancel and reschedule", () => {
 })
 
 describe("enquiries", () => {
+  it("keeps a selected vehicle's identity and title through validation and storage", () => {
+    const input = enquiryInput.parse({ name: "Ana", email: "ana@example.com", message: "Can I view this car?", topic: "Volvo XC40 Recharge", itemId: "v1", itemKind: "vehicle" })
+    const state = submitEnquiry(emptyState(), input, { now: NOW, key: "vehicle-enquiry", newId: () => "vehicle-e" })
+    expect(state.enquiries[0]).toMatchObject({ topic: "Volvo XC40 Recharge", itemId: "v1", itemKind: "vehicle", message: "Can I view this car?" })
+    expect(state.bookings).toEqual([])
+  })
   it("reserve no time and are idempotent", () => {
     const input = { name: "Ana", email: "ana@example.com", message: "Do you do kids' cuts?" }
     let s = submitEnquiry(emptyState(), input, { now: NOW, key: "e1", newId: () => "e" })

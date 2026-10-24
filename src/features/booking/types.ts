@@ -116,6 +116,8 @@ export interface Enquiry {
   message: string
   serviceId?: string
   topic?: string
+  itemId?: string
+  itemKind?: "product" | "vehicle"
   createdAt: number
   status: "new" | "answered" | "archived"
   idempotencyKey: string
@@ -127,6 +129,9 @@ export const enquiryInput = z.object({
   phone: z.string().trim().max(32).optional().or(z.literal("").transform(() => undefined)),
   message: z.string().trim().min(5, "Tell the business a little about what you need").max(1200),
   serviceId: z.string().max(64).optional(),
+  topic: z.string().trim().max(240).optional(),
+  itemId: z.string().min(1).max(64).optional(),
+  itemKind: z.enum(["product", "vehicle"]).optional(),
 }).refine((c) => Boolean(c.email || c.phone), { message: "Add an email address or a phone number so the business can reply", path: ["email"] })
 export type EnquiryInput = z.infer<typeof enquiryInput>
 

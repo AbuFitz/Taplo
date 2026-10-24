@@ -137,7 +137,7 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
     await expect(page.getByTestId("enquiry-sent")).toContainText("not emailed or texted")
   })
 
-  test("share: link, branded QR that decodes to the link, preview honesty, exported files decode", async ({ page }) => {
+  test("share: link, branded QR that decodes to the link, preview honesty, exported files decode", async ({ page }, testInfo) => {
     await open(page, FRAME())
     await page.getByRole("button", { name: /Share Marlowe/ }).click()
     const panel = page.getByTestId("share-panel")
@@ -189,7 +189,11 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
     await expect(panel.getByTestId("share-card-preview")).toBeVisible()
     const [shareDl] = await Promise.all([page.waitForEvent("download"), panel.getByRole("button", { name: /Share image/ }).click()])
     expect(shareDl.suggestedFilename()).toBe("marlowe-and-finch-preview-share-post.png")
-    const sf = await decodeFile(await shareDl.path(), 700)
+    await shareDl.saveAs(testInfo.outputPath("share-post.png"))
+    // Check the complete artwork at both camera size and its native resolution.
+    // jsQR has a thresholding blind spot at 700px; Apple Vision independently decodes that size too.
+    const sf = await decodeFile(await shareDl.path())
+    expect((await decodeFile(await shareDl.path(), 1350)).text, "native share artwork").toBe(url)
     expect((await sharp(await shareDl.path()).metadata()).width).toBe(1080)
     expect(sf.text).toBe(url)
   });

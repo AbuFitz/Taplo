@@ -81,12 +81,13 @@ export function EmailField({ value, onCommit }: { value?: string; onCommit: (v: 
   )
 }
 
-export function UrlField({ label, value, onCommit, validate, help }: { label: string; value?: string; onCommit: (v: string | undefined) => void; validate?: (v: string) => boolean; help?: string }) {
+export function UrlField({ label, value, onCommit, validate, help, autoFocus = false }: { label: string; value?: string; onCommit: (v: string | undefined) => void; validate?: (v: string) => boolean; help?: string; autoFocus?: boolean }) {
   const { text, setText, error, setError, commit } = useSyncedText(value)
   return (
     <TaploInput
       label={label}
       type="url"
+      autoFocus={autoFocus}
       placeholder="https://"
       hint={help}
       error={error}

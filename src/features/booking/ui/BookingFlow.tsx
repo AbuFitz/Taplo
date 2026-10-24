@@ -44,9 +44,10 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
   const viewerTz = React.useMemo(() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone } catch { return tz } }, [tz])
   const [now] = React.useState(nowMs)
 
-  const [service, setService] = React.useState<BookableService | null>(() => ctx.services.find((s) => s.id === preService) ?? null)
+  const initialService = ctx.services.find((s) => s.id === preService && (!preStaff || eligibleStaff(ctx, s).includes(preStaff))) ?? null
+  const [service, setService] = React.useState<BookableService | null>(initialService)
   const [staff, setStaff] = React.useState<string | null>(preStaff ?? null)
-  const [step, setStep] = React.useState<Step>(() => (preService && ctx.services.find((s) => s.id === preService) ? "time" : "service"))
+  const [step, setStep] = React.useState<Step>(() => !initialService ? "service" : !isOnlineBookable(initialService) ? "enquiry" : !preStaff && ctx.staff.length > 0 && eligibleStaff(ctx, initialService).length > 1 ? "person" : "time")
   const [pick, setPick] = React.useState<{ date: string; startsAt: number } | null>(null)
   const [date, setDate] = React.useState<string | null>(null)
   const [more, setMore] = React.useState(false)
@@ -81,7 +82,7 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
   const go = (s: Step) => { setBanner(null); setStep(s) }
   const back = () => {
     if (step === "person") return go("service")
-    if (step === "time") return go(people.length > 0 && eligible.length > 1 ? "person" : preService ? "time" : "service")
+    if (step === "time") return go(!preStaff && people.length > 0 && eligible.length > 1 ? "person" : "service")
     if (step === "details") return go("time")
     if (step === "review") return go("details")
     if (step === "enquiry") return go("service")
@@ -91,7 +92,7 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
     setService(s); setStaff(preStaff ?? null); setPick(null); setDate(null)
     if (!isOnlineBookable(s)) return go("enquiry")
     const el = eligibleStaff(ctx, s)
-    go(ctx.staff.length > 0 && el.length > 1 ? "person" : "time")
+    go(!preStaff && ctx.staff.length > 0 && el.length > 1 ? "person" : "time")
   }
 
   const choosePick = (startsAt: number) => { if (activeDate) setPick({ date: activeDate, startsAt }) }
@@ -136,8 +137,9 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
   const hold = useCountdown(holdUntil)
   const person = staff ? ctx.staff.find((p) => p.id === staff) : null
   const num = STEP_NUMBER[step]
-  const total = people.length > 0 && eligible.length > 1 ? 5 : 4
-  const shown = num && num > 2 && !(people.length > 0 && eligible.length > 1) ? num - 1 : num
+  const hasPersonStep = !preStaff && people.length > 0 && eligible.length > 1
+  const total = hasPersonStep ? 5 : 4
+  const shown = num && num > 2 && !hasPersonStep ? num - 1 : num
 
   const footer =
     step === "time" ? <Button className="min-h-12 w-full" disabled={!pick} onClick={toDetails}>{pick ? `${OUTCOME[mode].choose}: ${formatSlot(pick.startsAt, tz)}` : "Choose a time"}</Button>
@@ -275,7 +277,10 @@ function useCountdown(until: number | null): number | null {
 function PersonRow({ label, sub, photo, icon, on }: { label: string; sub?: string; photo?: string; icon?: React.ReactNode; on: () => void }) {
   return (
     <button type="button" onClick={on} className="flex w-full items-center gap-3 rounded-2xl border border-tp-border bg-tp-surface p-3 text-left outline-none transition-colors hover:border-tp-accent focus-visible:ring-2 focus-visible:ring-tp-accent">
-      {photo ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={photo} alt="" className="size-12 rounded-xl object-cover" /> : <span className="grid size-12 place-items-center rounded-xl bg-tp-bg">{icon ?? <User aria-hidden="true" className="size-5" />}</span>}
+      {photo ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={photo} alt="" className="size-12 rounded-xl object-cover" />
+      ) : <span className="grid size-12 place-items-center rounded-xl bg-tp-bg">{icon ?? <User aria-hidden="true" className="size-5" />}</span>}
       <span><span className="block font-semibold">{label}</span>{sub ? <span className="block text-sm text-tp-muted">{sub}</span> : null}</span>
     </button>
   )

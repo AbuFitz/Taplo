@@ -147,7 +147,7 @@ export function expirePending(state: BookingState, now: number): BookingState {
 /** Enquiries reserve no time. Idempotent on the key. */
 export function submitEnquiry(state: BookingState, input: EnquiryInput, ctx: { now: number; key: string; newId: () => string }): BookingState {
   if (state.enquiries.some((e) => e.idempotencyKey === ctx.key)) return state
-  const e: Enquiry = { id: ctx.newId(), name: input.name, email: input.email, phone: input.phone, message: input.message, serviceId: input.serviceId, createdAt: ctx.now, status: "new", idempotencyKey: ctx.key }
+  const e: Enquiry = { id: ctx.newId(), name: input.name, email: input.email, phone: input.phone, message: input.message, serviceId: input.serviceId, topic: input.topic, itemId: input.itemId, itemKind: input.itemKind, createdAt: ctx.now, status: "new", idempotencyKey: ctx.key }
   return { ...state, enquiries: [e, ...state.enquiries] }
 }
 

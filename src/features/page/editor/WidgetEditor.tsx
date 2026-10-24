@@ -1,6 +1,8 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
+import { CalendarDays, ArrowUpRight } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -17,10 +19,10 @@ import { newId } from "@/features/demo/actions"
 import { ChoiceGrid, Field, Segment } from "@/features/appearance/controls"
 import { ButtonTile, SurfaceTile } from "@/features/appearance/previews"
 import { ColorField, FieldShell, ImageField, Segmented, SelectField, SwitchField } from "./controls"
-import { Miniature } from "./Miniature"
 import { RecordsField } from "./RecordsField"
-import type { MiniArt } from "./content-model"
+import { PagePreview } from "@/features/preview/PagePreview"
 import type { Editor } from "./useEditor"
+import { SocialLinksEditor } from "./SocialLinksEditor"
 
 interface Option { id: string; label: string }
 
@@ -65,8 +67,6 @@ function RefsField({ f, value, ed, onChange }: { f: Extract<FieldSpec, { kind: "
   )
 }
 
-const VARIANT_ART: Record<string, MiniArt> = { list: "list", cards: "cards", compact: "list", grid: "grid", swipe: "swipe", carousel: "swipe", quote: "quote", chips: "chips", icons: "icons", beforeAfter: "beforeAfter", button: "button", card: "card", inline: "text", avatars: "avatars" }
-
 export function WidgetFields({ stored, ed }: { stored: StoredWidget; ed: Editor }) {
   const def = getWidget(stored.type)!
   const { settings } = parseSettings(stored.type as WidgetType, stored.settings)
@@ -76,12 +76,14 @@ export function WidgetFields({ stored, ed }: { stored: StoredWidget; ed: Editor 
   const variant = def.fields.find((f): f is Extract<FieldSpec, { kind: "select" }> => f.kind === "select" && f.key === "variant")
   return (
     <div className="grid gap-4">
+      {stored.type === "booking" ? <Link href="/dashboard/bookings?section=availability" className="flex min-h-14 items-center gap-3 rounded-xl bg-neutral-100 px-4 text-sm font-medium hover:bg-neutral-200"><CalendarDays className="size-5" /><span className="flex-1">Hours and booking rules</span><ArrowUpRight className="size-4" /></Link> : null}
       {variant ? (
         <Field label="Layout">
-          <ChoiceGrid label="Layout" value={String(s.variant ?? variant.options[0]!.value)} columns={variant.options.length > 3 ? 2 : variant.options.length} onChange={(v) => set("variant", v)}
-            options={variant.options.map((o) => ({ value: o.value, label: o.label, preview: <span className="block h-[4.25rem] bg-neutral-100"><Miniature art={VARIANT_ART[o.value] ?? "list"} /></span> }))} />
+          <ChoiceGrid label="Layout" value={String(s.variant ?? variant.options[0]!.value)} columns={variant.options.length === 1 ? 1 : 2} onChange={(v) => set("variant", v)}
+            options={variant.options.map((o) => ({ value: o.value, label: o.label, preview: <span className="pointer-events-none relative block aspect-[390/330] overflow-hidden" aria-hidden="true"><PagePreview src={`/demo/preview?widget=${encodeURIComponent(stored.id)}&variant=${encodeURIComponent(o.value)}`} title={`${o.label} section preview`} mode="device" device={{ w: 390, h: 330 }} interactive={false} /></span> }))} />
         </Field>
       ) : null}
+      {stored.type === "social" ? <SocialLinksEditor ed={ed} /> : null}
       {def.fields.map((f) => {
         const v = s[f.key]
         switch (f.kind) {

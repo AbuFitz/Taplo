@@ -4,7 +4,6 @@ import { ArrowUpRight, ChevronDown } from "lucide-react"
 import type { ProductContent, ServiceContent } from "@/features/businesses/content"
 import { formatDuration, formatMoney, formatPrice, groupServices } from "@/features/services/format"
 import { SOURCE_LABEL } from "@/components/taplo/taplo-review-card"
-import { TaploAvatar } from "@/components/taplo/taplo-avatar"
 import { isHttpUrl, smsHref } from "@/lib/validation"
 import { cn } from "@/lib/utils"
 import type { WidgetType } from "../contracts/widgets"
@@ -200,7 +199,7 @@ function ItemAction({ p, vm, compact }: { p: ProductContent; vm: PageViewModel; 
       </div>
     )
   }
-  return <BookingAction {...bookingProps(vm, { label: p.kind === "vehicle" ? "Enquire about this car" : "Ask about this", topic: p.name, variant: compact ? "compact" : "button" })} />
+  return <BookingAction {...bookingProps(vm, { label: p.kind === "vehicle" ? "Enquire about this car" : "Ask about this", topic: p.name, item: { id: p.id, kind: p.kind === "vehicle" ? "vehicle" : "product" }, variant: compact ? "compact" : "button" })} />
 }
 
 function ProductCard({ p, vm }: { p: ProductContent; vm: PageViewModel }) {
@@ -419,7 +418,6 @@ function FaqWidget({ w, vm }: P) {
 }
 
 /* ------------------------------------------------------------------ info */
-const DAY: Record<string, string> = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun" }
 const DAY_ORDER = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
 function HoursWidget({ w, vm }: P) {

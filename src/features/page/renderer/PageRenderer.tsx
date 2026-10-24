@@ -13,22 +13,25 @@ import type { PageViewModel } from "./view-model"
 /** Widgets whose items are cards in their own right: they get no outer panel. */
 const BARE = new Set(["team", "products", "gallery"])
 
-export function PageRenderer({ vm, bare = false }: { vm: PageViewModel; /** Component workbench only: render the widgets without the page header. */ bare?: boolean }) {
+export type PageFragment = { kind: "header" } | { kind: "widget"; id: string }
+
+export function PageRenderer({ vm, bare = false, fragment }: { vm: PageViewModel; /** Component workbench only: render the widgets without the page header. */ bare?: boolean; /** Design/capture surfaces render the same components, without unrelated content. */ fragment?: PageFragment }) {
+  const visible = fragment?.kind === "widget" ? vm.widgets.filter((w) => w.id === fragment.id && w.status.state === "ready") : vm.visible
   return (
     <ThemeRoot family="page" cssVars={vm.style.cssVars} attrs={vm.style.attrs}>
-      <Background vm={vm} />
+      <Background vm={vm} still={Boolean(fragment)} />
       <div className="tp-frame">
-        {bare ? null : <PageHeader vm={vm} />}
-        <main className="tp-widgets" aria-label="Page content">
-          {vm.visible.map((w, i) => (
+        {bare || fragment?.kind === "widget" ? null : <PageHeader vm={vm} />}
+        {fragment?.kind === "header" ? null : <main className="tp-widgets" aria-label="Page content">
+          {visible.map((w, i) => (
             <section key={w.id} className="tp-widget" data-widget={w.type} data-bare={BARE.has(w.type) ? "" : undefined} data-widget-id={w.id} {...w.style.attrs} style={{ ...w.style.vars, "--i": i } as React.CSSProperties}>
               {renderWidgetBody(w, vm)}
             </section>
           ))}
-        </main>
-        <footer className="pb-2 text-center text-sm tp-muted" style={{ gridColumn: "1 / -1" }}>
+        </main>}
+        {fragment ? null : <footer className="pb-2 text-center text-sm tp-muted" style={{ gridColumn: "1 / -1" }}>
           {vm.showBranding ? <p><a className="underline underline-offset-4" href="https://taplo.co">Made with Taplo</a></p> : null}
-        </footer>
+        </footer>}
       </div>
     </ThemeRoot>
   )

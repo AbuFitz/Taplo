@@ -22,9 +22,9 @@ type Tab = "calendar" | "enquiries" | "availability"
 const VIEWS: { id: View; label: string }[] = [{ id: "agenda", label: "Agenda" }, { id: "day", label: "Day" }, { id: "week", label: "Week" }, { id: "month", label: "Month" }]
 const SAMPLE_PEOPLE = [["Priya Shah", "priya@example.com"], ["Daniel Reed", "daniel@example.com"], ["Aisha Khan", "aisha@example.com"], ["Tom Hughes", "tom@example.com"], ["Lena Fischer", "lena@example.com"], ["Marcus Bell", "marcus@example.com"]]
 
-export function OwnerBookings() {
+export function OwnerBookings({ initialSection = "calendar" }: { initialSection?: Tab }) {
   const o = useOwner()
-  const [tab, setTab] = React.useState<Tab>("calendar")
+  const [tab, setTab] = React.useState<Tab>(initialSection)
   const [view, setView] = React.useState<View>("week")
   const [now] = React.useState(nowMs)
   const [anchor, setAnchor] = React.useState<string | null>(null)
@@ -129,6 +129,7 @@ export function OwnerBookings() {
             {state.enquiries.map((e) => (
               <li key={e.id} className={cn("rounded-2xl border p-4", e.status === "new" ? "bg-card" : "bg-muted/40")}>
                 <div className="flex items-start justify-between gap-3"><div><p className="font-semibold">{e.name}</p><p className="text-xs text-muted-foreground">{formatSlot(e.createdAt, tz)}{e.serviceId ? ` · about ${ctx.services.find((s) => s.id === e.serviceId)?.name ?? "a service"}` : ""}</p></div><span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", e.status === "new" ? "bg-amber-100 text-amber-950" : "bg-neutral-100 text-neutral-600")}>{e.status === "new" ? "New" : e.status === "answered" ? "Answered" : "Archived"}</span></div>
+                {e.topic ? <p className="mt-2 text-sm font-medium">About: {e.topic}</p> : null}
                 <p className="mt-2 whitespace-pre-wrap text-sm">{e.message}</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {e.email ? <Button asChild variant="outline" size="sm" className="min-h-10"><a href={`mailto:${e.email}`}><Mail /> Reply by email</a></Button> : null}

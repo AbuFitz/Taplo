@@ -3,7 +3,7 @@ import { expect, type Page, type FrameLocator } from "@playwright/test";
 export const previewFrame = (page: Page): FrameLocator => page.frameLocator('iframe[title="Live preview of your page"]').first();
 
 /** Load a synthetic sample into the demo store through the real UI and land in the editor. */
-export async function openEditorWithSample(page: Page, sample: "Barber" | "Tutor" | "Mechanic" | "Café" | "Consultant" | "Unlisted" = "Barber") {
+export async function openEditorWithSample(page: Page, sample: "Barber" | "Car dealer" | "Tutor" | "Mechanic" | "Café" | "Consultant" | "Unlisted" = "Barber") {
   await page.goto("/dashboard");
   await page.evaluate(() => localStorage.clear());
   await page.reload();

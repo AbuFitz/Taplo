@@ -18,7 +18,7 @@ type Field = "name" | "email" | "phone" | "message"
  * the screen says so. Input is never cleared on an error, a retry cannot create a second enquiry (idempotency key),
  * and in preview mode the confirmation says it was saved in this browser, not sent.
  */
-export function EnquiryForm({ slug, businessName, services, serviceId, submitLabel = "Send enquiry", onDone }: { slug: string; businessName: string; services: { id: string; name: string }[]; serviceId?: string; submitLabel?: string; onDone?: () => void }) {
+export function EnquiryForm({ slug, businessName, services, serviceId, topic, item, submitLabel = "Send enquiry", onDone }: { slug: string; businessName: string; services: { id: string; name: string }[]; serviceId?: string; topic?: string; item?: { id: string; kind: "product" | "vehicle" }; submitLabel?: string; onDone?: () => void }) {
   const { update } = useBookingState(slug)
   const [form, setForm] = React.useState({ name: "", email: "", phone: "", message: "", serviceId: serviceId ?? "" })
   const [errors, setErrors] = React.useState<Partial<Record<Field, string>>>({})
@@ -29,7 +29,7 @@ export function EnquiryForm({ slug, businessName, services, serviceId, submitLab
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault()
-    const p = enquiryInput.safeParse({ ...form, serviceId: form.serviceId || undefined })
+    const p = enquiryInput.safeParse({ ...form, serviceId: form.serviceId || undefined, topic, itemId: item?.id, itemKind: item?.kind })
     if (!p.success) {
       const next: typeof errors = {}
       for (const i of p.error.issues) next[(i.path[0] as Field) ?? "email"] ??= i.message
@@ -46,9 +46,9 @@ export function EnquiryForm({ slug, businessName, services, serviceId, submitLab
     return (
       <div className="grid gap-3" role="status" data-testid="enquiry-sent">
         <div className="grid size-11 place-items-center rounded-full bg-tp-accent text-tp-accent-fg"><Check aria-hidden="true" className="size-5" /></div>
-        <h3 ref={sent} tabIndex={-1} className="font-tp-heading text-xl outline-none">Enquiry sent</h3>
-        <p className="text-sm text-tp-muted">{businessName} will reply to the contact details you gave. No time was reserved.</p>
-        <p className="text-xs text-tp-muted">Saved in this browser only. {businessName} was not emailed or texted.</p>
+        <h3 ref={sent} tabIndex={-1} className="font-tp-heading text-xl outline-none">Enquiry saved</h3>
+        <p className="text-sm text-tp-muted">{topic ? `Your enquiry about ${topic} is saved in this browser.` : "Your enquiry is saved in this browser."} No time was reserved.</p>
+        <p className="text-xs text-tp-muted">{businessName} was not emailed or texted in this preview.</p>
       </div>
     )
 
@@ -58,7 +58,7 @@ export function EnquiryForm({ slug, businessName, services, serviceId, submitLab
       <TaploInput label="Your name" autoComplete="name" value={form.name} error={errors.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
       <TaploInput label="Email" type="email" autoComplete="email" inputMode="email" value={form.email} error={errors.email} hint="Email or phone is enough." onChange={(e) => setForm({ ...form, email: e.target.value })} />
       <TaploInput label="Phone (optional)" type="tel" autoComplete="tel" inputMode="tel" value={form.phone} error={errors.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-      {services.length > 0 && !serviceId ? (
+      {services.length > 0 && !serviceId && !topic ? (
         <div className="grid gap-1.5">
           <Label htmlFor="enq-service">About (optional)</Label>
           <Select value={form.serviceId} onValueChange={(v) => setForm({ ...form, serviceId: v === "_" ? "" : v })}>
@@ -73,7 +73,7 @@ export function EnquiryForm({ slug, businessName, services, serviceId, submitLab
         {errors.message ? <p id="enq-message-err" role="alert" className="text-sm text-destructive">{errors.message}</p> : null}
       </div>
       <Button type="submit" className="min-h-12" disabled={status === "sending"}>{status === "sending" ? "Sending…" : submitLabel}</Button>
-      <p className="text-xs text-tp-muted">Sending this does not reserve a time. {businessName} replies using the details you give.</p>
+      <p className="text-xs text-tp-muted">This preview saves the enquiry in this browser. No time is reserved.</p>
     </form>
   )
 }

@@ -69,7 +69,7 @@ export function HeaderPanel({ ed, notify }: { ed: Editor; notify: (m: string, un
   const c = ed.state.content
   return (
     <div className="grid gap-2.5" data-testid="header-panel">
-      <Disclosure title="Header layout" defaultOpen id="header" count={m.count("header")} onReset={() => m.resetGroup("header")}><HeaderControls m={m} identity={c.identity} /></Disclosure>
+      <Disclosure title="Header layout" defaultOpen id="header" count={m.count("header")} onReset={() => m.resetGroup("header")}><HeaderControls m={m} identity={c.identity} livePreviews /></Disclosure>
       <ProfileSections ed={ed} only="identity" identityOpen={!c.identity.name} />
       <Disclosure title="Logo and cover" id="header-images">
         <div className="grid gap-5">

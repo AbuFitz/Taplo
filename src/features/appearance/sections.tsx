@@ -13,6 +13,7 @@ import { FONT_PAIRS, SHADER_DEFAULT_COLOURS, type AppearanceModel } from "./mode
 import { LookThumb } from "@/components/taplo/look-thumb"
 import type { BusinessContent } from "@/features/businesses/content"
 import { ProfileMark } from "@/features/page/renderer/ProfileMark"
+import { PagePreview } from "@/features/preview/PagePreview"
 import { ButtonTile, FontTile, HeaderTile, PaletteTile, SurfaceTile, WallpaperTile, backgroundPreview } from "./previews"
 
 type M = { m: AppearanceModel }
@@ -122,12 +123,13 @@ export function TypeControls({ m }: M) {
 
 /* ------------------------------------------------------------------ header */
 const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] = [["side", "Compact"], ["cover", "Cover"], ["poster", "Image hero"], ["centered", "Text-led"]]
-export function HeaderControls({ m, identity }: M & { identity?: BusinessContent["identity"] }) {
+export function HeaderControls({ m, identity, livePreviews = false }: M & { identity?: BusinessContent["identity"]; livePreviews?: boolean }) {
   const { spec } = m
   return (
     <div className="grid gap-4">
-      <ChoiceGrid label="Header arrangement" value={spec.header.layout} columns={3} onChange={(v) => m.patch("header", "layout", v)}
-        options={(spec.header.layout === "minimal" ? [...HEADER_OPTIONS, ["minimal", "Text only (earlier)"] as [StyleSpec["header"]["layout"], string]] : HEADER_OPTIONS).map(([v, l]) => ({ value: v, label: l, preview: <HeaderTile layout={v} /> }))} />
+      <ChoiceGrid label="Header arrangement" value={spec.header.layout} columns={livePreviews ? 2 : 3} onChange={(v) => m.patch("header", "layout", v)}
+        options={(spec.header.layout === "minimal" ? [...HEADER_OPTIONS, ["minimal", "Text only (earlier)"] as [StyleSpec["header"]["layout"], string]] : HEADER_OPTIONS).map(([v, l]) => ({ value: v, label: l, preview: livePreviews ?
+          <span className="pointer-events-none relative block aspect-[390/550] overflow-hidden" aria-hidden="true"><PagePreview src={`/demo/preview?header=${v}`} title={`${l} header preview`} mode="device" device={{ w: 390, h: 550 }} interactive={false} /></span> : <HeaderTile layout={v} /> }))} />
       {spec.header.layout === "poster" || spec.header.layout === "cover" ? <Field label="Photo fade" dirty={m.has("header", "scrim")} onReset={() => m.reset("header", "scrim")} hint="How far the photograph fades into the page. Text always sits on the page colour."><Segment label="Photo fade" value={spec.header.scrim ?? "medium"} options={[{ value: "soft", label: "Soft" }, { value: "medium", label: "Medium" }, { value: "strong", label: "Strong" }]} onChange={(v) => m.patch("header", "scrim", v)} /></Field> : null}
       <div className="grid gap-3">
         <Field label="Your picture" dirty={m.has("header", "avatarShape")} onReset={() => m.reset("header", "avatarShape")}>

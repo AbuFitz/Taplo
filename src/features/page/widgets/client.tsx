@@ -2,8 +2,6 @@
 
 import * as React from "react"
 import { ArrowRight, CalendarCheck, CreditCard, Mail, MessageCircle, Phone, Play } from "lucide-react"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { TaploButton } from "@/components/taplo/taplo-button"
 import { TaploModal } from "@/components/taplo/taplo-modal"
 import { BookingFlow } from "@/features/booking/ui/BookingFlow"
@@ -27,6 +25,7 @@ export interface BookingActionProps {
   onlineBooking: boolean
   /** "Ask about: X" context, e.g. a product. */
   topic?: string
+  item?: { id: string; kind: "product" | "vehicle" }
   variant?: "button" | "card" | "compact"
   /** Render as the page's main action (large, accent). */
   hero?: boolean
@@ -39,8 +38,7 @@ export interface BookingActionProps {
 
 /** A page row that opens a themed dialog. Online booking links onward; otherwise it opens the business's own channels. */
 export function BookingAction(p: BookingActionProps) {
-  const [serviceId, setServiceId] = React.useState<string>(p.preselect ?? "")
-  const service = p.services.find((s) => s.id === serviceId)
+  const service = p.services.find((s) => s.id === p.preselect)
   const subject = p.topic ?? service?.name
   const message = subject ? `Hi ${p.businessName}, I'd like to ask about: ${subject}.` : `Hi ${p.businessName}, I'd like to ask about your services.`
   const trigger = (
@@ -66,7 +64,7 @@ export function BookingAction(p: BookingActionProps) {
         ) : null}
         <details className="rounded-xl border border-tp-border p-3 [&[open]>summary]:mb-3" open={!hasChannel}>
           <summary className="flex min-h-11 cursor-pointer list-none items-center font-semibold [&::-webkit-details-marker]:hidden">Send a message instead</summary>
-          <EnquiryForm slug={p.slug} businessName={p.businessName} services={p.services} serviceId={p.preselect ?? undefined} />
+          <EnquiryForm slug={p.slug} businessName={p.businessName} services={p.services} serviceId={p.preselect ?? undefined} topic={p.topic} item={p.item} />
         </details>
       </div>
     </TaploModal>

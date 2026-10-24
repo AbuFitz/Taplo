@@ -5,12 +5,14 @@ import Link from "next/link"
 import { EditBridge } from "@/features/page/editor/EditBridge"
 import { PageRenderer, buildPageViewModel } from "@/features/page/renderer"
 import { parseContent, useDemo } from "./store"
+import type { StyleSpec } from "@/features/page/contracts/style"
+import { getWidget } from "@/features/page/widgets/registry"
 
 /**
  * Renders the draft ("preview") or the frozen published copy through the SAME
  * PageRenderer/view-model the real public route and fixture routes use.
  */
-export function DemoProfile({ mode, slug, editing = false }: { mode: "draft" | "published"; slug?: string; editing?: boolean }) {
+export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetId, variant }: { mode: "draft" | "published"; slug?: string; editing?: boolean; headerLayout?: StyleSpec["header"]["layout"]; widgetId?: string; variant?: string }) {
   const { ready, state } = useDemo()
   const source = useMemo(() => {
     if (!state) return null
@@ -26,8 +28,16 @@ export function DemoProfile({ mode, slug, editing = false }: { mode: "draft" | "
     const content = mode === "draft" ? { ...source.content, identity: { ...id, name: id.name || "Your business name", industryKey: id.industryKey || "other", industryLabel: id.industryLabel || "Your business", slug: id.slug || "your-page" } } : source.content
     const parsed = parseContent(content)
     if (!parsed.success || !parsed.data.identity.name) return null
-    return buildPageViewModel(parsed.data, source.page, { plan: source.plan })
-  }, [source])
+    let page = source.page
+    if (mode === "draft" && (headerLayout || widgetId)) {
+      page = { ...page, appearance: { ...page.appearance, ...(headerLayout ? { header: { ...page.appearance.header, layout: headerLayout } } : {}), motion: "none" } }
+      if (widgetId && variant) page = { ...page, widgets: page.widgets.map((w) => {
+        const field = getWidget(w.type)?.fields.find((f) => f.kind === "select" && f.key === "variant")
+        return w.id === widgetId && field?.kind === "select" && field.options.some((o) => o.value === variant) ? { ...w, settings: { ...w.settings, variant } } : w
+      }) }
+    }
+    return buildPageViewModel(parsed.data, page, { plan: source.plan })
+  }, [source, mode, headerLayout, widgetId, variant])
 
   if (!ready) return <Message title="Loading…" />
   if (!vm) {
@@ -48,8 +58,8 @@ export function DemoProfile({ mode, slug, editing = false }: { mode: "draft" | "
           Preview of your published page. It opens in this browser only; a public address needs publishing, which is not connected yet.
         </div>
       ) : null}
-      <PageRenderer vm={vm} />
-      {editing ? <EditBridge /> : null}
+      <PageRenderer vm={vm} fragment={mode !== "draft" ? undefined : headerLayout ? { kind: "header" } : widgetId ? { kind: "widget", id: widgetId } : undefined} />
+      {editing && !headerLayout && !widgetId ? <EditBridge /> : null}
     </>
   )
 }

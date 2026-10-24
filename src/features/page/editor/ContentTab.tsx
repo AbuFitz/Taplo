@@ -13,9 +13,9 @@ import { EmailField, PhoneField, UrlField } from "@/features/demo/ui"
 import { Segmented } from "./controls"
 import { prepareImage } from "./image"
 import type { Editor } from "./useEditor"
+import { SocialLinksEditor } from "./SocialLinksEditor"
 
 const LOCATION_LABEL = { premises: "A place customers visit", service_area: "I travel to customers", online: "Online only" } as const
-const SOCIALS = ["instagram", "facebook", "tiktok", "linkedin", "youtube", "x"] as const
 const DAYS = [["mon", "Monday"], ["tue", "Tuesday"], ["wed", "Wednesday"], ["thu", "Thursday"], ["fri", "Friday"], ["sat", "Saturday"], ["sun", "Sunday"]] as const
 
 function Section({ id, title, children, defaultOpen }: { id?: string; title: string; children: React.ReactNode; defaultOpen?: boolean }) {
@@ -83,13 +83,7 @@ export function ProfileSections({ ed, only, identityOpen = true }: { ed: Editor;
         <PhoneField label="WhatsApp" value={c.contacts.whatsapp} hint="Include the country code, e.g. +44." onCommit={(v) => set((x) => ({ ...x, contacts: { ...x.contacts, whatsapp: v } }), "wa")} />
         <EmailField value={c.contacts.email} onCommit={(v) => set((x) => ({ ...x, contacts: { ...x.contacts, email: v } }), "email")} />
         <UrlField label="Website (optional)" value={c.contacts.website} onCommit={(v) => set((x) => ({ ...x, contacts: { ...x.contacts, website: v } }), "web")} />
-        <div className="grid gap-3 sm:grid-cols-2">
-          {SOCIALS.map((p) => (
-            <UrlField key={p} label={`${p === "x" ? "X" : p[0]!.toUpperCase() + p.slice(1)} (optional)`} value={(c.contacts.social ?? []).find((x) => x.platform === p)?.url}
-              onCommit={(v) => set((x) => ({ ...x, contacts: { ...x.contacts, social: [...(x.contacts.social ?? []).filter((q) => q.platform !== p), ...(v ? [{ platform: p, url: v }] : [])] } }), `soc:${p}`)} />
-          ))}
-        </div>
-        {!ed.vm?.ent.socialLinks ? <p className="text-xs text-muted-foreground">Social links are shown on your page from the Core plan; your entries are kept.</p> : null}
+        <SocialLinksEditor ed={ed} />
       </Section>
 
       <Section title="Location and opening hours">
