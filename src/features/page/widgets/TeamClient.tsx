@@ -5,6 +5,7 @@ import { ArrowRight, CalendarCheck, Check } from "lucide-react"
 import { Overlay } from "@/components/taplo/overlay"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { initialsOf } from "@/lib/validation"
 import { nextAvailableDate } from "@/features/booking/availability"
 import { useBookingState, useSchedulingConfig } from "@/features/booking/demo-adapter"
 import { eligibleStaff, isOnlineBookable, type BookingContext } from "@/features/booking/model"
@@ -31,8 +32,10 @@ const first = (name: string) => name.split(/\s+/)[0] ?? name
 function Portrait({ m, className, ratio = "4 / 5" }: { m: TeamMemberData; className?: string; ratio?: string }) {
   return (
     <div className={cn("tp-portrait", className)} style={{ aspectRatio: ratio }}>
-      {m.photo ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={m.photo.src} alt={m.photo.alt} loading="lazy" draggable={false} style={m.photo.focal ? { objectPosition: `${m.photo.focal.x}% ${m.photo.focal.y}%` } : undefined} />
-        : <span aria-hidden="true" className="tp-portrait-blank"><svg viewBox="0 0 100 100" focusable="false"><circle cx="50" cy="38" r="17" /><path d="M14 100c0-22 16-36 36-36s36 14 36 36z" /></svg></span>}
+      {m.photo ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={m.photo.src} alt={m.photo.alt} loading="lazy" draggable={false} style={m.photo.focal ? { objectPosition: `${m.photo.focal.x}% ${m.photo.focal.y}%` } : undefined} />
+      ) : <span aria-hidden="true" className="tp-portrait-blank"><span className="font-tp-heading text-xl font-semibold">{initialsOf(m.name)}</span></span>}
     </div>
   )
 }

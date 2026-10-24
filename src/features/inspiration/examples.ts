@@ -24,6 +24,18 @@ export interface Example {
 
 export const EXAMPLES: Example[] = [
   {
+    slug: "station-road-barbers", scenario: "station", industry: "beauty",
+    hook: "A proper local barber. Clear prices, a familiar face and your next haircut sorted.",
+    notes: ["The shop photograph and blue wordmark give it a recognisable identity.", "A simple price menu works just as well on a phone as beside the counter.", "Choose a barber, see available demonstration times and try booking."],
+    highlights: ["Prices and durations together", "Barber-specific service choices", "Real booking demonstration"],
+  },
+  {
+    slug: "parkside-valeting", scenario: "detailer", industry: "motoring",
+    hook: "The work up front. Valeting packages with room to explain what is included.",
+    notes: ["A dark workshop palette makes the yellow booking action easy to find.", "Services explain the work before asking for a booking.", "A request allows the business to agree the job and price first."],
+    highlights: ["From prices with proper detail", "Appointment requests", "Service area and questions"],
+  },
+  {
     slug: "marlowe-and-finch", scenario: "barber", industry: "beauty",
     hook: "Dark, photographic and made for booking a chair.",
     notes: ["The booking button leads, and customers choose a barber before a time.", "Products sit in a swipe row so the price menu stays short.", "Photography carries the mood, so the type stays quiet."],

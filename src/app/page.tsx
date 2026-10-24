@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { PLANS, PLAN_IDS } from "@/features/subscriptions/plans"
 import { formatMoney } from "@/features/services/format"
@@ -40,31 +41,38 @@ export default function Home() {
     <div className="bg-background">
       <SiteHeader />
       <main>
-        {/* Hero: a field of Taplo blue with the type at full size, and the product straddling its edge. */}
-        <section className="relative overflow-hidden">
-          <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[34rem] bg-signal lg:inset-y-0 lg:h-auto lg:w-[56%]" />
-          <div className="relative mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)] gap-10 px-5 pb-16 pt-14 sm:pt-20 lg:min-h-[41rem] lg:grid-cols-12 lg:gap-6 lg:pb-24 lg:pt-24">
-            <div className="text-white lg:col-span-6">
-              <h1 className="font-display font-display-tight text-[clamp(3.25rem,10.5vw,7.25rem)] text-balance">Your shop window, online.</h1>
-              <p className="mt-7 max-w-md text-[1.1875rem] leading-relaxed text-white/85">Prices, people and a way to book, on one page that looks like your business. Ready in minutes.</p>
-              <div className="mt-9 flex flex-wrap items-center gap-3">
-                <Link href={a.href} className="inline-flex min-h-12 items-center rounded-md bg-white px-6 text-base font-semibold text-signal outline-none hover:bg-white/90 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-signal">{a.label}</Link>
-                <Link href="/inspiration" className="inline-flex min-h-12 items-center gap-2 rounded-md border border-white/50 px-5 text-base font-semibold outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white">See designs</Link>
+        <section className="overflow-hidden bg-[#f1eddf] text-[#142d3e]" aria-labelledby="home-title">
+          <div className="mx-auto grid max-w-[88rem] items-center gap-10 px-5 pb-14 pt-12 sm:px-8 sm:pt-16 lg:min-h-[46rem] lg:grid-cols-[1fr_1.05fr] lg:gap-12 lg:py-20">
+            <div className="relative z-10 max-w-2xl">
+              <h1 id="home-title" className="font-display font-display-tight text-[clamp(2.25rem,11vw,3.5rem)] leading-[0.98] lg:text-[clamp(3.25rem,5.6vw,5.5rem)] tracking-[-0.055em]">Your business.<br />All together.<br /><span className="text-signal">One good page.</span></h1>
+              <p className="mt-7 max-w-[27rem] text-lg leading-relaxed sm:text-xl">The work you do. What it costs. How to book. Give customers a page that feels like you, wherever they find you.</p>
+              <div className="mt-8 flex flex-wrap items-center gap-5">
+                <Link href={a.href} className="inline-flex min-h-13 items-center gap-5 rounded-full bg-signal px-7 font-semibold text-white outline-none transition-colors hover:bg-[#243bd3] focus-visible:ring-3 focus-visible:ring-signal/50">{a.label}<ArrowRight aria-hidden="true" className="size-5" /></Link>
+                <Link href="/inspiration" className="inline-flex min-h-12 items-center border-b border-current font-semibold outline-none focus-visible:ring-3 focus-visible:ring-signal/50">Find your look</Link>
               </div>
+              <p className="mt-5 text-sm text-[#53616a]">Start free. Bring your photos. Make it yours.</p>
             </div>
-            <div className="relative lg:col-span-6" aria-label="A barber's page on a phone, with a café's page beside it">
-              <div className="relative mx-auto h-[30rem] w-full max-w-[30rem] sm:h-[34rem] lg:mx-0 lg:ml-auto lg:h-[36rem] lg:max-w-[33rem]">
-                <Shot id="ex-marlowe-and-finch-phone" alt="A barber's page: dark, with a bright Book your chair button" width={360} priority cropTo={720} frame="none" fluid className="absolute left-0 top-0 w-[68%] shadow-[0_40px_80px_-30px_rgb(10_16_32/0.7)] lg:-left-24" />
-                <Shot id="ex-pims-kitchen-phone" alt="A café's page: warm terracotta with a photograph of brunch" width={270} priority cropTo={540} frame="none" fluid className="absolute right-0 top-20 w-[50%] shadow-[0_30px_60px_-30px_rgb(10_16_32/0.5)] sm:top-28 lg:right-0 lg:top-32" />
+            <div className="relative mx-auto w-full max-w-[39rem] pb-9 pr-[20%] pt-2 sm:pb-14" aria-label="Station Road Barbers: a fictional UK business and its real Taplo page">
+              <div className="relative overflow-hidden rounded-[1.5rem] bg-[#d5d4bd]">
+                {/* Original illustrative scene; the page alongside is captured from the actual engine. */}
+                <Image src="/taplo-demo/station-road-barber-work.png" alt="Illustrative barber at work in a bright local shop" width={1536} height={1024} priority sizes="(min-width: 1024px) 40vw, 80vw" className="aspect-[0.82] w-full object-cover object-[85%_center]" />
+                <div className="absolute inset-x-0 bottom-0 hidden bg-gradient-to-t from-[#102d3c]/95 to-transparent px-6 pb-7 pt-24 text-white sm:block">
+                  <p className="text-sm font-medium text-white/75">A familiar face. A proper haircut.</p>
+                  <p className="mt-1 font-display text-[clamp(1.8rem,3vw,2.5rem)] leading-tight">Station Road<br />Barbers</p>
+                </div>
               </div>
+              <Shot id="ex-station-road-barbers-phone" alt="Station Road's real Taplo design, with its haircut booking button and price menu" width={290} priority cropTo={610} frame="phone" fluid className="absolute -bottom-1 right-0 w-[48%] shadow-[0_28px_60px_-20px_rgb(20_45_62/0.4)]" />
             </div>
+          </div>
+          <div className="border-t border-[#142d3e]/15">
+            <div className="mx-auto flex max-w-[88rem] flex-wrap items-center gap-x-8 gap-y-3 px-5 py-6 text-sm sm:px-8"><p className="text-[#53616a]">For the businesses that make our everyday.</p><ul className="flex flex-wrap gap-x-6 gap-y-2 font-semibold" aria-label="Businesses on Taplo"><li>Barbers</li><li>Detailers</li><li>Independent shops</li><li>Trades</li><li>Tutors</li><li>And yours.</li></ul></div>
           </div>
         </section>
 
         {/* The short film. Asked for, never autoplayed. */}
         <section aria-labelledby="film-h" className="bg-foreground py-16 text-background sm:py-24">
           <div className="mx-auto w-full max-w-5xl px-5">
-            <Reveal><h2 id="film-h" className="font-display font-display-tight mb-8 text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">From a name to a shared page in eighteen seconds.</h2></Reveal>
+            <Reveal><h2 id="film-h" className="font-display font-display-tight mb-8 text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">See how it comes together.</h2></Reveal>
             <Film className="[&_figcaption]:text-background/60 [&_figcaption_span]:text-background" />
           </div>
         </section>
@@ -136,7 +144,7 @@ export default function Home() {
         {/* Setup. */}
         <section aria-labelledby="setup-h" className="border-y border-foreground/10 bg-muted py-24 sm:py-32">
           <div className="mx-auto w-full max-w-7xl px-5">
-            <Reveal className="max-w-2xl"><h2 id="setup-h" className="font-display font-display-tight text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">Live in a few minutes.</h2><p className="mt-6 text-lg leading-relaxed text-foreground/70">Name it, say what you do and how people should reach you, choose a design, add your first service. Your page takes shape beside you as you go.</p></Reveal>
+            <Reveal className="max-w-2xl"><h2 id="setup-h" className="font-display font-display-tight text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">A little setup. A lot more you.</h2><p className="mt-6 text-lg leading-relaxed text-foreground/70">Name it, say what you do and how people should reach you, choose a design, add your first service. Your page takes shape beside you as you go.</p></Reveal>
             <div className="mt-14 grid grid-cols-[minmax(0,1fr)] gap-14">
               {(["setup-2-what", "setup-3-design", "setup-4-first"] as const).map((id, n) => (
                 <Reveal key={id} delay={n * 80} className={cn("grid grid-cols-[minmax(0,1fr)] items-center gap-6 md:grid-cols-12", n === 1 && "md:[&>*:first-child]:order-last")}>
@@ -167,7 +175,7 @@ export default function Home() {
 
         <section className="mx-auto w-full max-w-7xl px-5 pb-8">
           <div className="flex flex-wrap items-center justify-between gap-8 rounded-3xl bg-foreground px-7 py-12 text-background sm:px-12">
-            <h2 className="font-display font-display-tight max-w-xl text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">Make your Taplo in a few minutes.</h2>
+            <h2 className="font-display font-display-tight max-w-xl text-[clamp(1.875rem,3.6vw,2.75rem)] text-balance">Give your business a page of its own.</h2>
             <Link href={a.href} className="inline-flex min-h-13 items-center rounded-xl bg-background px-6 text-base font-semibold text-foreground outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-white/50">{a.label}</Link>
           </div>
         </section>

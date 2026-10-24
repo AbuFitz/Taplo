@@ -34,18 +34,40 @@
       "sourceType": "generated",
       "generator": "built-in image generation tool",
       "created": "2026-10-24 Europe/London",
-      "status": "candidate-UK-direction-study",
+      "status": "illustrative-fictional-demo",
       "uses": [
-        "UK direction review",
-        "future fictional barber example"
+        "Station Road Barbers fictional example",
+        "Taplo homepage business scene",
+        "UK design chooser captures"
       ],
       "restrictions": [
         "Fictional people and premises",
-        "Not an actual customer or completed service",
-        "Not yet bound to a runtime example"
+        "Not an actual customer or completed service"
       ],
       "generationSource": "exec-067c5081-1892-4882-bf22-bec8f21a6d16.png",
       "brief": "Original natural documentary-style photograph, ordinary independent British high-street shop, practical black chair and mirrors, overcast daylight, believable working haircut, no writing or logos. See UK-DIRECTION.md."
+    },
+    {
+      "id": "station-road-mark",
+      "file": "/taplo-demo/station-road-mark.svg",
+      "width": 240,
+      "height": 120,
+      "sourceType": "original-code-native-svg",
+      "status": "fictional-demo-wordmark",
+      "restrictions": [
+        "Not a real business identity or endorsement"
+      ]
+    },
+    {
+      "id": "parkside-mark",
+      "file": "/taplo-demo/parkside-mark.svg",
+      "width": 240,
+      "height": 120,
+      "sourceType": "original-code-native-svg",
+      "status": "fictional-demo-wordmark",
+      "restrictions": [
+        "Not a real business identity or endorsement"
+      ]
     }
   ]
 }

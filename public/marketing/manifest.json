@@ -628,5 +628,41 @@
     "cssHeight": 844,
     "bytes": 45658,
     "source": "/appearance/frame?scenario=barber"
+  },
+  "ex-station-road-barbers-phone": {
+    "file": "/marketing/ex-station-road-barbers-phone.webp",
+    "width": 780,
+    "height": 1600,
+    "cssWidth": 390,
+    "cssHeight": 800,
+    "bytes": 102750,
+    "source": "/appearance/frame?scenario=station"
+  },
+  "ex-station-road-barbers-desk": {
+    "file": "/marketing/ex-station-road-barbers-desk.webp",
+    "width": 2200,
+    "height": 1520,
+    "cssWidth": 1100,
+    "cssHeight": 760,
+    "bytes": 172928,
+    "source": "/appearance/frame?scenario=station"
+  },
+  "ex-parkside-valeting-phone": {
+    "file": "/marketing/ex-parkside-valeting-phone.webp",
+    "width": 780,
+    "height": 1600,
+    "cssWidth": 390,
+    "cssHeight": 800,
+    "bytes": 119322,
+    "source": "/appearance/frame?scenario=detailer"
+  },
+  "ex-parkside-valeting-desk": {
+    "file": "/marketing/ex-parkside-valeting-desk.webp",
+    "width": 2200,
+    "height": 1520,
+    "cssWidth": 1100,
+    "cssHeight": 760,
+    "bytes": 201148,
+    "source": "/appearance/frame?scenario=detailer"
   }
 }

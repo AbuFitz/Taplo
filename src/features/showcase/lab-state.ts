@@ -12,13 +12,15 @@ export interface LabConfig {
 }
 
 /** The look each example was designed with. */
-export const EXAMPLE_LOOK: Record<Scenario, string> = { barber: "folio", dealer: "showroom", trades: "colour", physio: "journal", cafe: "clay", tutor: "orchard", gym: "forge" }
+export const EXAMPLE_LOOK: Record<Scenario, string> = { station: "highstreet", detailer: "workbay", barber: "folio", dealer: "showroom", trades: "colour", physio: "journal", cafe: "clay", tutor: "orchard", gym: "forge" }
 
 /**
  * How each example is arranged on top of its look: the header, how wide the page is and what it does on a computer. These
  * are the owner's own controls (Header and Design tabs), so anything shown in the gallery can be reproduced in the editor.
  */
 export const EXAMPLE_OVERRIDES: Record<Scenario, StyleOverrides> = {
+  station: {},
+  detailer: {},
   barber: {},
   physio: { header: { align: "left" }, layout: { desktop: "split" } },
   cafe: { header: { layout: "cover", avatarShape: "circle", avatarSize: "md", align: "center" }, layout: { desktop: "columns", width: "wide" } },

@@ -10,12 +10,13 @@ const base = process.env.BASE_URL ?? "http://localhost:3200"
 const out = new URL("../../public/looks/", import.meta.url).pathname
 mkdirSync(out, { recursive: true })
 const src = readFileSync(new URL("../../src/features/page/themes/looks.ts", import.meta.url), "utf8")
-const ids = [...src.matchAll(/^\s{4}id: "([a-z]+)",$/gm)].map((m) => m[1])
+const only = process.argv.slice(2)
+const ids = [...src.matchAll(/^\s{4}id: "([a-z]+)"/gm)].map((m) => m[1]).filter((id) => !only.length || only.includes(id))
 const b = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? "/opt/pw-browsers/chromium-1194/chrome-linux/chrome" })
 for (const id of ids) {
   const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, reducedMotion: "reduce" })
   const p = await ctx.newPage()
-  await p.goto(`${base}/appearance/frame?scenario=barber&look=${id}`, { waitUntil: "load", timeout: 60000 })
+  await p.goto(`${base}/appearance/frame?scenario=station&look=${id}`, { waitUntil: "load", timeout: 60000 })
   await p.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {})
   await p.evaluate(() => document.fonts.ready)
   await p.waitForTimeout(600)

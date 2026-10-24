@@ -14,7 +14,7 @@ import { initialConfig, toContent, toPage, type LabConfig, type LabMessage } fro
  */
 export function Frame() {
   const q = useSearchParams()
-  const sc = (q.get("scenario") as Scenario) in SCENARIOS ? (q.get("scenario") as Scenario) : "barber"
+  const sc = Object.hasOwn(SCENARIOS, q.get("scenario") ?? "") ? (q.get("scenario") as Scenario) : "barber"
   const [cfg, setCfg] = React.useState<LabConfig>(() => {
     const base = initialConfig(sc, q.get("look") ?? undefined)
     // `o` carries a URL-encoded JSON StyleOverrides, so marketing captures and shared links can pose any configuration of the engine.

@@ -262,8 +262,7 @@ li.tp-subcard + li.tp-subcard, figure.tp-subcard + figure.tp-subcard { padding-t
 .tp-portrait { position: relative; overflow: hidden; width: 100%; border-radius: var(--tp-radius-md); background: color-mix(in oklab, var(--tp-accent) 14%, var(--tp-surface-2)); }
 .tp-portrait img { display: block; width: 100%; height: 100%; object-fit: cover; }
 /* The default profile picture, shown until a photo is added: a plain silhouette, never a generated likeness. */
-.tp-portrait-blank { position: absolute; inset: 0; display: grid; place-items: end center; overflow: hidden; }
-.tp-portrait-blank svg { width: 78%; height: 78%; fill: color-mix(in oklab, var(--tp-foreground) 24%, var(--tp-surface-2)); }
+.tp-portrait-blank { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; color: var(--tp-foreground); }
 .tp-portrait-sm { width: 3.5rem; flex: none; border-radius: var(--tp-radius-sm); }
 .tp-team-card { display: grid; gap: var(--tp-s-3); align-content: start; height: 100%; }
 .tp-team-open { all: unset; box-sizing: border-box; position: relative; display: grid; gap: var(--tp-s-1); cursor: pointer; border-radius: var(--tp-radius-md); text-align: left; }

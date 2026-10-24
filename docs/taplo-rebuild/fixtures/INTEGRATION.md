@@ -1,5 +1,7 @@
 # Using the fictional content inputs
 
+Runtime update, 24 October: `src/features/showcase/uk.ts` now parses these inputs for Station Road Barbers and Parkside Valeting, adds their authored image/wordmark bindings and isolated demonstration scheduling. Their PageDocs live in showcase/content.ts and their editable looks in page/themes/looks.ts. The generated input files remain conservative source data; the other four have not yet been integrated. See CONNECTED-EDITING-AND-UK-DESIGNS.md for verification and limits.
+
 The editorial source is `businesses.json`. Run `python3 build-fixtures.py` from this directory to rebuild `business-content-inputs.json`. The adapter is deterministic and reads/writes only these preparation files. It does not connect to Taplo or seed an account.
 
 The generated input objects passed the actual repository `businessContentSchema` at commit `e4cee6d1f169cfbd9ffcd76a39b8965e5fea4c52`, using Taplo's lockfile version Zod 4.6.7. See `schema-validation.json`. Revalidate against the current repository schema before integration; the reported commit is not a promise of future compatibility.

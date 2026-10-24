@@ -443,6 +443,66 @@
         760
       ],
       "dsf": 2
+    },
+    {
+      "id": "ex-station-road-barbers-phone",
+      "url": "/appearance/frame?scenario=station",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        800
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-station-road-barbers-desk",
+      "url": "/appearance/frame?scenario=station",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-parkside-valeting-phone",
+      "url": "/appearance/frame?scenario=detailer",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        800
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-parkside-valeting-desk",
+      "url": "/appearance/frame?scenario=detailer",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
     }
   ]
 }

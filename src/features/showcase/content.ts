@@ -1,6 +1,7 @@
 import type { BusinessContentInput } from "@/features/businesses/content"
 import type { PageDoc } from "@/features/page/contracts/page"
 
+import { PARKSIDE, STATION } from "./uk"
 import { hours, newWidget, person, photo, svc } from "./helpers"
 import { CAFE, EXTRA_WIDGETS, GYM, PHYSIO, TUTOR } from "./examples"
 
@@ -184,8 +185,31 @@ export const TRADES: BusinessContentInput = {
   booking: { mode: "instant", onlineBookingReady: true },
 }
 
-export type Scenario = "barber" | "dealer" | "trades" | "physio" | "cafe" | "tutor" | "gym"
+export type Scenario = "station" | "detailer" | "barber" | "dealer" | "trades" | "physio" | "cafe" | "tutor" | "gym"
 export const SCENARIOS: Record<Scenario, { label: string; content: BusinessContentInput; widgets: () => PageDoc["widgets"] }> = {
+  station: {
+    label: "High-street barber", content: STATION,
+    widgets: () => [
+      newWidget("booking", { label: "Book a haircut", variant: "button" }),
+      newWidget("priceMenu", { title: "Cuts and prices", showDescriptions: true }),
+      newWidget("team", { title: "Choose your barber", variant: "list" }),
+      newWidget("gallery", { title: "The shop", variant: "grid" }),
+      newWidget("hours", { title: "When we're open" }),
+      newWidget("faq", { title: "Before you visit" }),
+      newWidget("share", { label: "Share Station Road", variant: "button" }),
+    ],
+  },
+  detailer: {
+    label: "Valeting and detailing", content: PARKSIDE,
+    widgets: () => [
+      newWidget("booking", { label: "Request a valet", variant: "button" }),
+      newWidget("serviceList", { title: "A clean that suits your car", variant: "cards" }),
+      newWidget("serviceArea", { title: "Where we work" }),
+      newWidget("faq", { title: "Good to know" }),
+      newWidget("enquiry", { title: "Tell us about your car", intro: "Include the model, condition and the work you have in mind.", variant: "inline" }),
+      newWidget("hours", { title: "Working hours" }),
+    ],
+  },
   physio: { label: "Physiotherapy clinic", content: PHYSIO, widgets: EXTRA_WIDGETS.physio },
   cafe: { label: "Café", content: CAFE, widgets: EXTRA_WIDGETS.cafe },
   tutor: { label: "Tutor", content: TUTOR, widgets: EXTRA_WIDGETS.tutor },

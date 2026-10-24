@@ -22,7 +22,7 @@ const toggle = <T,>(list: T[], v: T) => (list.includes(v) ? list.filter((x) => x
  * design's own configuration. The example business is only the content a design is shown with: any design suits any business.
  */
 export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
-  const [view, setView] = React.useState<"desktop" | "phone">("desktop")
+  const [view, setView] = React.useState<"desktop" | "phone">("phone")
   const [style, setStyle] = React.useState<StyleTag[]>([])
   const [caps, setCaps] = React.useState<CapabilityTag[]>([])
   const [biz, setBiz] = React.useState<string | null>(initialIndustry ?? null)
@@ -58,7 +58,7 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
       {shown.length === 0 ? <p className="py-20 text-lg text-foreground/70">No design has all of those. Take one filter off.</p> : (
         <ul className={cn("mt-8 grid grid-cols-[minmax(0,1fr)] gap-x-10 gap-y-16", view === "desktop" ? "lg:grid-cols-2" : "sm:grid-cols-2 xl:grid-cols-4")} data-testid="gallery-list" data-view={view}>
           {shown.map((d, n) => (
-            <li key={d.slug} className={cn(view === "phone" && n % 2 === 1 && "xl:mt-12")} data-testid="design-card">
+            <li key={d.slug} className={cn(view === "phone" && n % 2 === 1 && "xl:mt-8")} data-testid="design-card">
               <Link href={`/inspiration/${d.slug}`} aria-label={`${d.name}: open this design`} className="group block outline-none">
                 {view === "desktop"
                   ? <Shot id={`ex-${d.slug}-desk` as never} alt={`${d.name}'s page on a desktop screen`} width={720} frame="browser" priority={n < 2} className="w-full transition-transform duration-300 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 motion-reduce:transition-none" />

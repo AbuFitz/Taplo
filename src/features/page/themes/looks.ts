@@ -15,6 +15,34 @@ export interface Look {
 
 export const LOOKS: Look[] = [
   {
+    id: "highstreet", name: "High Street",
+    blurb: "Warm paper, inky blue and a picture of the work. Clear prices with a friendly, practical feel.",
+    overrides: {
+      colors: { background: "#f3eddf", text: "#183c55", muted: "#50616b", surface: "#fffaf0", accent: "#183c55", accentText: "#fffaf0", border: "#cec6b6" },
+      text: { headingFont: "bricolage", bodyFont: "inter", size: "md", headingCase: "normal", headingWeight: "bold", align: "left" },
+      background: { kind: "solid", color: "#f3eddf" },
+      header: { layout: "cover", avatarShape: "logo", avatarSize: "md", align: "left", actions: "primary", showLocation: true, scrim: "soft" },
+      buttons: { shape: "rounded", fill: "solid", shadow: "none", showIcons: true },
+      cards: { surface: "transparent", opacity: 100, radius: "sm", border: "thin", shadow: "none", padding: "comfortable" },
+      layout: { width: "wide", density: "comfortable", desktop: "split" },
+      decoration: "none", motion: "subtle",
+    },
+  },
+  {
+    id: "workbay", name: "Workbay",
+    blurb: "Deep blue-grey, practical yellow and generous service cards. Built to put the work first.",
+    overrides: {
+      colors: { background: "#152a32", text: "#f3f5ed", muted: "#b5c5c7", surface: "#213a43", accent: "#f5da64", accentText: "#152a32", border: "#476069" },
+      text: { headingFont: "spaceGrotesk", bodyFont: "inter", size: "md", headingCase: "normal", headingWeight: "bold", align: "left" },
+      background: { kind: "solid", color: "#152a32" },
+      header: { layout: "cover", avatarShape: "logo", avatarSize: "md", align: "left", actions: "primary", showLocation: true, scrim: "soft" },
+      buttons: { shape: "rounded", fill: "solid", shadow: "none", showIcons: true },
+      cards: { surface: "solid", opacity: 100, radius: "md", border: "thin", shadow: "none", padding: "roomy" },
+      layout: { width: "wide", density: "comfortable", desktop: "split" },
+      decoration: "none", motion: "subtle",
+    },
+  },
+  {
     id: "folio",
     name: "Folio",
     blurb: "Editorial. A serif name, a wide photograph and hairline sections. Quiet, assured and made for a good picture.",
