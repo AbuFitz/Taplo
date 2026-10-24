@@ -33,7 +33,7 @@ describe("current UK business examples", () => {
       const page = toPage(initialConfig(e.scenario))
       const start = exampleStart(e.slug)!
       expect(start.widgets.map(w => w.appearance)).toEqual(page.widgets.map(w => w.appearance))
-      const first = start.widgets.find(w => Object.keys(w.appearance).length > 0)!
+      const first = start.widgets.find(w => Object.keys(w.appearance).length > 0) ?? start.widgets[0]!
       first.appearance.surface = "glass"
       expect(toPage(initialConfig(e.scenario)).widgets.map(w => w.appearance)).toEqual(page.widgets.map(w => w.appearance))
       expect(exampleStart(e.slug)!.widgets.find(w => w.type === first.type)!.appearance.surface).not.toBe("glass")

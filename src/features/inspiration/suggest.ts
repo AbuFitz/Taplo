@@ -31,6 +31,11 @@ export function exampleStart(slug: string) {
       for (const field of getWidget(w.type)?.fields ?? []) if (field.kind === "refs" || field.kind === "record") delete settings[field.key]
       // A sample may name itself in its share button; a new owner starts with the neutral label.
       if (w.type === "share") delete settings.label
+      if (w.type === "text") { settings.body = ""; delete settings.title }
+      if (w.type === "image") { settings.image = undefined; delete settings.caption; delete settings.linkUrl }
+      if (w.type === "announcement") { settings.text = ""; delete settings.linkUrl; delete settings.linkLabel }
+      if (w.type === "link") { settings.url = ""; delete settings.subtitle }
+      if (w.type === "enquiry") { delete settings.title; delete settings.intro; settings.buttonLabel = "Get in touch" }
       return { type: w.type, settings, appearance: structuredClone(w.appearance) }
     }),
   }

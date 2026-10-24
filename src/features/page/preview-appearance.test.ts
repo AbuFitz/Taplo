@@ -3,7 +3,7 @@ import { newPage } from "./starter";
 import { previewAppearance, previewWidgetStyle } from "./preview-appearance";
 
 describe("read-only look previews", () => {
-  it("uses a saved look without changing the draft, its widgets or the saved snapshot", () => {
+  it("uses a saved look without changing the draft, its blocks or the saved snapshot", () => {
     const page = newPage("barber");
     page.savedLooks = [
       {

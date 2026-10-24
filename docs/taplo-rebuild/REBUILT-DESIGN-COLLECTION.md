@@ -1,0 +1,26 @@
+# Rebuilt design collection
+
+25 October 2026. Owner priority: rebuild the entire visible collection with the editable engine, expand beyond local businesses into personal portfolios and independent founders, and call the content pieces blocks.
+
+32 selectable starting designs now each have a dedicated public gallery example: twelve rebuilt business looks plus twenty new designs. The gallery combines eight established business identities with 24 new original identities. Earlier saved theme IDs remain resolvable; they are not the advertised collection. Every visible choice is made from the same schema, colour/readability resolver, profile, block renderer and responsive layouts used by the editor. No separate template stylesheets or new runtime libraries.
+
+The full collection: Studio, Service, Personal, Midnight, Silver, Smoke, Folio, Showroom, Journal, Clay, Forge, Orchard; Atelier, Index, Kiln, Ritual, Petal, Founder, Habitat, Frame, Advisory, Lune, Batch, Cursor, Archive, Social, Tempo, Canvas, Stride, Repair, Occasion and Still.
+
+Identity and content: 24 original vector marks, 16 native concept-art pieces, 12 original generated raster artworks with saved prompts and provenance. No generated human portraits or car photographs. All new identities and work are fictional examples. No invented review ratings, testimonials, customer numbers, results or working integrations. Creative pages lead with selected work; maker pages use actual product records; other pages use authored service/menu, enquiries, hours and information blocks.
+
+Profile choices now include Floating profile and Portrait introduction, alongside the existing arrangements. Each has a graceful image-free fallback. The complete visible collection is individually composed rather than forced through one global card/shadow rule. Backgrounds include solid paper/ink, drifting gradients, grain and silk/flow shaders, with static/reduced-motion fallbacks. Linked backgrounds derive a quiet colour from the uploaded logo; manual colour editing detaches that link and movement can be turned off.
+
+Registration adds maintained icons and relevant categories for designers, founders, makers, florists, filmmakers, illustrators and interiors. Creative setup begins with work images; maker setup begins with a product, using the existing editor form and persisted draft. Example adoption clears fictional biographies, images, links and announcements as well as record references. Owner records and existing saved IDs are preserved.
+
+Visual corrections from rendered review: shortened a giant founder statement; made portfolio work lead; removed a repeated maker hero/gallery photograph; added whole-image framing for graphic work; fixed the half-empty one-image carousel; repaired intersecting orbital layers; increased plaque scale and spring responsiveness; enlarged marketing headings and introduced selected curved sections. Desktop design previews use shared browser chrome and customer URLs. Phone previews keep the shared hardware.
+
+Still required: finish the individual feature/product/pricing pages beyond the typography changes in this pass; complete every portal and booking-tool flow; keep refining all profile/block combinations and original art with owner feedback; physical iOS/Android keyboard and performance validation. Animation is an original code-native illustrative composition, not a finished exported cinematic film. Plaque fulfilment, wallet passes, backend, custom domain/mailbox setup and operator legal facts remain separate work. Do not claim complete frontend or visual approval from passing tests.
+
+Artwork: public/showcase/originals/PROVENANCE.json contains saved paths and generation prompts; marks and concept pieces are in public/showcase/marks and public/showcase/projects. Real example previews and theme thumbnails are captured from the renderer, not generated.
+
+
+## Validation
+
+Final production build and typecheck pass. Source lint has zero errors (four pre-existing warnings); the bare repository-wide lint command also includes old untracked scratch scripts, which have legacy CommonJS lint errors. 236 unit cases pass; 39 existing real-Postgres cases are skipped. Final release browser suite: 68 passed. Transparent wide-logo/profile undo, redo and reload: two passed. A wider editing/setup/profile run supplied 95 passing cases; its three outdated theme/profile assumptions were corrected and rechecked in the final suites. Native Firefox/WebKit representative collection and motion suite: 28 passed, followed by eight clean-adoption, homepage and motion-control cases. Physical-device keyboard and performance checks remain outstanding.
+
+Media: 74 full example captures (37 preserved/working example routes, 32 in the public gallery), all 32 current theme thumbnails, 54 existing interaction/setup capture jobs (one enquiry pose updated and rerun after its default became a card), and the actual setup walkthrough. The final tutorial is 34.68 seconds and decodes without errors. The code-native marketing orbit uses purpose-designed artwork, independent of these recordings. Original raster artwork, vector marks and conceptual portfolio art were inspected; representative full pages, homepage, plaque and library were reviewed at phone and desktop sizes.

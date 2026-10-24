@@ -9,7 +9,7 @@ import {
 import { Overlay } from "@/components/taplo/overlay";
 import { Button } from "@/components/ui/button";
 import { ColorField, ImageField } from "@/features/page/editor/controls";
-import { resolveStyle } from "@/features/page/themes/resolve";
+import { resolveStyle, shaderFallbackCss } from "@/features/page/themes/resolve";
 import { LOOKS, PALETTES } from "@/features/page/themes/looks";
 import { useDemo, initialState } from "./store";
 import type { StyleOverrides } from "@/features/page/contracts/style";
@@ -63,7 +63,7 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
       decoration: gradient ? "grain" : "none",
     });
   const resolved=resolveStyle(s.page.themeId,s.page.appearance,s.content.identity.logo?.accent).spec;
-  const previewBackground=resolved.background.kind === "gradient" ? `linear-gradient(${resolved.background.angle}deg,${resolved.background.from},${resolved.background.to})` : resolved.colors.background;
+  const previewBackground=resolved.background.kind === "gradient" ? `linear-gradient(${resolved.background.angle}deg,${resolved.background.from},${resolved.background.to})` : resolved.background.kind === "shader" ? shaderFallbackCss(resolved.background) : resolved.colors.background;
   return (
     <div
       className={
@@ -80,7 +80,7 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
         <span>
           Background & colours
           <span className="block text-xs font-normal text-muted-foreground">
-            {background?.kind === "gradient"
+            {background?.kind === "shader" ? `${background.style === "aurora" ? "Flow" : background.style === "grain" ? "Grain" : "Silk"} background` : background?.kind === "gradient"
               ? "Moving gradient"
               : background?.kind === "solid"
                 ? "Plain colour"
@@ -98,7 +98,7 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
         <span>
           Profile arrangement
           <span className="block text-xs font-normal text-muted-foreground">
-            {{minimal:"Compact",centered:"Centered",side:"Side by side",cover:"Photo cover",banner:"Photo fade",poster:"Editorial",editorial:"Editorial",feature:"Photo cover"}[header] ?? "Custom profile"}
+            {{floating:"Floating profile",portrait:"Portrait introduction",minimal:"Compact",centered:"Centered",side:"Side by side",cover:"Photo cover",banner:"Photo fade",poster:"Editorial",editorial:"Editorial",feature:"Photo cover"}[header] ?? "Custom profile"}
           </span>
         </span>
         <LayoutTemplate aria-hidden="true" className="ml-auto size-4" />
@@ -149,6 +149,14 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
                 </button>
               ))}
             </div>
+            <div className="grid grid-cols-3 gap-2" aria-label="Animated backgrounds">
+              {([['aurora','Flow'],['silk','Silk'],['grain','Grain']] as const).map(([style,name])=><button key={style} type="button" aria-pressed={background?.kind==='shader'&&background.style===style} className="setup-background-choice" onClick={()=>patch({background:{kind:'shader',style,base:resolved.colors.background,colors:[resolved.colors.background,resolved.colors.surface,resolved.colors.background],source:'logo',motion:true}})}><span aria-hidden="true" className="mb-2 block h-12 rounded-xl" style={{background:shaderFallbackCss({base:resolved.colors.background,colors:[resolved.colors.surface,resolved.colors.background]})}}/>{name}</button>)}
+            </div>
+            {background?.kind === 'shader' ? <div className="grid gap-3">
+              <label className="flex min-h-11 items-center justify-between gap-3 text-sm">Follow my logo colours<input type="checkbox" className="size-5 accent-black" checked={background.source==='logo'} onChange={e=>patch({background:{...background,source:e.target.checked?'logo':'manual'}})}/></label>
+              <label className="flex min-h-11 items-center justify-between gap-3 text-sm">Gentle movement<input type="checkbox" className="size-5 accent-black" checked={background.motion??true} onChange={e=>patch({background:{...background,motion:e.target.checked}})}/></label>
+              <div className="grid grid-cols-2 gap-3">{background.colors.map((color,i)=><ColorField key={i} label={`Background colour ${i+1}`} value={color} onChange={value=>patch({background:{...background,source:'manual',colors:background.colors.map((c,j)=>i===j?value:c)}})}/>)}</div>
+            </div> : null}
             {background?.kind === "gradient" ? (
               <>
                 <label className="flex min-h-11 items-center justify-between gap-3 text-sm">
@@ -204,7 +212,7 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
                   }
                 />
               </>
-            ) : (
+            ) : background?.kind === "shader" ? null : (
               <ColorField
                 label="Background colour"
                 value={
@@ -239,6 +247,8 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
             <div className="grid grid-cols-2 gap-2">
               {(
                 [
+                  { id: "floating", name: "Floating profile" },
+                  { id: "portrait", name: "Portrait introduction" },
                   { id: "minimal", name: "Compact" },
                   { id: "centered", name: "Centered" },
                   { id: "side", name: "Side by side" },

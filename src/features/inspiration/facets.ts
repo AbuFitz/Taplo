@@ -18,7 +18,7 @@ export function styleTags(f: Pick<ExampleFacts, "colors" | "header">): StyleTag[
   const bg = f.colors.background ?? "#ffffff"
   const tags: StyleTag[] = [luminance(bg) < 0.25 ? "Dark" : "Light"]
   if (saturation(bg) > 0.35) tags.push("Bold colour")
-  tags.push(f.header === "cover" || f.header === "poster" || f.header === "feature" ? "Photo-led" : "Type-led")
+  tags.push(f.header === "cover" || f.header === "poster" || f.header === "feature" || f.header === "floating" || f.header === "portrait" || f.header === "banner" ? "Photo-led" : "Type-led")
   return tags
 }
 

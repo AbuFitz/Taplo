@@ -18,8 +18,8 @@ const vmOf = (k: string, over: Partial<{ themeId: string; plan: "free" | "core" 
   return buildPageViewModel(f.content, { ...f.page, themeId: over.themeId ?? f.page.themeId }, { plan: over.plan ?? f.plan, now: new Date("2026-10-22T12:00:00Z") });
 };
 
-describe("widget registry", () => {
-  it("defines every widget type, with a schema, defaults and valid editor fields", () => {
+describe("block registry", () => {
+  it("defines every block type, with a schema, defaults and valid editor fields", () => {
     expect(Object.keys(WIDGETS).sort()).toEqual([...WIDGET_TYPES].sort());
     for (const type of WIDGET_TYPES) {
       const def = WIDGETS[type];
@@ -112,7 +112,7 @@ describe("style overrides", () => {
     const r = resolveStyle("clean", { colors: { background: "#e8f0e8" } });
     expect(r.spec.background).toEqual({ kind: "solid", color: "#e8f0e8" });
   });
-  it("accent-filled widgets stay readable", () => {
+  it("accent-filled blocks stay readable", () => {
     const r = resolveStyle("clean", {});
     const w = widgetStyle(r, { surface: "accent", accent: "#ffee00" });
     expect(contrastRatio(w.vars["--tp-foreground"]!, w.vars["--tp-card-bg"]!)).toBeGreaterThanOrEqual(4.5);
@@ -138,14 +138,14 @@ describe("page document and migration", () => {
     expect(m.page.widgets.length).toBeGreaterThan(0);
     expect(m.notes[0]).toMatch(/content is unchanged/);
   });
-  it("removes unknown widget types from view and says so in plain language", () => {
+  it("removes unknown block types from view and says so in plain language", () => {
     const page = newPage("barber");
     const raw = { ...page, widgets: [...page.widgets, { id: "x1", type: "hologram", version: 1, hidden: false, appearance: {}, settings: {} }] };
     const m = migratePage(raw, "barber");
     expect(m.page.widgets.some((w) => w.type === "hologram")).toBe(false);
     expect(m.notes.join(" ")).toMatch(/no longer available/);
   });
-  it("de-duplicates widget ids and repairs a half-valid document", () => {
+  it("de-duplicates block ids and repairs a half-valid document", () => {
     const w = newWidget("link", { label: "A", url: "https://example.com" });
     const m = migratePage({ schemaVersion: 2, themeId: "ghost", appearance: "nope", widgets: [w, { ...w }] }, "other");
     expect(new Set(m.page.widgets.map((x) => x.id)).size).toBe(2);
@@ -158,7 +158,7 @@ describe("page document and migration", () => {
 });
 
 describe("starters are explicit, previewable and non-destructive", () => {
-  it("every industry's starter lists valid widget types", () => {
+  it("every industry's starter lists valid block types", () => {
     for (const i of INDUSTRY_PRESETS) {
       expect(starterWidgets(i.id).length, i.id).toBeGreaterThan(0);
       for (const w of starterWidgets(i.id)) expect(WIDGETS[w.type as WidgetType]).toBeDefined();
@@ -182,7 +182,7 @@ describe("starters are explicit, previewable and non-destructive", () => {
 });
 
 describe("view-model", () => {
-  it("switching theme preserves business records and widget arrangement exactly", () => {
+  it("switching theme preserves business records and block arrangement exactly", () => {
     for (const k of ["barber", "tutor", "mechanic", "cafe", "consultant", "unlisted"]) {
       const a = vmOf(k);
       for (const t of THEMES) {
@@ -192,7 +192,7 @@ describe("view-model", () => {
       }
     }
   });
-  it("hides empty/hidden widgets from visitors but still lists them for the owner, with a reason", () => {
+  it("hides empty/hidden blocks from visitors but still lists them for the owner, with a reason", () => {
     const f = fx("minimal");
     const page = newPage("tutor");
     page.widgets.push(newWidget("gallery"), newWidget("hours"));
@@ -205,13 +205,13 @@ describe("view-model", () => {
     expect(vm.visible.some((w) => w.id === page.widgets[0]!.id)).toBe(false);
     expect(gallery.status.state === "empty" && gallery.status.reason).toMatch(/photos/i);
   });
-  it("never invents content: no reviews widget visible without testimonials or a rating", () => {
+  it("never invents content: no reviews block visible without testimonials or a rating", () => {
     const vm = vmOf("unlisted");
     expect(vm.business.testimonials).toEqual([]);
     const page = { ...fx("unlisted").page, widgets: [newWidget("reviews")] };
     expect(buildPageViewModel(fx("unlisted").content, page, { plan: "business" }).visible).toEqual([]);
   });
-  it("plan gating keeps content but hides locked widgets, with an explanation", () => {
+  it("plan gating keeps content but hides locked blocks, with an explanation", () => {
     const vm = vmOf("barber", { plan: "free" });
     const gallery = vm.widgets.find((w) => w.type === "gallery");
     if (gallery) expect(gallery.status.state).toBe("locked");
@@ -237,7 +237,7 @@ describe("view-model", () => {
     const vm = buildPageViewModel(f.content, page, { plan: "business", now: new Date("2026-10-22T12:00:00Z") });
     expect(vm.visible.map((w) => w.settings.text)).toEqual(["Fresh"]);
   });
-  it("corrupt widget settings fall back to defaults and are reported", () => {
+  it("corrupt block settings fall back to defaults and are reported", () => {
     const f = fx("barber");
     const w = newWidget("serviceList");
     w.settings = { variant: "hologram", showPrices: "yes" };

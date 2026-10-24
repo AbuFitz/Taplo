@@ -16,7 +16,7 @@ export default async function ThemeGallery({ searchParams }: { searchParams: Pro
     <div className="mx-auto w-full max-w-[1800px] p-4 sm:p-6">
       <p className="text-sm"><Link className="underline" href="/demo/profiles">← Sample profiles</Link></p>
       <h1 className="mt-2 text-xl font-semibold">{fixture.content.identity.name} in every look</h1>
-      <p className="mt-1 max-w-3xl text-sm text-neutral-600">Same business records, same widgets in the same order. Only the theme changes. (Synthetic sample.)</p>
+      <p className="mt-1 max-w-3xl text-sm text-neutral-600">Same business records, same blocks in the same order. Only the theme changes. (Synthetic sample.)</p>
       <nav aria-label="Samples" className="mt-4 flex flex-wrap gap-2 text-sm">
         {FIXTURES.filter((f) => !["minimal", "no-contacts", "stress", "detailer"].includes(f.key)).map((f) => (
           <Link key={f.key} href={`/demo/themes?fixture=${f.key}&viewport=${viewport}`} className={`rounded-full border px-3 py-1.5 ${f.key === fixture.key ? "bg-neutral-900 text-white" : ""}`}>{f.label}</Link>

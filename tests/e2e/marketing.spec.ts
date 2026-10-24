@@ -213,7 +213,7 @@ test.describe("inspiration", () => {
     ).toHaveAttribute("src", /ex-station-road-barbers-desk/);
     await expect.poll(() => first.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
   });
-  test("using a design on an existing page changes the look and arrangement only; the owner's content and widget order stay", async ({
+  test("using a design on an existing page changes the look and arrangement only; the owner's content and block order stay", async ({
     page,
   }) => {
     await page.goto("/dashboard");

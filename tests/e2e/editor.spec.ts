@@ -4,7 +4,7 @@ import { FIXTURES } from "../../src/features/themes/fixtures";
 import { look, pickLook, addWidget, openStructure, openEditorWithSample, insp, openRow, openSection, pngFile, previewFrame, previewOrder, row, rowOrder, seedFixture, selectPart } from "./helpers";
 
 test.describe("My page editor", () => {
-  test("add, edit, duplicate, hide and remove widgets; records survive removal", async ({ page }) => {
+  test("add, edit, duplicate, hide and remove blocks; records survive removal", async ({ page }) => {
     await openEditorWithSample(page, "Unlisted");
     const frame = previewFrame(page);
 

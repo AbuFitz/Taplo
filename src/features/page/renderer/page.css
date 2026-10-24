@@ -424,3 +424,20 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 [data-testid="booking-flow"] [data-testid="bk-slot"], [data-testid="booking-flow"] [aria-pressed]{border-color:transparent}
 [data-testid="booking-step-action"]{border-top:0;background:linear-gradient(transparent,var(--tp-background) 24%)}
 .tp-gallery-grid img,.tp-team-card{box-shadow:var(--tp-shadow-1)}
+
+/* Photo and portrait profiles are editable arrangements, with sensible image-free fallbacks. */
+.tp-header[data-layout=floating]{justify-items:stretch;gap:0;justify-self:stretch}
+.tp-floating-cover{position:relative;aspect-ratio:16/10;overflow:hidden;border-radius:var(--tp-card-radius)}
+.tp-floating-cover img,.tp-identity-portrait img{width:100%;height:100%;object-fit:cover}
+.tp-floating-intro{position:relative;display:grid;gap:12px;min-width:0;padding:var(--tp-s-5);border-radius:var(--tp-card-radius);background:var(--tp-card-bg);box-shadow:var(--tp-card-shadow);justify-items:var(--tp-header-justify);text-align:var(--tp-header-align)}
+.tp-header[data-layout=floating][data-cover] .tp-floating-intro{margin:-42px 14px 0}
+.tp-floating-intro .tp-name{font-size:clamp(2rem,8cqi,3.25rem);line-height:1.05}
+.tp-header[data-layout=portrait]{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;text-align:left;justify-items:stretch;container-type:inline-size;--tp-header-justify:start;--tp-header-align:left}
+.tp-header[data-layout=portrait][data-cover]{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);align-items:center;gap:18px}
+.tp-portrait-intro{display:grid;min-width:0;gap:12px;justify-items:start}
+.tp-portrait-intro .tp-name{font-size:clamp(1.8rem,8cqi,3.25rem);line-height:1.06}
+.tp-portrait-intro .tp-bio{font-size:var(--tp-t-sm)}
+.tp-portrait-intro .tp-logo{max-height:36px}
+.tp-identity-portrait{aspect-ratio:3/4;overflow:hidden;border-radius:999px;box-shadow:var(--tp-card-shadow)}
+.tp-header[data-layout=portrait]>.tp-actions{grid-column:1/-1}
+@media(min-width:900px){.tp-floating-cover{aspect-ratio:16/8}.tp-header[data-layout=floating][data-cover] .tp-floating-intro{margin-inline:28px}.tp-header[data-layout=portrait][data-cover]{gap:30px}}

@@ -78,7 +78,7 @@ export function WidgetOrbit() {
           <MapPin className="orbit-place-pin" /><span>Come on in.</span><strong>St Albans.</strong><span className="orbit-place-action">Find the studio<ArrowUpRight /></span>
         </div>
       </div>
-      <span className="sr-only">Illustrative business profile, service, calendar, social and location widgets.</span>
+      <span className="sr-only">Illustrative business profile, service, calendar, social and location blocks.</span>
     </Link>
     <Link href="/product" className="widget-orbit-cta">Explore the widgets<ArrowUpRight size={16} aria-hidden="true" /></Link>
   </div>;

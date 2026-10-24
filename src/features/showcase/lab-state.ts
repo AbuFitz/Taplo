@@ -1,3 +1,4 @@
+import { COLLECTION_BRIEFS, type CollectionScenario } from "./collection"
 import { businessContentSchema, type BusinessContent } from "@/features/businesses/content"
 import type { PageDoc } from "@/features/page/contracts/page"
 import { applySectionTreatment, type SectionTreatmentId } from "@/features/page/section-treatments"
@@ -13,23 +14,24 @@ export interface LabConfig {
 }
 
 /** The look each example was designed with. */
-export const EXAMPLE_LOOK: Record<Scenario, string> = { corner: "open", oakfield: "service", rowan: "personal", brookfield: "open", station: "service", detailer: "ink", barber: "folio", dealer: "showroom", trades: "service", physio: "open", cafe: "clay", tutor: "orchard", gym: "ink" }
+export const EXAMPLE_LOOK: Record<Scenario, string> = { ...Object.fromEntries(COLLECTION_BRIEFS.map(b=>[b.id,b.look])) as Record<CollectionScenario,string>, corner: "clay", oakfield: "orchard", rowan: "personal", brookfield: "showroom", station: "service", detailer: "ink", barber: "folio", dealer: "showroom", trades: "service", physio: "open", cafe: "clay", tutor: "orchard", gym: "forge" }
 
 /**
  * How each example is arranged on top of its look: the header, how wide the page is and what it does on a computer. These
  * are the owner's own controls (Header and Design tabs), so anything shown in the gallery can be reproduced in the editor.
  */
 export const EXAMPLE_OVERRIDES: Record<Scenario, StyleOverrides> = {
-  corner: { header: { layout: "cover", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
+  ...Object.fromEntries(COLLECTION_BRIEFS.map(b=>[b.id,{header:{actions:"none"}}])) as Record<CollectionScenario,StyleOverrides>,
+  corner: { header: { layout: "floating", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
   oakfield: { header: { layout: "side", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
-  rowan: { header: { layout: "centered", avatarShape: "circle", avatarSize: "lg", align: "left" }, text: { align: "left" }, layout: { desktop: "split", width: "wide", rhythm: "editorial" } },
+  rowan: { header: { layout: "portrait", avatarShape: "circle", avatarSize: "lg", align: "left" }, text: { align: "left" }, layout: { desktop: "split", width: "wide", rhythm: "editorial" } },
   brookfield: { header: { layout: "feature", avatarShape: "logo", align: "left" }, layout: { width: "wide", desktop: "columns", rhythm: "editorial" } },
   station: { header: { layout: "banner", avatarShape: "logo", align: "left" }, layout: { desktop: "split", width: "wide", rhythm: "even" } },
   detailer: { header: { layout: "poster", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
   barber: {},
   physio: { header: { layout: "editorial", avatarShape: "logo", align: "left" }, text: { headingFont: "manrope", align: "left", size: "lg" }, layout: { desktop: "split", width: "wide", rhythm: "editorial" } },
-  cafe: { header: { layout: "cover", avatarShape: "circle", avatarSize: "md", align: "center" }, layout: { desktop: "columns", width: "wide" } },
-  tutor: { header: { layout: "cover", avatarShape: "circle", avatarSize: "md", align: "left" }, layout: { desktop: "split" } },
+  cafe: { header: { layout: "floating", avatarShape: "circle", avatarSize: "md", align: "center" }, layout: { desktop: "columns", width: "wide" } },
+  tutor: { header: { layout: "portrait", avatarShape: "circle", avatarSize: "md", align: "left" }, layout: { desktop: "split" } },
   gym: { header: { layout: "feature", avatarShape: "logo", align: "left", scrim: "strong" }, text: { headingFont: "spaceGrotesk", headingCase: "normal", size: "lg" }, layout: { desktop: "columns", width: "wide", rhythm: "editorial" } },
   trades: { header: { layout: "cover", avatarShape: "circle", avatarSize: "lg", align: "center" }, layout: { desktop: "centered", width: "regular" } },
   dealer: { layout: { desktop: "columns", width: "wide" } },

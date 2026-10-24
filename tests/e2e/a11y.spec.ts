@@ -48,7 +48,7 @@ test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", ()
     }
   });
 
-  test("editor: structure, page style, header, a widget, details and settings", async ({ page }) => {
+  test("editor: structure, page style, header, a block, details and settings", async ({ page }) => {
     await openEditorWithSample(page, "Barber");
     await scan(page, "editor/page-style", '[data-testid="my-page"]');
     await selectPart(page, "header");

@@ -115,3 +115,4 @@
 .tp-photo-wall>li{break-inside:avoid;margin-bottom:var(--tp-s-3)}.tp-photo-wall .tp-media{border-radius:var(--tp-card-radius);box-shadow:var(--tp-card-shadow)}.tp-photo-wall .tp-media img{display:block;width:100%;height:100%;object-fit:cover}
 @container(min-width:40rem){.tp-photo-wall{column-count:3}}
 .tp-service-description.tp-clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tp-gallery.tp-gallery-single{grid-template-columns:minmax(0,1fr)}.tp-photo-wall.tp-gallery-single{column-count:1}.tp-gallery-single .tp-media{aspect-ratio:4/3}

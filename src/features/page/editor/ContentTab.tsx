@@ -141,7 +141,7 @@ export function ProfileSections({ ed, only, identityOpen = true }: { ed: Editor;
       </Section>
 
       <Section title={`Photos (${gallery.length})`}>
-        <p className="text-xs text-muted-foreground">Photos you add here can appear in any Gallery widget. {ed.vm?.ent.gallery ? "" : "Galleries are shown from the Core plan; your photos are kept."}</p>
+        <p className="text-xs text-muted-foreground">Photos you add here can appear in any Gallery block. {ed.vm?.ent.gallery ? "" : "Galleries are shown from the Core plan; your photos are kept."}</p>
         <ul className="grid gap-2">
           {gallery.map((g) => (
             <li key={g.id} className="flex items-end gap-2">

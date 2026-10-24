@@ -18,7 +18,7 @@ export function Background({ vm, still = false }: { vm: PageViewModel; still?: b
         ) : (
           <div className="tp-bg-gradient" style={{ background: backgroundCss(spec), ...(still ? { animation: "none" } : {}) }} />
         )}
-        {b.kind === "shader" && !still ? <ShaderWallpaper style={b.style} colors={b.colors} base={b.base} /> : null}
+        {b.kind === "shader" && !still ? <ShaderWallpaper style={b.style} colors={b.colors} base={b.base} animate={b.motion !== false} /> : null}
       </div>
       <div className="tp-deco" aria-hidden="true" />
     </>

@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { ArrowUpRight, Search, X } from "lucide-react";
+import { businessAddress } from "@/lib/domains";
 import { Shot } from "@/features/marketing/Shot";
 import type { StyleOverrides } from "@/features/page/contracts/style";
 import { UseDesign } from "./UseDesign";
@@ -74,11 +75,11 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
           className="size-4 shrink-0 text-foreground/60"
         />
         <input
-          aria-label="Find a business design"
+          aria-label="Find a design"
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Try café, clinic, booking…"
+          placeholder="Try portfolio, founder, café…"
           className="min-h-12 w-full min-w-0 appearance-none bg-transparent text-base outline-none [&::-webkit-search-cancel-button]:hidden"
         />
         {query ? (
@@ -202,7 +203,7 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
         </div>
       </div>
 
-      <div className="design-industry-rail" role="group" aria-label="Business categories"><button type="button" aria-pressed={biz===null} onClick={()=>setBiz(null)}>All businesses</button>{industries.map(i=><button type="button" key={i.id} aria-pressed={biz===i.id} onClick={()=>setBiz(biz===i.id?null:i.id)}>{i.label}</button>)}</div>
+      <div className="design-industry-rail" role="group" aria-label="Page categories"><button type="button" aria-pressed={biz===null} onClick={()=>setBiz(null)}>All designs</button>{industries.map(i=><button type="button" key={i.id} aria-pressed={biz===i.id} onClick={()=>setBiz(biz===i.id?null:i.id)}>{i.label}</button>)}</div>
       {shown.length === 0 ? (
         <p className="py-20 text-lg text-foreground/70">
           No matching designs. Try another search or remove a filter.
@@ -239,7 +240,8 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
                       id={`ex-${d.assetSlug}-desk` as never}
                       alt={`${d.name}'s page on a desktop screen`}
                       width={720}
-                      frame="none"
+                      frame="browser"
+                      url={businessAddress(d.slug)}
                       priority={n < 2}
                       className="w-full"
                     />

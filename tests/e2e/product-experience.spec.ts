@@ -1,8 +1,9 @@
+import { HOME_DESIGNS } from "../../src/features/marketing/home/designs";
 import { expect, test, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import path from "node:path";
 import { PRODUCT_PAGES } from "../../src/features/marketing/product";
-import { CURRENT_LOOKS, SPOTLIGHT_LOOK_IDS } from "../../src/features/page/themes/looks";
+import { CURRENT_LOOKS } from "../../src/features/page/themes/looks";
 import { PRODUCT_LINKS } from "../../src/features/marketing/ia";
 const routes = [
   "/product",
@@ -132,7 +133,7 @@ test("feature copy follows the real look count and distinguishes plans, connecti
 }) => {
   await page.goto("/product/design");
   const count = await page.getByRole("radio").count();
-  expect(count).toBe(SPOTLIGHT_LOOK_IDS.length);
+  expect(count).toBe(HOME_DESIGNS.length);
   const status = page.getByTestId("status");
   await expect(status).toContainText(`${CURRENT_LOOKS.length} starting looks`);
   const plan = status

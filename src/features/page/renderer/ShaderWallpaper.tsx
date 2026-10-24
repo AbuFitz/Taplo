@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-type Props = { style: "aurora" | "silk" | "grain"; colors: string[]; base: string }
+type Props = { style: "aurora" | "silk" | "grain"; colors: string[]; base: string; animate?: boolean }
 
 /**
  * Optional animated wallpaper (Paper Shaders, Apache-2.0, pinned). The static colour fields in
@@ -21,10 +21,15 @@ const Shader = React.lazy(async () => {
   }
 })
 
+let supported: boolean | undefined;
 function webglAvailable() {
+  if (supported !== undefined) return supported;
   try {
     const c = document.createElement("canvas")
-    return Boolean(c.getContext("webgl2") || c.getContext("webgl"))
+    const gl = c.getContext("webgl2") || c.getContext("webgl");
+    supported = Boolean(gl);
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    return supported;
   } catch {
     return false
   }
@@ -41,11 +46,22 @@ export function ShaderWallpaper(props: Props) {
     () => window.matchMedia(reducedQuery).matches,
     () => true,
   )
-  if (!on) return null
+  const host = React.useRef<HTMLDivElement>(null);
+  const [active, setActive] = React.useState(false);
+  const [seen, setSeen] = React.useState(false);
+  React.useEffect(() => {
+    const el = host.current;
+    if (!el) return;
+    let visible = false;
+    const sync = () => setActive(visible && !document.hidden);
+    const observer = new IntersectionObserver(([entry]) => { visible = Boolean(entry?.isIntersecting); if (visible) setSeen(true); sync(); });
+    observer.observe(el); document.addEventListener("visibilitychange", sync);
+    return () => { observer.disconnect(); document.removeEventListener("visibilitychange", sync); };
+  }, []);
   return (
-    <div className="tp-shader" aria-hidden="true">
+    <div ref={host} className="tp-shader" aria-hidden="true" data-active={active && !reduced && props.animate !== false}>
       <React.Suspense fallback={null}>
-        <Shader {...props} speed={reduced ? 0 : 0.35} />
+        {on && seen ? <Shader {...props} speed={reduced || !active || props.animate === false ? 0 : 0.3} /> : null}
       </React.Suspense>
     </div>
   )

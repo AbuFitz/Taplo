@@ -32,10 +32,10 @@ export function Products() {
   }
   return (
     <>
-      <PageHeader title="Products and vehicles" description="Things you sell, recommend or have in stock. Show them on your page with a Products widget." actions={<Button onClick={() => open(blankProduct(), true)}><Plus /> Add item</Button>} />
+      <PageHeader title="Products and vehicles" description="Things you sell, recommend or have in stock. Show them on your page with a Products block." actions={<Button onClick={() => open(blankProduct(), true)}><Plus /> Add item</Button>} />
       <div className="grid max-w-3xl gap-6">
         {active.length === 0 ? (
-          <div className="rounded-xl border border-dashed p-6"><h2 className="font-semibold">No products yet</h2><p className="mt-1 text-sm text-muted-foreground">Add a product, then add a Products widget in My page → Content. Until you do, that widget stays hidden.</p></div>
+          <div className="rounded-xl border border-dashed p-6"><h2 className="font-semibold">No products yet</h2><p className="mt-1 text-sm text-muted-foreground">Add a product, then add a Products block in My page → Content. Until you do, that block stays hidden.</p></div>
         ) : (
           <ul className="grid gap-3">
             {active.map((p) => (
@@ -55,7 +55,7 @@ export function Products() {
       </div>
       <Dialog open={editing !== null} onOpenChange={(o) => !o && setEditing(null)}>
         <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-lg">
-          <DialogHeader><DialogTitle>{editing?.isNew ? "Add a product" : "Edit product"}</DialogTitle><DialogDescription>Shown in any Products widget on your page.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{editing?.isNew ? "Add a product" : "Edit product"}</DialogTitle><DialogDescription>Shown in any Products block on your page.</DialogDescription></DialogHeader>
           {editing ? <ProductForm product={editing.p} onChange={(p) => setEditing({ ...editing, p })} showErrors={showErr} /> : null}
           <DialogFooter><Button variant="outline" onClick={() => setEditing(null)}>Cancel</Button><Button onClick={save}>Save product</Button></DialogFooter>
         </DialogContent>

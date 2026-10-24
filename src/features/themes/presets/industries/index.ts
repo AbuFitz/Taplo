@@ -99,6 +99,13 @@ const RAW: IndustryPreset[] = [
   preset("hospitality", "Cafe / restaurant", "general", "contact", ["Menu", "Catering", "Private hire"], ["food", "cafe", "restaurant", "coffee", "bakery", "pub", "takeaway"], { services: "Menu", booking: "Book a table" }, { suggestedThemeId: "clean", starterWidgets: ["booking", "priceMenu", "document", "hours", "gallery", "location", "social", "reviews"] }),
   preset("event-services", "Events / entertainment", "general", "request", ["Wedding package", "Corporate event", "Party"], ["dj", "catering", "wedding"]),
   // Fallback — always available, publishes immediately.
+  preset("designer", "Designer / creative studio", "professional", "contact", ["Brand identity", "Website design", "Design consultation"], ["graphic", "branding", "design", "portfolio"], {services:"Projects",booking:"Discuss a project"}, {suggestedThemeId:"index",starterWidgets:["gallery","text","serviceList","enquiry","social"]}),
+  preset("founder", "Founder / entrepreneur", "general", "contact", ["Working session", "Product feedback", "Collaboration"], ["startup", "entrepreneur", "creator", "independent"], {services:"Work together"}, {suggestedThemeId:"founder",starterWidgets:["text","gallery","enquiry","social"]}),
+  preset("maker", "Maker / independent shop", "general", "contact", [], ["ceramic", "pottery", "craft", "vintage", "retail", "shop"], {services:"Collection"}, {suggestedThemeId:"kiln",starterWidgets:["products","text","gallery","enquiry"]}),
+  preset("florist", "Florist / event stylist", "general", "contact", ["Seasonal bouquet", "Event flowers", "Flowers for a space"], ["floral", "flowers", "event styling"], {}, {suggestedThemeId:"petal",starterWidgets:["gallery","serviceList","enquiry","hours"]}),
+  preset("filmmaker", "Filmmaker / videographer", "professional", "contact", ["Brand film", "A day of filming", "Editing"], ["film", "video", "production", "portfolio"], {services:"Work together"}, {suggestedThemeId:"frame",starterWidgets:["gallery","serviceList","text","enquiry"]}),
+  preset("illustrator", "Illustrator / artist", "professional", "contact", ["Editorial illustration", "Personal commission"], ["art", "drawing", "lettering", "portfolio"], {services:"Commissions"}, {suggestedThemeId:"canvas",starterWidgets:["gallery","text","serviceList","enquiry"]}),
+  preset("interiors", "Interior designer", "professional", "contact", ["Room consultation", "Colour and materials", "Room plan"], ["interior", "styling", "spaces", "portfolio"], {}, {suggestedThemeId:"habitat",starterWidgets:["gallery","serviceList","text","enquiry"]}),
   preset("other", "Other / describe your business", "general", "contact", [], []),
 ];
 

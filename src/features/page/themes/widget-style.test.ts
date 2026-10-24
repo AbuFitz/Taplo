@@ -2,21 +2,21 @@ import { describe, expect, it } from "vitest";
 import { contrastRatio } from "./color";
 import { resolveStyle, widgetStyle } from "./resolve";
 
-describe("effective widget surfaces", () => {
-  it("keeps transparent widget text readable after changing the wallpaper independently of the palette", () => {
+describe("effective block surfaces", () => {
+  it("keeps transparent block text readable after changing the wallpaper independently of the palette", () => {
     const page = resolveStyle("night", { background: { kind: "solid", color: "#ffffff" }, colors: { text: "#000000" } });
     const widget = widgetStyle(page, { surface: "transparent", text: "#ffffff" });
     expect(contrastRatio(widget.vars["--tp-foreground"]!, "#ffffff")).toBeGreaterThanOrEqual(4.5);
   });
 
-  it("resolves outlined buttons against their widget background", () => {
+  it("resolves outlined buttons against their block background", () => {
     const page = resolveStyle("night");
     const widget = widgetStyle(page, { background: "#ffffff", text: "#000000", buttonFill: "outline" });
     expect(widget.vars["--tp-btn-bg"]).toBe("transparent");
     expect(contrastRatio(widget.vars["--tp-btn-text"]!, "#ffffff")).toBeGreaterThanOrEqual(4.5);
   });
 
-  it("removes inherited glass effects when a widget has no surface", () => {
+  it("removes inherited glass effects when a block has no surface", () => {
     const page = resolveStyle("night", { cards: { surface: "glass" } });
     const widget = widgetStyle(page, { surface: "transparent" });
     expect(page.cssVars["--tp-card-blur"]).toBe("22px");
@@ -36,7 +36,7 @@ describe("effective widget surfaces", () => {
     expect(widget.vars["--tp-card-border-color"]).toBe("var(--tp-border)");
   });
 
-  it("does not mutate the page or stored widget appearance", () => {
+  it("does not mutate the page or stored block appearance", () => {
     const page = resolveStyle("night");
     const appearance = { surface: "transparent" as const, text: "#ffffff" };
     const before = structuredClone({ page, appearance });

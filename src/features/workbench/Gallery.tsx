@@ -16,7 +16,7 @@ export function WorkbenchIndex() {
   return (
     <main className="mx-auto max-w-[1700px] px-5 py-8">
       <h1 className="text-2xl font-semibold tracking-tight">Component workbench</h1>
-      <p className="mt-1 max-w-3xl text-sm text-muted-foreground">Every widget and overlay in its real shared component, at its real width, in the states that matter. {STORIES.length} stories. Frames are the production renderer; nothing here is a replica.</p>
+      <p className="mt-1 max-w-3xl text-sm text-muted-foreground">Every block and overlay in its real shared component, at its real width, in the states that matter. {STORIES.length} stories. Frames are the production renderer; nothing here is a replica.</p>
       <nav aria-label="Groups" className="mt-4 flex flex-wrap gap-2">
         {["all", ...GROUPS].map((g) => <button key={g} type="button" aria-pressed={only === g} onClick={() => setOnly(g)} className="min-h-9 rounded-full border px-3.5 text-sm aria-pressed:border-foreground aria-pressed:bg-foreground aria-pressed:text-background">{g === "all" ? "All" : g}</button>)}
       </nav>

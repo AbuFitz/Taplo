@@ -12,27 +12,27 @@ type Side = "before" | "after"
 const pos = (f?: { x: number; y: number }) => (f ? { objectPosition: `${f.x}% ${f.y}%` } : undefined)
 
 /** Real images keep their proportions in the viewer; both halves of a comparison are accessible. */
-export function Gallery({ items, variant, title }: { items: GalleryItem[]; variant: "grid" | "carousel" | "beforeAfter" | "masonry"; title?: string }) {
+export function Gallery({ items, variant, title, fit = "cover" }: { items: GalleryItem[]; variant: "grid" | "carousel" | "beforeAfter" | "masonry"; title?: string; fit?: "cover" | "contain" }) {
   const [selection, setSelection] = React.useState<{ at: number; side: Side } | null>(null)
   const openedFrom = React.useRef<HTMLButtonElement | null>(null)
   const label = title || "Gallery"
   const tile = (g: GalleryItem, i: number, ratio?: string, side: Side = "after") => {
     const image = side === "before" ? g.before! : g.image
     return <button type="button" className="tp-gallery-open" onClick={(e) => { openedFrom.current = e.currentTarget; setSelection({ at: i, side }) }} aria-haspopup="dialog" aria-label={`${g.caption || image.alt}${g.before ? `, ${side}` : ""}. Open larger`} data-testid="gallery-open">
-      <span className="tp-media block" style={ratio ? { aspectRatio: ratio } : undefined}>
+      <span className="tp-media block" style={fit === "contain" && image.width && image.height ? {aspectRatio:`${image.width} / ${image.height}`} : ratio ? { aspectRatio: ratio } : undefined}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={image.src} alt="" loading="lazy" draggable={false} style={pos(image.focal)} /></span>
+      <img src={image.src} alt="" loading="lazy" draggable={false} style={{...pos(image.focal),objectFit:fit}} /></span>
     </button>
   }
   return <>
-    {variant === "carousel" ? <Collection label={label} compact>{items.map((g, i) => <figure key={g.id} className="m-0">{tile(g, i, "4 / 5")}{g.caption ? <figcaption className="tp-gallery-caption">{g.caption}</figcaption> : null}</figure>)}</Collection>
+    {variant === "carousel" && items.length > 1 ? <Collection label={label} compact>{items.map((g, i) => <figure key={g.id} className="m-0">{tile(g, i, "4 / 5")}{g.caption ? <figcaption className="tp-gallery-caption">{g.caption}</figcaption> : null}</figure>)}</Collection>
       : variant === "beforeAfter" ? <ul className="grid gap-5">{items.map((g, i) => <li key={g.id}>
         <div className="grid grid-cols-2 gap-2">
           {g.before ? <div className="relative">{tile(g, i, "4 / 5", "before")}<span className="tp-ba-label pointer-events-none">Before</span></div> : null}
           <div className={cn("relative", !g.before && "col-span-2")}>{tile(g, i, g.before ? "4 / 5" : "4 / 3")}{g.before ? <span className="tp-ba-label pointer-events-none" data-after="">After</span> : null}</div>
         </div>{g.caption ? <p className="tp-gallery-caption">{g.caption}</p> : null}
       </li>)}</ul>
-        : <ul className={variant === "masonry" ? "tp-photo-wall" : "tp-gallery"} aria-label={label}>{items.map((g, i) => <li key={g.id}>{tile(g, i, variant === "masonry" ? (i % 3 === 0 ? "4 / 5" : i % 3 === 1 ? "1 / 1" : "4 / 3") : undefined)}{g.caption ? <p className="tp-gallery-caption">{g.caption}</p> : null}</li>)}</ul>}
+        : <ul className={cn(variant === "masonry" ? "tp-photo-wall" : "tp-gallery",items.length===1&&"tp-gallery-single")} aria-label={label}>{items.map((g, i) => <li key={g.id}>{tile(g, i, variant === "masonry" ? (i % 3 === 0 ? "4 / 5" : i % 3 === 1 ? "1 / 1" : "4 / 3") : undefined)}{g.caption ? <p className="tp-gallery-caption">{g.caption}</p> : null}</li>)}</ul>}
     <Overlay tone="page" kind="detail" open={selection !== null} onOpenChange={(o) => !o && setSelection(null)} title={selection ? `${label}: picture ${selection.at + 1} of ${items.length}` : label} hideTitle
       onCloseAutoFocus={(e) => { e.preventDefault(); openedFrom.current?.focus() }} className="tp-lightbox !border-0 !bg-black !text-white" bodyClassName="p-0" testId="lightbox">
       {selection && items[selection.at] ? <Lightbox items={items} at={selection.at} side={selection.side} select={setSelection} /> : null}

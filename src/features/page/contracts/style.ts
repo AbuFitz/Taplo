@@ -34,6 +34,8 @@ export const SHADER_STYLES = ["aurora", "silk", "grain"] as const;
 export const backgroundShaderSchema = z.object({
   kind: z.literal("shader"),
   style: z.enum(SHADER_STYLES),
+  source: z.enum(["manual", "logo"]).optional(),
+  motion: z.boolean().optional(),
   colors: z.array(hex).min(2).max(4),
   /** Base colour behind the shader and in the static fallback. */
   base: hex,
@@ -62,7 +64,7 @@ export const backgroundSchema = z.discriminatedUnion("kind", [
   }),
 ]);
 
-export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal", "feature", "editorial", "banner"] as const;
+export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal", "feature", "editorial", "banner", "floating", "portrait"] as const;
 export const headerSchema = z.object({
   layout: z.enum(HEADER_LAYOUTS),
   /** "logo" shows the picture uncropped at its own proportions (for wide wordmarks); a wide logo is never cropped to a face shape regardless. */

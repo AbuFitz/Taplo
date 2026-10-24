@@ -8,7 +8,7 @@ import { Gallery, type GalleryItem } from "@/features/inspiration/Gallery";
 export const metadata: Metadata = {
   title: "Designs | Taplo",
   description:
-    "Explore Taplo business page designs. See each on a desktop and a phone, then use it for your own business.",
+    "Explore designs for businesses, independent founders and creative portfolios. Open a demo and make it your own.",
 };
 
 export default async function InspirationPage({
@@ -34,6 +34,8 @@ export default async function InspirationPage({
       heading: f.heading,
       header:
         {
+          floating: "Floating profile",
+          portrait: "Portrait introduction",
           side: "Compact",
           cover: "Cover",
           poster: "Image hero",
@@ -56,7 +58,7 @@ export default async function InspirationPage({
             Find your starting point.
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-foreground/65">
-            Choose the structure. Make it your own. Every design opens as a working business demo.
+            For your business, your work or your next idea. Open a design, try the blocks and make it yours.
           </p>
         </div>
         <Gallery

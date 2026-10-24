@@ -360,7 +360,7 @@ function GalleryWidget({ w, vm }: P) {
   const s = w.settings as S
   const items = pick(vm.business.gallery, s.itemIds).map((g) => ({ id: g.id, caption: g.caption, image: { src: g.image.src, alt: g.image.alt, width: g.image.width, height: g.image.height, focal: g.image.focal }, before: g.beforeImage ? { src: g.beforeImage.src, alt: g.beforeImage.alt, width: g.beforeImage.width, height: g.beforeImage.height, focal: g.beforeImage.focal } : undefined }))
   const title = s.title ? <h2 className="mb-2 px-1 text-[1.125rem]" style={{ fontFamily: "var(--tp-font-heading)", fontWeight: "var(--tp-heading-weight)", textTransform: "var(--tp-heading-case)" as never }}>{s.title}</h2> : null
-  return <div>{title}<Gallery items={items} variant={s.variant === "carousel" ? "carousel" : s.variant === "beforeAfter" ? "beforeAfter" : s.variant === "masonry" ? "masonry" : "grid"} title={s.title} /></div>
+  return <div>{title}<Gallery items={items} fit={s.fit === "contain" ? "contain" : "cover"} variant={s.variant === "carousel" ? "carousel" : s.variant === "beforeAfter" ? "beforeAfter" : s.variant === "masonry" ? "masonry" : "grid"} title={s.title} /></div>
 }
 
 function VideoWidget({ w }: P) {

@@ -69,6 +69,8 @@ export function HeaderTile({ layout }: { layout: StyleSpec["header"]["layout"] }
       {layout === "feature" ? <><rect x="5" y="8" width="26" height="33" rx="3" fill="#8f8a80" /><rect x="36" y="13" width="23" height="5" rx="2" fill={ink} /><rect x="36" y="23" width="20" height="3" rx="1" fill={soft} /><rect x="36" y="32" width="22" height="6" rx="2" fill={ink} /></> : null}
       {layout === "editorial" ? <>{body(7, 7, 45)}<rect x="7" y="32" width="50" height="19" rx="4" fill={soft} /></> : null}
       {layout === "banner" ? <><rect x="0" y="0" width="64" height="29" fill={soft} /><rect x="5" y="24" width="54" height="32" rx="6" fill="#f4f2ee" />{body(10, 30, 42)}</> : null}
+      {layout === "floating" ? <><rect x="3" y="2" width="58" height="28" rx="5" fill={soft}/><rect x="8" y="22" width="48" height="31" rx="7" fill="#fff"/>{body(14,28,36)}</> : null}
+      {layout === "portrait" ? <><rect x="40" y="4" width="20" height="30" rx="10" fill={soft}/>{body(5,10,30)}<rect x="5" y="43" width="54" height="6" rx="3" fill={ink}/></> : null}
       {layout === "minimal" ? <><rect x="9" y="14" width="40" height="7" rx="2" fill={ink} /><rect x="9" y="26" width="30" height="2.5" rx="1.25" fill={soft} /><rect x="9" y="34" width="46" height="1" fill={soft} /></> : null}
     </svg>
   )

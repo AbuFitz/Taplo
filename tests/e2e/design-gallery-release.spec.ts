@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import path from "node:path";
+import {EXAMPLES} from "../../src/features/inspiration/examples";
 import AxeBuilder from "@axe-core/playwright";
 
 for (const width of [320, 390, 768, 1440]) {
@@ -7,8 +8,8 @@ for (const width of [320, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 950 });
     await page.goto("/inspiration");
     const cards = page.getByTestId("design-card");
-    await expect(cards).toHaveCount(8);
-    const search = page.getByRole("searchbox", { name: "Find a business design" });
+    await expect(cards).toHaveCount(EXAMPLES.length);
+    const search = page.getByRole("searchbox", { name: "Find a design" });
     await search.fill("clinic");
     await expect(cards).toHaveCount(1);
     await expect(cards.first().getByRole("heading")).toHaveText("Hollin Physiotherapy");
@@ -31,7 +32,7 @@ for (const width of [320, 390, 768, 1440]) {
     await expect(cards).toHaveCount(1);
     await expect(cards.first().getByRole("heading")).toHaveText("Forge Strength");
     await page.getByRole("button", { name: "Clear search" }).click();
-    await expect(cards).toHaveCount(8);
+    await expect(cards).toHaveCount(EXAMPLES.length);
     await page.getByTestId("gallery-filters").getByText("Desktop", { exact: true }).click();
     await expect(page.getByTestId("gallery-list")).toHaveAttribute("data-view", "desktop");
     await cards.first().locator("img").evaluate((img: HTMLImageElement) => img.decode());
@@ -70,7 +71,7 @@ for (const [slug, scenario, title, action] of [
     const serial = JSON.stringify(state.content);
     expect(serial).not.toContain(title);
     expect(state.page.widgets.some((w: { type: string }) => w.type === "team")).toBe(true);
-    expect(state.page.themeId).toBe(scenario === "physio" ? "open" : "ink");
+    expect(state.page.themeId).toBe(scenario === "physio" ? "open" : "forge");
     expect(state.page.appearance.header.layout).toBe(scenario === "physio" ? "editorial" : "feature");
   });
 }

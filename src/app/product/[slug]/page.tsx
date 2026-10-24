@@ -46,7 +46,7 @@ export default async function ProductPageRoute({
     a = primaryAction(),
     tone = PRODUCT_TONES[p.slug];
   return (
-    <div className="bg-background">
+    <div className="feature-page bg-background">
       <SiteHeader />
       <main>
         <section style={{ background: tone.background, color: tone.ink }}>

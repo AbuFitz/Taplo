@@ -162,7 +162,7 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
     await page.getByRole("button", {name:"Share from this device",exact:true}).click();
     await expect(page.getByTestId("share-panel").getByRole("status")).toHaveText("");
   });
-  test("native share is absent when unsupported, and a page without a share widget still shares", async ({page}) => {
+  test("native share is absent when unsupported, and a page without a share block still shares", async ({page}) => {
     await page.addInitScript(() => Object.defineProperty(navigator,"share",{value:undefined,configurable:true}));
     await open(page,FRAME("physio","open"));
     await expect(page.getByRole("link",{name:/Powered by Taplo.*Build your own/})).toHaveAttribute("href","/onboarding");
@@ -190,7 +190,7 @@ test.describe("products, status and payments", () => {
     await expect(link).toHaveAttribute("target", "_blank")
     await expect(page.getByText(/Affiliate link: .* may earn a commission/)).toBeVisible()
   })
-  test("the payment widget never shows on a public page while payments are not connected", async ({ page }) => {
+  test("the payment block never shows on a public page while payments are not connected", async ({ page }) => {
     await page.goto(FRAME())
     await expect(page.locator('[data-widget="payment"]')).toHaveCount(0)
   })

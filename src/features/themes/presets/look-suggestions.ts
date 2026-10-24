@@ -1,5 +1,12 @@
 /** New pages start from a neutral composition. Saved designs remain available by their existing IDs. */
 const GROUPS: { ids: string[]; looks: string[] }[] = [
+  {ids:["designer"],looks:["index","cursor","atelier","journal","canvas"]},
+  {ids:["founder"],looks:["founder","social","advisory","personal"]},
+  {ids:["maker"],looks:["kiln","archive","clay","open"]},
+  {ids:["florist"],looks:["petal","occasion","orchard","folio"]},
+  {ids:["filmmaker"],looks:["frame","tempo","ink","smoke"]},
+  {ids:["illustrator"],looks:["canvas","index","folio","personal"]},
+  {ids:["interiors"],looks:["habitat","atelier","folio","open"]},
   {ids:["car-dealer"],looks:["showroom","open","journal","silver","ink","service"]},
   {ids:["detailer"],looks:["open","smoke","ink","folio","silver","service"]},
   {ids:["hospitality"],looks:["clay","open","silver","personal","service","journal"]},

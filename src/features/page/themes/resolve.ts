@@ -125,6 +125,11 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}, logoAc
     decoration: ov.decoration ?? base.decoration,
     motion: ov.motion ?? base.motion ?? "subtle",
   };
+  if (spec.background.kind === "shader" && spec.background.source === "logo" && logoAccent && /^#[0-9a-fA-F]{6}$/.test(logoAccent)) {
+    const b = spec.background;
+    spec.background = { ...b, colors: [mix(b.base, logoAccent, .08), b.base, mix(b.base, logoAccent, .22)] };
+    if (!ov.colors?.accent) { spec.colors.accent = ensureReadable(logoAccent, b.base).color; spec.colors.accentText = readableOn(spec.colors.accent); }
+  }
   if (spec.background.kind === "gradient" && spec.background.source === "logo") {
     const dark = contrastRatio("#ffffff", spec.background.from) > contrastRatio("#000000", spec.background.from);
     const accent = logoAccent && /^#[0-9a-fA-F]{6}$/.test(logoAccent) ? logoAccent : dark ? "#ffffff" : "#000000";

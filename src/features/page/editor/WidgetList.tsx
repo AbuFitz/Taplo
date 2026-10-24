@@ -80,7 +80,7 @@ export function WidgetList({ ed, selectedId, onSelect, onDetails }: { ed: Editor
     useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   )
-  const name = (id: string | number) => { const w = widgets.find((x) => x.id === id); return w ? getWidget(w.type)?.label ?? "Widget" : "Widget" }
+  const name = (id: string | number) => { const w = widgets.find((x) => x.id === id); return w ? getWidget(w.type)?.label ?? "Block" : "Block" }
   const announcements: Announcements = {
     onDragStart: ({ active }) => `Picked up ${name(active.id)}. Position ${widgets.findIndex((w) => w.id === active.id) + 1} of ${widgets.length}.`,
     onDragOver: ({ active, over }) => (over ? `${name(active.id)} is over position ${widgets.findIndex((w) => w.id === over.id) + 1} of ${widgets.length}.` : undefined),
@@ -99,9 +99,9 @@ export function WidgetList({ ed, selectedId, onSelect, onDetails }: { ed: Editor
 
   return (
     <>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd} accessibility={{ announcements, screenReaderInstructions: { draggable: "To pick up a widget, press space or enter. Use the up and down arrow keys to move it, then press space or enter to drop it. Press escape to cancel." } }}>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd} accessibility={{ announcements, screenReaderInstructions: { draggable: "To pick up a block, press space or enter. Use the up and down arrow keys to move it, then press space or enter to drop it. Press escape to cancel." } }}>
         <SortableContext items={widgets.map((w) => w.id)} strategy={verticalListSortingStrategy}>
-          <ul className="grid grid-cols-[minmax(0,1fr)] gap-2" aria-label="Widgets on your page" data-testid="widget-list">
+          <ul className="grid grid-cols-[minmax(0,1fr)] gap-2" aria-label="Blocks on your page" data-testid="widget-list">
             {widgets.map((w) => (
               <Row key={w.id} stored={w} rw={rwById.get(w.id)} selected={selectedId === w.id} onSelect={() => onSelect(w.id)} onDetails={onDetails} ed={ed} />
             ))}

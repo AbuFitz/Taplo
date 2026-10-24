@@ -10,7 +10,7 @@ describe("neutral business compositions", () => {
     expect(getTheme("voltage")?.id).toBe("voltage")
   })
   it("offers distinct profile structures in neutral palettes", () => {
-    expect(new Set(STARTER_LOOKS.map(l => l.overrides.header?.layout)).size).toBe(4)
+    expect(new Set(STARTER_LOOKS.map(l => l.overrides.header?.layout)).size).toBeGreaterThanOrEqual(5)
     for (const look of STARTER_LOOKS) {
       const s = getTheme(look.id)!.style
       for (const colour of Object.values(s.colors)) {

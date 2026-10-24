@@ -1,3 +1,4 @@
+import { COLLECTION_BRIEFS } from "@/features/showcase/collection"
 import { googleReviewUrl } from "@/features/page/widgets/google-reviews"
 import type { IndustryId } from "@/features/marketing/ia"
 import { FONT_LABELS } from "@/features/page/themes/font-metadata"
@@ -24,6 +25,7 @@ export interface Example {
 }
 
 const CATALOGUE: Example[] = [
+  ...COLLECTION_BRIEFS.map(b=>({slug:b.slug,scenario:b.id,industry:b.sector,hook:b.line,notes:[b.bio,"An original identity and a page composed with the editable Taplo engine.","All sample content is illustrative. Start from this design with your own details."],highlights:[b.label,"Original brand mark",b.sector==="portfolios"?"Selected work and project enquiries":"Clear offers and enquiries"]})),
   { slug: "no-6-coffee", scenario: "corner", industry: "food", hook: "A neighbourhood café. The menu, the opening times and a place at the table.", notes: ["An open menu keeps drinks and food easy to scan; opening times sit on a quiet separate surface.", "Coffee and food show prices without starting appointment bookings.", "A larger visit starts an enquiry, not a confirmed reservation."], highlights: ["A proper grouped menu", "Opening times at a glance", "Group enquiries without booking menu items"] },
   { slug: "dans-home-repairs", scenario: "oakfield", industry: "trades", hook: "Small repairs, shelves and fittings. Explain the job before agreeing the visit.", notes: ["The compact introduction puts the business and the next step before the service details.", "Service cards explain from prices, estimates and first conversations.", "Requests and enquiries let the scope be agreed before the visit."], highlights: ["From and quote prices", "Visit requests", "Service area instead of a private address"] },
   { slug: "maths-with-aisha", scenario: "rowan", industry: "learning", hook: "A familiar face and a clear first step. Maths sessions at a pace you can follow.", notes: ["A clear personal wordmark introduces the tutor without a synthetic portrait.", "A free first conversation sits before the paid sessions.", "Session requests leave room to agree the learner’s needs and delivery."], highlights: ["Free introduction", "Online and local sessions", "A personal tutor profile"] },
@@ -90,7 +92,7 @@ const CATALOGUE: Example[] = [
 ]
 
 // Superseded example routes remain available; the gallery leads with their new UK replacements.
-export const EXAMPLES = CATALOGUE.filter((e) => ["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].includes(e.scenario)).sort((a, b) => (["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(a.scenario) - ["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(b.scenario)))
+export const EXAMPLES = CATALOGUE.filter((e) => COLLECTION_BRIEFS.some(b=>b.id===e.scenario) || ["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].includes(e.scenario)).sort((a, b) => (["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(a.scenario) - ["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(b.scenario)))
 const LEGACY_SLUGS: Record<string, string> = {"station-road-barbers": "jays-barbers", "parkside-valeting": "detail-dept", "brookfield-motors": "harris-cars", "corner-table-cafe": "no-6-coffee", "oakfield-home-repairs": "dans-home-repairs", "rowan-learning": "maths-with-aisha"}
 export const bySlug = (slug: string) => CATALOGUE.find((e) => e.slug === (LEGACY_SLUGS[slug] ?? slug))
 

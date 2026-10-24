@@ -43,7 +43,7 @@ function InspectorBody({ ed, selection, onSelect, notify }: InspectorProps) {
   if (selection.kind === "widget") {
     const stored = ed.state.page.widgets.find((w) => w.id === selection.id)
     const def = stored ? getWidget(stored.type) : undefined
-    if (!stored || !def) return <Head title="That widget is no longer on the page" onBack={back} />
+    if (!stored || !def) return <Head title="That block is no longer on the page" onBack={back} />
     return <WidgetInspector ed={ed} stored={stored} onBack={back} onSelect={onSelect} notify={notify} />
   }
   if (selection.kind === "header") {
@@ -57,7 +57,7 @@ function InspectorBody({ ed, selection, onSelect, notify }: InspectorProps) {
   if (selection.kind === "details") {
     return (
       <div data-testid="inspector-details">
-        <Head title="Business details" hint="Widgets pull from these, so you only type things once." onBack={back} />
+        <Head title="Business details" hint="Blocks pull from these, so you only type things once." onBack={back} />
         <ProfileSections ed={ed} only="rest" />
       </div>
     )
@@ -72,7 +72,7 @@ function InspectorBody({ ed, selection, onSelect, notify }: InspectorProps) {
   }
   return (
     <div data-testid="inspector-page">
-      <Head title="Page style" hint="Applies to the whole page. Select a widget to style just that one." />
+      <Head title="Page style" hint="Applies to the whole page. Select a block to style just that one." />
       <div className="grid gap-3">
         <Recommendations ed={ed} onSelect={onSelect} notify={notify} />
         <PageStylePanel ed={ed} notify={notify} />
@@ -90,7 +90,7 @@ function WidgetInspector({ ed, stored, onBack, onSelect, notify }: { ed: Editor;
       <Head title={def.label} hint={def.description} onBack={onBack} icon={<WidgetIcon name={def.icon} className="mt-0.5 size-5 shrink-0 text-muted-foreground" />} />
       {stored.type === "booking" ? (
         <div className="mb-3 rounded-xl bg-black/[0.04] px-3" data-testid="booking-main-action">
-          <Toggle label="Make booking my main action" hint="Shows it as the big button at the top of your page. Your widget order does not change."
+          <Toggle label="Make booking my main action" hint="Shows it as the big button at the top of your page. Your block order does not change."
             checked={ed.vm?.promotedWidgetId === stored.id}
             onChange={(on) => ed.setPage((p) => ({ ...p, meta: { ...p.meta, primaryAction: on ? "book" : p.meta.primaryAction === "book" ? "auto" : p.meta.primaryAction } }))} />
         </div>
@@ -109,7 +109,7 @@ function WidgetInspector({ ed, stored, onBack, onSelect, notify }: { ed: Editor;
         <Button type="button" variant="outline" className="min-h-11" data-testid="move-down" disabled={index >= ed.state.page.widgets.length - 1} onClick={() => ed.moveWidget(stored.id, 1)}><ArrowDown /> Move down</Button>
         {def.multiple ? <Button type="button" variant="outline" className="min-h-11" data-testid="duplicate-widget" onClick={() => { const id = ed.duplicateWidget(stored.id); if (id) onSelect({ kind: "widget", id }) }}><Copy /> Duplicate</Button> : null}
         <Button type="button" variant="outline" className="min-h-11" data-testid="remove-widget" onClick={() => { const w = ed.removeWidget(stored.id); if (w) { onSelect({ kind: "content" }); notify(`Removed “${def.label}” from your page. Your records are kept.`, true) } }}><Trash2 /> Remove from page</Button>
-        <p className="basis-full text-xs text-muted-foreground">Removing a widget only takes it off your page. Your services, team, photos and other records are kept.</p>
+        <p className="basis-full text-xs text-muted-foreground">Removing a block only takes it off your page. Your services, team, photos and other records are kept.</p>
       </div>
     </div>
   )

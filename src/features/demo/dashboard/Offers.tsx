@@ -26,7 +26,7 @@ export function Offers() {
   return (
     <section className="mt-10 max-w-3xl" aria-labelledby="offers-h">
       <h2 id="offers-h" className="text-lg font-semibold">Offers</h2>
-      <p className="mb-3 text-sm text-muted-foreground">Deals and promotions. Add an Offers widget in My page to show them. Expired offers hide themselves.</p>
+      <p className="mb-3 text-sm text-muted-foreground">Deals and promotions. Add an Offers block in My page to show them. Expired offers hide themselves.</p>
       {offers.length ? (
         <ul className="mb-4 grid gap-2">
           {offers.map((o) => (

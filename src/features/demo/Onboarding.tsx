@@ -82,8 +82,8 @@ function applyGoal<T extends ReturnType<typeof initialState>>(s: T, g: Goal): T 
 }
 
 /** What the first thing to add is, by kind of business. Nothing is added for them. */
-function firstKind(industryKey: string): "service" | "vehicle" | "photo" {
-  return industryKey === "car-dealer" ? "vehicle" : industryKey === "photographer" ? "photo" : "service"
+function firstKind(industryKey: string): "service" | "vehicle" | "photo" | "product" {
+  return industryKey === "car-dealer" ? "vehicle" : industryKey === "maker" ? "product" : ["photographer","designer","founder","filmmaker","illustrator","interiors"].includes(industryKey) ? "photo" : "service"
 }
 
 
@@ -204,7 +204,7 @@ export function Onboarding() {
       <div className="setup-workspace grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
         <section aria-labelledby="step-title" className="min-w-0">
           <div className="setup-question-heading">{fromName || intent ? <p className="setup-origin">{fromName ? <span data-testid="from-example">Starting from {fromName}</span> : null}{fromName && intent ? " · " : ""}{intent ? <span data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}</p> : null}
-          <motion.h1 key={step} initial={reducedMotion ? false : { opacity:0, x:direction*10 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34 }} tabIndex={-1} id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? { service: c.identity.industryKey === "hospitality" ? "Add your first menu item" : /tutor|teacher/.test(c.identity.industryKey) ? "Add your first lesson" : "Add your first service", vehicle: "Add your first vehicle", photo: "Add your first photos" }[firstKind(c.identity.industryKey)] : STEP_TITLE[step]}</motion.h1></div>
+          <motion.h1 key={step} initial={reducedMotion ? false : { opacity:0, x:direction*10 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34 }} tabIndex={-1} id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? { service: c.identity.industryKey === "hospitality" ? "Add your first menu item" : /tutor|teacher/.test(c.identity.industryKey) ? "Add your first lesson" : "Add your first service", vehicle: "Add your first vehicle", photo: "Add your first photos", product: "Add your first product" }[firstKind(c.identity.industryKey)] : STEP_TITLE[step]}</motion.h1></div>
 
           <motion.div className="setup-step-body" key={step} initial={reducedMotion ? false : { opacity:0, x:direction*16 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34, opacity:{duration:.16} }}>
           {step === "industry" ? (
@@ -370,14 +370,14 @@ function FirstServices({onValidity}:{onValidity:(valid:boolean)=>void}) {
 }
 
 /** A vehicle or product, entered with the same form the editor uses, so nothing is learned twice. */
-function FirstRecord({ kind, onValidity }: { kind: "vehicle" | "photo"; onValidity:(valid:boolean)=>void }) {
+function FirstRecord({ kind, onValidity }: { kind: "vehicle" | "photo" | "product"; onValidity:(valid:boolean)=>void }) {
   const { state, update } = useDemo()
   const s = state ?? initialState()
   const [draft, setDraft] = React.useState<unknown>(() => s.setupDrafts?.record?.kind===kind?s.setupDrafts.record.value:blankFor(kind, s.content))
   const [show, setShow] = React.useState(false)
   const [blank] = React.useState(()=>JSON.stringify(blankFor(kind,s.content),(k,v)=>k==='id'?undefined:v))
   React.useEffect(()=>onValidity(JSON.stringify(draft,(k,v)=>k==='id'?undefined:v)===blank),[draft,blank,onValidity])
-  const items = kind === "vehicle" ? (s.content.products ?? []).filter((p) => !p.archived && p.kind === "vehicle").map((p) => p.name) : (s.content.gallery ?? []).map((g, i) => g.caption || `Photo ${i + 1}`)
+  const items = kind !== "photo" ? (s.content.products ?? []).filter((p) => !p.archived && p.kind === kind).map((p) => p.name) : (s.content.gallery ?? []).map((g, i) => g.caption || `Photo ${i + 1}`)
   const save = () => {
     if (Object.keys(validate(kind, draft)).length) { setShow(true); return }
     update((st) => ({ ...st, content: commitRecord(kind, draft, st.content),setupDrafts:{...st.setupDrafts,record:undefined} }))
@@ -387,7 +387,7 @@ function FirstRecord({ kind, onValidity }: { kind: "vehicle" | "photo"; onValidi
     <div className="grid gap-4" data-testid="first-record">
       {items.length ? <ul className="grid gap-1 text-sm" aria-label="Added"><li className="font-medium">Added so far</li>{items.map((n, i) => <li key={i} className="flex items-center gap-2"><Check aria-hidden="true" className="size-4 text-foreground" />{n}</li>)}</ul> : null}
       <RecordForm setup key={items.length} kind={kind} value={draft} onChange={v=>{setDraft(v);update(st=>({...st,setupDrafts:{...st.setupDrafts,record:{kind,value:v}}}))}} showErrors={show} content={s.content} />
-      <Button type="button" className="min-h-11 justify-self-start" onClick={save} data-testid="first-record-save">{kind === "vehicle" ? "Add this vehicle" : "Add these photos"}</Button>
+      <Button type="button" className="min-h-11 justify-self-start" onClick={save} data-testid="first-record-save">{kind === "vehicle" ? "Add this vehicle" : kind === "product" ? "Add this product" : "Add these photos"}</Button>
     </div>
   )
 }

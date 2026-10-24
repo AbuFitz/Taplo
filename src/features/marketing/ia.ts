@@ -37,6 +37,9 @@ export const PRODUCT_GROUPS: NavGroup[] = [
 ]
 
 export const INDUSTRY_FILTERS = [
+  { id: "portfolios", label: "Portfolios and creatives" },
+  { id: "entrepreneurs", label: "Founders and independents" },
+  { id: "makers", label: "Makers and shops" },
   { id: "beauty", label: "Barbers and salons" },
   { id: "health", label: "Clinics and practitioners" },
   { id: "food", label: "Cafés and food" },

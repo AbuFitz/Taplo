@@ -129,7 +129,7 @@ export function TypeControls({ m }: M) {
 }
 
 /* ------------------------------------------------------------------ header */
-const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] = [["side", "Compact"], ["editorial", "Editorial"], ["banner", "Photo profile"], ["cover", "Cover"], ["feature", "Wide feature"], ["poster", "Image hero"], ["centered", "Text-led"]]
+const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] = [["floating", "Floating profile"], ["portrait", "Portrait introduction"], ["side", "Compact"], ["editorial", "Editorial"], ["banner", "Photo profile"], ["cover", "Cover"], ["feature", "Wide feature"], ["poster", "Image hero"], ["centered", "Text-led"]]
 export function HeaderControls({ m, identity, livePreviews = false }: M & { identity?: BusinessContent["identity"]; livePreviews?: boolean }) {
   const { spec } = m
   return (
@@ -156,7 +156,7 @@ export function HeaderControls({ m, identity, livePreviews = false }: M & { iden
           <div className="mt-3 grid gap-3">
         <Field label="Logo size" dirty={m.has("header", "avatarSize")} onReset={() => m.reset("header", "avatarSize")}><Segment label="Logo size" value={spec.header.avatarSize} options={[{ value: "sm", label: "Small" }, { value: "md", label: "Medium" }, { value: "lg", label: "Large" }]} onChange={(v) => m.patch("header", "avatarSize", v)} /></Field>
         <Field label="Alignment" dirty={m.has("header", "align")} onReset={() => m.reset("header", "align")}><Segment label="Header alignment" value={spec.header.align} options={[{ value: "left", label: "Left" }, { value: "center", label: "Centre" }]} onChange={(v) => m.patch("header", "align", v)} /></Field>
-        <Field label="Contact actions" dirty={m.has("header", "actions")} onReset={() => m.reset("header", "actions")} hint="Call, WhatsApp and Email you’ve added. If you add one as a widget, it isn’t repeated here."><Segment label="Contact actions" value={spec.header.actions} options={[{ value: "primary", label: "Main + icons" }, { value: "buttons", label: "Buttons" }, { value: "icons", label: "Icons" }, { value: "none", label: "Hidden" }]} onChange={(v) => m.patch("header", "actions", v)} /></Field>
+        <Field label="Contact actions" dirty={m.has("header", "actions")} onReset={() => m.reset("header", "actions")} hint="Call, WhatsApp and Email you’ve added. If you add one as a block, it isn’t repeated here."><Segment label="Contact actions" value={spec.header.actions} options={[{ value: "primary", label: "Main + icons" }, { value: "buttons", label: "Buttons" }, { value: "icons", label: "Icons" }, { value: "none", label: "Hidden" }]} onChange={(v) => m.patch("header", "actions", v)} /></Field>
         <Toggle label="Show location under the name" checked={spec.header.showLocation} onChange={(v) => m.patch("header", "showLocation", v)} />
           </div>
         </details>
@@ -212,7 +212,7 @@ export function SurfaceControls({ m }: M) {
       <Field label="Space inside" dirty={m.has("cards", "padding")} onReset={() => m.reset("cards", "padding")}><Segment label="Spacing inside" value={spec.cards.padding} options={[{ value: "compact", label: "Compact" }, { value: "comfortable", label: "Comfortable" }, { value: "roomy", label: "Roomy" }]} onChange={(x) => m.patch("cards", "padding", x)} /></Field>
         </div>
       </details>
-      <p className="text-xs text-neutral-600">To make just one widget stand out, select it and use its Appearance tab.</p>
+      <p className="text-xs text-neutral-600">To make just one block stand out, select it and use its Appearance tab.</p>
     </div>
   )
 }
@@ -243,7 +243,9 @@ export function WallpaperControls({ m }: M) {
         { value: "image", label: "Photo", preview: tile("linear-gradient(135deg, #8a8f98, #2b2f36)") },
       ]} />
       {bg.kind === "shader" ? <>
-        <div className="grid grid-cols-2 gap-3">{bg.colors.map((c, i) => <ColorField key={i} label={`Colour ${i + 1}`} value={c} onChange={(v) => m.setBackground({ ...bg, colors: bg.colors.map((x, j) => (j === i ? v : x)) }, `wall.${i}`)} />)}</div>
+        <Toggle label="Gentle movement" checked={bg.motion ?? true} onChange={v=>m.setBackground({...bg,motion:v})} />
+        <Toggle label="Follow my logo" checked={bg.source === "logo"} onChange={v=>m.setBackground({...bg,source:v?"logo":"manual"})} hint="A quiet colour from your uploaded logo. Monochrome marks keep the background neutral." />
+        <div className="grid grid-cols-2 gap-3">{bg.colors.map((c, i) => <ColorField key={i} label={`Colour ${i + 1}`} value={c} onChange={(v) => m.setBackground({ ...bg, source: "manual", colors: bg.colors.map((x, j) => (j === i ? v : x)) }, `wall.${i}`)} />)}</div>
         <p className="text-xs text-neutral-600">Animated wallpapers freeze, and fall back to the same colours, when motion is reduced.</p>
       </> : null}
       {bg.kind === "gradient" ? <>

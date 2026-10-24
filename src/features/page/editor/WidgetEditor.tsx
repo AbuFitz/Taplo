@@ -215,7 +215,7 @@ function SavedStyles({ styles, canSave, onSave, onApply, onRemove, typeLabel }: 
     <div className="grid gap-2 rounded-2xl bg-black/[0.035] p-3" data-testid="saved-styles">
       <p className="text-xs font-semibold">Saved styles</p>
       {styles.length ? (
-        <ul className="grid grid-cols-2 gap-2.5" aria-label="Saved widget styles">
+        <ul className="grid grid-cols-2 gap-2.5" aria-label="Saved block styles">
           {styles.map((st) => (
             <li key={st.id} className="grid min-w-0 gap-2 rounded-xl bg-white p-1.5 ring-1 ring-black/10">
               <button type="button" aria-label={`Apply ${st.name}`} onClick={() => onApply(st.id)} className="grid gap-2 rounded-lg text-left outline-none focus-visible:ring-2 focus-visible:ring-primary">

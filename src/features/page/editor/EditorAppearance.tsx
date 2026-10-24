@@ -60,7 +60,7 @@ export function MainActionControl({ ed }: { ed: Editor }) {
   return (
     <div className="grid gap-3" data-testid="main-action">
       <ChoiceGrid label="Main action" value={page.meta.primaryAction} columns={3} onChange={(v) => ed.setPage((p) => ({ ...p, meta: { ...p.meta, primaryAction: v } }))} options={options.map((o) => ({ ...o }))} />
-      <p className="text-xs text-neutral-500">{current ? `Right now your main action is ${ed.vm!.primary!.label}.` : "No main action yet: add a phone number, email or booking."} It sits at the top of your page. Your widgets stay in the order you set.</p>
+      <p className="text-xs text-neutral-500">{current ? `Right now your main action is ${ed.vm!.primary!.label}.` : "No main action yet: add a phone number, email or booking."} It sits at the top of your page. Your blocks stay in the order you set.</p>
     </div>
   )
 }

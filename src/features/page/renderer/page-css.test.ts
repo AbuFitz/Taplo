@@ -9,7 +9,7 @@ import { describe, expect, it } from "vitest"
 const css = readFileSync("src/features/page/renderer/page.css", "utf8")
 const widgetRules = css.slice(css.indexOf("/* ---------- buttons (rows) ---------- */"))
 
-describe("page.css widget system", () => {
+describe("page.css block system", () => {
   it("uses only the type scale for font sizes", () => {
     const raw = [...widgetRules.matchAll(/font-size:\s*([^;}]+)/g)].map((m) => m[1]!.trim()).filter((v) => !v.startsWith("var(--tp-t-") && !v.startsWith("clamp(") && !v.startsWith("calc("))
     expect(raw).toEqual([])

@@ -79,8 +79,8 @@ test.describe("onboarding", () => {
   });
 });
 
-test.describe("records flow into widgets (nothing is copied)", () => {
-  test("products and offers: add a record → widget shows it → archive → widget explains and hides", async ({ page }) => {
+test.describe("records flow into blocks (nothing is copied)", () => {
+  test("products and offers: add a record → block shows it → archive → block explains and hides", async ({ page }) => {
     await openEditorWithSample(page, "Unlisted");
     await page.goto("/dashboard/products");
     await expect(page.getByText("No products yet")).toBeVisible();
@@ -112,7 +112,7 @@ test.describe("records flow into widgets (nothing is copied)", () => {
     await expect(preview(page).locator('[data-widget="products"]')).toHaveCount(0);
   });
 
-  test("a service added in Services appears in every service widget at once", async ({ page }) => {
+  test("a service added in Services appears in every service block at once", async ({ page }) => {
     await openEditorWithSample(page, "Unlisted");
     await page.goto("/dashboard/services");
     await page.getByRole("button", { name: "Add service" }).click();

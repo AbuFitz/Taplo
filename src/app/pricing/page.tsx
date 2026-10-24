@@ -82,7 +82,7 @@ export default function PricingPage() {
     PLAN_IDS.map((id) => [id, resolveEntitlements(id, "active")]),
   ) as Record<PlanId, Entitlements>;
   return (
-    <div className="bg-[#f4f4f4] text-[#080808]">
+    <div className="pricing-shell bg-[#f4f4f4] text-[#080808]">
       <SiteHeader />
       <main className="mx-auto w-full max-w-[88rem] px-5 py-14 sm:px-8 sm:py-20">
         <h1 className="font-display font-display-tight mt-4 max-w-4xl text-[clamp(2.5rem,7vw,5.5rem)] text-balance">

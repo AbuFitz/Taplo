@@ -5,8 +5,8 @@ import { motion, useReducedMotion, useSpring } from "motion/react";
 /** A physical sharing concept. Pointer and touch exploration settle naturally, without a control panel. */
 export function PlaqueScene({ code }: { code: string }) {
   const reduce = useReducedMotion();
-  const yaw = useSpring(0, { stiffness: 210, damping: 25, mass: 0.8 });
-  const pitch = useSpring(0, { stiffness: 210, damping: 25, mass: 0.8 });
+  const yaw = useSpring(0, { stiffness: 340, damping: 29, mass: 0.55 });
+  const pitch = useSpring(0, { stiffness: 340, damping: 29, mass: 0.55 });
   const host = React.useRef<HTMLDivElement>(null);
   const resting = () => {
     yaw.set(0); pitch.set(0);
@@ -19,8 +19,16 @@ export function PlaqueScene({ code }: { code: string }) {
       if (!entry?.isIntersecting) { yaw.set(0); pitch.set(0); element.dataset.engaged = "false"; }
     });
     observer.observe(element);
-    return () => observer.disconnect();
+  return () => observer.disconnect();
   }, [yaw, pitch]);
+  const pose = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (reduce) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+    yaw.set((x - 0.5) * 44); pitch.set(-(y - 0.5) * 32);
+    e.currentTarget.dataset.engaged = "true";
+  };
   return (
     <div className="plaque-experience" data-testid="plaque-experience">
       <div
@@ -31,13 +39,10 @@ export function PlaqueScene({ code }: { code: string }) {
         aria-label="No. 6 Coffee counter plaque, interactive preview"
         aria-describedby="plaque-keyboard-help"
         data-engaged="false"
-        onPointerDown={(e)=>{if(e.pointerType!=="mouse")e.currentTarget.setPointerCapture(e.pointerId)}}
+        onPointerDown={(e)=>{if(e.pointerType!=="mouse"){e.currentTarget.setPointerCapture(e.pointerId);pose(e)}}}
         onPointerMove={(e) => {
           if (reduce || (e.pointerType !== "mouse" && !e.currentTarget.hasPointerCapture(e.pointerId))) return;
-          const rect = e.currentTarget.getBoundingClientRect();
-          yaw.set(((e.clientX - rect.left) / rect.width - 0.5) * 32);
-          pitch.set(-((e.clientY - rect.top) / rect.height - 0.5) * 24);
-          e.currentTarget.dataset.engaged = "true";
+          pose(e);
         }}
         onPointerLeave={resting}
         onPointerCancel={resting}

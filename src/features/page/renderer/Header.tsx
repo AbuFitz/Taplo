@@ -102,6 +102,16 @@ export function PageHeader({ vm }: { vm: PageViewModel }) {
   const h = spec.header
   const cover = vm.business.identity.heroImage
 
+  if (h.layout === "floating") return <header aria-label={`${vm.business.identity.name} business profile`} className="tp-header" data-layout="floating" data-align={h.align} data-cover={cover ? "" : undefined}>
+    {cover ? <div className="tp-floating-cover"><ProfileImage image={cover} sizes="(min-width:900px) 50vw, 100vw" priority /></div> : null}
+    <div className="tp-floating-intro"><Avatar vm={vm} /><Text vm={vm} /><Actions vm={vm} /></div>
+  </header>;
+  if (h.layout === "portrait") return <header aria-label={`${vm.business.identity.name} business profile`} className="tp-header" data-layout="portrait" data-align="left" data-cover={cover ? "" : undefined}>
+    <div className="tp-portrait-intro"><Avatar vm={vm} /><Text vm={vm} /></div>
+    {cover ? <div className="tp-identity-portrait"><ProfileImage image={cover} sizes="(min-width:900px) 20rem, 40vw" priority /></div> : null}
+    <Actions vm={vm} />
+  </header>;
+
   if (h.layout === "editorial" || h.layout === "banner") {
     return (
       <header aria-label={`${vm.business.identity.name} business profile`} className="tp-header" data-layout={h.layout} data-align={h.align} data-cover={cover ? "" : undefined}>

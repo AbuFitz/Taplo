@@ -124,7 +124,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
   },
   gallery: {
     type: "gallery", version: 1, label: "Gallery", description: "A set of photos.", category: "content", icon: "Images", multiple: true, appearance: ["card"],
-    fields: [TITLE, { kind: "refs", key: "itemIds", label: "Which photos", source: "gallery" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "grid", label: "Grid" }, { value: "carousel", label: "Swipeable row" }, { value: "beforeAfter", label: "Before and after" }, { value: "masonry", label: "Photo wall" }] }],
+    fields: [TITLE, { kind: "refs", key: "itemIds", label: "Which photos", source: "gallery" }, { kind: "select", key: "fit", label: "Image framing", options: [{ value: "cover", label: "Fill the space" }, { value: "contain", label: "Show whole image" }] }, { kind: "select", key: "variant", label: "Style", options: [{ value: "grid", label: "Grid" }, { value: "carousel", label: "Swipeable row" }, { value: "beforeAfter", label: "Before and after" }, { value: "masonry", label: "Photo wall" }] }],
     status: (s, c) => (!c.ent.gallery ? { state: "locked", reason: "Galleries are included from the Core plan." } : pick(c.business.gallery, s.itemIds).length ? READY : selectionEmpty(Boolean(c.business.gallery.length), "photos", "profile")),
   },
   video: {

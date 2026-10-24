@@ -167,7 +167,7 @@ test.describe("themed interaction", () => {
     await expect(page.locator('[data-widget="video"] iframe')).toHaveAttribute("src", /youtube-nocookie\.com\/embed\//);
   });
 
-  test("a payment widget stays off the public page until payments are connected", async ({ page }) => {
+  test("a payment block stays off the public page until payments are connected", async ({ page }) => {
     await page.goto("/demo-mechanic", { waitUntil: "networkidle" });
     // Nothing on the page pretends to take money: the widget is saved on the page but not shown.
     await expect(page.locator('[data-widget="payment"]')).toHaveCount(0);
