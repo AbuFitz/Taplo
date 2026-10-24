@@ -13,7 +13,7 @@ export interface LabConfig {
 }
 
 /** The look each example was designed with. */
-export const EXAMPLE_LOOK: Record<Scenario, string> = { corner: "open", oakfield: "service", rowan: "personal", brookfield: "open", station: "service", detailer: "ink", barber: "folio", dealer: "showroom", trades: "colour", physio: "journal", cafe: "clay", tutor: "orchard", gym: "forge" }
+export const EXAMPLE_LOOK: Record<Scenario, string> = { corner: "open", oakfield: "service", rowan: "personal", brookfield: "open", station: "service", detailer: "ink", barber: "folio", dealer: "showroom", trades: "colour", physio: "open", cafe: "clay", tutor: "orchard", gym: "ink" }
 
 /**
  * How each example is arranged on top of its look: the header, how wide the page is and what it does on a computer. These
@@ -27,10 +27,10 @@ export const EXAMPLE_OVERRIDES: Record<Scenario, StyleOverrides> = {
   station: { header: { layout: "banner", avatarShape: "logo", align: "left" }, layout: { desktop: "split", width: "wide", rhythm: "even" } },
   detailer: { header: { layout: "poster", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
   barber: {},
-  physio: { header: { align: "left" }, layout: { desktop: "split" } },
+  physio: { header: { layout: "editorial", avatarShape: "logo", align: "left" }, text: { headingFont: "manrope", align: "left", size: "lg" }, layout: { desktop: "split", width: "wide", rhythm: "editorial" } },
   cafe: { header: { layout: "cover", avatarShape: "circle", avatarSize: "md", align: "center" }, layout: { desktop: "columns", width: "wide" } },
   tutor: { header: { layout: "cover", avatarShape: "circle", avatarSize: "md", align: "left" }, layout: { desktop: "split" } },
-  gym: { header: { layout: "poster", avatarShape: "square", avatarSize: "sm", align: "left", scrim: "strong" }, layout: { desktop: "columns", width: "wide" } },
+  gym: { header: { layout: "feature", avatarShape: "logo", align: "left", scrim: "strong" }, text: { headingFont: "spaceGrotesk", headingCase: "normal", size: "lg" }, layout: { desktop: "columns", width: "wide", rhythm: "editorial" } },
   trades: { header: { layout: "cover", avatarShape: "circle", avatarSize: "lg", align: "center" }, layout: { desktop: "centered", width: "regular" } },
   dealer: { layout: { desktop: "columns", width: "wide" } },
 }
@@ -50,6 +50,8 @@ const SECTION_COMPOSITIONS: Partial<Record<Scenario, Record<string, SectionTreat
   brookfield: { faq: "inline", hours: "soft" },
   corner: { priceMenu: "inline", hours: "soft", faq: "inline" },
   oakfield: { serviceList: "inline", serviceArea: "soft", faq: "inline" },
+  physio: { serviceList: "inline", team: "soft", faq: "inline", hours: "soft" },
+  gym: { featuredService: "spotlight", serviceList: "inline", team: "soft", faq: "inline" },
   rowan: { featuredService: "soft", serviceList: "inline", faq: "inline" },
 }
 export function widgetsFor(s: Scenario) {

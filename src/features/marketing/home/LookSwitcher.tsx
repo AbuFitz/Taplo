@@ -1,40 +1,33 @@
-"use client"
-
-import * as React from "react"
-import Link from "next/link"
-import { LOOKS, SPOTLIGHT_LOOK_IDS } from "@/features/page/themes/looks"
-import { cn } from "@/lib/utils"
-
-/** Every choice shows the same business example through the real appearance engine. */
+"use client";
+import * as React from "react";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { Shot } from "../Shot";
+const DESIGNS = [
+  { label: "Appointments", name: "Hollin Physiotherapy", slug: "hollin-physio", asset: "hollin-physio" },
+  { label: "Stock", name: "Harris Cars", slug: "harris-cars", asset: "brookfield-motors" },
+  { label: "Menus", name: "No. 6 Coffee", slug: "no-6-coffee", asset: "corner-table-cafe" },
+] as const;
+/** Each choice opens the same working business that is pictured; setup carries its arrangement. */
 export function LookSwitcher() {
-  const [id, setId] = React.useState("open")
-  const look = LOOKS.find((l) => l.id === id) ?? LOOKS[0]!
-  return (
-    <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-24">
-      <div>
-        <p className="max-w-lg text-lg leading-relaxed text-foreground/65">Lead with your work, keep services close, or make a personal introduction. Start with a layout, then adjust each section.</p>
-        <fieldset className="mt-7">
-          <legend className="mb-3 text-sm font-semibold">Try a starting look</legend>
-          <div className="grid grid-cols-4 gap-3 lg:grid-cols-4">
-            {LOOKS.filter(l => (SPOTLIGHT_LOOK_IDS as readonly string[]).includes(l.id)).map((l) => <label key={l.id} className="group min-w-0 cursor-pointer">
-              <input type="radio" name="home-look" value={l.id} checked={id === l.id} onChange={() => setId(l.id)} className="peer sr-only" />
-              <span className={cn("block overflow-hidden rounded-lg border-2 p-1 transition-colors peer-focus-visible:ring-3 peer-focus-visible:ring-ring/60", id === l.id ? "border-signal" : "border-transparent group-hover:border-foreground/30")}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/looks/${l.id}.webp`} alt="" width={780} height={1080} loading="lazy" className="aspect-[0.85] w-full rounded object-cover object-top" />
-              </span>
-              <span className={cn("mt-1 block text-center text-xs", id === l.id ? "font-semibold text-foreground" : "text-foreground/65")}>{l.name}</span>
-            </label>)}
-          </div>
-        </fieldset>
-        <Link href="/inspiration" className="mt-7 inline-flex min-h-11 items-center font-semibold underline underline-offset-4">Explore the designs</Link>
+  const [selected, select] = React.useState(0);
+  const design = DESIGNS[selected];
+  return <div className="home-designs grid items-center gap-8 lg:grid-cols-2 lg:gap-20" data-testid="home-designs">
+    <div>
+      <fieldset className="flex flex-wrap gap-2">
+        <legend className="sr-only">Choose a business design</legend>
+        {DESIGNS.map((item, i) => <label key={item.slug} className="cursor-pointer rounded-full border border-black/20 px-5 py-3 text-sm font-medium has-[:checked]:bg-black has-[:checked]:text-white has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-black has-[:focus-visible]:ring-offset-4"><input type="radio" className="sr-only" name="home-design" checked={selected === i} onChange={() => select(i)} />{item.label}</label>)}
+      </fieldset>
+      <div className="mt-8" aria-live="polite"><p className="font-display text-3xl tracking-[-.04em] sm:text-4xl">{design.name}</p></div>
+      <div className="mt-6 flex flex-wrap items-center gap-6">
+        <Link href={`/inspiration/${design.slug}`} className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline underline-offset-4">Open the demo<ArrowUpRight aria-hidden="true" className="size-4" /></Link>
+        <Link href={`/onboarding?from=${design.slug}`} className="inline-flex min-h-11 items-center rounded-full bg-black px-5 text-sm font-semibold text-white">Use this design</Link>
       </div>
-      <div className="py-6">
-        <div className="mx-auto max-w-[22rem] overflow-hidden rounded-3xl">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={`/looks/${look.id}.webp`} alt={`Jay’s Barbers in the ${look.name} look`} width={780} height={1080} loading="lazy" className="block h-auto w-full" />
-        </div>
-        <div className="mx-auto mt-6 max-w-sm text-center" aria-live="polite"><p className="font-display text-2xl">{look.name}</p><p className="mt-1 text-sm leading-relaxed text-foreground/65">{look.blurb}</p></div>
-      </div>
+      <Link href="/inspiration" className="mt-4 inline-flex min-h-11 items-center text-sm text-black/65 underline underline-offset-4">All business designs</Link>
     </div>
-  )
+    <div className="home-design-art" key={design.slug}>
+      <div className="home-design-desktop" aria-hidden="true"><Shot id={`ex-${design.asset}-desk` as never} alt="" width={800} fluid frame="none" /></div>
+      <div className="home-design-phone"><Shot id={`ex-${design.asset}-phone` as never} alt={`${design.name} business design`} width={390} fluid frame="none" /></div>
+    </div>
+  </div>;
 }

@@ -89,7 +89,7 @@ export default async function ProductPageRoute({
                   </a>
                 </div>
               </div>
-              {p.slug === "sharing" ? <div className="rounded-[2rem] bg-white p-5 text-black"><PlaqueScene code={taploCodeSvg("https://taplo-lilac.vercel.app/inspiration/no-6-coffee",320,"Example Taplo QR code")}/></div> : <ProductArtwork slug={p.slug} priority />}
+              {p.slug === "sharing" ? <div className="sharing-plaque-art"><PlaqueScene code={taploCodeSvg("https://taplo-lilac.vercel.app/inspiration/no-6-coffee",320,"Example Taplo QR code")}/></div> : <ProductArtwork slug={p.slug} priority />}
             </div>
           </div>
         </section>

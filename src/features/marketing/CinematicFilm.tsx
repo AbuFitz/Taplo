@@ -207,10 +207,6 @@ export function CinematicFilm() {
         </motion.div>
       </Link>
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-        <p className="max-w-lg text-xs leading-relaxed opacity-65">
-          A business page comes together, brings the next step closer, and
-          becomes something you can share.
-        </p>
         <Link
           href="/product"
           className="inline-flex min-h-11 items-center gap-2 rounded text-sm font-semibold underline underline-offset-4"

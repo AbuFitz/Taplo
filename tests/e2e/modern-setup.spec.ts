@@ -59,7 +59,7 @@ for (const width of [390, 1440]) test(`visual setup keeps each decision separate
 
 for (const width of [390, 1440]) test(`homepage examples are frameless previews at ${width}`, async ({ page }) => {
   await page.setViewportSize({width,height:950});await page.goto('/')
-  await expect(page.locator('.business-stage .hero-phone img')).toHaveAttribute('alt','Jay’s Barbers business page')
+  await expect(page.locator('.business-stage .hero-phone img')).toHaveAttribute('alt','No. 6 Coffee business page')
   await expect(page.locator('.business-stage iframe')).toHaveCount(0)
   await page.getByRole('button',{name:'Car dealer',exact:true}).click()
   await expect(page.locator('.business-stage .hero-phone img')).toHaveAttribute('alt','Harris Cars business page')

@@ -634,27 +634,25 @@ function Sharing() {
       <section className="grid items-center gap-10 lg:grid-cols-[0.85fr_1.15fr]">
         <div>
           <Intro title="Small enough for a counter. Useful enough to keep.">
-            Download a QR code for a print job or a screen. Bring your own logo,
-            choose a finish and keep the destination easy to reach.
+            Copy the link, save the QR code or share from your device.
           </Intro>
           <div className="mt-7">
             <ArrowLink href="/inspiration/jays-barbers">
-              Try the sharing controls
+              Open an example page
             </ArrowLink>
           </div>
         </div>
         <div>
           <Shot
             id="qr-options"
-            alt="Current QR controls showing the Jay’s Barbers logo, dot style and actual download formats"
+            alt="The simple share popup with a scannable QR code and copy link action"
             width={510}
             fluid
             frame="none"
             className="mx-auto w-full"
           />
           <Label>
-            The example uses a reserved .example address. Public page links need
-            publishing connected.
+            The QR code opens the working example. Your own public address needs publishing connected.
           </Label>
         </div>
       </section>
@@ -668,11 +666,11 @@ function Sharing() {
             ["Copy your link", "For a bio, a message or an email."],
             [
               "Print the code",
-              "SVG or a print-ready PNG for a counter, window or van.",
+              "Save a clear PNG for your own printed material.",
             ],
             [
-              "Save a share card",
-              "Your name, identity, link and code in one picture.",
+              "A digital business card",
+              "Wallet passes are in development, alongside physical plaques.",
             ],
             ["Share from your phone", "Into the apps your device supports."],
           ].map(([t, b], n) => (

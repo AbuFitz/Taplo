@@ -45,19 +45,23 @@ export interface PagePreviewProps {
   /** Synchronously remeasure when a parent sheet expands, before the next paint. */
   resizeKey?: boolean | number | string
   interactive?: boolean
+  /** Space occupied by fixed parent navigation when revealing a customer dialog. */
+  topInset?: number
+  /** Show the top of a full phone viewport when the available mobile canvas is short. */
+  cropDevice?: boolean
 }
 
 const MIN_DESKTOP = 1024
 const MAX_DESKTOP = 1440
 const READABLE = 0.72
 
-export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, device = { w: 390, h: 844 }, zoom: "fit" | "actual" = "fit", chrome = false) {
+export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, device = { w: 390, h: 844 }, zoom: "fit" | "actual" = "fit", chrome = false, cropDevice = false) {
   if (mode === "fill") return { vw: box.w, vh: box.h, scale: 1, pad: 0, bar: 0, outerW: box.w, outerH: box.h }
   if (mode === "device") {
     const pad = chrome ? 6 : 0
     const outerW = device.w + pad * 2
     const outerH = device.h + pad * 2
-    const scale = zoom === "actual" ? 1 : Math.min(1, box.w / outerW, box.h / outerH)
+    const scale = zoom === "actual" ? 1 : Math.min(1, box.w / outerW, cropDevice ? 1 : box.h / outerH)
     return { vw: device.w, vh: device.h, scale, pad, bar: 0, outerW, outerH }
   }
   const bar = chrome ? 38 : 0
@@ -68,7 +72,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, resizeKey }: PagePreviewProps) {
+export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, resizeKey, topInset = 0, cropDevice = false }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
@@ -85,7 +89,7 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
   }, [mode, zoom, resizeKey])
 
   const decorated = chrome && mode !== "fill"
-  const L = box ? layoutPreview(mode, box, device, zoom, decorated) : null
+  const L = box ? layoutPreview(mode, box, device, zoom, decorated, cropDevice) : null
   React.useEffect(() => { if (L) onViewport?.({ w: L.vw, h: L.vh, scale: L.scale }) }, [L?.vw, L?.vh, L?.scale]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const setFrame = React.useCallback((el: HTMLIFrameElement | null) => { frame.current = el; frameRef?.(el) }, [frameRef])
@@ -100,14 +104,18 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
     const onMessage = (e: MessageEvent<FromPreview>) => {
       if (e.origin !== window.location.origin || e.source !== frame.current?.contentWindow) return
       if (e.data?.type === "taplo:overlay-open") {
-        // A customer dialog needs the whole preview visible, including its continuation action.
-        host.current?.scrollIntoView({ block: "center", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
+        // Make the whole dialog visible before its next tap. A smooth outer scroll moves iframe hit targets during the flow.
+        const rect = host.current?.getBoundingClientRect()
+        if (rect && (rect.top < topInset || rect.bottom > window.innerHeight)) {
+          const top = topInset + Math.max(0, (window.innerHeight - topInset - rect.height) / 2)
+          window.scrollBy({ top: rect.top - top, behavior: "instant" })
+        }
       } else if (e.data?.type === "taplo:select") onSelect?.(e.data.selection)
       else if (e.data?.type === "taplo:ready" || (e.data as {type?: string})?.type === "taplo:lab-ready") { setLoaded(true); post() }
     }
     window.addEventListener("message", onMessage)
     return () => window.removeEventListener("message", onMessage)
-  }, [onSelect, post])
+  }, [onSelect, post, topInset])
   React.useEffect(post, [post, L?.vw, L?.vh])
 
   const iframe = L ? (
@@ -128,11 +136,11 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
     <div ref={host} className={cn("relative h-full w-full min-h-0", zoom === "actual" ? "overflow-auto" : "overflow-hidden", className)} data-preview-mode={mode}>
       {/* Keep one DOM path for the iframe: changing viewport must not reload a booking or discard typed details. */}
       {L ? (
-        <div className={cn("absolute inset-x-0 top-0 flex justify-center", mode === "device" && zoom !== "actual" && "inset-y-0 items-center", zoom === "actual" && "relative")}>
+        <div className={cn("absolute inset-x-0 top-0 flex justify-center", mode === "device" && zoom !== "actual" && !cropDevice && "inset-y-0 items-center", zoom === "actual" && "relative")}>
           <div style={{ width: L.outerW * L.scale, height: L.outerH * L.scale }} className="shrink-0">
             <div
               className={cn("origin-top-left overflow-hidden", decorated ? (mode === "device" ? "rounded-[2.375rem] bg-[#141416] shadow-[0_0_0_1px_rgb(0_0_0/0.14),0_28px_48px_-26px_rgb(0_0_0/0.4)]" : "rounded-2xl bg-[#f3f2ef] shadow-[0_30px_60px_-28px_rgb(0_0_0/0.4),0_0_0_1px_rgb(0_0_0/0.1)]") : "")}
-              style={{ width: L.outerW, height: L.outerH, padding: L.pad, transform: `scale(${L.scale})` }}
+              style={{ width: L.outerW, height: L.outerH, padding: L.pad, transform: L.scale === 1 ? undefined : `scale(${L.scale})` }}
             >
               {L.bar ? (
                 <div className="flex items-center gap-3 border-b border-black/10 px-4" style={{ height: L.bar }} aria-hidden="true">

@@ -5,11 +5,11 @@
     "poster": "/marketing/walkthroughs/setup-poster.webp",
     "width": 780,
     "height": 1928,
-    "duration": 33.52,
+    "duration": 33.64,
     "fps": "25/1",
-    "bytes": 3093842,
-    "sha256": "9b4408045e7ac2bdf46b430483e9cc63988e8fe87e12b0c44def2f89474b0dfc",
-    "recordedAt": "2026-10-24T12:09:38.814Z",
+    "bytes": 2884202,
+    "sha256": "0d8cc18b756db64919670c43dd66c416cb34f5376e28137f1fc7d8d018f809d4",
+    "recordedAt": "2026-10-24T15:15:45.356Z",
     "source": "/onboarding?from=no-6-coffee",
     "chapters": [
       {
@@ -18,7 +18,7 @@
         "line": "Your name and logo, with a crop you approve before it is added."
       },
       {
-        "seconds": 4.8,
+        "seconds": 4.9,
         "title": "Say what you do",
         "line": "Search for your business. Keep the setup relevant."
       },
@@ -33,22 +33,22 @@
         "line": "A simple menu item and its price. No sample business records are copied."
       },
       {
-        "seconds": 14.9,
+        "seconds": 15,
         "title": "Add the practical details",
         "line": "Your description, location, hours and links live in a focused popup."
       },
       {
-        "seconds": 17.6,
+        "seconds": 17.7,
         "title": "Make the page yours",
         "line": "Choose a layout, then adjust the background and profile separately."
       },
       {
-        "seconds": 22.3,
+        "seconds": 22.4,
         "title": "Review the actual page",
         "line": "Check the menu, contact details and opening hours before continuing."
       },
       {
-        "seconds": 27.4,
+        "seconds": 27.5,
         "title": "Keep making it yours",
         "line": "Your draft is saved in this browser. Publishing and billing are not connected."
       }

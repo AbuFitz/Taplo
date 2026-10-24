@@ -2,7 +2,11 @@
 
 24 October 2026. Keep this checklist active across runs. “Implemented” means shipped behaviour, not owner approval or finished design quality. Work one area at a time and verify actual rendered quality before moving on.
 
-## Latest owner corrections: cinematic reveal and physical sharing
+## Latest owner steering — takes priority over earlier presentation checkpoints
+
+The owner rejects the earlier hero interpretation, the3D film's concept/pace/placement, boxed or fading artwork, repeated barber content and the white library. All artwork should feel frameless, with deliberate moving monochrome section canvases. Feature marketing pages need a proper creative redesign. Home's business-design selector must actually work. Setup needs a real handset preview, a compact unnumbered progress strip without “Your business” wording, View full size rather than inline expansion, and a comfortable independently scrolling form with anchored continuation rather than forcing the form into a frame. The plaque should follow pointer/touch naturally and settle without visible instructions/reset/sliders/format controls. Wallet means a digital business card for Apple/Google/Samsung Wallet, not a cosmetic card toggle. All customer pages need a well-designed Powered by Taplo / Build your own footer and a simple QR/copy/native-share popup, not an artwork editor. See CONNECTED-PRESENTATION.md for the active implementation and explicit remaining work. The current film is still creatively rejected; moving it lower does not complete the film request.
+
+## Earlier owner corrections: cinematic reveal and physical sharing
 
 The owner rejected9d4f9c0's three-business story as a final film: it still feels like a slideshow. Build a continuous cinematic product reveal using the existing motion/3D production tools, with actual interface transformations, visual cause/effect, silent autoplay, integrated/clear background and tactile interaction. Do not re-label changing image cards or a paragraph-led slideshow as the requested film. Finish the current composition checkpoint, then make this the immediate next priority. Automatically continue through the remaining ordered frontend list; do not ask whether to proceed again.
 
@@ -86,3 +90,9 @@ Shipped and independently verified as30fdc34 (READY deployment dpl_CZcuu3PcHKupi
 ## Continuous film checkpoint
 
 The rejected DOM slideshow is replaced by an authored26-second continuous3D product reveal, real interface surfaces and a page-to-plaque transformation. Native transparent compositing works in Chromium, Firefox and WebKit with one H.264 decode and no new runtime dependency. Phone and desktop cameras are separately composed. Silent autoplay, pointer/press response, click to Product, reduced-motion no-video fallback, offscreen/hidden pause, graphics-loss poster and viewport switching are implemented and tested. Local57 Chromium,10 native and222 unit pass (39DB skipped), production build/lint pass. Physical-phone verification, public deployment confirmation and square/feed propagation remain separate; implementation does not imply owner design approval.
+
+## Gallery and live demo checkpoint
+
+Eight business examples are now discoverable, adding recomposed clinic and training studio pages with the real renderer. Neutral raised preview surfaces, consistent geometry, two-column desktop composition, search with accent normalization and direct demo links address the gallery blending into the background. The two newly surfaced demos remove fabricated testimonials/accreditation labels. Actual captures are refreshed. Example-to-setup preserves section types/layout while removing sample record references and content; broader guided replacement of every relevant record remains OPEN. A shared preview bug found in native engines is corrected: opening a dialog repositions immediately only when outside the viewport, avoiding a smooth parent scroll moving subsequent tap targets. No owner design approval is implied.
+
+Legal operator facts are not yet available (owner confirmation). Single reminder created for tomorrow morning to supply legal name/address/support/privacy email/company number if incorporated. Do not invent these facts; legal pages and current law/service-behaviour research remain open.

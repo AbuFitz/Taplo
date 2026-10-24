@@ -45,7 +45,7 @@ export function Frame() {
       const field = getWidget(w.type)?.fields.find(f => f.kind === "select" && f.key === "variant")
       return w.type === widgetType && field?.kind === "select" && field.options.some(o => o.value === variant) ? { ...w, settings: { ...w.settings, variant } } : w
     }) : page.widgets
-    return buildPageViewModel(toContent(cfg), { ...page, widgets }, { plan: "business" })
+    return { ...buildPageViewModel(toContent(cfg), { ...page, widgets }, { plan: "business" }), showBranding: true }
   }, [cfg, widgetType, variant, q])
   const isolated = widgetType ? vm.widgets.find(w => w.type === widgetType) : undefined
   return <PageRenderer vm={vm} fragment={isolated ? { kind: "widget", id: isolated.id } : undefined} />

@@ -7,11 +7,10 @@ import { SetupDetails } from "./SetupDetails"
 import { SetupPlans } from "./SetupPlans"
 import { SetupCanvas } from "./SetupCanvas"
 import { SetupLoading } from "./SetupLoading"
-import { TaploLogo } from "@/components/taplo/brand"
 import * as React from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Check, Plus, Trash2, CalendarDays, MessageSquare, Phone, Mail } from "lucide-react"
+import { Check, Plus, Trash2, CalendarDays, MessageSquare, Phone, Mail, X, ArrowUpRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { SLUG_PROBLEM_MESSAGE } from "@/features/businesses/slug"
@@ -181,27 +180,17 @@ export function Onboarding() {
   }
 
   return (
-    <main ref={shell} data-preview-expanded={mobilePreview} data-step={step} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
-      <header className="mb-12 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/" aria-label="Taplo home" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo /></Link>
-        <div className="flex flex-wrap items-center gap-2">{fromName ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="from-example" title="Only its look and the kinds of content are used. None of its words, prices or pictures are copied.">Starting from {fromName}</span> : null}{intent ? <span className="rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-medium" data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}<Link href="/dashboard/page" className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground">Skip to the editor</Link></div>
-      </header>
-
-      <nav aria-label="Progress" className="mb-10 max-w-xl">
-        <div className="setup-progress-heading"><p className="text-xs font-medium text-muted-foreground">Step {stepIndex + 1} of {SETUP_STEPS.length} · {STEP_LABEL[step]}</p><SandboxBadge compact className="setup-context" /></div>
-        <ol className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${SETUP_STEPS.length}, minmax(0, 1fr))` }}>
-          {SETUP_STEPS.map((st, i) => (
-            <li key={st} aria-current={st === step ? "step" : undefined} className="h-1 overflow-hidden rounded-full bg-black/[0.09]">
-              <span className={cn("block h-full rounded-full bg-primary transition-[width] duration-500 ease-out", i < stepIndex ? "w-full" : i === stepIndex ? "w-1/2 bg-signal" : "w-0")} />
-              <span className="sr-only">{STEP_LABEL[st]}{i < stepIndex ? " (done)" : ""}</span>
-            </li>
-          ))}
-        </ol>
+    <main ref={shell} data-preview-expanded="false" data-step={step} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
+      <nav aria-label="Progress" className="setup-progress mb-4">
+        <div className="flex min-h-9 items-center gap-3">
+          <div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><span className="block h-full rounded-full bg-black transition-[width] duration-300 motion-reduce:transition-none" style={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} /></div>
+          <SandboxBadge compact className="setup-context" /><Link href="/" aria-label="Leave setup" className="grid size-9 shrink-0 place-items-center rounded-full focus-visible:ring-2"><X aria-hidden="true" className="size-4" /></Link>
+        </div>
       </nav>
 
       <div className="setup-workspace grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
         <section aria-labelledby="step-title" className="min-w-0">
-          <div className="setup-question-heading">{fromName || intent ? <p className="setup-origin lg:hidden">{[fromName ? `Starting from ${fromName}` : "", intent ? `${PLANS[intent].name} plan` : ""].filter(Boolean).join(" · ")}</p> : null}
+          <div className="setup-question-heading">{fromName || intent ? <p className="setup-origin">{fromName ? <span data-testid="from-example">Starting from {fromName}</span> : null}{fromName && intent ? " · " : ""}{intent ? <span data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}</p> : null}
           <h1 id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? { service: "Add your first service", vehicle: "Add your first vehicle", photo: "Add your first photos" }[firstKind(c.identity.industryKey)] : STEP_TITLE[step]}</h1></div>
 
           <div className="setup-step-body" key={step}>
@@ -289,10 +278,12 @@ export function Onboarding() {
         </section>
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="setup-canvas-heading"><span className="truncate">{c.identity.name || "Your page"}</span><button type="button" onClick={() => setMobilePreview(v => !v)} aria-expanded={mobilePreview} className="min-h-9 rounded-full px-3 text-xs font-medium lg:hidden">{mobilePreview ? "Back to setup" : "Expand preview"}</button><a href="/demo/preview" target="_blank" rel="noreferrer" className="hidden text-xs underline lg:block">Open preview</a></div>
-          <div className="setup-canvas"><SetupCanvas src={step === "contacts" && c.services?.length && !mobilePreview ? `/demo/preview?widget=${s.page.widgets.find(w => w.type === "serviceList" || w.type === "priceMenu")?.id ?? ""}` : "/demo/preview"} expanded={mobilePreview} showIdentity={step === "business"} look={s.page.themeId} /></div>
+          <div className="setup-canvas-heading"><button type="button" onClick={() => setMobilePreview(true)} className="inline-flex min-h-9 items-center gap-1 rounded-full px-3 text-xs font-medium">View full size<ArrowUpRight aria-hidden="true" className="size-3" /></button></div>
+          <div className="setup-canvas"><SetupCanvas src="/demo/preview" expanded={false} /></div>
+
         </aside>
       </div>
+      <Overlay open={mobilePreview} onOpenChange={setMobilePreview} kind="detail" title="Full-size preview" testId="setup-full-preview" className="sm:h-[90dvh] sm:max-h-[90dvh] sm:w-[min(96vw,90rem)] sm:max-w-none" bodyClassName="p-0! overflow-hidden!"><div className="h-full min-h-0"><SetupCanvas src="/demo/preview" expanded /></div></Overlay>
     </main>
   )
 }

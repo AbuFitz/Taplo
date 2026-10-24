@@ -120,10 +120,9 @@ export const PRODUCT_PAGES: ProductPage[] = [
   {
     slug: "sharing", label: "Sharing and QR codes", eyebrow: "Sharing and QR codes",
     title: "Your page, out in the world.",
-    lead: "A scannable code for your printed material, a share image for messages and a link to your business page. Branded counter plaques and wallet cards are the next formats we’re developing; physical ordering and wallet export are not available yet.",
+    lead: "A clear QR code, a copied link or your phone’s share sheet. Physical plaques and digital business cards for Apple Wallet, Google Wallet and Samsung Wallet are in development.",
     status: [
-      { label: "A Taplo QR code with the Taplo mark in the middle, as PNG for screens, PNG for print and SVG", state: "works" },
-      { label: "A share image with your name, your logo and the code", state: "works" },
+      { label: "A scannable Taplo QR code you can save as a PNG", state: "works" },
       { label: "Share from a phone with the system share sheet", state: "works" },
       { label: "A public address for every page", state: "needs", feature: "publicLinks" },
       { label: "Exact link previews in social apps", state: "needs", requirement: "platform", note: "Apps decide this and cache it. Taplo cannot guarantee it." },

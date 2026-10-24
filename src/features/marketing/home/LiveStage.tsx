@@ -35,7 +35,7 @@ const SCENES = [
   },
 ] as const;
 export function LiveStage() {
-  const [selected, select] = useState(0);
+  const [selected, select] = useState(3);
   const scene = SCENES[selected];
   return (
     <MonoField className="business-stage hero-stage">
@@ -76,15 +76,14 @@ export function LiveStage() {
             priority
           />
         </div>
+      </div>
         <div className="hero-stage-caption">
           <p>{scene.name}</p>
-          <p>{scene.detail}</p>
           <Link href={`/inspiration/${scene.slug}`}>
             Explore this page
             <ArrowUpRight aria-hidden="true" size={16} />
           </Link>
         </div>
-      </div>
     </MonoField>
   );
 }

@@ -142,33 +142,13 @@ for (const width of [390, 1440])
       .click();
     expect((await read(page)).setupDrafts.planIntent).toBe("free");
     expect((await read(page)).plan).toBe("business");
-    if (width < 1024) {
-      await page
-        .getByRole("button", { name: "Expand preview", exact: true })
-        .click();
-      await expect
-        .poll(
-          async () =>
-            (await page
-              .locator('[data-testid="setup-live-page"]')
-              .boundingBox())!.height,
-        )
-        .toBeGreaterThan(700);
-    }
-    await expect(
-      frame.getByRole("heading", { name: "West Road Motors", exact: true }),
-    ).toBeVisible();
-    await expect(frame.locator('[data-widget="hours"]')).toContainText("Tue");
-    await page.screenshot({
-      path: path.join(
-        process.env.TAPLO_REVIEW_DIR ?? "test-results",
-        `finished-page-${width}.png`,
-      ),
-    });
-    if (width < 1024)
-      await page
-        .getByRole("button", { name: "Back to setup", exact: true })
-        .click();
+    await page.getByRole("button", { name: "View full size", exact: true }).click();
+    const full = page.getByTestId("setup-full-preview");
+    const fullFrame = full.frameLocator("iframe");
+    await expect(fullFrame.getByRole("heading", { name: "West Road Motors", exact: true })).toBeVisible();
+    await expect(fullFrame.locator('[data-widget="hours"]')).toContainText("Tue");
+    await page.screenshot({path:path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results",`finished-page-${width}.png`)});
+    await full.getByRole("button", {name:"Close",exact:true}).click();
     const axe = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
       .analyze();

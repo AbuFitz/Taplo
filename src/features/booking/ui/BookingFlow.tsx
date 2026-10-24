@@ -69,7 +69,10 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
   const offered = preStaff ? ctx.services.filter((s) => eligibleStaff(ctx, s).includes(preStaff)) : ctx.services
   const eligibleKey = eligible.join()
 
-  React.useEffect(() => { heading.current?.focus() }, [step])
+  React.useEffect(() => {
+    heading.current?.closest<HTMLElement>("[data-overlay-body]")?.scrollTo({ top: 0, behavior: "instant" })
+    heading.current?.focus({ preventScroll: true })
+  }, [step])
 
   // Availability for the whole booking window, recomputed from the live state (so a time someone else just took disappears).
   const avail = React.useMemo(() => {
@@ -346,7 +349,7 @@ function SlotGrid({ slots, tz, viewerTz, pick, onPick, date }: { slots: { starts
 
 function Done({ ctx, booking, tz, viewerTz, update, state, config, onClose }: { onClose: () => void; ctx: BookingContext; booking: Booking; tz: string; viewerTz: string; onChanged: () => void; update: (fn: (s: typeof state) => typeof state) => boolean; state: ReturnType<typeof useBookingState>["state"]; config: ReturnType<typeof useSchedulingConfig> }) {
   const heading = React.useRef<HTMLHeadingElement>(null)
-  React.useEffect(() => { heading.current?.focus() }, [])
+  React.useEffect(() => { heading.current?.focus({ preventScroll: true }) }, [])
   const live = state.bookings.find((b) => b.id === booking.id) ?? booking
   const o = OUTCOME[live.mode]
   const cancelled = live.status === "cancelled"

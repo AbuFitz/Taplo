@@ -1,7 +1,10 @@
 import "../themes/fonts"
+import Link from "next/link"
 import "./page.css"
 import { ThemeRoot } from "@/components/taplo/theme-root"
 import { renderWidgetBody } from "../widgets/renderers"
+import { SharePanel } from "../widgets/ShareClient"
+import { Share2, ArrowUpRight } from "lucide-react"
 import { Background } from "./Background"
 import { PageHeader } from "./Header"
 import type { PageViewModel } from "./view-model"
@@ -31,7 +34,8 @@ export function PageRenderer({ vm, bare = false, fragment }: { vm: PageViewModel
         </main>}
         {fragment ? null : <footer aria-label={`${vm.business.identity.name} business page footer`} className="pb-2 text-center text-sm tp-muted" style={{ gridColumn: "1 / -1" }}>
           {[vm.business.identity.heroImage, ...vm.business.products.map(p => p.image)].some(image => image?.src.startsWith('/photography/')) ? <p className="mb-2 text-xs"><a href="/credits" target="_blank" rel="noreferrer" className="underline underline-offset-4">Photography credits</a></p> : null}
-          {vm.showBranding ? <p><a className="underline underline-offset-4" href="https://taplo.co">Made with Taplo</a></p> : null}
+          <SharePanel data={{ name: vm.business.identity.name, slug: vm.business.identity.slug }} trigger={<button type="button" className="mx-auto mb-3 inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4" aria-label="Share page"><Share2 aria-hidden="true" className="size-4" />Share</button>} />
+          {vm.showBranding ? <Link href="/onboarding" target="_top" className="group mx-auto flex min-h-11 w-fit flex-wrap items-center justify-center gap-x-2 rounded-full px-4 text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-4"><span>Powered by <strong className="font-semibold">Taplo</strong></span><span aria-hidden="true">·</span><span className="inline-flex items-center gap-1">Build your own<ArrowUpRight aria-hidden="true" className="size-3" /></span></Link> : null}
         </footer>}
       </div>
     </ThemeRoot>

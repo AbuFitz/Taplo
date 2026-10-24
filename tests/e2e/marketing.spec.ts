@@ -292,7 +292,7 @@ test.describe("inspiration", () => {
     await page.getByRole("button", { name: "Continue" }).click(); // → first content
     await page.getByRole("button", { name: "Continue" }).click(); // → design
     await expect(
-      page.getByTestId("look-picker").getByRole("radio", { name: /Mono/ }),
+      page.getByTestId("look-picker").getByRole("radio", { name: /Studio/ }),
     ).toBeChecked();
     const owner = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!));
     expect(owner.content.identity.name).toBe("Ridgeway Physio");

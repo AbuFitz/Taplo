@@ -30,7 +30,7 @@ const LABELS: Record<Slug, string> = {
   "gallery-reviews":
     "An illustrative shop photograph opened in Taplo's actual photo viewer",
   enquiries: "The actual Detail Dept. enquiry form and local preview confirmation",
-  sharing: "Jay’s Barbers's downloadable branded share card and actual page",
+  sharing: "The café sharing popup and a working business page",
   messages:
     "The current enquiry interface alongside messaging and appointment symbols",
 };

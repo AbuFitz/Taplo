@@ -53,8 +53,8 @@ const CATALOGUE: Example[] = [
   },
   {
     slug: "hollin-physio", scenario: "physio", industry: "health",
-    hook: "Quiet, typographic and unhurried. A printed programme, not an app.",
-    notes: ["Every appointment is a request, because a clinician decides whether it is the right slot.", "Long appointments, written plainly, with prices up front.", "No photography at all. Type, space and one deep red do the work."],
+    hook: "A calm clinic introduction, clear appointment prices and space to meet the team.",
+    notes: ["Every appointment is a request, because a clinician decides whether it is the right slot.", "Long appointments, written plainly, with prices up front.", "An editorial introduction and aligned appointment rows keep the page calm without relying on photography."],
     highlights: ["Requests that the clinic accepts or declines", "A team grid with services per person", "Questions answered before the call"],
   },
   {
@@ -71,9 +71,9 @@ const CATALOGUE: Example[] = [
   },
   {
     slug: "forge-strength", scenario: "gym", industry: "fitness",
-    hook: "Loud, condensed and high contrast. Energy first, detail second.",
-    notes: ["Headings are capitals in a condensed face with hard shadows.", "Coaches sit in a swipe row because there are four of them.", "The free intro is the one action that matters."],
-    highlights: ["Classes, coaching and memberships", "Four coaches, each with their own services", "Member quotes in a swipe row"],
+    hook: "A bold training studio. Start with an introduction, then explore classes and coaching.",
+    notes: ["An open photographic introduction pairs with true black, clear white type and curved controls.", "Coaches sit in a swipe row because there are four of them.", "The free intro is the one action that matters."],
+    highlights: ["Classes, coaching and memberships", "Four coaches, each with their own services", "Classes and coaching with clear prices"],
   },
   {
     slug: "northgate-heating", scenario: "trades", industry: "trades",
@@ -90,7 +90,7 @@ const CATALOGUE: Example[] = [
 ]
 
 // Superseded example routes remain available; the gallery leads with their new UK replacements.
-export const EXAMPLES = CATALOGUE.filter((e) => ["station", "detailer", "brookfield", "corner", "oakfield", "rowan"].includes(e.scenario)).sort((a, b) => (["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(a.scenario) - ["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(b.scenario)))
+export const EXAMPLES = CATALOGUE.filter((e) => ["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].includes(e.scenario)).sort((a, b) => (["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(a.scenario) - ["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(b.scenario)))
 const LEGACY_SLUGS: Record<string, string> = {"station-road-barbers": "jays-barbers", "parkside-valeting": "detail-dept", "brookfield-motors": "harris-cars", "corner-table-cafe": "no-6-coffee", "oakfield-home-repairs": "dans-home-repairs", "rowan-learning": "maths-with-aisha"}
 export const bySlug = (slug: string) => CATALOGUE.find((e) => e.slug === (LEGACY_SLUGS[slug] ?? slug))
 
