@@ -9,8 +9,6 @@ import { cn } from "@/lib/utils"
 import { canPublish, hasUnpublishedChanges, publish, readiness } from "@/features/demo/actions"
 import { PreviewFrame } from "@/features/demo/ui"
 import { DashboardMenu } from "@/features/demo/DashboardShell"
-import { SandboxBadge } from "@/components/taplo/sandbox-badge"
-import { capabilities } from "@/lib/capabilities"
 import { EditorPanel } from "./EditorPanel"
 import { MobileEditor } from "./MobileEditor"
 import { CONTENT, type Selection } from "./selection"
@@ -74,7 +72,6 @@ export function MyPage() {
         <p className={cn("truncate text-xs leading-tight", ed.storageFailed ? "text-destructive" : "text-muted-foreground")} data-testid="save-state">{saveText}</p>
       </div>
       <div className="ml-auto flex items-center gap-1.5">
-        {capabilities().sandbox ? <SandboxBadge /> : null}
         <Button variant="ghost" size="icon" className="size-11" onClick={ed.undo} disabled={!ed.canUndo} aria-label="Undo" data-testid="undo"><Undo2 /></Button>
         <Button variant="ghost" size="icon" className="size-11" onClick={ed.redo} disabled={!ed.canRedo} aria-label="Redo" data-testid="redo"><Redo2 /></Button>
         <Button asChild variant="outline" className="min-h-11"><a href="/demo/preview" target="_blank" rel="noreferrer" data-testid="full-preview">Preview</a></Button>

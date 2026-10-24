@@ -27,8 +27,6 @@ import {
 import { cn } from "@/lib/utils";
 import { Welcome } from "./Welcome";
 import { useDemo } from "./store";
-import { SandboxBadge } from "@/components/taplo/sandbox-badge";
-import { capabilities } from "@/lib/capabilities";
 
 const NAV = [
   {
@@ -168,7 +166,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 "No business yet"
               )}
             </p>
-            {capabilities().sandbox ? <SandboxBadge /> : null}
             <span className="rounded-md border px-2.5 py-1 text-xs font-medium capitalize">
               {state?.plan ?? "business"} plan
             </span>

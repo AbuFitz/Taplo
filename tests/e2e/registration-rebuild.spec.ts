@@ -43,11 +43,8 @@ for (const width of [390, 1440])
         exact: true,
       })
       .click();
-    await expect(page.getByTestId("image-edit-dialog")).toBeVisible();
-    await page
-      .getByTestId("image-edit-dialog")
-      .getByRole("button", { name: "Done", exact: true })
-      .click();
+    await expect(crop).toBeVisible();
+    await crop.getByRole("button",{name:"Cancel",exact:true}).click();
     const next = () =>
       page.getByRole("button", { name: "Continue", exact: true }).click();
     await next();
@@ -61,12 +58,8 @@ for (const width of [390, 1440])
       .click();
     await next();
     await expect(page.getByTestId("goal")).toHaveCount(0);
-    await expect(page.getByTestId("reach").getByRole("textbox")).toHaveCount(1);
-    await page
-      .getByRole("button", { name: "Change main action", exact: true })
-      .click();
-    await page.getByRole("radio", { name: /Book with me/ }).check();
-    await page.getByRole("button", { name: "Done", exact: true }).click();
+    await expect(page.getByTestId("reach").getByRole("textbox")).toHaveCount(3);
+    await page.getByRole("button",{name:"Booking requests",exact:true}).click();
     await page.getByLabel("Email", { exact: true }).fill("owner@example.com");
     await next();
     await page.getByLabel("Service 1 name").fill("Diagnostic inspection");
@@ -95,11 +88,7 @@ for (const width of [390, 1440])
     await details.getByLabel("Tuesday", { exact: true }).check();
     await details.getByRole("button", { name: "Save details" }).click();
     await next();
-    await page
-      .getByTestId("look-picker")
-      .locator("label")
-      .filter({ has: page.locator('input[value="silver"]') })
-      .click();
+    await page.getByRole("radio",{name:"Studio",exact:true}).check();
     await page.getByRole("button", { name: /Background & colours/ }).click();
     const design = page.getByTestId("setup-design-dialog");
     await design
@@ -128,27 +117,15 @@ for (const width of [390, 1440])
       ),
     });
     await next();
-    await expect(
-      page.getByRole("heading", { name: "Review your page", exact: true }),
-    ).toBeVisible();
-    await page
-      .getByRole("button", { name: "Find a plan", exact: true })
-      .click();
-    const plans = page.getByTestId("setup-plans");
-    await expect(plans).toContainText("No card is collected here.");
-    await plans.getByRole("button", { name: /^Free/ }).click();
-    await plans
-      .getByRole("button", { name: "Continue with Free", exact: true })
-      .click();
+    await expect(page.getByRole("heading",{name:"Room to grow.",exact:true})).toBeVisible();
+    await page.getByRole("radio",{name:"Choose Free",exact:true}).check();
+    await next();
+    await expect(page.getByRole("heading",{name:"Review your page",exact:true})).toBeVisible();
     expect((await read(page)).setupDrafts.planIntent).toBe("free");
     expect((await read(page)).plan).toBe("business");
-    await page.getByRole("button", { name: "View full size", exact: true }).click();
-    const full = page.getByTestId("setup-full-preview");
-    const fullFrame = full.frameLocator("iframe");
-    await expect(fullFrame.getByRole("heading", { name: "West Road Motors", exact: true })).toBeVisible();
-    await expect(fullFrame.locator('[data-widget="hours"]')).toContainText("Tue");
-    await page.screenshot({path:path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results",`finished-page-${width}.png`)});
-    await full.getByRole("button", {name:"Close",exact:true}).click();
+    await expect(frame.getByRole("heading", {level:1,includeHidden:true})).toHaveText("West Road Motors");
+    await expect(frame.locator('[data-widget="hours"]')).toContainText("Tue");
+    await expect(page.getByRole("button",{name:"View full size"})).toHaveCount(0);
     const axe = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
       .analyze();
@@ -219,9 +196,6 @@ for (const width of [320, 390])
         exact: true,
       })
       .click();
-    await page
-      .getByRole("button", { name: "Change crop or framing", exact: true })
-      .click();
     await expect(crop).toBeVisible();
     await crop.getByRole("button", { name: "Cancel", exact: true }).click();
     expect((await read(page)).content.identity.logo.src).toBe(logo.src);
@@ -264,23 +238,18 @@ test("partial service text survives back and reload, custom businesses work, and
   await page.getByRole("button", { name: "Free", exact: true }).click();
   await page.getByRole("button", { name: "Done", exact: true }).click();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await expect
-    .poll(async () => (await read(page)).page.appearance.background?.source)
-    .toBe("logo");
-  await page.getByRole("button", { name: /Background & colours/ }).click();
+  await page.getByRole("button",{name:/Background & colours/}).click();
+  await page.getByTestId("setup-design-dialog").getByRole("button",{name:"Silver gradient",exact:true}).click();
   await page
     .getByTestId("setup-design-dialog")
     .getByLabel("Gradient end hex value")
     .fill("#cccccc");
   await page.getByRole("button", { name: "Done", exact: true }).click();
-  await page
-    .getByTestId("look-picker")
-    .locator("label")
-    .filter({ has: page.locator('input[value="ink"]') })
-    .click();
+  await page.getByRole("radio",{name:"Studio",exact:true}).check();
   expect((await read(page)).page.appearance.background.to).toBe("#cccccc");
   expect((await read(page)).page.appearance.background.source).toBe("manual");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByRole("button",{name:"Continue",exact:true}).click();
   await page
     .getByRole("button", { name: /Business name and image Add/ })
     .click();

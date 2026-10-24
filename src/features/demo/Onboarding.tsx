@@ -16,7 +16,7 @@ import { SetupLoading } from "./SetupLoading"
 import * as React from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Check, Plus, Trash2, CalendarDays, MessageSquare, Phone, Mail, X, ArrowUpRight } from "lucide-react"
+import { Check, Plus, Trash2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { SLUG_PROBLEM_MESSAGE } from "@/features/businesses/slug"
@@ -27,16 +27,13 @@ import { buildPageViewModel } from "@/features/page/renderer"
 import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures"
 import { OTHER_INDUSTRY_ID, getIndustryPreset, searchIndustries } from "@/features/themes/presets/industries"
 import { cn } from "@/lib/utils"
-import { exampleStart, suggestedLooks } from "@/features/inspiration/suggest"
-import { LOOKS } from "@/features/page/themes/looks"
-import { ThemeSwatch } from "./ThemeSwatch"
+import { exampleStart } from "@/features/inspiration/suggest"
 import { applyIndustry, blankService, canPublish, hasContactChannel, loadSample, newId, normService, publish, readiness, setName, setSlug, slugProblems } from "./actions"
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans"
 import { ONBOARDING_STEPS, initialState, parseContent, useDemo, type OnboardingStep } from "./store"
 import { RecordForm, blankFor, commitRecord, validate } from "@/features/page/editor/RecordForms"
 import { WHEN_UNAVAILABLE, capabilities } from "@/lib/capabilities"
-import { SandboxBadge } from "@/components/taplo/sandbox-badge"
-import { EmailField, PhoneField } from "./ui"
+import { SetupConnections } from "./SetupConnections"
 import type { WidgetType } from "@/features/page/contracts/widgets"
 
 const STEP_LABEL: Record<OnboardingStep, string> = {
@@ -47,13 +44,15 @@ const STEP_LABEL: Record<OnboardingStep, string> = {
   widgets: "Design",
   contacts: "First content",
   publish: "Review",
+  plan: "Plan",
 }
 const STEP_TITLE: Record<OnboardingStep, string> = {
   business: "Make it yours.",
   industry: "What do you do?",
   goal: "Choose the first step.",
-  reach: "How can customers reach you?",
-  widgets: "Choose your layout.",
+  reach: "Connect your business.",
+  widgets: "Your page, your style.",
+  plan: "Room to grow.",
   contacts: "Add your first content",
   publish: "Review your page",
 }
@@ -63,12 +62,6 @@ const SETUP_STEPS = ONBOARDING_STEPS.filter(step => step !== "goal")
 const POPULAR = ["barber", "detailer", "car-dealer", "hospitality", "tutor", "plumber", "personal-trainer", "photographer", "other"]
 
 type Goal = "book" | "enquire" | "call" | "message"
-const GOALS: { id: Goal; label: string; hint: string }[] = [
-  { id: "book", label: "Book with me", hint: "Customers choose a service and ask for a time." },
-  { id: "enquire", label: "Send an enquiry", hint: "A short form. Nothing is reserved." },
-  { id: "call", label: "Call me", hint: "A call button comes first." },
-  { id: "message", label: "Message me", hint: "WhatsApp or email comes first." },
-]
 function goalOf(s: { content: { booking?: { mode: string } }; page: { meta: { primaryAction: string } } }): Goal {
   const a = s.page.meta.primaryAction
   if (a === "call") return "call"
@@ -79,7 +72,7 @@ function goalOf(s: { content: { booking?: { mode: string } }; page: { meta: { pr
 // Whether a booking is confirmed straight away or accepted by hand is a setting for when services and hours exist (Bookings), not a question for the first minute.
 function applyGoal<T extends ReturnType<typeof initialState>>(s: T, g: Goal): T {
   const mode = g === "book" ? "request" : "contact"
-  const primaryAction = g === "book" ? "book" : g === "call" ? "call" : g === "message" ? (s.content.contacts.whatsapp ? "whatsapp" : s.content.contacts.email ? "email" : "auto") : "auto"
+  const primaryAction = g === "book" ? "book" : g === "call" ? "call" : g === "message" ? (s.content.contacts.whatsapp ? "whatsapp" : "email") : "auto"
   return { ...s, content: { ...s.content, booking: { ...s.content.booking, mode } }, page: { ...s.page, meta: { ...s.page.meta, primaryAction } } }
 }
 
@@ -91,7 +84,6 @@ function firstKind(industryKey: string): "service" | "vehicle" | "photo" {
 
 export function Onboarding() {
   const shell = React.useRef<HTMLElement>(null)
-  const previewTrigger = React.useRef<HTMLButtonElement>(null)
   const reducedMotion = useReducedMotion()
   const [direction, setDirection] = React.useState(1)
   const navigated = React.useRef(false)
@@ -116,12 +108,10 @@ export function Onboarding() {
   const [showErrors, setShowErrors] = React.useState(false)
   const [contentValid,setContentValid]=React.useState(true)
   const [query, setQuery] = React.useState("")
-  const [actionOpen, setActionOpen] = React.useState(false)
   const [profileOpen, setProfileOpen] = React.useState(false)
   const [editSlug, setEditSlug] = React.useState(false)
   const [otherOpen, setOtherOpen] = React.useState(false)
-  const [mobilePreview, setMobilePreview] = React.useState(false)
-  const [reachChoice, setReachChoice] = React.useState<"phone" | "email" | "whatsapp" | null>(null)
+  const [connectionsValid,setConnectionsValid]=React.useState(true)
   const s = state ?? initialState()
   const step: OnboardingStep = s.step === "goal" ? "reach" : (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "widgets"
   const stepIndex = SETUP_STEPS.indexOf(step as Exclude<OnboardingStep, "goal">)
@@ -137,8 +127,8 @@ export function Onboarding() {
     if (!navigated.current) return
     shell.current?.querySelector<HTMLElement>("#step-title")?.focus({ preventScroll: true })
   }, [step])
-  const next = () => go(SETUP_STEPS[Math.min(stepIndex + 1, SETUP_STEPS.length - 1)]!)
-  const back = () => go(SETUP_STEPS[Math.max(stepIndex - 1, 0)]!)
+  const next = () => {if(step === "reach")update(x=>({...x,setupDrafts:{...x.setupDrafts,connections:undefined}}));if(step === "plan" && !s.setupDrafts?.planIntent)update(x=>({...x,setupDrafts:{...x.setupDrafts,planIntent:"free"}}));if(s.setupDrafts?.reviewEdit){go("publish");update(x=>({...x,setupDrafts:{...x.setupDrafts,reviewEdit:false}}))}else go(SETUP_STEPS[Math.min(stepIndex + 1, SETUP_STEPS.length - 1)]!)}
+  const back = () => {if(s.setupDrafts?.reviewEdit){go("publish");update(x=>({...x,setupDrafts:{...x.setupDrafts,reviewEdit:false}}))}else go(SETUP_STEPS[Math.max(stepIndex - 1, 0)]!)}
 
   // A plan chosen on the pricing page carries into setup (and stays through every step) without taking payment.
   // Read from the router, not window.location: on a client-side navigation (pricing → setup) the address has not changed yet when this first renders.
@@ -175,12 +165,12 @@ export function Onboarding() {
   if (!ready) return <SetupLoading />
 
   const c = s.content
-  const reachMethod = goalOf(s) === "call" ? "phone" : reachChoice ?? (goalOf(s) === "message" ? "whatsapp" : c.contacts.phone ? "phone" : "email")
   const slugErrs = slugProblems(c.identity.slug)
   const valid: Record<OnboardingStep, boolean> = {
     industry: state !== null && Boolean(c.identity.industryLabel.trim()),
     goal: true,
-    reach: goalOf(s) === "call" ? Boolean(c.contacts.phone) : hasContactChannel(c),
+    reach: connectionsValid && (goalOf(s) === "call" ? Boolean(c.contacts.phone) : hasContactChannel(c)),
+    plan: true,
     business: Boolean(c.identity.name.trim()) && slugErrs.length === 0,
     contacts: contentValid,
     widgets: true,
@@ -189,7 +179,8 @@ export function Onboarding() {
   const why: Record<OnboardingStep, string> = {
     industry: "Choose what you do.",
     goal: "",
-    reach: goalOf(s) === "call" ? "Add the phone number people should call." : "Add at least one way to reach you.",
+    plan: "",
+    reach: goalOf(s) === "call" ? "Add the phone number people should call." : goalOf(s) === "message" ? "Add an email or WhatsApp number for messages." : "Add a website, email or phone number to continue.",
     business: "Add a name and a valid web address.",
     contacts: "Finish the service name and price, or choose quote/free pricing. Save any vehicle or photos you started.",
     widgets: "",
@@ -201,7 +192,7 @@ export function Onboarding() {
       <nav aria-label="Progress" className="setup-progress mb-4">
         <div className="flex min-h-9 items-center gap-3">
           <div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div>
-          <button type="button" className="setup-mobile-preview" aria-label="View full size" onClick={event => { previewTrigger.current=event.currentTarget;setMobilePreview(true) }}>View full size<ArrowUpRight aria-hidden="true" className="size-3" /></button><SandboxBadge compact className="setup-context" /><Link href="/" aria-label="Leave setup" className="grid size-9 shrink-0 place-items-center rounded-full focus-visible:ring-2"><X aria-hidden="true" className="size-4" /></Link>
+          <Link href="/" aria-label="Leave setup" className="grid size-9 shrink-0 place-items-center rounded-full focus-visible:ring-2"><X aria-hidden="true" className="size-4" /></Link>
         </div>
       </nav>
 
@@ -222,7 +213,7 @@ export function Onboarding() {
                       <li key={p.id}>
                         <button type="button" aria-pressed={selected} onClick={() => { setOtherOpen(p.id === OTHER_INDUSTRY_ID); update((x) => applyIndustry(x, p.id, p.id === OTHER_INDUSTRY_ID ? "" : p.label)) }}
                           className={cn("setup-industry relative flex min-h-14 w-full items-center gap-3 rounded-2xl px-3 py-2 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", selected ? "bg-[#111111] text-white" : "bg-[#f5f5f5] hover:bg-[#ededed]")}>
-                          <span className="setup-icon"><BusinessIcon id={p.id} /></span>{selected ? <Check aria-hidden="true" className="absolute right-2 top-2 size-3 text-current" /> : null}<span>{p.label}</span>
+                          <span className="setup-icon"><BusinessIcon id={p.id} /></span><span className="flex-1">{p.label}</span>{selected ? <Check aria-hidden="true" className="size-4 text-current" /> : null}
                         </button>
                       </li>
                     )
@@ -244,35 +235,26 @@ export function Onboarding() {
             </div>
           ) : null}
 
-              {step === "reach" ? (
-                <div className="grid gap-5"><div className="setup-action-summary"><span><span className="block text-xs text-muted-foreground">Your main button</span><strong className="text-sm">{GOALS.find(g => g.id === goalOf(s))?.label}</strong></span><Overlay trigger={<button type="button" className="min-h-11 px-3 text-sm font-semibold underline underline-offset-4">Change main action</button>} open={actionOpen} onOpenChange={setActionOpen} title="Choose your main button" description="Choose what customers can do from your page." footer={<Button className="min-h-11 w-full" onClick={() => setActionOpen(false)}>Done</Button>}>
-                  <fieldset className="grid gap-2" data-testid="goal"><legend className="sr-only">Main button</legend>{GOALS.map(g => { const Icon = { book: CalendarDays, enquire: MessageSquare, call: Phone, message: Mail }[g.id]; return <label key={g.id} className="flex min-h-16 cursor-pointer items-center gap-3 rounded-2xl bg-neutral-50 p-3 has-[:checked]:bg-black has-[:checked]:text-white"><input type="radio" className="sr-only" name="goal" checked={goalOf(s)===g.id} onChange={()=>update(x=>applyGoal(x,g.id))}/><Icon aria-hidden="true" className="size-5 shrink-0"/><span><strong className="block text-sm">{g.label}</strong><span className="mt-1 block text-xs opacity-75">{g.hint}</span></span></label>})}</fieldset>
-                </Overlay></div><fieldset className="grid gap-3" data-testid="reach">
-                  <legend className="mb-1 text-sm font-semibold">{goalOf(s) === "call" ? "The number to call" : "How can people reach you?"}</legend>
-                  {goalOf(s) !== "call" ? <div className="grid grid-cols-3 gap-3" role="group" aria-label="Contact method">{(["email", "phone", "whatsapp"] as const).map(method => { const Icon = method === "email" ? Mail : method === "phone" ? Phone : MessageSquare; return <button type="button" key={method} aria-pressed={reachMethod === method} onClick={() => setReachChoice(method)} className={cn("flex min-h-11 items-center justify-center gap-2 rounded-full border text-sm font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring", reachMethod === method ? "border-signal bg-signal-soft text-signal" : "bg-white hover:border-signal")}><Icon className="size-4" aria-hidden="true" />{method === "email" ? "Email" : method === "phone" ? "Phone" : "WhatsApp"}</button> })}</div> : null}
-                  {reachMethod === "email" ? <EmailField value={c.contacts.email} onCommit={v => update(x => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }, goalOf(x)), { coalesce: "email" })} /> : <PhoneField label={reachMethod === "phone" ? "Phone" : "WhatsApp"} value={c.contacts[reachMethod]} onCommit={v => update(x => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, [reachMethod]: v } } }, goalOf(x)), { coalesce: reachMethod })} hint={reachMethod === "whatsapp" ? "With country code, e.g. +44." : undefined} />}
-                  <p className="text-sm text-muted-foreground">One contact method is enough.</p>
-                </fieldset></div>
-              ) : null}
+          {step === "reach" ? <SetupConnections goal={goalOf(s)} onGoalChange={goal=>update(x=>applyGoal(x,goal))} onValidity={setConnectionsValid}/> : null}
 
           {step === "business" ? (
             <div className="grid gap-5">
-              <ImageField presentation="identity" purpose="identity" samples={false} onFramingChange={shape=>update(x=>({...x,page:{...x.page,appearance:{...x.page.appearance,header:{...x.page.appearance.header,avatarShape:shape}}}}))} label="Add your logo or profile photo" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
-              <TaploInput label="Business name" value={c.identity.name} maxLength={100} autoComplete="organization" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
-              <div className="-mt-2 text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">{TAPLO_DOMAINS.host}/{c.identity.slug || "your-name"}</span>{" "}
-                <button type="button" onClick={() => setEditSlug((v) => !v)} aria-expanded={editSlug || (showErrors && slugErrs.length > 0)} className="rounded px-1 font-medium text-foreground underline underline-offset-4">{editSlug ? "Done" : "Change"}</button>
+              <ImageField presentation="identity" framing={s.page.appearance.header?.avatarShape === "circle"?"circle":s.page.appearance.header?.avatarShape === "square"?"square":"logo"} purpose="identity" samples={false} onFramingChange={shape=>update(x=>({...x,page:{...x.page,appearance:{...x.page.appearance,header:{...x.page.appearance.header,avatarShape:shape}}}}))} label="Add your logo or profile photo" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
+              <TaploInput label="Business name" placeholder="e.g. North Street Studio" value={c.identity.name} maxLength={100} autoComplete="organization" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
+              <div className="setup-address">
+                <span className="text-muted-foreground">{TAPLO_DOMAINS.host}/{c.identity.slug || "your-name"}</span>{" "}
+                <button type="button" onClick={() => setEditSlug((v) => !v)} aria-expanded={editSlug || (showErrors && slugErrs.length > 0)} className="setup-secondary">{editSlug ? "Done" : "Change"}</button>
                 {slugErrs.length && c.identity.slug ? <span className="block text-destructive">{SLUG_PROBLEM_MESSAGE[slugErrs[0]!]}</span> : null}
               </div>
               {editSlug || (showErrors && slugErrs.length) ? (
                 <TaploInput label="Web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />
               ) : null}
 
-              <TaploInput label="Short description (optional)" value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
-              <Overlay trigger={<button type="button" className="min-h-11 text-left text-sm font-medium underline underline-offset-4">Add a cover photo</button>} open={profileOpen} onOpenChange={setProfileOpen} title="Cover photo" footer={<Button className="min-h-11 w-full" onClick={()=>setProfileOpen(false)}>Done</Button>}><div className="grid gap-5">
+              <TaploInput label="Short description (optional)" placeholder="e.g. Independent hair studio in St Albans." value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
+              <Overlay trigger={<button type="button" className="setup-secondary">Add a cover photo</button>} open={profileOpen} onOpenChange={setProfileOpen} title="Cover photo" footer={<Button className="min-h-11 w-full" onClick={()=>setProfileOpen(false)}>Done</Button>}><div className="grid gap-5">
 
 
-              <ImageField purpose="cover" label="Cover photo (optional)" cropAspect={16 / 9} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1600} value={c.identity.heroImage ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, heroImage: v ?? undefined } } }))} />
+              <ImageField purpose="cover" samples={false} label="Cover photo (optional)" cropAspect={16 / 9} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1600} value={c.identity.heroImage ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, heroImage: v ?? undefined } } }))} />
               </div></Overlay>
             </div>
           ) : null}
@@ -280,68 +262,35 @@ export function Onboarding() {
           {step === "contacts" ? <FirstContent onValidity={setContentValid} /> : null}
 
           {step === "widgets" ? <WidgetsStep /> : null}
-          {step === "publish" ? <PublishStep onEditor={() => router.push("/dashboard/page")} onEdit={go} /> : null}
+          {step === "plan" ? <SetupPlans inline /> : null}
+          {step === "publish" ? <PublishStep onEditor={() => router.push("/dashboard/page")} onEdit={to=>{go(to);update(x=>({...x,setupDrafts:{...x.setupDrafts,reviewEdit:true}}))}} /> : null}
 
           </motion.div>
           {step !== "publish" ? (
             <div className="setup-next mt-8 flex flex-wrap items-center gap-3">
               {stepIndex > 0 ? <Button variant="outline" size="lg" onClick={back}>Back</Button> : null}
-              <Button className="flex-1 bg-signal text-white hover:bg-[#333333] sm:flex-none sm:min-w-40" size="lg" onClick={() => (valid[step] ? next() : setShowErrors(true))} aria-describedby="why-disabled">Continue</Button>
+              <Button className="flex-1 bg-signal text-white hover:bg-[#333333] sm:flex-none sm:min-w-40" size="lg" onClick={() => (valid[step] ? next() : setShowErrors(true))} aria-describedby={!valid[step] && showErrors ? "why-disabled" : undefined}>{s.setupDrafts?.reviewEdit?"Save changes":"Continue"}</Button>
               {!valid[step] && showErrors ? <p id="why-disabled" role="alert" className="text-sm text-destructive">{why[step]}</p> : null}
             </div>
           ) : (
-            <div className="mt-8"><Button variant="outline" size="lg" onClick={back}>Back</Button></div>
+            <div className="setup-next"><Button variant="outline" size="lg" onClick={back}>Back</Button></div>
           )}
         </section>
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="setup-canvas-heading"><button type="button" onClick={event => { previewTrigger.current=event.currentTarget;setMobilePreview(true) }} className="inline-flex min-h-9 items-center gap-1 rounded-full px-3 text-xs font-medium">View full size<ArrowUpRight aria-hidden="true" className="size-3" /></button></div>
           <div className="setup-canvas"><SetupCanvas src="/demo/preview" expanded={false} /></div>
 
         </aside>
       </div>
-      <Overlay open={mobilePreview} onOpenChange={setMobilePreview} kind="detail" title="Full-size preview" testId="setup-full-preview" onCloseAutoFocus={event => { event.preventDefault(); previewTrigger.current?.focus({ preventScroll:true }) }} className="sm:h-[90dvh] sm:max-h-[90dvh] sm:w-[min(96vw,90rem)] sm:max-w-none" bodyClassName="p-0! overflow-hidden!"><div className="h-full min-h-0"><SetupCanvas src="/demo/preview" expanded /></div></Overlay>
     </main></div>
   )
 }
 
-/** Suggested looks for this kind of business, each shown as a real page. A look is a starting point: every colour, font and shape can be changed afterwards. */
-function LookPicker({ industryKey, themeId, onPick }: { industryKey: string; themeId: string; onPick: (id: string) => void }) {
-  const [initialLook] = React.useState(themeId)
-  const looks = React.useMemo(() => { const list = suggestedLooks(industryKey); const current = LOOKS.find(l => l.id === initialLook); const at = list.findIndex(l => l.id === initialLook); return current && (at < 0 || at >= 6) ? [current, ...list.filter(l => l.id !== initialLook)] : list }, [industryKey, initialLook])
-  const card = (l: (typeof looks)[number]) => {
-    const active = themeId === l.id
-    return (
-      <label key={l.id} className="setup-look-choice" data-selected={active}>
-        <input type="radio" name="look" value={l.id} checked={active} onChange={() => onPick(l.id)} className="sr-only" />
-        <span className="block overflow-hidden rounded-xl"><ThemeSwatch look={l} /></span>
-        <span className="setup-look-name">{l.name}{active ? <Check aria-hidden="true" className="size-3" /> : null}</span>
-      </label>
-    )
-  }
-  return (
-    <fieldset className="setup-look-picker grid gap-3" data-testid="look-picker">
-      <legend className="sr-only">Pick a look</legend>
-      <div className="grid grid-cols-3 gap-2 pb-2">{looks.slice(0, 6).map(card)}</div>
-      {looks.length > 6 ? <details className="group">
-        <summary className="inline-flex min-h-10 cursor-pointer list-none items-center rounded-lg text-sm font-medium underline underline-offset-4 [&::-webkit-details-marker]:hidden">More looks</summary>
-        <div className="mt-3 grid grid-cols-3 gap-3 pb-2">{looks.slice(6).map(card)}</div>
-      </details> : null}
-    </fieldset>
-  )
-}
-
-/** Design: one choice, shown on an example business, applied to theirs as they pick. Everything can be changed in the editor. */
+/** Spatial presets change layout rules, independently of profile and colours. */
 function WidgetsStep() {
-  const { state, update } = useDemo()
-  const s = state ?? initialState()
-  React.useEffect(()=>{
-    if(s.page.appearance.background || s.setupDrafts?.backgroundEdited)return
-    const bg=LOOKS.find(l=>l.id===s.page.themeId)?.overrides.colors?.background??'#ffffff'
-    const dark=bg==='#000000'||bg==='#080808'
-    update(st=>({...st,page:{...st.page,appearance:{...st.page.appearance,background:{kind:'gradient',from:dark?'#000000':'#ffffff',to:dark?'#303030':'#dddddd',angle:135,motion:true,source:'logo'},decoration:'grain'}}}))
-  },[s.page.themeId,s.page.appearance.background,s.setupDrafts?.backgroundEdited,update])
-  return <div className="grid gap-4"><SetupDesign compact /><LookPicker industryKey={s.content.identity.industryKey} themeId={s.page.themeId} onPick={(id) => update((x) => ({ ...x, page: { ...x.page, themeId: id, appearance: x.setupDrafts?.backgroundEdited?{background:x.page.appearance.background,colors:x.page.appearance.colors,decoration:x.page.appearance.decoration}:{} } }))} /></div>
+  const {state,update}=useDemo();const s=state??initialState();
+  const selected=s.page.appearance.layout?.desktop??"centered";
+  return <div className="grid gap-6"><fieldset><legend className="setup-layout-heading">Page layout</legend><div className="setup-layout-options">{([{id:"centered",name:"Simple",width:"narrow",density:"comfortable"},{id:"split",name:"Studio",width:"regular",density:"comfortable"},{id:"columns",name:"Collection",width:"wide",density:"compact"}]as const).map(item=><label className="setup-layout-choice" key={item.id}><input type="radio" name="page-layout" checked={selected===item.id} onChange={()=>update(st=>({...st,page:{...st.page,appearance:{...st.page.appearance,layout:{...st.page.appearance.layout,desktop:item.id,width:item.width,density:item.density}}}}))}/><span aria-hidden="true" className="setup-layout-diagram" data-layout={item.id}><i/><i/><i/><i/></span><span>{item.name}</span></label>)}</div></fieldset><SetupDesign/></div>;
 }
 
 const toPounds = (minor?: number) => (minor === undefined ? "" : (minor / 100).toFixed(minor % 100 === 0 ? 0 : 2))
@@ -387,7 +336,7 @@ function FirstServices({onValidity}:{onValidity:(valid:boolean)=>void}) {
     sync([...rows,row])
   }
   const anyMinutes = rows.some((r) => validRow(r) && r.minutes)
-  const field = "h-11 w-full min-w-0 rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+  const field = "h-12 w-full min-w-0 rounded-lg border-0 bg-white/80 px-3 text-base outline-none focus-visible:ring-2 focus-visible:ring-ring"
   return (
     <div className="grid gap-4" data-testid="first-services">
       {suggestions.length ? (
@@ -399,11 +348,11 @@ function FirstServices({onValidity}:{onValidity:(valid:boolean)=>void}) {
       <ul className="grid gap-3">
         {rows.map((r, i) => (
           <li key={r.id} className="grid grid-cols-[minmax(0,1fr)_5.5rem_5.5rem_auto] items-end gap-2 max-sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-            <label className="grid gap-1 max-sm:col-span-3"><span className="text-xs font-medium text-muted-foreground">{i === 0 ? "Service" : <span className="sr-only">Service</span>}</span><input className={field} aria-label={`Service ${i + 1} name`} placeholder="e.g. Initial consultation" maxLength={120} autoFocus={focus === `${r.id}-name`} value={r.name} onChange={(e) => patch(r.id, { name: e.target.value })} /></label>
-            <label className="grid gap-1"><span className="text-xs font-medium text-muted-foreground">{i === 0 ? "Price (£)" : <span className="sr-only">Price</span>}</span><input className={field} aria-label={`Service ${i + 1} price`} inputMode="decimal" disabled={r.priceMode === "quote" || r.priceMode === "free"} placeholder={r.priceMode === "quote" ? "Quote" : r.priceMode === "free" ? "Free" : ""} autoFocus={focus === `${r.id}-price`} value={r.price} onChange={(e) => { if (/^\d{0,6}(\.\d{0,2})?$/.test(e.target.value)) patch(r.id, { price: e.target.value }) }} /></label>
-            <label className="grid gap-1"><span className="text-xs font-medium text-muted-foreground">{i === 0 ? "Minutes" : <span className="sr-only">Minutes</span>}</span><input className={field} aria-label={`Service ${i + 1} minutes`} inputMode="numeric" value={r.minutes} onChange={(e) => patch(r.id, { minutes: e.target.value.replace(/\D/g, "").slice(0, 4) })} /></label>
+            <label className="grid gap-1 max-sm:col-span-3"><span className="text-base font-semibold text-foreground">{i === 0 ? "Service" : <span className="sr-only">Service</span>}</span><input className={field} aria-label={`Service ${i + 1} name`} placeholder={industry.suggestedServices[0]?.name ?? "e.g. Initial consultation"} maxLength={120} autoFocus={focus === `${r.id}-name`} value={r.name} onChange={(e) => patch(r.id, { name: e.target.value })} /></label>
+            <label className="grid gap-1"><span className="text-base font-semibold text-foreground">{i === 0 ? "Price (£)" : <span className="sr-only">Price</span>}</span><input className={field} aria-label={`Service ${i + 1} price`} inputMode="decimal" disabled={r.priceMode === "quote" || r.priceMode === "free"} placeholder={r.priceMode === "quote" ? "Quote" : r.priceMode === "free" ? "Free" : "0.00"} autoFocus={focus === `${r.id}-price`} value={r.priceMode === "quote" || r.priceMode === "free" ? "" : r.price} onChange={(e) => { if (/^\d{0,6}(\.\d{0,2})?$/.test(e.target.value)) patch(r.id, { price: e.target.value }) }} /></label>
+            <label className="grid gap-1"><span className="text-base font-semibold text-foreground">{i === 0 ? "Minutes" : <span className="sr-only">Minutes</span>}</span><input className={field} aria-label={`Service ${i + 1} minutes`} inputMode="numeric" placeholder="30" value={r.minutes} onChange={(e) => patch(r.id, { minutes: e.target.value.replace(/\D/g, "").slice(0, 4) })} /></label>
             <Button type="button" variant="ghost" size="icon" className="size-11" aria-label={`Remove service ${i + 1}`} disabled={rows.length === 1 && !r.name && !r.price} onClick={() => { const next = rows.filter((x) => x.id !== r.id); sync(next.length ? next : [{ id: newId("svc"), name: "", price: "", minutes: "" }]) }}><Trash2 /></Button>
-            <button type="button" className="col-span-full min-h-8 justify-self-start text-xs font-medium underline underline-offset-4" onClick={()=>setPricing(r.id)}>Pricing options{r.priceMode && r.priceMode!=="fixed" ? ` · ${r.priceMode}` : ""}</button>
+            <button type="button" className="col-span-full min-h-8 justify-self-start setup-secondary" onClick={()=>setPricing(r.id)}>Pricing options{r.priceMode && r.priceMode!=="fixed" ? ` · ${r.priceMode}` : ""}</button>
           </li>
         ))}
       </ul>
@@ -466,9 +415,9 @@ function PublishStep({ onEditor, onEdit }: { onEditor: () => void; onEdit: (step
   const [copied, setCopied] = React.useState(false)
   return (
     <div className="grid gap-5">
-      <p className="text-sm text-muted-foreground">Check the real page above. Fill any gaps before you save it.</p>
+      <p className="text-sm text-muted-foreground">Your page is taking shape. Check the details before you save it.</p>
       <div className="grid gap-1" aria-label="Page checklist">{[{label:'Business name and image',step:'business' as const,done:Boolean(s.content.identity.logo)},{label:'Description',step:'business' as const,done:Boolean(s.content.identity.tagline)},{label:'Services, stock or work',step:'contacts' as const,done:Boolean(s.content.services?.some(x=>!x.archived)||s.content.products?.some(x=>!x.archived)||s.content.gallery?.length)},{label:'Layout and colours',step:'widgets' as const,done:true}].map(item=><button key={item.label} type="button" className="setup-edit-row" onClick={()=>onEdit(item.step)}><span className="grid size-6 place-items-center rounded-full bg-neutral-100 text-xs">{item.done?<Check aria-hidden="true" className="size-3"/>:'+'}</span><span>{item.label}</span><span className="ml-auto text-xs text-muted-foreground">{item.done?'Edit':'Add'}</span></button>)}</div>
-      <SetupDetails /><SetupDesign /><SetupPlans />
+      <SetupDetails /><SetupDesign /><button type="button" className="setup-edit-row" onClick={()=>onEdit("plan")}><span>{PLANS[s.setupDrafts?.planIntent??"free"].name} plan</span><span className="ml-auto setup-secondary">Change</span></button>
       {checks.some((c) => c.required && !c.done) ? (
         <ul className="grid gap-2" aria-label="Still needed">
           {checks.filter((c) => c.required && !c.done).map((c) => <li key={c.id} className="flex items-center gap-2 text-sm text-destructive"><span className="size-1.5 rounded-full bg-destructive" aria-hidden="true" />{c.label}</li>)}

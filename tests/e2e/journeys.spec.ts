@@ -26,6 +26,7 @@ test.describe("onboarding", () => {
     await page.getByRole('button',{name:'Use a different business type',exact:true}).click();await page.getByLabel('Describe your business').fill('Dog groomer');await page.getByRole('button',{name:'Continue',exact:true}).click()
     await page.getByLabel('Email',{exact:true}).fill('hello@example.com');await page.getByRole('button',{name:'Continue',exact:true}).click()
     await page.getByLabel('Service 1 name').fill('Full groom');await page.getByLabel('Service 1 price').fill('45');await page.getByRole('button',{name:'Continue',exact:true}).click();await page.getByRole('button',{name:'Continue',exact:true}).click()
+    await page.getByRole('button',{name:'Continue',exact:true}).click();
     await expect(page.getByRole('heading',{name:'Review your page',exact:true})).toBeVisible();await page.getByRole('button',{name:'Publish my page',exact:true}).click()
     await expect(page.getByRole('status')).toContainText('Saved as your page')
     const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!));expect(saved.published.content.services[0].name).toBe('Full groom')
@@ -44,12 +45,13 @@ test.describe("onboarding", () => {
     await expect(preview(page).getByRole("heading", { level: 1 })).toHaveText("Olive Test Barbers");
   });
 
-  test("phone: the whole flow fits at 390px with the preview behind a toggle", async ({ page }) => {
+  test("phone: the focused form fits at 390px and retains the live preview", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/onboarding");
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
     await page.getByLabel("Business name").fill("Clearpath");
-    await page.getByRole("button", { name: "Expand preview" }).click();
+    await expect(page.getByRole("button", { name: "Expand preview" })).toHaveCount(0);
+    await expect(page.locator(".setup-canvas")).toBeHidden();
     await expect(page.frameLocator('iframe[data-testid="setup-live-page"]').getByRole("heading", { level: 1 })).toHaveText("Clearpath");
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
   });

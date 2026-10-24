@@ -48,7 +48,7 @@ export function slugProblems(slug: string): SlugProblem[] {
 
 export function hasContactChannel(c: BusinessContentInput): boolean {
   const k = c.contacts;
-  return Boolean(k.phone || k.whatsapp || k.email);
+  return Boolean(k.phone || k.whatsapp || k.email || k.website || k.social?.length);
 }
 
 export interface Check {

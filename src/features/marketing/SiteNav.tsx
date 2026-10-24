@@ -65,7 +65,7 @@ export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: str
         <div className="fixed inset-x-0 top-16"><NavigationMenu.Viewport className="h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden data-[state=closed]:hidden" /></div>
       </NavigationMenu.Root>
       <div className="ml-auto flex items-center gap-2">
-        <Link href={dashboardHref} className={cn(ink,"hidden lg:inline-flex")}>Log in</Link><Link href={ctaHref} className={primary}>{cta}</Link>
+        <Link href={dashboardHref} className={cn(ink,"hidden lg:inline-flex")}>Log in</Link><Link data-brand-action href={ctaHref} className={primary}>{cta}</Link>
         <Dialog.Root open={open} onOpenChange={v => { setOpenOn(v ? path : null); setMenu("") }}>
           <Dialog.Trigger aria-label="Menu" className="group ml-1 flex md:hidden min-h-11 items-center gap-2 rounded px-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-white"><span className="hidden lg:inline">Menu</span><Plus aria-hidden="true" className="size-5 transition-transform group-hover:rotate-90 motion-reduce:transition-none" /></Dialog.Trigger>
           <Dialog.Portal><Dialog.Overlay className="fixed inset-0 z-50 bg-black/70" /><Dialog.Content className="fixed inset-0 z-50 flex h-[100dvh] flex-col overflow-y-auto bg-[#080808] px-5 text-white outline-none sm:px-8">
@@ -75,7 +75,7 @@ export function SiteNav({ cta, ctaHref, loginHref }: { cta: string; ctaHref: str
               <nav aria-label="Menu" className="grid content-start">{INDEX.map((l,n)=><Link key={l.href} href={l.href} className="group flex min-h-20 items-baseline gap-5 border-b border-white/15 py-4 outline-none focus-visible:ring-2 focus-visible:ring-white"><span className="text-xs tabular-nums text-white/60">0{n+1}</span><span className="font-display text-[clamp(2rem,5vw,4rem)] font-medium leading-none tracking-[-.05em] text-white/80 transition-colors group-hover:text-white">{l.label}</span><ArrowUpRight aria-hidden="true" className="ml-auto size-5 text-white/60" /></Link>)}<Link href={dashboardHref} className="mt-5 inline-flex min-h-11 w-fit items-center gap-3 rounded text-sm text-white/60 outline-none hover:text-white focus-visible:ring-2 focus-visible:ring-white">Log in<ArrowUpRight aria-hidden="true" className="size-4" /></Link></nav>
               <div><p className="mb-5 text-xs uppercase tracking-widest text-white/60">Explore the features</p><div className="grid grid-cols-2 gap-x-8 gap-y-7">{PRODUCT_GROUPS.map(g=><div key={g.title}><p className="mb-2 text-xs text-white/60">{g.title}</p><ul>{g.links.map(l=><li key={l.href}><Link href={l.href} className="inline-flex min-h-10 rounded text-sm text-white/80 outline-none hover:text-white focus-visible:ring-2 focus-visible:ring-white">{l.label}</Link></li>)}</ul></div>)}</div></div>
             </div>
-            <div className="mx-auto flex w-full max-w-[84rem] shrink-0 items-center justify-between gap-5 border-t border-white/15 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]"><p className="text-xs text-white/60">Services. Bookings. Stock.</p><Link href={ctaHref} className={primary}>{cta}</Link></div>
+            <div className="mx-auto flex w-full max-w-[84rem] shrink-0 items-center justify-between gap-5 border-t border-white/15 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]"><p className="text-xs text-white/60">Services. Bookings. Stock.</p><Link data-brand-action href={ctaHref} className={primary}>{cta}</Link></div>
           </Dialog.Content></Dialog.Portal>
         </Dialog.Root>
       </div>

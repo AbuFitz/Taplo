@@ -30,7 +30,7 @@ export function SiteFooter() {
             <br />One page away.
           </h2>
           <Link
-            href={a.href}
+            data-brand-action href={a.href}
             className="inline-flex min-h-13 items-center gap-8 rounded-full bg-[#ffffff] px-7 font-semibold text-[#111111] outline-none hover:bg-white focus-visible:ring-3 focus-visible:ring-white/60"
           >
             {a.label}

@@ -58,7 +58,7 @@ export default function HowItWorks() {
                 shape as you go, with room to keep making it yours.
               </p>
               <Link
-                href={a.href}
+                data-brand-action href={a.href}
                 className="mt-7 inline-flex min-h-12 items-center gap-6 rounded-full bg-signal px-6 font-semibold text-white outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-signal/50"
               >
                 {a.label}
@@ -107,7 +107,7 @@ export default function HowItWorks() {
               ))}
             </dl>
             <Link
-              href={a.href}
+              data-brand-action href={a.href}
               className="mt-10 inline-flex min-h-12 items-center gap-6 rounded-full bg-signal px-6 font-semibold text-white outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-signal/50"
             >
               {a.label}

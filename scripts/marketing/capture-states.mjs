@@ -67,7 +67,9 @@ const jobs = [
 
 const firstContentJob = jobs.find(j => j.id === "setup-4-first")
 if (!firstContentJob) throw new Error("Missing first-content capture")
-jobs.push({ ...firstContentJob, id: "setup-5-review", run: async p => { await firstContentJob.run(p); await p.getByRole("button", { name: "Continue", exact: true }).click(); await p.getByRole("button", { name: "Continue", exact: true }).click(); await p.getByRole("heading", { name: "Review your page", exact: true }).waitFor() } })
+jobs.push({ ...firstContentJob, id: "setup-5-review", run: async p => { await firstContentJob.run(p); await p.getByRole("button", { name: "Continue", exact: true }).click(); await p.getByRole("button", { name: "Continue", exact: true }).click(); await p.getByRole("button", { name: "Continue", exact: true }).click(); await p.getByRole("heading", { name: "Review your page", exact: true }).waitFor() } })
+
+jobs.push({...firstContentJob,id:"setup-6-plan",run:async p=>{await firstContentJob.run(p);await p.getByRole("button",{name:"Continue",exact:true}).click();await p.getByRole("button",{name:"Continue",exact:true}).click();await p.getByRole("radio",{name:"Choose Core",exact:true}).check()}})
 
 // The setup story uses real mobile captures on phones, rather than shrinking desktop form text.
 for (const j of [...jobs].filter(j => j.id.startsWith("setup-"))) jobs.push({ ...j, id: `${j.id}-phone`, vp: [390, 844], clip: [0, 0, 390, 844], run: async p => { await j.run(p); await p.locator("#step-title").scrollIntoViewIfNeeded() } })
@@ -137,7 +139,7 @@ async function setupFirstContent(p) {
   await p.getByRole("button", { name: "Continue", exact: true }).click()
   await p.getByRole("list", { name: "Kinds of business" }).getByRole("button", { name: "Cafe / restaurant", exact: true }).click()
   await p.getByRole("button", { name: "Continue", exact: true }).click()
-  await p.getByRole("button",{name:"Change main action",exact:true}).click(); await p.getByText("Call me", { exact:true }).click(); await p.getByRole("button",{name:"Done",exact:true}).click()
+  await p.getByRole("button",{name:"Phone calls",exact:true}).click()
   await p.getByLabel("Phone", { exact: true }).fill("01632 960123")
   await p.getByRole("button", { name: "Continue", exact: true }).click()
 }

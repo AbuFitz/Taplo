@@ -36,8 +36,7 @@ const recordings = {
     await f.getByRole("list",{name:"Kinds of business"}).getByRole("button",{name:"Cafe / restaurant",exact:true}).click()
     await f.getByRole("button", { name: "Continue", exact: true }).click()
     await step("Choose how people reach you", "A call fits this café. The menu does not need appointment bookings.")
-    await f.getByRole("button",{name:"Change main action",exact:true}).click()
-    await f.getByText("Call me",{exact:true}).click();await f.getByRole("button",{name:"Done",exact:true}).click();await expect(f.getByRole("dialog")).toBeHidden()
+    await f.getByRole("button",{name:"Phone calls",exact:true}).click()
     await f.getByLabel("Phone", { exact: true }).pressSequentially("01632 960123", { delay: 95 });await pause(1500)
     await f.getByRole("button", { name: "Continue", exact: true }).click()
     await step("Add something customers can buy", "A simple menu item and its price. No sample business records are copied.")
@@ -53,10 +52,12 @@ const recordings = {
     await f.getByRole("button",{name:"Done",exact:true}).click()
     await f.getByRole("button",{name:/Profile arrangement/}).click();await f.getByTestId("setup-design-dialog").getByRole("button",{name:"Photo fade",exact:true}).click();await f.getByRole("button",{name:"Done",exact:true}).click();await pause(2000)
     await f.getByRole("button", { name: "Continue", exact: true }).click()
+    await step("Choose room to grow", "Compare the plans and save a preference. No payment is taken.")
+    await f.getByRole("radio",{name:"Choose Core",exact:true}).check();await pause(1800)
+    await f.getByRole("button",{name:"Continue",exact:true}).click()
     await step("Review the actual page", "Check the menu, contact details and opening hours before continuing.")
     await expect(f.getByRole("heading",{name:"Review your page",exact:true})).toBeVisible()
-    await f.getByRole("button",{name:"View full size",exact:true}).click();await pause(3500)
-    await f.getByTestId("setup-full-preview").getByRole("button",{name:"Close",exact:true}).click()
+    await pause(2000)
     await f.getByRole("button",{name:"Customise my page",exact:true}).click();await expect(f.getByTestId("my-page")).toBeVisible()
     await step("Keep making it yours", "Your draft is saved in this browser. Publishing and billing are not connected.")
     await f.getByTestId("customer-preview").click();await pause(3500)
@@ -107,7 +108,7 @@ try {
     const step = async (title, line) => {
       console.log(id, title)
       chapters.push({ seconds: Math.round((Date.now() - started) / 100) / 10, title, line })
-      await page.evaluate(({ title, line, n, total }) => { document.querySelector("#caption").textContent = title; document.querySelector("#line").textContent = line; document.querySelector("#number").textContent = `${n} / ${total}` }, { title, line, n: chapters.length, total: id === "setup" ? 8 : 6 })
+      await page.evaluate(({ title, line, n, total }) => { document.querySelector("#caption").textContent = title; document.querySelector("#line").textContent = line; document.querySelector("#number").textContent = `${n} / ${total}` }, { title, line, n: chapters.length, total: id === "setup" ? 9 : 6 })
       await pause(650)
     }
     let outcome, poster

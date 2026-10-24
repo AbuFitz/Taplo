@@ -22,7 +22,7 @@ export default function ProductIndex() {
         <div className="product-atlas-intro">
           <h1>A page with<br />a job to do.</h1>
           <p>Make the next step easy. A booking, a question, a closer look at what you offer.</p>
-          <Link href={action.href} className="product-atlas-cta">{action.label}<ArrowRight size={18} aria-hidden="true" /></Link>
+          <Link data-brand-action href={action.href} className="product-atlas-cta">{action.label}<ArrowRight size={18} aria-hidden="true" /></Link>
           <a href="#everything" className="product-atlas-all-link">See what’s inside<ArrowRight size={16} aria-hidden="true" /></a>
         </div>
         <ProductLead />

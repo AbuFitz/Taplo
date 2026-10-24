@@ -10,7 +10,7 @@ export function HomeBooking() {
       <div className="home-booking-copy">
         <h2 id="home-booking-title">Less back and forth.<br />More booked in.</h2>
         <p>A service. A time. A clear next step.<br />Let customers start the booking on your page.</p>
-        <Link href="/product/booking#try-booking" className="home-booking-primary">Try a booking<ArrowRight size={18} aria-hidden="true" /></Link>
+        <Link data-brand-action href="/product/booking#try-booking" className="home-booking-primary">Try a booking<ArrowRight size={18} aria-hidden="true" /></Link>
         <ul className="home-booking-routes"><li><Check size={16} aria-hidden="true" />Confirm straight away</li><li><Check size={16} aria-hidden="true" />Or approve requests first</li></ul>
       </div>
       <div className="home-booking-art">

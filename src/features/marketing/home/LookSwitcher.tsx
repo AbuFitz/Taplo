@@ -22,7 +22,7 @@ export function LookSwitcher() {
       <div className="mt-8" aria-live="polite"><p className="font-display text-3xl tracking-[-.04em] sm:text-4xl">{design.name}</p></div>
       <div className="mt-6 flex flex-wrap items-center gap-6">
         <Link href={`/inspiration/${design.slug}`} className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline underline-offset-4">Open the demo<ArrowUpRight aria-hidden="true" className="size-4" /></Link>
-        <Link href={`/onboarding?from=${design.slug}`} className="inline-flex min-h-11 items-center rounded-full bg-black px-5 text-sm font-semibold text-white">Use this design</Link>
+        <Link data-brand-action href={`/onboarding?from=${design.slug}`} className="inline-flex min-h-11 items-center rounded-full bg-black px-5 text-sm font-semibold text-white">Use this design</Link>
       </div>
       <Link href="/inspiration" className="mt-4 inline-flex min-h-11 items-center text-sm text-black/65 underline underline-offset-4">All business designs</Link>
     </div>

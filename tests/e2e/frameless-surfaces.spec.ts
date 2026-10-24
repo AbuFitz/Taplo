@@ -8,9 +8,9 @@ for (const width of [320, 390, 768]) test(`mobile setup gives early decisions th
   const form = page.locator(".setup-workspace>section");
   const f = await form.boundingBox();
   expect(f!.y).toBeLessThan(100);
-  expect(f!.width).toBe(width-40);
+  expect(f!.width).toBe(width-44);
   await expect(page.locator(".setup-workspace>aside")).not.toBeVisible();
-  await expect(page.getByRole("button",{name:"View full size"})).toBeInViewport();
+  await expect(page.getByRole("button",{name:"View full size"})).toHaveCount(0);
   await expect(page.getByTestId("setup-backdrop")).toBeVisible();
   await expect(page.getByTestId("setup-backdrop").locator("canvas")).toHaveCount(0);
   await page.getByRole("button", { name: "Continue", exact: true }).click();
@@ -30,10 +30,7 @@ test("popup surfaces keep focus and dismissal without an outer frame", async ({ 
   await page.keyboard.press("Escape");
   await expect(modal).toBeHidden();
   await expect(page.getByRole("button", { name: "Add a cover photo", exact: true })).toBeFocused();
-  await page.getByRole("button", { name: "View full size" }).click();
-  await expect(page.getByTestId("setup-full-preview")).toBeVisible();
-  await page.keyboard.press("Escape");
-  await expect(page.getByRole("button", { name: "View full size" })).toBeFocused();
+  await expect(page.getByRole("button",{name:"View full size"})).toHaveCount(0);
 });
 
 test("mobile motion preference changes keep setup intact and stop tonal motion", async ({ page }) => {
@@ -57,9 +54,9 @@ test("closing a chooser does not steal focus from the next field while typing", 
   await page.getByRole("button", { name:"Continue", exact:true }).click();
   await page.getByRole("button", { name:"Barber", exact:true }).click();
   await page.getByRole("button", { name:"Continue", exact:true }).click();
-  await page.getByRole("button", { name:"Change main action", exact:true }).click();
-  await page.getByText("Call me", { exact:true }).click();
-  await page.getByRole("button", { name:"Done", exact:true }).click();
+  await page.getByRole("button",{name:"Phone calls",exact:true}).click();
+  await page.getByRole("button",{name:"WhatsApp & Instagram",exact:true}).click();
+  await page.getByRole("button",{name:"Done",exact:true}).click();
   await page.getByLabel("Phone", { exact:true }).pressSequentially("01632 960123", { delay:60 });
   await expect(page.getByRole("dialog")).toBeHidden();
   await expect(page.getByLabel("Phone", { exact:true })).toHaveValue("01632 960123");

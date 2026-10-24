@@ -132,6 +132,7 @@ export function SetupDetails() {
         <div className="grid gap-5">
           <TaploInput
             label="Short description"
+            placeholder="e.g. Independent hair studio in St Albans."
             value={draft.tagline}
             maxLength={160}
             onChange={(e) => setDraft({ ...draft, tagline: e.target.value })}

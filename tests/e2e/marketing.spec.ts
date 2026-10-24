@@ -285,22 +285,20 @@ test.describe("inspiration", () => {
     await page.getByRole("button", { name: "Continue" }).click(); // → what you do
     await page.getByRole("button", { name: "Continue" }).click();
     await expect(page.getByTestId("goal")).toHaveCount(0);
-    await expect(page.getByRole("button",{name:"Change main action",exact:true})).toBeVisible();
-    await page.getByRole("group", { name: "Contact method" }).getByRole("button", { name: "Phone", exact: true }).click();
+    await expect(page.getByRole("button",{name:"Phone calls",exact:true})).toBeVisible();
+    await page.getByRole("button", { name: "Phone calls", exact: true }).click();
     await page.getByLabel("Phone", { exact: true }).fill("01632 960987");
     await page.getByLabel("Phone", { exact: true }).blur();
     await page.getByRole("button", { name: "Continue" }).click(); // → first content
     await page.getByRole("button", { name: "Continue" }).click(); // → design
-    await expect(
-      page.getByTestId("look-picker").getByRole("radio", { name: /Studio/ }),
-    ).toBeChecked();
+    await expect(page.getByRole("radio",{name:"Simple",exact:true})).toBeAttached();
     const owner = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!));
     expect(owner.content.identity.name).toBe("Ridgeway Physio");
     expect(JSON.stringify(owner.content)).not.toContain("Hollin");
-    await page.getByTestId("look-picker").getByText("Silver", { exact: true }).click();
+    await page.getByRole("radio",{name:"Collection",exact:true}).check();
     await page.reload();
     await expect(
-      page.getByTestId("look-picker").getByRole("radio", { name: /Silver/ }),
+      page.getByRole("radio", { name: "Collection",exact:true }),
     ).toBeChecked(); // a refresh does not re-apply the example
   });
 });

@@ -4,26 +4,26 @@ import path from 'node:path'
 import sharp from 'sharp'
 import { openEditorWithSample, selectPart } from './helpers'
 
-for(const width of [320,390,768,1440])test(`mobile-led setup has six steps, a live page and reachable actions at ${width}`,async({page})=>{
+for(const width of [320,390,768,1440])test(`mobile-led setup has seven steps, a live page and reachable actions at ${width}`,async({page})=>{
   await page.setViewportSize({width,height:844});await page.emulateMedia({reducedMotion:'reduce'})
   await page.goto('/onboarding');await page.getByLabel('Business name',{exact:true}).fill('North Street Barbers')
   const frame=page.frameLocator('[data-testid="setup-live-page"]')
   await expect(frame.getByRole('heading',{level:1})).toHaveText('North Street Barbers')
-  await expect(page.getByRole('navigation',{name:'Progress'})).toContainText('Step 1 of 6')
+  await expect(page.getByRole('progressbar',{name:'Setup progress'})).toHaveAttribute('aria-valuemax','7')
   const next=()=>page.getByRole('button',{name:'Continue',exact:true}).click()
   await next();await page.getByRole('button',{name:'Barber',exact:true}).click();await next()
-  await page.getByRole("button",{name:"Change main action",exact:true}).click(); await page.getByRole('radio',{name:/Book with me/}).check(); await page.getByRole("button",{name:"Done",exact:true}).click()
+  await page.getByRole('button',{name:'Booking requests',exact:true}).click()
   await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await next()
   await page.getByLabel('Service 1 name').fill('Haircut');await page.getByLabel('Service 1 price').fill('25');await page.getByLabel('Service 1 minutes').fill('30');await next()
-  await page.getByTestId('look-picker').locator('label').filter({has:page.locator('input[value="silver"]')}).click()
+  await page.getByRole('radio',{name:'Studio',exact:true}).check();await page.getByRole('button',{name:/Background & colours/}).click();await page.getByTestId('setup-design-dialog').getByRole('button',{name:'Silver gradient',exact:true}).click();await page.getByTestId('setup-design-dialog').getByRole('button',{name:'Done',exact:true}).click()
   await expect(frame.locator('[data-taplo-page]')).toHaveAttribute('data-motion','drift')
   await expect(frame.getByRole('heading',{level:1})).toBeInViewport({ratio:1})
   await expect(page.getByRole('button',{name:'Continue',exact:true})).toBeInViewport()
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth&&scrollY===0)).toBe(true)
-  if(width<1024){await page.getByRole('button',{name:'Expand preview',exact:true}).click();await expect(page.locator('.setup-workspace > section')).toBeHidden();await page.getByRole('button',{name:'Back to setup',exact:true}).click()}
+  await expect(page.getByRole('button',{name:'View full size'})).toHaveCount(0)
   await page.screenshot({path:path.join(process.env.TAPLO_REVIEW_DIR??'test-results',`setup-six-${width}.png`)})
   const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();expect(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([])
-  await page.reload();await expect(page.getByTestId('look-picker').locator('input[value="silver"]')).toBeChecked();await next()
+  await page.reload();await expect(page.getByRole('radio',{name:'Studio',exact:true})).toBeChecked();await next();await next()
   await page.getByRole('button',{name:'Publish my page',exact:true}).click();await expect(page.getByRole('status')).toContainText('Saved as your page')
 })
 for(const width of [390,1440])test(`uploaded logo colours drive linked gradients, replacement and reload at ${width}`,async({page})=>{
@@ -44,5 +44,5 @@ test('a reduced visual viewport keeps the current input and continuation above t
  await page.evaluate(()=>{Object.defineProperty(window.visualViewport!,'height',{configurable:true,get:()=>440});window.visualViewport!.dispatchEvent(new Event('resize'))})
  await expect(page.locator('.setup-flow')).toHaveAttribute('data-keyboard','true');await expect(page.getByRole('button',{name:'Continue',exact:true})).toBeInViewport()
  const box=await page.getByRole('button',{name:'Continue',exact:true}).boundingBox();expect(box!.y+box!.height).toBeLessThanOrEqual(441)
- await expect(page.locator('.setup-canvas')).toBeHidden();await expect(page.locator('.setup-canvas-heading')).toContainText('North Street')
+ await expect(page.locator('.setup-canvas')).toBeHidden();await expect(page.getByLabel('Business name',{exact:true})).toHaveValue('North Street')
 })

@@ -144,8 +144,8 @@ export function ColorField({ label, value, onChange, customised, onReset, hint, 
 }
 
 /** Image chooser: upload (downscaled in the browser), pick a sample, remove; plus a focal-point picker so crops keep the subject. */
-export function ImageField({ presentation = "standard", label, value, onChange, defaultAlt, maxEdge, cropAspect, cropRound, purpose = "photo", samples = true, onFramingChange, focalHint = "Click the picture (or use the sliders) to choose the part that should always stay in view." }: {
-  presentation?: "standard" | "identity"; label: string; value: ImageRef | null | undefined; onChange: (v: ImageRef | null) => void; defaultAlt: string; maxEdge?: number; /** When set, a crop step frames the picture at this width/height ratio before it is used. */ cropAspect?: number; cropRound?: boolean; purpose?: "photo" | "identity" | "cover"; samples?: boolean; onFramingChange?: (shape:"logo"|"circle"|"square")=>void; focalHint?: string
+export function ImageField({ presentation = "standard", framing = "logo", label, value, onChange, defaultAlt, maxEdge, cropAspect, cropRound, purpose = "photo", samples = true, onFramingChange, focalHint = "Click the picture (or use the sliders) to choose the part that should always stay in view." }: {
+  presentation?: "standard" | "identity"; framing?: "logo"|"circle"|"square"; label: string; value: ImageRef | null | undefined; onChange: (v: ImageRef | null) => void; defaultAlt: string; maxEdge?: number; /** When set, a crop step frames the picture at this width/height ratio before it is used. */ cropAspect?: number; cropRound?: boolean; purpose?: "photo" | "identity" | "cover"; samples?: boolean; onFramingChange?: (shape:"logo"|"circle"|"square")=>void; focalHint?: string
 }) {
   const inputId = React.useId()
   const [busy, setBusy] = React.useState(false)
@@ -169,8 +169,10 @@ export function ImageField({ presentation = "standard", label, value, onChange, 
     try {
       const p = await prepareImage(file, maxEdge, { preserveAlpha: purpose === "identity" })
       onChange({ src: p.src, width: p.width, height: p.height, ...(p.ink ? { ink: p.ink } : {}), ...(p.accent ? { accent: p.accent } : {}), alt: value?.alt || defaultAlt, focal: { x: 50, y: 50 } })
+      return true
     } catch (e) {
       setError(e instanceof Error ? e.message : "That picture could not be used.")
+      return false
     } finally {
       setBusy(false)
     }
@@ -180,13 +182,22 @@ export function ImageField({ presentation = "standard", label, value, onChange, 
   const fy = value?.focal?.y ?? 50
   const wholeLogo = purpose === "identity" && Boolean(value?.width && value?.height && value.width / value.height > 1.5)
   const marker = containedImageRect({ width: 160, height: 100 }, value ?? {})
+  const openFraming = async () => {
+    if (!value) return
+    try {
+      const file = original.current ?? new File([await (await fetch(value.src)).blob()], "profile-image.png", { type: value.src.startsWith('data:image/jpeg') ? 'image/jpeg' : 'image/png' })
+      setPending(file)
+    } catch { setError("Choose the original file to change its crop.") }
+  }
+
 
   return (
     <div className={cn("grid gap-2", presentation === "identity" && "setup-identity-upload")}>
-      {presentation === "identity" ? <button type="button" disabled={busy} className="setup-avatar-control" onClick={() => value ? setEditing(true) : document.getElementById(inputId)?.click()} aria-label={value ? `Edit image: ${label}` : label}>
-        <span className="setup-avatar-picture">{value ? <Image src={value.src} alt="" fill sizes="96px" unoptimized className="object-contain p-2" /> : <ImagePlus aria-hidden="true" className="size-7" />}<span className="setup-avatar-plus">{value ? <Pencil aria-hidden="true" className="size-3" /> : "+"}</span></span>
-        <span>{busy ? "Preparing…" : value ? "Edit logo" : "Add your logo"}</span>
+      {presentation === "identity" ? <button type="button" disabled={busy} className="setup-avatar-control" onClick={() => value ? void openFraming() : document.getElementById(inputId)?.click()} aria-label={value ? `Edit image: ${label}` : label}>
+        <span className="setup-avatar-picture">{value ? <span className="setup-avatar-image" data-framing={framing} style={{borderRadius:framing === "circle"?"50%":framing === "square"?"10px":0}}><Image src={value.src} alt="" fill sizes="96px" unoptimized className={framing === "logo"?"object-contain":"object-cover"} /></span> : <ImagePlus aria-hidden="true" className="size-7" />}<span className="setup-avatar-plus">{value ? <Pencil aria-hidden="true" className="size-3" /> : "+"}</span></span>
+        <span>{busy ? "Preparing…" : value ? "Adjust your logo" : "Add a logo or photo"}<span className="setup-upload-meta">PNG, JPG or WebP. Optional.</span></span>
       </button> : <p className="text-sm font-medium">{label}</p>}
+      {value && presentation === "identity" ? <div className="flex gap-5"><button type="button" className="setup-secondary" disabled={busy} onClick={()=>document.getElementById(inputId)?.click()}>Replace image</button><button type="button" className="setup-secondary" disabled={busy} onClick={()=>onChange(null)}>Remove image</button></div> : null}
       {value && presentation !== "identity" ? <button type="button" className="flex min-h-24 items-center gap-4 rounded-2xl bg-neutral-50 p-3 text-left" onClick={() => setEditing(true)} aria-label={`Edit image: ${label}`}><span className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-white"><Image src={value.src} alt="" fill sizes="64px" unoptimized className="object-contain" /></span><span className="text-sm font-medium">Edit image<span className="mt-1 block text-xs font-normal text-muted-foreground">Framing and image details</span></span><Pencil aria-hidden="true" className="ml-auto size-4"/></button> : null}
       <Overlay open={editing} onOpenChange={setEditing} title={`Edit image: ${label}`} testId="image-edit-dialog" footer={<Button className="min-h-11 w-full" onClick={() => setEditing(false)}>Done</Button>}>
       {value ? (
@@ -224,7 +235,7 @@ export function ImageField({ presentation = "standard", label, value, onChange, 
       <div className="flex flex-wrap gap-2">
         {presentation !== "identity" ? <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => document.getElementById(inputId)?.click()}><ImagePlus /> {busy ? "Preparing…" : value ? "Replace picture" : "Upload a picture"}</Button> : null}
         <input id={inputId} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(e) => { onPick(e.target.files?.[0]); e.target.value = "" }} aria-label={`${label}: upload a picture`} />
-        <CropDialog file={pending} aspect={cropAspect ?? 1} round={cropRound} allowOriginal={purpose !== "photo"} title={`Frame: ${label}`} onCancel={() => setPending(null)} onDone={(f,shape) => { if(shape)onFramingChange?.(shape); original.current = pending; setPending(null); void onFile(f) }} />
+        {pending ? <CropDialog file={pending} aspect={cropAspect ?? 1} round={framing === "circle" || cropRound} defaultCrop={framing !== "logo"} allowOriginal={purpose !== "photo"} title={purpose === "identity" ? "Your logo, your way." : "Adjust your photo"} onCancel={() => setPending(null)} onDone={(f,shape) => { const source=pending;setPending(null);void onFile(f).then(success=>{if(success){original.current=source;if(shape)onFramingChange?.(shape)}}) }} /> : null}
         {samples ? <Button type="button" variant="ghost" size="sm" onClick={() => setShowSamples((v) => !v)} aria-expanded={showSamples}>Use a sample picture</Button> : null}
         {value && presentation !== "identity" ? <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null)}><Trash2 /> Remove</Button> : null}
       </div>

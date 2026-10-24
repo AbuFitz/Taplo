@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Overlay } from "@/components/taplo/overlay";
 import { Button } from "@/components/ui/button";
-import { ColorField } from "@/features/page/editor/controls";
+import { ColorField, ImageField } from "@/features/page/editor/controls";
 import { LOOKS } from "@/features/page/themes/looks";
 import { useDemo, initialState } from "./store";
 import type { StyleOverrides } from "@/features/page/contracts/style";
@@ -108,7 +108,6 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
             ? "Make the background yours"
             : "Arrange your profile"
         }
-        description="Your live preview updates as you choose."
         testId="setup-design-dialog"
         footer={
           <Button className="min-h-11 w-full" onClick={() => setPanel(null)}>
@@ -251,22 +250,19 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
                     ["cover", "banner", "poster"].includes(x.id) &&
                     !s.content.identity.heroImage
                   }
-                  className="min-h-16 rounded-2xl bg-neutral-50 p-3 text-sm font-semibold aria-pressed:bg-black aria-pressed:text-white disabled:opacity-40"
+                  className="setup-profile-choice"
                   onClick={() =>
                     patch({
                       header: { ...s.page.appearance.header, layout: x.id },
                     })
                   }
                 >
-                  {x.name}
+                  <span aria-hidden="true" className="setup-profile-diagram" data-kind={x.id}><i/><b/><em/></span><span>{x.name}</span>
                 </button>
               ))}
             </div>
             {!s.content.identity.heroImage ? (
-              <p className="text-xs text-muted-foreground">
-                Add a cover photo in your profile details to use a photo
-                arrangement.
-              </p>
+              <ImageField purpose="cover" samples={false} label="Add a cover photo for photo layouts" cropAspect={16/9} defaultAlt={`${s.content.identity.name} cover`} value={s.content.identity.heroImage} onChange={image=>update(st=>({...st,content:{...st.content,identity:{...st.content.identity,heroImage:image??undefined}}}))}/>
             ) : null}
             <fieldset>
               <legend className="mb-2 text-sm font-medium">Image shape</legend>

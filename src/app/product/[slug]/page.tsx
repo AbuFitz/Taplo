@@ -77,7 +77,7 @@ export default async function ProductPageRoute({
                 </p>
                 <div className="mt-8 flex flex-wrap items-center gap-5">
                   <Link
-                    href={a.href}
+                    data-brand-action href={a.href}
                     className="inline-flex min-h-12 items-center gap-5 rounded-full bg-white px-6 font-semibold text-[#080808] shadow-sm outline-none transition-opacity hover:opacity-85 focus-visible:ring-3 focus-visible:ring-current"
                   >
                     {a.label}

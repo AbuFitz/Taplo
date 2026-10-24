@@ -1,8 +1,4 @@
-import { BookOpen, Building2, Camera, Dumbbell, Flame, Hammer, Scissors, SprayCan, CarFront, Utensils, Wrench, type LucideIcon } from "lucide-react"
-
-/** One maintained SVG system: consistent optical size, stroke and visible text labels at the call site. */
-const ICONS: Record<string, LucideIcon> = { barber: Scissors, hairdresser: Scissors, detailer: SprayCan, "car-dealer": CarFront, hospitality: Utensils, tutor: BookOpen, plumber: Flame, "personal-trainer": Dumbbell, photographer: Camera, mechanic: Wrench, builder: Hammer }
-export function BusinessIcon({ id }: { id: string }) {
-  const Icon = ICONS[id] ?? Building2
-  return <Icon aria-hidden="true" size={22} strokeWidth={2} className="shrink-0" />
-}
+import { BookOpen, Camera, Dumbbell, Hammer, Scissors, SprayCan, CarFront, Utensils, Wrench, Zap, Leaf, KeyRound, Truck, Bug, Hand, Brush, Eye, Pencil, Music, Languages, Calculator, BriefcaseBusiness, BadgePoundSterling, House, Monitor, HeartPulse, PawPrint, CalendarDays, CircleHelp, Trophy, Scale, Ruler, type LucideIcon } from "lucide-react";
+/** Maintained Lucide symbols for each supported business, without a coloured icon tile. */
+export const BUSINESS_ICONS:Record<string,LucideIcon>={barber:Scissors,hairdresser:Scissors,detailer:SprayCan,"car-dealer":CarFront,hospitality:Utensils,tutor:BookOpen,plumber:Wrench,"personal-trainer":Dumbbell,photographer:Camera,mechanic:Wrench,builder:Hammer,electrician:Zap,landscaper:Leaf,cleaner:SprayCan,locksmith:KeyRound,removals:Truck,handyman:Hammer,"pest-control":Bug,nails:Hand,"lashes-brows":Eye,"beauty-therapist":Brush,massage:Hand,makeup:Brush,tattoo:Pencil,"music-teacher":Music,"driving-instructor":CarFront,"language-teacher":Languages,coach:BriefcaseBusiness,"sports-coach":Trophy,accountant:Calculator,consultant:BriefcaseBusiness,solicitor:Scale,architect:Ruler,"financial-adviser":BadgePoundSterling,"estate-agent":House,"web-designer":Monitor,dentist:HeartPulse,physio:HeartPulse,vet:PawPrint,"event-services":CalendarDays,other:CircleHelp};
+export function BusinessIcon({id}:{id:string}){const Icon=BUSINESS_ICONS[id]??CircleHelp;return <Icon aria-hidden="true" size={23} strokeWidth={1.7} className="shrink-0 bg-transparent"/>;}

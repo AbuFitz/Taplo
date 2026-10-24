@@ -79,7 +79,7 @@ export function PlanChooser({
               ))}
             </ul>
             <Link
-              href={demo ? `/onboarding?plan=${id}` : "/how-it-works"}
+              data-brand-action href={demo ? `/onboarding?plan=${id}` : "/how-it-works"}
               className="pricing-start"
             >
               {id === "free" ? "Start free" : `Start with ${PLANS[id].name}`}

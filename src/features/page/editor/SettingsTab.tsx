@@ -69,7 +69,7 @@ export function SettingsTab({ ed, notify }: { ed: Editor; notify: (m: string, un
 
       <Card title="Search engines">
         <SwitchField label="Let Google and others find my page" checked={meta.searchVisible} onChange={(v) => ed.setPage((p) => ({ ...p, meta: { ...p.meta, searchVisible: v } }))} hint="When off, your page asks search engines not to list it. People with your link can still open it." />
-        <p className="text-xs text-muted-foreground">Pages in the sandbox are never listed in search, whatever this says.</p>
+        <p className="text-xs text-muted-foreground">Pages saved in this browser are not listed in search.</p>
       </Card>
 
       <Card title="Your own domain">

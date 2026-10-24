@@ -31,7 +31,7 @@ export function BookingMarketingPage({ product }: { product: ProductPage }) {
           <Link href="/product" className="booking-kicker booking-back">Product / Booking</Link>
           <h1>Goodbye,<br />back and forth.</h1>
           <p className="booking-lead">From “when are you free?” to a time that works. Appointments, people and availability, together on your page.</p>
-          <div className="booking-hero-actions"><Link href={action.href} className="booking-cta">{action.label}<ArrowRight size={18} aria-hidden="true" /></Link><a href="#try-booking" className="booking-text-link">Try booking<ArrowUpRight size={16} aria-hidden="true" /></a></div>
+          <div className="booking-hero-actions"><Link data-brand-action href={action.href} className="booking-cta">{action.label}<ArrowRight size={18} aria-hidden="true" /></Link><a href="#try-booking" className="booking-text-link">Try booking<ArrowUpRight size={16} aria-hidden="true" /></a></div>
         </div>
         <div className="booking-hero-art">
           <div className="booking-hero-orbit" aria-hidden="true"><CalendarDays size={22} /><span>A time that<br />works for you.</span></div>

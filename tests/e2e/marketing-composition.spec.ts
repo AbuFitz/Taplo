@@ -67,17 +67,9 @@ for (const width of [320, 390, 768, 1440])
       })),
     ).toEqual([]);
     await page.goto("/product");
-    await page
-      .getByRole("button", { name: "Show your stock", exact: true })
-      .click();
-    await expect(page.locator(".product-lead-art img")).toHaveAttribute(
-      "alt",
-      "Keep the car in the conversation.",
-    );
-    await expect(page.locator(".product-lead-body a")).toHaveAttribute(
-      "href",
-      "/product/vehicles",
-    );
+    await page.getByTestId("product-experience").getByRole("radio", { name: "Car dealer", exact: true }).check();
+    await expect(page.getByTestId("product-experience").getByText("Harris Cars", {exact:true})).toBeVisible();
+    await expect(page.getByTestId("product-demo")).toHaveAttribute("href", "/inspiration/harris-cars");
     await page.screenshot({
       path: path.join(
         process.env.TAPLO_REVIEW_DIR ?? "test-results",
