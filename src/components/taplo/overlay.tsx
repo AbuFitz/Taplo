@@ -92,21 +92,27 @@ export function Overlay({ open, onOpenChange, trigger, kind = "dialog", tone = "
     <DialogPrimitive.Root open={isOpen} onOpenChange={setOpen}>
       {trigger ? <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger> : null}
       <DialogPrimitive.Portal container={container}>
-        <DialogPrimitive.Overlay className={cn("fixed inset-0 z-50 bg-black/35 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none!", page && "backdrop-blur-[2px]")} />
+        <DialogPrimitive.Overlay className={cn("fixed inset-0 z-50 bg-black/25 backdrop-blur-md data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none!", page && "backdrop-blur-[2px]")} />
         <DialogPrimitive.Content
           ref={setShell}
-          onCloseAutoFocus={onCloseAutoFocus}
+          onCloseAutoFocus={event => {
+            onCloseAutoFocus?.(event)
+            // A quick tap into the next field takes priority over delayed exit focus restoration.
+            const active = document.activeElement
+            if (!event.defaultPrevented && active instanceof HTMLElement && active !== document.body && active.isConnected && !shell?.contains(active)) event.preventDefault()
+          }}
           data-overlay={kind}
+          data-overlay-tone={tone}
           data-testid={testId}
           {...(description ? {} : { "aria-describedby": undefined })}
           className={cn(
-            "fixed z-50 flex flex-col overflow-hidden outline-none shadow-[0_24px_64px_-16px_rgb(0_0_0/0.45)] data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none!",
+            "fixed z-50 flex flex-col overflow-hidden outline-none shadow-[0_32px_100px_-28px_rgb(0_0_0/0.32)] data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none!",
             kind === "panel" ? "sm:data-open:slide-in-from-right sm:data-closed:slide-out-to-right max-sm:data-open:slide-in-from-bottom max-sm:data-closed:slide-out-to-bottom" : "max-sm:data-open:slide-in-from-bottom max-sm:data-closed:slide-out-to-bottom sm:data-open:zoom-in-95 sm:data-closed:zoom-out-95",
-            page ? "border border-tp-border bg-tp-bg text-tp-fg" : "bg-background text-foreground ring-1 ring-foreground/10",
+            page ? "bg-tp-bg text-tp-fg" : "bg-background text-foreground",
             SHELL[kind], className,
           )}
         >
-          <header className={cn("flex shrink-0 items-start gap-1 px-4 pb-2 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] sm:pt-4", page ? "border-b border-tp-border/60" : "border-b border-foreground/8")}>
+          <header className={cn("flex shrink-0 items-start gap-1 px-4 pb-2 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] sm:pt-4", page ? "text-tp-fg" : "text-foreground")}>
             {onBack ? <Button type="button" variant="ghost" size="icon" className="-ml-2 size-11 shrink-0" onClick={onBack} aria-label="Back"><ArrowLeft /></Button> : null}
             <div className="min-w-0 flex-1 py-1.5">
               <DialogPrimitive.Title className={cn("font-semibold leading-tight tracking-[-0.015em]", hideTitle ? "sr-only" : "text-lg", page && "font-tp-heading")}>{title}</DialogPrimitive.Title>
@@ -121,7 +127,7 @@ export function Overlay({ open, onOpenChange, trigger, kind = "dialog", tone = "
               <div className="mt-2 flex gap-2"><Button size="sm" variant="outline" onClick={() => setConfirming(false)}>Keep editing</Button><Button size="sm" variant="destructive" onClick={forceClose}>Discard</Button></div>
             </div>
           ) : footer ? (
-            <footer className={cn("shrink-0 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pt-3", page ? "border-t border-tp-border/60 bg-tp-bg" : "border-t border-foreground/8 bg-background")}>{footer}</footer>
+            <footer className={cn("shrink-0 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pt-3", page ? "bg-tp-bg" : "bg-background")}>{footer}</footer>
           ) : null}
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
@@ -137,7 +143,7 @@ export function ConfirmDialog({ open, onOpenChange, title, description, confirmL
     <AlertPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <AlertPrimitive.Portal container={container}>
         <AlertPrimitive.Overlay className="fixed inset-0 z-[60] bg-black/40 data-open:animate-in data-open:fade-in-0 motion-reduce:animate-none!" />
-        <AlertPrimitive.Content onOpenAutoFocus={(e) => { e.preventDefault(); cancel.current?.focus() }} className={cn("fixed left-1/2 top-1/2 z-[60] grid w-[min(26rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl p-5 shadow-2xl outline-none motion-reduce:animate-none!", tone === "page" ? "border border-tp-border bg-tp-bg text-tp-fg" : "bg-background text-foreground ring-1 ring-foreground/10")}>
+        <AlertPrimitive.Content onOpenAutoFocus={(e) => { e.preventDefault(); cancel.current?.focus() }} className={cn("fixed left-1/2 top-1/2 z-[60] grid w-[min(26rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl p-5 shadow-2xl outline-none motion-reduce:animate-none!", tone === "page" ? "bg-tp-bg text-tp-fg" : "bg-background text-foreground")}>
           <div><AlertPrimitive.Title className="text-lg font-semibold tracking-[-0.015em]">{title}</AlertPrimitive.Title><AlertPrimitive.Description className="mt-1.5 text-sm text-muted-foreground">{description}</AlertPrimitive.Description></div>
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <AlertPrimitive.Cancel asChild><Button ref={cancel} variant="outline" className="min-h-11">Cancel</Button></AlertPrimitive.Cancel>

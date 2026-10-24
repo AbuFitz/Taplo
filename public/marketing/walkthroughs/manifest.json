@@ -5,11 +5,11 @@
     "poster": "/marketing/walkthroughs/setup-poster.webp",
     "width": 780,
     "height": 1928,
-    "duration": 33.72,
+    "duration": 33.88,
     "fps": "25/1",
-    "bytes": 3099647,
-    "sha256": "b5ce138f1ab873e0131cba253b4decd1df569d2ff70fd3286a4718b1b2ec0dc8",
-    "recordedAt": "2026-10-24T16:25:44.807Z",
+    "bytes": 2886329,
+    "sha256": "0e51c8a8107e1fbf80766e6d94d84e51299d1c357959c4a2d569285a7e86dd80",
+    "recordedAt": "2026-10-24T17:25:52.324Z",
     "source": "/onboarding?from=no-6-coffee",
     "chapters": [
       {
@@ -18,37 +18,37 @@
         "line": "Your name and logo, with a crop you approve before it is added."
       },
       {
-        "seconds": 4.9,
+        "seconds": 5.2,
         "title": "Say what you do",
         "line": "Search for your business. Keep the setup relevant."
       },
       {
-        "seconds": 7.6,
+        "seconds": 8,
         "title": "Choose how people reach you",
         "line": "A call fits this café. The menu does not need appointment bookings."
       },
       {
-        "seconds": 11.1,
+        "seconds": 11.8,
         "title": "Add something customers can buy",
         "line": "A simple menu item and its price. No sample business records are copied."
       },
       {
-        "seconds": 15,
+        "seconds": 15.7,
         "title": "Add the practical details",
         "line": "Your description, location, hours and links live in a focused popup."
       },
       {
-        "seconds": 17.7,
+        "seconds": 18.4,
         "title": "Make the page yours",
         "line": "Choose a layout, then adjust the background and profile separately."
       },
       {
-        "seconds": 22.5,
+        "seconds": 23.1,
         "title": "Review the actual page",
         "line": "Check the menu, contact details and opening hours before continuing."
       },
       {
-        "seconds": 27.6,
+        "seconds": 27.7,
         "title": "Keep making it yours",
         "line": "Your draft is saved in this browser. Publishing and billing are not connected."
       }

@@ -1,0 +1,21 @@
+# Mobile setup, handset and moving light correction
+
+Owner feedback,24 October2026. Preserve the desktop workspace composition. Correct the mobile preview's abrupt open-sided cut, weak handset material and dull gradient. Extend the tonal motion to selected home widget/booking canvases and mobile setup. Keep independent field scrolling, anchored Continue, label clarity, focus, crop-before-apply and honest demos.
+
+Design: a deliberate preview scene above an overlapping white input sheet. The sheet physically occludes the phone crop, rather than fading the business page or leaving exposed vertical edges. A moderately thicker continuous dark-metal rim and mathematically concentric inner corners unify static/live handsets. Ambient and contact shadow establish depth. The form and modal surfaces use whitespace and soft fields rather than outer rings and divider frames.
+
+Motion: faster existing Paper mesh on desktop, bounded pixel budget and spring pointer response. Mobile uses a lightweight animated monochrome CSS field, with its origin responding to the setup stage. Shared marketing field gets a wider, perceptible drift and secondary tonal layer. Pause off-screen/hidden and honor live reduced-motion preference. No new dependency or autoplay navigation. Reduced motion remains completely static.
+
+Acceptance: inspect actual320/390/768/1440 layouts and popup states; no corner backing leaks; phone crop meets the sheet with no orphan vertical edges; independent form scrolling and continuation survive reduced viewport/keyboard simulation; crop/full preview still work; existing booking modal and marketing routes remain functional; normal motion measurably changes pixels while reduced motion does not. Real-device keyboard/touch/performance remain a separate unverified check.
+
+## Implemented and verified
+
+Mobile preview is now a light-field stage physically covered by the full-width curved input surface, with no exposed cutoff edges. Shared phone geometry uses a6px metal rim around390×844, concentric48px screen corners, explicit clipping, contact/ambient shadows and consistent static capture geometry. Desktop composition is preserved. Desktop shader speed increased from0.12 to0.4, with stronger spring pointer travel; mobile uses a CSS tonal field whose origin responds to the setup stage. Home booking/widget section now has the shared moving field, and existing marketing fields drift more visibly.
+
+Shared inputs, textareas, dialogs, sheets, popovers and page/admin overlays have clean surfaces without outer framing rings or header/footer divider outlines. Focus indicators remain. Cover and main-action popups use proper dialog triggers; full-size preview returns focus explicitly. Exit focus restoration now respects someone already typing in the next field. A rapid typing regression covers the chooser-to-phone journey.
+
+Visual review also found baked page/backdrop pixels around rounded homepage widget captures. Capture isolation now preserves only the actual component, with alpha around it. Four widget images were refreshed, and their corner alpha was checked. Ten real setup images and the silent setup walkthrough were regenerated. Walkthrough33.88s,780×1928,H.264, probed and fully decoded by the recorder.
+
+Production Turbopack build/typecheck and affected lint/diff pass. All39 affected Chromium and52 Firefox/WebKit checks pass together, including320/390/768/1440 layouts, crop flow, full-size preview, live preference switching, independent scrolling, booking outcomes, popup focus return and fast typing. Pixel proof: mobile3750 changed channels and desktop6480 over900ms; both reduced-motion samples have exactly0 changes and no WebGL canvas. These are browser checks, not physical-device or owner approval.
+
+Remaining frontend work is unchanged: owner review, individual feature/product/pricing marketing redesigns, rejected film replacement, deeper composition/profile/media engine and broader business layouts/adoption, compact owner portal/navigation/draft continuity, physical-device and measured performance checks. Legal facts pending with existing reminder; backend services later. This batch does not claim overall frameless coverage of every owner-selected business style.

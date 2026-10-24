@@ -37,7 +37,7 @@ const recordings = {
     await f.getByRole("button", { name: "Continue", exact: true }).click()
     await step("Choose how people reach you", "A call fits this café. The menu does not need appointment bookings.")
     await f.getByRole("button",{name:"Change main action",exact:true}).click()
-    await f.getByText("Call me",{exact:true}).click();await f.getByRole("button",{name:"Done",exact:true}).click()
+    await f.getByText("Call me",{exact:true}).click();await f.getByRole("button",{name:"Done",exact:true}).click();await expect(f.getByRole("dialog")).toBeHidden()
     await f.getByLabel("Phone", { exact: true }).pressSequentially("01632 960123", { delay: 95 });await pause(1500)
     await f.getByRole("button", { name: "Continue", exact: true }).click()
     await step("Add something customers can buy", "A simple menu item and its price. No sample business records are copied.")

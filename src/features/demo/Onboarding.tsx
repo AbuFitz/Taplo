@@ -88,6 +88,7 @@ function firstKind(industryKey: string): "service" | "vehicle" | "photo" {
 
 export function Onboarding() {
   const shell = React.useRef<HTMLElement>(null)
+  const previewTrigger = React.useRef<HTMLButtonElement>(null)
   const reducedMotion = useReducedMotion()
   const [direction, setDirection] = React.useState(1)
   const navigated = React.useRef(false)
@@ -192,7 +193,7 @@ export function Onboarding() {
   }
 
   return (
-    <div className="setup-scene"><SetupBackdrop /><main ref={shell} data-preview-expanded="false" data-step={step} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
+    <div className="setup-scene"><SetupBackdrop phase={stepIndex} /><main ref={shell} data-preview-expanded="false" data-step={step} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
       <nav aria-label="Progress" className="setup-progress mb-4">
         <div className="flex min-h-9 items-center gap-3">
           <div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div>
@@ -240,10 +241,9 @@ export function Onboarding() {
           ) : null}
 
               {step === "reach" ? (
-                <div className="grid gap-5"><div className="setup-action-summary"><span><span className="block text-xs text-muted-foreground">Your main button</span><strong className="text-sm">{GOALS.find(g => g.id === goalOf(s))?.label}</strong></span><button type="button" className="min-h-11 px-3 text-sm font-semibold underline underline-offset-4" onClick={() => setActionOpen(true)}>Change main action</button></div>
-                <Overlay open={actionOpen} onOpenChange={setActionOpen} title="Choose your main button" description="Choose what customers can do from your page." footer={<Button className="min-h-11 w-full" onClick={() => setActionOpen(false)}>Done</Button>}>
+                <div className="grid gap-5"><div className="setup-action-summary"><span><span className="block text-xs text-muted-foreground">Your main button</span><strong className="text-sm">{GOALS.find(g => g.id === goalOf(s))?.label}</strong></span><Overlay trigger={<button type="button" className="min-h-11 px-3 text-sm font-semibold underline underline-offset-4">Change main action</button>} open={actionOpen} onOpenChange={setActionOpen} title="Choose your main button" description="Choose what customers can do from your page." footer={<Button className="min-h-11 w-full" onClick={() => setActionOpen(false)}>Done</Button>}>
                   <fieldset className="grid gap-2" data-testid="goal"><legend className="sr-only">Main button</legend>{GOALS.map(g => { const Icon = { book: CalendarDays, enquire: MessageSquare, call: Phone, message: Mail }[g.id]; return <label key={g.id} className="flex min-h-16 cursor-pointer items-center gap-3 rounded-2xl bg-neutral-50 p-3 has-[:checked]:bg-black has-[:checked]:text-white"><input type="radio" className="sr-only" name="goal" checked={goalOf(s)===g.id} onChange={()=>update(x=>applyGoal(x,g.id))}/><Icon aria-hidden="true" className="size-5 shrink-0"/><span><strong className="block text-sm">{g.label}</strong><span className="mt-1 block text-xs opacity-75">{g.hint}</span></span></label>})}</fieldset>
-                </Overlay><fieldset className="grid gap-3" data-testid="reach">
+                </Overlay></div><fieldset className="grid gap-3" data-testid="reach">
                   <legend className="mb-1 text-sm font-semibold">{goalOf(s) === "call" ? "The number to call" : "How can people reach you?"}</legend>
                   {goalOf(s) !== "call" ? <div className="grid grid-cols-3 gap-3" role="group" aria-label="Contact method">{(["email", "phone", "whatsapp"] as const).map(method => { const Icon = method === "email" ? Mail : method === "phone" ? Phone : MessageSquare; return <button type="button" key={method} aria-pressed={reachMethod === method} onClick={() => setReachChoice(method)} className={cn("flex min-h-11 items-center justify-center gap-2 rounded-full border text-sm font-semibold outline-none focus-visible:ring-2 focus-visible:ring-ring", reachMethod === method ? "border-signal bg-signal-soft text-signal" : "bg-white hover:border-signal")}><Icon className="size-4" aria-hidden="true" />{method === "email" ? "Email" : method === "phone" ? "Phone" : "WhatsApp"}</button> })}</div> : null}
                   {reachMethod === "email" ? <EmailField value={c.contacts.email} onCommit={v => update(x => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }, goalOf(x)), { coalesce: "email" })} /> : <PhoneField label={reachMethod === "phone" ? "Phone" : "WhatsApp"} value={c.contacts[reachMethod]} onCommit={v => update(x => applyGoal({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, [reachMethod]: v } } }, goalOf(x)), { coalesce: reachMethod })} hint={reachMethod === "whatsapp" ? "With country code, e.g. +44." : undefined} />}
@@ -265,7 +265,7 @@ export function Onboarding() {
               ) : null}
 
               <TaploInput label="Short description (optional)" value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
-              <button type="button" className="min-h-11 text-left text-sm font-medium underline underline-offset-4" onClick={()=>setProfileOpen(true)}>Add a cover photo</button><Overlay open={profileOpen} onOpenChange={setProfileOpen} title="Cover photo" footer={<Button className="min-h-11 w-full" onClick={()=>setProfileOpen(false)}>Done</Button>}><div className="grid gap-5">
+              <Overlay trigger={<button type="button" className="min-h-11 text-left text-sm font-medium underline underline-offset-4">Add a cover photo</button>} open={profileOpen} onOpenChange={setProfileOpen} title="Cover photo" footer={<Button className="min-h-11 w-full" onClick={()=>setProfileOpen(false)}>Done</Button>}><div className="grid gap-5">
 
 
               <ImageField purpose="cover" label="Cover photo (optional)" cropAspect={16 / 9} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1600} value={c.identity.heroImage ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, heroImage: v ?? undefined } } }))} />
@@ -291,12 +291,12 @@ export function Onboarding() {
         </section>
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="setup-canvas-heading"><button type="button" onClick={() => setMobilePreview(true)} className="inline-flex min-h-9 items-center gap-1 rounded-full px-3 text-xs font-medium">View full size<ArrowUpRight aria-hidden="true" className="size-3" /></button></div>
+          <div className="setup-canvas-heading"><button ref={previewTrigger} type="button" onClick={() => setMobilePreview(true)} className="inline-flex min-h-9 items-center gap-1 rounded-full px-3 text-xs font-medium">View full size<ArrowUpRight aria-hidden="true" className="size-3" /></button></div>
           <div className="setup-canvas"><SetupCanvas src="/demo/preview" expanded={false} /></div>
 
         </aside>
       </div>
-      <Overlay open={mobilePreview} onOpenChange={setMobilePreview} kind="detail" title="Full-size preview" testId="setup-full-preview" className="sm:h-[90dvh] sm:max-h-[90dvh] sm:w-[min(96vw,90rem)] sm:max-w-none" bodyClassName="p-0! overflow-hidden!"><div className="h-full min-h-0"><SetupCanvas src="/demo/preview" expanded /></div></Overlay>
+      <Overlay open={mobilePreview} onOpenChange={setMobilePreview} kind="detail" title="Full-size preview" testId="setup-full-preview" onCloseAutoFocus={event => { event.preventDefault(); previewTrigger.current?.focus({ preventScroll:true }) }} className="sm:h-[90dvh] sm:max-h-[90dvh] sm:w-[min(96vw,90rem)] sm:max-w-none" bodyClassName="p-0! overflow-hidden!"><div className="h-full min-h-0"><SetupCanvas src="/demo/preview" expanded /></div></Overlay>
     </main></div>
   )
 }

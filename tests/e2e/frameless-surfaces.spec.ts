@@ -1,0 +1,71 @@
+import { test, expect } from "@playwright/test";
+
+for (const width of [320, 390, 768]) test(`mobile setup has a continuous preview-to-form surface at ${width}`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 900 });
+  await page.goto("/onboarding");
+  await page.getByLabel("Business name", { exact: true }).fill("North Street Studio");
+  const form = page.locator(".setup-workspace>section");
+  const preview = page.locator(".setup-workspace>aside");
+  const f = await form.boundingBox(), p = await preview.boundingBox();
+  expect(p!.y + p!.height - f!.y).toBeGreaterThanOrEqual(19);
+  expect(f!.x).toBe(0);
+  expect(f!.width).toBe(width);
+  await expect(form).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await expect(page.getByTestId("setup-backdrop")).toBeVisible();
+  await expect(page.getByTestId("setup-backdrop").locator("canvas")).toHaveCount(0);
+  await expect(page.getByLabel("Business name", { exact: true })).toHaveCSS("border-top-color", "rgba(0, 0, 0, 0)");
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(page.getByTestId("setup-backdrop")).toHaveCSS("--setup-phase", "34%");
+  await expect(page.getByRole("button", { name: "Continue", exact: true })).toBeInViewport();
+});
+
+test("popup surfaces keep focus and dismissal without an outer frame", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/onboarding");
+  await page.getByRole("button", { name: "Add a cover photo", exact: true }).click();
+  const modal = page.getByRole("dialog");
+  await expect(modal).toBeVisible();
+  await expect(modal).toHaveCSS("border-top-width", "0px");
+  await expect(modal.locator("header")).toHaveCSS("border-bottom-width", "0px");
+  await expect(modal.locator("footer")).toHaveCSS("border-top-width", "0px");
+  await page.keyboard.press("Escape");
+  await expect(modal).toBeHidden();
+  await expect(page.getByRole("button", { name: "Add a cover photo", exact: true })).toBeFocused();
+  await page.getByRole("button", { name: "View full size" }).click();
+  await expect(page.getByTestId("setup-full-preview")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("button", { name: "View full size" })).toBeFocused();
+});
+
+test("mobile motion preference changes keep setup intact and stop tonal motion", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/onboarding");
+  await page.getByLabel("Business name", { exact: true }).fill("North Street Studio");
+  const field = page.getByTestId("setup-backdrop");
+  await expect(field).toHaveAttribute("data-moving", "true");
+  expect(await field.evaluate(el => getComputedStyle(el, "::before").animationName)).toBe("setup-light-flow");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(field).toHaveAttribute("data-reduced-motion", "true");
+  expect(await field.evaluate(el => getComputedStyle(el, "::before").animationName)).toBe("none");
+  await expect(page.getByLabel("Business name", { exact: true })).toHaveValue("North Street Studio");
+});
+
+
+test("closing a chooser does not steal focus from the next field while typing", async ({ page }) => {
+  await page.setViewportSize({ width:390, height:844 });
+  await page.goto("/onboarding");
+  await page.getByLabel("Business name", { exact:true }).fill("North Street Studio");
+  await page.getByRole("button", { name:"Continue", exact:true }).click();
+  await page.getByRole("button", { name:"Barber", exact:true }).click();
+  await page.getByRole("button", { name:"Continue", exact:true }).click();
+  await page.getByRole("button", { name:"Change main action", exact:true }).click();
+  await page.getByText("Call me", { exact:true }).click();
+  await page.getByRole("button", { name:"Done", exact:true }).click();
+  await page.getByLabel("Phone", { exact:true }).pressSequentially("01632 960123", { delay:60 });
+  await expect(page.getByRole("dialog")).toBeHidden();
+  await expect(page.getByLabel("Phone", { exact:true })).toHaveValue("01632 960123");
+  await expect(page.getByLabel("Phone", { exact:true })).toBeFocused();
+  await page.getByRole("button", { name:"Continue", exact:true }).click();
+  await expect(page.getByRole("heading", { level:1 })).toHaveText("Add your first service");
+});

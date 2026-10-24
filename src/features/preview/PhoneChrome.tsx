@@ -1,5 +1,5 @@
 /** Shared handset geometry for live pages and captured previews. Sizes are in screen CSS pixels. */
-export const PHONE = { width: 390, height: 844, bezel: 4, top: 36, bottom: 16 } as const
+export const PHONE = { width: 390, height: 844, bezel: 6, top: 36, bottom: 16 } as const
 
 /** Purely decorative hardware. It never covers or intercepts the usable page viewport. */
 export function PhoneChrome() {

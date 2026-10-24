@@ -22,10 +22,10 @@ const jobs = [
   { id: "booking-clinic-time", url: frame("physio"), vp: [390, 844], run: async (p) => { await p.evaluate(() => { document.documentElement.dataset.taploPhone = "true" }); await p.getByRole("button", { name: /Request an appointment/ }).first().click(); await flow(p).getByTestId("bk-service").filter({ hasText: "Initial assessment" }).click(); await anyone(p); await flow(p).getByTestId("bk-slots").waitFor() }, clip: [0, 0, 390, 844] },
   // ---- Booking: a real journey, step by step
   { id: "bk-1-service", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Book (your chair|a haircut)/ }).first().click() }, shot: '[data-testid="booking-flow"]' },
-  { id: "bk-2-time", url: frame("station"), vp: [1000, 900], run: async (p) => { await openBooking(p); await p.getByTestId("booking-flow").getByTestId("bk-service").first().click(); await p.getByTestId("booking-flow").getByRole("button", { name: /Anyone available/ }).click(); await p.getByTestId("bk-slots").waitFor() }, shot: '[data-testid="booking-flow"]' },
+  { id: "bk-2-time", transparent: true, url: frame("station"), vp: [1000, 900], run: async (p) => { await openBooking(p); await p.getByTestId("booking-flow").getByTestId("bk-service").first().click(); await p.getByTestId("booking-flow").getByRole("button", { name: /Anyone available/ }).click(); await p.getByTestId("bk-slots").waitFor() }, shot: '[data-testid="booking-flow"]' },
   { id: "bk-3-details", url: frame("station"), vp: [1000, 900], run: async (p) => { await toDetails(p) }, shot: '[data-testid="booking-flow"]' },
   { id: "bk-4-review", url: frame("station"), vp: [1000, 900], run: async (p) => { await toDetails(p); await fillDetails(p); await flow(p).getByRole("button", { name: "Review" }).click(); await flow(p).getByText("Check your booking").waitFor() }, shot: '[data-testid="booking-flow"]' },
-  { id: "bk-5-done", url: frame("station"), vp: [1000, 900], run: async (p) => { await toDetails(p); await fillDetails(p); await flow(p).getByRole("button", { name: "Review" }).click(); await flow(p).getByRole("button", { name: "Confirm booking" }).click(); await p.getByTestId("bk-done").waitFor() }, shot: '[data-testid="booking-flow"]' },
+  { id: "bk-5-done", transparent: true, url: frame("station"), vp: [1000, 900], run: async (p) => { await toDetails(p); await fillDetails(p); await flow(p).getByRole("button", { name: "Review" }).click(); await flow(p).getByRole("button", { name: "Confirm booking" }).click(); await p.getByTestId("bk-done").waitFor() }, shot: '[data-testid="booking-flow"]' },
   { id: "bk-request-review", url: frame("detailer"), vp: [1000, 900], run: async (p) => { await p.getByRole("button", { name: /Request a valet/ }).first().click(); await flow(p).getByTestId("bk-service").first().click(); await anyone(p); await flow(p).getByTestId("bk-slot").nth(1).click(); await flow(p).getByRole("button", { name: /Request this time/ }).click(); await fillDetails(p); await flow(p).getByRole("button", { name: "Review" }).click(); await flow(p).getByText("Check your request").waitFor().catch(() => {}) }, shot: '[data-testid="booking-flow"]' },
   // ---- The service-to-booking story, on a phone, one viewport each (390 x 844)
   { id: "story-1-menu", url: frame("station"), vp: [390, 844], run: async (p) => { await p.evaluate(() => { const el = document.querySelector('[data-widget="priceMenu"]'); if (el) window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 24) }) }, clip: [0, 0, 390, 844] },
@@ -33,8 +33,8 @@ const jobs = [
   { id: "story-3-time", url: frame("station"), vp: [390, 844], run: async (p) => { await p.getByTestId("service-open").first().click(); await p.getByTestId("service-detail").getByRole("button", { name: /Book this/ }).click(); await p.getByTestId("booking-flow").waitFor(); await anyone(p) }, clip: [0, 0, 390, 844] },
   { id: "story-4-done", url: frame("station"), vp: [390, 844], run: async (p) => { await toDetails(p); await fillDetails(p); await flow(p).getByRole("button", { name: "Review" }).click(); await flow(p).getByRole("button", { name: "Confirm booking" }).click(); await p.getByTestId("bk-done").waitFor() }, clip: [0, 0, 390, 844] },
   // ---- Services
-  { id: "svc-detail", url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByTestId("service-open").first().click() }, shot: '[data-testid="service-detail"]' },
-  { id: "svc-menu-barber", url: frame("station"), vp: [390, 900], shot: '[data-widget="priceMenu"]' },
+  { id: "svc-detail", transparent: true, url: frame("station"), vp: [1000, 900], run: async (p) => { await p.getByTestId("service-open").first().click() }, shot: '[data-testid="service-detail"]' },
+  { id: "svc-menu-barber", transparent: true, url: frame("station"), vp: [390, 900], shot: '[data-widget="priceMenu"]' },
   { id: "svc-menu-physio", url: frame("physio"), vp: [390, 900], shot: '[data-widget="serviceList"]' },
   { id: "svc-menu-cafe", url: frame("cafe"), vp: [390, 900], shot: '[data-widget="priceMenu"]' },
   { id: "svc-menu-gym", url: frame("gym"), vp: [390, 900], shot: '[data-widget="serviceList"]' },
@@ -99,7 +99,12 @@ for (const j of jobs.filter((x) => !only.length || only.includes(x.id))) {
     await page.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {})
     await page.evaluate(() => document.fonts.ready)
     if (j.run) await j.run(page)
-    if (j.transparent) await page.addStyleTag({content:"html,body,[data-taplo-page]{background:transparent!important}"})
+    if (j.transparent) {
+      if (!j.shot) throw new Error("Transparent capture needs a component selector")
+      await page.locator(j.shot).first().evaluate(el => el.setAttribute("data-capture-subject", "true"))
+      // Preserve the real component and its geometry/tokens, while excluding the surrounding page and backdrop.
+      await page.addStyleTag({content:"html,body,[data-taplo-page]{background:transparent!important} body *{visibility:hidden!important} [data-capture-subject],[data-capture-subject] *{visibility:visible!important}"})
+    }
     await page.evaluate(async () => { await Promise.all([...document.images].map(async img => { img.loading = "eager"; await img.decode() })) })
     await page.waitForTimeout(500)
     let buf
