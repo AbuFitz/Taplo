@@ -7,6 +7,7 @@ import sharp from "sharp"
 const cfg = JSON.parse(readFileSync(new URL("../../marketing/captures.json", import.meta.url), "utf8"))
 const base = process.env.BASE_URL ?? cfg.base
 const only = process.argv.slice(2)
+for (const id of only) if (!cfg.jobs.some((j) => j.id === id)) throw new Error(`Unknown capture: ${id}`)
 const out = new URL("../../public/marketing/", import.meta.url).pathname
 mkdirSync(out, { recursive: true })
 

@@ -129,7 +129,7 @@ export function TypeControls({ m }: M) {
 }
 
 /* ------------------------------------------------------------------ header */
-const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] = [["side", "Compact"], ["cover", "Cover"], ["poster", "Image hero"], ["centered", "Text-led"]]
+const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] = [["side", "Compact"], ["cover", "Cover"], ["feature", "Wide feature"], ["poster", "Image hero"], ["centered", "Text-led"]]
 export function HeaderControls({ m, identity, livePreviews = false }: M & { identity?: BusinessContent["identity"]; livePreviews?: boolean }) {
   const { spec } = m
   return (

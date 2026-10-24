@@ -1,3 +1,4 @@
+import { serviceListItems } from "../widgets/service-list";
 import type { BusinessContent } from "@/features/businesses/content";
 import { formatMoney } from "@/features/services/format";
 import type { WidgetType } from "../contracts/widgets";
@@ -417,10 +418,7 @@ export function summarise(
     switch (w.type) {
       case "priceMenu":
       case "serviceList": {
-        const list = pickIds(
-          r.services.filter((x) => !x.archived),
-          s.serviceIds,
-        );
+        const list = w.type === "serviceList" ? serviceListItems(r.services, s, ctx?.featuredServiceIds) : pickIds(r.services.filter((x) => !x.archived), s.serviceIds);
         const prices = list
           .map((x) => x.priceMinor)
           .filter((x): x is number => x !== undefined);

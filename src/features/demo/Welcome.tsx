@@ -43,6 +43,9 @@ const SAMPLES: {
     category: "Car dealership",
     detail: "Proper stock photographs and the facts buyers need.",
   },
+  { scenario: "corner", slug: "corner-table-cafe", name: "Corner Table Café", category: "Neighbourhood café", detail: "A proper menu, opening times and a way to ask about a larger visit." },
+  { scenario: "oakfield", slug: "oakfield-home-repairs", name: "Oakfield Home Repairs", category: "Home repairs", detail: "Explain the work, agree the scope and arrange a visit." },
+  { scenario: "rowan", slug: "rowan-learning", name: "Rowan Learning", category: "Maths tutor", detail: "A personal introduction and sessions at a pace you can follow." },
 ];
 
 /** Only shown for an empty account. Existing drafts never enter the sample-loading flow. */

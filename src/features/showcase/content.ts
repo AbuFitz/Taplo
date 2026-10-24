@@ -1,7 +1,7 @@
 import type { BusinessContentInput } from "@/features/businesses/content"
 import type { PageDoc } from "@/features/page/contracts/page"
 
-import { BROOKFIELD, PARKSIDE, STATION } from "./uk"
+import { BROOKFIELD, PARKSIDE, STATION, OAKFIELD, ROWAN, CORNER } from "./uk"
 import { hours, newWidget, person, photo, svc } from "./helpers"
 import { CAFE, EXTRA_WIDGETS, GYM, PHYSIO, TUTOR } from "./examples"
 
@@ -185,8 +185,30 @@ export const TRADES: BusinessContentInput = {
   booking: { mode: "instant", onlineBookingReady: true },
 }
 
-export type Scenario = "brookfield" | "station" | "detailer" | "barber" | "dealer" | "trades" | "physio" | "cafe" | "tutor" | "gym"
+export type Scenario = "oakfield" | "rowan" | "corner" | "brookfield" | "station" | "detailer" | "barber" | "dealer" | "trades" | "physio" | "cafe" | "tutor" | "gym"
 export const SCENARIOS: Record<Scenario, { label: string; content: BusinessContentInput; widgets: () => PageDoc["widgets"] }> = {
+  corner: { label: "Neighbourhood café", content: CORNER, widgets: () => [
+    newWidget("priceMenu", { title: "At the counter", showDescriptions: true }),
+    newWidget("hours", { title: "Come by" }),
+    newWidget("faq", { title: "Before you visit" }),
+    newWidget("enquiry", { title: "A larger visit?", intro: "Tell us the day, group size and anything you would like to ask. This is an enquiry, not a table reservation.", variant: "inline" }),
+    newWidget("share", { label: "Share this café", variant: "button" }),
+  ] },
+  oakfield: { label: "Local home repairs", content: OAKFIELD, widgets: () => [
+    newWidget("booking", { label: "Request a visit", variant: "button" }),
+    newWidget("serviceList", { title: "A few things we can help with", variant: "cards" }),
+    newWidget("serviceArea", { title: "Where we work" }),
+    newWidget("faq", { title: "Before we visit" }),
+    newWidget("enquiry", { title: "Tell us about the job", intro: "What needs doing, which town are you in, and is there anything useful to know about the fitting?", variant: "inline" }),
+  ] },
+  rowan: { label: "Independent maths tutor", content: ROWAN, widgets: () => [
+    newWidget("featuredService", { headline: "Start with a conversation", serviceId: "rl-intro" }),
+    newWidget("serviceList", { title: "Sessions at your pace", variant: "list", excludeFeatured: true }),
+    newWidget("team", { title: "Meet your tutor", variant: "list" }),
+    newWidget("faq", { title: "A few questions first" }),
+    newWidget("enquiry", { title: "What would you like help with?", variant: "inline" }),
+    newWidget("booking", { label: "Request an introduction", variant: "button", serviceId: "rl-intro" }),
+  ] },
   brookfield: {
     label: "Independent car dealer", content: BROOKFIELD,
     widgets: () => [

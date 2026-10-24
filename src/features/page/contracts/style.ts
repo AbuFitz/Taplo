@@ -60,7 +60,7 @@ export const backgroundSchema = z.discriminatedUnion("kind", [
   }),
 ]);
 
-export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal"] as const;
+export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal", "feature"] as const;
 export const headerSchema = z.object({
   layout: z.enum(HEADER_LAYOUTS),
   /** "logo" shows the picture uncropped at its own proportions (for wide wordmarks); a wide logo is never cropped to a face shape regardless. */

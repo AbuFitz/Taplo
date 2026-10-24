@@ -12,7 +12,7 @@ export default async function InspirationPage({ searchParams }: { searchParams: 
   const initialIndustry = INDUSTRY_FILTERS.find((i) => i.id === q)?.id
   const items: GalleryItem[] = EXAMPLES.map((e) => {
     const f = describe(e)
-    return { slug: e.slug, name: f.name, hook: e.hook, industry: e.industry, industryLabel: f.industryLabel, lookId: f.lookId, lookName: f.lookName, overrides: f.overrides, heading: f.heading, header: { side: "Compact", cover: "Cover", poster: "Image hero", centered: "Text-led", minimal: "Text-only" }[f.header] ?? f.header, style: styleTags(f), capabilities: capabilityTags(f.content) }
+    return { slug: e.slug, name: f.name, hook: e.hook, industry: e.industry, industryLabel: f.industryLabel, lookId: f.lookId, lookName: f.lookName, overrides: f.overrides, heading: f.heading, header: { side: "Compact", cover: "Cover", poster: "Image hero", centered: "Text-led", minimal: "Text-only", feature: "Wide feature" }[f.header] ?? f.header, style: styleTags(f), capabilities: capabilityTags(f.content) }
   })
   return (
     <div className="bg-background">

@@ -1,4 +1,5 @@
 import * as React from "react"
+import { serviceListItems } from "./service-list"
 import { SocialIcon } from "./social-icons"
 import { ArrowUpRight, ChevronDown } from "lucide-react"
 import type { ProductContent, ServiceContent } from "@/features/businesses/content"
@@ -137,9 +138,7 @@ function serviceCtx(vm: PageViewModel) {
 
 function ServiceListWidget({ w, vm }: P) {
   const s = w.settings as S
-  let list = pick(vm.business.services, s.serviceIds)
-  if (s.group) list = list.filter((x) => x.group === s.group)
-  if (s.limit) list = list.slice(0, s.limit)
+  const list = serviceListItems(vm.business.services, s, vm.ctx.featuredServiceIds)
   return (
     <Card title={s.title}>
       <ServiceCollection groups={[{ items: list.map(bookable) }]} variant={s.variant === "cards" ? "cards" : s.variant === "compact" ? "compact" : "rows"} options={{ showPrices: s.showPrices !== false, showDuration: s.showDuration !== false, showDescriptions: s.showDescriptions !== false }}
@@ -169,7 +168,7 @@ function FeaturedServiceWidget({ w, vm }: P) {
       <h2 style={{ fontSize: "1.375rem" }}>{svc.name}</h2>
       {svc.description ? <p className="tp-muted mb-2">{svc.description}</p> : null}
       <p className="mb-3"><span className="tp-price">{formatPrice(svc)}</span>{svc.durationMinutes ? <span className="tp-muted"> · {formatDuration(svc.durationMinutes)}</span> : null}</p>
-      <BookingAction {...bookingProps(vm, { label: s.ctaLabel || vm.industry.terminology.booking, preselect: svc.id })} />
+      <BookingAction {...bookingProps(vm, { label: s.ctaLabel || (vm.onlineBooking && svc.bookingMode === "request" ? "Request a time" : vm.onlineBooking && svc.bookingMode === "instant" ? "Book a time" : "Ask about this"), preselect: svc.id })} />
     </Card>
   )
 }

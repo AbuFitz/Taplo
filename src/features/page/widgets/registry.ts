@@ -1,3 +1,4 @@
+import { serviceListItems } from "./service-list";
 import { isHttpUrl, videoEmbed } from "@/lib/validation";
 import { WIDGET_TYPES, parseSettings, settingsSchemas, type WidgetType } from "../contracts/widgets";
 import type { FieldSpec, WidgetContext, WidgetDefinition, WidgetStatus } from "./types";
@@ -53,8 +54,8 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
 
   serviceList: {
     type: "serviceList", version: 1, label: "Services", description: "A list of what you offer, with prices.", category: "sales", icon: "ListChecks", multiple: true, appearance: ["card"],
-    fields: [TITLE, { kind: "refs", key: "serviceIds", label: "Which services", source: "services", help: "Leave on “All” to follow your service list automatically." }, { kind: "select", key: "variant", label: "Style", options: [{ value: "list", label: "List" }, { value: "cards", label: "Cards" }, { value: "compact", label: "Compact" }] }, { kind: "switch", key: "showPrices", label: "Show prices" }, { kind: "switch", key: "showDuration", label: "Show how long it takes" }, { kind: "switch", key: "showDescriptions", label: "Show descriptions" }],
-    status: (_s, c) => (c.business.services.length ? READY : { state: "empty", reason: "Add a service to show it here.", fix: "services" }),
+    fields: [TITLE, { kind: "switch", key: "excludeFeatured", label: "Keep featured services out of this list" }, { kind: "refs", key: "serviceIds", label: "Which services", source: "services", help: "Leave on “All” to follow your service list automatically." }, { kind: "select", key: "variant", label: "Style", options: [{ value: "list", label: "List" }, { value: "cards", label: "Cards" }, { value: "compact", label: "Compact" }] }, { kind: "switch", key: "showPrices", label: "Show prices" }, { kind: "switch", key: "showDuration", label: "Show how long it takes" }, { kind: "switch", key: "showDescriptions", label: "Show descriptions" }],
+    status: (s, c) => (serviceListItems(c.business.services, s, c.featuredServiceIds).length ? READY : { state: "empty", reason: s.excludeFeatured && c.business.services.length ? "All selected services are already featured. Add another service or turn off the featured-service filter." : "Add a service to show it here.", fix: "services" }),
   },
   featuredService: {
     type: "featuredService", version: 1, label: "Featured service", description: "Spotlight one service.", category: "sales", icon: "Sparkles", multiple: true, appearance: ["card", "button"],

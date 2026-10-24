@@ -30,7 +30,7 @@
       "file": "/taplo-demo/station-road-barber-work.png",
       "width": 1536,
       "height": 1024,
-      "alt": "An illustrative barber cutting a client’s hair in a naturally lit high-street shop.",
+      "alt": "An illustrative barber cutting a client\u2019s hair in a naturally lit high-street shop.",
       "sourceType": "generated",
       "generator": "built-in image generation tool",
       "created": "2026-10-24 Europe/London",
@@ -223,6 +223,73 @@
       "restrictions": [
         "Not a real product or branded endorsement",
         "No ingredient or performance claims implied"
+      ]
+    },
+    {
+      "id": "corner-table-cafe",
+      "file": "/taplo-demo/corner-table-cafe.png",
+      "width": 1536,
+      "height": 1024,
+      "alt": "Illustrative caf\u00e9 interior with mushrooms on toast and a flat white.",
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "generatedSource": "/Users/abu-bakr/.codex/generated_images/01a16af8-45fc-7782-b54a-b39524f31f91/exec-77bbf821-f383-417b-b669-92dd23ece2c3.png",
+      "status": "fictional-demo-illustration",
+      "restrictions": [
+        "Not a real business, job, learner or endorsement",
+        "No qualifications, reviews or completed-job proof implied"
+      ]
+    },
+    {
+      "id": "oakfield-shelf",
+      "file": "/taplo-demo/oakfield-shelf.png",
+      "width": 1536,
+      "height": 1024,
+      "alt": "Illustrative tradesperson checking a shelf in a British home.",
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "generatedSource": "/Users/abu-bakr/.codex/generated_images/01a16af8-45fc-7782-b54a-b39524f31f91/exec-1b3cd7f7-4b71-49f0-bdd4-09b067ed488c.png",
+      "status": "fictional-demo-illustration",
+      "restrictions": [
+        "Not a real business, job, learner or endorsement",
+        "No qualifications, reviews or completed-job proof implied"
+      ]
+    },
+    {
+      "id": "rowan-tutor",
+      "file": "/taplo-demo/rowan-tutor.png",
+      "width": 1536,
+      "height": 1024,
+      "alt": "Illustrative portrait of Rowan, a fictional maths tutor.",
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "generatedSource": "/Users/abu-bakr/.codex/generated_images/01a16af8-45fc-7782-b54a-b39524f31f91/exec-5f884157-8a8f-451e-840a-a2ca07ef635d.png",
+      "status": "fictional-demo-illustration",
+      "restrictions": [
+        "Not a real business, job, learner or endorsement",
+        "No qualifications, reviews or completed-job proof implied"
+      ]
+    },
+    {
+      "id": "corner-table-mark",
+      "file": "/taplo-demo/corner-table-mark.svg",
+      "width": 280,
+      "height": 120,
+      "sourceType": "original-code-native-svg",
+      "status": "fictional-demo-wordmark",
+      "restrictions": [
+        "Not a real business identity or endorsement"
+      ]
+    },
+    {
+      "id": "oakfield-mark",
+      "file": "/taplo-demo/oakfield-mark.svg",
+      "width": 280,
+      "height": 120,
+      "sourceType": "original-code-native-svg",
+      "status": "fictional-demo-wordmark",
+      "restrictions": [
+        "Not a real business identity or endorsement"
       ]
     }
   ]

@@ -40,6 +40,7 @@ export const settingsSchemas = {
     variant: z.enum(["list", "cards", "compact"]).default("list"),
     showPrices: z.boolean().default(true), showDuration: z.boolean().default(true), showDescriptions: z.boolean().default(true),
     limit: z.number().int().min(1).max(50).optional(),
+    excludeFeatured: z.boolean().default(false),
   }),
   featuredService: z.object({ serviceId: z.string().max(64).nullable().default(null), headline: label, ctaLabel: label }),
   priceMenu: z.object({ title, serviceIds: ids, showDescriptions: z.boolean().default(false) }),

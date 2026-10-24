@@ -1,3 +1,4 @@
+import { getWidget } from "@/features/page/widgets/registry"
 import { bySlug } from "./examples"
 import { LOOKS, type Look } from "@/features/page/themes/looks"
 import { SCENARIOS } from "@/features/showcase/content"
@@ -24,6 +25,11 @@ export function exampleStart(slug: string) {
     lookId: EXAMPLE_LOOK[e.scenario],
     overrides: EXAMPLE_OVERRIDES[e.scenario],
     bookingMode: sc.content.booking?.mode ?? "contact",
-    widgets: sc.widgets().map((w) => ({ type: w.type, settings: w.settings as Record<string, unknown> })),
+    widgets: sc.widgets().map((w) => {
+      // References belong to the fictional business. A new owner's sections follow their own records.
+      const settings = { ...w.settings } as Record<string, unknown>
+      for (const field of getWidget(w.type)?.fields ?? []) if (field.kind === "refs" || field.kind === "record") delete settings[field.key]
+      return { type: w.type, settings }
+    }),
   }
 }

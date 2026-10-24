@@ -829,5 +829,59 @@
     "source": "/onboarding",
     "sha256": "43a5f34d5833dda4f4e2f5311d94d09eef10e823d21d4424a722458dfb7e3413",
     "capturedAt": "2026-10-24T02:30:45.586Z"
+  },
+  "ex-corner-table-cafe-phone": {
+    "file": "/marketing/ex-corner-table-cafe-phone.webp",
+    "width": 780,
+    "height": 1600,
+    "cssWidth": 390,
+    "cssHeight": 800,
+    "bytes": 117248,
+    "source": "/appearance/frame?scenario=corner"
+  },
+  "ex-corner-table-cafe-desk": {
+    "file": "/marketing/ex-corner-table-cafe-desk.webp",
+    "width": 2200,
+    "height": 1520,
+    "cssWidth": 1100,
+    "cssHeight": 760,
+    "bytes": 158046,
+    "source": "/appearance/frame?scenario=corner"
+  },
+  "ex-oakfield-home-repairs-phone": {
+    "file": "/marketing/ex-oakfield-home-repairs-phone.webp",
+    "width": 780,
+    "height": 1600,
+    "cssWidth": 390,
+    "cssHeight": 800,
+    "bytes": 89310,
+    "source": "/appearance/frame?scenario=oakfield"
+  },
+  "ex-oakfield-home-repairs-desk": {
+    "file": "/marketing/ex-oakfield-home-repairs-desk.webp",
+    "width": 2200,
+    "height": 1520,
+    "cssWidth": 1100,
+    "cssHeight": 760,
+    "bytes": 153062,
+    "source": "/appearance/frame?scenario=oakfield"
+  },
+  "ex-rowan-learning-phone": {
+    "file": "/marketing/ex-rowan-learning-phone.webp",
+    "width": 780,
+    "height": 1600,
+    "cssWidth": 390,
+    "cssHeight": 800,
+    "bytes": 93728,
+    "source": "/appearance/frame?scenario=rowan"
+  },
+  "ex-rowan-learning-desk": {
+    "file": "/marketing/ex-rowan-learning-desk.webp",
+    "width": 2200,
+    "height": 1520,
+    "cssWidth": 1100,
+    "cssHeight": 760,
+    "bytes": 132996,
+    "source": "/appearance/frame?scenario=rowan"
   }
 }

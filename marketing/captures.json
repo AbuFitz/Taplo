@@ -533,6 +533,96 @@
         760
       ],
       "dsf": 2
+    },
+    {
+      "id": "ex-corner-table-cafe-phone",
+      "url": "/appearance/frame?scenario=corner",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        800
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-corner-table-cafe-desk",
+      "url": "/appearance/frame?scenario=corner",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-oakfield-home-repairs-phone",
+      "url": "/appearance/frame?scenario=oakfield",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        800
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-oakfield-home-repairs-desk",
+      "url": "/appearance/frame?scenario=oakfield",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-rowan-learning-phone",
+      "url": "/appearance/frame?scenario=rowan",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        800
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-rowan-learning-desk",
+      "url": "/appearance/frame?scenario=rowan",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
     }
   ]
 }

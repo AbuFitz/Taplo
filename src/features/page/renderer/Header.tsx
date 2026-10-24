@@ -96,7 +96,7 @@ function Text({ vm }: { vm: PageViewModel }) {
   )
 }
 
-/** One header component, four arrangements chosen by the page style (not by industry): compact identity, cover, image hero, and text-led. */
+/** One header component, with schema-controlled arrangements chosen by the page style rather than the industry. */
 export function PageHeader({ vm }: { vm: PageViewModel }) {
   const { spec } = vm.style
   const h = spec.header
@@ -117,11 +117,11 @@ export function PageHeader({ vm }: { vm: PageViewModel }) {
       </header>
     )
   }
-  if (h.layout === "cover") {
+  if (h.layout === "cover" || h.layout === "feature") {
     return (
-      <header className="tp-header" data-layout="cover" data-align={h.align} data-cover={cover ? "" : undefined}>
+      <header className="tp-header" data-layout={h.layout} data-align={h.align} data-cover={cover ? "" : undefined}>
         {cover ? <div className="tp-cover"><ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /></div> : null}
-        <div style={{ paddingInline: "0.25rem", justifyItems: "var(--tp-header-justify)" }} className="grid w-full gap-2.5">
+        <div style={{ paddingInline: "0.25rem", justifyItems: "var(--tp-header-justify)" }} className="tp-cover-body grid w-full gap-2.5">
           <Avatar vm={vm} />
           <Text vm={vm} />
           <Actions vm={vm} />

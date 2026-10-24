@@ -45,3 +45,41 @@ export const BROOKFIELD: BusinessContentInput = {
     image: { src: `/taplo-demo/brookfield-${STOCK_IMAGES[p.id]}.png`, alt: `Illustrative example of ${p.name}; not a real vehicle listing`, width: 1536, height: 1024, focal: { x: 50, y: 50 } },
   })),
 }
+
+const oakfield = example("fieldwork-home-care", "request", "oakfield-mark")
+export const OAKFIELD: BusinessContentInput = {
+  ...oakfield,
+  identity: { ...oakfield.identity, heroImage: { src: "/taplo-demo/oakfield-shelf.png", alt: "Illustrative shelf-fitting work in a British home", width: 1536, height: 1024, focal: { x: 70, y: 44 } } },
+  about: "The small jobs that make a home work better. Tell us what needs attention, where you are and anything useful about the wall or fittings. We will agree the scope before a visit.",
+  hours: hours(["mon", "tue", "wed", "thu", "fri"], "09:00", "17:00"),
+  faqs: [
+    { id: "oak-area", question: "Which areas do you cover?", answer: "This example covers Hertfordshire. Include your town when you enquire so the visit can be agreed." },
+    { id: "oak-price", question: "What does the from price include?", answer: "A small-repairs visit starts from £65. Materials and longer jobs are agreed separately, before work starts." },
+    { id: "oak-photos", question: "What should I send with an enquiry?", answer: "Tell us what needs fixing and the type of wall or fitting. We can ask for photographs when discussing the job." },
+  ],
+}
+
+const rowan = example("rowan-learning", "request", "rowan-mark")
+const rowanPhoto = { src: "/taplo-demo/rowan-tutor.png", alt: "Illustrative portrait of Rowan, a fictional maths tutor", width: 1536, height: 1024, focal: { x: 32, y: 35 } }
+export const ROWAN: BusinessContentInput = {
+  ...rowan,
+  identity: { ...rowan.identity, logo: rowanPhoto },
+  about: "Maths at a pace you can follow. We work through the question, find the sticking point and leave you with something clear to practise next.",
+  hours: [...hours(["tue", "wed", "thu"], "16:00", "20:00"), ...hours(["sat"], "09:00", "13:00")],
+  staff: (rowan.staff ?? []).map((p) => ({ ...p, photo: rowanPhoto, bio: "One-to-one maths support, from a first conversation to focused GCSE and A-level sessions. We start with what you would like help with." })),
+  services: (rowan.services ?? []).map((s) => ({ ...s, delivery: ["online", "premises"] })),
+  faqs: [
+    { id: "rowan-online", question: "Can we work online?", answer: "Yes. This example offers online and local sessions. Mention your preference in the request." },
+    { id: "rowan-intro", question: "What happens in the introduction?", answer: "A free 20-minute conversation about the learner, the topics they find difficult and what they would like to achieve. A session time is agreed after the request." },
+    { id: "rowan-start", question: "Do I need to know exactly what help I need?", answer: "No. Bring a question or a topic that feels difficult and we can start there." },
+  ],
+}
+
+const corner = businessContentSchema.parse(inputs["sunday-counter"])
+export const CORNER: BusinessContentInput = {
+  ...corner,
+  identity: { ...corner.identity, industryKey: "hospitality", logo: { src: "/taplo-demo/corner-table-mark.svg", alt: "Corner Table Café example wordmark", width: 280, height: 120 }, heroImage: { src: "/taplo-demo/corner-table-cafe.png", alt: "Illustrative neighbourhood café with mushrooms on toast and a flat white", width: 1536, height: 1024, focal: { x: 68, y: 64 } } },
+  about: "A coffee, a proper breakfast, a little time at the table. Browse the example menu, check the opening times or ask about a larger visit.",
+  hours: [...hours(["tue", "wed", "thu", "fri"], "08:00", "16:00"), ...hours(["sat"], "09:00", "16:00"), ...hours(["sun"], "09:00", "15:00")],
+  booking: { mode: "contact", onlineBookingReady: false },
+}

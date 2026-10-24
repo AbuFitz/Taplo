@@ -23,6 +23,9 @@ export interface Example {
 }
 
 const CATALOGUE: Example[] = [
+  { slug: "corner-table-cafe", scenario: "corner", industry: "food", hook: "A neighbourhood café. The menu, the opening times and a place at the table.", notes: ["Warm paper and serif headings make the menu easy to settle into.", "Coffee and food show prices without starting appointment bookings.", "A larger visit starts an enquiry, not a confirmed reservation."], highlights: ["A proper grouped menu", "Opening times at a glance", "Group enquiries without booking menu items"] },
+  { slug: "oakfield-home-repairs", scenario: "oakfield", industry: "trades", hook: "Small repairs, shelves and fittings. Explain the job before agreeing the visit.", notes: ["The photograph shows the kind of work rather than a generic tool icon.", "Service cards explain from prices, estimates and first conversations.", "Requests and enquiries let the scope be agreed before the visit."], highlights: ["From and quote prices", "Visit requests", "Service area instead of a private address"] },
+  { slug: "rowan-learning", scenario: "rowan", industry: "learning", hook: "A familiar face and a clear first step. Maths sessions at a pace you can follow.", notes: ["The tutor’s portrait makes the introduction personal.", "A free first conversation sits before the paid sessions.", "Session requests leave room to agree the learner’s needs and delivery."], highlights: ["Free introduction", "Online and local sessions", "A personal tutor profile"] },
   {
     slug: "station-road-barbers", scenario: "station", industry: "beauty",
     hook: "A proper local barber. Clear prices, a familiar face and your next haircut sorted.",
@@ -86,7 +89,7 @@ const CATALOGUE: Example[] = [
 ]
 
 // Superseded example routes remain available; the gallery leads with their new UK replacements.
-export const EXAMPLES = CATALOGUE.filter((e) => e.scenario !== "barber" && e.scenario !== "dealer")
+export const EXAMPLES = CATALOGUE.filter((e) => !["barber", "dealer", "cafe", "tutor", "trades"].includes(e.scenario)).sort((a, b) => (["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(a.scenario) - ["station", "detailer", "brookfield", "corner", "oakfield", "rowan", "physio", "gym"].indexOf(b.scenario)))
 export const bySlug = (slug: string) => CATALOGUE.find((e) => e.slug === slug)
 
 const WIDGET_NAME: Partial<Record<WidgetType, string>> = {
