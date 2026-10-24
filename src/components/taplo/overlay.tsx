@@ -83,6 +83,10 @@ export function Overlay({ open, onOpenChange, trigger, kind = "dialog", tone = "
   }
   const forceClose = () => { setConfirming(false); if (!controlled) setInternal(false); onOpenChange?.(false) }
 
+  React.useEffect(() => {
+    if (isOpen && window.parent !== window) window.parent.postMessage({ type: "taplo:overlay-open" }, window.location.origin)
+  }, [isOpen])
+
   const page = tone === "page"
   return (
     <DialogPrimitive.Root open={isOpen} onOpenChange={setOpen}>

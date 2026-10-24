@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { getTheme } from "../../src/features/page/themes/catalogue";
 import { FIXTURES } from "../../src/features/themes/fixtures";
 import { look, pickLook, addWidget, openStructure, openEditorWithSample, insp, openRow, openSection, pngFile, previewFrame, previewOrder, row, rowOrder, seedFixture, selectPart } from "./helpers";
 
@@ -40,9 +41,9 @@ test.describe("My page editor", () => {
     const before = await previewOrder(page);
     await row(page, "video").getByRole("button", { name: /Hide Video/ }).click();
     await expect(row(page, "video")).toContainText("Hidden");
-    expect(await previewOrder(page)).toEqual(before.filter((t) => t !== "video"));
+    await expect.poll(() => previewOrder(page)).toEqual(before.filter((t) => t !== "video"));
     await row(page, "video").getByRole("button", { name: /Show Video/ }).click();
-    expect(await previewOrder(page)).toEqual(before);
+    await expect.poll(() => previewOrder(page)).toEqual(before);
 
     // ---- remove from page only: the underlying records are kept
     const servicesBefore = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.services.length);
@@ -148,7 +149,7 @@ test.describe("My page editor", () => {
     for (const id of ["night", "clean", "colour", "photo", "showroom"]) {
       await look(page, id).click();
       await expect(look(page, id).locator("input")).toBeChecked();
-      await expect.poll(async () => frame.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-background").trim())).not.toBe("");
+      await expect.poll(async () => frame.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-background").trim())).toBe(getTheme(id)!.style.colors.background);
       seen.add(await frame.locator("[data-taplo-page]").evaluate((el) => JSON.stringify([el.getAttribute("data-header"), el.getAttribute("data-desktop"), getComputedStyle(el).getPropertyValue("--tp-background").trim(), getComputedStyle(el).getPropertyValue("--tp-font-heading").trim()])));
     }
     expect(seen.size).toBe(5);
@@ -299,6 +300,7 @@ test.describe("My page editor", () => {
     await selectPart(page, "header");
     // no logo → initials fallback, never a broken image
     await expect(frame.locator(".tp-avatar")).toContainText("PG");
+    await openSection(page, "Logo and cover");
     const upload = page.getByLabel("Logo or profile picture: upload a picture");
     await upload.setInputFiles({ name: "notes.txt", mimeType: "text/plain", buffer: Buffer.from("hello") });
     await expect(page.getByRole("alert").filter({ hasText: "JPG, PNG or WebP" })).toBeVisible();

@@ -32,7 +32,7 @@ export function BookingFlow({ ctx, trigger, serviceId, staffId, title, open: con
   const setOpen = (o: boolean) => { setInner(o); onOpenChange?.(o) }
   return (
     <Overlay tone="page" kind="detail" open={open} onOpenChange={setOpen} trigger={trigger} title={title ?? "Book with " + ctx.businessName} testId="booking-flow">
-      {open ? <FlowBody ctx={ctx} preService={serviceId} preStaff={staffId} onClose={() => setOpen(false)} /> : null}
+      <FlowBody ctx={ctx} preService={serviceId} preStaff={staffId} onClose={() => setOpen(false)} />
     </Overlay>
   )
 }

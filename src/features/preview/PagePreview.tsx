@@ -78,9 +78,10 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
     const ro = new ResizeObserver(measure)
     ro.observe(el)
     return () => ro.disconnect()
-  }, [])
+  }, [mode, zoom])
 
-  const L = box ? layoutPreview(mode, box, device, zoom, chrome && mode !== "fill") : null
+  const decorated = chrome && mode !== "fill"
+  const L = box ? layoutPreview(mode, box, device, zoom, decorated) : null
   React.useEffect(() => { if (L) onViewport?.({ w: L.vw, h: L.vh, scale: L.scale }) }, [L?.vw, L?.vh, L?.scale]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const setFrame = React.useCallback((el: HTMLIFrameElement | null) => { frame.current = el; frameRef?.(el) }, [frameRef])
@@ -92,10 +93,12 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
   }, [selection, inset])
   const onSelect = edit?.onSelect
   React.useEffect(() => {
-    if (!onSelect) return
     const onMessage = (e: MessageEvent<FromPreview>) => {
       if (e.origin !== window.location.origin || e.source !== frame.current?.contentWindow) return
-      if (e.data?.type === "taplo:select") onSelect(e.data.selection)
+      if (e.data?.type === "taplo:overlay-open") {
+        // A customer dialog needs the whole preview visible, including its continuation action.
+        host.current?.scrollIntoView({ block: "center", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
+      } else if (e.data?.type === "taplo:select") onSelect?.(e.data.selection)
       else if (e.data?.type === "taplo:ready") { setLoaded(true); post() }
     }
     window.addEventListener("message", onMessage)
@@ -119,12 +122,12 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
 
   return (
     <div ref={host} className={cn("relative h-full w-full min-h-0", zoom === "actual" ? "overflow-auto" : "overflow-hidden", className)} data-preview-mode={mode}>
-      {L && mode === "fill" ? <div className="absolute inset-0">{iframe}</div> : null}
-      {L && mode !== "fill" ? (
+      {/* Keep one DOM path for the iframe: changing viewport must not reload a booking or discard typed details. */}
+      {L ? (
         <div className={cn("absolute inset-x-0 top-0 flex justify-center", mode === "device" && zoom !== "actual" && "inset-y-0 items-center", zoom === "actual" && "relative")}>
           <div style={{ width: L.outerW * L.scale, height: L.outerH * L.scale }} className="shrink-0">
             <div
-              className={cn("origin-top-left overflow-hidden", chrome ? (mode === "device" ? "rounded-[2.375rem] bg-[#141416] shadow-[0_0_0_1px_rgb(0_0_0/0.14),0_28px_48px_-26px_rgb(0_0_0/0.4)]" : "rounded-2xl bg-[#f3f2ef] shadow-[0_30px_60px_-28px_rgb(0_0_0/0.4),0_0_0_1px_rgb(0_0_0/0.1)]") : "")}
+              className={cn("origin-top-left overflow-hidden", decorated ? (mode === "device" ? "rounded-[2.375rem] bg-[#141416] shadow-[0_0_0_1px_rgb(0_0_0/0.14),0_28px_48px_-26px_rgb(0_0_0/0.4)]" : "rounded-2xl bg-[#f3f2ef] shadow-[0_30px_60px_-28px_rgb(0_0_0/0.4),0_0_0_1px_rgb(0_0_0/0.1)]") : "")}
               style={{ width: L.outerW, height: L.outerH, padding: L.pad, transform: `scale(${L.scale})` }}
             >
               {L.bar ? (
@@ -134,12 +137,12 @@ export function PagePreview({ src, title, mode, device, zoom = "fit", chrome = f
                   <span className="w-10" />
                 </div>
               ) : null}
-              <div className={cn("overflow-hidden bg-white", chrome && mode === "device" && "rounded-[2rem]")} style={{ width: L.vw, height: L.vh }}>{iframe}</div>
+              <div className={cn("overflow-hidden bg-white", decorated && mode === "device" && "rounded-[2rem]")} style={{ width: L.vw, height: L.vh }}>{iframe}</div>
             </div>
           </div>
         </div>
       ) : null}
-      {!loaded ? <div aria-hidden="true" className="pointer-events-none absolute inset-0 animate-pulse bg-black/[0.04]" /> : null}
+      {!loaded ? <div aria-hidden="true" className="pointer-events-none absolute inset-0 animate-pulse bg-black/[0.04] motion-reduce:animate-none" /> : null}
     </div>
   )
 }

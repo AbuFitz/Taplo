@@ -24,4 +24,4 @@ export const sameSelection = (a: Selection, b: Selection) =>
 
 /** Messages exchanged between the editor and its preview frame (same origin only). */
 export type ToPreview = { type: "taplo:selected"; selection: Selection; /** Pixels of the bottom edge covered by a sheet, so the selection scrolls into the visible part. */ bottomInset?: number };
-export type FromPreview = { type: "taplo:select"; selection: Selection } | { type: "taplo:ready" };
+export type FromPreview = { type: "taplo:select"; selection: Selection } | { type: "taplo:ready" } | { type: "taplo:overlay-open" };

@@ -22,12 +22,12 @@ export function UseDesign({ slug, lookId, lookName, overrides, className, size =
     const applied = owner.page.themeId === lookId && JSON.stringify(owner.page.appearance ?? {}) === JSON.stringify(overrides)
     return (
       <div className="grid gap-1.5">
-        <button type="button" className={cn(base, "bg-foreground text-background hover:opacity-90")} onClick={() => { update((x) => ({ ...x, page: { ...x.page, themeId: lookId, appearance: structuredClone(overrides) } })); router.push("/dashboard/page") }} data-testid="apply-look">
-          {applied ? <><Check aria-hidden="true" className="size-4" />Applied to your page</> : `Use this design on your page`}
+        <button type="button" className={cn(base, "bg-foreground text-background hover:opacity-90")} onClick={() => { update((x) => ({ ...x, page: { ...x.page, themeId: lookId, appearance: structuredClone(overrides) } })); router.push("/dashboard/page") }} aria-label={applied ? "Applied to your page" : `Use this design: ${lookName}`} data-testid="apply-look">
+          {applied ? <><Check aria-hidden="true" className="size-4" />Applied to your page</> : `Use this design`}
         </button>
-        <p className="text-xs text-foreground/60">Keeps your words, prices, photos and page order. Only the look and arrangement change. You can undo it in the editor.</p>
+        <p className="text-xs text-foreground/60">Your content stays. Change the look, undo anytime.</p>
       </div>
     )
   }
-  return <Link href={`/onboarding?from=${slug}`} className={cn(base, "bg-foreground text-background hover:opacity-90")} data-testid="start-design">Start with this design</Link>
+  return <Link href={`/onboarding?from=${slug}`} className={cn(base, "bg-foreground text-background hover:opacity-90")} aria-label={`Start with this design: ${lookName}`} data-testid="start-design">Start with this design</Link>
 }

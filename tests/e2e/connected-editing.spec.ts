@@ -36,6 +36,7 @@ for (const width of [390, 1440]) {
     await expect(form.getByLabel("YouTube", { exact: true })).toBeFocused()
     await form.getByLabel("YouTube", { exact: true }).fill("https://youtube.com/@stationroadtest")
     await expect(previewFrame(page).getByRole("link", { name: "YouTube", exact: true })).toHaveAttribute("href", "https://youtube.com/@stationroadtest")
+    await expect(previewFrame(page).locator('[data-widget="social"]')).toBeInViewport({ ratio: 0.5 })
     const icons = page.frameLocator('iframe[title="Icon row section preview"]')
     await expect(icons.getByRole("link", { name: "YouTube", exact: true })).toHaveAttribute("href", "https://youtube.com/@stationroadtest")
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)

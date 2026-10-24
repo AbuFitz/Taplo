@@ -105,6 +105,7 @@ test.describe("inspiration", () => {
     // The first preview is above the fold, not behind an introduction.
     const top = (await cards.first().locator("img").first().boundingBox())!.y
     expect(top).toBeLessThan(900)
+    await page.getByRole("button", { name: "Filters", exact: true }).click()
     await page.getByRole("button", { name: "Dark", exact: true }).click()
     const dark = await cards.count()
     expect(dark).toBeGreaterThan(0)
