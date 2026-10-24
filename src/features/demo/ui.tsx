@@ -46,7 +46,7 @@ export function PhoneField({ label, value, onCommit, hint }: { label: string; va
             setError(undefined)
             commit(n)
             onCommit(n)
-          } else setError("Enter a valid phone number (7–15 digits).")
+          } else setError("Enter a valid phone number (7 to 15 digits).")
         }
       }}
     />

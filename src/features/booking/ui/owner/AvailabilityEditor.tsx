@@ -100,7 +100,7 @@ export function AvailabilityEditor({ ctx, config, setConfig, online, setOnline, 
         <ul className="grid gap-2">
           {config.exceptions.length === 0 ? <li className="text-sm text-muted-foreground">None yet.</li> : null}
           {config.exceptions.slice().sort((a, b) => a.date.localeCompare(b.date)).map((x) => (
-            <li key={x.id} className="flex items-center justify-between gap-3 rounded-xl border p-3 text-sm"><span><strong>{formatDay(x.date)}</strong> · {x.staffId === null ? "Everyone" : people.find((p) => p.id === x.staffId)?.name ?? x.staffId} · {x.windows.length ? x.windows.map((w) => `${w.start}–${w.end}`).join(", ") : "Closed"}</span><Button variant="ghost" size="icon" className="size-11" aria-label="Remove" onClick={() => setConfig((c) => ({ ...c, exceptions: c.exceptions.filter((e) => e.id !== x.id) }))}><Trash2 /></Button></li>
+            <li key={x.id} className="flex items-center justify-between gap-3 rounded-xl border p-3 text-sm"><span><strong>{formatDay(x.date)}</strong> · {x.staffId === null ? "Everyone" : people.find((p) => p.id === x.staffId)?.name ?? x.staffId} · {x.windows.length ? x.windows.map((w) => `${w.start} to ${w.end}`).join(", ") : "Closed"}</span><Button variant="ghost" size="icon" className="size-11" aria-label="Remove" onClick={() => setConfig((c) => ({ ...c, exceptions: c.exceptions.filter((e) => e.id !== x.id) }))}><Trash2 /></Button></li>
           ))}
         </ul>
         <div className="grid gap-3 rounded-xl bg-muted/50 p-3 sm:grid-cols-2">

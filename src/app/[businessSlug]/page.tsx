@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const b = p.content
   const where = b.location.locality ? ` in ${b.location.locality}` : ""
   return {
-    title: `${b.identity.name} — ${b.identity.industryLabel}${where}`,
+    title: `${b.identity.name} · ${b.identity.industryLabel}${where}`,
     description: b.identity.tagline ?? b.about?.slice(0, 155),
     alternates: { canonical: `/${b.identity.slug}` },
     // Synthetic fixtures must never be indexed.
@@ -51,7 +51,7 @@ export default async function BusinessProfilePage({ params, searchParams }: { pa
     <>
       {p.synthetic ? (
         <div role="note" className="relative z-10 bg-amber-300 px-4 py-2 text-center text-sm font-medium text-black">
-          Synthetic demo profile — not a real business. Try another look with <code>?theme=noir</code>, <code>pop</code>, <code>showroom</code>…
+          Synthetic demo profile. This is not a real business. Try another look with <code>?theme=noir</code>, <code>pop</code>, <code>showroom</code>…
         </div>
       ) : null}
       <PageRenderer vm={vm} />

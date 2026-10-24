@@ -42,7 +42,7 @@ test('collections measure actual gaps and visible items, support Home/End, and h
   await expect.poll(()=>track.evaluate(el=>{const b=el.getBoundingClientRect();const pad=parseFloat(getComputedStyle(el).scrollPaddingInlineStart);const child=el.children[1].getBoundingClientRect();return Math.abs(child.left-b.left-pad)})).toBeLessThan(3)
   await track.focus();await page.keyboard.press('End');await expect(collection).toHaveAttribute('data-end','true')
   await page.keyboard.press('Home');await expect(collection).toHaveAttribute('data-start','true')
-  const counter=await collection.locator('.tp-collection-count').innerText();expect(counter).toMatch(/^1(?:–2)? of 3$/)
+  const counter=await collection.locator('.tp-collection-count').innerText();expect(counter).toMatch(/^1(?: to 2)? of 3$/)
   await page.setViewportSize({width:1440,height:900})
   // Owner-sized cards that fit should not advertise scrolling controls.
   await track.evaluate(el=>{Array.from(el.children).forEach(child=>(child as HTMLElement).style.flex='1 1 0')})

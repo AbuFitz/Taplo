@@ -6,7 +6,7 @@ import { THEMES, getTheme } from "@/features/page/themes/catalogue"
 import { getIndustryPreset } from "@/features/themes/presets/industries"
 
 export const dynamic = "force-dynamic"
-export const metadata: Metadata = { title: "Sample profiles — Taplo", robots: { index: false, follow: false } }
+export const metadata: Metadata = { title: "Sample profiles · Taplo", robots: { index: false, follow: false } }
 
 const HEADLINE = ["mechanic", "barber", "tutor", "cafe", "consultant", "unlisted"]
 

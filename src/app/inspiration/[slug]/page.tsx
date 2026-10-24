@@ -13,7 +13,7 @@ import { BOOKING_WORDS } from "@/features/inspiration/wording"
 export function generateStaticParams() { return EXAMPLES.map((e) => ({ slug: e.slug })) }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const e = bySlug((await params).slug)
-  return e ? { title: `${describe(e).name} — ${describe(e).lookName} | Taplo designs`, description: e.hook } : {}
+  return e ? { title: `${describe(e).name} · ${describe(e).lookName} | Taplo designs`, description: e.hook } : {}
 }
 export const dynamic = "force-dynamic"
 

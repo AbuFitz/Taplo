@@ -57,7 +57,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
   {
     slug: "booking", label: "Booking", eyebrow: "Booking",
     title: "Less back and forth. More booked in.",
-    lead: "Let customers choose a service, a person and a time. Take the booking straight away or agree the request first — whichever fits the way you work.",
+    lead: "Let customers choose a service, a person and a time. Take the booking straight away or agree the request first, whichever fits the way you work.",
     status: [
       { label: "Service, person, date and time, details, review, result", state: "works" },
       { label: "Working hours, breaks, leave, buffers, notice and booking window", state: "works" },

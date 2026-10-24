@@ -41,7 +41,7 @@ export function Settings() {
             <Select value={plan} onValueChange={(v) => update((x) => ({ ...x, plan: v as PlanId }))}>
               <SelectTrigger id="plan" className="min-h-11 w-full"><SelectValue /></SelectTrigger>
               <SelectContent position="popper">
-                {PLAN_IDS.map((p) => <SelectItem key={p} value={p}>{PLANS[p].name} — {PLANS[p].priceMinorGbp ? `${formatMoney(PLANS[p].priceMinorGbp)}/month` : "£0"}</SelectItem>)}
+                {PLAN_IDS.map((p) => <SelectItem key={p} value={p}>{PLANS[p].name} · {PLANS[p].priceMinorGbp ? `${formatMoney(PLANS[p].priceMinorGbp)}/month` : "£0"}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
@@ -51,7 +51,7 @@ export function Settings() {
           </ul>
           <p className="mt-3 text-xs text-muted-foreground">Downgrading never deletes your content; restricted items are hidden and can be restored by upgrading.</p>
         </Panel>
-        <NotBuilt title="Subscription billing, payments, notifications, domains" phase="Phases 7–8">
+        <NotBuilt title="Subscription billing, payments, notifications, domains" phase="Phases 7 to 8">
           <p>Not connected: Stripe billing and Connect, email notifications (Resend), custom domains, privacy tools (export/delete). Each needs its own credentials and is reported separately when it exists.</p>
         </NotBuilt>
         <Panel title="Demo data" description="Everything is stored only in this browser.">

@@ -31,7 +31,7 @@ export function Offers() {
         <ul className="mb-4 grid gap-2">
           {offers.map((o) => (
             <li key={o.id} className="flex items-start justify-between gap-3 rounded-lg border p-3 text-sm">
-              <div><p className="font-semibold">{o.title}{o.endsAt && o.endsAt < today ? <span className="ml-2 rounded border px-1.5 py-0.5 text-xs font-normal text-muted-foreground">Expired — hidden</span> : null}</p>{o.description ? <p className="text-muted-foreground">{o.description}</p> : null}<p className="text-xs text-muted-foreground">{[o.code ? `Code ${o.code}` : null, o.endsAt ? `Until ${o.endsAt}` : null].filter(Boolean).join(" · ")}</p></div>
+              <div><p className="font-semibold">{o.title}{o.endsAt && o.endsAt < today ? <span className="ml-2 rounded border px-1.5 py-0.5 text-xs font-normal text-muted-foreground">Expired · hidden</span> : null}</p>{o.description ? <p className="text-muted-foreground">{o.description}</p> : null}<p className="text-xs text-muted-foreground">{[o.code ? `Code ${o.code}` : null, o.endsAt ? `Until ${o.endsAt}` : null].filter(Boolean).join(" · ")}</p></div>
               <Button variant="outline" size="icon" aria-label={`Remove offer ${o.title}`} onClick={() => setContent((x) => ({ ...x, offers: (x.offers ?? []).filter((q) => q.id !== o.id) }))}><Trash2 /></Button>
             </li>
           ))}

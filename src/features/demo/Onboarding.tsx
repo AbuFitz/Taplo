@@ -471,7 +471,7 @@ function PublishStep({ onEditor, onEdit }: { onEditor: () => void; onEdit: (step
       <span className="sr-only" data-testid="page-summary">{shown.length ? `On your page: ${shown.join(", ")}.` : ""}</span>
       {s.published ? (
         <div role="status" className="rounded-lg border border-green-600/40 bg-green-50 p-4 text-sm text-green-950">
-          <p className="font-semibold">{capabilities().publicPublishing ? "Published" : "Saved as your page"} — version {s.published.version}</p>
+          <p className="font-semibold">{capabilities().publicPublishing ? "Published" : "Saved as your page"} · version {s.published.version}</p>
           <p className="mt-1">View it at <Link className="underline" href={`/demo/p/${s.published.content.identity.slug}`} target="_blank">/demo/p/{s.published.content.identity.slug}</Link> in this browser.</p>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Button size="sm" variant="outline" onClick={() => { void navigator.clipboard?.writeText(`${window.location.origin}/demo/p/${s.published!.content.identity.slug}`).then(() => setCopied(true)).catch(() => undefined) }}>{copied ? "Link copied" : "Copy link"}</Button>

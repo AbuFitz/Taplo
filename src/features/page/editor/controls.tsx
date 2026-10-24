@@ -203,8 +203,8 @@ export function ImageField({ label, value, onChange, defaultAlt, maxEdge, cropAs
           </div>
           <p className="text-xs text-muted-foreground">{wholeLogo ? "Your logo keeps its original proportions and transparency. It is shown whole in every profile layout." : focalHint}</p>
           {!wholeLogo ? <div className="grid grid-cols-2 gap-3">
-            <RangeField label="Focus left–right" value={fx} min={0} max={100} onChange={(v) => setFocal(v, fy)} />
-            <RangeField label="Focus top–bottom" value={fy} min={0} max={100} onChange={(v) => setFocal(fx, v)} />
+            <RangeField label="Horizontal focus" value={fx} min={0} max={100} onChange={(v) => setFocal(v, fy)} />
+            <RangeField label="Vertical focus" value={fy} min={0} max={100} onChange={(v) => setFocal(fx, v)} />
           </div> : null}
           <div className="grid gap-1.5">
             <Label htmlFor={`${inputId}-alt`} className="text-sm font-medium">Describe the picture (for screen readers)</Label>

@@ -34,7 +34,7 @@ function optionsFor(source: FieldSource, ed: Editor): Option[] {
   const r = ed.records
   if (!r) return []
   switch (source) {
-    case "services": return r.services.filter((s) => !s.archived).map((s) => ({ id: s.id, label: `${s.name} — ${formatPrice(s)}` }))
+    case "services": return r.services.filter((s) => !s.archived).map((s) => ({ id: s.id, label: `${s.name} · ${formatPrice(s)}` }))
     case "staff": return r.staff.map((s) => ({ id: s.id, label: s.name }))
     case "gallery": return r.gallery.map((g, i) => ({ id: g.id, label: g.caption || `Photo ${i + 1}` }))
     case "faqs": return r.faqs.map((f) => ({ id: f.id, label: f.question }))
@@ -54,7 +54,7 @@ function RefsField({ f, value, ed, onChange }: { f: Extract<FieldSpec, { kind: "
   return (
     <fieldset className="grid gap-1.5">
       <legend className="text-sm font-medium">{f.label}</legend>
-      <label className="flex min-h-11 items-center gap-2 text-sm"><Checkbox checked={all} onCheckedChange={(c) => onChange(c ? null : options.map((o) => o.id))} /> All of them{options.length ? ` (${options.length})` : ""} — updates automatically</label>
+      <label className="flex min-h-11 items-center gap-2 text-sm"><Checkbox checked={all} onCheckedChange={(c) => onChange(c ? null : options.map((o) => o.id))} /> All of them{options.length ? ` (${options.length})` : ""}. Updates automatically</label>
       {!all ? (
         options.length ? (
           <ul className="grid gap-0.5 rounded-lg border p-2">

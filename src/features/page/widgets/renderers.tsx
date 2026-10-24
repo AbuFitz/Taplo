@@ -276,7 +276,7 @@ function OffersWidget({ w, vm }: P) {
 function PaymentWidget({ w, vm }: P) {
   const s = w.settings as S
   const svc = vm.business.services.find((x) => x.id === s.serviceId)
-  const summary = svc ? `${svc.name} — ${formatPrice(svc)}` : "Choose what to pay for at checkout."
+  const summary = svc ? `${svc.name} · ${formatPrice(svc)}` : "Choose what to pay for at checkout."
   return <PaymentAction label={s.label || "Pay a deposit"} summary={summary} thumbnail={w.appearance.thumbnail ? <Thumb w={w} /> : undefined} />
 }
 

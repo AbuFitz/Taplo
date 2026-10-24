@@ -258,7 +258,7 @@ test.describe("My page editor", () => {
   test("publishing: draft stays private, published matches the preview, changes need an explicit publish", async ({ page }) => {
     await openEditorWithSample(page, "Consultant");
     await selectPart(page, "settings");
-    await expect(page.getByText("Draft — not published")).toBeVisible();
+    await expect(page.getByText("Draft · not published")).toBeVisible();
     await page.getByRole("button", { name: "Publish", exact: true }).first().click();
     await expect(page.getByText(/Published · version 1/)).toBeVisible();
     const slug = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.identity.slug);
@@ -312,8 +312,8 @@ test.describe("My page editor", () => {
     await page.getByLabel("Describe the picture (for screen readers)").first().fill("Paws & Polish paw logo");
     await expect(frame.locator(".tp-avatar img")).toHaveAttribute("alt", "Paws & Polish paw logo");
     // focal point via the accessible sliders drives object-position
-    await page.getByLabel("Focus left–right").first().fill("20");
-    await page.getByLabel("Focus top–bottom").first().fill("80");
+    await page.getByLabel("Horizontal focus").first().fill("20");
+    await page.getByLabel("Vertical focus").first().fill("80");
     await expect.poll(() => frame.locator(".tp-avatar img").evaluate((el) => (el as HTMLElement).style.objectPosition)).toBe("20% 80%");
     // stored as a small downscaled data URL, never an arbitrary script
     const src = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.identity.logo.src as string);

@@ -14,14 +14,14 @@ export const FONT_STACKS: Record<FontKey, string> = {
 };
 
 export const FONT_LABELS: Record<FontKey, string> = {
-  inter: "Inter — clean",
-  barlowCondensed: "Barlow Condensed — strong",
-  fraunces: "Fraunces — warm serif",
-  sourceSerif: "Source Serif — editorial",
-  manrope: "Manrope — friendly",
-  lexend: "Lexend — easy to read",
-  instrumentSerif: "Instrument Serif — refined display",
-  bricolage: "Bricolage Grotesque — expressive",
-  geist: "Geist — precise, modern",
-  spaceGrotesk: "Space Grotesk — technical",
+  inter: "Inter · clean",
+  barlowCondensed: "Barlow Condensed · strong",
+  fraunces: "Fraunces · warm serif",
+  sourceSerif: "Source Serif · editorial",
+  manrope: "Manrope · friendly",
+  lexend: "Lexend · easy to read",
+  instrumentSerif: "Instrument Serif · refined display",
+  bricolage: "Bricolage Grotesque · expressive",
+  geist: "Geist · precise, modern",
+  spaceGrotesk: "Space Grotesk · technical",
 };

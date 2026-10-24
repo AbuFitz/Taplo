@@ -50,7 +50,7 @@ function Row({ stored, rw, selected, onSelect, onDetails, ed }: {
           <span className="min-w-0">
             <span className="block truncate text-sm font-semibold">{label}{summary(rw ?? ({ settings: stored.settings } as RenderWidget)) ? <span className="font-normal text-muted-foreground"> · {summary(rw ?? ({ settings: stored.settings } as RenderWidget))}</span> : null}</span>
             <span className="block truncate text-xs text-muted-foreground">
-              {stored.hidden ? "Hidden from visitors" : rw?.id && stored.type === "booking" && ed.vm?.promotedWidgetId === stored.id ? "Shown as your main action" : note ? (note.state === "locked" ? "Plan needed — not shown" : "Needs content — not shown yet") : "Showing on your page"}
+              {stored.hidden ? "Hidden from visitors" : rw?.id && stored.type === "booking" && ed.vm?.promotedWidgetId === stored.id ? "Shown as your main action" : note ? (note.state === "locked" ? "Plan needed · not shown" : "Needs content · not shown yet") : "Showing on your page"}
             </span>
           </span>
         </button>

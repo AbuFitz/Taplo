@@ -92,7 +92,7 @@ test.describe("records flow into widgets (nothing is copied)", () => {
     await page.getByLabel("Offer title").fill("First groom 10% off");
     await page.getByLabel("Last day (optional)").fill("2020-01-01");
     await page.getByRole("button", { name: "Add offer" }).click();
-    await expect(page.getByText("Expired — hidden")).toBeVisible();
+    await expect(page.getByText("Expired · hidden")).toBeVisible();
 
     await page.getByRole("link", { name: "My page" }).first().click();
     await addWidget(page, /^Products/);

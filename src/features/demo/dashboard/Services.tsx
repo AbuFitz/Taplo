@@ -50,7 +50,7 @@ export function Services() {
       />
       {hidden > 0 ? (
         <p role="status" className="mb-4 max-w-2xl rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-950">
-          Your plan shows the first {ent.maxServices} services publicly. {hidden} more {hidden === 1 ? "is" : "are"} saved but hidden. Upgrade to Core for unlimited services — nothing is deleted.
+          Your plan shows the first {ent.maxServices} services publicly. {hidden} more {hidden === 1 ? "is" : "are"} saved but hidden. Upgrade to Core for unlimited services. Nothing is deleted.
         </p>
       ) : null}
       {active.length === 0 ? (

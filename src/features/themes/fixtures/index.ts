@@ -348,7 +348,7 @@ export const FIXTURES: Fixture[] = [
   withPage(mechanic, "clean", (w) => {
     const featured = newWidget("featuredService", { serviceId: "s1", headline: "Most booked" });
     featured.appearance = { emphasis: "featured" };
-    const notice = newWidget("announcement", { text: "Open Saturdays 9–1 this month (sample notice).", tone: "promo" });
+    const notice = newWidget("announcement", { text: "Open Saturdays 9am to 1pm this month (sample notice).", tone: "promo" });
     notice.appearance = { surface: "accent" };
     const pay = newWidget("payment", { label: "Pay a diagnostics deposit", kind: "deposit", serviceId: "s3" });
     return [notice, newWidget("call", { subtitle: "Talk to a mechanic" }), ...w.slice(0, 1), featured, ...w.slice(1), pay];

@@ -33,7 +33,7 @@ export function Overview() {
           <Panel title="Publish status">
             <div className="flex flex-wrap items-center gap-3">
               <span className={cn("rounded-full border px-3 py-1 text-sm font-medium", s.published && "border-green-600/50 bg-green-50 text-green-950")}>
-                {s.published ? `Published · v${s.published.version}` : "Draft — not published"}
+                {s.published ? `Published · v${s.published.version}` : "Draft · not published"}
               </span>
               {draftDiffers ? <span className="text-sm text-amber-800">You have unpublished changes.</span> : null}
             </div>
@@ -70,7 +70,7 @@ export function Overview() {
               {METRICS.map((m) => (
                 <div key={m} className="rounded-lg border p-3">
                   <dt className="text-xs text-muted-foreground">{m}</dt>
-                  <dd className="mt-1 text-xl font-semibold" aria-label={`${m}: not tracked yet`}>—</dd>
+                  <dd className="mt-1 text-xl font-semibold" aria-label={`${m}: not tracked yet`}>Not tracked</dd>
                 </div>
               ))}
             </dl>

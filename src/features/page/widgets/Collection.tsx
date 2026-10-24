@@ -79,7 +79,7 @@ export function Collection({ label, children, itemClassName, compact = false }: 
       </ul>
       {count > 1 ? (
         <div className="tp-collection-bar">
-          <span className="tp-collection-count" aria-live="polite">{edge.first === edge.last ? `${edge.first} of ${count}` : `${edge.first}–${edge.last} of ${count}`}</span>
+          <span className="tp-collection-count" aria-live="polite">{edge.first === edge.last ? `${edge.first} of ${count}` : `${edge.first} to ${edge.last} of ${count}`}</span>
           <span className="tp-collection-nav">
             <button type="button" onClick={() => step(-1)} disabled={edge.start} aria-label={`Previous in ${label}`}><ChevronLeft aria-hidden="true" className="size-4" /></button>
             <button type="button" onClick={() => step(1)} disabled={edge.end} aria-label={`Next in ${label}`}><ChevronRight aria-hidden="true" className="size-4" /></button>

@@ -44,7 +44,7 @@ export function Hours({ hours, tz, compact }: { hours: HoursDay[]; tz: string; c
           return (
             <div key={d} className="contents" data-today={on || undefined}>
               <dt className={on ? "text-left font-bold" : "text-left font-medium"}>{NAME[d]}{on ? <span className="sr-only"> (today)</span> : null}</dt>
-              <dd className={on ? "text-left font-semibold" : "tp-muted text-left"}>{h?.opens && h.closes ? `${h.opens}–${h.closes}` : "Closed"}</dd>
+              <dd className={on ? "text-left font-semibold" : "tp-muted text-left"}>{h?.opens && h.closes ? `${h.opens} to ${h.closes}` : "Closed"}</dd>
             </div>
           )
         })}

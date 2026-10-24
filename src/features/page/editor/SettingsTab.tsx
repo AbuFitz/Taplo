@@ -26,14 +26,14 @@ export function SettingsTab({ ed, notify }: { ed: Editor; notify: (m: string, un
   const missing = readiness(s).filter((c) => c.required && !c.done)
   const changed = hasUnpublishedChanges(s)
   const canShare = typeof navigator !== "undefined" && typeof navigator.share === "function"
-  const previewTitle = meta.shareTitle || `${s.content.identity.name || "Your business"} — ${s.content.identity.industryLabel || "Taplo"}`
+  const previewTitle = meta.shareTitle || `${s.content.identity.name || "Your business"} · ${s.content.identity.industryLabel || "Taplo"}`
   const previewDesc = meta.shareDescription || s.content.identity.tagline || "Find us on Taplo."
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-3">
       <Card title="Publishing" id="publishing">
         <div className="flex flex-wrap items-center gap-2">
-          <span className={`rounded-full border px-3 py-1 text-sm font-medium ${s.published ? "border-green-600/50 bg-green-50 text-green-950" : ""}`}>{s.published ? `Published · version ${s.published.version}` : "Draft — not published"}</span>
+          <span className={`rounded-full border px-3 py-1 text-sm font-medium ${s.published ? "border-green-600/50 bg-green-50 text-green-950" : ""}`}>{s.published ? `Published · version ${s.published.version}` : "Draft · not published"}</span>
           {changed ? <span className="text-sm text-amber-800">You have unpublished changes.</span> : null}
         </div>
         <div className="flex flex-wrap gap-2">
