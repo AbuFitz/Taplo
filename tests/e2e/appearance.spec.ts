@@ -146,3 +146,17 @@ test("changing a look keeps the current example preview and open customer conten
   expect(await preview.locator("body").evaluate(() => performance.timeOrigin)).toBe(stamp)
   await expect(faq.locator("xpath=parent::details")).toHaveAttribute("open", "")
 })
+
+for (const width of [768, 1280, 1440]) {
+  test(`phone preview stays near the top at ${width}px instead of centring in an oversized blank canvas`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 950 })
+    await page.goto("/appearance")
+    const phone = page.locator('iframe[title="Mobile preview"]')
+    await expect(phone).toBeVisible()
+    const bounds = await phone.boundingBox()
+    expect(bounds!.y).toBeLessThan(260)
+    expect(bounds!.width).toBeLessThanOrEqual(410)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    await page.screenshot({ path: `test-results/appearance-layout-${width}.png`, fullPage: true })
+  })
+}

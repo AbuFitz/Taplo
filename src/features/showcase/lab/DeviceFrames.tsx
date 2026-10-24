@@ -28,7 +28,7 @@ export function useFrames(scenario: Scenario, themeId: string, overrides: StyleO
 /** The showcase's phone and desktop previews are the shared PagePreview controller, so the lab shows pages exactly as the owner editor does. */
 export function PhoneFrame({ register, src, title }: { register: (el: HTMLIFrameElement | null) => void; src: string; title: string }) {
   return (
-    <div className="w-full" style={{ aspectRatio: "410 / 864" }}>
+    <div className="mx-auto w-full max-w-[410px]" style={{ aspectRatio: "410 / 864" }}>
       <PagePreview mode="device" device={{ w: 390, h: 846 }} chrome src={src} title={title} frameRef={register} testId="lab-frame" />
     </div>
   )
