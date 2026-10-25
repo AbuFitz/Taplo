@@ -51,13 +51,14 @@ for (const width of [320, 390, 1440])
           element.contentWindow!.performance.timeOrigin,
       ),
     ).toBe(origin);
+    await page.screenshot({ path: `work/hero-steady-${width}.png` });
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
   });
-test("desktop lens settles away and mobile buttons remain the accessible alternative", async ({
+test("hero stays steady on hover and changes only through the explicit controls", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
@@ -67,8 +68,8 @@ test("desktop lens settles away and mobile buttons remain the accessible alterna
   await stage.scrollIntoViewIfNeeded();
   await stage.hover();
   const blocks = page.getByTestId("hero-page-blocks");
-  await expect(blocks).toHaveCSS("visibility", "visible");
-  await expect(blocks).toHaveCSS("mask-image", /radial-gradient/);
+  await expect(blocks).toHaveCSS("visibility", "hidden");
+  await expect(blocks).toHaveCSS("mask-image", "none");
   await page.mouse.move(1, 1);
   await expect(blocks).toHaveCSS("visibility", "hidden");
   await page.setViewportSize({ width: 390, height: 844 });

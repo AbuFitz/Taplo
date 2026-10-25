@@ -3,13 +3,7 @@ import { businessAddress } from "@/lib/domains";
 import { useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Layers3, Smartphone } from "lucide-react";
-import {
-  motion,
-  useReducedMotion,
-  useMotionValue,
-  useSpring,
-  useMotionTemplate,
-} from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { PagePreview } from "@/features/preview/PagePreview";
 
 import type { HeroScene } from "./hero-scene-types";
@@ -22,12 +16,6 @@ export function LiveStage({ scenes }: { scenes: HeroScene[] }) {
   const [selected, select] = useState(1);
   const stage = useRef<HTMLDivElement>(null);
   const [revealed, reveal] = useState(false);
-  const [hovered, hover] = useState(false);
-  const x = useMotionValue(300),
-    y = useMotionValue(180);
-  const sx = useSpring(x, { stiffness: 280, damping: 30 }),
-    sy = useSpring(y, { stiffness: 280, damping: 30 });
-  const lens = useMotionTemplate`radial-gradient(230px circle at ${sx}px ${sy}px, #000 0%, #000 68%, transparent 100%)`;
   const desktop = useSyncExternalStore(
     subscribe,
     () => matchMedia("(min-width:768px)").matches,
@@ -71,24 +59,10 @@ export function LiveStage({ scenes }: { scenes: HeroScene[] }) {
         animate={{ y: 0 }}
         transition={{ duration: 0.35 }}
         style={{ touchAction: "pan-y", perspective: 1400 }}
-        onPointerEnter={(event) => {
-          if (desktop && event.pointerType === "mouse" && !reduced) hover(true);
-        }}
-        onPointerLeave={() => hover(false)}
-        onPointerMove={(event) => {
-          if (desktop && event.pointerType === "mouse") {
-            const box = event.currentTarget.getBoundingClientRect();
-            x.set(event.clientX - box.left);
-            y.set(event.clientY - box.top);
-          }
-        }}
       >
         <motion.div
           className="hero-demo-face"
-          animate={{
-            rotateY: !desktop && revealed && !reduced ? 180 : 0,
-          }}
-          transition={{ duration: reduced ? 0 : 0.42 }}
+          style={{ visibility: revealed ? "hidden" : "visible" }}
         >
           {desktop ? (
             <div className="hero-live-browser">
@@ -117,15 +91,10 @@ export function LiveStage({ scenes }: { scenes: HeroScene[] }) {
           className="hero-blueprint"
           aria-hidden={!revealed}
           data-testid="hero-page-blocks"
-          animate={{
-            rotateY: !desktop && !revealed && !reduced ? -180 : 0,
-          }}
           style={{
-            visibility: revealed || (desktop && hovered) ? "visible" : "hidden",
-            maskImage: desktop && !revealed ? lens : "none",
+            visibility: revealed ? "visible" : "hidden",
             pointerEvents: "none",
           }}
-          transition={{ duration: reduced ? 0 : 0.24 }}
         >
           <div className="hero-blueprint-heading">
             <Layers3 size={18} aria-hidden="true" />
