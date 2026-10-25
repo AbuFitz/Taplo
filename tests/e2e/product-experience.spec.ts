@@ -214,7 +214,7 @@ test("phone pricing comparison changes visible plan values while the complete de
   const staff = table.getByRole("row").filter({
     has: page.getByRole("rowheader", { name: "Customers choose a person" }),
   });
-  await expect(staff.getByRole("cell")).toContainText("Included");
+  await expect(staff.getByRole("cell")).toContainText("Unlimited");
   await page.setViewportSize({ width: 1440, height: 1000 });
   await expect(plans).toBeHidden();
   await expect(bookings.getByRole("cell")).toHaveCount(4);

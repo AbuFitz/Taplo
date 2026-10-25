@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 type Row = {
+  group?: string;
   label: string;
   note?: string;
   value: (e: Entitlements, id: PlanId) => string | boolean;
@@ -26,14 +27,14 @@ type Row = {
  */
 const ROWS: Row[] = [
   {
+    group: "Your page",
     label: "Services you can list",
     value: (e) =>
       e.maxServices === null ? "Unlimited" : String(e.maxServices),
   },
   { label: "Call and WhatsApp buttons", value: (e) => e.callAndWhatsapp },
   {
-    label: "Customise colours, fonts, header, buttons and wallpaper",
-    note: "Every plan can change these.",
+    label: "Colours, fonts and page styling",
     value: () => true,
   },
   {
@@ -48,16 +49,28 @@ const ROWS: Row[] = [
   },
   {
     label: "Products, vehicles and affiliate links",
-    note: "Included on every plan; Free is limited by the services cap only.",
     value: () => true,
   },
   { label: "Contact form", value: () => true },
-  { label: "Online bookings and requests", value: (e) => e.onlineBooking },
+  { label: "Customer testimonials", value: (e) => e.testimonials },
+  {
+    group: "Bookings and your team",
+    label: "Online bookings and requests",
+    value: (e) => e.onlineBooking,
+  },
   { label: "Team profiles", value: (e) => e.teamPages },
+  { label: "Customer management", value: (e) => e.customerManagement },
+  { label: "Staff scheduling", value: (e) => e.staffScheduling },
+  { label: "Team permissions", value: (e) => e.rolePermissions },
   {
     label: "Customers choose a person",
     note: "Each person has their own hours. Pro includes three staff calendars.",
-    value: (e) => e.maxStaffBookable === null ? "Unlimited" : e.maxStaffBookable > 0 ? String(e.maxStaffBookable) : false,
+    value: (e) =>
+      e.maxStaffBookable === null
+        ? "Unlimited"
+        : e.maxStaffBookable > 0
+          ? String(e.maxStaffBookable)
+          : false,
   },
   {
     label: "Deposits and payments",
@@ -69,7 +82,12 @@ const ROWS: Row[] = [
     note: "Requires an email provider.",
     value: (e) => e.emailConfirmations,
   },
-  { label: "Analytics", value: (e) => e.analytics },
+  {
+    group: "Growing your business",
+    label: "Analytics",
+    value: (e) => e.analytics,
+  },
+  { label: "Advanced analytics", value: (e) => e.advancedAnalytics },
   { label: "No Taplo branding", value: (e) => e.removeBranding },
   { label: "Custom domain", value: (e) => e.customDomains },
   { label: "More than one location", value: (e) => e.multiLocation },
@@ -81,21 +99,24 @@ export default function PricingPage() {
     PLAN_IDS.map((id) => [id, resolveEntitlements(id, "active")]),
   ) as Record<PlanId, Entitlements>;
   return (
-    <div className="pricing-shell bg-[#f4f4f4] text-[#080808]">
+    <div className="pricing-shell">
       <SiteHeader />
       <main className="mx-auto w-full max-w-[88rem] px-5 py-14 sm:px-8 sm:py-20">
         <h1 className="font-display font-display-tight mt-4 max-w-4xl text-[clamp(2.5rem,7vw,5.5rem)] text-balance">
-          Start with what you need.
+          One page.
+          <br />
+          Room to grow.
         </h1>
-        <p className="mt-6 max-w-2xl text-xl leading-relaxed text-foreground/70">
-          Start free. Add design options, appointments or a team when you need
-          them.
+        <p className="pricing-intro">
+          Start free. Add more ways to show your work, take bookings and bring
+          your team together.
         </p>
 
         <div className="mt-10">
           <PricingExperience
             demo={demo}
             rows={ROWS.map((r) => ({
+              group: r.group,
               label: r.label,
               note: r.note,
               values: Object.fromEntries(
@@ -104,8 +125,8 @@ export default function PricingPage() {
             }))}
           />
         </div>
-        <p className="mt-6 max-w-3xl text-sm leading-relaxed text-foreground/60">
-          Prices are per month. Choose a plan during setup.
+        <p className="pricing-footnote">
+          Monthly prices in GBP. Choose your plan during setup.
         </p>
       </main>
       <SiteFooter />

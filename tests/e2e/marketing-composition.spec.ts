@@ -87,9 +87,11 @@ for (const width of [320, 390, 768, 1440])
       ),
     ).toBe(true);
     await page.goto("/pricing");
-    await page
-      .getByRole("button", { name: "Appointments", exact: true })
-      .click();
+    if (width < 768)
+      await page
+        .getByRole("group", { name: "Choose a plan", exact: true })
+        .getByRole("button", { name: "Pro", exact: true })
+        .click();
     const plan = page.locator('.pricing-plans > li[data-plan="pro"]');
     await expect(plan).toBeVisible();
     await expect(plan).toContainText("£19.99");

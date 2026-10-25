@@ -1,15 +1,44 @@
 "use client";
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import "./pricing-story.css";
 import { ArrowRight, Check } from "lucide-react";
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
 import { formatMoney } from "@/features/services/format";
-const PURPOSES = [
-  { label: "A business profile", plan: "core" },
-  { label: "Appointments", plan: "pro" },
-  { label: "A team or locations", plan: "business" },
-] as const;
+import { PlanIllustration } from "./PlanIllustration";
+
+const DESCRIPTIONS: Record<PlanId, string> = {
+  free: "Put your business in reach.",
+  core: "Make the page your own.",
+  pro: "Turn interest into bookings.",
+  business: "Bring your whole team together.",
+};
+const HIGHLIGHTS: Record<PlanId, string[]> = {
+  free: [
+    "Your business profile",
+    "Three services",
+    "Call and WhatsApp",
+    "A starting look for your category",
+  ],
+  core: [
+    "Unlimited services and a gallery",
+    "More starting looks",
+    "Social and review links",
+    "Analytics and no Taplo branding",
+  ],
+  pro: [
+    "Everything in Core",
+    "Online bookings and requests",
+    "Up to three staff calendars",
+    "Deposits, payments and a custom domain",
+  ],
+  business: [
+    "Everything in Pro",
+    "Unlimited staff calendars",
+    "Multiple locations",
+    "Staff scheduling and permissions",
+  ],
+};
 export function PlanChooser({
   demo,
   selected,
@@ -20,42 +49,51 @@ export function PlanChooser({
   select: (id: PlanId) => void;
 }) {
   const rail = useRef<HTMLUListElement>(null);
-  const choose = (id: PlanId) => {
-    select(id);
-    if (window.matchMedia("(max-width:767px)").matches) {
-      const card = rail.current?.querySelector<HTMLElement>(
-        `[data-plan="${id}"]`,
-      );
-      if (card && rail.current)
-        rail.current.scrollTo({
-          left: card.offsetLeft,
-          behavior: window.matchMedia("(prefers-reduced-motion:reduce)").matches
-            ? "instant"
-            : "smooth",
-        });
+  const requested = useRef<PlanId | null>(null);
+  const fromScroll = useRef<PlanId | null>(null);
+  const selectedRef = useRef(selected);
+  useEffect(() => {
+    selectedRef.current = selected;
+  }, [selected]);
+  useEffect(() => {
+    if (fromScroll.current === selected) {
+      fromScroll.current = null;
+      return;
     }
-  };
+    const el = rail.current;
+    if (!el || !window.matchMedia("(max-width:767px)").matches) return;
+    const card = el.querySelector<HTMLElement>(`[data-plan="${selected}"]`);
+    if (!card) return;
+    requested.current = selected;
+    el.scrollTo({
+      left: card.offsetLeft,
+      behavior: window.matchMedia("(prefers-reduced-motion:reduce)").matches
+        ? "instant"
+        : "smooth",
+    });
+  }, [selected]);
+  useEffect(() => {
+    const el = rail.current;
+    if (!el) return;
+    const query = window.matchMedia("(max-width:767px)");
+    const align = () => {
+      requested.current = null;
+      if (!query.matches) return;
+      const card = el.querySelector<HTMLElement>(
+        `[data-plan="${selectedRef.current}"]`,
+      );
+      if (card) el.scrollTo({ left: card.offsetLeft, behavior: "instant" });
+    };
+    query.addEventListener("change", align);
+    const observer = new ResizeObserver(align);
+    observer.observe(el);
+    return () => {
+      query.removeEventListener("change", align);
+      observer.disconnect();
+    };
+  }, []);
   return (
     <div data-testid="plan-chooser">
-      <div className="pricing-intent">
-        <p className="text-sm font-semibold">What do you need next?</p>
-        <div
-          role="group"
-          aria-label="Find a suitable plan"
-          className="mt-3 flex flex-wrap gap-2"
-        >
-          {PURPOSES.map((p) => (
-            <button
-              key={p.plan}
-              type="button"
-              aria-pressed={selected === p.plan}
-              onClick={() => choose(p.plan)}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
-      </div>
       <div
         className="pricing-mobile-choices"
         role="group"
@@ -66,7 +104,7 @@ export function PlanChooser({
             key={id}
             type="button"
             aria-pressed={selected === id}
-            onClick={() => choose(id)}
+            onClick={() => select(id)}
           >
             {PLANS[id].name}
           </button>
@@ -76,6 +114,12 @@ export function PlanChooser({
         ref={rail}
         className="pricing-plans"
         aria-label="Plan options"
+        onPointerDown={() => {
+          requested.current = null;
+        }}
+        onWheel={() => {
+          requested.current = null;
+        }}
         onScroll={() => {
           const el = rail.current;
           if (!el || !window.matchMedia("(max-width:767px)").matches) return;
@@ -88,7 +132,20 @@ export function PlanChooser({
               ? a
               : b,
           );
-          select(nearest.dataset.plan as PlanId);
+          const id = nearest.dataset.plan as PlanId;
+          if (requested.current !== null) {
+            if (
+              id === requested.current &&
+              Math.abs(nearest.offsetLeft - el.scrollLeft) < 3
+            )
+              requested.current = null;
+            else return;
+          }
+          if (id !== selectedRef.current) {
+            fromScroll.current = id;
+            selectedRef.current = id;
+            select(id);
+          }
         }}
       >
         {PLAN_IDS.map((id) => (
@@ -98,40 +155,24 @@ export function PlanChooser({
             data-selected={selected === id}
             aria-label={`${PLANS[id].name} plan`}
           >
-            <div>
-              <div className="pricing-plan-heading">
-                <h2>{PLANS[id].name}</h2>
-                {id === "pro" ? (
-                  <span>For appointments</span>
-                ) : id === "business" ? (
-                  <span>For growing teams</span>
-                ) : null}
-              </div>
-              <p className="pricing-price">
-                {id === "free" ? "£0" : formatMoney(PLANS[id].priceMinorGbp)}
-                <span>/month</span>
-              </p>
-              <p className="pricing-summary">{PLANS[id].summary}</p>
-              {id === "pro" || id === "business" ? (
-                <p className="mt-3 text-xs leading-relaxed text-neutral-600">
-                  Payments and email delivery need their services connected.
-                </p>
+            <div className="pricing-plan-heading">
+              <h2>{PLANS[id].name}</h2>
+              {id === "pro" ? (
+                <span>For bookings</span>
+              ) : id === "business" ? (
+                <span>For teams</span>
               ) : null}
             </div>
-            <div
-              className="pricing-plan-illustration"
-              data-tier={id}
-              aria-hidden="true"
-            >
-              <span />
-              <span />
-              <span />
-              <span />
-            </div>
+            <p className="pricing-price">
+              {formatMoney(PLANS[id].priceMinorGbp)}
+              <span>/month</span>
+            </p>
+            <p className="pricing-summary">{DESCRIPTIONS[id]}</p>
+            <PlanIllustration plan={id} />
             <ul className="pricing-highlights">
-              {PLANS[id].highlights.slice(0, 4).map((h) => (
+              {HIGHLIGHTS[id].map((h) => (
                 <li key={h}>
-                  <Check aria-hidden="true" size={15} />
+                  <Check size={15} aria-hidden="true" />
                   {h}
                 </li>
               ))}
@@ -142,15 +183,11 @@ export function PlanChooser({
               className="pricing-start"
             >
               {id === "free" ? "Start free" : `Start with ${PLANS[id].name}`}
-              <ArrowRight aria-hidden="true" size={16} />
+              <ArrowRight size={16} aria-hidden="true" />
             </Link>
           </li>
         ))}
       </ul>
-      <p className="mt-5 max-w-xl text-sm leading-relaxed text-neutral-600">
-        Your selection helps you compare. It does not activate a subscription or
-        collect payment. You can explore the full preview before choosing.
-      </p>
     </div>
   );
 }

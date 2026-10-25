@@ -2,8 +2,8 @@
 import * as React from "react";
 import { Check, Minus } from "lucide-react";
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
-import { cn } from "@/lib/utils";
 export interface ComparisonRow {
+  group?: string;
   label: string;
   note?: string;
   values: Record<PlanId, string | boolean>;
@@ -42,81 +42,74 @@ export function PlanComparison({
     uid = React.useId();
   const selected = selectedPlan ?? ownSelected;
   const setSelected = onPlanChange ?? setOwnSelected;
-  const column = (id: PlanId) =>
-    cn("p-4 text-center", id !== selected && "hidden sm:table-cell");
+  const groups = rows.reduce<{ name: string; rows: ComparisonRow[] }[]>(
+    (all, row) => {
+      if (row.group || !all.length)
+        all.push({ name: row.group ?? "Features", rows: [] });
+      all[all.length - 1].rows.push(row);
+      return all;
+    },
+    [],
+  );
   return (
-    <div>
-      <fieldset className="mb-6 sm:hidden">
-        <legend className="mb-3 text-sm font-semibold">Compare a plan</legend>
-        <div className="grid grid-cols-4 gap-2">
+    <div className="pricing-comparison">
+      <fieldset className="pricing-compare-choices">
+        <legend>Compare a plan</legend>
+        <div>
           {PLAN_IDS.map((id) => (
-            <label key={id} className="cursor-pointer">
+            <label key={id}>
               <input
                 type="radio"
                 name={`comparison-${uid}`}
                 value={id}
                 checked={selected === id}
                 onChange={() => setSelected(id)}
-                className="peer sr-only"
               />
-              <span
-                className={cn(
-                  "flex min-h-11 items-center justify-center rounded-full border-2 px-1 text-sm font-semibold peer-focus-visible:ring-3 peer-focus-visible:ring-signal/50 peer-focus-visible:ring-offset-2",
-                  selected === id
-                    ? "border-[#080808] bg-[#080808] text-white"
-                    : "border-[#080808]/25 bg-white text-[#080808]",
-                )}
-              >
-                {PLANS[id].name}
-              </span>
+              <span>{PLANS[id].name}</span>
             </label>
           ))}
         </div>
       </fieldset>
-      <div className="relative overflow-x-auto rounded-2xl border border-foreground/15 bg-white">
-        <table
-          className="w-full border-collapse text-left text-sm sm:min-w-[40rem]"
-          data-testid="plan-table"
-        >
+      <div className="pricing-comparison-table">
+        <table data-testid="plan-table">
           <caption className="sr-only">Plan comparison</caption>
           <thead>
-            <tr className="border-b border-foreground/15 bg-[#ffffff]/50">
-              <th scope="col" className="p-4 font-semibold">
-                Feature
-              </th>
+            <tr>
+              <th scope="col">Feature</th>
               {PLAN_IDS.map((id) => (
                 <th
                   key={id}
                   scope="col"
-                  className={cn(column(id), "w-24 font-semibold sm:w-28")}
+                  data-plan={id}
+                  data-selected={id === selected}
                 >
                   {PLANS[id].name}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr
-                key={row.label}
-                className="border-b border-foreground/10 last:border-0"
-              >
-                <th scope="row" className="p-4 font-medium">
-                  {row.label}
-                  {row.note && (
-                    <span className="mt-1 block text-xs font-normal leading-relaxed text-foreground/65">
-                      {row.note}
-                    </span>
-                  )}
+          {groups.map((group) => (
+            <tbody key={group.name}>
+              <tr className="pricing-comparison-group">
+                <th scope="rowgroup" colSpan={5}>
+                  {group.name}
                 </th>
-                {PLAN_IDS.map((id) => (
-                  <td key={id} className={column(id)}>
-                    <Cell value={row.values[id]} />
-                  </td>
-                ))}
               </tr>
-            ))}
-          </tbody>
+              {group.rows.map((row) => (
+                <tr key={row.label}>
+                  <th scope="row">
+                    {row.label}
+                    {row.note && <span>{row.note}</span>}
+                  </th>
+                  {PLAN_IDS.map((id) => (
+                    <td key={id} data-plan={id} data-selected={id === selected}>
+                      <Cell value={row.values[id]} />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          ))}
         </table>
       </div>
     </div>

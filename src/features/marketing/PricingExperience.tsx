@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { PlanId } from "@/features/subscriptions/plans";
 import { PlanChooser } from "./PlanChooser";
 import { PlanComparison, type ComparisonRow } from "./PlanComparison";
-/** One selected plan continues from the recommendation into the detailed phone comparison. */
+/** One selected plan stays consistent between the cards and detailed phone comparison. */
 export function PricingExperience({
   demo,
   rows,
@@ -15,16 +15,17 @@ export function PricingExperience({
   return (
     <>
       <PlanChooser demo={demo} selected={selected} select={select} />
-      <h2 className="font-display mt-20 text-[clamp(1.75rem,4vw,3rem)] font-medium tracking-tight">
-        What each plan includes
-      </h2>
-      <div className="mt-8">
+      <section
+        className="pricing-comparison-section"
+        aria-labelledby="pricing-comparison-title"
+      >
+        <h2 id="pricing-comparison-title">The details, side by side.</h2>
         <PlanComparison
           rows={rows}
           selectedPlan={selected}
           onPlanChange={select}
         />
-      </div>
+      </section>
     </>
   );
 }
