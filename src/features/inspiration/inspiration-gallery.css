@@ -1,0 +1,99 @@
+.design-library {
+  min-height: 100svh;
+  background: #080808;
+}
+.inspiration-gallery {
+  position: relative;
+}
+.gallery-search {
+  max-width: 420px;
+  margin-bottom: 10px;
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding-inline: 2px !important;
+}
+.gallery-search input {
+  font-size: 13px;
+  min-height: 40px;
+}
+.gallery-tool-controls {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 5;
+}
+.gallery-tool-controls > div:first-child {
+  gap: 10px;
+}
+.gallery-tool-controls button,
+.gallery-tool-controls [role="radiogroup"] label {
+  font-size: 12px;
+  min-height: 40px;
+}
+.gallery-tool-controls > div[id] {
+  position: absolute;
+  right: 0;
+  top: 52px;
+  width: min(650px, calc(100vw - 32px));
+  box-shadow: 0 20px 40px #0008;
+  border-radius: 20px;
+}
+.inspiration-gallery .design-industry-rail {
+  padding: 8px 0 0;
+  gap: 6px;
+}
+.inspiration-gallery .design-industry-rail button {
+  background: transparent;
+  border-radius: 0;
+  padding: 9px 13px;
+  font-size: 12px;
+  min-height: 40px;
+  border-bottom: 2px solid transparent;
+}
+.inspiration-gallery .design-industry-rail button[aria-pressed="true"] {
+  background: transparent;
+  color: #fff;
+  border-bottom-color: #b8abc9;
+}
+.inspiration-gallery .design-frost-rail.design-gallery[data-view] {
+  padding-top: 20px;
+}
+.inspiration-gallery .design-card-actions {
+  margin-top: 7px;
+}
+.inspiration-gallery .design-card-actions a {
+  font-size: 12px;
+}
+@media (max-width: 699px) {
+  .gallery-search {
+    max-width: calc(100% - 215px);
+  }
+  .gallery-search input {
+    font-size: 12px;
+    min-height: 40px;
+  }
+  .gallery-search input::placeholder {
+    color: transparent;
+  }
+  .gallery-tool-controls > div:first-child {
+    gap: 5px;
+  }
+  .gallery-tool-controls button {
+    padding-inline: 12px;
+  }
+  .gallery-tool-controls [role="radiogroup"] label {
+    padding-inline: 10px;
+  }
+  .inspiration-gallery .design-frost-rail.design-gallery[data-view] {
+    padding-top: 18px;
+  }
+  .inspiration-gallery .design-industry-rail {
+    margin-inline: -4px;
+  }
+}
+
+.gallery-tool-controls > div[id] {
+  max-height: 70svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}

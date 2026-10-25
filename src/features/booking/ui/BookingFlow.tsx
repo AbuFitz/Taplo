@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { CalendarDays, Check, Clock, Download, MessageCircle, User, Users } from "lucide-react"
+import { ArrowUpRight, CalendarDays, Check, Clock, Download, MessageCircle, User, Users } from "lucide-react"
 import { ProfileImage } from "@/features/page/renderer/ProfileImage"
 import { Overlay } from "@/components/taplo/overlay"
 import { TaploInput } from "@/components/taplo/taplo-input"
@@ -169,7 +169,7 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
                 return (
                   <li key={s.id}>
                     <button type="button" onClick={() => chooseService(s)} data-testid="bk-service" className="grid w-full grid-cols-[1fr_auto] items-center gap-x-4 rounded-2xl border border-tp-border bg-tp-surface p-4 text-left outline-none transition-colors hover:border-tp-accent focus-visible:ring-2 focus-visible:ring-tp-accent">
-                      <span className="min-w-0"><span className="block font-semibold">{s.name}</span><span className="mt-0.5 block text-sm text-tp-muted">{s.durationMinutes ? `${s.durationMinutes} min` : "Time agreed with you"}{m === "request" ? " · by request" : m === "contact" ? " · enquiry" : ""}</span></span>
+                      <span className="min-w-0"><span className="block font-semibold">{s.name}</span><span className="mt-0.5 block text-sm text-tp-muted">{s.externalUrl ? "Continue on website" : <>{s.durationMinutes ? `${s.durationMinutes} min` : "Time agreed with you"}{m === "request" ? " · by request" : m === "contact" ? " · enquiry" : ""}</>}</span></span>
                       <span className="text-right font-semibold tabular-nums">{priceWording(s)}</span>
                     </button>
                   </li>
@@ -253,8 +253,13 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
       {step === "enquiry" && service ? (
         <section aria-labelledby="bk-h" className="grid gap-3">
           <h2 id="bk-h" ref={heading} tabIndex={-1} className="font-tp-heading text-2xl outline-none">Ask about {service.name}</h2>
-          <p className="text-sm text-tp-muted">This service is arranged with the business directly. No time is reserved by sending this.</p>
-          <EnquiryForm slug={ctx.slug} businessName={ctx.businessName} services={ctx.services.map((s) => ({ id: s.id, name: s.name }))} serviceId={service.id} onDone={() => undefined} />
+          {service.externalUrl ? <>
+            <p className="text-sm text-tp-muted">Continue on the business’s website to arrange this service.</p>
+            <a className="tp-btn" href={service.externalUrl} target="_blank" rel="noopener noreferrer">{service.externalLabel || "View on website"}<ArrowUpRight className="size-4" aria-hidden="true" /></a>
+          </> : <>
+            <p className="text-sm text-tp-muted">This service is arranged with the business directly. No time is reserved by sending this.</p>
+            <EnquiryForm slug={ctx.slug} businessName={ctx.businessName} services={ctx.services.map((s) => ({ id: s.id, name: s.name }))} serviceId={service.id} onDone={() => undefined} />
+          </>}
         </section>
       ) : null}
 

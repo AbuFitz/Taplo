@@ -1,17 +1,24 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  ChevronDown,
+  ImageIcon,
+  Link as LinkIcon,
+} from "lucide-react";
 import {
   SiteFooter,
   SiteHeader,
   primaryAction,
 } from "@/features/marketing/Site";
-import { SetupStory } from "@/features/marketing/SetupStory";
-import { Walkthroughs } from "@/features/marketing/Walkthroughs";
+import { ScrollReveal } from "@/features/marketing/ScrollReveal";
+import "@/features/marketing/how-it-works.css";
 export const metadata: Metadata = {
   title: "How it works | Taplo",
   description:
-    "Build your first business page with a visual guided setup. Choose a look and add what you offer.",
+    "Add your business details, shape your page and see it as a customer. A visual way to build a page of your own.",
 };
 export const dynamic = "force-dynamic";
 const FAQ = [
@@ -33,86 +40,201 @@ const FAQ = [
   },
 ];
 export default function HowItWorks() {
-  const a = primaryAction();
+  const action = primaryAction();
   return (
-    <div className="bg-background">
+    <div className="how-editorial">
       <SiteHeader />
       <main>
-        <section className="bg-[#f4f4f4] text-[#080808]">
-          <div className="mx-auto grid max-w-[88rem] items-end gap-8 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-[1.1fr_0.8fr] lg:gap-24">
+        <section className="how-opening" aria-labelledby="how-title">
+          <div className="how-opening-copy">
+            <h1 id="how-title">
+              Set up your
+              <br />
+              <span>Taplo page.</span>
+            </h1>
+            <p>
+              Add your details, choose a design and try your page before
+              sharing it.
+            </p>
+            <Link data-brand-action href={action.href} className="how-start">
+              {action.label}
+              <ArrowRight />
+            </Link>
+          </div>
+          <div
+            className="how-opening-art"
+            role="img"
+            aria-label="Illustration of a business identity, project image and links coming together"
+          >
+            <ScrollReveal className="how-floating-photo" delay={0.08}>
+              <div>
+                <Image
+                  src="/showcase/originals/brand-stilllife.webp"
+                  alt=""
+                  fill
+                  sizes="(min-width:900px) 470px, 72vw"
+                />
+              </div>
+            </ScrollReveal>
+            <ScrollReveal className="how-floating-profile" delay={0.18}>
+              <div>
+                <span className="how-monogram">n.</span>
+                <strong>North Studio</strong>
+                <p>Brand identity & graphic design.</p>
+                <span className="how-art-action">
+                  See the projects
+                  <ArrowUpRight />
+                </span>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal className="how-floating-url" delay={0.25}>
+              <span>
+                mytaplo.com/<b>northstudio</b>
+                <LinkIcon />
+              </span>
+            </ScrollReveal>
+          </div>
+        </section>
+        <section className="how-identity" aria-labelledby="how-identity-title">
+          <ScrollReveal>
+            <h2 id="how-identity-title">
+              Add your
+              <br />
+              <em>business details.</em>
+            </h2>
+          </ScrollReveal>
+          <div
+            className="how-identity-fields"
+            role="img"
+            aria-label="Illustration of adding a logo, business name and description"
+          >
+            <span className="how-identity-avatar">n.</span>
             <div>
-              <p className="text-sm font-semibold">Make a start</p>
-              <h1 className="font-display font-display-tight mt-5 text-[clamp(2.75rem,6vw,5.5rem)] leading-[1.01] tracking-[-0.05em]">
-                A few good choices.
-                <br />A page of your own.
-              </h1>
+              <small>Business name</small>
+              <strong>North Studio</strong>
             </div>
             <div>
-              <p className="max-w-lg text-lg leading-relaxed sm:text-xl">
-                Bring the name. Pick a look. Add what you do. Your page takes
-                shape as you go, with room to keep making it yours.
-              </p>
-              <Link
-                data-brand-action
-                href={a.href}
-                className="mt-7 inline-flex min-h-12 items-center gap-6 rounded-full bg-signal px-6 font-semibold text-white outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-signal/50"
-              >
-                {a.label}
-                <ArrowRight aria-hidden="true" className="size-4" />
-              </Link>
+              <small>Short description</small>
+              <span>Brand identity & graphic design.</span>
             </div>
+          </div>
+          <p className="how-identity-note">
+            Add your name, logo and a short description. Include your website
+            and social links if you have them.
+          </p>
+        </section>
+        <section className="how-design" aria-labelledby="how-design-title">
+          <div className="how-design-intro">
+            <h2 id="how-design-title">
+              Choose
+              <br />
+              <span>your design.</span>
+            </h2>
+            <p>
+              Choose your colours. Arrange your profile. Add the blocks that fit
+              your business.
+            </p>
+          </div>
+          <div
+            className="how-design-art"
+            role="img"
+            aria-label="Illustration of gallery, profile and link blocks with a coordinated colour palette"
+          >
+            <ScrollReveal className="how-design-gallery">
+              <div>
+                <Image
+                  src="/showcase/originals/brand-stilllife.webp"
+                  alt=""
+                  fill
+                  sizes="(min-width:900px) 480px, 70vw"
+                />
+                <span>
+                  Selected projects
+                  <ImageIcon />
+                </span>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal className="how-design-palette" delay={0.12}>
+              <div>
+                <span />
+                <span />
+                <span />
+                <strong>Colour. Type. Layout.</strong>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal className="how-design-link" delay={0.2}>
+              <span>
+                Work with North
+                <ArrowUpRight />
+              </span>
+            </ScrollReveal>
+          </div>
+        </section>
+        <section className="how-preview" aria-labelledby="how-preview-title">
+          <ScrollReveal>
+            <h2 id="how-preview-title">
+              See it as
+              <br />a customer.
+            </h2>
+          </ScrollReveal>
+          <p>
+            Check your page on mobile and desktop. Test your links and
+            booking flow, then make any changes you need.
+          </p>
+          <div
+            className="how-preview-art"
+            role="img"
+            aria-label="Illustration of the same business identity arranged for a phone and a wider screen"
+          >
+            <div className="how-preview-wide">
+              <span className="how-preview-address">
+                mytaplo.com/northstudio
+              </span>
+              <div>
+                <span className="how-monogram">n.</span>
+                <strong>North Studio</strong>
+                <span>Brand identity & graphic design.</span>
+                <div className="how-preview-links">
+                  <span>Selected projects</span>
+                  <span>Get in touch</span>
+                </div>
+              </div>
+            </div>
+            <ScrollReveal className="how-preview-small" delay={0.16}>
+              <div>
+                <span className="how-monogram">n.</span>
+                <strong>
+                  North
+                  <br />
+                  Studio
+                </strong>
+                <span>
+                  Selected projects
+                  <ArrowUpRight />
+                </span>
+                <span>
+                  Get in touch
+                  <ArrowUpRight />
+                </span>
+              </div>
+            </ScrollReveal>
           </div>
         </section>
         <section
-          aria-labelledby="setup-preview-title"
-          className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-24"
+          className="how-questions"
+          aria-labelledby="how-questions-title"
         >
-          <h2
-            id="setup-preview-title"
-            className="font-display text-[clamp(1.75rem,3vw,2.75rem)] tracking-tight"
-          >
-            Get a feel for the setup.
-          </h2>
-          <p className="mb-8 mt-4 max-w-xl text-lg leading-relaxed text-foreground/70">
-            Choose a step to see the actual screen. On a phone, you will see the
-            phone layout.
-          </p>
-          <SetupStory />
-        </section>
-        <section
-          aria-label="Product walkthroughs"
-          className="mx-auto max-w-6xl px-5 pb-16 sm:px-8 sm:pb-24"
-        >
-          <Walkthroughs />
-        </section>
-        <section className="border-y border-foreground/15 bg-[#f6f4ec]">
-          <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-24">
-            <h2 className="font-display text-[clamp(1.75rem,3vw,2.75rem)] tracking-tight">
-              A few things you might be wondering.
-            </h2>
-            <dl className="mt-10 divide-y divide-foreground/15 border-y border-foreground/15">
-              {FAQ.map((f) => (
-                <div
-                  key={f.q}
-                  className="grid gap-4 py-7 md:grid-cols-[0.8fr_1.2fr] md:gap-14"
-                >
-                  <dt className="text-lg font-semibold tracking-tight">
-                    {f.q}
-                  </dt>
-                  <dd className="max-w-2xl text-base leading-relaxed text-foreground/70">
-                    {f.a}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <Link
-              data-brand-action
-              href={a.href}
-              className="mt-10 inline-flex min-h-12 items-center gap-6 rounded-full bg-signal px-6 font-semibold text-white outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-signal/50"
-            >
-              {a.label}
-              <ArrowRight aria-hidden="true" className="size-4" />
-            </Link>
+          <h2 id="how-questions-title">A few good questions.</h2>
+          <div>
+            {FAQ.map((f) => (
+              <details key={f.q}>
+                <summary>
+                  {f.q}
+                  <ChevronDown aria-hidden="true" />
+                </summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
           </div>
         </section>
       </main>

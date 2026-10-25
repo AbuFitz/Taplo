@@ -23,6 +23,10 @@ for (const width of [320, 390, 768, 1440])
       page.getByRole("group", { name: "Find a suitable plan" }),
     ).toHaveCount(0);
     await expect(chooser.locator(".pricing-plan-illustration")).toHaveCount(0);
+    await expect(chooser.locator('[data-plan="free"] .plan-art')).toHaveCount(
+      0,
+    );
+    await expect(chooser.locator(".plan-art")).toHaveCount(3);
     for (const id of PLAN_IDS) {
       if (width < 768)
         await chooser

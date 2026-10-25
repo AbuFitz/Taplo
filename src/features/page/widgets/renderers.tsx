@@ -124,7 +124,7 @@ function DocumentWidget({ w }: P) {
 
 /* ------------------------------------------------------------------ services / sales */
 function bookable(x: ServiceContent): BookableService {
-  return { id: x.id, name: x.name, description: x.description, group: x.group, image: x.image, priceMode: x.priceMode, priceMinor: x.priceMinor, currency: x.currency, durationMinutes: x.durationMinutes, bookingMode: x.bookingMode }
+  return { id: x.id, name: x.name, description: x.description, group: x.group, image: x.image, priceMode: x.priceMode, priceMinor: x.priceMinor, currency: x.currency, priceUnit: x.priceUnit, externalUrl: x.externalUrl, externalLabel: x.externalLabel, durationMinutes: x.durationMinutes, bookingMode: x.bookingMode }
 }
 
 /** Who provides each service, so the detail view can say so. People with serviceIds null provide every service. */
@@ -169,7 +169,7 @@ function FeaturedServiceWidget({ w, vm }: P) {
     <h2>{svc.name}</h2>
     {svc.description ? <p className="tp-muted tp-featured-description">{svc.description}</p> : null}
     <div className="tp-featured-terms"><span className="tp-price">{formatPrice(svc)}</span>{svc.durationMinutes ? <span className="tp-muted">{formatDuration(svc.durationMinutes)}</span> : null}</div>
-    <BookingAction {...bookingProps(vm, { label: s.ctaLabel || (vm.onlineBooking && svc.bookingMode === "request" ? "Request a time" : vm.onlineBooking && svc.bookingMode === "instant" ? "Book a time" : "Ask about this"), preselect: svc.id })} />
+    {svc.externalUrl ? <a className="tp-btn" href={svc.externalUrl} target="_blank" rel="noopener noreferrer">{svc.externalLabel || "View on website"}<ArrowUpRight aria-hidden="true" className="size-4" /></a> : <BookingAction {...bookingProps(vm, { label: s.ctaLabel || (vm.onlineBooking && svc.bookingMode === "request" ? "Request a time" : vm.onlineBooking && svc.bookingMode === "instant" ? "Book a time" : "Ask about this"), preselect: svc.id })} />}
   </Card>
 }
 
@@ -189,10 +189,11 @@ function ItemAction({ p, vm, compact }: { p: ProductContent; vm: PageViewModel; 
     return <span className="tp-status-note" data-status={p.availability}>{p.availability === "sold" ? (p.kind === "vehicle" ? "Sold" : "Sold out") : "Not available right now"}</span>
   if (p.mode === "link" && isHttpUrl(p.linkUrl)) {
     const host = hostOf(p.linkUrl!)
+    const label = p.linkLabel || (p.kind === "vehicle" ? "View listing" : "View in shop")
     return (
       <div className="tp-link-out">
-        <a className="tp-btn" data-variant={compact ? "compact" : "button"} href={p.linkUrl} target="_blank" rel={p.affiliate ? "noopener noreferrer sponsored" : "noopener noreferrer"}>
-          <span className="tp-btn-main"><span className="tp-btn-label">{host ? `View on ${host}` : "View"}</span></span><ArrowUpRight aria-hidden="true" className="size-4" />
+        <a className="tp-btn" data-variant={compact ? "compact" : "button"} href={p.linkUrl} aria-label={`${label}: ${p.name}${host ? ` on ${host}` : ""}`} target="_blank" rel={p.affiliate ? "noopener noreferrer sponsored" : "noopener noreferrer"}>
+          <span className="tp-btn-main"><span className="tp-btn-label">{label}</span></span><ArrowUpRight aria-hidden="true" className="size-4" />
         </a>
         {p.affiliate ? <p className="tp-affiliate">Affiliate link: {vm.business.identity.name} may earn a commission.</p> : null}
       </div>

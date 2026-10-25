@@ -14,8 +14,8 @@ export function PresenceSection() {
             <span>Bring it together.</span>
           </h2>
           <p>
-            Keep your website. Keep your socials. Give people one place to find
-            your work and the right way to reach you.
+            Link your website, social profiles and booking service from your
+            Taplo page. Keep using the tools that work for you.
           </p>
         </div>
         <div
@@ -34,21 +34,21 @@ export function PresenceSection() {
             <div>
               <Globe />
               <span>
-                Our website<small>The full picture.</small>
+                Our website<small>Projects and services</small>
               </span>
               <ArrowUpRight />
             </div>
             <div>
               <SocialIcon platform="instagram" />
               <span>
-                On Instagram<small>A little behind the scenes.</small>
+                On Instagram<small>Latest work and studio updates</small>
               </span>
               <ArrowUpRight />
             </div>
             <div>
               <CalendarDays />
               <span>
-                Book with us<small>Your existing booking link.</small>
+                Book a call<small>Choose a time on Calendly</small>
               </span>
               <ArrowUpRight />
             </div>

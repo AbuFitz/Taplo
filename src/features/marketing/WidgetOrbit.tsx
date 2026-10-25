@@ -92,7 +92,7 @@ export function WidgetOrbit() {
               <ArrowUpRight />
             </div>
 
-            <span className="orbit-profile-signature">Made with Taplo</span>
+            <span className="orbit-profile-signature">Powered by Taplo</span>
           </div>
           <div
             ref={(el) => {
@@ -117,7 +117,7 @@ export function WidgetOrbit() {
           >
             <div className="orbit-mini-heading">
               <CalendarDays />
-              <span>Make time.</span>
+              <span>Workshop dates</span>
             </div>
             <div className="orbit-date-strip">
               <span>

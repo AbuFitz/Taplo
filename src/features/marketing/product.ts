@@ -1,6 +1,6 @@
 /**
  * Product pages. Every claim here is checked against docs/messaging.md ("Supported now").
- * `status` is shown on each page so what works today and what needs a connection are never blurred.
+ * Capability records remain separate from the public marketing copy.
  */
 import { CURRENT_LOOKS } from "@/features/page/themes/looks"
 import { featureNote, featureState, type FeatureId } from "@/lib/feature-status"
@@ -19,8 +19,8 @@ export interface ProductPage {
 export const PRODUCT_PAGES: ProductPage[] = [
   {
     slug: "design", label: "Looks and design", eyebrow: "Looks and design",
-    title: "Your photos. Your colours. Your page.",
-    lead: "Start with a look you like. Bring your own photos, choose your colours and make the layout work for what you do. See every choice on your page as you go.",
+    title: "Make it your own.",
+    lead: "Choose a design, add your logo and adjust the colours, fonts and layout. Preview your changes as you edit.",
     status: [
       { label: `${CURRENT_LOOKS.length} starting looks, each usable for any business`, state: "works" },
       { label: "Colours, fonts, header, buttons, cards, wallpaper", state: "works" },
@@ -32,8 +32,8 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "services", label: "Services and prices", eyebrow: "Services and prices",
-    title: "Good work. Clear prices.",
-    lead: "Put what you offer in one useful place. A quick price list, a menu with the detail, or packages people can compare before they get in touch.",
+    title: "Show what you offer.",
+    lead: "List your services, explain what’s included and show your prices. Customers can open each service to find out more or book.",
     status: [
       { label: "Fixed, from, quote and free pricing, worded exactly", state: "works" },
       { label: "Grouped price menus, lists and cards", state: "works" },
@@ -45,7 +45,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
   {
     slug: "enquiries", label: "Contact and enquiries", eyebrow: "Contact and enquiries",
     title: "Make it easy to ask.",
-    lead: "A question about a car. A quote for a job. A first hello. Give customers a clear way to reach you, with the right details attached.",
+    lead: "Let customers call, message or send an enquiry from your page. Questions about a service or product include the item they’re asking about.",
     status: [
       { label: "Call, WhatsApp, email and directions buttons", state: "works" },
       { label: "A contact form with validation and clear confirmation", state: "works" },
@@ -56,7 +56,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "booking", label: "Booking", eyebrow: "Booking",
-    title: "Less back and forth. More booked in.",
+    title: "Let customers book from your page.",
     lead: "Let customers choose a service, a person and a time. Take the booking straight away or agree the request first, whichever fits the way you work.",
     status: [
       { label: "Service, person, date and time, details, review, result", state: "works" },
@@ -71,8 +71,8 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "team", label: "Team profiles", eyebrow: "Team profiles",
-    title: "Put a face to the good work.",
-    lead: "Introduce your people with a photo, a little about them and the services they offer. Let customers find someone they feel comfortable booking with.",
+    title: "Introduce your team.",
+    lead: "Add a photo, a short introduction and each person’s services. Customers can choose who they want to book with.",
     status: [
       { label: "Swipe, grid, list and avatar layouts", state: "works" },
       { label: "Profiles with services, working days and qualifications you supply", state: "works" },
@@ -83,8 +83,8 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "products", label: "Products and links", eyebrow: "Products and links",
-    title: "From your shop to their shortlist.",
-    lead: "Show the things you sell with good photos, clear prices and useful details. Take an enquiry, link to your own shop or share a recommendation.",
+    title: "Put your products on your page.",
+    lead: "Add product photos, prices and descriptions. Link each item to your existing shop or let customers ask you about it.",
     status: [
       { label: "Products with photos, facts and a clear status", state: "works" },
       { label: "Enquire, or open your own shop in a new tab", state: "works" },
@@ -95,8 +95,8 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "vehicles", label: "Vehicle stock", eyebrow: "Vehicle stock",
-    title: "Show your stock. Arrange more viewings.",
-    lead: "Give every car room to be seen. Big photos, the facts buyers ask for and a clear way to arrange a viewing. Keep available, reserved and sold stock easy to recognise.",
+    title: "Give buyers a closer look.",
+    lead: "List your vehicles with photos, specifications and prices. Mark stock as available, reserved or sold, and let buyers enquire about a specific car.",
     status: [
       { label: "Vehicle cards with specifications and a detail view", state: "works" },
       { label: "Available, reserved and sold shown honestly", state: "works" },
@@ -107,8 +107,8 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "gallery-reviews", label: "Photos and reviews", eyebrow: "Photos and reviews",
-    title: "Let your work do the talking.",
-    lead: "A good picture deserves more than a tiny thumbnail. Show your space, your people and your work, alongside a direct route to your Google reviews.",
+    title: "Show customers your work.",
+    lead: "Build a gallery customers can browse and open full screen. Add a link to your Google reviews so they can read what others think.",
     status: [
       { label: "Photo grid and swipe rows, with a full-screen viewer", state: "works" },
       { label: "A Google reviews destination and a Google review invitation", state: "works" },
@@ -119,8 +119,8 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "sharing", label: "Sharing and QR codes", eyebrow: "Sharing and QR codes",
-    title: "Your page, out in the world.",
-    lead: "A clear QR code, a copied link or your phone’s share sheet. Physical plaques and digital business cards for Apple Wallet, Google Wallet and Samsung Wallet are in development.",
+    title: "Share your page anywhere.",
+    lead: "Copy your link, share it from your phone or save a QR code for your printed materials. Counter plaques and digital wallet cards are coming later.",
     status: [
       { label: "A scannable Taplo QR code you can save as a PNG", state: "works" },
       { label: "Share from a phone with the system share sheet", state: "works" },
@@ -131,8 +131,8 @@ export const PRODUCT_PAGES: ProductPage[] = [
   },
   {
     slug: "messages", label: "Messages and reminders", eyebrow: "Messages and reminders",
-    title: "Keep the conversation moving.",
-    lead: "Make it easy to ask a question now. Bring confirmations, reminders and opted-in offers into the same customer journey when your messaging service is connected.",
+    title: "Keep customers informed.",
+    lead: "Give customers a direct way to contact you. Prepare booking confirmations and reminders with the date, time and appointment details included.",
     status: [
       { label: "Text us: opens the customer’s own messages app with the words ready", state: "works", feature: "textApp" },
       { label: "A contact form that keeps each enquiry for the owner", state: "works", feature: "enquiryInbox" },

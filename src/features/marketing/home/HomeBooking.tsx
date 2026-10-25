@@ -18,9 +18,8 @@ export function HomeBooking() {
             More booked in.
           </h2>
           <p>
-            A service. A time. A clear next step.
-            <br />
-            Instant bookings or requests you approve.
+            Customers choose a service and an available time. Accept bookings
+            straight away or review requests first.
           </p>
           <Link
             data-brand-action
@@ -39,7 +38,7 @@ export function HomeBooking() {
           <div className="booking-art-calendar">
             <span className="booking-art-label">
               <CalendarDays size={19} aria-hidden="true" />
-              Make a little time.
+              Choose a day.
             </span>
             <div className="booking-art-days">
               <span>
@@ -52,7 +51,7 @@ export function HomeBooking() {
                 WED<strong>28</strong>
               </span>
             </div>
-            <p>A time that works for you.</p>
+            <p>Available times</p>
             <div className="booking-art-times">
               <span>09:00</span>
               <span data-selected>11:30</span>
@@ -61,13 +60,13 @@ export function HomeBooking() {
           </div>
           <div className="booking-art-service">
             <span>
-              A good place to start.
+              Hollin Physiotherapy
               <ArrowUpRight size={16} aria-hidden="true" />
             </span>
             <strong>
-              The first
+              Initial
               <br />
-              conversation.
+              assessment.
             </strong>
             <span>
               <Clock3 size={14} aria-hidden="true" />

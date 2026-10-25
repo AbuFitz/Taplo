@@ -1,59 +1,187 @@
-.home-core-features {
+.home-work {
   position: relative;
-  background: #f1f1ee;
-  color: #111;
+  background: #eeeae2;
+  color: #25231f;
   overflow: clip;
 }
-.home-core-inner {
+.home-work::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 180px;
+  background: linear-gradient(
+    180deg,
+    #080808,
+    #343431 30%,
+    #c4c0b7 72%,
+    #eeeae2
+  );
+}
+.home-work-inner {
+  position: relative;
   max-width: 1280px;
   margin: auto;
-  padding: 64px 20px;
-  display: grid;
-  gap: 32px;
-  align-items: center;
+  padding: 210px 32px 92px;
 }
-.home-core-copy h2 {
+.home-work-title {
+  margin-left: 7%;
+  position: relative;
+  z-index: 2;
+}
+.home-work h2 {
   font-family: var(--font-display);
-  font-size: clamp(2.1rem, 4.5vw, 4.2rem);
+  font-size: clamp(42px, 6.5vw, 82px);
+  letter-spacing: -0.055em;
   font-weight: 500;
-  line-height: 1.06;
-  letter-spacing: -0.045em;
+  line-height: 1.03;
 }
-.home-core-copy p {
-  max-width: 33ch;
-  font-size: 16px;
-  line-height: 1.65;
-  color: #62625c;
-  margin-top: 22px;
+.home-work h2 span {
+  color: #777166;
 }
-.home-core-link {
-  display: inline-flex;
+.home-work-composition {
+  position: relative;
+  height: 560px;
+  margin-top: 25px;
+  isolation: isolate;
+}
+.home-work-main {
+  position: absolute;
+  left: 5%;
+  top: 15px;
+  width: 72%;
+  height: 440px;
+}
+.home-work-photo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  transform: rotate(-3deg);
+  box-shadow: 0 28px 48px -22px #30291c66;
+}
+.home-work-photo img,
+.home-work-sample img {
+  object-fit: cover;
+}
+.home-work-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#0003, transparent 60%);
+}
+.home-work-wordmark {
+  position: absolute;
+  top: 28px;
+  left: 30px;
+  z-index: 1;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+.home-work-detail {
+  position: absolute;
+  width: 29%;
+  height: 260px;
+  right: 2%;
+  bottom: 20px;
+  z-index: 2;
+}
+.home-work-sample {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  transform: rotate(6deg);
+  box-shadow: 0 23px 40px -18px #332b2055;
+}
+.home-work-enquiry {
+  position: absolute;
+  left: 20%;
+  bottom: 40px;
+  z-index: 3;
+}
+.home-work-enquiry > span {
+  display: flex;
   align-items: center;
-  gap: 16px;
-  min-height: 48px;
-  font-size: 14px;
-  font-weight: 550;
-  margin-top: 22px;
+  gap: 55px;
+  padding: 22px 27px;
+  border-radius: 16px;
+  background: #fffdf6;
+  color: #25231f;
+  font-size: 16px;
+  box-shadow: 0 16px 26px -13px #40392a55;
+  transform: rotate(-2deg);
 }
-.home-core-link:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 4px;
+.home-work-enquiry svg {
+  width: 19px;
+  height: 19px;
 }
-.home-core-art {
-  min-width: 0;
+.home-work-note {
+  margin: 15px 14% 0 auto;
+  max-width: 37ch;
+  font-size: 17px;
+  line-height: 1.75;
+  color: #655e52;
 }
-.home-core-art .service-pricing-demo {
-  max-width: 570px;
-  margin: auto;
-}
-.home-core-art .service-pricing-card h2 {
-  font-size: clamp(32px, 4vw, 48px);
-}
-@media (min-width: 900px) {
-  .home-core-inner {
-    grid-template-columns: 1fr 1fr;
-    gap: 9%;
-    padding: 100px 32px;
+@media (max-width: 767px) {
+  .home-work::before {
+    height: 110px;
+  }
+  .home-work-inner {
+    padding: 140px 20px 65px;
+  }
+  .home-work-title {
+    margin-left: 0;
+  }
+  .home-work h2 {
+    font-size: clamp(36px, 10.5vw, 58px);
+  }
+  .home-work-composition {
+    height: 365px;
+    margin-top: 34px;
+  }
+  .home-work-main {
+    left: 1%;
+    top: 0;
+    width: 88%;
+    height: 245px;
+  }
+  .home-work-photo {
+    border-radius: 15px;
+  }
+  .home-work-wordmark {
+    top: 19px;
+    left: 20px;
+    font-size: 23px;
+  }
+  .home-work-detail {
+    width: 42%;
+    height: 155px;
+    right: 2%;
+    bottom: 14px;
+  }
+  .home-work-sample {
+    border-radius: 14px;
+  }
+  .home-work-enquiry {
+    left: 0;
+    bottom: 50px;
+  }
+  .home-work-enquiry > span {
+    padding: 15px 18px;
+    font-size: 12px;
+    gap: 20px;
+    border-radius: 12px;
+  }
+  .home-work-note {
+    margin: 20px 0 0 auto;
+    max-width: 29ch;
+    font-size: 14px;
+    line-height: 1.7;
   }
 }
 .home-design-live-phone {
@@ -86,10 +214,6 @@
   .home-design-live-phone {
     width: 280px;
   }
-}
-.marketing-shell .home-core-art .feature-demo-card h2 {
-  font-size: clamp(32px, 9cqw, 52px);
-  line-height: 1.04;
 }
 .home-design-summary {
   max-width: 760px;

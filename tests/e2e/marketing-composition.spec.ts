@@ -62,19 +62,9 @@ for (const width of [320, 390, 768, 1440])
       })),
     ).toEqual([]);
     await page.goto("/product");
-    await page
-      .getByTestId("product-experience")
-      .getByRole("radio", { name: "Car dealer", exact: true })
-      .check();
-    await expect(
-      page
-        .getByTestId("product-experience")
-        .getByText("Harris Cars", { exact: true }),
-    ).toBeVisible();
-    await expect(page.getByTestId("product-demo")).toHaveAttribute(
-      "href",
-      "/inspiration/harris-cars",
-    );
+    await page.getByTestId("product-experience").getByRole("tab", {name:"List what you sell",exact:true}).click();
+    await expect(page.getByRole("tabpanel")).toHaveAttribute("data-scene","stock");
+    await expect(page.getByRole("tabpanel").getByRole("link")).toHaveAttribute("href","/product/vehicles");
     await page.screenshot({
       path: path.join(
         process.env.TAPLO_REVIEW_DIR ?? "test-results",

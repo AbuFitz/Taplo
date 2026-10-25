@@ -8,6 +8,7 @@ import type { StyleOverrides } from "@/features/page/contracts/style";
 import { DesignRail } from "./DesignRail";
 import { UseDesign } from "./UseDesign";
 import { cn } from "@/lib/utils";
+import "./inspiration-gallery.css";
 import {
   CAPABILITY_TAGS,
   STYLE_TAGS,
@@ -47,8 +48,7 @@ const toggle = <T,>(list: T[], v: T) =>
   list.includes(v) ? list.filter((x) => x !== v) : [...list, v];
 
 /**
- * The one place to explore designs. Every card is a composed page captured from the real renderer; the filters read the
- * design's own configuration. The example business is only the content a design is shown with: any design suits any business.
+ * Direct access to real rendered designs. Filters read each design's configuration.
  */
 export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
   const [view, setView] = React.useState<"desktop" | "phone">("phone");
@@ -76,8 +76,8 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
   );
   const filtering = style.length + caps.length > 0 || biz !== null;
   return (
-    <div>
-      <div className="mb-5 flex min-h-12 items-center gap-3 rounded-2xl bg-foreground/[0.07] px-4 focus-within:ring-2 focus-within:ring-foreground/50">
+    <div className="inspiration-gallery">
+      <div className="gallery-search flex min-h-12 items-center gap-3 rounded-2xl bg-foreground/[0.07] px-4 focus-within:ring-2 focus-within:ring-foreground/50">
         <Search
           aria-hidden="true"
           className="size-4 shrink-0 text-foreground/60"
@@ -101,10 +101,7 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
           </button>
         ) : null}
       </div>
-      <div
-        className="mb-5 border-b border-foreground/10 pb-5"
-        data-testid="gallery-filters"
-      >
+      <div className="gallery-tool-controls" data-testid="gallery-filters">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <button
             type="button"
@@ -203,7 +200,7 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
             </div>
           </div>
         </div>
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-foreground/60">
+        <div className="sr-only">
           <p id="biz-note" className="sr-only">
             Every design works for any business.
           </p>
@@ -268,7 +265,7 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
                 <p className="text-xs font-medium text-foreground/60">
                   {d.industryLabel}
                 </p>
-                <h2 className="mt-1 font-display font-display-tight text-lg sm:text-2xl">
+                <h2 className="sr-only">
                   <Link
                     href={`/inspiration/${d.slug}`}
                     className="hover:underline underline-offset-4"

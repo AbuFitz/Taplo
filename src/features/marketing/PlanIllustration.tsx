@@ -1,25 +1,12 @@
 import Image from "next/image";
-import { ArrowUpRight, CalendarDays, Phone, Users } from "lucide-react";
-import { SocialIcon } from "@/features/page/widgets/social-icons";
+import { ArrowUpRight, CalendarDays, Users } from "lucide-react";
 import type { PlanId } from "@/features/subscriptions/plans";
 
 /** Compact editorial illustrations, not screenshots or pretend account activity. */
-export function PlanIllustration({ plan }: { plan: PlanId }) {
+export function PlanIllustration({ plan }: { plan: Exclude<PlanId, "free"> }) {
   return (
     <div className="plan-art" data-tier={plan} aria-hidden="true">
-      {plan === "free" ? (
-        <div className="plan-art-profile">
-          <span className="plan-art-logo">n.</span>
-          <div>
-            <strong>North Studio</strong>
-            <small>Your work. One link.</small>
-          </div>
-          <span className="plan-art-contact">
-            <Phone />
-            <SocialIcon platform="whatsapp" />
-          </span>
-        </div>
-      ) : plan === "core" ? (
+      {plan === "core" ? (
         <div className="plan-art-gallery">
           <div className="plan-art-photo">
             <Image
@@ -45,7 +32,8 @@ export function PlanIllustration({ plan }: { plan: PlanId }) {
       ) : plan === "pro" ? (
         <div className="plan-art-calendar">
           <span>
-            <CalendarDays />A time that works.
+            <CalendarDays />
+            Choose a time.
           </span>
           <div className="plan-art-days">
             <span>

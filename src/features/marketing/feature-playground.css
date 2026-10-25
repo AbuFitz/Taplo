@@ -363,3 +363,7 @@
     transition: none !important;
   }
 }
+
+.feature-product-photo{position:relative;height:240px;margin:20px 0;background:#fff;border-radius:18px;overflow:hidden}
+.feature-product-photo img{object-fit:contain;padding:16px}
+@media(max-width:420px){.feature-product-photo{height:200px}}

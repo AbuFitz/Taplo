@@ -92,6 +92,7 @@ export function ProductForm({ product, onChange, showErrors, setup = false }: { 
         {product.mode === "enquire" ? <p className="text-xs text-muted-foreground">They choose to call, WhatsApp or email you about it. This is an enquiry, not a purchase: nothing is paid on Taplo.</p> : (
           <>
             <UrlField label="Web address to open" value={product.linkUrl} onCommit={(v) => set({ linkUrl: v })} help={errors.link} />
+            <TaploInput label="Link text (optional)" placeholder={product.kind === "vehicle" ? "View listing" : "View in shop"} value={product.linkLabel ?? ""} maxLength={60} onChange={event => set({linkLabel:event.target.value || undefined})} />
             <div className="flex items-center justify-between gap-3">
               <Label htmlFor={`${product.id}-aff`} className="text-sm font-normal">This is an affiliate or referral link<span className="block text-xs text-muted-foreground">Visitors are told it is one before they follow it.</span></Label>
               <Switch id={`${product.id}-aff`} checked={product.affiliate} onCheckedChange={(v) => set({ affiliate: v })} />

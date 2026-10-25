@@ -1,3 +1,4 @@
+import { REAL_BUSINESSES } from "./real-businesses"
 import { COLLECTION_SCENARIOS, type CollectionScenario } from "./collection"
 import type { BusinessContentInput } from "@/features/businesses/content"
 import type { PageDoc } from "@/features/page/contracts/page"
@@ -186,9 +187,10 @@ export const TRADES: BusinessContentInput = {
   booking: { mode: "instant", onlineBookingReady: true },
 }
 
-export type Scenario = CollectionScenario | "oakfield" | "rowan" | "corner" | "brookfield" | "station" | "detailer" | "barber" | "dealer" | "trades" | "physio" | "cafe" | "tutor" | "gym"
+export type Scenario = "fixnow" | "brightlearn" | CollectionScenario | "oakfield" | "rowan" | "corner" | "brookfield" | "station" | "detailer" | "barber" | "dealer" | "trades" | "physio" | "cafe" | "tutor" | "gym"
 export const SCENARIOS: Record<Scenario, { label: string; content: BusinessContentInput; widgets: () => PageDoc["widgets"] }> = {
   ...COLLECTION_SCENARIOS,
+  ...REAL_BUSINESSES,
   corner: { label: "Neighbourhood café", content: CORNER, widgets: () => [
     newWidget("priceMenu", { title: "At the counter", showDescriptions: true }),
     newWidget("hours", { title: "Come by" }),

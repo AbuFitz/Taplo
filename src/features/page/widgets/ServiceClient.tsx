@@ -94,10 +94,10 @@ function Detail({ s, ctx, businessName, slug, providers, onBook }: { s: Bookable
       <dl className="tp-service-facts grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
         <div><dt className="text-tp-muted">Price</dt><dd className="font-semibold">{priceWording(s)}</dd></div>
         {s.durationMinutes ? <div><dt className="text-tp-muted">Time</dt><dd className="flex items-center gap-1 font-semibold"><Clock aria-hidden="true" className="size-3.5" />{mins(s.durationMinutes)}</dd></div> : null}
-        <div className="col-span-2"><dt className="text-tp-muted">How it works</dt><dd className="font-medium">{canBook && m === "instant" ? "Pick a time and it is confirmed straight away." : canBook && m === "request" ? "Pick a time and send a request. It is confirmed when the business accepts it." : "Arranged with the business directly. Send an enquiry; no time is reserved."}</dd></div>
+        <div className="col-span-2"><dt className="text-tp-muted">How it works</dt><dd className="font-medium">{s.externalUrl ? "Continue on the business’s website to enquire or arrange this service." : canBook && m === "instant" ? "Pick a time and it is confirmed straight away." : canBook && m === "request" ? "Pick a time and send a request. It is confirmed when the business accepts it." : "Arranged with the business directly. Send an enquiry; no time is reserved."}</dd></div>
         {providers.length > 0 ? <div className="col-span-2"><dt className="text-tp-muted">Provided by</dt><dd className="font-medium">{providers.map((p) => p.name).join(", ")}</dd></div> : null}
       </dl>
-      {canBook ? <Button className="min-h-12 bg-tp-accent text-tp-accent-fg hover:bg-tp-accent/90" onClick={onBook}><CalendarCheck />{m === "instant" ? "Book this" : "Request this"}</Button> : (
+      {s.externalUrl ? <a className="tp-btn" href={s.externalUrl} target="_blank" rel="noopener noreferrer">{s.externalLabel || "View on website"}<ArrowUpRight aria-hidden="true" className="size-4" /></a> : canBook ? <Button className="min-h-12 bg-tp-accent text-tp-accent-fg hover:bg-tp-accent/90" onClick={onBook}><CalendarCheck />{m === "instant" ? "Book this" : "Request this"}</Button> : (
         <section aria-labelledby={`enq-${s.id}`} className="grid gap-3">
           <h3 id={`enq-${s.id}`} className="flex items-center gap-2 font-semibold"><MessageCircle aria-hidden="true" className="size-4" />{OUTCOME.contact.choose} about {s.name}</h3>
           <EnquiryForm slug={slug} businessName={businessName} services={[{ id: s.id, name: s.name }]} serviceId={s.id} />

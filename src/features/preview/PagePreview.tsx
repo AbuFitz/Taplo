@@ -92,8 +92,6 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
     stopWatching.current?.()
     const doc = frame.current?.contentDocument
     if (!doc?.body) return
-    doc.documentElement.dataset.taploEmbedded = "true"
-    doc.documentElement.setAttribute("data-taplo-phone", String(isPhone))
     let page: Element | null = null
     const sync = () => {
       const next = doc.querySelector("[data-taplo-page]")
@@ -106,6 +104,10 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
       // A server-rendered button may be visible before its click handler mounts.
       // Keep the loading surface until the themed client subtree is ready.
       if (next.getAttribute("data-taplo-ready") !== "true") return
+      // Apply embedding attributes after hydration; changing the server document earlier
+      // causes a root-attribute mismatch in every preview iframe.
+      doc.documentElement.dataset.taploEmbedded = "true"
+      doc.documentElement.setAttribute("data-taplo-phone", String(isPhone))
       const color = doc.defaultView?.getComputedStyle(next).getPropertyValue("--tp-background").trim()
       if (color) host.current?.style.setProperty("--phone-surface", color)
       setLoaded(true)
@@ -118,7 +120,7 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
 
   React.useEffect(() => {
     const doc = frame.current?.contentDocument
-    if (doc) doc.documentElement.setAttribute("data-taplo-phone", String(isPhone))
+    if (doc?.querySelector('[data-taplo-ready="true"]')) doc.documentElement.setAttribute("data-taplo-phone", String(isPhone))
   }, [isPhone])
 
   React.useLayoutEffect(() => {

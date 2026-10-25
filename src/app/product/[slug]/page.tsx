@@ -45,25 +45,9 @@ export default async function ProductPageRoute({
       <main>
         <section style={{ background: tone.background, color: tone.ink }}>
           <div className="mx-auto max-w-[88rem] px-5 pb-14 pt-8 sm:px-8 sm:pb-20 sm:pt-10">
-            <nav
-              aria-label="Breadcrumb"
-              className="flex items-center gap-3 text-sm"
-            >
-              <Link
-                href="/product"
-                className="rounded underline underline-offset-4 outline-none focus-visible:ring-3 focus-visible:ring-current"
-              >
-                Product
-              </Link>
-              <span aria-hidden="true" className="opacity-50">
-                /
-              </span>
-              <span>{p.label}</span>
-            </nav>
-            <div className="mt-10 grid items-center gap-10 md:grid-cols-[1fr_1.1fr] lg:gap-16">
+            <div className="grid items-center gap-10 md:grid-cols-[1fr_1.1fr] lg:gap-16">
               <div>
-                <p className="text-sm font-semibold">{p.eyebrow}</p>
-                <h1 className="font-display font-display-tight mt-5 max-w-2xl text-[clamp(2.5rem,5.3vw,5rem)] leading-[1.01] tracking-[-0.05em]">
+                <h1 className="font-display font-display-tight max-w-2xl text-[clamp(2.5rem,5.3vw,5rem)] leading-[1.01] tracking-[-0.05em]">
                   {p.title}
                 </h1>
                 <p className="mt-7 max-w-xl text-lg leading-relaxed opacity-85 sm:text-xl">
@@ -82,7 +66,7 @@ export default async function ProductPageRoute({
                     href="#feature-detail"
                     className="inline-flex min-h-11 items-center rounded font-semibold underline underline-offset-4 outline-none focus-visible:ring-3 focus-visible:ring-current"
                   >
-                    Take a closer look
+                    See details
                   </a>
                 </div>
               </div>
@@ -114,7 +98,7 @@ export default async function ProductPageRoute({
           <div className="flex flex-wrap items-end justify-between gap-8">
             <div>
               <h2 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-tight tracking-tight">
-                Better together.
+                Related features
               </h2>
               <ul className="mt-6 flex flex-wrap gap-x-8 gap-y-4">
                 {p.related.map((r) => (

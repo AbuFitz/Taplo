@@ -185,7 +185,7 @@ test.describe("products, status and payments", () => {
   })
   test("an affiliate link is disclosed and opens safely in a new tab", async ({ page }) => {
     await open(page, FRAME())
-    const link = page.getByRole("link", { name: /View on example\.com/ })
+    const link = page.getByRole("link", { name: /View in shop: .* on example\.com/ })
     await expect(link).toHaveAttribute("rel", /sponsored/)
     await expect(link).toHaveAttribute("target", "_blank")
     await expect(page.getByText(/Affiliate link: .* may earn a commission/)).toBeVisible()

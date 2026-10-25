@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { isHttpUrl } from "@/lib/validation"
 import { ImageField } from "@/features/page/editor/controls"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
@@ -22,11 +23,12 @@ const BOOKING_LABEL: Record<(typeof SERVICE_BOOKING_MODES)[number], string> = {
   instant: "Customer books a time and it is confirmed",
 }
 
-export function serviceErrors(s: ServiceContent): Partial<Record<"name" | "price" | "duration", string>> {
-  const e: Partial<Record<"name" | "price" | "duration", string>> = {}
+export function serviceErrors(s: ServiceContent): Partial<Record<"name" | "price" | "duration" | "link", string>> {
+  const e: Partial<Record<"name" | "price" | "duration" | "link", string>> = {}
   if (!s.name.trim()) e.name = "Give the service a name."
   if ((s.priceMode === "fixed" || s.priceMode === "from") && s.priceMinor === undefined) e.price = "Enter a price, or choose “Quote on request”."
-  if (s.bookingMode === "instant" && !s.durationMinutes) e.duration = "Instant booking needs a duration."
+  if (!s.externalUrl && s.bookingMode === "instant" && !s.durationMinutes) e.duration = "Instant booking needs a duration."
+  if (s.externalUrl && !isHttpUrl(s.externalUrl)) e.link = "Enter a full web address starting with https://."
   return e
 }
 
@@ -74,6 +76,19 @@ export function ServiceForm({ service, onChange, showErrors }: { service: Servic
           />
         ) : null}
       </div>
+      {needsPrice ? <div className="grid gap-1.5">
+        <Label htmlFor={`${id}-unit`}>Price is for</Label>
+        <Select value={service.priceUnit ?? "once"} onValueChange={value => set({priceUnit: value === "once" ? undefined : value as ServiceContent["priceUnit"]})}>
+          <SelectTrigger id={`${id}-unit`} className="min-h-11 w-full"><SelectValue /></SelectTrigger>
+          <SelectContent position="popper">
+            <SelectItem value="once">This service</SelectItem>
+            <SelectItem value="hour">One hour</SelectItem>
+            <SelectItem value="session">One session</SelectItem>
+            <SelectItem value="month">One month</SelectItem>
+            <SelectItem value="course">One course</SelectItem>
+          </SelectContent>
+        </Select>
+      </div> : null}
       <div className="grid gap-4 sm:grid-cols-2">
         <TaploInput
           label="Duration (minutes, optional)"
@@ -95,6 +110,23 @@ export function ServiceForm({ service, onChange, showErrors }: { service: Servic
       <details className="rounded-2xl bg-muted/40 px-4 py-2">
         <summary className="min-h-11 cursor-pointer py-3 text-sm font-medium">Service photo (optional)</summary>
         <ImageField label="Service photo" value={service.image} onChange={image => set({ image: image ?? undefined })} defaultAlt={service.name || "Service photo"} purpose="photo" samples={false} />
+        {service.image ? <div className="grid gap-1.5 py-3">
+          <Label htmlFor={`${id}-image-fit`}>Picture fit</Label>
+          <Select value={service.image.fit ?? "cover"} onValueChange={fit => set({image:{...service.image!,fit:fit as "cover"|"contain"}})}>
+            <SelectTrigger id={`${id}-image-fit`} className="min-h-11 w-full"><SelectValue /></SelectTrigger>
+            <SelectContent position="popper">
+              <SelectItem value="cover">Fill the space</SelectItem>
+              <SelectItem value="contain">Show the whole picture</SelectItem>
+            </SelectContent>
+          </Select>
+        </div> : null}
+      </details>
+      <details className="px-1 py-2">
+        <summary className="min-h-11 cursor-pointer py-3 text-sm font-medium">Use an existing website or booking link</summary>
+        <div className="grid gap-4 py-3">
+          <TaploInput label="Service link" error={errors.link} type="url" placeholder="https://your-website.com/service" value={service.externalUrl ?? ""} onChange={event => set({externalUrl:event.target.value || undefined})} hint="Customers continue on this website instead of opening the Taplo form." />
+          {service.externalUrl ? <TaploInput label="Link text" placeholder="e.g. Get a quote" maxLength={60} value={service.externalLabel ?? ""} onChange={event => set({externalLabel:event.target.value || undefined})} /> : null}
+        </div>
       </details>
       <fieldset className="grid gap-2">
         <legend className="mb-1 text-sm font-medium">Where does it happen?</legend>
@@ -110,7 +142,7 @@ export function ServiceForm({ service, onChange, showErrors }: { service: Servic
           ))}
         </div>
       </fieldset>
-      <div className="grid gap-1.5">
+      {!service.externalUrl ? <div className="grid gap-1.5">
         <Label htmlFor={`${id}-book`}>How do customers book?</Label>
         <Select value={service.bookingMode} onValueChange={(v) => set({ bookingMode: v as ServiceContent["bookingMode"] })}>
           <SelectTrigger id={`${id}-book`} className="min-h-11 w-full"><SelectValue /></SelectTrigger>
@@ -119,7 +151,7 @@ export function ServiceForm({ service, onChange, showErrors }: { service: Servic
           </SelectContent>
         </Select>
         <p className="text-sm text-muted-foreground">{service.bookingMode === "contact" ? "Customers send you an enquiry. Nothing is reserved." : service.durationMinutes ? "Customers pick a time from your working hours (Bookings, then Hours and rules). Online booking is part of the Pro plan; no payment is taken." : "Add a duration above so customers have a length of time to book."}</p>
-      </div>
+      </div> : null}
     </div>
   )
 }

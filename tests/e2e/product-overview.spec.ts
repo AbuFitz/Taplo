@@ -1,110 +1,46 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { PRODUCT_LINKS } from "../../src/features/marketing/ia";
-
-for (const width of [320, 390, 768, 1440]) {
-  test(`product overview keeps all business journeys coherent at ${width}`, async ({
-    page,
-  }) => {
-    const errors: string[] = [];
-    page.on("pageerror", (error) => errors.push(error.message));
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto("/product");
-    const experience = page.getByTestId("product-experience");
-    await experience.scrollIntoViewIfNeeded();
-    for (const choice of [
-      {
-        label: "Clinic",
-        name: "Hollin Physio",
-        slug: "hollin-physio",
-        scenario: "physio",
-      },
-      {
-        label: "Café",
-        name: "No. 6 Coffee",
-        slug: "no-6-coffee",
-        scenario: "corner",
-      },
-      {
-        label: "Trades",
-        name: "Dan’s Home Repairs",
-        slug: "dans-home-repairs",
-        scenario: "oakfield",
-      },
-      {
-        label: "Car dealer",
-        name: "Harris Cars",
-        slug: "harris-cars",
-        scenario: "brookfield",
-      },
-    ]) {
-      const before = await experience.boundingBox();
-      const scroll = await page.evaluate(() => scrollY);
-      await experience
-        .getByRole("radio", { name: choice.label, exact: true })
-        .check();
-      await expect(
-        experience.getByText(choice.name, { exact: true }),
-      ).toBeVisible();
-      await expect(page.getByTestId("product-demo")).toHaveAttribute(
-        "href",
-        `/inspiration/${choice.slug}`,
-      );
-      await expect(page.getByTestId("product-adopt")).toHaveAttribute(
-        "href",
-        `/onboarding?from=${choice.slug}`,
-      );
-      await expect(experience.locator("iframe")).toHaveAttribute(
-        "src",
-        `/appearance/frame?scenario=${choice.scenario}`,
-      );
-      await expect(experience.locator("iframe")).toHaveAttribute(
-        "data-loaded",
-        "true",
-      );
-      expect(
-        Math.abs((await experience.boundingBox())!.height - before!.height),
-      ).toBeLessThanOrEqual(1);
-      expect(
-        Math.abs((await page.evaluate(() => scrollY)) - scroll),
-      ).toBeLessThanOrEqual(1);
-    }
-    const directory = page.getByRole("navigation", {
-      name: "All product features",
-    });
-    for (const link of PRODUCT_LINKS)
-      await expect(
-        directory.getByRole("link", { name: new RegExp(`^${link.label}`) }),
-      ).toHaveAttribute("href", link.href);
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth + 1,
-      ),
-    ).toBe(true);
-    expect(errors).toEqual([]);
-  });
+for(const width of [320,390,768,1440]) {
+ test(`product tools have usable tabs and relevant destinations at ${width}`,async({page})=>{
+  const errors:string[]=[]; page.on('pageerror',e=>errors.push(e.message));
+  await page.setViewportSize({width,height:1000});await page.goto('/product');
+  const experience=page.getByTestId('product-experience');
+  for(const [tab,scene,href] of [
+   ['Show your work','work','/product/gallery-reviews'],
+   ['Take bookings','booking','/product/booking'],
+   ['List what you sell','stock','/product/vehicles'],
+   ['Stay in touch','contact','/product/enquiries'],
+  ]) {
+   await experience.getByRole('tab',{name:tab,exact:true}).click();
+   const panel=experience.getByRole('tabpanel');
+   await expect(panel).toHaveAttribute('data-scene',scene);
+   await expect(panel).toHaveCSS('opacity','1');
+   await expect(experience.getByRole('tab',{name:tab,exact:true})).toHaveAttribute('aria-selected','true');
+   await expect(panel.getByRole('link')).toHaveAttribute('href',href);
+   expect((await new AxeBuilder({page}).include('main').analyze()).violations).toEqual([]);
+  }
+  await expect(page.getByRole('navigation',{name:'All product features'})).toHaveCount(0);
+  if(width>=1024){
+   await expect(page.getByTestId('product-snapshots').getByRole('link')).toHaveCount(3);
+   await page.getByTestId('product-snapshots').scrollIntoViewIfNeeded();
+   for(const image of await page.getByTestId('product-snapshots').getByRole('img').all())
+    await expect.poll(()=>image.evaluate((i:HTMLImageElement)=>i.complete&&i.naturalWidth===1170)).toBe(true);
+  }else await expect(page.getByTestId('product-snapshots')).toHaveCount(0);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.screenshot({path:`work/product-overview-${width}.png`,fullPage:true});
+  expect(errors).toEqual([]);
+ });
 }
-
-test("business choices support keyboard, reduced motion and accessible content", async ({
-  page,
-}) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/product");
-  const experience = page.getByTestId("product-experience");
-  await experience.getByRole("radio", { name: "Clinic", exact: true }).focus();
-  await page.keyboard.press("ArrowRight");
-  await expect(
-    experience.getByRole("radio", { name: "Café", exact: true }),
-  ).toBeChecked();
-  await expect(page.locator(".product-atlas-phone-slot")).toHaveCSS(
-    "animation-name",
-    "none",
-  );
-  await expect(
-    page.locator(".product-atlas-light .liquid-light"),
-  ).toHaveAttribute("data-reduced-motion", "true");
-  const results = await new AxeBuilder({ page }).include("main").analyze();
-  expect(results.violations).toEqual([]);
-  await page.getByTestId("product-demo").click();
-  await expect(page).toHaveURL(/\/inspiration\/no-6-coffee$/);
+test('product tabs support keyboard and hover without changing on a passing pointer',async({page})=>{
+ await page.setViewportSize({width:1440,height:1000});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/product');
+ const experience=page.getByTestId('product-experience');
+ const first=experience.getByRole('tab',{name:'Show your work',exact:true});
+ await first.focus();await page.keyboard.press('ArrowRight');
+ await expect(experience.getByRole('tab',{name:'Take bookings',exact:true})).toBeFocused();
+ await expect(experience.getByRole('tabpanel')).toHaveAttribute('data-scene','booking');
+ await page.keyboard.press('End');await expect(experience.getByRole('tab',{name:'Stay in touch',exact:true})).toBeFocused();
+ await page.keyboard.press('Home');await expect(first).toBeFocused();
+ await experience.getByRole('tab',{name:'List what you sell',exact:true}).hover();
+ await expect(experience.getByRole('tabpanel')).toHaveAttribute('data-scene','stock');
+ await experience.getByRole('tabpanel').getByRole('link').click();await expect(page).toHaveURL(/\/product\/vehicles$/);
 });

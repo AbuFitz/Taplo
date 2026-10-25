@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 for (const width of [320, 390, 768, 1440])
-  test(`editorial hero is illustrated, cropped and responsive at ${width}`, async ({
+  test(`actual page hero is sharp, cropped and responsive at ${width}`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: 950 });

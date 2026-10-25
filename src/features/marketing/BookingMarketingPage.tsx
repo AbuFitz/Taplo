@@ -57,17 +57,14 @@ export function BookingMarketingPage({ product }: { product: ProductPage }) {
       <main>
         <section className="booking-hero booking-section">
           <div className="booking-hero-copy">
-            <Link href="/product" className="booking-kicker booking-back">
-              Product / Booking
-            </Link>
             <h1>
               Goodbye,
               <br />
               back and forth.
             </h1>
             <p className="booking-lead">
-              From “when are you free?” to a time that works. Appointments,
-              people and availability, together on your page.
+              Let customers choose a service, a team member and an available
+              time. Accept bookings straight away or review requests first.
             </p>
             <div className="booking-hero-actions">
               <Link
@@ -97,18 +94,16 @@ export function BookingMarketingPage({ product }: { product: ProductPage }) {
         </section>
         <section className="booking-section booking-control-section">
           <div className="booking-control-heading">
-            <p className="booking-kicker">Your diary. Your rules.</p>
+            <p className="booking-kicker">Availability</p>
             <h2>
-              Open for business.
-              <br />
-              On your terms.
+              Set the hours that suit you.
             </h2>
             <p className="booking-lead">
               Customers see the times you can offer. You decide what goes into
               the diary.
             </p>
             <Link href="/product/team" className="booking-text-link">
-              Meet the team setup
+              Team profiles
               <ArrowUpRight size={16} aria-hidden="true" />
             </Link>
           </div>
@@ -153,10 +148,10 @@ export function BookingMarketingPage({ product }: { product: ProductPage }) {
           {product.related.map((slug) => (
             <Link key={slug} href={`/product/${slug}`}>
               {slug === "team"
-                ? "People behind the business"
+                ? "Team profiles"
                 : slug === "services"
-                  ? "Services worth a closer look"
-                  : "A simpler way to enquire"}
+                  ? "Services and prices"
+                  : "Contact and enquiries"}
               <ArrowUpRight size={22} aria-hidden="true" />
             </Link>
           ))}

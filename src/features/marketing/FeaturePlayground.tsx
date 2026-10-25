@@ -27,7 +27,7 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
     enquiries: ["A project", "A service", "A viewing"],
     messages: ["Confirm", "Remind", "Update"],
     team: ["Alex", "Jamie", "Morgan"],
-    products: ["Small", "Medium", "Large"],
+    products: ["F70 Pro", "Q200", "X800"],
     vehicles: ["Available", "Reserved", "Sold"],
     "gallery-reviews": ["Golf", "CX-5", "MINI"],
     booking: ["Consultation", "Follow-up", "Online"],
@@ -84,7 +84,7 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
               <>
                 <div className="feature-demo-top">
                   <Palette size={18} aria-hidden="true" />
-                  <span>A look of your own</span>
+                  <span>OTHER STUDIO</span>
                 </div>
                 <div
                   className="feature-demo-monogram"
@@ -97,7 +97,7 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
                   <br />
                   <em>Studio.</em>
                 </h2>
-                <p>Independent ideas. Beautifully made.</p>
+                <p>Brand identity & graphic design.</p>
                 <div
                   className="feature-mini-block"
                   style={{ background: theme.card }}
@@ -120,7 +120,7 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
                     color: choice === 1 ? "#fff" : "#172019",
                   }}
                 >
-                  Find your starting look
+                  Browse designs
                   <ArrowUpRight size={17} aria-hidden="true" />
                 </Link>
               </>
@@ -128,12 +128,10 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
               <>
                 <div className="feature-demo-top">
                   <MessageCircle size={18} aria-hidden="true" />
-                  <span>The right context, attached</span>
+                  <span>Your enquiry</span>
                 </div>
                 <h2>
-                  Let’s talk
-                  <br />
-                  about it.
+                  Send an enquiry.
                 </h2>
                 <div className="feature-enquiry-subject">
                   <small>About</small>
@@ -158,7 +156,7 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
                   className="feature-demo-action"
                   href={`/inspiration/${choice === 2 ? "harris-cars" : choice === 1 ? "detail-dept" : "sora-fields"}`}
                 >
-                  Try an example page
+                  Open demo
                   <ArrowUpRight size={17} aria-hidden="true" />
                 </Link>
               </>
@@ -166,33 +164,29 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
               <>
                 <div className="feature-demo-top">
                   <Mail size={18} aria-hidden="true" />
-                  <span>Example message</span>
+                  <span>FORM STUDIO</span>
                 </div>
                 <h2>
                   {
-                    ["All the details.", "A little reminder.", "Plans change."][
+                    ["Booking confirmed.", "See you tomorrow.", "Booking updated."][
                       choice
                     ]
                   }
                 </h2>
                 <div className="feature-message-bubble">
-                  <span>FORM STUDIO</span>
+                  <span>Pottery workshop</span>
                   <p>
                     {
                       [
-                        "Your appointment details, together in one place. Consultation · Thursday · 11:30.",
-                        "A reminder about your consultation tomorrow at 11:30. Here’s everything you need before your visit.",
-                        "Need a different time? View your appointment details and get in touch about a change.",
+                        "You’re booked for Thursday at 11:30. Your pottery workshop lasts 90 minutes. All materials are included.",
+                        "Your pottery workshop is tomorrow at 11:30. Please arrive five minutes early. We’ll have your materials ready.",
+                        "Your pottery workshop has moved to Friday at 14:00, as requested. Your booking still includes all materials.",
                       ][choice]
                     }
                   </p>
-                  <small>Illustration · no message sent</small>
                 </div>
-                <p className="feature-demo-note">
-                  Appointment messages need a connected delivery service.
-                </p>
                 <Link href="/product/booking" className="feature-demo-action">
-                  Explore the booking journey
+                  See booking
                   <ArrowUpRight size={17} aria-hidden="true" />
                 </Link>
               </>
@@ -200,7 +194,7 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
               <>
                 <div className="feature-demo-top">
                   <Users size={18} aria-hidden="true" />
-                  <span>People, not just appointments</span>
+                  <span>HOLLIN PHYSIOTHERAPY</span>
                 </div>
                 <div className="feature-team-avatar" aria-hidden="true">
                   {labels[choice][0]}
@@ -210,9 +204,9 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
                 <p>
                   {
                     [
-                      "First appointments & a fresh perspective.",
-                      "Follow-up appointments & steady progress.",
-                      "Online consultations & practical guidance.",
+                      "Physiotherapist · Initial assessments",
+                      "Physiotherapist · Rehabilitation",
+                      "Physiotherapist · Online consultations",
                     ][choice]
                   }
                 </p>
@@ -232,38 +226,41 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
                   href="/inspiration/hollin-physio"
                   className="feature-demo-action"
                 >
-                  Meet an example team
+                  View team demo
                   <ArrowUpRight size={17} aria-hidden="true" />
                 </Link>
               </>
             ) : slug === "products" ? (
               <>
                 <div className="feature-demo-top">
-                  <span>FORM OBJECTS</span>
-                  <span>01 / 03</span>
+                  <span>FIXNOW MECHANICS</span>
+                  <span>0{choice + 1} / 03</span>
                 </div>
-                <div className="feature-object-art" aria-hidden="true">
-                  <div
-                    style={{ transform: `scale(${0.75 + choice * 0.12})` }}
+                <div className="feature-product-photo">
+                  <Image
+                    src={[
+                      "/businesses/fixnow/thinkware-f70-pro.jpg",
+                      "/businesses/fixnow/thinkware-q200.jpg",
+                      "/businesses/fixnow/thinkware-x800.jpg",
+                    ][choice]}
+                    alt={["Thinkware F70 Pro front dash cam kit", "Thinkware Q200 front and rear dash cam kit", "Thinkware X800 touchscreen dash cam kit"][choice]}
+                    fill
+                    sizes="(min-width:768px) 500px, 90vw"
                   />
                 </div>
-                <h2>
-                  The everyday
-                  <br />
-                  vessel.
-                </h2>
+                <h2>Thinkware {labels[choice]}</h2>
                 <div className="feature-mini-block">
-                  <span>{labels[choice]} · Stoneware</span>
-                  <strong>{["£24", "£36", "£48"][choice]}</strong>
+                  <span>{["Full HD front dash cam", "2K front & rear dash cam", "2K touchscreen dash cam"][choice]}</span>
+                  <strong>{["£125", "£219", "£249"][choice]}</strong>
                 </div>
-                <p>Room for the detail. A clear route to your shop.</p>
-                <Link
-                  href="/inspiration/form-objects"
+                <p>{["32GB card and hardwire kit included.", "Front and rear cameras with a GPS mount.", "Front and rear cameras with a touchscreen display."][choice]}</p>
+                <a
+                  href={`https://shop.fixnowmechanics.co.uk/shop/${["thinkware-f70-pro-32gb-front-dash-cam", "thinkware-q200-2k-front-rear-dash-cam-with-gps-mount", "thinkware-x800-2k-front-rear-dash-cam-with-touchscreen"][choice]}`}
                   className="feature-demo-action"
                 >
-                  Explore the maker’s page
+                  View in shop
                   <ArrowUpRight size={17} aria-hidden="true" />
-                </Link>
+                </a>
               </>
             ) : slug === "vehicles" ? (
               <>
@@ -325,15 +322,13 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
                   ))}
                 </div>
                 <h2>
-                  Work worth
-                  <br />
-                  seeing.
+                  Browse the gallery.
                 </h2>
                 <Link
                   href="/inspiration/harris-cars"
                   className="feature-demo-action"
                 >
-                  Open the full gallery
+                  View gallery demo
                   <ArrowUpRight size={17} aria-hidden="true" />
                 </Link>
               </>
@@ -341,10 +336,10 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
               <>
                 <div className="feature-demo-top">
                   <CalendarDays size={18} aria-hidden="true" />
-                  <span>Make a little time.</span>
+                  <span>Choose a time</span>
                 </div>
                 <h2>{labels[choice]}.</h2>
-                <p>A service. The right person. A time that works.</p>
+                <p>Choose your appointment and an available time.</p>
                 <div className="feature-calendar-strip" aria-hidden="true">
                   {["M", "T", "W", "T", "F"].map((day, n) => (
                     <span key={n} data-active={n === choice + 1}>
@@ -356,10 +351,9 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
                 <div className="feature-mini-block">
                   <Clock3 size={18} aria-hidden="true" />
                   <span>{choice === 0 ? "45" : "30"} minutes</span>
-                  <span>Illustration</span>
                 </div>
                 <a href="#try-booking" className="feature-demo-action">
-                  Try the actual booking flow
+                  Try booking
                   <ArrowUpRight size={17} aria-hidden="true" />
                 </a>
               </>

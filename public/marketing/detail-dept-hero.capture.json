@@ -1,0 +1,16 @@
+{
+  "source": "/appearance/frame?scenario=detailer",
+  "renderer": "PageRenderer",
+  "context": "Shared PagePreview decorated phone",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "deviceScaleFactor": 3,
+  "pixels": {
+    "width": 1170,
+    "height": 2532
+  },
+  "reducedMotion": true,
+  "content": "Original Taplo Detail Dept. example; no retouching or UI reconstruction"
+}

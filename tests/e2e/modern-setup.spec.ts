@@ -89,6 +89,6 @@ test('Google review setup preserves old records but never publishes them as Goog
 
 test('homepage removes the repeated feature wall and keeps direct product discovery',async({page})=>{
  await page.goto('/');await expect(page.locator('section[aria-labelledby="feature-spotlights-title"]')).toHaveCount(0)
- await expect(page.locator('.hero-stage iframe')).toHaveCount(0);await expect(page.locator('a[href="/product/booking"]').first()).toBeVisible()
- await page.goto('/product');await expect(page.getByRole('navigation',{name:'All product features'})).toBeVisible();await expect(page.getByRole('link',{name:/Services and prices/}).first()).toBeVisible()
+ await expect(page.locator('.hero-stage iframe')).toHaveCount(0);await expect(page.locator('a[href="/product/booking#try-booking"]').first()).toBeVisible()
+ await page.goto('/product');await expect(page.getByRole('tablist',{name:'What your page can do'})).toBeVisible();await expect(page.getByRole('tabpanel').getByRole('link')).toHaveAttribute('href','/product/gallery-reviews')
 })

@@ -2,7 +2,7 @@ import Image from "next/image"
 import type { ImageRef } from "@/features/businesses/content"
 import { cn } from "@/lib/utils"
 
-/** Cover-fit image honouring the owner's focal point. Local raster assets get responsive derivatives;
+/** Image honouring the owner’s fit and focal point. Local raster assets get responsive derivatives;
  * uploaded data and arbitrary external references keep their original browser-supported source. */
 export function ProfileImage({ image, sizes, className, priority }: { image: ImageRef; sizes: string; className?: string; priority?: boolean }) {
   const f = image.focal
@@ -16,7 +16,7 @@ export function ProfileImage({ image, sizes, className, priority }: { image: Ima
       unoptimized={!/^\/(?!\/)/.test(image.src) || /\.svg(?:$|[?#])/i.test(image.src)}
       draggable={false}
       className={cn("object-cover", className)}
-      style={f ? { objectPosition: `${f.x}% ${f.y}%` } : undefined}
+      style={{ ...(f ? { objectPosition: `${f.x}% ${f.y}%` } : {}), ...(image.fit ? {objectFit:image.fit} : {}) }}
     />
   )
 }

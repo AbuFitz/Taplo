@@ -32,6 +32,8 @@ export const imageSchema = z.object({
   width: z.number().int().positive().optional(),
   height: z.number().int().positive().optional(),
   focal: focalSchema.optional(),
+  /** Keep illustrations and cutouts whole when a photograph-style crop is unsuitable. */
+  fit: z.enum(["cover", "contain"]).optional(),
   /** Derived only for transparent identity uploads; supplies a contrasting backing without changing the pixels. */
   ink: z.enum(["dark", "light", "mixed"]).optional(),
   /** Sampled from an uploaded identity; absent for monochrome marks. */
@@ -52,6 +54,11 @@ export const serviceSchema = z.object({
   /** Integer minor units (pence). Required for fixed/from. */
   priceMinor: z.number().int().nonnegative().optional(),
   currency: z.string().length(3).default("GBP"),
+  /** Display basis only; a monthly price does not configure recurring billing. */
+  priceUnit: z.enum(["hour", "session", "month", "course"]).optional(),
+  /** Use the business’s existing site instead of starting a Taplo enquiry or booking. */
+  externalUrl: safeUrl.optional(),
+  externalLabel: optText(60),
   durationMinutes: z.number().int().positive().max(24 * 60).optional(),
   delivery: z.array(z.enum(DELIVERY_MODES)).default([]),
   bookingMode: z.enum(SERVICE_BOOKING_MODES).default("contact"),
@@ -143,6 +150,7 @@ export const productSchema = z.object({
   /** "enquire": customer contacts the business. "link": opens the owner's own shop/payment link. No checkout is built. */
   mode: z.enum(["enquire", "link"]).default("enquire"),
   linkUrl: safeUrl.optional(),
+  linkLabel: optText(60),
   /** What it is. Only changes wording and the suggested facts; every kind uses the same record. */
   kind: z.enum(["product", "vehicle"]).default("product"),
   /** Stock status. A sold or reserved item stays on the page (and in records) with its status shown. */

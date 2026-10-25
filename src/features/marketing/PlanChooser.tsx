@@ -168,7 +168,7 @@ export function PlanChooser({
               <span>/month</span>
             </p>
             <p className="pricing-summary">{DESCRIPTIONS[id]}</p>
-            <PlanIllustration plan={id} />
+            {id !== "free" && <PlanIllustration plan={id} />}
             <ul className="pricing-highlights">
               {HIGHLIGHTS[id].map((h) => (
                 <li key={h}>

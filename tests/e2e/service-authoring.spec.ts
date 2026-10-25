@@ -85,6 +85,8 @@ for (const width of [320, 390, 1440])
     await expect(crop).toContainText("Keep the complete photo.");
     await crop.getByTestId("crop-apply").click();
     await expect(crop).toBeHidden();
+    await dialog.getByLabel("Picture fit",{exact:true}).click();
+    await page.getByRole("option",{name:"Show the whole picture",exact:true}).click();
     await dialog.getByRole("button", { name: "Close", exact: true }).click();
     await expect(dialog.getByRole("alert")).toContainText(
       "Discard your changes?",
@@ -100,6 +102,7 @@ for (const width of [320, 390, 1440])
       }),
     ).toBeFocused();
     await expect(publicServices.first()).toContainText("Engine diagnostics");
+    await expect(publicServices.first().locator(".tp-service-photo img")).toHaveCSS("object-fit","contain");
     await expect(
       publicServices.first().locator(".tp-service-photo img"),
     ).toHaveCount(1);
@@ -123,6 +126,7 @@ for (const width of [320, 390, 1440])
     await page.reload();
     await openRow(page, "serviceList");
     await expect(publicServices.first()).toContainText("Engine diagnostics");
+    await expect(publicServices.first().locator(".tp-service-photo img")).toHaveCSS("object-fit","contain");
     await expect(
       publicServices.first().locator(".tp-service-photo img"),
     ).toHaveCount(1);
@@ -212,3 +216,33 @@ for (const width of [390, 1440])
     await expect(booking).toBeHidden();
     await expect(service).toBeFocused();
   });
+
+for (const width of [390, 1440]) test(`service price basis and an existing website link persist through editing at ${width}`, async ({page})=>{
+ await page.setViewportSize({width,height:1000});
+ await openEditorWithSample(page,"Mechanic");
+ await openRow(page,"serviceList");
+ const picker=insp(page).getByTestId("service-picker");
+ await picker.getByRole("button",{name:/^Edit /}).first().click();
+ const dialog=page.getByTestId("record-editor-dialog");
+ await dialog.getByLabel("Service name",{exact:true}).fill("Monthly support programme");
+ await dialog.getByLabel("Price",{exact:true}).click();await page.getByRole("option",{name:"Fixed price",exact:true}).click();
+ await dialog.getByLabel("Amount (£)",{exact:true}).fill("40");
+ await dialog.getByLabel("Price is for",{exact:true}).click();await page.getByRole("option",{name:"One month",exact:true}).click();
+ await dialog.locator("summary").filter({hasText:"Use an existing website or booking link"}).click();
+ await dialog.getByLabel("Service link",{exact:true}).fill("javascript:alert(1)");
+ await dialog.getByTestId("record-editor-save").click();
+ await expect(dialog).toContainText("Enter a full web address starting with https://.");
+ await dialog.getByLabel("Service link",{exact:true}).fill("https://www.brightlearntutoring.co.uk/online-one-to-one-maths-tutoring");
+ await dialog.getByLabel("Link text",{exact:true}).fill("View programme");
+ await expect(dialog.getByLabel("How do customers book?",{exact:true})).toHaveCount(0);
+ await dialog.getByTestId("record-editor-save").click();await expect(dialog).toBeHidden();
+ await page.reload();
+ const service=previewFrame(page).getByTestId("service-open").filter({hasText:"Monthly support programme"});
+ await expect(service).toContainText("£40 per month");
+ await page.goto("/demo/preview");
+ await page.getByTestId("service-open").filter({hasText:"Monthly support programme"}).click();
+ const detail=page.getByTestId("service-detail");
+ await expect(detail).toContainText("£40 per month");
+ await expect(detail.getByRole("link",{name:"View programme",exact:true})).toHaveAttribute("href","https://www.brightlearntutoring.co.uk/online-one-to-one-maths-tutoring");
+ await expect(detail.getByRole("textbox")).toHaveCount(0);
+});
