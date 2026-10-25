@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FeaturePlayground } from "@/features/marketing/FeaturePlayground";
 import { ServicePricingDemo } from "@/features/marketing/ServicePricingDemo";
 import { BookingMarketingPage } from "@/features/marketing/BookingMarketingPage";
 import { PlaqueScene } from "@/features/marketing/PlaqueScene";
@@ -12,11 +13,8 @@ import {
   primaryAction,
 } from "@/features/marketing/Site";
 import { ArrowLink } from "@/features/marketing/Scenes";
-import { SCENES } from "@/features/marketing/ProductScenes";
-import {
-  ProductArtwork,
-  PRODUCT_TONES,
-} from "@/features/marketing/ProductArtwork";
+import { FeatureDetails } from "@/features/marketing/FeatureDetails";
+import { PRODUCT_TONES } from "@/features/marketing/ProductArtwork";
 import { PRODUCT_PAGES, pageBySlug } from "@/features/marketing/product";
 
 export function generateStaticParams() {
@@ -39,8 +37,7 @@ export default async function ProductPageRoute({
   const p = pageBySlug((await params).slug);
   if (!p) notFound();
   if (p.slug === "booking") return <BookingMarketingPage product={p} />;
-  const Scene = SCENES[p.slug],
-    a = primaryAction(),
+  const a = primaryAction(),
     tone = PRODUCT_TONES[p.slug];
   return (
     <div className="feature-page bg-background">
@@ -102,7 +99,7 @@ export default async function ProductPageRoute({
                   />
                 </div>
               ) : (
-                <ProductArtwork slug={p.slug} priority />
+                <FeaturePlayground slug={p.slug} />
               )}
             </div>
           </div>
@@ -111,7 +108,7 @@ export default async function ProductPageRoute({
           id="feature-detail"
           className="mx-auto max-w-7xl scroll-mt-24 px-5 py-20 sm:px-8 sm:py-28"
         >
-          <Scene />
+          <FeatureDetails slug={p.slug} />
         </div>
         <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20">
           <div className="flex flex-wrap items-end justify-between gap-8">

@@ -129,3 +129,15 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 
 .setup-profile-choices .setup-theme-choice>span[aria-hidden="true"] {border-radius:16px;background:transparent;box-shadow:0 6px 18px -10px #1115;}
 .setup-profile-choices .setup-theme-choice:has(input:checked)>span[aria-hidden="true"] {outline:2px solid #233c42;outline-offset:3px;}
+/* Mobile preview and controls share the screen; the keyboard always gives fields priority. */
+@media(max-width:1023px){
+ .setup-flow[data-mobile-layout=preview] .setup-workspace { grid-template-rows:clamp(145px,24dvh,215px) minmax(0,1fr); }
+ .setup-flow[data-mobile-layout=preview] .setup-workspace>section { border-radius:26px 26px 0 0; background:linear-gradient(#ffffffdc,#ffffff96 65%,transparent); margin-inline:-22px; padding-inline:22px; width:calc(100% + 44px); }
+ .setup-flow[data-mobile-layout=preview] .setup-workspace>aside { mask-image:linear-gradient(#000 82%,transparent); }
+ .setup-flow[data-mobile-layout=preview] .setup-canvas { max-width:240px; padding:4px 6px 0; }
+ .setup-flow[data-keyboard=true] .setup-workspace { grid-template-rows:minmax(0,1fr); }
+ .setup-flow[data-keyboard=true] .setup-workspace>section { border-radius:0; background:transparent; }
+ .setup-flow[data-mobile-layout=preview] .setup-avatar-control { min-height:76px;gap:16px; }
+ .setup-flow[data-mobile-layout=preview] .setup-avatar-picture { width:66px;height:66px; }
+ .setup-flow[data-mobile-layout=preview] .setup-step-body>div { gap:18px; }
+}

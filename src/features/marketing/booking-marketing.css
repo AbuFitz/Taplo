@@ -93,3 +93,5 @@
 /* Page-themed portals stay above adjacent artwork and the marketing navigation. */
 .booking-try-section:has([data-overlay]) { position:relative; z-index:70; }
 .booking-demo-controls:has([data-overlay]) { position:relative; z-index:2; }
+
+.booking-hero-art:has(.feature-playground){height:auto;overflow:visible;padding-block:12px 24px}

@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import { useRef } from "react";
+import "./pricing-story.css";
 import { ArrowRight, Check } from "lucide-react";
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
 import { formatMoney } from "@/features/services/format";
@@ -17,6 +19,22 @@ export function PlanChooser({
   selected: PlanId;
   select: (id: PlanId) => void;
 }) {
+  const rail = useRef<HTMLUListElement>(null);
+  const choose = (id: PlanId) => {
+    select(id);
+    if (window.matchMedia("(max-width:767px)").matches) {
+      const card = rail.current?.querySelector<HTMLElement>(
+        `[data-plan="${id}"]`,
+      );
+      if (card && rail.current)
+        rail.current.scrollTo({
+          left: card.offsetLeft,
+          behavior: window.matchMedia("(prefers-reduced-motion:reduce)").matches
+            ? "instant"
+            : "smooth",
+        });
+    }
+  };
   return (
     <div data-testid="plan-chooser">
       <div className="pricing-intent">
@@ -31,7 +49,7 @@ export function PlanChooser({
               key={p.plan}
               type="button"
               aria-pressed={selected === p.plan}
-              onClick={() => select(p.plan)}
+              onClick={() => choose(p.plan)}
             >
               {p.label}
             </button>
@@ -48,17 +66,47 @@ export function PlanChooser({
             key={id}
             type="button"
             aria-pressed={selected === id}
-            onClick={() => select(id)}
+            onClick={() => choose(id)}
           >
             {PLANS[id].name}
           </button>
         ))}
       </div>
-      <ul className="pricing-plans">
+      <ul
+        ref={rail}
+        className="pricing-plans"
+        aria-label="Plan options"
+        onScroll={() => {
+          const el = rail.current;
+          if (!el || !window.matchMedia("(max-width:767px)").matches) return;
+          const cards = Array.from(
+            el.querySelectorAll<HTMLElement>("[data-plan]"),
+          );
+          const nearest = cards.reduce((a, b) =>
+            Math.abs(a.offsetLeft - el.scrollLeft) <
+            Math.abs(b.offsetLeft - el.scrollLeft)
+              ? a
+              : b,
+          );
+          select(nearest.dataset.plan as PlanId);
+        }}
+      >
         {PLAN_IDS.map((id) => (
-          <li key={id} data-plan={id} data-selected={selected === id}>
+          <li
+            key={id}
+            data-plan={id}
+            data-selected={selected === id}
+            aria-label={`${PLANS[id].name} plan`}
+          >
             <div>
-              <h2>{PLANS[id].name}</h2>
+              <div className="pricing-plan-heading">
+                <h2>{PLANS[id].name}</h2>
+                {id === "pro" ? (
+                  <span>For appointments</span>
+                ) : id === "business" ? (
+                  <span>For growing teams</span>
+                ) : null}
+              </div>
               <p className="pricing-price">
                 {id === "free" ? "£0" : formatMoney(PLANS[id].priceMinorGbp)}
                 <span>/month</span>
@@ -70,6 +118,16 @@ export function PlanChooser({
                 </p>
               ) : null}
             </div>
+            <div
+              className="pricing-plan-illustration"
+              data-tier={id}
+              aria-hidden="true"
+            >
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
             <ul className="pricing-highlights">
               {PLANS[id].highlights.slice(0, 4).map((h) => (
                 <li key={h}>
@@ -79,7 +137,8 @@ export function PlanChooser({
               ))}
             </ul>
             <Link
-              data-brand-action href={demo ? `/onboarding?plan=${id}` : "/how-it-works"}
+              data-brand-action
+              href={demo ? `/onboarding?plan=${id}` : "/how-it-works"}
               className="pricing-start"
             >
               {id === "free" ? "Start free" : `Start with ${PLANS[id].name}`}

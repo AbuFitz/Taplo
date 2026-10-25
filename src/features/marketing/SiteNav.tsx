@@ -7,12 +7,11 @@ import { Dialog, NavigationMenu } from "radix-ui";
 import {
   ArrowUpRight,
   CalendarDays,
-  CarFront,
+  Car,
   ChevronDown,
-  Compass,
-  CreditCard,
   ImageIcon,
   LayoutGrid,
+  Menu,
   List,
   MessageCircle,
   MessagesSquare,
@@ -23,11 +22,9 @@ import {
   X,
 } from "lucide-react";
 import { TaploLogo } from "@/components/taplo/brand";
-import { dashboardDestination } from "@/lib/domains";
 import { PRODUCT_GROUPS, INDUSTRY_FILTERS } from "./ia";
 import "./site-navigation.css";
 
-const subscribeHost = () => () => {};
 const ICONS: Record<string, typeof Palette> = {
   design: Palette,
   services: List,
@@ -36,29 +33,16 @@ const ICONS: Record<string, typeof Palette> = {
   messages: MessagesSquare,
   team: Users,
   products: Package,
-  vehicles: CarFront,
+  vehicles: Car,
   "gallery-reviews": ImageIcon,
   sharing: QrCode,
 };
 
-/** One information architecture; native desktop menus and a thumb-reachable mobile sheet. */
-export function SiteNav({
-  cta,
-  ctaHref,
-  loginHref,
-}: {
-  cta: string;
-  ctaHref: string;
-  loginHref: string;
-}) {
+/** Shared product taxonomy in desktop menus and a compact mobile header. */
+export function SiteNav({ cta, ctaHref }: { cta: string; ctaHref: string }) {
   const path = usePathname() ?? "/";
-  const host = React.useSyncExternalStore(
-    subscribeHost,
-    () => window.location.hostname,
-    () => "",
-  );
-  const dashboardHref = dashboardDestination(host, loginHref);
   const [menu, setMenu] = React.useState("");
+  const [mobileSection, setMobileSection] = React.useState("product");
   const [openOn, setOpenOn] = React.useState<string | null>(null);
   const productTrigger = React.useRef<HTMLButtonElement>(null);
   const featureTrigger = React.useRef<HTMLButtonElement>(null);
@@ -237,60 +221,23 @@ export function SiteNav({
           </NavigationMenu.Root>
           <div className="site-nav-actions">
             <Link
-              href={dashboardHref}
-              className="site-studio-link"
-              onClick={close}
-            >
-              Open Studio
-              <ArrowUpRight size={13} aria-hidden="true" />
-            </Link>
-            <Link
               data-brand-action
               href={ctaHref}
               onClick={close}
-              className="site-nav-primary site-desktop-start"
+              className="site-nav-primary"
             >
               {cta}
             </Link>
           </div>
+          <Dialog.Trigger
+            ref={featureTrigger}
+            className="site-mobile-trigger"
+            aria-label="Open menu"
+          >
+            <Menu size={22} strokeWidth={1.7} aria-hidden="true" />
+          </Dialog.Trigger>
         </div>
       </header>
-      <nav aria-label="Mobile navigation" className="site-thumb-dock">
-        <Dialog.Trigger
-          ref={featureTrigger}
-          className="site-thumb-item"
-          aria-label="Explore features"
-        >
-          <LayoutGrid size={19} strokeWidth={1.7} aria-hidden="true" />
-          <span>Features</span>
-        </Dialog.Trigger>
-        <Link
-          href="/inspiration"
-          className="site-thumb-item"
-          aria-current={at("/inspiration")}
-          onClick={close}
-        >
-          <Compass size={19} strokeWidth={1.7} aria-hidden="true" />
-          <span>Designs</span>
-        </Link>
-        <Link
-          href="/pricing"
-          className="site-thumb-item"
-          aria-current={at("/pricing")}
-          onClick={close}
-        >
-          <CreditCard size={19} strokeWidth={1.7} aria-hidden="true" />
-          <span>Pricing</span>
-        </Link>
-        <Link
-          data-brand-action
-          href={ctaHref}
-          onClick={close}
-          className="site-nav-primary"
-        >
-          {cta}
-        </Link>
-      </nav>
       <Dialog.Portal>
         <Dialog.Overlay className="site-feature-overlay" />
         <Dialog.Content
@@ -304,67 +251,114 @@ export function SiteNav({
           }}
         >
           <div className="site-feature-sheet-header">
-            <Dialog.Title>Explore Taplo</Dialog.Title>
-            <Dialog.Close
-              aria-label="Close features"
-              className="site-menu-close"
-            >
-              <X size={21} aria-hidden="true" />
+            <Link href="/" aria-label="Taplo home" onClick={close}>
+              <TaploLogo tone="light" className="h-7" />
+            </Link>
+            <Dialog.Title className="sr-only">Taplo menu</Dialog.Title>
+            <Dialog.Close aria-label="Close menu" className="site-menu-close">
+              <X size={23} aria-hidden="true" />
             </Dialog.Close>
           </div>
           <Dialog.Description className="sr-only">
-            Features, designs and setup. Choose a page to explore.
+            Explore the product, browse designs, or start your page.
           </Dialog.Description>
+          <nav className="site-mobile-categories" aria-label="Menu categories">
+            <button
+              type="button"
+              aria-expanded={mobileSection === "product"}
+              aria-controls="mobile-product-links"
+              onClick={() => setMobileSection("product")}
+            >
+              Product
+              <ChevronDown size={14} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              aria-expanded={mobileSection === "designs"}
+              aria-controls="mobile-design-links"
+              onClick={() => setMobileSection("designs")}
+            >
+              Designs
+              <ChevronDown size={14} aria-hidden="true" />
+            </button>
+            <Link href="/pricing" aria-current={at("/pricing")} onClick={close}>
+              Pricing
+            </Link>
+          </nav>
           <div className="site-feature-sheet-body">
-            <div className="site-sheet-shortcuts">
-              <Link href="/product" onClick={close}>
-                The platform
-                <ArrowUpRight size={15} aria-hidden="true" />
-              </Link>
-              <Link href="/how-it-works" onClick={close}>
-                How it works
-                <ArrowUpRight size={15} aria-hidden="true" />
-              </Link>
+            <div id="mobile-product-links" hidden={mobileSection !== "product"}>
+              <div className="site-sheet-shortcuts">
+                <Link href="/product" onClick={close}>
+                  The platform
+                  <ArrowUpRight size={15} aria-hidden="true" />
+                </Link>
+              </div>
+              <div className="site-mobile-groups">
+                {PRODUCT_GROUPS.map((group) => (
+                  <section key={group.title}>
+                    <h3 className="site-menu-label">{group.title}</h3>
+                    <ul>
+                      {group.links.map((link) => {
+                        const Icon =
+                          ICONS[link.href.split("/").at(-1)!] ?? LayoutGrid;
+                        return (
+                          <li key={link.href}>
+                            <Link
+                              href={link.href}
+                              onClick={close}
+                              className="site-feature-link"
+                            >
+                              <Icon
+                                size={21}
+                                strokeWidth={1.6}
+                                aria-hidden="true"
+                              />
+                              <span>
+                                {link.label}
+                                <small>{link.blurb}</small>
+                              </span>
+                              <ArrowUpRight
+                                className="site-feature-arrow"
+                                size={15}
+                                aria-hidden="true"
+                              />
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </section>
+                ))}
+              </div>
             </div>
-            {PRODUCT_GROUPS.map((group) => (
-              <section key={group.title}>
-                <h3 className="site-menu-label">{group.title}</h3>
-                <ul>
-                  {group.links.map((link) => {
-                    const Icon =
-                      ICONS[link.href.split("/").at(-1)!] ?? LayoutGrid;
-                    return (
-                      <li key={link.href}>
-                        <Link
-                          href={link.href}
-                          onClick={close}
-                          className="site-feature-link"
-                        >
-                          <Icon
-                            size={21}
-                            strokeWidth={1.6}
-                            aria-hidden="true"
-                          />
-                          <span>
-                            {link.label}
-                            <small>{link.blurb}</small>
-                          </span>
-                          <ArrowUpRight
-                            className="site-feature-arrow"
-                            size={15}
-                            aria-hidden="true"
-                          />
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </section>
-            ))}
+            <div id="mobile-design-links" hidden={mobileSection !== "designs"}>
+              <Link
+                href="/inspiration"
+                onClick={close}
+                className="site-menu-overview"
+              >
+                Explore all designs
+                <ArrowUpRight size={16} aria-hidden="true" />
+              </Link>
+              <ul className="site-mobile-designs">
+                {INDUSTRY_FILTERS.map((industry) => (
+                  <li key={industry.id}>
+                    <Link
+                      href={`/inspiration?industry=${industry.id}`}
+                      onClick={close}
+                    >
+                      {industry.label}
+                      <ArrowUpRight size={14} aria-hidden="true" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
           <div className="site-feature-sheet-footer">
-            <Link href={dashboardHref} onClick={close}>
-              Open Studio
+            <Link href="/how-it-works" onClick={close}>
+              How it works
+              <ArrowUpRight size={15} aria-hidden="true" />
             </Link>
             <Link
               data-brand-action

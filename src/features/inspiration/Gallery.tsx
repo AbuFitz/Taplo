@@ -3,8 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { ArrowUpRight, Search, X } from "lucide-react";
-import { businessAddress } from "@/lib/domains";
-import { Shot } from "@/features/marketing/Shot";
+import { MarketingPreview } from "@/features/marketing/MarketingPreview";
 import type { StyleOverrides } from "@/features/page/contracts/style";
 import { UseDesign } from "./UseDesign";
 import { cn } from "@/lib/utils";
@@ -37,7 +36,11 @@ export interface GalleryProps {
   initialIndustry?: string;
 }
 
-const searchable = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+const searchable = (value: string) =>
+  value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
 
 const toggle = <T,>(list: T[], v: T) =>
   list.includes(v) ? list.filter((x) => x !== v) : [...list, v];
@@ -60,7 +63,11 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
   const shown = items.filter(
     (i) =>
       words.every((word) =>
-        searchable([i.name, i.hook, i.industryLabel, i.scenario, ...i.capabilities].join(" ")).includes(word),
+        searchable(
+          [i.name, i.hook, i.industryLabel, i.scenario, ...i.capabilities].join(
+            " ",
+          ),
+        ).includes(word),
       ) &&
       style.every((s) => i.style.includes(s)) &&
       caps.every((c) => i.capabilities.includes(c)) &&
@@ -131,7 +138,7 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
               <label
                 key={v}
                 className={cn(
-                  "min-h-10 cursor-pointer rounded-full px-4 py-2 text-sm font-medium has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring",
+                  "relative min-h-10 cursor-pointer rounded-full px-4 py-2 text-sm font-medium has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring",
                   view === v ? "bg-background shadow-sm" : "text-foreground/65",
                 )}
               >
@@ -141,7 +148,7 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
                   value={v}
                   checked={view === v}
                   onChange={() => setView(v)}
-                  className="sr-only"
+                  className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                 />
                 {v === "desktop" ? "Desktop" : "Phone"}
               </label>
@@ -196,14 +203,38 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-foreground/60">
-          <p id="biz-note" className="sr-only">Every design works for any business.</p>
+          <p id="biz-note" className="sr-only">
+            Every design works for any business.
+          </p>
           <p aria-live="polite" data-testid="gallery-count">
             {shown.length} of {items.length} designs
           </p>
         </div>
       </div>
 
-      <div className="design-industry-rail" role="group" aria-label="Page categories"><button type="button" aria-pressed={biz===null} onClick={()=>setBiz(null)}>All designs</button>{industries.map(i=><button type="button" key={i.id} aria-pressed={biz===i.id} onClick={()=>setBiz(biz===i.id?null:i.id)}>{i.label}</button>)}</div>
+      <div
+        className="design-industry-rail"
+        role="group"
+        aria-label="Page categories"
+      >
+        <button
+          type="button"
+          aria-pressed={biz === null}
+          onClick={() => setBiz(null)}
+        >
+          All designs
+        </button>
+        {industries.map((i) => (
+          <button
+            type="button"
+            key={i.id}
+            aria-pressed={biz === i.id}
+            onClick={() => setBiz(biz === i.id ? null : i.id)}
+          >
+            {i.label}
+          </button>
+        ))}
+      </div>
       {shown.length === 0 ? (
         <p className="py-20 text-lg text-foreground/70">
           No matching designs. Try another search or remove a filter.
@@ -214,7 +245,7 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
           data-testid="gallery-list"
           data-view={view}
         >
-          {shown.map((d, n) => (
+          {shown.map((d) => (
             <li key={d.slug} data-testid="design-card">
               <Link
                 href={`/inspiration/${d.slug}`}
@@ -223,34 +254,25 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
                 data-tone={d.style.includes("Dark") ? "dark" : "light"}
               >
                 <div className="design-surface transition-transform duration-300 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 motion-reduce:transition-none">
-                  {view === "desktop" ? (
-                    <Shot
-                      id={`ex-${d.assetSlug}-desk` as never}
-                      alt={`${d.name}'s page on a desktop screen`}
-                      width={720}
-                      frame="browser"
-                      url={businessAddress(d.slug)}
-                      priority={n < 2}
-                      className="w-full"
-                    />
-                  ) : (
-                    <Shot
-                      id={`ex-${d.assetSlug}-phone` as never}
-                      alt={`${d.name}'s page on a phone`}
-                      width={390}
-                      cropTo={650}
-                      fluid
-                      frame="phone"
-                      priority={n < 2}
-                      className="mx-auto"
-                    />
-                  )}
+                  <MarketingPreview
+                    scenario={d.scenario}
+                    slug={d.slug}
+                    name={d.name}
+                    view={view}
+                  />
                 </div>
               </Link>
               <div className="mt-5">
-                <p className="text-xs font-medium text-foreground/60">{d.industryLabel}</p>
+                <p className="text-xs font-medium text-foreground/60">
+                  {d.industryLabel}
+                </p>
                 <h2 className="mt-1 font-display font-display-tight text-lg sm:text-2xl">
-                  <Link href={`/inspiration/${d.slug}`} className="hover:underline underline-offset-4">{d.lookName}</Link>
+                  <Link
+                    href={`/inspiration/${d.slug}`}
+                    className="hover:underline underline-offset-4"
+                  >
+                    {d.lookName}
+                  </Link>
                 </h2>
                 <div className="design-card-actions mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
                   <Link

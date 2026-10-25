@@ -67,7 +67,7 @@ test.describe("navigation", () => {
     ).toBeHidden();
   });
 
-  test("the header offers Pricing, Open Studio and the primary action", async ({
+  test("the signed-out header offers Pricing and Start free without claiming an account", async ({
     page,
   }) => {
     await page.goto("/pricing");
@@ -76,15 +76,15 @@ test.describe("navigation", () => {
       "aria-current",
       "page",
     );
-    await expect(
-      header.getByRole("link", { name: "Open Studio" }),
-    ).toHaveAttribute("href", "/dashboard");
+    await expect(header.getByRole("link", { name: "Open Studio" })).toHaveCount(
+      0,
+    );
     await expect(
       header.getByRole("link", { name: "Start free" }),
     ).toHaveAttribute("href", /\/onboarding|\/pricing/);
   });
 
-  test("on a phone the menu is a sheet with sections, a visible primary action, Escape and focus return", async ({
+  test("on a phone the header menu has product categories, a visible primary action, Escape and focus return", async ({
     browser,
   }) => {
     const ctx = await browser.newContext({
@@ -92,7 +92,7 @@ test.describe("navigation", () => {
     });
     const page = await ctx.newPage();
     await page.goto("/");
-    const trigger = page.getByRole("button", { name: "Explore features" });
+    const trigger = page.getByRole("button", { name: "Open menu" });
     await trigger.click();
     const sheet = page.getByRole("dialog");
     await expect(sheet).toBeVisible();
@@ -358,9 +358,10 @@ test.describe("film", () => {
     const story = page.getByTestId("widget-orbit");
     await story.scrollIntoViewIfNeeded();
     await expect(story.locator("video")).toHaveCount(0);
-    await expect(
-      story.getByRole("link", { name: "Explore Taplo widgets", exact: true }),
-    ).toHaveAttribute("href", "/product");
+    await expect(story.locator(".widget-orbit-link")).toHaveAttribute(
+      "href",
+      "/product",
+    );
     await expect(page.getByText("Read the film", { exact: true })).toHaveCount(
       0,
     );

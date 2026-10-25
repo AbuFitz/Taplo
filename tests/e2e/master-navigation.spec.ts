@@ -13,17 +13,21 @@ for (const width of [320, 390, 768, 1440])
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBe(width);
     if (width < 768) {
-      await expect(dock).toBeVisible();
+      await expect(dock).toHaveCount(0);
       await expect(
         header.getByRole("link", { name: "Open Studio" }),
+      ).toHaveCount(0);
+      await expect(
+        header.getByRole("link", { name: "Start free" }),
       ).toBeVisible();
       const open = page.getByRole("button", {
-        name: "Explore features",
+        name: "Open menu",
         exact: true,
       });
       await open.click();
-      const sheet = page.getByRole("dialog", { name: "Explore Taplo" });
+      const sheet = page.getByRole("dialog", { name: "Taplo menu" });
       await expect(sheet).toBeVisible();
+      await expect(sheet).toHaveCSS("opacity", "1");
       await page.screenshot({ path: `work/master-feature-sheet-${width}.png` });
       for (const slug of [
         "design",
@@ -48,9 +52,9 @@ for (const width of [320, 390, 768, 1440])
       await expect(page).toHaveURL(/\/product\/services$/);
       await expect(sheet).toBeHidden();
       await page
-        .getByRole("button", { name: "Explore features", exact: true })
+        .getByRole("button", { name: "Open menu", exact: true })
         .click();
-      await page.getByRole("button", { name: "Close features" }).click();
+      await page.getByRole("button", { name: "Close menu" }).click();
       await expect(page.getByRole("dialog")).toBeHidden();
     } else {
       await expect(dock).toBeHidden();
@@ -75,16 +79,16 @@ for (const width of [320, 390, 768, 1440])
     await page.screenshot({ path: `work/master-navigation-${width}.png` });
     const results = await new AxeBuilder({ page })
       .include(".site-navigation")
-      .include(".site-thumb-dock")
+
       .analyze();
     expect(results.violations).toEqual([]);
   });
-test("mobile sheet closes on desktop resize and does not obstruct footer links", async ({
+test("mobile menu closes on desktop resize and leaves the footer unobstructed", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/inspiration");
-  await page.getByRole("button", { name: "Explore features" }).click();
+  await page.getByRole("button", { name: "Open menu" }).click();
   await page.setViewportSize({ width: 1440, height: 1000 });
   await expect(page.getByRole("dialog")).toBeHidden();
   await expect(
@@ -93,11 +97,8 @@ test("mobile sheet closes on desktop resize and does not obstruct footer links",
   await page.setViewportSize({ width: 390, height: 844 });
   const terms = page.getByRole("link", { name: "Terms", exact: true });
   await terms.scrollIntoViewIfNeeded();
-  const t = await terms.boundingBox(),
-    d = await page
-      .getByRole("navigation", { name: "Mobile navigation" })
-      .boundingBox();
-  expect(t!.y + t!.height).toBeLessThan(d!.y);
+  await expect(terms).toBeInViewport();
+  await expect(page.locator(".site-thumb-dock")).toHaveCount(0);
 });
 test("authoring has one contextual preview explanation", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 844 });

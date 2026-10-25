@@ -11,26 +11,30 @@ for (const width of [320, 390, 768, 1440])
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     const hero = page.locator(".hero-stage");
-    await expect(hero.locator("iframe")).toHaveCount(0);
-    for (const label of ["Car dealer", "Café"]) {
+    await expect(hero.locator("iframe")).toHaveCount(width >= 768 ? 2 : 1);
+    for (const [label, scenario] of [
+      ["Stock", "brookfield"],
+      ["Cafés", "corner"],
+    ]) {
       await hero.getByRole("button", { name: label, exact: true }).click();
-      await expect(hero.locator(".hero-phone img")).toHaveAttribute(
-        "alt",
-        label === "Café"
-          ? "No. 6 Coffee business page"
-          : "Harris Cars business page",
+      await expect(hero.locator(".hero-live-phone iframe")).toHaveAttribute(
+        "src",
+        `/appearance/frame?scenario=${scenario}`,
+      );
+      await expect(hero.locator(".hero-live-phone iframe")).toHaveAttribute(
+        "data-loaded",
+        "true",
       );
     }
     expect(
-      (await hero.locator(".hero-phone").boundingBox())!.width,
+      (await hero.locator(".hero-live-phone").boundingBox())!.width,
     ).toBeLessThan(310);
     await expect(page.locator(".feature-illustration")).toHaveCount(0);
     await expect(
       page.locator('section[aria-labelledby="businesses-h"]'),
     ).toHaveCount(0);
-    await expect.poll(()=>hero.locator('img').evaluateAll(imgs=>imgs.every(i=>(i as HTMLImageElement).complete&&(i as HTMLImageElement).naturalWidth>0))).toBe(true)
-    const artwork = (await hero.locator('.hero-composition').boundingBox())!;
-    const caption = (await hero.locator('.hero-stage-caption').boundingBox())!;
+    const artwork = (await hero.locator(".hero-composition").boundingBox())!;
+    const caption = (await hero.locator(".hero-stage-caption").boundingBox())!;
     expect(caption.y).toBeGreaterThanOrEqual(artwork.y + artwork.height);
 
     await hero.screenshot({
@@ -43,9 +47,17 @@ for (const width of [320, 390, 768, 1440])
     await plaque.scrollIntoViewIfNeeded();
     await expect(plaque.getByRole("slider")).toHaveCount(0);
     await expect(plaque.getByRole("button")).toHaveCount(0);
-    const code = await plaque.locator(".plaque-code svg").evaluate(el => new XMLSerializer().serializeToString(el));
-    const {data,info} = await sharp(Buffer.from(code)).resize(800,800).ensureAlpha().raw().toBuffer({resolveWithObject:true});
-    expect(jsQR(new Uint8ClampedArray(data),info.width,info.height)?.data).toBe("https://taplo-lilac.vercel.app/inspiration/no-6-coffee");
+    const code = await plaque
+      .locator(".plaque-code svg")
+      .evaluate((el) => new XMLSerializer().serializeToString(el));
+    const { data, info } = await sharp(Buffer.from(code))
+      .resize(800, 800)
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    expect(
+      jsQR(new Uint8ClampedArray(data), info.width, info.height)?.data,
+    ).toBe("https://mytaplo.vercel.app/inspiration/no-6-coffee");
     await plaque.screenshot({
       path: path.join(
         process.env.TAPLO_REVIEW_DIR ?? "test-results",
@@ -67,9 +79,19 @@ for (const width of [320, 390, 768, 1440])
       })),
     ).toEqual([]);
     await page.goto("/product");
-    await page.getByTestId("product-experience").getByRole("radio", { name: "Car dealer", exact: true }).check();
-    await expect(page.getByTestId("product-experience").getByText("Harris Cars", {exact:true})).toBeVisible();
-    await expect(page.getByTestId("product-demo")).toHaveAttribute("href", "/inspiration/harris-cars");
+    await page
+      .getByTestId("product-experience")
+      .getByRole("radio", { name: "Car dealer", exact: true })
+      .check();
+    await expect(
+      page
+        .getByTestId("product-experience")
+        .getByText("Harris Cars", { exact: true }),
+    ).toBeVisible();
+    await expect(page.getByTestId("product-demo")).toHaveAttribute(
+      "href",
+      "/inspiration/harris-cars",
+    );
     await page.screenshot({
       path: path.join(
         process.env.TAPLO_REVIEW_DIR ?? "test-results",
@@ -111,32 +133,88 @@ for (const width of [320, 390, 768, 1440])
       ),
     ).toBe(true);
   });
-test("plaque follows the pointer without a click, settles on leaving, and the hero never captures the wheel", async ({page}) => {
-  await page.setViewportSize({width:1440,height:950});
-  await page.emulateMedia({reducedMotion:"no-preference"});
+test("plaque follows the pointer without a click, settles on leaving, and the hero never captures the wheel", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 950 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
-  const plaque=page.locator(".plaque-stage");await plaque.scrollIntoViewIfNeeded();
-  const box=(await plaque.boundingBox())!;
-  await page.mouse.move(box.x+box.width*.85,box.y+box.height*.3);
-  await expect(plaque).toHaveAttribute("data-engaged","true");
-  await page.mouse.move(1,1);
-  await expect(plaque).toHaveAttribute("data-engaged","false");
-  await plaque.focus();await page.keyboard.press("ArrowRight");await expect(plaque).toHaveAttribute("data-engaged","true");
-  await page.keyboard.press("Escape");await expect(plaque).toHaveAttribute("data-engaged","false");
-  const phone=page.locator(".hero-phone");await phone.scrollIntoViewIfNeeded();await phone.hover();const before=await page.evaluate(()=>scrollY);await page.mouse.wheel(0,300);await expect.poll(()=>page.evaluate(()=>scrollY)).toBeGreaterThan(before);
+  const plaque = page.locator(".plaque-stage");
+  await plaque.scrollIntoViewIfNeeded();
+  const box = (await plaque.boundingBox())!;
+  await page.mouse.move(box.x + box.width * 0.85, box.y + box.height * 0.3);
+  await expect(plaque).toHaveAttribute("data-engaged", "true");
+  await page.mouse.move(1, 1);
+  await expect(plaque).toHaveAttribute("data-engaged", "false");
+  await plaque.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(plaque).toHaveAttribute("data-engaged", "true");
+  await page.keyboard.press("Escape");
+  await expect(plaque).toHaveAttribute("data-engaged", "false");
+  const phone = page.locator(".hero-live-phone");
+  await phone.scrollIntoViewIfNeeded();
+  await phone.hover();
+  const before = await page.evaluate(() => scrollY);
+  await page.mouse.wheel(0, 300);
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(before);
 });
 
-test("sharing uses the simple plaque, with no reset or format controls",async({page})=>{
-  await page.setViewportSize({width:390,height:950});await page.emulateMedia({reducedMotion:"reduce"});await page.goto("/product/sharing");
-  const plaque=page.getByTestId("plaque-experience");await expect(plaque).toBeVisible();await expect(plaque.getByRole("button")).toHaveCount(0);
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();expect(result.violations.map(v=>v.id)).toEqual([]);
+test("sharing uses the simple plaque, with no reset or format controls", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 950 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/product/sharing");
+  const plaque = page.getByTestId("plaque-experience");
+  await expect(plaque).toBeVisible();
+  await expect(plaque.getByRole("button")).toHaveCount(0);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  const result = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+    .analyze();
+  expect(
+    result.violations.map((v) => ({
+      id: v.id,
+      nodes: v.nodes.map((n) => ({
+        target: n.target,
+        reason: n.failureSummary,
+      })),
+    })),
+  ).toEqual([]);
 });
 
-test("homepage design choices use distinct working businesses and send the selected design into setup",async({page})=>{
- await page.setViewportSize({width:390,height:950});await page.goto("/");const designs=page.getByTestId("home-designs");
- for(const [label,name,slug] of [["Appointments","Hollin Physiotherapy","hollin-physio"],["Stock","Harris Cars","harris-cars"],["Menus","No. 6 Coffee","no-6-coffee"]]){
-  await designs.getByText(label,{exact:true}).click();await expect(designs.locator('.home-design-phone img')).toHaveAttribute('alt',`${name} business design`);
-  await expect(designs.getByRole('link',{name:'Use this design',exact:true})).toHaveAttribute('href',`/onboarding?from=${slug}`);
- }
+test("homepage design choices use distinct working businesses and send the selected design into setup", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 950 });
+  await page.goto("/");
+  const designs = page.getByTestId("home-designs");
+  for (const [label, name, slug] of [
+    ["Appointments", "Hollin Physiotherapy", "hollin-physio"],
+    ["Stock", "Harris Cars", "harris-cars"],
+    ["Menus", "No. 6 Coffee", "no-6-coffee"],
+  ]) {
+    await designs.getByText(label, { exact: true }).click();
+    const scenario = {
+      "hollin-physio": "physio",
+      "harris-cars": "brookfield",
+      "no-6-coffee": "corner",
+    }[slug];
+    await expect(designs.locator("iframe")).toHaveAttribute(
+      "src",
+      `/appearance/frame?scenario=${scenario}`,
+    );
+    await expect(designs.locator("iframe")).toHaveAttribute(
+      "data-loaded",
+      "true",
+    );
+    await expect(designs.getByText(name, { exact: true })).toBeVisible();
+    await expect(
+      designs.getByRole("link", { name: "Use this design", exact: true }),
+    ).toHaveAttribute("href", `/onboarding?from=${slug}`);
+  }
 });

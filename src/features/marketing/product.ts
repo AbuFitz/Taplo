@@ -77,7 +77,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
       { label: "Swipe, grid, list and avatar layouts", state: "works" },
       { label: "Profiles with services, working days and qualifications you supply", state: "works" },
       { label: "Private staff contact details stay private", state: "works" },
-      { label: "Customers choosing a person when booking", state: "needs", requirement: "plan", note: "Needs the Business plan." },
+      { label: "Customers choosing a person when booking", state: "needs", requirement: "plan", note: "Pro includes up to three staff calendars; Business has no staff-calendar cap." },
     ],
     related: ["booking", "gallery-reviews", "design"],
   },

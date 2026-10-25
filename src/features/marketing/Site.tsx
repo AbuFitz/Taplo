@@ -17,7 +17,7 @@ export function primaryAction() {
 }
 export function SiteHeader() {
   const a = primaryAction();
-  return <SiteNav cta={a.label} ctaHref={a.href} loginHref="/dashboard" />;
+  return <SiteNav cta={a.label} ctaHref={a.href} />;
 }
 export function SiteFooter() {
   const a = primaryAction();
@@ -27,10 +27,12 @@ export function SiteFooter() {
         <div className="flex flex-wrap items-end justify-between gap-8 border-b border-white/25 pb-14 sm:pb-20">
           <h2 className="font-display font-display-tight max-w-3xl text-[clamp(2.25rem,5vw,4.75rem)] leading-[1.03] tracking-[-0.045em]">
             Your next customer.
-            <br />One page away.
+            <br />
+            One page away.
           </h2>
           <Link
-            data-brand-action href={a.href}
+            data-brand-action
+            href={a.href}
             className="inline-flex min-h-13 items-center gap-8 rounded-full bg-[#ffffff] px-7 font-semibold text-[#111111] outline-none hover:bg-white focus-visible:ring-3 focus-visible:ring-white/60"
           >
             {a.label}
@@ -51,7 +53,12 @@ export function SiteFooter() {
               <br />
               All together.
             </p>
-            <a href={`mailto:${TAPLO_DOMAINS.email}`} className="mt-4 inline-flex min-h-11 items-center text-sm text-white/80 underline underline-offset-4">{TAPLO_DOMAINS.email}</a>
+            <a
+              href={`mailto:${TAPLO_DOMAINS.email}`}
+              className="mt-4 inline-flex min-h-11 items-center text-sm text-white/80 underline underline-offset-4"
+            >
+              {TAPLO_DOMAINS.email}
+            </a>
             <p className="mt-4 text-sm leading-relaxed text-white/70">
               The work you do, the details people need and a useful next step.
             </p>
@@ -71,13 +78,24 @@ export function SiteFooter() {
               { href: "/product", label: "All features" },
               { href: "/how-it-works", label: "How setup works" },
               { href: "/pricing", label: "Pricing" },
-              { href: "/dashboard", label: "Log in" },
             ]}
           />
         </div>
         <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-t border-white/25 pt-6 text-sm text-white/70">
-          <p>Explore our <Link href="/inspiration" className="underline underline-offset-4">design examples</Link>.</p>
-          <nav aria-label="Legal" className="flex flex-wrap gap-6"><Link href="/credits" className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">Credits</Link>
+          <p>
+            Explore our{" "}
+            <Link href="/inspiration" className="underline underline-offset-4">
+              design examples
+            </Link>
+            .
+          </p>
+          <nav aria-label="Legal" className="flex flex-wrap gap-6">
+            <Link
+              href="/credits"
+              className="inline-flex min-h-11 items-center underline-offset-4 hover:underline"
+            >
+              Credits
+            </Link>
             <Link
               href="/legal/privacy"
               className="inline-flex min-h-11 items-center rounded underline-offset-4 outline-none hover:text-white hover:underline focus-visible:ring-3 focus-visible:ring-white"
