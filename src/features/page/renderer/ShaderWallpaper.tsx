@@ -61,7 +61,7 @@ export function ShaderWallpaper(props: Props) {
   return (
     <div ref={host} className="tp-shader" aria-hidden="true" data-active={active && !reduced && props.animate !== false}>
       <React.Suspense fallback={null}>
-        {on && seen ? <Shader {...props} speed={reduced || !active || props.animate === false ? 0 : 0.3} /> : null}
+        {on && seen ? <Shader {...props} speed={reduced || !active || props.animate === false ? 0 : props.style === "silk" ? 0.45 : 0.65} /> : null}
       </React.Suspense>
     </div>
   )

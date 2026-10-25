@@ -24,7 +24,7 @@ interface Appearance { themeId: string; overrides: StyleOverrides }
  */
 export function Lab() {
   const [scenario, setScenario] = React.useState<Scenario>("station")
-  const start = React.useMemo(() => initialConfig("station", EXAMPLE_LOOK.station), [])
+  const start = React.useMemo(() => initialConfig("station"), [])
   const h = useHistory<Appearance>(() => ({ themeId: start.themeId, overrides: start.overrides }))
   const { themeId, overrides } = h.value
   const register = useFrames(scenario, themeId, overrides)
@@ -58,7 +58,7 @@ export function Lab() {
           <Link href="/" aria-label="Taplo home" className="rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/60"><TaploLogo /></Link>
           <span className="hidden text-sm text-neutral-400 sm:inline">/</span>
           <h1 className="hidden text-sm font-medium sm:block">Appearance</h1>
-          <label className="order-last flex w-full items-center gap-3 text-xs font-medium sm:order-none sm:ml-6 sm:mr-auto sm:w-auto"><span className="text-neutral-600">Business</span><select aria-label="Business" value={scenario} onChange={(e) => { if (Object.hasOwn(SCENARIOS, e.target.value)) setScenario(e.target.value as Scenario) }} className="min-h-11 min-w-0 flex-1 rounded-xl border bg-white px-3 text-sm sm:w-56">{(Object.keys(SCENARIOS) as Scenario[]).map((s) => <option key={s} value={s}>{SCENARIOS[s].label}</option>)}</select></label>
+          <label className="order-last flex w-full items-center gap-3 text-xs font-medium sm:order-none sm:ml-6 sm:mr-auto sm:w-auto"><span className="text-neutral-600">Business</span><select aria-label="Business" value={scenario} onChange={(e) => { if (Object.hasOwn(SCENARIOS, e.target.value)) { const next = e.target.value as Scenario; setScenario(next); const config = initialConfig(next); set({ themeId: config.themeId, overrides: config.overrides }) } }} className="min-h-11 min-w-0 flex-1 rounded-xl border bg-white px-3 text-sm sm:w-56">{(Object.keys(SCENARIOS) as Scenario[]).map((s) => <option key={s} value={s}>{SCENARIOS[s].label}</option>)}</select></label>
           <div className="ml-auto flex items-center gap-1 sm:ml-0" role="toolbar" aria-label="History">
             <Button variant="ghost" size="icon" onClick={h.undo} disabled={!h.canUndo} aria-label="Undo" data-testid="lab-undo"><Undo2 /></Button>
             <Button variant="ghost" size="icon" onClick={h.redo} disabled={!h.canRedo} aria-label="Redo" data-testid="lab-redo"><Redo2 /></Button>
@@ -77,7 +77,7 @@ export function Lab() {
         </div>
 
         <aside aria-label="Appearance controls" className="rounded-[1.5rem] bg-white p-4 shadow-[0_1px_2px_rgb(0_0_0/0.06),0_24px_48px_-24px_rgb(0_0_0/0.25)] lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6.5rem)] lg:overflow-y-auto" data-testid="lab-controls">
-          <AppearancePanel m={m} header />
+          <AppearancePanel m={m} header profilePreview={layout=>`/appearance/frame?scenario=${scenario}&look=${themeId}&profile=${layout}&o=${encodeURIComponent(JSON.stringify({...overrides,header:{...overrides.header,layout,align:layout==='centered'?'center':'left'}}))}`} />
         </aside>
       </main>
     </div>

@@ -29,5 +29,5 @@ export function UseDesign({ slug, lookId, lookName, overrides, className, size =
       </div>
     )
   }
-  return <Link data-brand-action href={`/onboarding?from=${slug}`} className={cn(base, "bg-foreground text-background hover:opacity-90")} aria-label={`Start with this design: ${lookName}`} data-testid="start-design">Start with this design</Link>
+  return <Link data-brand-action href={`/onboarding?from=${slug}`} className={cn(base, "bg-foreground text-background hover:opacity-90")} aria-label={`${size === "sm" ? "Use design" : "Start with this design"}: ${lookName}`} data-testid="start-design">{size === "sm" ? "Use design" : "Start with this design"}</Link>
 }

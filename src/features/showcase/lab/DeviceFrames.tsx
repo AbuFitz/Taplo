@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import type { StyleOverrides } from "@/features/page/contracts/style"
+import { PHONE } from "@/features/preview/PhoneChrome"
 import { PagePreview } from "@/features/preview/PagePreview"
 import type { Scenario } from "../content"
 import type { LabMessage } from "../lab-state"
@@ -28,8 +29,8 @@ export function useFrames(scenario: Scenario, themeId: string, overrides: StyleO
 /** The showcase's phone and desktop previews are the shared PagePreview controller, so the lab shows pages exactly as the owner editor does. */
 export function PhoneFrame({ register, src, title }: { register: (el: HTMLIFrameElement | null) => void; src: string; title: string }) {
   return (
-    <div className="mx-auto w-full max-w-[410px]" style={{ aspectRatio: "410 / 864" }}>
-      <PagePreview mode="device" device={{ w: 390, h: 846 }} chrome src={src} title={title} frameRef={register} testId="lab-frame" />
+    <div className="mx-auto w-full max-w-[410px]" style={{ aspectRatio: `${PHONE.width + PHONE.bezel*2} / ${PHONE.height + PHONE.bezel*2}` }}>
+      <PagePreview mode="device" chrome src={src} title={title} frameRef={register} testId="lab-frame" />
     </div>
   )
 }

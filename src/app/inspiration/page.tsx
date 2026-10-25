@@ -55,10 +55,10 @@ export default async function InspirationPage({
       <main className="mx-auto w-full max-w-7xl px-5 pb-24 pt-10 sm:pt-14">
         <div className="max-w-3xl pb-10 sm:pb-14">
           <h1 className="font-display font-display-tight text-[clamp(2.75rem,6vw,5rem)] text-balance">
-            Find your starting point.
+            A page with your personality.
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-foreground/65">
-            For your business, your work or your next idea. Open a design, try the blocks and make it yours.
+            For businesses, independents and your next big idea.
           </p>
         </div>
         <Gallery

@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { ArrowLeft, Pencil, Plus } from "lucide-react"
+import { Overlay } from "@/components/taplo/overlay"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { formatPrice } from "@/features/services/format"
@@ -28,7 +29,7 @@ const SPEC: Partial<Record<FieldSource, Spec>> = {
   faqs: { kind: "faq", noun: "question", editable: true, archive: false },
   products: { kind: "product", noun: "product", editable: true, archive: true },
   offers: { kind: "offer", noun: "offer", editable: true, archive: true },
-  gallery: { kind: "photo", noun: "photo", editable: false, archive: false },
+  gallery: { kind: "photo", noun: "photo", editable: true, archive: false },
 }
 
 function rowsFor(source: FieldSource, c: BusinessContentInput, vehicles: boolean): Row[] {
@@ -53,6 +54,7 @@ function find(source: FieldSource, c: BusinessContentInput, id: string): unknown
     case "faqs": return c.faqs?.find((x) => x.id === id)
     case "products": return c.products?.find((x) => x.id === id)
     case "offers": return c.offers?.find((x) => x.id === id)
+    case "gallery": { const g=c.gallery?.find(x=>x.id===id); return g ? {id:g.id,images:[g.image],caption:g.caption??"",before:g.beforeImage} : undefined }
     default: return undefined
   }
 }
@@ -66,6 +68,7 @@ function replace(source: FieldSource, c: BusinessContentInput, id: string, v: an
     case "faqs": return { ...c, faqs: swap(c.faqs) }
     case "products": return { ...c, products: swap(c.products) }
     case "offers": return { ...c, offers: swap(c.offers) }
+    case "gallery": return {...c,gallery:swap(c.gallery).map(g=>g.id===id?{id,image:v.images[0],caption:v.caption?.trim()||undefined,beforeImage:v.before}:g)}
     default: return c
   }
 }
@@ -93,13 +96,14 @@ export function RecordsField({ f, value, ed, onChange, vehicles = false }: { f: 
   const rows = rowsFor(f.source, content, vehicles)
   const all = !Array.isArray(value)
   const chosen = new Set(Array.isArray(value) ? (value as string[]) : [])
+  const field = React.useRef<HTMLFieldSetElement>(null)
   const [mode, setMode] = React.useState<Mode>(null)
   const [draft, setDraft] = React.useState<any>(null)  // eslint-disable-line @typescript-eslint/no-explicit-any
   const [show, setShow] = React.useState(false)
   const [confirm, setConfirm] = React.useState(false)
   const kind: RecordKind | null = spec ? (f.source === "products" ? (vehicles ? "vehicle" : "product") : (spec.kind as RecordKind)) : null
 
-  const close = () => { setMode(null); setDraft(null); setShow(false); setConfirm(false) }
+  const close = () => { const id=mode?.kind==="edit"?mode.id:null; setMode(null); setDraft(null); setShow(false); setConfirm(false); if(id)requestAnimationFrame(()=>field.current?.querySelector<HTMLButtonElement>(`[data-record-id="${CSS.escape(id)}"] [data-testid="record-edit"]`)?.focus()) }
   const openAdd = () => { if (!kind) return; setDraft(blankFor(kind, content)); setShow(false); setMode({ kind: "add" }) }
   const openEdit = (id: string) => { const rec = find(f.source, content, id); if (!rec) return; setDraft(structuredClone(rec)); setShow(false); setConfirm(false); setMode({ kind: "edit", id }) }
 
@@ -110,14 +114,20 @@ export function RecordsField({ f, value, ed, onChange, vehicles = false }: { f: 
     const save = () => {
       if (Object.keys(validate(editKind, draft)).length) { setShow(true); return }
       if (mode.kind === "add") {
-        ed.setContent((c) => commitRecord(editKind, draft, c))
-        if (!all && draft.id) onChange([...chosen, draft.id as string])
+        if (editKind === "photo") {
+          const next=commitRecord(editKind,draft,content)
+          ed.setContent(()=>next)
+          if(!all) { const previous=new Set(content.gallery?.map(g=>g.id)); onChange([...chosen,...(next.gallery??[]).filter(g=>!previous.has(g.id)).map(g=>g.id)]) }
+        } else {
+          ed.setContent((c) => commitRecord(editKind, draft, c))
+          if (!all && draft.id) onChange([...chosen, draft.id as string])
+        }
       } else {
         ed.setContent((c) => replace(f.source, c, mode.id, editKind === "service" ? { ...draft, name: draft.name.trim() } : draft))
       }
       close()
     }
-    return (
+    const form = (
       <div className="grid gap-4" data-testid="record-editor">
         <div className="flex items-center gap-1">
           <Button type="button" variant="ghost" size="sm" className="-ml-2 min-h-10 gap-1.5 px-2" onClick={close}><ArrowLeft /> Back</Button>
@@ -141,18 +151,23 @@ export function RecordsField({ f, value, ed, onChange, vehicles = false }: { f: 
         ) : null}
       </div>
     )
+    return f.source === "gallery" ? <Overlay open onCloseAutoFocus={event=>event.preventDefault()} onOpenChange={open=>!open&&close()} title={mode.kind==="edit"?"Edit photo":"Add photos"} testId="gallery-photo-editor">{form}</Overlay> : form
   }
 
   return (
-    <fieldset className="grid gap-2" data-testid="records-field">
+    <fieldset ref={field} className="grid gap-2" data-testid="records-field">
       <legend className="mb-1 text-sm font-medium">{f.label}</legend>
       <label className="flex min-h-11 items-center gap-2 text-sm"><Checkbox checked={all} onCheckedChange={(c) => onChange(c ? null : rows.map((o) => o.id))} /> Show all{rows.length ? ` (${rows.length})` : ""}, including new ones</label>
       {rows.length ? (
         <ul className="min-w-0 divide-y overflow-hidden rounded-xl border">
           {rows.map((r) => (
-            <li key={r.id} className="flex min-h-14 items-center gap-2 px-3 py-1.5">
+            <li key={r.id} data-record-id={r.id} className="flex min-h-14 items-center gap-2 px-3 py-1.5">
               {!all ? <Checkbox checked={chosen.has(r.id)} aria-label={`Show ${r.name}`} onCheckedChange={(c) => { const next = new Set(chosen); if (c) next.add(r.id); else next.delete(r.id); onChange(rows.map((x) => x.id).filter((id) => next.has(id))) }} /> : null}
-              {r.thumb ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={r.thumb} alt="" className="size-9 shrink-0 rounded-md object-cover" /> : null}
+              {r.thumb ? (
+                // Browser uploads are already local image data.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={r.thumb} alt="" className="size-9 shrink-0 rounded-md object-cover" />
+              ) : null}
               <span className="min-w-0 flex-1"><span className="block truncate text-sm font-medium">{r.name}</span>{r.meta ? <span className="block truncate text-xs text-muted-foreground">{r.meta}</span> : null}</span>
               {spec.editable ? <Button type="button" variant="ghost" size="sm" className="min-h-11 shrink-0 gap-1.5 px-2.5" onClick={() => openEdit(r.id)} aria-label={`Edit ${r.name}`} data-testid="record-edit"><Pencil /> Edit</Button> : <Button type="button" variant="ghost" size="sm" className="min-h-11 shrink-0 px-2.5 text-destructive" aria-label={`Remove ${r.name}`} onClick={() => ed.setContent((c) => remove(f.source, c, r.id, false))}>Remove</Button>}
             </li>

@@ -978,13 +978,13 @@ export const LOOKS: Look[] = [
   const o = look.overrides, s = design.style;
   return { ...look, blurb: design.blurb, overrides: { ...o, ...s,
     colors: {...o.colors,...s.colors}, text: {...o.text,...s.text}, header: {...o.header,...s.header},
-    buttons: {...o.buttons,shape:"pill",shadow:"soft"}, cards: {...o.cards,...s.cards}, layout: {...o.layout,...s.layout}, motion:"subtle",
+    buttons: {...o.buttons,...s.buttons}, cards: {...o.cards,...s.cards}, layout: {...o.layout,...s.layout}, motion:"subtle",
   }};
 });
 
 /** Discovery uses the new direction. Earlier configurations remain resolvable for saved pages. */
-export const STARTER_LOOKS = ["open", "service", "personal", "ink", "silver", "smoke"].map(id => LOOKS.find(l => l.id === id)!);
-export const CURRENT_LOOKS = [...EXPANDED_LOOKS, ...STARTER_LOOKS, ...LOOKS.filter(l => ["folio", "showroom", "clay", "orchard", "journal", "forge"].includes(l.id))];
+export const STARTER_LOOKS = ["open", "service", "personal", "ink", "clay", "showroom"].map(id => LOOKS.find(l => l.id === id)!);
+export const CURRENT_LOOKS = ["open","showroom","clay","atelier","founder","service","ink","kiln","lune","orchard","personal","forge"].map(id=>LOOKS.find(l=>l.id===id)!);
 
 /* ---- Radix-derived palettes: coordinated neutral + accent, light and dark ---- */
 type Scale = Record<string, string>;

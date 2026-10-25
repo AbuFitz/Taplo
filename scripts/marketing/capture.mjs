@@ -21,6 +21,7 @@ for (const job of cfg.jobs.filter((j) => !only.length || only.includes(j.id))) {
   const url = base + job.url + (job.overrides ? `&o=${encodeURIComponent(JSON.stringify(job.overrides))}` : "")
   await page.goto(url, { waitUntil: "load", timeout: 45000 })
   await page.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {})
+  if (job.id.endsWith("-phone")) await page.evaluate(() => document.documentElement.setAttribute("data-taplo-phone", "true"))
   await page.evaluate(() => document.fonts.ready)
   await page.evaluate(async () => { // lazy images below the fold never load until scrolled to, so only wait for the ones in view, and never indefinitely
     const wait = [...document.images].filter((i) => !i.complete && i.loading !== "lazy").map((i) => new Promise((r) => { i.onload = i.onerror = r }))

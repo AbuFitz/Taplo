@@ -143,7 +143,7 @@ function ServiceListWidget({ w, vm }: P) {
   const list = serviceListItems(vm.business.services, s, vm.ctx.featuredServiceIds)
   return (
     <Card title={s.title}>
-      <ServiceCollection groups={[{ items: list.map(bookable) }]} variant={s.variant === "cards" ? "cards" : s.variant === "compact" ? "compact" : s.variant === "spotlight" ? "spotlight" : "rows"} options={{ showPrices: s.showPrices !== false, showDuration: s.showDuration !== false, showDescriptions: s.showDescriptions !== false }}
+      <ServiceCollection groups={[{ items: list.map(bookable) }]} variant={s.variant === "tiles" ? "tiles" : s.variant === "cards" ? "cards" : s.variant === "compact" ? "compact" : s.variant === "spotlight" ? "spotlight" : "rows"} options={{ showPrices: s.showPrices !== false, showDuration: s.showDuration !== false, showDescriptions: s.showDescriptions !== false }}
         ctx={serviceCtx(vm)} businessName={vm.business.identity.name} slug={vm.business.identity.slug} staffNames={providersByService(vm)} />
     </Card>
   )
@@ -360,7 +360,7 @@ function GalleryWidget({ w, vm }: P) {
   const s = w.settings as S
   const items = pick(vm.business.gallery, s.itemIds).map((g) => ({ id: g.id, caption: g.caption, image: { src: g.image.src, alt: g.image.alt, width: g.image.width, height: g.image.height, focal: g.image.focal }, before: g.beforeImage ? { src: g.beforeImage.src, alt: g.beforeImage.alt, width: g.beforeImage.width, height: g.beforeImage.height, focal: g.beforeImage.focal } : undefined }))
   const title = s.title ? <h2 className="mb-2 px-1 text-[1.125rem]" style={{ fontFamily: "var(--tp-font-heading)", fontWeight: "var(--tp-heading-weight)", textTransform: "var(--tp-heading-case)" as never }}>{s.title}</h2> : null
-  return <div>{title}<Gallery items={items} fit={s.fit === "contain" ? "contain" : "cover"} variant={s.variant === "carousel" ? "carousel" : s.variant === "beforeAfter" ? "beforeAfter" : s.variant === "masonry" ? "masonry" : "grid"} title={s.title} /></div>
+  return <div>{title}<Gallery items={items} fit={s.fit === "contain" ? "contain" : "cover"} variant={s.variant === "mosaic" ? "mosaic" : s.variant === "filmstrip" ? "filmstrip" : s.variant === "carousel" ? "carousel" : s.variant === "beforeAfter" ? "beforeAfter" : s.variant === "masonry" ? "masonry" : "grid"} title={s.title} /></div>
 }
 
 function VideoWidget({ w }: P) {

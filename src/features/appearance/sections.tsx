@@ -5,6 +5,7 @@ import { Check, Lock, RotateCcw, X } from "lucide-react"
 import { ColorField, ImageField } from "@/features/page/editor/controls"
 import { DECORATIONS, type StyleSpec } from "@/features/page/contracts/style"
 import { FONT_LABELS } from "@/features/page/themes/fonts"
+import { LOOK_GROUPS } from "@/features/page/themes/discovery"
 import { PALETTES } from "@/features/page/themes/looks"
 import { FONT_KEYS, type FontKey } from "@/features/themes/contracts/tokens"
 import { cn } from "@/lib/utils"
@@ -22,14 +23,18 @@ type M = { m: AppearanceModel }
 
 /* ------------------------------------------------------------------ starting look */
 export function LookPicker({ m }: M) {
+  const [category,setCategory]=React.useState<string>("all")
+  const group=LOOK_GROUPS.find(g=>g.id===category)!
+  const visible=m.looks.filter(l=>category==="all" || (group.looks as readonly string[]).includes(l.id))
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-3">
+      <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none]" role="group" aria-label="Design categories">{LOOK_GROUPS.map(g=><button type="button" key={g.id} aria-pressed={category===g.id} onClick={()=>setCategory(g.id)} className={cn("min-h-10 shrink-0 rounded-full px-3 text-xs font-medium",category===g.id?"bg-neutral-900 text-white":"bg-neutral-100 text-neutral-600")}>{g.name}</button>)}</div>
       <ChoiceGrid
         label="Look"
         value={m.look.id}
         columns={2}
         onChange={(id) => m.applyLook(id)}
-        options={m.looks.map((l) => ({ value: l.id, label: l.name, disabled: !m.canSwitchLook && l.id !== m.look.id, preview: <LookThumb id={l.id} /> }))}
+        options={visible.map((l) => ({ value: l.id, label: l.name, disabled: !m.canSwitchLook && l.id !== m.look.id, preview: <LookThumb id={l.id} /> }))}
       />
       {!m.canSwitchLook ? <p className="flex items-center gap-1.5 text-xs text-neutral-600"><Lock className="size-3.5" aria-hidden="true" />Choosing a different theme is included from the Core plan.</p> : null}
       <p className="text-xs text-neutral-600">{m.look.description} Everything below stays editable.</p>
@@ -129,14 +134,14 @@ export function TypeControls({ m }: M) {
 }
 
 /* ------------------------------------------------------------------ header */
-const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] = [["floating", "Floating profile"], ["portrait", "Portrait introduction"], ["side", "Compact"], ["editorial", "Editorial"], ["banner", "Photo profile"], ["cover", "Cover"], ["feature", "Wide feature"], ["poster", "Image hero"], ["centered", "Text-led"]]
-export function HeaderControls({ m, identity, livePreviews = false }: M & { identity?: BusinessContent["identity"]; livePreviews?: boolean }) {
+const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] = [["side", "Compact"], ["centered", "Centred"], ["banner", "Photo"]]
+export function HeaderControls({ m, identity, livePreviews = false, previewSrc }: M & { identity?: BusinessContent["identity"]; livePreviews?: boolean; previewSrc?: (layout: StyleSpec["header"]["layout"])=>string }) {
   const { spec } = m
   return (
     <div className="grid gap-4">
-      <ChoiceGrid label="Header arrangement" value={spec.header.layout} columns={livePreviews ? 2 : 3} onChange={(v) => m.patch("header", "layout", v)}
-        options={(spec.header.layout === "minimal" ? [...HEADER_OPTIONS, ["minimal", "Text only (earlier)"] as [StyleSpec["header"]["layout"], string]] : HEADER_OPTIONS).map(([v, l]) => ({ value: v, label: l, preview: livePreviews ?
-          <ChoicePreview src={`/demo/preview?header=${v}`} title={`${l} header preview`} height={500} /> : <HeaderTile layout={v} /> }))} />
+      <ChoiceGrid label="Header arrangement" value={spec.header.layout} columns={livePreviews ? 2 : 3} onChange={(v) => m.apply(o=>({...o,header:{...o.header,layout:v,align:v==="centered"?"center":"left"}}))}
+        options={HEADER_OPTIONS.map(([v, l]) => ({ value: v, label: l, preview: livePreviews || previewSrc ?
+          <ChoicePreview src={previewSrc?.(v) ?? `/demo/preview?header=${v}`} title={`${l} header preview`} height={500} /> : <HeaderTile layout={v} /> }))} />
       {spec.header.layout === "poster" || spec.header.layout === "cover" || spec.header.layout === "banner" ? <Field label="Photo fade" dirty={m.has("header", "scrim")} onReset={() => m.reset("header", "scrim")} hint="How far the photograph fades into the page. Text always sits on the page colour."><Segment label="Photo fade" value={spec.header.scrim ?? "medium"} options={[{ value: "soft", label: "Soft" }, { value: "medium", label: "Medium" }, { value: "strong", label: "Strong" }]} onChange={(v) => m.patch("header", "scrim", v)} /></Field> : null}
       <div className="grid gap-3">
         <Field label="Your picture" dirty={m.has("header", "avatarShape")} onReset={() => m.reset("header", "avatarShape")}>
@@ -303,13 +308,13 @@ export function Readability({ m }: M) {
  * are open; the rest are one tap away. The same panel runs in the owner editor, in guided
  * setup and in the showcase.
  */
-export function AppearancePanel({ m, header = false }: { m: AppearanceModel; header?: boolean }) {
+export function AppearancePanel({ m, header = false, profilePreview }: { m: AppearanceModel; header?: boolean; profilePreview?: (layout: StyleSpec["header"]["layout"])=>string }) {
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-2.5" data-testid="appearance-panel">
       <Disclosure title="Look" defaultOpen id="look" hint="A starting point, not a template. Change anything afterwards."><LookPicker m={m} /></Disclosure>
       <Disclosure title="Colour" defaultOpen id="colour" count={m.count("colors")} onReset={() => m.resetGroup("colors")}><ColourControls m={m} /></Disclosure>
       <Disclosure title="Type" id="type" count={m.count("text")} onReset={() => m.resetGroup("text")}><TypeControls m={m} /></Disclosure>
-      {header ? <Disclosure title="Header" defaultOpen id="header" count={m.count("header")} onReset={() => m.resetGroup("header")}><HeaderControls m={m} /></Disclosure> : null}
+      {header ? <Disclosure title="Header" defaultOpen id="header" count={m.count("header")} onReset={() => m.resetGroup("header")}><HeaderControls m={m} previewSrc={profilePreview} /></Disclosure> : null}
       <Disclosure title="Buttons" id="buttons" count={m.count("buttons")} onReset={() => m.resetGroup("buttons")}><ButtonControls m={m} /></Disclosure>
       <Disclosure title="Cards" id="cards" count={m.count("cards")} onReset={() => m.resetGroup("cards")}><SurfaceControls m={m} /></Disclosure>
       <Disclosure title="Wallpaper" id="wallpaper" count={m.count("background", "decoration")} onReset={() => m.resetGroup("background", "decoration")}><WallpaperControls m={m} /></Disclosure>

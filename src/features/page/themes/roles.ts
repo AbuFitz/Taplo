@@ -1,3 +1,4 @@
+import { contrastRatio } from "./color";
 import { clampChroma, converter, formatHex, interpolate, parse } from "culori"
 
 /**
@@ -62,7 +63,7 @@ export function deriveRoles(c: PageColours, pageBackground: string): Roles {
     line: blend(pageBackground, c.text, dark ? 0.16 : 0.1),
     lineStrong: blend(pageBackground, c.text, dark ? 0.3 : 0.22),
     ink3: blend(c.muted, pageBackground, 0.38),
-    accentHover: shift(c.accent, isDark(c.accent) ? 0.045 : -0.045),
+    accentHover: contrastRatio(c.accentText,shift(c.accent, isDark(c.accent) ? 0.045 : -0.045)) >= 4.5 ? shift(c.accent, isDark(c.accent) ? 0.045 : -0.045) : c.accent,
     accentPress: shift(c.accent, isDark(c.accent) ? 0.08 : -0.08),
     accentSoft: blend(c.surface, c.accent, surfaceDark ? 0.2 : 0.13),
     accentLine: blend(c.surface, c.accent, 0.38),

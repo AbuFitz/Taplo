@@ -16,7 +16,7 @@ export function Background({ vm, still = false }: { vm: PageViewModel; still?: b
             <div className="absolute inset-0" style={{ background: b.overlayColor, opacity: b.overlay / 100 }} />
           </>
         ) : (
-          <div className="tp-bg-gradient" style={{ background: backgroundCss(spec), ...(still ? { animation: "none" } : {}) }} />
+          <div className="tp-bg-gradient" data-animate={!still && (b.kind === "gradient" ? b.motion : b.kind === "shader" && b.motion !== false) || undefined} style={{ background: backgroundCss(spec), ...(still ? { animation: "none" } : {}) }} />
         )}
         {b.kind === "shader" && !still ? <ShaderWallpaper style={b.style} colors={b.colors} base={b.base} animate={b.motion !== false} /> : null}
       </div>

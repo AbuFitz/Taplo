@@ -19,7 +19,7 @@ const mins = (m?: number) => (m ? (m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? 
  * Booking from the detail closes it and opens the booking journey: one overlay at a time.
  */
 export function ServiceCollection({ groups, variant, options, ctx, businessName, slug, staffNames }: {
-  groups: ServiceGroup[]; variant: "rows" | "cards" | "compact" | "spotlight" | "menu" | "menu-panels" | "menu-compact"; options: ServiceViewOptions
+  groups: ServiceGroup[]; variant: "rows" | "cards" | "tiles" | "compact" | "spotlight" | "menu" | "menu-panels" | "menu-compact"; options: ServiceViewOptions
   ctx?: BookingContext; businessName: string; slug: string; staffNames: Record<string, { id: string; name: string; serviceIds: string[] | null }[]>
 }) {
   const trigger = React.useRef<HTMLButtonElement | null>(null)
@@ -30,7 +30,7 @@ export function ServiceCollection({ groups, variant, options, ctx, businessName,
   const open = (id: string) => (event: React.MouseEvent<HTMLButtonElement>) => { trigger.current = event.currentTarget; setOpenId(id) }
   const price = (s: BookableService) => (options.showPrices ? priceWording(s) : "")
 
-  const tiles = variant === "cards" || variant === "spotlight"
+  const tiles = variant === "cards" || variant === "tiles" || variant === "spotlight"
   const menu = variant === "menu" || variant === "menu-panels" || variant === "menu-compact"
   const row = (s: BookableService, index: number) => (
     <button type="button" className="tp-service-open" data-layout={variant} data-lead={variant === "spotlight" && index === 0 || undefined} onClick={open(s.id)} aria-haspopup="dialog" data-testid="service-open">

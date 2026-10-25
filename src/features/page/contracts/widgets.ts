@@ -37,7 +37,7 @@ export const settingsSchemas = {
   social: z.object({ variant: z.enum(["icons", "list"]).default("icons"), platforms: z.array(z.string()).nullable().default(null) }),
   serviceList: z.object({
     title, serviceIds: ids, group: z.string().max(80).optional(),
-    variant: z.enum(["list", "cards", "compact", "spotlight"]).default("list"),
+    variant: z.enum(["list", "cards", "tiles", "compact", "spotlight"]).default("list"),
     showPrices: z.boolean().default(true), showDuration: z.boolean().default(true), showDescriptions: z.boolean().default(true),
     limit: z.number().int().min(1).max(50).optional(),
     excludeFeatured: z.boolean().default(false),
@@ -54,7 +54,7 @@ export const settingsSchemas = {
   credentials: z.object({ title, variant: z.enum(["chips", "list"]).default("chips") }),
   text: z.object({ title, body: z.string().max(4000).default(""), variant: z.enum(["body", "statement", "note"]).default("body"), collapsible: z.boolean().default(false), align: z.enum(["left", "center"]).optional() }),
   image: z.object({ image: imageSchema.nullable().default(null), caption: z.string().max(240).optional(), linkUrl: z.string().max(2048).optional(), shape: z.enum(["rounded", "square", "wide"]).default("rounded") }),
-  gallery: z.object({ title, itemIds: ids, fit: z.enum(["cover", "contain"]).default("cover"), variant: z.enum(["grid", "carousel", "beforeAfter", "masonry"]).default("grid") }),
+  gallery: z.object({ title, itemIds: ids, fit: z.enum(["cover", "contain"]).default("cover"), variant: z.enum(["mosaic", "grid", "carousel", "filmstrip", "beforeAfter", "masonry"]).default("mosaic") }),
   video: z.object({ url: z.string().max(500).default(""), title: z.string().max(120).optional() }),
   faq: z.object({ title, faqIds: ids, variant: z.enum(["list", "cards"]).default("list") }),
   document: z.object({ title: z.string().trim().max(100).default(""), url: z.string().max(2048).default(""), description: z.string().max(240).optional() }),

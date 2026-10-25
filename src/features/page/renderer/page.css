@@ -17,6 +17,8 @@ html:has([data-taplo-page]) { scrollbar-width: thin; scrollbar-color: color-mix(
   position: relative;
   isolation: isolate;
   min-height: 100dvh;
+  padding-top: var(--tp-safe-top, env(safe-area-inset-top, 0px));
+  padding-bottom: var(--tp-safe-bottom, env(safe-area-inset-bottom, 0px));
   font-family: var(--tp-font-body);
   font-size: calc(1rem * var(--tp-scale));
   line-height: 1.55;
@@ -361,8 +363,8 @@ li.tp-subcard + li.tp-subcard, figure.tp-subcard + figure.tp-subcard { padding-t
 
 /* ---------- motion: a calm entrance, never required to read the page ---------- */
 @media (prefers-reduced-motion: no-preference) {
-  [data-motion-level="subtle"] .tp-header, [data-motion-level="lively"] .tp-header { animation: tp-rise 0.7s var(--tp-ease) both; }
-  [data-motion-level="subtle"] .tp-widget, [data-motion-level="lively"] .tp-widget { animation: tp-rise 0.7s var(--tp-ease) both; animation-delay: calc(80ms + min(var(--i, 0), 7) * 60ms); }
+  [data-motion-level="subtle"] .tp-header, [data-motion-level="lively"] .tp-header { animation: tp-rise 0.38s var(--tp-ease) both; }
+  [data-motion-level="subtle"] .tp-widget, [data-motion-level="lively"] .tp-widget { animation: tp-rise 0.38s var(--tp-ease) both; animation-delay: calc(min(var(--i, 0), 4) * 35ms); }
   @keyframes tp-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 }
 @media (prefers-reduced-motion: reduce) { .tp-btn, .tp-icon-action, .tp-card, .tp-btn > svg:last-child { transition: none !important; } .tp-btn:active, .tp-icon-action:active { transform: none; } }
@@ -411,7 +413,7 @@ li.tp-subcard + li.tp-subcard, figure.tp-subcard + figure.tp-subcard { padding-t
 @media (max-width: 639px) { .tp-lightbox { height: var(--tp-vvh, 100dvh); } }
 
 /* Simulated hardware safe areas belong inside the actual page, keeping its wallpaper continuous. */
-html[data-taplo-phone="true"] [data-taplo-page] { padding-top:36px; padding-bottom:16px; }
+html[data-taplo-phone="true"] [data-taplo-page] { --tp-safe-top:36px; --tp-safe-bottom:16px; }
 html[data-taplo-phone="true"] [role="dialog"][data-overlay="detail"] > header { padding-top:48px; }
 
 /* A scaled iframe must not move native hit targets while its sheet opens. Keep the reveal in place. */
@@ -438,6 +440,41 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 .tp-portrait-intro .tp-name{font-size:clamp(1.8rem,8cqi,3.25rem);line-height:1.06}
 .tp-portrait-intro .tp-bio{font-size:var(--tp-t-sm)}
 .tp-portrait-intro .tp-logo{max-height:36px}
-.tp-identity-portrait{aspect-ratio:3/4;overflow:hidden;border-radius:999px;box-shadow:var(--tp-card-shadow)}
+.tp-identity-portrait{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:999px;box-shadow:var(--tp-card-shadow)}
 .tp-header[data-layout=portrait]>.tp-actions{grid-column:1/-1}
 @media(min-width:900px){.tp-floating-cover{aspect-ratio:16/8}.tp-header[data-layout=floating][data-cover] .tp-floating-intro{margin-inline:28px}.tp-header[data-layout=portrait][data-cover]{gap:30px}}
+
+/* Work and information surfaces keep their depth in every profile composition. */
+.tp-header { container-type:inline-size; }
+.tp-name { letter-spacing:-.045em; }
+.tp-bio { line-height:1.55; max-width:38ch; }
+.tp-profile-photo { box-shadow:var(--tp-card-shadow); }
+.tp-gallery .tp-media { box-shadow:var(--tp-shadow-2),var(--tp-edge); }
+
+/* The identity is always a separate raised surface, across all profile layouts. */
+.tp-header { padding:var(--tp-s-5); border:0; border-radius:var(--tp-card-radius); background:var(--tp-surface); box-shadow:var(--tp-shadow-2),var(--tp-edge); }
+.tp-header[data-layout="minimal"] { padding:var(--tp-s-5); border:0; }
+.tp-header[data-layout="floating"] { padding:0; background:transparent; box-shadow:none; }
+.tp-floating-cover { box-shadow:var(--tp-shadow-2); }
+.tp-floating-intro { background:var(--tp-surface); box-shadow:var(--tp-shadow-2),var(--tp-edge); }
+.tp-header[data-layout="poster"] { margin:0; overflow:hidden; padding:0; }
+.tp-header[data-layout="poster"] .tp-herobody { padding:0 var(--tp-s-5) var(--tp-s-5); }
+.tp-hero-media::after { background:linear-gradient(to bottom,transparent calc(100% - var(--tp-fade,52%)),color-mix(in srgb,var(--tp-surface) 72%,transparent) calc(100% - var(--tp-fade,52%) * .35),var(--tp-surface) 100%); }
+.tp-header[data-layout="banner"][data-cover] { margin:0; width:100%; padding:0 0 var(--tp-s-5); overflow:hidden; }
+.tp-header[data-layout="banner"][data-cover] .tp-profile-intro { padding-inline:var(--tp-s-5); margin-inline:0; }
+.tp-header[data-layout="banner"] .tp-profile-photo::after { background:linear-gradient(to bottom,transparent calc(100% - var(--tp-fade,52%)),var(--tp-surface)); }
+[data-desktop="centered"] .tp-header[data-layout="cover"] .tp-cover { width:100%; margin-inline:0; }
+
+/* Shader canvases are viewport-sized, rather than stretched over a long page.
+   The moving CSS field remains visible when WebGL is unavailable. */
+[data-bg="shader"] .tp-bg-gradient,[data-bg="shader"] .tp-shader { position:fixed; height:100dvh; }
+.tp-bg-gradient[data-animate="true"] { background-size:200% 200%; animation:tp-drift 12s ease-in-out infinite alternate; }
+.tp-bg-gradient[data-animate="true"]::after { content:""; position:absolute; inset:-20%; background:radial-gradient(ellipse at 30% 30%,color-mix(in srgb,var(--tp-accent) 15%,transparent),transparent 56%),radial-gradient(ellipse at 75% 75%,color-mix(in srgb,var(--tp-surface) 80%,transparent),transparent 62%); animation:tp-wallpaper-flow 14s ease-in-out infinite alternate; }
+@keyframes tp-wallpaper-flow { from {transform:translate(-8%,-5%) scale(1)} to {transform:translate(8%,6%) scale(1.13)} }
+@media(prefers-reduced-motion:reduce) { .tp-bg-gradient[data-animate="true"],.tp-bg-gradient[data-animate="true"]::after { animation:none!important; transform:none!important; } }
+
+/* Compact wordmarks leave room for the name and locality on narrow phones. */
+.tp-header[data-layout="side"] .tp-logo {max-width:4.5rem;max-height:3.5rem;}
+.tp-header[data-layout="side"] .tp-sidehead {gap:var(--tp-s-3);}
+/* Profile type follows its actual panel, including a narrow desktop sidebar. */
+.tp-header[data-layout="centered"] .tp-name {font-size:calc(clamp(2rem,8.4cqi,3.1rem) * var(--tp-heading-scale,1));}

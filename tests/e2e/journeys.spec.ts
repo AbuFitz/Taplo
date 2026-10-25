@@ -140,7 +140,7 @@ test.describe("plans and page settings", () => {
     await selectPart(page, "page");
     await openSection(page, /^Look/);
     await expect(page.getByText("Choosing a different theme is included from the Core plan.")).toBeVisible();
-    await expect(page.getByRole("radiogroup", { name: "Look" }).locator('label[data-choice="colour"] input')).toBeDisabled();
+    await expect(page.getByRole("radiogroup", { name: "Look" }).getByRole('radio', { name: 'Studio', exact: true })).toBeDisabled();
     await openStructure(page);
     await expect(row(page, "gallery")).toContainText("Not on your page");
     await expect(row(page, "gallery")).toContainText("Galleries are included from the Core plan");

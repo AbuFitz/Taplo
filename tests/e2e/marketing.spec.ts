@@ -291,7 +291,7 @@ test.describe("inspiration", () => {
     await page.getByLabel("Phone", { exact: true }).blur();
     await page.getByRole("button", { name: "Continue" }).click(); // → first content
     await page.getByRole("button", { name: "Continue" }).click(); // → design
-    await expect(page.getByRole("radio",{name:"Portrait",exact:true})).toBeAttached();
+    await expect(page.getByRole("radio",{name:"Photo",exact:true})).toBeAttached();
     const owner = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!));
     expect(owner.content.identity.name).toBe("Ridgeway Physio");
     expect(JSON.stringify(owner.content)).not.toContain("Hollin");

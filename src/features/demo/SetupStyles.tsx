@@ -6,16 +6,16 @@ import { Button } from "@/components/ui/button";
 import { suggestedLooks } from "@/features/inspiration/suggest";
 import { ThemeSwatch } from "./ThemeSwatch";
 import { useDemo, initialState } from "./store";
+import { PROFILE_CHOICES } from "@/features/page/contracts/style";
+import { ImageField } from "@/features/page/editor/controls";
+import { ChoicePreview } from "@/features/preview/ChoicePreview";
 import { resolveStyle } from "@/features/page/themes/resolve";
 export function SetupThemes({ compact = false }: { compact?: boolean }) {
   const { state, update } = useDemo();
   const s = state ?? initialState();
   const [open, setOpen] = React.useState(false);
   const looks = suggestedLooks(s.content.identity.industryKey);
-  const [all, setAll] = React.useState(false);
-  const visible = all
-    ? looks
-    : looks.filter((l, i) => i < 6 || l.id === s.page.themeId);
+  const visible = looks.slice(0,6);
   const grid = (
     <>
       <div
@@ -36,17 +36,7 @@ export function SetupThemes({ compact = false }: { compact?: boolean }) {
                   page: {
                     ...st.page,
                     themeId: look.id,
-                    appearance: {
-                      ...structuredClone(look.overrides),
-                      header: {
-                        ...look.overrides.header,
-                        ...st.page.appearance.header,
-                      },
-                      layout: {
-                        ...look.overrides.layout,
-                        ...st.page.appearance.layout,
-                      },
-                    },
+                    appearance: structuredClone(look.overrides),
                   },
                 }))
               }
@@ -56,15 +46,6 @@ export function SetupThemes({ compact = false }: { compact?: boolean }) {
           </label>
         ))}
       </div>
-      {looks.length > 6 ? (
-        <button
-          type="button"
-          className="setup-secondary mt-4"
-          onClick={() => setAll((v) => !v)}
-        >
-          {all ? "Fewer themes" : "More themes"}
-        </button>
-      ) : null}
     </>
   );
   return compact ? (
@@ -98,100 +79,8 @@ export function SetupThemes({ compact = false }: { compact?: boolean }) {
     </fieldset>
   );
 }
-const COMPOSITIONS = [
-  {
-    id: "centered",
-    name: "Portrait",
-    density: "comfortable",
-    rhythm: "even",
-    align: "center",
-  },
-  {
-    id: "side",
-    name: "Compact",
-    density: "compact",
-    rhythm: "tight",
-    align: "left",
-  },
-  {
-    id: "editorial",
-    name: "Editorial",
-    density: "comfortable",
-    rhythm: "editorial",
-    align: "left",
-  },
-] as const;
-/** These are real phone profile/rhythm settings, never desktop column diagrams. */
+/** Three reviewed arrangements. Each preview renders the owner's actual identity. */
 export function SetupMobileLayouts() {
-  const { state, update } = useDemo();
-  const s = state ?? initialState();
-  const style = resolveStyle(s.page.themeId, s.page.appearance).spec;
-  const layout = style.header.layout;
-  const patch = (item: (typeof COMPOSITIONS)[number]) =>
-    update((st) => ({
-      ...st,
-      page: {
-        ...st.page,
-        appearance: {
-          ...st.page.appearance,
-          header: {
-            ...st.page.appearance.header,
-            layout: item.id,
-            align: item.align,
-          },
-          text: { ...st.page.appearance.text, align: item.align },
-          layout: {
-            ...st.page.appearance.layout,
-            density: item.density,
-            rhythm: item.rhythm,
-          },
-          cards: {
-            ...st.page.appearance.cards,
-            padding: item.density === "compact" ? "compact" : "comfortable",
-          },
-        },
-      },
-    }));
-  return (
-    <fieldset>
-      <legend className="setup-layout-heading">Mobile composition</legend>
-      <div className="setup-mobile-layouts">
-        {COMPOSITIONS.map((item) => (
-          <label key={item.id} className="setup-mobile-choice">
-            <input
-              type="radio"
-              name="mobile-composition"
-              aria-label={item.name}
-              checked={layout === item.id}
-              onChange={() => patch(item)}
-            />
-            <span
-              className="setup-mobile-diagram"
-              data-composition={item.id}
-              style={
-                {
-                  background: style.colors.background,
-                  color: style.colors.text,
-                  "--composition-surface": style.colors.surface,
-                  "--composition-accent": style.colors.accent,
-                } as React.CSSProperties
-              }
-            >
-              <span className="setup-mini-identity">
-                <i />
-                <b>{s.content.identity.name || "Your name"}</b>
-              </span>
-              <em />
-              <span className="setup-mini-widgets">
-                <i />
-                <i />
-                <i />
-              </span>
-            </span>
-            <span>{item.name}</span>
-          </label>
-        ))}
-      </div>
-    </fieldset>
-  );
+ const {state,update}=useDemo();const s=state??initialState();const layout=resolveStyle(s.page.themeId,s.page.appearance).spec.header.layout;
+ return <fieldset className="setup-profile-choices" data-testid="setup-profile-choices"><legend className="setup-layout-heading">Arrange your profile</legend><div className="grid grid-cols-3 gap-2">{PROFILE_CHOICES.map(item=><label key={item.id} className="setup-theme-choice"><input type="radio" name="profile-arrangement" aria-label={item.name} checked={layout===item.id} onChange={()=>update(st=>({...st,page:{...st.page,appearance:{...st.page.appearance,header:{...st.page.appearance.header,layout:item.id,align:item.id==='centered'?'center':'left'}}}}))}/><ChoicePreview src={`/demo/preview?header=${item.id}`} title={`${item.name} profile preview`} height={460}/><span>{item.name}</span></label>)}</div>{layout==='banner'?<div className="mt-4"><ImageField purpose="cover" presentation="identity" samples={false} label={s.content.identity.heroImage?'Cover photo':'Add a cover photo'} value={s.content.identity.heroImage??null} cropAspect={16/9} defaultAlt={`${s.content.identity.name} cover`} onChange={image=>update(st=>({...st,content:{...st.content,identity:{...st.content.identity,heroImage:image??undefined}}}))}/></div>:null}</fieldset>
 }

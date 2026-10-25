@@ -15,9 +15,9 @@ export async function openEditorWithSample(
     | "Consultant"
     | "Unlisted" = "Barber",
 ) {
-  await page.goto("/dashboard");
+  await page.goto("/dashboard", {waitUntil:"domcontentloaded"});
   await page.evaluate(() => localStorage.clear());
-  await page.reload();
+  await page.reload({waitUntil:"domcontentloaded"});
   await page.getByText("More sample businesses", { exact: true }).click();
   await page
     .getByRole("button", { name: new RegExp(`^${sample}`) })
@@ -152,7 +152,7 @@ export async function openSection(page: Page, title: string | RegExp) {
 
 /** Seed the demo store directly with a fixture (used for stress data that has no UI sample button). */
 export async function seedFixture(page: Page, state: unknown) {
-  await page.goto("/dashboard");
+  await page.goto("/dashboard", {waitUntil:"domcontentloaded"});
   await page.evaluate(
     (s) => localStorage.setItem("taplo.demo.v2", JSON.stringify(s)),
     state,

@@ -2,13 +2,12 @@
 import * as React from "react";
 import {
   Palette,
-  LayoutTemplate,
-  CircleUserRound,
   ArrowRight,
 } from "lucide-react";
+import { SetupMobileLayouts } from "./SetupStyles";
 import { Overlay } from "@/components/taplo/overlay";
 import { Button } from "@/components/ui/button";
-import { ColorField, ImageField } from "@/features/page/editor/controls";
+import { ColorField } from "@/features/page/editor/controls";
 import { resolveStyle, shaderFallbackCss } from "@/features/page/themes/resolve";
 import { LOOKS, PALETTES } from "@/features/page/themes/looks";
 import { useDemo, initialState } from "./store";
@@ -18,15 +17,11 @@ import type { StyleOverrides } from "@/features/page/contracts/style";
 export function SetupDesign({ compact = false }: { compact?: boolean }) {
   const { state, update } = useDemo();
   const s = state ?? initialState();
-  const [panel, setPanel] = React.useState<"background" | "profile" | null>(
+  const [panel, setPanel] = React.useState<"background" | null>(
     null,
   );
   const look = LOOKS.find((l) => l.id === s.page.themeId);
   const background = s.page.appearance.background ?? look?.overrides.background;
-  const header =
-    s.page.appearance.header?.layout ??
-    look?.overrides.header?.layout ??
-    "minimal";
   const patch = (changes: StyleOverrides) =>
     update((st) => ({
       ...st,
@@ -89,20 +84,6 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
         </span>
         <ArrowRight aria-hidden="true" className="ml-auto size-4" />
       </button>
-      <button
-        className="setup-edit-row"
-        type="button"
-        onClick={() => setPanel("profile")}
-      >
-        <CircleUserRound aria-hidden="true" className="size-4" />
-        <span>
-          Profile arrangement
-          <span className="block text-xs font-normal text-muted-foreground">
-            {{floating:"Floating profile",portrait:"Portrait introduction",minimal:"Compact",centered:"Centered",side:"Side by side",cover:"Photo cover",banner:"Photo fade",poster:"Editorial",editorial:"Editorial",feature:"Photo cover"}[header] ?? "Custom profile"}
-          </span>
-        </span>
-        <LayoutTemplate aria-hidden="true" className="ml-auto size-4" />
-      </button>
       <Overlay
         open={panel !== null}
         onOpenChange={(o) => !o && setPanel(null)}
@@ -118,7 +99,7 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
           </Button>
         }
       >
-        {panel === "background" ? (
+        {(
           <div className="grid gap-5">
             <div className="setup-colour-preview" aria-hidden="true" style={{background:previewBackground,color:resolved.colors.text}}><span>{s.content.identity.name||"Your page"}</span><i style={{background:resolved.colors.surface,boxShadow:"0 8px 24px #0001"}}/><b style={{background:resolved.colors.accent,color:resolved.colors.accentText}}>Your next customer</b></div>
             <div className="setup-colour-palettes" role="group" aria-label="Colour palettes">{PALETTES.slice(0,6).map(p=><button type="button" key={p.id} aria-label={`${p.name} palette`} onClick={()=>patch({colors:p.colors,background:{kind:"solid",color:p.colors.background??"#ffffff"}})}><span style={{background:p.colors.background}}><i style={{background:p.colors.surface}}/><i style={{background:p.colors.accent}}/></span><b>{p.name}</b></button>)}</div>
@@ -242,76 +223,9 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
               contrast is checked by the page engine.
             </p>
           </div>
-        ) : (
-          <div className="grid gap-5">
-            <div className="grid grid-cols-2 gap-2">
-              {(
-                [
-                  { id: "floating", name: "Floating profile" },
-                  { id: "portrait", name: "Portrait introduction" },
-                  { id: "minimal", name: "Compact" },
-                  { id: "centered", name: "Centered" },
-                  { id: "side", name: "Side by side" },
-                  { id: "cover", name: "Photo cover" },
-                  { id: "banner", name: "Photo fade" },
-                  { id: "poster", name: "Editorial" },
-                ] as const
-              ).map((x) => (
-                <button
-                  type="button"
-                  key={x.id}
-                  aria-pressed={header === x.id}
-                  disabled={
-                    ["cover", "banner", "poster"].includes(x.id) &&
-                    !s.content.identity.heroImage
-                  }
-                  className="setup-profile-choice"
-                  onClick={() =>
-                    patch({
-                      header: { ...s.page.appearance.header, layout: x.id },
-                    })
-                  }
-                >
-                  <span aria-hidden="true" className="setup-profile-diagram" data-kind={x.id}><i/><b/><em/></span><span>{x.name}</span>
-                </button>
-              ))}
-            </div>
-            {!s.content.identity.heroImage ? (
-              <ImageField purpose="cover" samples={false} label="Add a cover photo for photo layouts" cropAspect={16/9} defaultAlt={`${s.content.identity.name} cover`} value={s.content.identity.heroImage} onChange={image=>update(st=>({...st,content:{...st.content,identity:{...st.content.identity,heroImage:image??undefined}}}))}/>
-            ) : null}
-            <fieldset>
-              <legend className="mb-2 text-sm font-medium">Image shape</legend>
-              <div className="flex gap-2">
-                {(["logo", "circle", "square"] as const).map((shape) => (
-                  <Button
-                    key={shape}
-                    type="button"
-                    variant="outline"
-                    aria-pressed={
-                      (s.page.appearance.header?.avatarShape ?? "logo") ===
-                      shape
-                    }
-                    onClick={() =>
-                      patch({
-                        header: {
-                          ...s.page.appearance.header,
-                          avatarShape: shape,
-                        },
-                      })
-                    }
-                  >
-                    {shape === "logo"
-                      ? "Whole logo"
-                      : shape === "circle"
-                        ? "Round"
-                        : "Square"}
-                  </Button>
-                ))}
-              </div>
-            </fieldset>
-          </div>
         )}
       </Overlay>
+      <div className="col-span-full mt-4"><SetupMobileLayouts /></div>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import path from "node:path"
 import { openEditorWithSample, previewFrame, selectPart, insp, openRow } from "./helpers"
 
 const review = process.env.TAPLO_REVIEW_DIR ?? 'test-results'
-for (const width of [320, 390, 1440]) for (const layout of ['editorial', 'banner']) for (const look of ['service', 'ink']) test(`${layout} profile is readable with ${look} at ${width}`, async ({ page }) => {
+for (const width of [320, 390, 1440]) for (const layout of ['side', 'centered', 'banner']) for (const look of ['service', 'ink']) test(`${layout} profile is readable with ${look} at ${width}`, async ({ page }) => {
   await page.setViewportSize({ width, height: 844 })
   await page.emulateMedia({ reducedMotion: 'reduce' })
   const o = { header: { layout, align: 'left' }, layout: { desktop: 'centered' } }
@@ -58,14 +58,14 @@ for (const width of [390,1440]) test(`transparent wide logo keeps its full compo
   await expect(page.getByTestId('crop-dialog')).toHaveCount(0)
   const cover=await page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!).content.identity.heroImage)
   expect(cover).toMatchObject({width:600,height:900})
-  await page.getByRole('radiogroup',{name:'Header arrangement',exact:true}).locator('label[data-choice="floating"]').click()
-  await expect(previewFrame(page).locator('.tp-header')).toHaveAttribute('data-layout','floating')
+  await page.getByRole('radiogroup',{name:'Header arrangement',exact:true}).locator('label[data-choice="centered"]').click()
+  await expect(previewFrame(page).locator('.tp-header')).toHaveAttribute('data-layout','centered')
   await expect(logo).toHaveAttribute('data-ink','dark')
   await page.getByTestId('undo').click()
-  await expect(previewFrame(page).locator('.tp-header')).not.toHaveAttribute('data-layout','floating')
+  await expect(previewFrame(page).locator('.tp-header')).not.toHaveAttribute('data-layout','centered')
   await page.getByTestId('redo').click()
   await page.reload()
-  await expect(previewFrame(page).locator('.tp-header')).toHaveAttribute('data-layout','floating')
+  await expect(previewFrame(page).locator('.tp-header')).toHaveAttribute('data-layout','centered')
   const next=await page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!).content.identity.logo)
   expect(next).toEqual(stored)
 })
@@ -97,7 +97,7 @@ for (const width of [390,1440]) test(`section recipes update only their panel, u
   await expect(previewFrame(page).locator('[data-widget="priceMenu"]')).toHaveAttribute('data-featured','true')
 })
 
-for (const width of [320,1440]) for (const layout of ['banner','editorial']) test(`${layout} has no empty photo space with a long name at ${width}`, async ({page})=>{
+for (const width of [320,1440]) for (const layout of ['banner','centered']) test(`${layout} has no empty photo space with a long name at ${width}`, async ({page})=>{
   await page.setViewportSize({width,height:844})
   await openEditorWithSample(page,'Barber')
   const name='North Street Barbering and Independent Grooming Studio'

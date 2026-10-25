@@ -5,7 +5,7 @@ export const SECTION_TREATMENTS = [
   { id: "inline", label: "Open", description: "Content sits directly on the page.", appearance: { surface: "transparent", radius: "lg", border: "none", shadow: "none", padding: "none", emphasis: "normal" } },
   { id: "soft", label: "Soft", description: "A quiet tonal surface groups the content.", appearance: { surface: "soft", radius: "lg", border: "none", shadow: "none", padding: "comfortable", emphasis: "normal" } },
   { id: "raised", label: "Raised", description: "A rounded surface with restrained depth.", appearance: { surface: "solid", radius: "xl", border: "none", shadow: "soft", padding: "roomy", emphasis: "normal" } },
-  { id: "spotlight", label: "Spotlight", description: "A stronger surface for your most important section.", appearance: { surface: "accent", radius: "xl", border: "none", shadow: "none", padding: "roomy", emphasis: "featured" } },
+  { id: "spotlight", label: "Spotlight", description: "A stronger surface for your most important section.", appearance: { surface: "accent", radius: "xl", border: "none", shadow: "soft", padding: "roomy", emphasis: "featured" } },
 ] as const satisfies readonly { id: string; label: string; description: string; appearance: WidgetAppearance }[]
 export type SectionTreatmentId = (typeof SECTION_TREATMENTS)[number]["id"]
 const KEYS = ["surface", "radius", "border", "shadow", "padding", "emphasis", "background", "text"] as const

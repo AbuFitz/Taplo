@@ -79,7 +79,7 @@ test.describe("My page editor", () => {
     await handle.focus();
     await page.keyboard.press("Space");
     await page.waitForTimeout(120); // dnd-kit registers its listeners on the next frame
-    await page.keyboard.press("ArrowDown");
+    await page.keyboard.press("ArrowRight");
     await page.waitForTimeout(120);
     await page.keyboard.press("Space");
     await expect.poll(() => rowOrder(page)).not.toEqual(start);
@@ -147,7 +147,7 @@ test.describe("My page editor", () => {
     // an optional look can still be a starting point; content and widgets stay exactly as they were
     await openSection(page, /^Look/);
     const seen = new Set<string>();
-    for (const id of ["forge", "open", "folio", "clay", "orchard"]) {
+    for (const id of ["forge", "open", "atelier", "clay", "orchard"]) {
       await look(page, id).click();
       await expect(look(page, id).locator("input")).toBeChecked();
       await expect.poll(async () => frame.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-background").trim())).toBe(getTheme(id)!.style.colors.background);
@@ -252,7 +252,7 @@ test.describe("My page editor", () => {
     await page.waitForLoadState("networkidle");
     expect(await rowOrder(page)).toEqual(reordered);
     await expect(previewFrame(page).getByRole("heading", { level: 1 })).toContainText("(edited)");
-    await expect(previewFrame(page).locator("[data-taplo-page]")).toHaveAttribute("data-header", "feature"); // Current Studio header
+    await expect(previewFrame(page).locator("[data-taplo-page]")).toHaveAttribute("data-header", "centered"); // Current Studio header
   });
 
   test("publishing: draft stays private, published matches the preview, changes need an explicit publish", async ({ page }) => {
@@ -282,7 +282,7 @@ test.describe("My page editor", () => {
     await page.getByRole("button", { name: "Publish changes" }).first().click();
     await expect(page.getByText(/Published · version 2/)).toBeVisible();
     await pub.reload();
-    await expect(pub.locator("[data-taplo-page]")).toHaveAttribute("data-header", "centered");
+    await expect(pub.locator("[data-taplo-page]")).toHaveAttribute("data-header", "banner");
 
     // discard unpublished changes returns to the published copy
     await pickLook(page, "ink");

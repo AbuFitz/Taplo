@@ -56,13 +56,13 @@ const C: Control[] = [
   { id: "wallpaper-angle", part: "page", open: "Wallpaper", also: radio("Wallpaper", "gradient"), run: slider("Angle", 90), probe: css(".tp-bg-gradient", "background-image") },
   { id: "pattern", part: "page", open: "Wallpaper", run: radio("Pattern", "dots"), probe: at("data-decoration"), expect: "dots" },
   // Header
-  { id: "header-layout", part: "header", run: radio("Header arrangement", "poster"), probe: at("data-header"), expect: "poster" },
+  { id: "header-layout", part: "header", run: radio("Header arrangement", "centered"), probe: at("data-header"), expect: "centered" },
   { id: "header-shape", part: "header", run: radio("Picture style", "circle"), probe: sub(".tp-avatar", "data-shape"), expect: "circle" },
   { id: "header-size", part: "header", more: "Adjust layout", run: radio("Logo size", "lg"), probe: sub(".tp-avatar", "data-size"), expect: "lg" },
   { id: "header-align", part: "header", more: "Adjust layout", run: radio("Header alignment", "center"), probe: sub(".tp-header", "data-align"), expect: "center" },
   { id: "header-actions", part: "header", more: "Adjust layout", run: radio("Contact actions", "icons"), probe: count(".tp-header .tp-actions-primary, .tp-header .tp-quick") },
   { id: "header-location", part: "header", more: "Adjust layout", run: toggle("Show location under the name"), probe: count(".tp-meta svg") },
-  { id: "header-fade", part: "header", also: radio("Header arrangement", "poster"), run: radio("Photo fade", "strong"), probe: cv("--tp-fade"), expect: "74%" },
+  { id: "header-fade", part: "header", also: async (page) => { await radio("Header arrangement", "banner")(page); await radio("Photo fade", "soft")(page) }, run: radio("Photo fade", "strong"), probe: cv("--tp-fade"), expect: "74%" },
   // Buttons
   { id: "button-style", part: "page", open: "Buttons", run: radio("Button style", "outline"), probe: at("data-btn-fill"), expect: "outline" },
   { id: "button-shape", part: "page", open: "Buttons", run: radio("Button shape", "square"), probe: cv("--tp-btn-radius") },
@@ -95,8 +95,8 @@ test.describe("design controls change the rendered page, undo, and persist", () 
     test(c.id, async ({ page }) => {
       await openEditorWithSample(page, "Barber")
       await page.waitForTimeout(600)
-      // Every control is exercised from the same known start. The sample barber now opens in the Folio design, whose values already equal several of the targets below (and whose light page rejects light text), so the Night look is chosen first through the Look control.
-      if (c.id !== "look") { await selectPart(page, "page"); await radio("Look", "night")(page); await page.waitForTimeout(400) }
+      // Every control is exercised from the same known start. The sample barber opens in the Service design, whose values already equal several of the targets below (and whose light page rejects light text), so the Midnight look is chosen first through the Look control.
+      if (c.id !== "look") { await selectPart(page, "page"); await radio("Look", "ink")(page); await page.waitForTimeout(400) }
       await go(page, c)
       const before = await c.probe(page)
       await c.run(page)

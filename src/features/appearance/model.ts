@@ -76,7 +76,7 @@ export function useAppearanceModel(host: AppearanceHost): AppearanceModel {
         return next as StyleOverrides
       })
     const patch: AppearanceModel["patch"] = (g, k, v, coalesce) =>
-      apply((o) => ({ ...o, [g]: { ...((o as Record<string, object>)[g] ?? {}), [k]: v } }) as StyleOverrides, coalesce ?? `${g}.${k}`)
+      apply((o) => ({ ...o, [g]: { ...((o as Record<string, object>)[g] ?? {}), [k]: v } }) as StyleOverrides, coalesce ?? (g === "colors" || typeof v === "number" ? `${g}.${k}` : undefined))
     const setBackground: AppearanceModel["setBackground"] = (b, coalesce) =>
       apply((o) => {
         const n = { ...o }

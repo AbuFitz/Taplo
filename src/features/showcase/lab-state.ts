@@ -22,18 +22,15 @@ export const EXAMPLE_LOOK: Record<Scenario, string> = { ...Object.fromEntries(CO
  */
 export const EXAMPLE_OVERRIDES: Record<Scenario, StyleOverrides> = {
   ...Object.fromEntries(COLLECTION_BRIEFS.map(b=>[b.id,{header:{actions:"none"}}])) as Record<CollectionScenario,StyleOverrides>,
-  corner: { header: { layout: "floating", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
-  oakfield: { header: { layout: "side", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
-  rowan: { header: { layout: "portrait", avatarShape: "circle", avatarSize: "lg", align: "left" }, text: { align: "left" }, layout: { desktop: "split", width: "wide", rhythm: "editorial" } },
-  brookfield: { header: { layout: "feature", avatarShape: "logo", align: "left" }, layout: { width: "wide", desktop: "columns", rhythm: "editorial" } },
-  station: { header: { layout: "banner", avatarShape: "logo", align: "left" }, layout: { desktop: "split", width: "wide", rhythm: "even" } },
-  detailer: { header: { layout: "poster", avatarShape: "logo", align: "left" }, layout: { desktop: "centered", width: "wide", rhythm: "editorial" } },
+  corner: { header: { avatarShape: "logo", align: "left" } },
+  oakfield: {}, rowan: { header: { avatarShape: "circle" } },
+  brookfield: {}, station: {}, detailer: {},
   barber: {},
-  physio: { header: { layout: "editorial", avatarShape: "logo", align: "left" }, text: { headingFont: "manrope", align: "left", size: "lg" }, layout: { desktop: "split", width: "wide", rhythm: "editorial" } },
-  cafe: { header: { layout: "floating", avatarShape: "circle", avatarSize: "md", align: "center" }, layout: { desktop: "columns", width: "wide" } },
-  tutor: { header: { layout: "portrait", avatarShape: "circle", avatarSize: "md", align: "left" }, layout: { desktop: "split" } },
-  gym: { header: { layout: "feature", avatarShape: "logo", align: "left", scrim: "strong" }, text: { headingFont: "spaceGrotesk", headingCase: "normal", size: "lg" }, layout: { desktop: "columns", width: "wide", rhythm: "editorial" } },
-  trades: { header: { layout: "cover", avatarShape: "circle", avatarSize: "lg", align: "center" }, layout: { desktop: "centered", width: "regular" } },
+  physio: { header: { layout: "centered", avatarShape: "logo", align: "left" }, text: { headingFont: "manrope", align: "left", size: "lg" }, layout: { desktop: "split", width: "wide", rhythm: "editorial" } },
+  cafe: { header: { layout: "banner", avatarShape: "circle", avatarSize: "md", align: "center" }, layout: { desktop: "columns", width: "wide" } },
+  tutor: { header: { layout: "side", avatarShape: "circle", avatarSize: "md", align: "left" }, layout: { desktop: "split" } },
+  gym: { header: { layout: "banner", avatarShape: "logo", align: "left", scrim: "strong" },  layout: { desktop: "columns", width: "wide", rhythm: "editorial" } },
+  trades: { header: { layout: "banner", avatarShape: "circle", avatarSize: "lg", align: "center" }, layout: { desktop: "centered", width: "regular" } },
   dealer: { layout: { desktop: "columns", width: "wide" } },
 }
 
@@ -47,20 +44,20 @@ export function initialConfig(scenario: Scenario = "barber", lookId?: string): L
 const widgetCache = new Map<Scenario, PageDoc["widgets"]>()
 /** Authored hierarchy, using exactly the same section treatments offered in the editor. */
 const SECTION_COMPOSITIONS: Partial<Record<Scenario, Record<string, SectionTreatmentId>>> = {
-  station: { priceMenu: "spotlight", hours: "soft", faq: "inline" },
-  detailer: { serviceList: "raised", serviceArea: "soft", faq: "inline", hours: "soft" },
-  brookfield: { faq: "inline", hours: "soft" },
-  corner: { priceMenu: "raised", hours: "soft", faq: "inline" },
-  oakfield: { serviceList: "raised", serviceArea: "soft", faq: "inline" },
-  physio: { serviceList: "raised", team: "soft", faq: "inline", hours: "raised" },
-  gym: { featuredService: "spotlight", serviceList: "raised", team: "soft", faq: "inline" },
-  rowan: { featuredService: "raised", serviceList: "soft", faq: "inline" },
+  station: { priceMenu: "spotlight", hours: "raised", faq: "raised" },
+  detailer: { serviceList: "raised", serviceArea: "raised", faq: "raised", hours: "raised" },
+  brookfield: { faq: "raised", hours: "raised" },
+  corner: { priceMenu: "raised", hours: "raised", faq: "raised" },
+  oakfield: { serviceList: "raised", serviceArea: "raised", faq: "raised" },
+  physio: { serviceList: "raised", team: "raised", faq: "raised", hours: "raised" },
+  gym: { featuredService: "spotlight", serviceList: "raised", team: "raised", faq: "raised" },
+  rowan: { featuredService: "raised", serviceList: "raised", faq: "raised" },
 }
 /** Spatial choices are authored per business, independent of the shared surface recipes. */
 const SECTION_LAYOUTS: Partial<Record<Scenario,Record<string,Record<string,unknown>>>> = {
   barber:{gallery:{variant:"masonry"}},
   detailer:{serviceList:{variant:"spotlight"},enquiry:{variant:"card"},faq:{variant:"cards"},hours:{variant:"compact"}},
-  physio:{serviceList:{variant:"cards"},hours:{variant:"status"},location:{variant:"compact"}},
+  physio:{serviceList:{variant:"tiles"},hours:{variant:"status"},location:{variant:"compact"}},
   cafe:{priceMenu:{variant:"panels"},hours:{variant:"compact"},location:{variant:"visit"}},
   corner:{priceMenu:{variant:"panels"},hours:{variant:"compact"}},
   tutor:{serviceList:{variant:"cards"},text:{variant:"note",collapsible:true}},

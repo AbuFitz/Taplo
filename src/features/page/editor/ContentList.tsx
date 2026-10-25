@@ -16,12 +16,13 @@ import type { Editor } from "./useEditor"
 export function ContentList({ ed, selection, onSelect, notify }: { ed: Editor; selection: Selection; onSelect: (s: Selection) => void; notify: (msg: string, undoable?: boolean) => void }) {
   const [addOpen, setAddOpen] = React.useState(false)
   const [kind, setKind] = React.useState<RecordKind | null>(null)
+  const [repairId, setRepairId] = React.useState<string | null>(null)
   const widgets = ed.state.page.widgets
-  const add = () => { setKind(null); setAddOpen(true) }
+  const add = () => { setRepairId(null); setKind(null); setAddOpen(true) }
   return (
     <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3" data-testid="structure">
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-        <h2 id="widgets-h" className="text-base font-semibold">Your content</h2>
+        <h2 id="widgets-h" className="text-base font-semibold">Page blocks</h2>
         <div className="flex flex-wrap gap-2">
           <Button size="sm" className="min-h-10" onClick={add} data-testid="add-widget"><Plus /> Add content</Button>
         </div>
@@ -33,9 +34,9 @@ export function ContentList({ ed, selection, onSelect, notify }: { ed: Editor; s
           <div className="mt-3 flex justify-center"><Button size="sm" className="min-h-10" onClick={add}><Plus /> Add content</Button></div>
         </div>
       ) : (
-        <ContentCards ed={ed} selectedId={selection.kind === "widget" ? selection.id : null} onSelect={(id) => onSelect({ kind: "widget", id })} onDetails={() => onSelect({ kind: "details" })} onAddRecord={(k) => { setKind(k); setAddOpen(true) }} />
+        <ContentCards ed={ed} selectedId={selection.kind === "widget" ? selection.id : null} onSelect={(id) => onSelect({ kind: "widget", id })} onDetails={() => onSelect({ kind: "details" })} onAddRecord={(k, id) => { setRepairId(id); setKind(k); setAddOpen(true) }} />
       )}
-      <AddContent ed={ed} open={addOpen} onOpenChange={setAddOpen} initialKind={kind} onAdded={(id) => { onSelect({ kind: "widget", id }); notify("Added to your page.", true) }} />
+      <AddContent ed={ed} open={addOpen} onOpenChange={setAddOpen} initialKind={kind} repairId={repairId} onAdded={(id) => { onSelect({ kind: "widget", id }); notify("Added to your page.", true) }} />
     </div>
   )
 }

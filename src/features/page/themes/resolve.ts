@@ -125,6 +125,11 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}, logoAc
     decoration: ov.decoration ?? base.decoration,
     motion: ov.motion ?? base.motion ?? "subtle",
   };
+  // Retired profile arrangements render through the reviewed set. Stored owner
+  // data stays intact, while old drafts cannot reintroduce overlapping panels.
+  const layout = spec.header.layout;
+  spec.header.layout = layout === "centered" ? "centered" : ["side", "minimal", "portrait"].includes(layout) ? "side" : "banner";
+
   if (spec.background.kind === "shader" && spec.background.source === "logo" && logoAccent && /^#[0-9a-fA-F]{6}$/.test(logoAccent)) {
     const b = spec.background;
     spec.background = { ...b, colors: [mix(b.base, logoAccent, .08), b.base, mix(b.base, logoAccent, .22)] };
@@ -381,8 +386,8 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
     vars["--tp-btn-border"] = btn.border;
     const local = widgetBackground(style, a);
     const buttonRoles = deriveRoles({ ...spec.colors, background: local, surface: local, text: vars["--tp-foreground"] ?? spec.colors.text, accent: btn.bg === "transparent" ? (inverted ? inverseInk : accent) : btn.bg }, local);
-    vars["--tp-btn-hover"] = btn.bg === "transparent" ? "transparent" : buttonRoles.accentHover;
-    vars["--tp-accent-soft"] = buttonRoles.accentSoft;
+    vars["--tp-btn-hover"] = btn.bg === "transparent" ? "transparent" : contrastRatio(btn.text, buttonRoles.accentHover) >= 4.5 ? buttonRoles.accentHover : btn.bg;
+    vars["--tp-accent-soft"] = contrastRatio(btn.text, buttonRoles.accentSoft) >= 4.5 ? buttonRoles.accentSoft : local;
     if (a.buttonFill) attrs["data-btn-fill"] = a.buttonFill;
   }
   if (a.buttonShape) vars["--tp-btn-radius"] = BTN_RADIUS[a.buttonShape];

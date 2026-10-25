@@ -49,7 +49,7 @@ describe("themes", () => {
   it("ships at least four, each genuinely different (not accent swaps)", () => {
     expect(THEMES.length).toBeGreaterThanOrEqual(4);
     const sig = (t: (typeof THEMES)[number]) => JSON.stringify([t.style.header.layout, t.style.header.avatarShape, t.style.text.headingFont, t.style.buttons.shape, t.style.buttons.fill, t.style.buttons.shadow, t.style.cards.surface, t.style.cards.radius, t.style.layout.desktop, t.style.background.kind, t.style.decoration]);
-    expect(new Set(THEMES.map(sig)).size).toBe(THEMES.length);
+    expect(THEMES.filter((t,i)=>THEMES.some((other,j)=>j<i && sig(other)===sig(t))).map(t=>[t.id,THEMES.filter(other=>sig(other)===sig(t)).map(other=>other.id)])).toEqual([]);
     expect(new Set(THEMES.map((t) => t.style.header.layout)).size).toBeGreaterThanOrEqual(4);
     expect(new Set(THEMES.map((t) => t.style.layout.desktop)).size).toBe(3);
   });

@@ -3,7 +3,7 @@
 import * as React from "react"
 import { ArrowDown, ArrowUp, ArrowUpToLine, ArrowDownToLine, Eye, EyeOff, GripVertical, Lock, MoreHorizontal } from "lucide-react"
 import { DndContext, KeyboardSensor, MouseSensor, TouchSensor, closestCenter, useSensor, useSensors, type Announcements, type DragEndEvent } from "@dnd-kit/core"
-import { SortableContext, arrayMove, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import { SortableContext, arrayMove, sortableKeyboardCoordinates, useSortable, rectSortingStrategy } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -36,7 +36,7 @@ function Thumb({ s, icon }: { s: ReturnType<typeof summarise>; icon: string }) {
  * for ordering. The row's menu offers the same moves as plain choices, and any move is one undo. A row with nothing to
  * show offers the one step that fixes it, in place, instead of a link to another page.
  */
-export function ContentCards({ ed, selectedId, onSelect, onDetails, onAddRecord }: { ed: Editor; selectedId: string | null; onSelect: (id: string) => void; onDetails: () => void; onAddRecord: (kind: RecordKind) => void }) {
+export function ContentCards({ ed, selectedId, onSelect, onDetails, onAddRecord }: { ed: Editor; selectedId: string | null; onSelect: (id: string) => void; onDetails: () => void; onAddRecord: (kind: RecordKind, widgetId: string) => void }) {
   const sums = useSummaries(ed)
   const widgets = ed.state.page.widgets
   const [msg, setMsg] = React.useState("")
@@ -67,9 +67,9 @@ export function ContentCards({ ed, selectedId, onSelect, onDetails, onAddRecord 
   }
   return (
     <>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd} autoScroll={{ threshold: { x: 0, y: 0.18 }, acceleration: 14 }} accessibility={{ announcements, screenReaderInstructions: { draggable: "To pick up a row, press space or enter on its handle. Use the up and down arrow keys to move it, then space or enter to drop it. Press escape to cancel." } }}>
-        <SortableContext items={widgets.map((w) => w.id)} strategy={verticalListSortingStrategy}>
-          <ul className="min-w-0 divide-y overflow-hidden rounded-xl border bg-card" aria-label="Content on your page" data-testid="content-list">
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd} autoScroll={{ threshold: { x: 0, y: 0.18 }, acceleration: 14 }} accessibility={{ announcements, screenReaderInstructions: { draggable: "To pick up a row, press space or enter on its handle. Use the arrow keys to move it, then space or enter to drop it. Press escape to cancel." } }}>
+        <SortableContext items={widgets.map((w) => w.id)} strategy={rectSortingStrategy}>
+          <ul className="content-block-board" aria-label="Content on your page" data-testid="content-list">
             {widgets.map((w, i) => <Row key={w.id} w={w} i={i} count={widgets.length} ed={ed} sum={sums.get(w.id)!} selected={selectedId === w.id} onSelect={onSelect} onDetails={onDetails} onAddRecord={onAddRecord} moveTo={(to) => moveTo(w.id, to)} />)}
           </ul>
         </SortableContext>
@@ -81,7 +81,7 @@ export function ContentCards({ ed, selectedId, onSelect, onDetails, onAddRecord 
 
 function Row({ w, i, count, ed, sum: s, selected, onSelect, onDetails, onAddRecord, moveTo }: {
   w: StoredWidget; i: number; count: number; ed: Editor; sum: ReturnType<typeof summarise>; selected: boolean
-  onSelect: (id: string) => void; onDetails: () => void; onAddRecord: (kind: RecordKind) => void; moveTo: (to: number) => void
+  onSelect: (id: string) => void; onDetails: () => void; onAddRecord: (kind: RecordKind, widgetId: string) => void; moveTo: (to: number) => void
 }) {
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({ id: w.id })
   const def = getWidget(w.type)!
@@ -90,7 +90,7 @@ function Row({ w, i, count, ed, sum: s, selected, onSelect, onDetails, onAddReco
   const status = w.hidden ? { text: "Hidden from your page", tone: "muted" } : s.locked ? { text: "Not on your page", tone: "warn" } : s.needs ? { text: "Needs a first entry", tone: "warn" } : null
   return (
     <li ref={setNodeRef} style={{ transform: CSS.Transform.toString(transform), transition }} data-widget-row={w.type} data-widget-row-id={w.id}
-      className={cn("bg-card transition-colors", selected && "bg-[var(--signal-soft)]", w.hidden && "opacity-75", isDragging && "relative z-10 shadow-[0_12px_32px_-8px_rgb(10_16_32/0.35)] ring-2 ring-signal")}>
+      className={cn("content-block-card bg-card transition-colors", selected && "bg-[var(--signal-soft)]", w.hidden && "opacity-75", isDragging && "relative z-10 shadow-[0_12px_32px_-8px_rgb(10_16_32/0.35)] ring-2 ring-signal")}>
       <div className="flex items-center pr-1">
         <button type="button" ref={setActivatorNodeRef} {...attributes} {...listeners} data-testid="drag-handle" data-base-ui-swipe-ignore="" style={{ touchAction: "none" }}
           aria-label={`Reorder ${s.name}. Position ${i + 1} of ${count}. Press space, then the arrow keys.`}
@@ -119,7 +119,7 @@ function Row({ w, i, count, ed, sum: s, selected, onSelect, onDetails, onAddReco
       </div>
       {s.needs ? (
         <div className="px-3 pb-3 pl-11">
-          {s.needs.kind === "details" ? <Button variant="outline" className="min-h-11 w-full justify-start" onClick={onDetails}>{s.needs.cta}</Button> : s.needs.kind === "self" ? <Button variant="outline" className="min-h-11 w-full justify-start" onClick={() => onSelect(w.id)} data-testid="needs-cta">{s.needs.cta}</Button> : <Button variant="outline" className="min-h-11 w-full justify-start" onClick={() => onAddRecord(s.needs!.kind as RecordKind)} data-testid="needs-cta">{s.needs.cta}</Button>}
+          {s.needs.kind === "details" ? <Button variant="outline" className="min-h-11 w-full justify-start" onClick={onDetails}>{s.needs.cta}</Button> : s.needs.kind === "self" ? <Button variant="outline" className="min-h-11 w-full justify-start" onClick={() => onSelect(w.id)} data-testid="needs-cta">{s.needs.cta}</Button> : <Button variant="outline" className="min-h-11 w-full justify-start" onClick={() => onAddRecord(s.needs!.kind as RecordKind, w.id)} data-testid="needs-cta">{s.needs.cta}</Button>}
         </div>
       ) : null}
       {s.locked ? <p className="mx-3 mb-3 ml-11 flex items-start gap-2 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground"><Lock aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />{s.locked} Your content is kept.</p> : null}

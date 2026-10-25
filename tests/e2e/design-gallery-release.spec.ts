@@ -12,7 +12,7 @@ for (const width of [320, 390, 768, 1440]) {
     const search = page.getByRole("searchbox", { name: "Find a design" });
     await search.fill("clinic");
     await expect(cards).toHaveCount(1);
-    await expect(cards.first().getByRole("heading")).toHaveText("Hollin Physiotherapy");
+    await expect(cards.first().getByRole("heading")).toHaveText("Studio");
     await expect(cards.first().getByRole("link", { name: /Open demo/ })).toHaveAttribute("href", "/appearance/frame?scenario=physio");
     await expect(cards.first().getByTestId("start-design")).toHaveAttribute("href", "/onboarding?from=hollin-physio");
     await cards.first().locator("img").evaluate((img: HTMLImageElement) => img.decode());
@@ -21,16 +21,16 @@ for (const width of [320, 390, 768, 1440]) {
     await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `gallery-clinic-${width}.png`) });
     const surface = await stage.locator(".design-surface").boundingBox();
     const box = (await stage.boundingBox())!;
-    expect(surface!.x).toBeGreaterThan(box.x + 10);
-    expect(surface!.x + surface!.width).toBeLessThan(box.x + box.width - 10);
+    expect(surface!.x).toBeGreaterThan(box.x - 1);
+    expect(surface!.x + surface!.width).toBeLessThan(box.x + box.width + 1);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.getByRole("button", { name: "Clear search" }).click();
     await search.fill("cafe");
     await expect(cards).toHaveCount(1);
-    await expect(cards.first().getByRole("heading")).toHaveText("No. 6 Coffee");
+    await expect(cards.first().getByRole("heading")).toHaveText("Terracotta");
     await search.fill("strength");
     await expect(cards).toHaveCount(1);
-    await expect(cards.first().getByRole("heading")).toHaveText("Forge Strength");
+    await expect(cards.first().getByRole("heading")).toHaveText("Forge");
     await page.getByRole("button", { name: "Clear search" }).click();
     await expect(cards).toHaveCount(EXAMPLES.length);
     await page.getByTestId("gallery-filters").getByText("Desktop", { exact: true }).click();
@@ -54,7 +54,14 @@ for (const [slug, scenario, title, action] of [
     await page.goto(`/inspiration/${slug}`);
     const frame = page.frameLocator('[data-testid="design-preview-frame"]');
     await expect(frame.getByRole("heading", { level: 1 })).toHaveText(title!);
-    await frame.getByRole("button", { name: action!, exact: true }).click();
+    // A real pointer tap must open the demo on the first attempt. Locator.click
+    // scrolls transformed nested documents and can move the target out of view.
+    const handset = page.getByTestId("design-preview-frame");
+    await expect(handset).toHaveAttribute("data-loaded", "true");
+    await page.getByTestId("design-preview").scrollIntoViewIfNeeded();
+    const target = frame.getByRole("button", { name: action!, exact: true });
+    const hit = (await target.boundingBox())!;
+    await page.mouse.click(hit.x + hit.width / 2, hit.y + hit.height / 2);
     await expect(frame.getByTestId("booking-flow")).toBeVisible();
     if (scenario === "physio") await frame.getByTestId("bk-service").first().click();
     const close = frame.getByRole("button", { name: "Close", exact: true });
@@ -72,7 +79,7 @@ for (const [slug, scenario, title, action] of [
     expect(serial).not.toContain(title);
     expect(state.page.widgets.some((w: { type: string }) => w.type === "team")).toBe(true);
     expect(state.page.themeId).toBe(scenario === "physio" ? "open" : "forge");
-    expect(state.page.appearance.header.layout).toBe(scenario === "physio" ? "editorial" : "feature");
+    expect(state.page.appearance.header.layout).toBe(scenario === "physio" ? "centered" : "banner");
   });
 }
 

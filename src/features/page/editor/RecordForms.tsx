@@ -139,7 +139,13 @@ export function RecordForm({ kind, value, onChange, showErrors, content, setup =
         <div className="grid gap-1.5"><Label htmlFor="fq-a">Answer</Label><Textarea id="fq-a" rows={4} maxLength={2000} value={value.answer} aria-invalid={Boolean(err.answer)} onChange={(e) => onChange({ ...value, answer: e.target.value })} />{err.answer ? <p role="alert" className="text-sm text-destructive">{err.answer}</p> : null}</div>
       </div>
     )
-    case "photo": return (
+    case "photo": if (value.id) return <div className="grid gap-4">
+      <ImageField purpose="photo" samples={false} label="Photo" value={value.images[0]??null} defaultAlt="Gallery photo" maxEdge={1400} onChange={im=>onChange({...value,images:im?[im]:[]})}/>
+      <TaploInput label="Caption (optional)" value={value.caption??""} maxLength={240} onChange={e=>onChange({...value,caption:e.target.value})}/>
+      <details><summary className="min-h-11 cursor-pointer py-3 text-sm font-medium">Before and after pair</summary><ImageField purpose="photo" samples={false} label="Before photo (optional)" value={value.before??null} defaultAlt="Before" maxEdge={1400} onChange={before=>onChange({...value,before:before??undefined})}/></details>
+      {err.images?<p role="alert" className="text-sm text-destructive">{err.images}</p>:null}
+    </div>;
+    return (
       <div className="grid gap-3">
         {value.images.map((im: { src: string; alt: string }, i: number) => <ImageField key={i} samples={!setup} label={`Photo ${i + 1}`} value={im} defaultAlt="Photo" maxEdge={1400} onChange={(v) => onChange({ ...value, images: v ? value.images.map((x: unknown, n: number) => (n === i ? v : x)) : value.images.filter((_: unknown, n: number) => n !== i) })} />)}
         <ImageField key={`add-${value.images.length}`} samples={!setup} label={value.images.length ? "Add another photo" : "Choose a photo"} value={null} defaultAlt="Photo" maxEdge={1400} onChange={(v) => v && onChange({ ...value, images: [...value.images, v] })} />

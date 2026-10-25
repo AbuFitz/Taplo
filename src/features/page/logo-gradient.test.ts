@@ -3,11 +3,14 @@ import { resolveStyle } from './themes/resolve'
 import { contrastRatio, mix } from './themes/color'
 it('linked gradients follow replacement logos, preserve neutral marks and keep text readable throughout the background', () => {
   for (const look of ['silver','smoke']) {
-    const neutral = resolveStyle(look)
-    const first = resolveStyle(look, {}, '#ee3311')
-    const replacement = resolveStyle(look, {}, '#16734b')
+    const background = resolveStyle(look).spec.background
+    if(background.kind !== 'shader') throw new Error('Expected a shader look')
+    const linked = {background:{...background,source:'logo' as const}}
+    const neutral = resolveStyle(look, linked)
+    const first = resolveStyle(look, linked, '#ee3311')
+    const replacement = resolveStyle(look, linked, '#16734b')
     expect(first.spec.background).not.toEqual(replacement.spec.background)
-    expect(resolveStyle(look, {}, undefined).spec.background).toEqual(neutral.spec.background)
+    expect(resolveStyle(look, linked, undefined).spec.background).toEqual(neutral.spec.background)
     for (const style of [neutral,first,replacement]) {
       const bg=style.spec.background
       expect(['gradient','shader']).toContain(bg.kind)

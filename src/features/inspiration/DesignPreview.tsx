@@ -30,7 +30,7 @@ export function DesignPreview({ scenario, name, slug }: { scenario: string; name
           <PagePreview src={`/appearance/frame?scenario=${scenario}`} title={`${name}, live`} mode={view === "phone" ? "device" : "desktop"} chrome url={businessAddress(slug)} testId="design-preview-frame" topInset={80} />
         </div>
       </div>
-      <p className="mt-3 text-sm text-foreground/60">Try the page here, or open it at full size. Demo bookings and enquiries stay in this browser.</p>
+      <p className="mt-3 text-sm text-foreground/60">Demo bookings and enquiries stay in this browser.</p>
     </div>
   )
 }

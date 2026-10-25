@@ -64,6 +64,8 @@ export const backgroundSchema = z.discriminatedUnion("kind", [
   }),
 ]);
 
+/** Only these reviewed arrangements are offered for new profile choices. Older stored values remain readable. */
+export const PROFILE_CHOICES = [{id:"side",name:"Compact"},{id:"centered",name:"Centred"},{id:"banner",name:"Photo"}] as const;
 export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal", "feature", "editorial", "banner", "floating", "portrait"] as const;
 export const headerSchema = z.object({
   layout: z.enum(HEADER_LAYOUTS),

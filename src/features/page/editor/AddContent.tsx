@@ -74,12 +74,14 @@ export function AddContent({
   onOpenChange,
   onAdded,
   initialKind,
+  repairId,
 }: {
   ed: Editor;
   open: boolean;
   onOpenChange: (o: boolean) => void;
   onAdded: (id: string) => void;
   initialKind?: RecordKind | null;
+  repairId?: string | null;
 }) {
   const [q, setQ] = React.useState("");
   const [step, setStep] = React.useState<{
@@ -188,7 +190,21 @@ export function AddContent({
         content,
         page: widget
           ? { ...s.page, widgets: [...s.page.widgets, widget] }
-          : s.page,
+          : repairId ? { ...s.page, widgets: s.page.widgets.map(w => {
+              if (w.id !== repairId) return w;
+              // An explicit selection must include the entry just created from
+              // this block's recovery action. Other blocks stay untouched.
+              const refs = {
+                service: ["serviceIds", "services"], product: ["productIds", "products"], vehicle: ["productIds", "products"],
+                photo: ["itemIds", "gallery"], faq: ["faqIds", "faqs"], staff: ["staffIds", "staff"],
+                review: ["testimonialIds", "testimonials"], offer: ["offerIds", "offers"],
+              } as const;
+              const ref = refs[active.kind as keyof typeof refs];
+              if (!ref || !Array.isArray(w.settings[ref[0]])) return w;
+              const before = new Set((s.content[ref[1]] ?? []).map(r => r.id));
+              const added = (content[ref[1]] ?? []).filter(r => !before.has(r.id)).map(r => r.id);
+              return { ...w, settings: { ...w.settings, [ref[0]]: [...w.settings[ref[0]] as string[], ...added] } };
+            }) } : s.page,
       };
     });
     const id = base?.id;

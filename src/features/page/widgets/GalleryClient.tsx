@@ -12,20 +12,21 @@ type Side = "before" | "after"
 const pos = (f?: { x: number; y: number }) => (f ? { objectPosition: `${f.x}% ${f.y}%` } : undefined)
 
 /** Real images keep their proportions in the viewer; both halves of a comparison are accessible. */
-export function Gallery({ items, variant, title, fit = "cover" }: { items: GalleryItem[]; variant: "grid" | "carousel" | "beforeAfter" | "masonry"; title?: string; fit?: "cover" | "contain" }) {
+export function Gallery({ items, variant, title, fit = "cover" }: { items: GalleryItem[]; variant: "mosaic" | "grid" | "carousel" | "filmstrip" | "beforeAfter" | "masonry"; title?: string; fit?: "cover" | "contain" }) {
   const [selection, setSelection] = React.useState<{ at: number; side: Side } | null>(null)
   const openedFrom = React.useRef<HTMLButtonElement | null>(null)
   const label = title || "Gallery"
   const tile = (g: GalleryItem, i: number, ratio?: string, side: Side = "after") => {
     const image = side === "before" ? g.before! : g.image
-    return <button type="button" className="tp-gallery-open" onClick={(e) => { openedFrom.current = e.currentTarget; setSelection({ at: i, side }) }} aria-haspopup="dialog" aria-label={`${g.caption || image.alt}${g.before ? `, ${side}` : ""}. Open larger`} data-testid="gallery-open">
+    return <button type="button" className="tp-gallery-open" data-fit={fit} onClick={(e) => { openedFrom.current = e.currentTarget; setSelection({ at: i, side }) }} aria-haspopup="dialog" aria-label={`${g.caption || image.alt}${g.before ? `, ${side}` : ""}. Open larger`} data-testid="gallery-open">
       <span className="tp-media block" style={fit === "contain" && image.width && image.height ? {aspectRatio:`${image.width} / ${image.height}`} : ratio ? { aspectRatio: ratio } : undefined}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={image.src} alt="" loading="lazy" draggable={false} style={{...pos(image.focal),objectFit:fit}} /></span>
     </button>
   }
   return <>
-    {variant === "carousel" && items.length > 1 ? <Collection label={label} compact>{items.map((g, i) => <figure key={g.id} className="m-0">{tile(g, i, "4 / 5")}{g.caption ? <figcaption className="tp-gallery-caption">{g.caption}</figcaption> : null}</figure>)}</Collection>
+    {variant === "mosaic" && items.length > 1 ? <ul className="tp-gallery-mosaic" aria-label={label} data-count={Math.min(items.length,5)}>{items.slice(0,5).map((g,i)=><li key={g.id} data-lead={i===0||undefined}>{tile(g,i,"4 / 3")}{g.caption?<p className="tp-gallery-caption">{g.caption}</p>:null}{i===4&&items.length>5?<span className="tp-gallery-more" aria-hidden="true">+{items.length-5}</span>:null}</li>)}</ul>
+    : (variant === "carousel" || variant === "filmstrip") && items.length > 1 ? <div className={variant === "filmstrip" ? "tp-gallery-filmstrip" : undefined}><Collection label={label} compact>{items.map((g, i) => <figure key={g.id} className="m-0">{tile(g, i, "4 / 5")}{g.caption ? <figcaption className="tp-gallery-caption">{g.caption}</figcaption> : null}</figure>)}</Collection></div>
       : variant === "beforeAfter" ? <ul className="grid gap-5">{items.map((g, i) => <li key={g.id}>
         <div className="grid grid-cols-2 gap-2">
           {g.before ? <div className="relative">{tile(g, i, "4 / 5", "before")}<span className="tp-ba-label pointer-events-none">Before</span></div> : null}

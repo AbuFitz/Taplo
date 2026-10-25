@@ -96,14 +96,17 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
     const sync = () => {
       const next = doc.querySelector("[data-taplo-page]")
       if (!next) return
-      const color = doc.defaultView?.getComputedStyle(next).getPropertyValue("--tp-background").trim()
-      if (color) host.current?.style.setProperty("--phone-surface", color)
-      setLoaded(true)
       if (page !== next) {
         page = next
         observer.disconnect()
-        observer.observe(next, { attributes: true, attributeFilter: ["style"] })
+        observer.observe(next, { attributes: true, attributeFilter: ["style", "data-taplo-ready"] })
       }
+      // A server-rendered button may be visible before its click handler mounts.
+      // Keep the loading surface until the themed client subtree is ready.
+      if (next.getAttribute("data-taplo-ready") !== "true") return
+      const color = doc.defaultView?.getComputedStyle(next).getPropertyValue("--tp-background").trim()
+      if (color) host.current?.style.setProperty("--phone-surface", color)
+      setLoaded(true)
     }
     const observer = new MutationObserver(sync)
     observer.observe(doc.body, { childList: true, subtree: true })
@@ -162,14 +165,14 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
       title={title}
       tabIndex={interactive ? undefined : -1}
       aria-hidden={interactive ? undefined : true}
-      inert={!interactive}
+      inert={!interactive || !loaded}
       src={src}
       loading={loading}
       data-testid={testId ?? "preview-frame"}
       onLoad={() => { prepareDocument(); post() }}
       className="preview-document"
       data-loaded={loaded}
-      style={{ width: mode === "fill" ? "100%" : L.vw, height: mode === "fill" ? "100%" : L.vh, border: 0, display: "block", background: "white", pointerEvents: interactive ? undefined : "none" }}
+      style={{ width: mode === "fill" ? "100%" : L.vw, height: mode === "fill" ? "100%" : L.vh, border: 0, display: "block", background: "white", pointerEvents: interactive && loaded ? undefined : "none" }}
     />
   ) : null
 

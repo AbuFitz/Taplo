@@ -17,7 +17,7 @@ import type { PageViewModel } from "./view-model"
 /** Widgets whose items are cards in their own right: they get no outer panel. */
 const BARE = new Set(["team", "products", "gallery"])
 const ITEM_SURFACES: Record<string, readonly string[]> = {
-  serviceList: ["cards", "spotlight"], priceMenu: ["panels"], faq: ["cards"], offers: ["cards"], text: ["statement"],
+  serviceList: ["cards", "tiles", "spotlight"], priceMenu: ["panels"], faq: ["cards"], offers: ["cards"],
 }
 const hasItemSurfaces = (w: PageViewModel["widgets"][number]) => BARE.has(w.type) || ITEM_SURFACES[w.type]?.includes(String(w.settings.variant))
 

@@ -50,10 +50,10 @@ const recordings = {
     await step("Make the page yours", "Choose a layout, then adjust the background and profile separately.")
     await f.getByRole("button",{name:/Background & colours/}).click();await f.getByTestId("setup-design-dialog").getByRole("button",{name:"Silver gradient",exact:true}).click();await pause(1800)
     await f.getByRole("button",{name:"Done",exact:true}).click()
-    await f.getByRole("button",{name:/Profile arrangement/}).click();await f.getByTestId("setup-design-dialog").getByRole("button",{name:"Photo fade",exact:true}).click();await f.getByRole("button",{name:"Done",exact:true}).click();await pause(2000)
+    await f.getByTestId("setup-profile-choices").getByRole("radio",{name:"Photo",exact:true}).check();await pause(2000)
     await f.getByRole("button", { name: "Continue", exact: true }).click()
     await step("Choose room to grow", "Compare the plans and save a preference. No payment is taken.")
-    await f.getByRole("radio",{name:"Choose Core",exact:true}).check();await pause(1800)
+    await f.getByRole("radio",{name:"Choose Core",exact:true}).check();await f.locator(".plan-experience button").click();await pause(1800);await f.getByRole("button",{name:"Keep Core",exact:true}).click();await pause(600)
     await f.getByRole("button",{name:"Continue",exact:true}).click()
     await step("Review the actual page", "Check the menu, contact details and opening hours before continuing.")
     await expect(f.getByRole("heading",{name:"Review your page",exact:true})).toBeVisible()
@@ -121,8 +121,23 @@ try {
     const encoded = spawnSync(process.env.HYPERFRAMES_FFMPEG_PATH ?? "ffmpeg", ["-hide_banner", "-loglevel", "error", "-y", "-ss", String((started - created) / 1000), "-i", source, "-an", "-vf", "scale=780:1928:flags=lanczos,fps=25", "-c:v", "libx264", "-preset", "fast", "-crf", "18", "-pix_fmt", "yuv420p", "-movflags", "+faststart", file], { encoding: "utf8" })
     if (encoded.status !== 0) throw new Error(encoded.stderr)
     const probe = spawnSync(process.env.HYPERFRAMES_FFPROBE_PATH ?? "ffprobe", ["-v", "error", "-show_streams", "-show_format", "-of", "json", file], { encoding: "utf8" })
-    if (probe.status !== 0) throw new Error(probe.stderr)
-    const media = JSON.parse(probe.stdout), stream = media.streams.find(s => s.codec_type === "video")
+    let media;
+    if (probe.status === 0) media = JSON.parse(probe.stdout);
+    else if (probe.error?.code === "ENOENT") {
+      // The bundled encoder may be installed without the separate ffprobe
+      // executable. Its decoded stream metadata is the fallback evidence.
+      const decodedProbe = spawnSync(process.env.HYPERFRAMES_FFMPEG_PATH ?? "ffmpeg", ["-hide_banner", "-i", file, "-f", "null", "-"], { encoding: "utf8" });
+      if (decodedProbe.status !== 0) throw new Error(decodedProbe.stderr);
+      const text = decodedProbe.stderr;
+      const duration = text.match(/Duration: (\d+):(\d+):([\d.]+)/);
+      const video = text.match(/Video: (\w+)[^\n]*? (\d{2,5})x(\d{2,5})[^\n]*? (\d+(?:\.\d+)?) fps/);
+      if (!duration || !video) throw new Error("Could not verify decoded recording metadata");
+      media = { format: { duration: String(Number(duration[1])*3600+Number(duration[2])*60+Number(duration[3])) }, streams: [
+        { codec_type: "video", codec_name: video[1], width: Number(video[2]), height: Number(video[3]), avg_frame_rate: `${video[4]}/1` },
+        ...(/Stream .*Audio:/.test(text) ? [{ codec_type: "audio" }] : []),
+      ] };
+    } else throw new Error(probe.stderr || probe.error?.message);
+    const stream = media.streams.find(s => s.codec_type === "video");
     if (stream.width !== 780 || stream.height !== 1928 || stream.codec_name !== "h264" || media.streams.some(s => s.codec_type === "audio")) throw new Error(`Invalid output: ${id}`)
     const decoded = spawnSync(process.env.HYPERFRAMES_FFMPEG_PATH ?? "ffmpeg", ["-v", "error", "-i", file, "-f", "null", "-"], { encoding: "utf8" })
     if (decoded.status !== 0 || decoded.stderr.trim()) throw new Error(decoded.stderr)

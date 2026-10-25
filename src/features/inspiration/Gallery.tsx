@@ -210,7 +210,7 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
         </p>
       ) : (
         <ul
-          className="design-gallery mt-8 grid grid-cols-[minmax(0,1fr)] gap-x-8 gap-y-14 md:grid-cols-2"
+          className="design-gallery mt-8 grid grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-9 sm:gap-x-8 sm:gap-y-12"
           data-testid="gallery-list"
           data-view={view}
         >
@@ -222,18 +222,6 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
                 className="design-stage group relative flex items-center justify-center overflow-hidden rounded-none outline-none focus-visible:ring-3 focus-visible:ring-black/70 focus-visible:ring-offset-4"
                 data-tone={d.style.includes("Dark") ? "dark" : "light"}
               >
-                <span
-                  aria-hidden="true"
-                  className="absolute left-5 top-4 z-10 text-[11px] font-medium uppercase tracking-[.12em] text-foreground/65"
-                >
-                  {d.industryLabel}
-                </span>
-                <span
-                  aria-hidden="true"
-                  className="absolute right-4 top-3 z-10 grid size-9 place-items-center rounded-full bg-foreground/10 text-foreground transition-transform group-hover:rotate-45 motion-reduce:transition-none"
-                >
-                  <ArrowUpRight className="size-4" />
-                </span>
                 <div className="design-surface transition-transform duration-300 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 motion-reduce:transition-none">
                   {view === "desktop" ? (
                     <Shot
@@ -260,21 +248,11 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
                 </div>
               </Link>
               <div className="mt-5">
-                <p className="text-xs font-medium text-foreground/60">
-                  {d.header} · {d.lookName}
-                </p>
-                <h2 className="mt-1 font-display font-display-tight text-2xl sm:text-3xl">
-                  <Link
-                    href={`/inspiration/${d.slug}`}
-                    className="hover:underline underline-offset-4"
-                  >
-                    {d.name}
-                  </Link>
+                <p className="text-xs font-medium text-foreground/60">{d.industryLabel}</p>
+                <h2 className="mt-1 font-display font-display-tight text-lg sm:text-2xl">
+                  <Link href={`/inspiration/${d.slug}`} className="hover:underline underline-offset-4">{d.lookName}</Link>
                 </h2>
-                <p className="mt-2 max-w-lg text-sm leading-relaxed text-foreground/65">
-                  {d.hook}
-                </p>
-                <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+                <div className="design-card-actions mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
                   <Link
                     href={`/appearance/frame?scenario=${d.scenario}`}
                     target="_blank"
