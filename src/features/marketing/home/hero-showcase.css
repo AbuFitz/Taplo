@@ -19,8 +19,7 @@
   transform: rotate(-3deg);
   filter: drop-shadow(0 24px 24px #0008);
 }
-.hero-showcase-phone > div,
-.hero-showcase-browser > div {
+.hero-showcase-phone > div {
   height: 100%;
 }
 .hero-showcase-offer {
@@ -79,30 +78,6 @@
   flex-shrink: 0;
   font-weight: 600;
 }
-.hero-showcase figcaption {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 6px 0 28px;
-  font-size: 11px;
-  line-height: 1.5;
-  color: #b0b0b0;
-}
-.hero-showcase figcaption > span {
-  max-width: 18ch;
-}
-.hero-showcase figcaption a {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  color: #e3e3e3;
-}
-.hero-showcase a:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 5px;
-}
 @media (min-width: 500px) and (max-width: 899px) {
   .hero-showcase-canvas {
     height: 480px;
@@ -130,25 +105,16 @@
   .hero-showcase-canvas {
     height: 570px;
   }
-  .hero-showcase-browser {
-    position: absolute;
-    left: 0;
-    top: 56px;
-    width: 82%;
-    height: 620px;
-    transform: perspective(1800px) rotateY(4deg) rotateX(1deg);
-    filter: drop-shadow(0 24px 40px #0008);
-  }
   .hero-showcase-phone {
-    left: auto;
-    right: 1%;
+    right: auto;
+    left: calc(50% - 230px);
     top: 12px;
     width: 310px;
     height: 710px;
     transform: rotate(3deg);
   }
   .hero-showcase-offer {
-    left: 43%;
+    left: calc(50% + 30px);
     right: auto;
     top: 290px;
     width: 250px;
@@ -162,26 +128,20 @@
   .hero-showcase-offer li {
     font-size: 12px;
   }
-  .hero-showcase figcaption {
-    font-size: 13px;
-    padding-bottom: 36px;
-  }
-  .hero-showcase figcaption > span {
-    max-width: none;
-  }
 }
 @media (min-width: 1200px) {
   .hero-showcase-canvas {
     height: 620px;
   }
   .hero-showcase-phone {
-    right: 2%;
+    right: auto;
+    left: calc(50% - 250px);
     width: 345px;
     height: 780px;
   }
   .hero-showcase-offer {
     top: 330px;
-    left: 46%;
+    left: calc(50% + 40px);
     width: 270px;
   }
 }
@@ -194,89 +154,6 @@
 .hero-showcase-phone > .phone-shell {
   height: auto;
   width: 100%;
-}
-.hero-showcase-browser {
-  overflow: hidden;
-  border-radius: 18px;
-  background: #171715;
-}
-.hero-showcase-browser .browser-chrome {
-  height: 35px;
-  background: #242421;
-  color: #ddd;
-}
-.hero-barber-art {
-  position: relative;
-  min-height: 600px;
-  padding: 40px;
-  background: #151512;
-  color: #f0ebdd;
-}
-.hero-art-wordmark {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 48px;
-  line-height: 0.95;
-  letter-spacing: -0.06em;
-}
-.hero-art-wordmark > span {
-  display: block;
-  margin-top: 15px;
-  font-family: var(--font-body);
-  font-size: 8px;
-  letter-spacing: 0.18em;
-  color: #b6b1a6;
-}
-.hero-art-barber-photo {
-  position: absolute;
-  right: 30px;
-  top: 30px;
-  width: 48%;
-  height: 290px;
-  overflow: hidden;
-  border-radius: 8px;
-}
-.hero-art-barber-photo img {
-  object-fit: cover;
-  object-position: 50% 44%;
-  filter: grayscale(1);
-}
-.hero-art-cuts {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px;
-  margin-top: 80px;
-}
-.hero-art-cuts > span {
-  font-family: var(--font-display);
-  font-size: 60px;
-  letter-spacing: -0.06em;
-  line-height: 1;
-}
-.hero-art-cuts > div {
-  padding-top: 95px;
-}
-.hero-art-cuts p {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 16px 0;
-  border-bottom: 1px solid #ffffff20;
-  font-size: 15px;
-}
-.hero-art-cuts strong {
-  font-weight: 500;
-}
-.hero-art-cuts > div > span {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #e7e1d2;
-  color: #151512;
-  padding: 15px 20px;
-  margin-top: 20px;
-  border-radius: 8px;
-  font-size: 13px;
 }
 .hero-illustration-screen {
   background: #101110 !important;
@@ -348,6 +225,3 @@
   letter-spacing: -0.025em;
   color: #e5e5db;
 }
-
-.hero-showcase-browser .browser-chrome-address{background:#363630;color:#e8e7e0}
-.hero-showcase-browser .browser-chrome-address>svg{color:#c6c5bc}

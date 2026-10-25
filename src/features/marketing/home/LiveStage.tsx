@@ -1,29 +1,13 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowUpRight, CalendarDays } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { PhoneChrome } from "@/features/preview/PhoneChrome";
-import { BrowserChrome } from "@/features/preview/BrowserChrome";
 import "./hero-showcase.css";
-
-const subscribe = (notify: () => void) => {
-  const query = window.matchMedia("(min-width: 900px)");
-  query.addEventListener("change", notify);
-  return () => query.removeEventListener("change", notify);
-};
-const desktopSnapshot = () => window.matchMedia("(min-width: 900px)").matches;
-const serverSnapshot = () => false;
 
 /** Purpose-built marketing artwork, using the same hardware as the real demos. */
 export function LiveStage() {
-  const desktop = useSyncExternalStore(
-    subscribe,
-    desktopSnapshot,
-    serverSnapshot,
-  );
   const reduced = useReducedMotion();
   return (
     <figure
@@ -37,47 +21,6 @@ export function LiveStage() {
         animate={{ y: 0 }}
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       >
-        {desktop ? (
-          <div
-            className="hero-showcase-browser browser-shell"
-            data-testid="hero-browser-illustration"
-          >
-            <BrowserChrome url="mytaplo.com/marlowe-and-finch" />
-            <div className="hero-barber-art">
-              <span className="hero-art-wordmark">
-                MARLOWE
-                <br />& FINCH<span>BARBERING, DONE WELL.</span>
-              </span>
-              <div className="hero-art-barber-photo">
-                <Image
-                  src="/photography/barber.webp"
-                  alt="A barber at work"
-                  fill
-                  sizes="650px"
-                />
-              </div>
-              <div className="hero-art-cuts">
-                <span>
-                  Good hair.
-                  <br />
-                  No fuss.
-                </span>
-                <div>
-                  <p>
-                    A cut & finish<strong>£22</strong>
-                  </p>
-                  <p>
-                    Skin fade<strong>£25</strong>
-                  </p>
-                  <span>
-                    Find your chair
-                    <ArrowUpRight size={15} aria-hidden="true" />
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : null}
         <div className="hero-showcase-phone">
           <div
             className="phone-shell"
@@ -118,11 +61,8 @@ export function LiveStage() {
             <PhoneChrome />
           </div>
         </div>
-        <Link className="hero-showcase-offer" href="/product/services">
-          <span className="hero-showcase-offer-label">
-            Your work, clearly.
-            <ArrowUpRight size={16} aria-hidden="true" />
-          </span>
+        <div className="hero-showcase-offer">
+          <span className="hero-showcase-offer-label">Your work, clearly.</span>
           <strong>
             More than
             <br />a good look.
@@ -137,15 +77,8 @@ export function LiveStage() {
               <span>Let’s talk</span>
             </li>
           </ul>
-        </Link>
+        </div>
       </motion.div>
-      <figcaption>
-        <span>Your business. Your own identity.</span>
-        <Link href="/inspiration">
-          Find your look
-          <ArrowUpRight size={16} aria-hidden="true" />
-        </Link>
-      </figcaption>
     </figure>
   );
 }

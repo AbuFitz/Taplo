@@ -13,18 +13,12 @@ for (const width of [320, 390, 768, 1440])
     const hero = page.getByTestId("hero-showcase");
     await expect(hero.locator("iframe")).toHaveCount(0);
     await expect(hero.getByTestId("hero-phone-illustration")).toBeVisible();
-    await expect(hero.getByTestId("hero-browser-illustration")).toHaveCount(
-      width >= 900 ? 1 : 0,
-    );
+    await expect(hero.getByTestId("hero-browser-illustration")).toHaveCount(0);
     await expect(page.locator(".feature-illustration")).toHaveCount(0);
     await expect(
       page.locator('section[aria-labelledby="businesses-h"]'),
     ).toHaveCount(0);
-    const artwork = (await hero
-      .locator(".hero-showcase-canvas")
-      .boundingBox())!;
-    const caption = (await hero.locator("figcaption").boundingBox())!;
-    expect(caption.y).toBeGreaterThanOrEqual(artwork.y + artwork.height);
+    await expect(hero.locator("figcaption,a,button")).toHaveCount(0);
 
     await hero.screenshot({
       path: path.join(
@@ -176,37 +170,21 @@ test("sharing uses the simple plaque, with no reset or format controls", async (
   ).toEqual([]);
 });
 
-test("homepage design choices use distinct working businesses and send the selected design into setup", async ({
+test("homepage explains keeping existing links without another design picker", async ({
   page,
 }) => {
-  await page.setViewportSize({ width: 390, height: 950 });
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  const designs = page.getByTestId("home-designs");
-  await designs.scrollIntoViewIfNeeded();
-  await designs
-    .getByRole("list", { name: "Starting designs", exact: true })
-    .focus();
-  await page.keyboard.press("Home");
-  for (const [index, name, slug, scenario] of [
-    [0, "Marlowe & Finch", "marlowe-and-finch", "barber"],
-    [1, "Detail Dept.", "detail-dept", "detailer"],
-    [2, "Hollin Physiotherapy", "hollin-physio", "physio"],
-  ] as const) {
-    if (index)
-      await designs
-        .getByRole("button", { name: "Next design", exact: true })
-        .click();
-    const frame = designs
-      .getByRole("link", { name: `Open ${name} design`, exact: true })
-      .locator("iframe");
-    await expect(frame).toHaveAttribute(
-      "src",
-      `/appearance/frame?scenario=${scenario}`,
-    );
-    await expect(frame).toHaveAttribute("data-loaded", "true");
-    await expect(designs.getByText(name, { exact: true })).toBeVisible();
-    await expect(
-      designs.getByRole("link", { name: "Use this design", exact: true }),
-    ).toHaveAttribute("href", `/onboarding?from=${slug}`);
-  }
+  const presence = page.getByRole("region", {
+    name: "Already out there? Bring it together.",
+  });
+  await presence.scrollIntoViewIfNeeded();
+  await expect(presence.getByRole("img")).toBeVisible();
+  await expect(presence.locator("a,button,iframe")).toHaveCount(0);
+  await expect(page.getByTestId("home-designs")).toHaveCount(0);
+  await presence.screenshot({ path: "work/presence-390.png" });
+  await page
+    .getByRole("link", { name: "Explore designs", exact: true })
+    .click();
+  await expect(page).toHaveURL(/\/inspiration$/);
 });

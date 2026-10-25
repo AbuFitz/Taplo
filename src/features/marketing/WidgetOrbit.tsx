@@ -1,8 +1,7 @@
 "use client";
 import * as React from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowUpRight, CalendarDays, Clock3 } from "lucide-react";
+import { ArrowUpRight, CalendarDays } from "lucide-react";
 import { SocialIcon } from "@/features/page/widgets/social-icons";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import "./widget-orbit.css";
@@ -36,53 +35,32 @@ export function WidgetOrbit() {
   }, []);
   React.useEffect(() => {
     const el = world.current;
+    if (reduced) {
+      items.current.forEach((item) => {
+        item?.style.removeProperty("translate");
+        item?.style.removeProperty("rotate");
+      });
+    }
     if (!el || !active || reduced) return;
     let frame = 0,
       last = 0;
-    let mobile = false,
-      spreadX = 100,
-      spreadY = 180;
-    const measure = () => {
-      mobile = el.clientWidth < 600;
-      spreadX = mobile
-        ? Math.max(0, el.clientWidth / 2 - 82)
-        : Math.min(310, el.clientWidth * 0.29);
-      spreadY = mobile ? 200 : 175;
-    };
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(el);
     const draw = (now: number) => {
       if (last) elapsed.current += Math.min(now - last, 40);
       last = now;
       const turn = (elapsed.current / 18000) * Math.PI * 2;
-      const anchors = mobile
-        ? [
-            [-0.82, -1.08, -5],
-            [0.85, -0.95, 5],
-            [0.78, 1.03, 4],
-            [-0.92, 0.64, -5],
-          ]
-        : [
-            [-0.95, -0.5, -7],
-            [0.85, -0.9, 6],
-            [0.9, 0.75, 5],
-            [-0.8, 0.9, -6],
-          ];
+      const mobile = el.clientWidth < 900;
       items.current.forEach((item, i) => {
         if (!item) return;
         const phase = turn + (i * Math.PI) / 2;
-        const [ax, ay, tilt] = anchors[i];
-        const x = ax * spreadX + Math.cos(phase) * (mobile ? 6 : 16);
-        const y = ay * spreadY + Math.sin(phase) * (mobile ? 9 : 13);
-        item.style.transform = `translate3d(calc(-50% + ${x}px),calc(-50% + ${y}px),0) rotateY(${i % 2 ? -7 : 7}deg) rotateZ(${tilt + Math.sin(phase) * 1.5}deg)`;
+        // Keep the authored arrangement intact; orbit only within its own space.
+        item.style.translate = `${Math.cos(phase) * (mobile ? 4 : 10)}px ${Math.sin(phase) * (mobile ? 6 : 12)}px`;
+        item.style.rotate = `y ${Math.sin(phase) * 5}deg`;
       });
       frame = requestAnimationFrame(draw);
     };
     frame = requestAnimationFrame(draw);
     return () => {
       cancelAnimationFrame(frame);
-      observer.disconnect();
     };
   }, [active, reduced]);
   return (
@@ -92,29 +70,25 @@ export function WidgetOrbit() {
       data-testid="widget-orbit"
       data-active={active && !reduced}
     >
-      <Link
-        href="/product"
-        className="widget-orbit-link"
+      <div
+        className="widget-orbit-art"
+        role="img"
+        aria-label="Animated illustration of a ceramics studio, workshop, calendar, work and social links"
       >
         <div ref={world} className="widget-orbit-world" aria-hidden="true">
+          <div className="orbit-sculpture" />
           <div className="widget-orbit-core">
-            <div className="orbit-profile-mark">
-              f<span>.</span>
-            </div>
+            <div className="orbit-profile-mark">f.</div>
             <span className="orbit-profile-name">
               FORM
               <br />
               <em>Studio.</em>
             </span>
             <span className="orbit-profile-bio">
-              Independent work. All together.
+              Small groups. Something handmade.
             </span>
             <div className="orbit-profile-action">
-              Book a time
-              <ArrowUpRight />
-            </div>
-            <div className="orbit-profile-secondary">
-              Services & prices
+              Book a workshop
               <ArrowUpRight />
             </div>
 
@@ -127,16 +101,12 @@ export function WidgetOrbit() {
             className="widget-orbit-item orbit-service"
             data-phase="0"
           >
-            <div className="orbit-mini-heading">
-              <span>The first step</span>
+            <strong>Clay workshop.</strong>
+            <div className="orbit-service-line">
+              <span className="orbit-price">£45</span>
               <ArrowUpRight />
             </div>
-            <strong>Consultation.</strong>
-            <span className="orbit-price">£45</span>
-            <span className="orbit-duration">
-              <Clock3 />
-              45 minutes
-            </span>
+            <span className="orbit-duration">Materials included</span>
           </div>
           <div
             ref={(el) => {
@@ -173,12 +143,14 @@ export function WidgetOrbit() {
             className="widget-orbit-item orbit-social"
             data-phase="2"
           >
-            <SocialIcon platform="instagram" />
-            <span className="orbit-social-mark">f.</span>
-            <strong>form.studio</strong>
             <span>
-              Behind the scenes
-              <ArrowUpRight />
+              <SocialIcon platform="instagram" />
+            </span>
+            <span>
+              <SocialIcon platform="tiktok" />
+            </span>
+            <span>
+              <SocialIcon platform="youtube" />
             </span>
           </div>
           <div
@@ -200,11 +172,7 @@ export function WidgetOrbit() {
             </span>
           </div>
         </div>
-        <span className="widget-orbit-cta">
-          Explore the blocks
-          <ArrowUpRight size={16} aria-hidden="true" />
-        </span>
-      </Link>
+      </div>
     </div>
   );
 }

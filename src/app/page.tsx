@@ -11,9 +11,8 @@ import { CoreFeatures } from "@/features/marketing/home/CoreFeatures";
 import "@/features/marketing/home/master-home.css";
 import { Film } from "@/features/marketing/Film";
 import { HomeBooking } from "@/features/marketing/home/HomeBooking";
-import { LookSwitcher } from "@/features/marketing/home/LookSwitcher";
+import { PresenceSection } from "@/features/marketing/home/PresenceSection";
 import { PlaqueScene } from "@/features/marketing/PlaqueScene";
-import { MonoField } from "@/features/marketing/MonoField";
 import { LiveStage } from "@/features/marketing/home/LiveStage";
 import { taploCodeSvg } from "@/features/qr/taplo-code";
 
@@ -74,22 +73,7 @@ export default function Home() {
         <CoreFeatures />
         <HomeBooking />
 
-        <MonoField className="home-design-field">
-          <section
-            className="marketing-light home-design-section relative mx-auto max-w-[88rem] px-5 py-16 text-black sm:px-8 sm:py-24"
-            aria-labelledby="looks-h"
-          >
-            <h2
-              id="looks-h"
-              className="font-display mb-9 text-[clamp(1.8rem,3.2vw,3rem)] font-medium tracking-[-.045em]"
-            >
-              Start with the design.
-              <br />
-              Keep your own identity.
-            </h2>
-            <LookSwitcher />
-          </section>
-        </MonoField>
+        <PresenceSection />
 
         <div className="home-sharing-surface bg-[#f7f7f7]">
           <section
@@ -119,19 +103,10 @@ export default function Home() {
         </div>
 
         <section
-          aria-labelledby="film-h"
-          className="mx-auto max-w-[88rem] border-t border-white/15 px-5 py-16 sm:px-8 sm:py-24"
+          id="film-h"
+          aria-label="Taplo in motion"
+          className="mx-auto max-w-[88rem] px-5 py-12 sm:px-8 sm:py-20"
         >
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-            <h2
-              id="film-h"
-              className="font-display text-[clamp(1.8rem,3.2vw,3rem)] font-medium tracking-[-.045em]"
-            >
-              A page that takes shape.
-              <br />
-              Then gets to work.
-            </h2>
-          </div>
           <Film />
         </section>
 

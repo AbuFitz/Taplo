@@ -88,7 +88,7 @@ test("home uses composed illustrations with shared hardware and working design d
   await expect(hero.locator(".phone-hardware")).toBeVisible();
   await expect(hero.locator("iframe")).toHaveCount(0);
   await expect(
-    hero.getByRole("link", { name: "Find your look", exact: true }),
+    page.getByRole("link", { name: "Explore designs", exact: true }),
   ).toHaveAttribute("href", "/inspiration");
   await expect(
     page.getByRole("group", { name: "Explore page features" }),

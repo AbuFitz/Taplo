@@ -18,9 +18,7 @@ for (const width of [320, 390, 768, 1440])
     await expect(
       page.getByRole("group", { name: "Explore page features" }),
     ).toHaveCount(0);
-    await expect(hero.getByTestId("hero-browser-illustration")).toHaveCount(
-      width >= 900 ? 1 : 0,
-    );
+    await expect(hero.getByTestId("hero-browser-illustration")).toHaveCount(0);
     const phone = hero.getByTestId("hero-phone-illustration");
     const before = await phone.evaluate((el) => getComputedStyle(el).transform);
     await hero.locator(".hero-showcase-canvas").hover();
@@ -32,9 +30,7 @@ for (const width of [320, 390, 768, 1440])
         .poll(() => img.evaluate((el: HTMLImageElement) => el.naturalWidth))
         .toBeGreaterThan(0);
     await hero.scrollIntoViewIfNeeded();
-    const art = await hero.locator(".hero-showcase-canvas").boundingBox(),
-      caption = await hero.locator("figcaption").boundingBox();
-    expect(caption!.y).toBeGreaterThanOrEqual(art!.y + art!.height - 1);
+    await expect(hero.locator("figcaption,a,button")).toHaveCount(0);
     const result = await new AxeBuilder({ page })
       .include('[data-testid="hero-showcase"]')
       .analyze();
@@ -59,10 +55,6 @@ for (const width of [320, 390, 768, 1440])
     await booking.screenshot({
       path: `work/booking-illustration-${width}.png`,
     });
-    await hero
-      .getByRole("link", { name: "Find your look", exact: true })
-      .click();
-    await expect(page).toHaveURL(/\/inspiration$/);
   });
 for (const width of [320, 390, 768, 1440])
   test(`illustrated motion scene has a composed reduced-motion view at ${width}`, async ({
@@ -84,11 +76,29 @@ for (const width of [320, 390, 768, 1440])
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBe(width);
+    // Supporting art must not cover the identity or its primary action.
+    for (const selector of [".orbit-profile-name", ".orbit-profile-action"]) {
+      const focal = (await scene.locator(selector).boundingBox())!;
+      for (const card of await scene.locator(".widget-orbit-item").all()) {
+        const box = (await card.boundingBox())!;
+        const overlapX = Math.max(
+          0,
+          Math.min(focal.x + focal.width, box.x + box.width) -
+            Math.max(focal.x, box.x),
+        );
+        const overlapY = Math.max(
+          0,
+          Math.min(focal.y + focal.height, box.y + box.height) -
+            Math.max(focal.y, box.y),
+        );
+        expect(overlapX * overlapY).toBe(0);
+      }
+    }
     await scene.screenshot({ path: `work/motion-editorial-${width}.png` });
-    await scene
-      .getByRole("link", { name: "Explore the blocks", exact: true })
-      .click();
-    await expect(page).toHaveURL(/\/product$/);
+    await expect(scene.locator("a,button")).toHaveCount(0);
+    await expect(
+      page.getByRole("heading", { name: "A page that takes shape." }),
+    ).toHaveCount(0);
   });
 for (const width of [390, 1440])
   test(`motion scene moves gently, pauses offscreen and resumes at ${width}`, async ({
@@ -101,9 +111,9 @@ for (const width of [390, 1440])
     await scene.scrollIntoViewIfNeeded();
     await expect(scene).toHaveAttribute("data-active", "true");
     const item = scene.locator(".widget-orbit-item").first();
-    const before = await item.evaluate((el) => getComputedStyle(el).transform);
+    const before = await item.evaluate((el) => getComputedStyle(el).translate);
     await expect
-      .poll(() => item.evaluate((el) => getComputedStyle(el).transform))
+      .poll(() => item.evaluate((el) => getComputedStyle(el).translate))
       .not.toBe(before);
     const boxes = await scene.locator(".widget-orbit-item").evaluateAll((els) =>
       els.map((el) => {

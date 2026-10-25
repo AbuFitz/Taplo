@@ -75,10 +75,6 @@ export function HomeBooking() {
             </span>
           </div>
         </div>
-        <Link href="/product/booking" className="home-booking-more">
-          Explore booking
-          <ArrowUpRight size={17} aria-hidden="true" />
-        </Link>
       </div>
     </section>
   );

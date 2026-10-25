@@ -1,57 +1,44 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 for (const width of [320, 390, 1440])
-  test(`design carousel preserves real demos and supports keyboard browsing at ${width}`, async ({
+  test(`inspiration carousel preserves real demos and keyboard navigation at ${width}`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: 950 });
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/");
-    const designs = page.getByTestId("home-designs");
-    await designs.scrollIntoViewIfNeeded();
-    const rail = designs.getByRole("list", {
-      name: "Starting designs",
-      exact: true,
-    });
+    await page.goto("/inspiration");
+    const rail = page.getByTestId("gallery-list");
+    await rail.scrollIntoViewIfNeeded();
     await rail.focus();
-    await page.keyboard.press("Home");
-    await expect(
-      designs
-        .locator(".home-design-summary")
-        .getByText("Marlowe & Finch", { exact: true }),
-    ).toBeVisible();
-    await expect(rail.locator("li").first().locator("iframe")).toHaveAttribute(
-      "src",
-      "/appearance/frame?scenario=barber",
-    );
-    await expect(
-      designs.getByRole("link", { name: "Use this design", exact: true }),
-    ).toHaveAttribute("href", "/onboarding?from=marlowe-and-finch");
     await page.keyboard.press("End");
     await expect(
-      designs
-        .locator(".home-design-summary")
-        .getByText("Maya Builds", { exact: true }),
-    ).toBeVisible();
-    await expect(
-      designs.getByRole("button", { name: "Next design", exact: true }),
+      page.getByRole("button", { name: "Next design", exact: true }),
     ).toBeDisabled();
     await rail.focus();
     await page.keyboard.press("Home");
+    await expect(
+      page.getByRole("button", { name: "Previous design", exact: true }),
+    ).toBeDisabled();
     await page.keyboard.press("ArrowRight");
     await expect(
-      designs.getByRole("link", { name: "Use this design", exact: true }),
-    ).toHaveAttribute("href", "/onboarding?from=detail-dept");
+      page.getByRole("button", { name: "Previous design", exact: true }),
+    ).toBeEnabled();
+    await rail.locator(":scope > li").nth(1).scrollIntoViewIfNeeded();
+    await expect(
+      rail.locator(":scope > li").nth(1).locator("iframe"),
+    ).toHaveAttribute("src", /appearance\/frame\?scenario=/);
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
-    const axe = await new AxeBuilder({ page })
-      .include('[data-testid="home-designs"]')
-      .analyze();
-    expect(axe.violations).toEqual([]);
-    await designs.screenshot({ path: `work/design-rail-${width}.png` });
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .include('[data-testid="gallery-list"]')
+          .analyze()
+      ).violations,
+    ).toEqual([]);
   });
 test("gallery carousel filtering and viewport controls keep real links", async ({
   page,
@@ -109,22 +96,18 @@ test("quick repeated Next taps keep the intended design and adoption link", asyn
 }) => {
   await page.setViewportSize({ width: 390, height: 950 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await page.goto("/");
-  const designs = page.getByTestId("home-designs");
-  await designs.scrollIntoViewIfNeeded();
-  const rail = designs.getByRole("list", {
-    name: "Starting designs",
-    exact: true,
-  });
+  await page.goto("/inspiration");
+  const rail = page.getByTestId("gallery-list");
+  await rail.scrollIntoViewIfNeeded();
   await rail.focus();
   await page.keyboard.press("Home");
   for (let i = 0; i < 3; i++)
-    await designs
+    await page
       .getByRole("button", { name: "Next design", exact: true })
       .click();
-  await expect(
-    designs.getByRole("link", { name: "Use this design", exact: true }),
-  ).toHaveAttribute("href", "/onboarding?from=sora-fields");
+  await expect(page.getByText("Design 4 of 12", { exact: true })).toHaveCount(
+    1,
+  );
   await expect
     .poll(() =>
       rail.evaluate((el) => {
