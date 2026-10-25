@@ -102,6 +102,15 @@ for (const viewport of [
     }) => {
       await openEditorWithSample(page);
       await selectPart(page, "page");
+      await expect(
+        page.getByRole("radio", { name: "Mono flow", exact: true }),
+      ).toBeVisible();
+      await expect(
+        page.getByTestId("appearance-panel").locator("details#look"),
+      ).not.toHaveAttribute("open");
+      await expect(
+        page.getByTestId("appearance-panel").locator("details#colour"),
+      ).not.toHaveAttribute("open");
       await openSection(page, /^Wallpaper/);
       await page.getByRole("radio", { name: "Mono flow", exact: true }).check();
       await page
@@ -119,12 +128,20 @@ for (const viewport of [
       ).not.toBe(first);
       await page.reload();
       await expect(bg).toHaveCSS("animation-duration", "7s");
-      await expect(previewFrame(page).getByRole("heading", { level: 1 })).toBeVisible();
+      await expect(
+        previewFrame(page).getByRole("heading", { level: 1 }),
+      ).toBeVisible();
       await selectPart(page, "page");
       await openSection(page, /^Wallpaper/);
-      await page.getByRole("radiogroup", { name: "Background pace" }).getByText("Still", { exact: true }).click();
+      await page
+        .getByRole("radiogroup", { name: "Background pace" })
+        .getByText("Still", { exact: true })
+        .click();
       await expect(bg).toHaveCSS("animation-name", "none");
-      await page.getByRole("radiogroup", { name: "Background pace" }).getByText("Flow", { exact: true }).click();
+      await page
+        .getByRole("radiogroup", { name: "Background pace" })
+        .getByText("Flow", { exact: true })
+        .click();
       await page.emulateMedia({ reducedMotion: "reduce" });
       await expect(bg).toHaveCSS("animation-name", "none");
       await page.waitForTimeout(500);

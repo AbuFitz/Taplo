@@ -8,7 +8,7 @@ This is a verified foundation pass, not completion of the owner's full engine/da
 - Team: create/edit using the same record form as the page engine; portraits, speciality, service assignment, bookable state, search, removal confirmation, undo and individual-hours handoff. Actual account invitations/permissions remain unconnected.
 - Availability: focused validated drafts, multiple daily periods, a one-hour break, chosen-day copying, per-person hours, timezone, special dates with edit/remove/undo, booking rules and per-service buffer/capacity overrides. Only Save writes a draft to the schedule; unsaved changes are guarded.
 - Calendar: phone defaults to Agenda, desktop to Week; responsive Day view; keyboard arrow navigation and Enter to block a time. Explicitly chosen views persist during resize in the current session.
-- Appearance: one shared visual finish picker in setup and Design. Four dark and two light finishes; atomic readable palettes, solid lifted surfaces and matching action colours; existing typography/profile/content preserved. Gradient/shader pace Still/Slow/Flow/Lively persists. Still overrides old page-motion drift. Reduced motion and offscreen shader pausing remain. Photo selection no longer inserts a fixture image before choosing a real photo. Custom colours clear preset selection.
+- Appearance: one shared visual finish picker in setup and Design. Design opens this picker first; the Look and detailed Colour groups start collapsed, keeping two large choice lists out of the initial view. Four dark and two light finishes; atomic readable palettes, solid lifted surfaces and matching action colours; existing typography/profile/content preserved. Gradient/shader pace Still/Slow/Flow/Lively persists. Still overrides old page-motion drift. Reduced motion and offscreen shader pausing remain. Photo selection no longer inserts a fixture image before choosing a real photo. Custom colours clear preset selection.
 - Services/products use the shared accessible detail overlay with dirty dismissal guards. A car dealer starts a new stock record as a vehicle with vehicle fact fields.
 
 ## Evidence
@@ -20,6 +20,8 @@ This is a verified foundation pass, not completion of the owner's full engine/da
 - 16 native Firefox/WebKit cases passed, both desktop and phone: team edit/remove/restore/scheduling handoff, split/copy/invalid hours, date overrides/rules, real gradient movement/persistence/Still/reduced motion, calendar defaults and keyboard input.
 - Manual in-app review: shared menu, Team empty/profile/editor, individual schedule and working-hours popup at desktop and 390px. Rendered proof remains in work/engine-hours-{390,1440}.png and work/engine-finish-{390,1440}.png. Screenshot timing waits for actual iframe content rather than accepting the loading skeleton.
 - Logs in work/engine-workspace-{build,types,source-lint,units,regression,native,navigation,draft-safety}.log.
+
+The final finish-first entry refinement passed six targeted Chromium cases and four native Firefox/WebKit cases after rebuilding; logs are work/engine-entry-{build,lint,browser,native}.log. The preceding published foundation passed all thirteen engine/navigation/draft-safety public cases.
 
 ## Explicit remaining work, in owner priority order
 

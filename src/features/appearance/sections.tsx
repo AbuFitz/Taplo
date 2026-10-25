@@ -1303,8 +1303,8 @@ export function Readability({ m }: M) {
 
 /* ------------------------------------------------------------------ whole panel */
 /**
- * Everything about the page's appearance, in the order people reach for it. The first groups
- * are open; the rest are one tap away. The same panel runs in the owner editor, in guided
+ * Everything about the page's appearance, in the order people reach for it. The visual finish is open first;
+ * detailed controls are one tap away. The same panel runs in the owner editor, in guided
  * setup and in the showcase.
  */
 export function AppearancePanel({
@@ -1322,8 +1322,16 @@ export function AppearancePanel({
       data-testid="appearance-panel"
     >
       <Disclosure
-        title="Look"
+        title="Wallpaper"
         defaultOpen
+        id="wallpaper"
+        count={m.count("background", "decoration")}
+        onReset={() => m.resetGroup("background", "decoration")}
+      >
+        <WallpaperControls m={m} />
+      </Disclosure>
+      <Disclosure
+        title="Look"
         id="look"
         hint="A starting point, not a template. Change anything afterwards."
       >
@@ -1331,7 +1339,6 @@ export function AppearancePanel({
       </Disclosure>
       <Disclosure
         title="Colour"
-        defaultOpen
         id="colour"
         count={m.count("colors")}
         onReset={() => m.resetGroup("colors")}
@@ -1372,14 +1379,6 @@ export function AppearancePanel({
         onReset={() => m.resetGroup("cards")}
       >
         <SurfaceControls m={m} />
-      </Disclosure>
-      <Disclosure
-        title="Wallpaper"
-        id="wallpaper"
-        count={m.count("background", "decoration")}
-        onReset={() => m.resetGroup("background", "decoration")}
-      >
-        <WallpaperControls m={m} />
       </Disclosure>
       <Disclosure
         title="Layout and motion"
