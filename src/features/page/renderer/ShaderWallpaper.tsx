@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-type Props = { style: "aurora" | "silk" | "grain"; colors: string[]; base: string; animate?: boolean }
+type Props = { style: "aurora" | "silk" | "grain"; colors: string[]; base: string; animate?: boolean; pace?: "slow" | "steady" | "expressive" }
 
 /**
  * Optional animated wallpaper (Paper Shaders, Apache-2.0, pinned). The static colour fields in
@@ -61,7 +61,7 @@ export function ShaderWallpaper(props: Props) {
   return (
     <div ref={host} className="tp-shader" aria-hidden="true" data-active={active && !reduced && props.animate !== false}>
       <React.Suspense fallback={null}>
-        {on && seen ? <Shader {...props} speed={reduced || !active || props.animate === false ? 0 : props.style === "silk" ? 0.45 : 0.65} /> : null}
+        {on && seen ? <Shader {...props} speed={reduced || !active || props.animate === false ? 0 : ({slow:0.35,steady:0.75,expressive:1.25}[props.pace??"steady"])} /> : null}
       </React.Suspense>
     </div>
   )

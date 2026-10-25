@@ -1,14 +1,16 @@
 "use client";
 import * as React from "react";
-import {
-  Palette,
-  ArrowRight,
-} from "lucide-react";
+import { Palette, ArrowRight } from "lucide-react";
+import { FinishPicker } from "@/features/appearance/FinishPicker";
+import { matchingFinish, withFinish } from "@/features/appearance/finishes";
 import { SetupMobileLayouts } from "./SetupStyles";
 import { Overlay } from "@/components/taplo/overlay";
 import { Button } from "@/components/ui/button";
 import { ColorField } from "@/features/page/editor/controls";
-import { resolveStyle, shaderFallbackCss } from "@/features/page/themes/resolve";
+import {
+  resolveStyle,
+  shaderFallbackCss,
+} from "@/features/page/themes/resolve";
 import { LOOKS, PALETTES } from "@/features/page/themes/looks";
 import { useDemo, initialState } from "./store";
 import type { StyleOverrides } from "@/features/page/contracts/style";
@@ -17,9 +19,7 @@ import type { StyleOverrides } from "@/features/page/contracts/style";
 export function SetupDesign({ compact = false }: { compact?: boolean }) {
   const { state, update } = useDemo();
   const s = state ?? initialState();
-  const [panel, setPanel] = React.useState<"background" | null>(
-    null,
-  );
+  const [panel, setPanel] = React.useState<"background" | null>(null);
   const look = LOOKS.find((l) => l.id === s.page.themeId);
   const background = s.page.appearance.background ?? look?.overrides.background;
   const patch = (changes: StyleOverrides) =>
@@ -57,8 +57,17 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
         : { kind: "solid", color: dark ? "#000000" : "#ffffff" },
       decoration: gradient ? "grain" : "none",
     });
-  const resolved=resolveStyle(s.page.themeId,s.page.appearance,s.content.identity.logo?.accent).spec;
-  const previewBackground=resolved.background.kind === "gradient" ? `linear-gradient(${resolved.background.angle}deg,${resolved.background.from},${resolved.background.to})` : resolved.background.kind === "shader" ? shaderFallbackCss(resolved.background) : resolved.colors.background;
+  const resolved = resolveStyle(
+    s.page.themeId,
+    s.page.appearance,
+    s.content.identity.logo?.accent,
+  ).spec;
+  const previewBackground =
+    resolved.background.kind === "gradient"
+      ? `linear-gradient(${resolved.background.angle}deg,${resolved.background.from},${resolved.background.to})`
+      : resolved.background.kind === "shader"
+        ? shaderFallbackCss(resolved.background)
+        : resolved.colors.background;
   return (
     <div
       className={
@@ -66,6 +75,21 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
       }
       data-testid="setup-design-controls"
     >
+      {!compact ? (
+        <FinishPicker
+          value={matchingFinish(resolved)}
+          onChange={(id) =>
+            update((st) => ({
+              ...st,
+              setupDrafts: { ...st.setupDrafts, backgroundEdited: true },
+              page: {
+                ...st.page,
+                appearance: withFinish(st.page.appearance, id),
+              },
+            }))
+          }
+        />
+      ) : null}
       <button
         className="setup-edit-row"
         type="button"
@@ -75,11 +99,13 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
         <span>
           Background & colours
           <span className="block text-xs font-normal text-muted-foreground">
-            {background?.kind === "shader" ? `${background.style === "aurora" ? "Flow" : background.style === "grain" ? "Grain" : "Silk"} background` : background?.kind === "gradient"
-              ? "Moving gradient"
-              : background?.kind === "solid"
-                ? "Plain colour"
-                : "Use your logo colours or a neutral finish"}
+            {background?.kind === "shader"
+              ? `${background.style === "aurora" ? "Flow" : background.style === "grain" ? "Grain" : "Silk"} background`
+              : background?.kind === "gradient"
+                ? "Moving gradient"
+                : background?.kind === "solid"
+                  ? "Plain colour"
+                  : "Use your logo colours or a neutral finish"}
           </span>
         </span>
         <ArrowRight aria-hidden="true" className="ml-auto size-4" />
@@ -99,10 +125,60 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
           </Button>
         }
       >
-        {(
+        {
           <div className="grid gap-5">
-            <div className="setup-colour-preview" aria-hidden="true" style={{background:previewBackground,color:resolved.colors.text}}><span>{s.content.identity.name||"Your page"}</span><i style={{background:resolved.colors.surface,boxShadow:"0 8px 24px #0001"}}/><b style={{background:resolved.colors.accent,color:resolved.colors.accentText}}>Your next customer</b></div>
-            <div className="setup-colour-palettes" role="group" aria-label="Colour palettes">{PALETTES.slice(0,6).map(p=><button type="button" key={p.id} aria-label={`${p.name} palette`} onClick={()=>patch({colors:p.colors,background:{kind:"solid",color:p.colors.background??"#ffffff"}})}><span style={{background:p.colors.background}}><i style={{background:p.colors.surface}}/><i style={{background:p.colors.accent}}/></span><b>{p.name}</b></button>)}</div>
+            <div
+              className="setup-colour-preview"
+              aria-hidden="true"
+              style={{
+                background: previewBackground,
+                color: resolved.colors.text,
+              }}
+            >
+              <span>{s.content.identity.name || "Your page"}</span>
+              <i
+                style={{
+                  background: resolved.colors.surface,
+                  boxShadow: "0 8px 24px #0001",
+                }}
+              />
+              <b
+                style={{
+                  background: resolved.colors.accent,
+                  color: resolved.colors.accentText,
+                }}
+              >
+                Your next customer
+              </b>
+            </div>
+            <div
+              className="setup-colour-palettes"
+              role="group"
+              aria-label="Colour palettes"
+            >
+              {PALETTES.slice(0, 6).map((p) => (
+                <button
+                  type="button"
+                  key={p.id}
+                  aria-label={`${p.name} palette`}
+                  onClick={() =>
+                    patch({
+                      colors: p.colors,
+                      background: {
+                        kind: "solid",
+                        color: p.colors.background ?? "#ffffff",
+                      },
+                    })
+                  }
+                >
+                  <span style={{ background: p.colors.background }}>
+                    <i style={{ background: p.colors.surface }} />
+                    <i style={{ background: p.colors.accent }} />
+                  </span>
+                  <b>{p.name}</b>
+                </button>
+              ))}
+            </div>
             <div className="grid grid-cols-2 gap-3">
               {[
                 { name: "White", dark: false, gradient: false },
@@ -130,14 +206,111 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
                 </button>
               ))}
             </div>
-            <div className="grid grid-cols-3 gap-2" aria-label="Animated backgrounds">
-              {([['aurora','Flow'],['silk','Silk'],['grain','Grain']] as const).map(([style,name])=><button key={style} type="button" aria-pressed={background?.kind==='shader'&&background.style===style} className="setup-background-choice" onClick={()=>patch({background:{kind:'shader',style,base:resolved.colors.background,colors:[resolved.colors.background,resolved.colors.surface,resolved.colors.background],source:'logo',motion:true}})}><span aria-hidden="true" className="mb-2 block h-12 rounded-xl" style={{background:shaderFallbackCss({base:resolved.colors.background,colors:[resolved.colors.surface,resolved.colors.background]})}}/>{name}</button>)}
+            <div
+              className="grid grid-cols-3 gap-2"
+              aria-label="Animated backgrounds"
+            >
+              {(
+                [
+                  ["aurora", "Flow"],
+                  ["silk", "Silk"],
+                  ["grain", "Grain"],
+                ] as const
+              ).map(([style, name]) => (
+                <button
+                  key={style}
+                  type="button"
+                  aria-pressed={
+                    background?.kind === "shader" && background.style === style
+                  }
+                  className="setup-background-choice"
+                  onClick={() =>
+                    patch({
+                      background: {
+                        kind: "shader",
+                        style,
+                        base: resolved.colors.background,
+                        colors: [
+                          resolved.colors.background,
+                          resolved.colors.surface,
+                          resolved.colors.background,
+                        ],
+                        source: "logo",
+                        motion: true,
+                      },
+                    })
+                  }
+                >
+                  <span
+                    aria-hidden="true"
+                    className="mb-2 block h-12 rounded-xl"
+                    style={{
+                      background: shaderFallbackCss({
+                        base: resolved.colors.background,
+                        colors: [
+                          resolved.colors.surface,
+                          resolved.colors.background,
+                        ],
+                      }),
+                    }}
+                  />
+                  {name}
+                </button>
+              ))}
             </div>
-            {background?.kind === 'shader' ? <div className="grid gap-3">
-              <label className="flex min-h-11 items-center justify-between gap-3 text-sm">Follow my logo colours<input type="checkbox" className="size-5 accent-black" checked={background.source==='logo'} onChange={e=>patch({background:{...background,source:e.target.checked?'logo':'manual'}})}/></label>
-              <label className="flex min-h-11 items-center justify-between gap-3 text-sm">Gentle movement<input type="checkbox" className="size-5 accent-black" checked={background.motion??true} onChange={e=>patch({background:{...background,motion:e.target.checked}})}/></label>
-              <div className="grid grid-cols-2 gap-3">{background.colors.map((color,i)=><ColorField key={i} label={`Background colour ${i+1}`} value={color} onChange={value=>patch({background:{...background,source:'manual',colors:background.colors.map((c,j)=>i===j?value:c)}})}/>)}</div>
-            </div> : null}
+            {background?.kind === "shader" ? (
+              <div className="grid gap-3">
+                <label className="flex min-h-11 items-center justify-between gap-3 text-sm">
+                  Follow my logo colours
+                  <input
+                    type="checkbox"
+                    className="size-5 accent-black"
+                    checked={background.source === "logo"}
+                    onChange={(e) =>
+                      patch({
+                        background: {
+                          ...background,
+                          source: e.target.checked ? "logo" : "manual",
+                        },
+                      })
+                    }
+                  />
+                </label>
+                <label className="flex min-h-11 items-center justify-between gap-3 text-sm">
+                  Gentle movement
+                  <input
+                    type="checkbox"
+                    className="size-5 accent-black"
+                    checked={background.motion ?? true}
+                    onChange={(e) =>
+                      patch({
+                        background: { ...background, motion: e.target.checked },
+                      })
+                    }
+                  />
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {background.colors.map((color, i) => (
+                    <ColorField
+                      key={i}
+                      label={`Background colour ${i + 1}`}
+                      value={color}
+                      onChange={(value) =>
+                        patch({
+                          background: {
+                            ...background,
+                            source: "manual",
+                            colors: background.colors.map((c, j) =>
+                              i === j ? value : c,
+                            ),
+                          },
+                        })
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : null}
             {background?.kind === "gradient" ? (
               <>
                 <label className="flex min-h-11 items-center justify-between gap-3 text-sm">
@@ -223,9 +396,11 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
               contrast is checked by the page engine.
             </p>
           </div>
-        )}
+        }
       </Overlay>
-      <div className="col-span-full mt-4"><SetupMobileLayouts /></div>
+      <div className="col-span-full mt-4">
+        <SetupMobileLayouts />
+      </div>
     </div>
   );
 }

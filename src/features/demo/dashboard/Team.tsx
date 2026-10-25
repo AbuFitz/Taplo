@@ -1,64 +1,315 @@
-"use client"
+"use client";
+import * as React from "react";
+import Link from "next/link";
+import {
+  CalendarDays,
+  Pencil,
+  Plus,
+  Search,
+  Trash2,
+  Users,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Overlay } from "@/components/taplo/overlay";
+import {
+  blankFor,
+  commitRecord,
+  RecordForm,
+  validate,
+} from "@/features/page/editor/RecordForms";
+import {
+  staffSchema,
+  type BusinessContentInput,
+} from "@/features/businesses/content";
+import { useDraft } from "../hooks";
+import { PageHeader } from "./Panel";
 
-import * as React from "react"
-import { Plus, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { TaploInput } from "@/components/taplo/taplo-input"
-import { isReservedStaffSlug, normalizeSlug } from "@/features/businesses/slug"
-import { useDraft } from "../hooks"
-import { NotBuilt, PageHeader, Panel } from "./Panel"
-
+type Person = NonNullable<BusinessContentInput["staff"]>[number];
 export function Team() {
-  const { c, ent, setContent } = useDraft()
-  const [f, setF] = React.useState({ name: "", role: "", bio: "", subjects: "" })
-  const [err, setErr] = React.useState<string>()
-  if (!c || !ent) return null
-  const staff = c.staff ?? []
-
-  const add = () => {
-    const slug = normalizeSlug(f.name)
-    if (!f.name.trim()) return setErr("Add a name.")
-    if (slug.length < 2 || isReservedStaffSlug(slug) || staff.some((s) => s.slug === slug)) return setErr("That name would clash with another page address. Try adding a surname.")
-    setErr(undefined)
-    setContent((x) => ({ ...x, staff: [...staff, { id: `st-${Math.random().toString(36).slice(2, 8)}`, slug, name: f.name.trim(), role: f.role.trim() || undefined, bio: f.bio.trim() || undefined, subjects: f.subjects.split(",").map((q) => q.trim()).filter(Boolean).slice(0, 12) }] }))
-    setF({ name: "", role: "", bio: "", subjects: "" })
-  }
-
+  const { c, ent, setContent } = useDraft();
+  const [query, setQuery] = React.useState("");
+  const [editing, setEditing] = React.useState<{
+    draft: Person;
+    before: string;
+    isNew: boolean;
+  } | null>(null);
+  const [showErrors, setShowErrors] = React.useState(false);
+  const [removing, setRemoving] = React.useState<Person | null>(null);
+  const [removed, setRemoved] = React.useState<Person | null>(null);
+  const trigger = React.useRef<HTMLButtonElement | null>(null);
+  if (!c || !ent) return null;
+  const staff = c.staff ?? [];
+  const filtered = staff.filter((p) =>
+    `${p.name} ${p.role ?? ""} ${(p.subjects ?? []).join(" ")}`
+      .toLowerCase()
+      .includes(query.trim().toLowerCase()),
+  );
+  const edit = (draft: Person, isNew: boolean, button: HTMLButtonElement) => {
+    trigger.current = button;
+    setShowErrors(false);
+    setEditing({
+      draft: structuredClone(draft),
+      before: JSON.stringify(draft),
+      isNew,
+    });
+  };
+  const save = () => {
+    if (!editing) return;
+    if (Object.keys(validate("staff", editing.draft)).length) {
+      setShowErrors(true);
+      return;
+    }
+    const person = staffSchema.safeParse({
+      ...editing.draft,
+      name: editing.draft.name.trim(),
+    });
+    if (!person.success && !editing.isNew) {
+      setShowErrors(true);
+      return;
+    }
+    setContent((current) =>
+      editing.isNew
+        ? commitRecord("staff", editing.draft, current)
+        : {
+            ...current,
+            staff: (current.staff ?? []).map((p) =>
+              p.id === editing.draft.id
+                ? {
+                    ...editing.draft,
+                    name: editing.draft.name.trim(),
+                    role: editing.draft.role?.trim() || undefined,
+                    bio: editing.draft.bio?.trim() || undefined,
+                  }
+                : p,
+            ),
+          },
+    );
+    setEditing(null);
+  };
+  const restore = () => {
+    if (removed)
+      setContent((current) => ({
+        ...current,
+        staff: [
+          ...(current.staff ?? []).filter((p) => p.id !== removed.id),
+          removed,
+        ],
+      }));
+    setRemoved(null);
+  };
   return (
     <>
-      <PageHeader title="Team" description="Public team profiles. A team member’s biography never exposes an email address or permissions." />
-      <div className="grid max-w-3xl gap-6">
-        {!ent.teamPages ? <p role="status" className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-950">Team pages start on the Pro plan. You can prepare profiles now; they stay hidden on your page until your plan includes them.</p> : null}
-        <Panel title="People">
-          {staff.length === 0 ? <p className="text-sm text-muted-foreground">No team members yet. This section stays hidden on your page.</p> : (
-            <ul className="grid gap-3">
-              {staff.map((s) => (
-                <li key={s.id} className="rounded-lg border p-3 text-sm">
-                  <p className="font-semibold">{s.name}{s.role ? <span className="font-normal text-muted-foreground"> · {s.role}</span> : null}</p>
-                  {s.bio ? <p className="mt-1">{s.bio}</p> : null}
-                  <p className="mt-1 text-xs text-muted-foreground">Page address: /{c.identity.slug || "your-name"}/{s.slug} (individual profile pages arrive with the team phase)</p>
-                  <Button variant="outline" size="sm" className="mt-2" onClick={() => setContent((x) => ({ ...x, staff: staff.filter((q) => q.id !== s.id) }))}><Trash2 /> Remove</Button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Panel>
-        <Panel title="Add a team member">
-          <div className="grid gap-3">
-            <TaploInput label="Name" value={f.name} maxLength={120} onChange={(e) => setF({ ...f, name: e.target.value })} />
-            <TaploInput label="Role (optional)" value={f.role} maxLength={120} onChange={(e) => setF({ ...f, role: e.target.value })} />
-            <TaploInput label="Subjects or specialities (optional, comma separated)" value={f.subjects} onChange={(e) => setF({ ...f, subjects: e.target.value })} />
-            <div className="grid gap-1.5"><Label htmlFor="bio">Short biography (optional)</Label><Textarea id="bio" rows={3} maxLength={1200} value={f.bio} onChange={(e) => setF({ ...f, bio: e.target.value })} /></div>
-            {err ? <p role="alert" className="text-sm text-destructive">{err}</p> : null}
-            <Button className="justify-self-start" onClick={add}><Plus /> Add team member</Button>
+      <PageHeader
+        title="Team"
+        description="Give people a face, a speciality and the right work."
+        actions={
+          <Button
+            data-testid="team-add"
+            onClick={(e) =>
+              edit(blankFor("staff", c) as Person, true, e.currentTarget)
+            }
+          >
+            <Plus />
+            Add team member
+          </Button>
+        }
+      />
+      {!ent.teamPages ? (
+        <p role="status" className="workspace-notice">
+          Profiles are saved here. Show them on your page with Pro; offer
+          several bookable people with Business.
+        </p>
+      ) : null}
+      {removed ? (
+        <div role="status" className="workspace-toast">
+          <span>{removed.name} removed from your team.</span>
+          <Button size="sm" variant="ghost" onClick={restore}>
+            Undo removal
+          </Button>
+        </div>
+      ) : null}
+      {staff.length > 0 ? (
+        <div className="workspace-list-toolbar">
+          <label className="workspace-search">
+            <Search size={17} aria-hidden="true" />
+            <input
+              aria-label="Find a team member"
+              placeholder="Find a person or speciality"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </label>
+          <span>
+            {staff.length} {staff.length === 1 ? "person" : "people"}
+          </span>
+        </div>
+      ) : null}
+      {staff.length === 0 ? (
+        <section className="workspace-empty">
+          <Users size={30} strokeWidth={1.5} aria-hidden="true" />
+          <h2>Introduce your people.</h2>
+          <p>
+            Add a profile, choose the services they provide, then set their
+            hours.
+          </p>
+          <Button
+            onClick={(e) =>
+              edit(blankFor("staff", c) as Person, true, e.currentTarget)
+            }
+          >
+            <Plus />
+            Add your first person
+          </Button>
+        </section>
+      ) : (
+        <ul className="team-person-grid">
+          {filtered.map((p) => (
+            <li key={p.id} className="team-person" data-testid="team-person">
+              <div className="team-person-top">
+                {p.photo ? (
+                  // Owner-uploaded images stay in this browser.
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={p.photo.src} alt="" />
+                ) : (
+                  <span aria-hidden="true">
+                    {p.name
+                      .split(/\s+/)
+                      .slice(0, 2)
+                      .map((w) => w[0])
+                      .join("")}
+                  </span>
+                )}
+                <div>
+                  <h2>{p.name}</h2>
+                  <p>{p.role || "Team member"}</p>
+                </div>
+                <button
+                  type="button"
+                  aria-label={`Edit ${p.name}`}
+                  onClick={(e) => edit(p, false, e.currentTarget)}
+                >
+                  <Pencil size={17} />
+                </button>
+              </div>
+              {p.bio ? <p className="team-person-bio">{p.bio}</p> : null}
+              <div className="team-person-services">
+                {p.serviceIds === null || p.serviceIds === undefined
+                  ? "Every service"
+                  : p.serviceIds.length
+                    ? `${p.serviceIds.length} selected ${p.serviceIds.length === 1 ? "service" : "services"}`
+                    : "No services assigned"}
+                <span>
+                  {p.bookable === false
+                    ? "Profile only"
+                    : "Available for booking"}
+                </span>
+              </div>
+              <div className="team-person-footer">
+                <Link
+                  href={`/dashboard/bookings?section=availability&staff=${encodeURIComponent(p.id)}`}
+                >
+                  <CalendarDays size={16} aria-hidden="true" />
+                  Working hours
+                </Link>
+                <button
+                  type="button"
+                  aria-label={`Remove ${p.name}`}
+                  onClick={(e) => {
+                    trigger.current = e.currentTarget;
+                    setRemoving(p);
+                  }}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+      {staff.length > 0 && !filtered.length ? (
+        <p className="workspace-empty" role="status">
+          No matching people. Try another name or speciality.
+        </p>
+      ) : null}
+      <p className="workspace-footnote">
+        Profiles and schedules are managed here. Team sign-in invitations and
+        account permissions need the connected account service.
+      </p>
+      <Overlay
+        open={editing !== null}
+        onOpenChange={(open) => !open && setEditing(null)}
+        dirty={Boolean(
+          editing && JSON.stringify(editing.draft) !== editing.before,
+        )}
+        title={editing?.isNew ? "Add a team member" : "Edit team member"}
+        kind="detail"
+        testId="team-person-editor"
+        onCloseAutoFocus={(e) => {
+          e.preventDefault();
+          if (trigger.current?.isConnected) trigger.current.focus();
+          else
+            document
+              .querySelector<HTMLElement>('[data-testid="team-add"]')
+              ?.focus();
+        }}
+        footer={
+          <Button className="w-full" onClick={save}>
+            Save team member
+          </Button>
+        }
+      >
+        {editing ? (
+          <RecordForm
+            kind="staff"
+            content={c}
+            value={editing.draft}
+            onChange={(draft) =>
+              setEditing({ ...editing, draft: draft as Person })
+            }
+            showErrors={showErrors}
+          />
+        ) : null}
+      </Overlay>
+      <Overlay
+        open={removing !== null}
+        onOpenChange={(open) => !open && setRemoving(null)}
+        title="Remove team profile?"
+        onCloseAutoFocus={(e) => {
+          e.preventDefault();
+          if (trigger.current?.isConnected) trigger.current.focus();
+          else
+            document
+              .querySelector<HTMLElement>('[data-testid="team-add"]')
+              ?.focus();
+        }}
+        footer={
+          <div className="flex gap-3">
+            <Button variant="outline" onClick={() => setRemoving(null)}>
+              Keep profile
+            </Button>
+            <Button
+              onClick={() => {
+                if (!removing) return;
+                setRemoved(removing);
+                setContent((current) => ({
+                  ...current,
+                  staff: (current.staff ?? []).filter(
+                    (p) => p.id !== removing.id,
+                  ),
+                }));
+                setRemoving(null);
+              }}
+            >
+              Remove profile
+            </Button>
           </div>
-        </Panel>
-        <NotBuilt title="Invitations, logins and permissions" phase="Phase 8">
-          <p>Inviting people to sign in, role permissions, per-person availability and bookable staff aren’t built yet. Team profiles here are public biographies only.</p>
-        </NotBuilt>
-      </div>
+        }
+      >
+        <p className="text-sm leading-relaxed">
+          {removing?.name} will leave your team list and page. Existing booking
+          records stay saved. You can undo this removal here.
+        </p>
+      </Overlay>
     </>
-  )
+  );
 }

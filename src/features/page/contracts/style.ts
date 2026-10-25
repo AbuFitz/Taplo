@@ -36,6 +36,7 @@ export const backgroundShaderSchema = z.object({
   style: z.enum(SHADER_STYLES),
   source: z.enum(["manual", "logo"]).optional(),
   motion: z.boolean().optional(),
+  pace: z.enum(["slow", "steady", "expressive"]).optional(),
   colors: z.array(hex).min(2).max(4),
   /** Base colour behind the shader and in the static fallback. */
   base: hex,
@@ -51,6 +52,7 @@ export const backgroundSchema = z.discriminatedUnion("kind", [
     angle: z.number().min(0).max(360),
     /** Slow colour drift. Disabled for visitors who prefer reduced motion. */
     motion: z.boolean(),
+    pace: z.enum(["slow", "steady", "expressive"]).optional(),
     /** Linked gradients recompute from identity metadata; manual edits detach the link. */
     source: z.enum(["manual", "logo"]).optional(),
   }),

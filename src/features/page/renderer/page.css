@@ -478,3 +478,7 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 .tp-header[data-layout="side"] .tp-sidehead {gap:var(--tp-s-3);}
 /* Profile type follows its actual panel, including a narrow desktop sidebar. */
 .tp-header[data-layout="centered"] .tp-name {font-size:calc(clamp(2rem,8.4cqi,3.1rem) * var(--tp-heading-scale,1));}
+.tp-bg-gradient[data-animate="true"]{animation-duration:var(--tp-wallpaper-duration,12s)}
+.tp-bg-gradient[data-animate="true"]::after{animation-duration:calc(var(--tp-wallpaper-duration,12s) * 1.2)}
+
+.tp-bg-gradient[data-animate="false"] { animation:none!important; }

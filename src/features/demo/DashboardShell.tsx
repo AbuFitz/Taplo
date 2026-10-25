@@ -1,5 +1,6 @@
 "use client";
 import "@/features/page/editor/portal-workspace.css";
+import "./dashboard/workspace-tools.css";
 
 import { TaploLogo } from "@/components/taplo/brand";
 import * as React from "react";
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { Welcome } from "./Welcome";
+import { getIndustryPreset } from "@/features/themes/presets/industries";
 import { useDemo } from "./store";
 
 const NAV = [
@@ -53,9 +55,20 @@ const NAV = [
 
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
   const path = usePathname();
+  const { state } = useDemo();
+  const terms = getIndustryPreset(
+    state?.content.identity.industryKey ?? "other",
+  ).terminology;
   return (
     <nav aria-label="Dashboard" className="grid gap-1">
-      {NAV.map(({ href, label, icon: Icon, primary }) => {
+      {NAV.map(({ href, label: originalLabel, icon: Icon, primary }) => {
+        const label =
+          originalLabel === "Services"
+            ? terms.services
+            : originalLabel === "Products" &&
+                state?.content.identity.industryKey === "car-dealer"
+              ? "Vehicle stock"
+              : originalLabel;
         const active =
           href === "/dashboard" ? path === href : path.startsWith(href);
         return (
@@ -112,74 +125,53 @@ export function DashboardMenu({ className }: { className?: string }) {
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { ready, state } = useDemo();
-  const [open, setOpen] = React.useState(false);
-  /** The page editor needs the full width: the side menu moves into the top-bar menu there. */
-  const focus = usePathname() === "/dashboard/page";
-
+  const path = usePathname();
+  const focus = path === "/dashboard/page";
   const empty =
     ready && (!state || (!state.onboarded && !state.content.identity.name));
-
+  const label = NAV.find((n) => n.href === path)?.label ?? "Dashboard";
   return (
-    <div className="portal-workspace flex min-h-screen flex-col lg:flex-row">
-      <aside
-        className={cn(
-          "hidden w-60 shrink-0 border-r p-4",
-          !focus && "lg:block",
-        )}
-      >
-        <Link href="/" aria-label="Taplo home" className="mb-6 block px-3">
-          <TaploLogo />
-        </Link>
-        <NavList />
-      </aside>
-      <div className="flex min-w-0 flex-1 flex-col">
-        {focus ? null : (
-          <header className="flex items-center gap-3 border-b px-4 py-2 lg:px-8">
-            <Sheet open={open} onOpenChange={setOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="lg:hidden"
-                  aria-label="Open menu"
-                >
-                  <Menu />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-64">
-                <SheetHeader>
-                  <SheetTitle>Taplo</SheetTitle>
-                </SheetHeader>
-                <div className="px-2">
-                  <NavList onNavigate={() => setOpen(false)} />
-                </div>
-              </SheetContent>
-            </Sheet>
-            <p className="min-w-0 flex-1 truncate text-sm text-muted-foreground">
+    <div
+      className="portal-workspace"
+      data-workspace-section={focus ? "editor" : "manage"}
+    >
+      <div className="portal-main">
+        {!focus ? (
+          <header className="portal-toolbar" aria-label="Workspace navigation">
+            <DashboardMenu />
+            <div className="portal-toolbar-identity">
+              <p>{state?.content.identity.name || "Taplo"}</p>
+              <span>{label}</span>
+            </div>
+            <div className="ml-auto flex items-center gap-3">
+              {state ? (
+                <Link href="/dashboard/settings" className="portal-plan-link">
+                  {state.plan} plan
+                </Link>
+              ) : null}
               {state?.content.identity.name ? (
-                <>
-                  Managing{" "}
-                  <strong className="text-foreground">
-                    {state.content.identity.name}
-                  </strong>
-                </>
+                <Link
+                  href="/demo/preview"
+                  target="_blank"
+                  className="portal-preview-link"
+                >
+                  View page
+                </Link>
               ) : (
-                "No business yet"
+                <Link href="/" aria-label="Taplo home">
+                  <TaploLogo className="h-5" />
+                </Link>
               )}
-            </p>
-            <span className="rounded-md border px-2.5 py-1 text-xs font-medium capitalize">
-              {state?.plan ?? "business"} plan
-            </span>
+            </div>
           </header>
-        )}
+        ) : null}
         <main
-          className={cn(
-            "min-w-0 flex-1 px-4 lg:px-8",
-            focus ? "pb-3 pt-0" : "py-6",
-          )}
+          className={cn("portal-content", focus && "portal-content-editor")}
         >
           {!ready ? (
-            <p className="text-sm text-muted-foreground">Loading…</p>
+            <div className="portal-loading" role="status">
+              Loading your workspace…
+            </div>
           ) : empty ? (
             <Welcome />
           ) : (
