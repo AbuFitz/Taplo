@@ -7,7 +7,7 @@ import "./crop-dialog.css"
 import { cropFile, type CropArea } from "./image"
 
 /** Nothing reaches the page until the owner confirms this framing popup. */
-export function CropDialog({ file, aspect, round, title, allowOriginal = false, defaultCrop = false, onCancel, onDone }: { file: File | null; aspect: number; round?: boolean; title: string; allowOriginal?: boolean; defaultCrop?: boolean; onCancel: () => void; onDone: (cropped: File, shape?: "logo"|"circle"|"square") => void }) {
+export function CropDialog({ file, aspect, round, title, allowOriginal = false, defaultCrop = false, originalDescription = "Keep your logo complete, including its transparency.", onCancel, onDone }: { file: File | null; aspect: number; round?: boolean; title: string; allowOriginal?: boolean; defaultCrop?: boolean; originalDescription?: string; onCancel: () => void; onDone: (cropped: File, shape?: "logo"|"circle"|"square") => void }) {
   const active=React.useRef(true)
   React.useEffect(()=>{active.current=true;return()=>{active.current=false}},[])
   const [decoded,setDecoded]=React.useState<File|null>(null)
@@ -38,7 +38,7 @@ export function CropDialog({ file, aspect, round, title, allowOriginal = false, 
     setBusy(true); setError(undefined)
     try { const output=whole ? file : await cropFile(file, area!);if(active.current)onDone(output, whole ? "logo" : circle ? "circle" : "square") } catch (e) { if(active.current)setError(e instanceof Error ? e.message : "The image could not be saved.") } finally { if(active.current)setBusy(false) }
   }
-  return <Overlay open={Boolean(file)} onOpenChange={(o) => !o && onCancel()} title={title} description={whole ? "Keep your logo complete, including its transparency." : "Move the image into place."} className="crop-editor" testId="crop-dialog" bodyClassName="grid content-start gap-4"
+  return <Overlay open={Boolean(file)} onOpenChange={(o) => !o && onCancel()} title={title} description={whole ? originalDescription : "Move the image into place."} className="crop-editor" testId="crop-dialog" bodyClassName="grid content-start gap-4"
     footer={<div className="flex gap-2"><Button type="button" variant="outline" className="min-h-11" onClick={onCancel}>Cancel</Button><Button type="button" className="min-h-11 flex-1" disabled={decoded!==file || !url || (!whole && !area) || busy} onClick={() => void apply()} data-testid="crop-apply">{busy ? "Preparing…" : whole ? "Use image" : "Use this crop"}</Button></div>}>
     {allowOriginal ? <div role="group" aria-label="Image framing" className="grid grid-cols-2 gap-2"><Button variant={whole ? 'default' : 'outline'} className="min-h-11 rounded-full" aria-pressed={whole} onClick={() => setWhole(true)}>Keep whole image</Button><Button variant={!whole ? 'default' : 'outline'} className="min-h-11 rounded-full" aria-pressed={!whole} onClick={() => setWhole(false)}>Crop photo</Button></div> : null}
     <div className="crop-editor-stage">

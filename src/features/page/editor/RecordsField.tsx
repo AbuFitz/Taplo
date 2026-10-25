@@ -11,6 +11,7 @@ import type { FieldSource, FieldSpec } from "../widgets/types"
 import type { RecordKind } from "./content-model"
 import { RECORD_TITLE, RecordForm, blankFor, commitRecord, validate } from "./RecordForms"
 import type { Editor } from "./useEditor"
+import { GalleryPhotoPicker } from "./GalleryPhotoPicker"
 
 /**
  * The records behind a widget (services, people, products, questions...), shown where they are used: pick which ones the
@@ -103,7 +104,7 @@ export function RecordsField({ f, value, ed, onChange, vehicles = false }: { f: 
   const [confirm, setConfirm] = React.useState(false)
   const kind: RecordKind | null = spec ? (f.source === "products" ? (vehicles ? "vehicle" : "product") : (spec.kind as RecordKind)) : null
 
-  const close = () => { const id=mode?.kind==="edit"?mode.id:null; setMode(null); setDraft(null); setShow(false); setConfirm(false); if(id)requestAnimationFrame(()=>field.current?.querySelector<HTMLButtonElement>(`[data-record-id="${CSS.escape(id)}"] [data-testid="record-edit"]`)?.focus()) }
+  const close = () => { const id=mode?.kind==="edit"?mode.id:null; setMode(null); setDraft(null); setShow(false); setConfirm(false); requestAnimationFrame(()=>{const target=id?field.current?.querySelector<HTMLButtonElement>(`[data-record-id="${CSS.escape(id)}"] [data-testid="record-edit"]`):null;(target??field.current?.querySelector<HTMLButtonElement>('[data-testid="record-add"]'))?.focus()}) }
   const openAdd = () => { if (!kind) return; setDraft(blankFor(kind, content)); setShow(false); setMode({ kind: "add" }) }
   const openEdit = (id: string) => { const rec = find(f.source, content, id); if (!rec) return; setDraft(structuredClone(rec)); setShow(false); setConfirm(false); setMode({ kind: "edit", id }) }
 
@@ -129,12 +130,12 @@ export function RecordsField({ f, value, ed, onChange, vehicles = false }: { f: 
     }
     const form = (
       <div className="grid gap-4" data-testid="record-editor">
-        <div className="flex items-center gap-1">
+        {f.source !== "gallery" ? <div className="flex items-center gap-1">
           <Button type="button" variant="ghost" size="sm" className="-ml-2 min-h-10 gap-1.5 px-2" onClick={close}><ArrowLeft /> Back</Button>
           <p className="min-w-0 flex-1 truncate text-right text-sm font-semibold">{mode.kind === "add" ? RECORD_TITLE[editKind] : `Edit ${spec.noun}`}</p>
-        </div>
+        </div> : null}
         <RecordForm kind={editKind} value={draft} onChange={setDraft} showErrors={show} content={content} />
-        <div className="flex flex-wrap gap-2 border-t pt-3">
+        <div className={`flex flex-wrap gap-2 pt-3 ${f.source === "gallery" ? "" : "border-t"}`}>
           <Button type="button" className="min-h-11 flex-1" onClick={save} data-testid="record-editor-save">{mode.kind === "add" ? `Add ${spec.noun}` : "Save changes"}</Button>
           <Button type="button" variant="outline" className="min-h-11" onClick={close}>Cancel</Button>
         </div>
@@ -153,6 +154,15 @@ export function RecordsField({ f, value, ed, onChange, vehicles = false }: { f: 
     )
     return f.source === "gallery" ? <Overlay open onCloseAutoFocus={event=>event.preventDefault()} onOpenChange={open=>!open&&close()} title={mode.kind==="edit"?"Edit photo":"Add photos"} testId="gallery-photo-editor">{form}</Overlay> : form
   }
+
+  if (f.source === "gallery") return (
+    <fieldset ref={field} className="grid gap-2" data-testid="records-field">
+      <legend className="mb-1 text-base font-semibold">{f.label}</legend>
+      {rows.length ? <GalleryPhotoPicker rows={rows} value={value} onChange={onChange} onEdit={openEdit} /> : <p className="py-4 text-sm text-muted-foreground">Add a few photos to start your gallery.</p>}
+      <Button type="button" variant="outline" className="min-h-11 justify-self-start" onClick={openAdd} data-testid="record-add"><Plus /> Add photos</Button>
+      {f.help ? <p className="text-xs text-muted-foreground">{f.help}</p> : null}
+    </fieldset>
+  )
 
   return (
     <fieldset ref={field} className="grid gap-2" data-testid="records-field">
