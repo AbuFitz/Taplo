@@ -447,8 +447,8 @@ html:has(.marketing-shell) { scroll-padding-top:80px; }
 .marketing-shell #home-title{font-size:clamp(3.3rem,7.1vw,6.8rem);line-height:1.01;letter-spacing:-.06em;text-wrap:balance}
 .marketing-shell main h2{font-size:clamp(2.6rem,5.1vw,5rem);line-height:1.03;letter-spacing:-.055em;text-wrap:balance}
 .marketing-shell .home-booking-copy h2{font-size:clamp(2.8rem,5.2vw,5.3rem)}
-.marketing-shell .home-design-field{border-radius:clamp(28px,4vw,64px) clamp(28px,4vw,64px) 0 0;overflow:hidden}
-.home-sharing-surface{border-radius:clamp(28px,4vw,64px) clamp(28px,4vw,64px) 0 0}
+.marketing-shell .home-design-field{overflow:hidden}
+.home-sharing-surface{border-radius:0}
 .feature-page main h1,.pricing-shell main h1{font-size:clamp(3.3rem,6.8vw,6.6rem);line-height:1.02;letter-spacing:-.055em;text-wrap:balance}
 .feature-page #feature-detail h2{font-size:clamp(2.4rem,4.7vw,4.5rem);line-height:1.06;letter-spacing:-.05em}
 .plaque-stage{height:590px;perspective:1300px}.plaque-object{width:350px;height:465px}.plaque-front{padding:32px 34px 24px}.plaque-brand{font-size:32px}.plaque-invitation{font-size:14px;margin:24px 0 18px}.plaque-code{width:222px}.plaque-foot{font-size:11px;margin-top:19px}.plaque-signature{font-size:10px;margin-top:20px}

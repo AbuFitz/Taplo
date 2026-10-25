@@ -39,14 +39,15 @@ export function WidgetOrbit() {
     if (!el || !active || reduced) return;
     let frame = 0,
       last = 0;
-    let radiusX = 100,
-      radiusY = 150;
+    let mobile = false,
+      spreadX = 100,
+      spreadY = 180;
     const measure = () => {
-      radiusX = Math.min(315, el.clientWidth * 0.29);
-      radiusY = Math.min(
-        el.clientWidth <= 640 ? 220 : 185,
-        el.clientHeight * 0.36,
-      );
+      mobile = el.clientWidth < 600;
+      spreadX = mobile
+        ? Math.max(0, el.clientWidth / 2 - 82)
+        : Math.min(310, el.clientWidth * 0.29);
+      spreadY = mobile ? 200 : 175;
     };
     measure();
     const observer = new ResizeObserver(measure);
@@ -54,15 +55,27 @@ export function WidgetOrbit() {
     const draw = (now: number) => {
       if (last) elapsed.current += Math.min(now - last, 40);
       last = now;
-      const turn = (elapsed.current / 34000) * Math.PI * 2 - 2.45;
+      const turn = (elapsed.current / 18000) * Math.PI * 2;
+      const anchors = mobile
+        ? [
+            [-0.82, -1.08, -5],
+            [0.85, -0.95, 5],
+            [0.78, 1.03, 4],
+            [-0.92, 0.64, -5],
+          ]
+        : [
+            [-0.95, -0.5, -7],
+            [0.85, -0.9, 6],
+            [0.9, 0.75, 5],
+            [-0.8, 0.9, -6],
+          ];
       items.current.forEach((item, i) => {
         if (!item) return;
-        const angle = turn + (i * Math.PI) / 2;
-        const x = Math.cos(angle) * radiusX,
-          y = Math.sin(angle) * radiusY;
-        const depth = Math.cos(angle + Math.PI / 4);
-        item.style.zIndex = depth >= 0 ? "3" : "1";
-        item.style.transform = `translate3d(calc(-50% + ${x}px),calc(-50% + ${y}px),${depth * 75}px) rotate(${Math.sin(angle) * 5}deg) scale(${0.94 + depth * 0.06})`;
+        const phase = turn + (i * Math.PI) / 2;
+        const [ax, ay, tilt] = anchors[i];
+        const x = ax * spreadX + Math.cos(phase) * (mobile ? 6 : 16);
+        const y = ay * spreadY + Math.sin(phase) * (mobile ? 9 : 13);
+        item.style.transform = `translate3d(calc(-50% + ${x}px),calc(-50% + ${y}px),0) rotateY(${i % 2 ? -7 : 7}deg) rotateZ(${tilt + Math.sin(phase) * 1.5}deg)`;
       });
       frame = requestAnimationFrame(draw);
     };
@@ -82,11 +95,8 @@ export function WidgetOrbit() {
       <Link
         href="/product"
         className="widget-orbit-link"
-        aria-hidden="true"
-        tabIndex={-1}
       >
         <div ref={world} className="widget-orbit-world" aria-hidden="true">
-          <div className="orbit-ceramic-object" />
           <div className="widget-orbit-core">
             <div className="orbit-profile-mark">
               f<span>.</span>
@@ -97,7 +107,7 @@ export function WidgetOrbit() {
               <em>Studio.</em>
             </span>
             <span className="orbit-profile-bio">
-              A little space for good work.
+              Independent work. All together.
             </span>
             <div className="orbit-profile-action">
               Book a time
@@ -107,10 +117,7 @@ export function WidgetOrbit() {
               Services & prices
               <ArrowUpRight />
             </div>
-            <div className="orbit-profile-secondary">
-              Visit the studio
-              <ArrowUpRight />
-            </div>
+
             <span className="orbit-profile-signature">Made with Taplo</span>
           </div>
           <div
@@ -193,10 +200,10 @@ export function WidgetOrbit() {
             </span>
           </div>
         </div>
-      </Link>
-      <Link href="/product" className="widget-orbit-cta">
-        Explore the blocks
-        <ArrowUpRight size={16} aria-hidden="true" />
+        <span className="widget-orbit-cta">
+          Explore the blocks
+          <ArrowUpRight size={16} aria-hidden="true" />
+        </span>
       </Link>
     </div>
   );

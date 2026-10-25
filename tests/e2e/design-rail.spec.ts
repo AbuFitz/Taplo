@@ -18,15 +18,15 @@ for (const width of [320, 390, 1440])
     await expect(
       designs
         .locator(".home-design-summary")
-        .getByText("Hollin Physiotherapy", { exact: true }),
+        .getByText("Marlowe & Finch", { exact: true }),
     ).toBeVisible();
     await expect(rail.locator("li").first().locator("iframe")).toHaveAttribute(
       "src",
-      "/appearance/frame?scenario=physio",
+      "/appearance/frame?scenario=barber",
     );
     await expect(
       designs.getByRole("link", { name: "Use this design", exact: true }),
-    ).toHaveAttribute("href", "/onboarding?from=hollin-physio");
+    ).toHaveAttribute("href", "/onboarding?from=marlowe-and-finch");
     await page.keyboard.press("End");
     await expect(
       designs
@@ -36,10 +36,12 @@ for (const width of [320, 390, 1440])
     await expect(
       designs.getByRole("button", { name: "Next design", exact: true }),
     ).toBeDisabled();
-    await designs.getByRole("radio", { name: "Stock", exact: true }).check();
+    await rail.focus();
+    await page.keyboard.press("Home");
+    await page.keyboard.press("ArrowRight");
     await expect(
       designs.getByRole("link", { name: "Use this design", exact: true }),
-    ).toHaveAttribute("href", "/onboarding?from=harris-cars");
+    ).toHaveAttribute("href", "/onboarding?from=detail-dept");
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -100,4 +102,40 @@ test("desktop drag advances designs without accidentally opening a page", async 
     .poll(() => rail.evaluate((el) => el.scrollLeft))
     .toBeGreaterThan(before + 100);
   await expect(page).toHaveURL(/\/inspiration$/);
+});
+
+test("quick repeated Next taps keep the intended design and adoption link", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 950 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  const designs = page.getByTestId("home-designs");
+  await designs.scrollIntoViewIfNeeded();
+  const rail = designs.getByRole("list", {
+    name: "Starting designs",
+    exact: true,
+  });
+  await rail.focus();
+  await page.keyboard.press("Home");
+  for (let i = 0; i < 3; i++)
+    await designs
+      .getByRole("button", { name: "Next design", exact: true })
+      .click();
+  await expect(
+    designs.getByRole("link", { name: "Use this design", exact: true }),
+  ).toHaveAttribute("href", "/onboarding?from=sora-fields");
+  await expect
+    .poll(() =>
+      rail.evaluate((el) => {
+        const card = el.children[3] as HTMLElement;
+        return Math.abs(
+          card.offsetLeft +
+            card.offsetWidth / 2 -
+            el.scrollLeft -
+            el.clientWidth / 2,
+        );
+      }),
+    )
+    .toBeLessThan(15);
 });

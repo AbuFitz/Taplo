@@ -1,23 +1,85 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
-import { Shot } from "../Shot";
+import { ArrowRight, ArrowUpRight, CalendarDays, Clock3 } from "lucide-react";
 import "./home-booking.css";
 
-/** A single product moment, with real destinations instead of a staged success. */
+/** An illustrative booking moment, with the actual booking journey one click away. */
 export function HomeBooking() {
-  return <section className="home-booking" aria-labelledby="home-booking-title" data-testid="home-booking">
-    <div className="home-booking-inner">
-      <div className="home-booking-copy">
-        <h2 id="home-booking-title">Less back and forth.<br />More booked in.</h2>
-        <p>A service. A time. A clear next step.<br />Let customers start the booking on your page.</p>
-        <Link data-brand-action href="/product/booking#try-booking" className="home-booking-primary">Try a booking<ArrowRight size={18} aria-hidden="true" /></Link>
-        <ul className="home-booking-routes"><li><Check size={16} aria-hidden="true" />Confirm straight away</li><li><Check size={16} aria-hidden="true" />Or approve requests first</li></ul>
+  return (
+    <section
+      className="home-booking"
+      aria-labelledby="home-booking-title"
+      data-testid="home-booking"
+    >
+      <div className="home-booking-inner">
+        <div className="home-booking-copy">
+          <h2 id="home-booking-title">
+            Less back and forth.
+            <br />
+            More booked in.
+          </h2>
+          <p>
+            A service. A time. A clear next step.
+            <br />
+            Instant bookings or requests you approve.
+          </p>
+          <Link
+            data-brand-action
+            href="/product/booking#try-booking"
+            className="home-booking-primary"
+          >
+            Try a booking
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+        </div>
+        <div
+          className="home-booking-art booking-illustration"
+          role="img"
+          aria-label="Illustration of choosing a service and a time"
+        >
+          <div className="booking-art-calendar">
+            <span className="booking-art-label">
+              <CalendarDays size={19} aria-hidden="true" />
+              Make a little time.
+            </span>
+            <div className="booking-art-days">
+              <span>
+                MON<strong>26</strong>
+              </span>
+              <span data-selected>
+                TUE<strong>27</strong>
+              </span>
+              <span>
+                WED<strong>28</strong>
+              </span>
+            </div>
+            <p>A time that works for you.</p>
+            <div className="booking-art-times">
+              <span>09:00</span>
+              <span data-selected>11:30</span>
+              <span>14:00</span>
+            </div>
+          </div>
+          <div className="booking-art-service">
+            <span>
+              A good place to start.
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </span>
+            <strong>
+              The first
+              <br />
+              conversation.
+            </strong>
+            <span>
+              <Clock3 size={14} aria-hidden="true" />
+              45 minutes
+            </span>
+          </div>
+        </div>
+        <Link href="/product/booking" className="home-booking-more">
+          Explore booking
+          <ArrowUpRight size={17} aria-hidden="true" />
+        </Link>
       </div>
-      <div className="home-booking-art">
-        <div className="home-booking-phone-crop"><Shot id="booking-clinic-time" alt="The actual clinic appointment picker, with a choice of dates and available times" width={390} fluid frame="phone" className="home-booking-phone" /></div>
-        <div className="home-booking-example"><span>Hollin Physiotherapy<span>Example business</span></span><Link href="/inspiration/hollin-physio">Open demo<ArrowUpRight size={16} aria-hidden="true" /></Link></div>
-      </div>
-      <Link href="/product/booking" className="home-booking-more">Explore booking<ArrowUpRight size={17} aria-hidden="true" /></Link>
-    </div>
-  </section>;
+    </section>
+  );
 }

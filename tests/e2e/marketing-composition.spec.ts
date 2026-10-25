@@ -10,31 +10,20 @@ for (const width of [320, 390, 768, 1440])
     await page.setViewportSize({ width, height: 950 });
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
-    const hero = page.locator(".hero-stage");
-    await expect(hero.locator("iframe")).toHaveCount(width >= 768 ? 2 : 1);
-    for (const [label, scenario] of [
-      ["Stock", "brookfield"],
-      ["Cafés", "corner"],
-    ]) {
-      await hero.getByRole("button", { name: label, exact: true }).click();
-      await expect(hero.locator(".hero-live-phone iframe")).toHaveAttribute(
-        "src",
-        `/appearance/frame?scenario=${scenario}`,
-      );
-      await expect(hero.locator(".hero-live-phone iframe")).toHaveAttribute(
-        "data-loaded",
-        "true",
-      );
-    }
-    expect(
-      (await hero.locator(".hero-live-phone").boundingBox())!.width,
-    ).toBeLessThan(310);
+    const hero = page.getByTestId("hero-showcase");
+    await expect(hero.locator("iframe")).toHaveCount(0);
+    await expect(hero.getByTestId("hero-phone-illustration")).toBeVisible();
+    await expect(hero.getByTestId("hero-browser-illustration")).toHaveCount(
+      width >= 900 ? 1 : 0,
+    );
     await expect(page.locator(".feature-illustration")).toHaveCount(0);
     await expect(
       page.locator('section[aria-labelledby="businesses-h"]'),
     ).toHaveCount(0);
-    const artwork = (await hero.locator(".hero-composition").boundingBox())!;
-    const caption = (await hero.locator(".hero-stage-caption").boundingBox())!;
+    const artwork = (await hero
+      .locator(".hero-showcase-canvas")
+      .boundingBox())!;
+    const caption = (await hero.locator("figcaption").boundingBox())!;
     expect(caption.y).toBeGreaterThanOrEqual(artwork.y + artwork.height);
 
     await hero.screenshot({
@@ -151,7 +140,7 @@ test("plaque follows the pointer without a click, settles on leaving, and the he
   await expect(plaque).toHaveAttribute("data-engaged", "true");
   await page.keyboard.press("Escape");
   await expect(plaque).toHaveAttribute("data-engaged", "false");
-  const phone = page.locator(".hero-live-phone");
+  const phone = page.locator(".hero-showcase-canvas");
   await phone.scrollIntoViewIfNeeded();
   await phone.hover();
   const before = await page.evaluate(() => scrollY);
@@ -193,17 +182,20 @@ test("homepage design choices use distinct working businesses and send the selec
   await page.setViewportSize({ width: 390, height: 950 });
   await page.goto("/");
   const designs = page.getByTestId("home-designs");
-  for (const [label, name, slug] of [
-    ["Appointments", "Hollin Physiotherapy", "hollin-physio"],
-    ["Stock", "Harris Cars", "harris-cars"],
-    ["Menus", "No. 6 Coffee", "no-6-coffee"],
-  ]) {
-    await designs.getByText(label, { exact: true }).click();
-    const scenario = {
-      "hollin-physio": "physio",
-      "harris-cars": "brookfield",
-      "no-6-coffee": "corner",
-    }[slug];
+  await designs.scrollIntoViewIfNeeded();
+  await designs
+    .getByRole("list", { name: "Starting designs", exact: true })
+    .focus();
+  await page.keyboard.press("Home");
+  for (const [index, name, slug, scenario] of [
+    [0, "Marlowe & Finch", "marlowe-and-finch", "barber"],
+    [1, "Detail Dept.", "detail-dept", "detailer"],
+    [2, "Hollin Physiotherapy", "hollin-physio", "physio"],
+  ] as const) {
+    if (index)
+      await designs
+        .getByRole("button", { name: "Next design", exact: true })
+        .click();
     const frame = designs
       .getByRole("link", { name: `Open ${name} design`, exact: true })
       .locator("iframe");

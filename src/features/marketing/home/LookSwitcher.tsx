@@ -3,37 +3,16 @@ import * as React from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { MarketingPreview } from "../MarketingPreview";
-import {
-  DesignRail,
-  type DesignRailHandle,
-} from "@/features/inspiration/DesignRail";
+import { DesignRail } from "@/features/inspiration/DesignRail";
 import { HOME_DESIGNS } from "./designs";
 /** Each choice opens the same working business that is pictured; setup carries its arrangement. */
 export function LookSwitcher() {
-  const [selected, select] = React.useState(3);
+  const [selected, select] = React.useState(0);
   const design = HOME_DESIGNS[selected];
-  const rail = React.useRef<DesignRailHandle>(null);
   return (
     <div className="home-designs" data-testid="home-designs">
       <div className="home-design-summary">
-        <fieldset className="flex flex-wrap gap-2">
-          <legend className="sr-only">Choose a page design</legend>
-          {HOME_DESIGNS.map((item, i) => (
-            <label
-              key={item.slug}
-              className="relative cursor-pointer rounded-full border border-black/20 px-5 py-3 text-sm font-medium has-[:checked]:bg-black has-[:checked]:text-white has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-black has-[:focus-visible]:ring-offset-4"
-            >
-              <input
-                type="radio"
-                className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-                name="home-design"
-                checked={selected === i}
-                onChange={() => rail.current?.goTo(i)}
-              />
-              {item.label}
-            </label>
-          ))}
-        </fieldset>
+        <p className="text-sm font-medium text-black/60">{design.label}</p>
         <div className="mt-8" aria-live="polite">
           <p className="font-display text-3xl tracking-[-.04em] sm:text-4xl">
             {design.name}
@@ -63,9 +42,8 @@ export function LookSwitcher() {
         </Link>
       </div>
       <DesignRail
-        ref={rail}
         label="Starting designs"
-        initialIndex={3}
+        initialIndex={0}
         onIndexChange={select}
         className="home-starting-rail"
       >

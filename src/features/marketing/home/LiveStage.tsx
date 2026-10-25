@@ -1,179 +1,151 @@
 "use client";
-import { businessAddress } from "@/lib/domains";
-import { useRef, useState, useSyncExternalStore } from "react";
-import Link from "next/link";
-import { ArrowUpRight, Layers3, Smartphone } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
-import { PagePreview } from "@/features/preview/PagePreview";
 
-import type { HeroScene } from "./hero-scene-types";
-const subscribe = (callback: () => void) => {
-  const query = matchMedia("(min-width:768px)");
-  query.addEventListener("change", callback);
-  return () => query.removeEventListener("change", callback);
+import { useSyncExternalStore } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight, CalendarDays } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+import { PhoneChrome } from "@/features/preview/PhoneChrome";
+import { BrowserChrome } from "@/features/preview/BrowserChrome";
+import "./hero-showcase.css";
+
+const subscribe = (notify: () => void) => {
+  const query = window.matchMedia("(min-width: 900px)");
+  query.addEventListener("change", notify);
+  return () => query.removeEventListener("change", notify);
 };
-export function LiveStage({ scenes }: { scenes: HeroScene[] }) {
-  const [selected, select] = useState(1);
-  const stage = useRef<HTMLDivElement>(null);
-  const [revealed, reveal] = useState(false);
+const desktopSnapshot = () => window.matchMedia("(min-width: 900px)").matches;
+const serverSnapshot = () => false;
+
+/** Purpose-built marketing artwork, using the same hardware as the real demos. */
+export function LiveStage() {
   const desktop = useSyncExternalStore(
     subscribe,
-    () => matchMedia("(min-width:768px)").matches,
-    () => false,
+    desktopSnapshot,
+    serverSnapshot,
   );
   const reduced = useReducedMotion();
-  const scene = scenes[selected];
   return (
-    <div className="business-stage hero-stage hero-live-stage">
-      <div
-        className="hero-choices"
-        role="group"
-        aria-label="Try a business design"
-      >
-        {scenes.map((s, i) => (
-          <button
-            key={s.slug}
-            type="button"
-            aria-pressed={selected === i}
-            onClick={() => select(i)}
-          >
-            {s.label}
-          </button>
-        ))}
-      </div>
+    <figure
+      className="hero-showcase"
+      aria-label="Illustrated business pages made with Taplo"
+      data-testid="hero-showcase"
+    >
       <motion.div
-        ref={stage}
-        className="hero-composition"
-        key={scene.slug}
-        drag={!desktop && !reduced ? "x" : false}
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.12}
-        onDragEnd={(_, info) => {
-          if (Math.abs(info.offset.x) > 35)
-            select(
-              (selected + (info.offset.x < 0 ? 1 : scenes.length - 1)) %
-                scenes.length,
-            );
-        }}
-        initial={reduced ? false : { y: 14 }}
+        className="hero-showcase-canvas"
+        initial={reduced ? false : { y: 18 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.35 }}
-        style={{ touchAction: "pan-y", perspective: 1400 }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       >
-        <motion.div
-          className="hero-demo-face"
-          style={{ visibility: revealed ? "hidden" : "visible" }}
-        >
-          {desktop ? (
-            <div className="hero-live-browser">
-              <PagePreview
-                src={`/appearance/frame?scenario=${scene.scenario}`}
-                title={`${scene.name}, desktop`}
-                mode="desktop"
-                chrome
-                url={businessAddress(scene.slug)}
-                interactive={false}
-              />
-            </div>
-          ) : null}
-          <div className="hero-live-phone">
-            <PagePreview
-              src={`/appearance/frame?scenario=${scene.scenario}`}
-              title={`${scene.name}, phone`}
-              mode="device"
-              chrome
-              interactive={false}
-              cropDevice
-            />
-          </div>
-        </motion.div>
-        <motion.div
-          className="hero-blueprint"
-          aria-hidden={!revealed}
-          data-testid="hero-page-blocks"
-          style={{
-            visibility: revealed ? "visible" : "hidden",
-            pointerEvents: "none",
-          }}
-        >
-          <div className="hero-blueprint-heading">
-            <Layers3 size={18} aria-hidden="true" />
-            <span>Built from blocks</span>
-            <span>{scene.name}</span>
-          </div>
-          <div className="hero-blueprint-blocks">
-            {scene.blocks.map((block, index) => (
-              <article key={`${block.kind}-${index}`} data-kind={block.kind}>
-                <div>
-                  <span className="hero-blueprint-number" aria-hidden="true">
-                    0{index + 1}
-                  </span>
-                  <h2>{block.title}</h2>
-                </div>
-                {block.entries.length ? (
-                  <ul>
-                    {block.entries.map((entry, n) => (
-                      <li key={n}>
-                        <span>{entry.title}</span>
-                        <span>{entry.detail}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="hero-blueprint-lines" aria-hidden="true">
-                    <i />
-                    <i />
-                    <i />
-                  </div>
-                )}
-              </article>
-            ))}
-          </div>
-          {scene.action ? (
-            <div className="hero-blueprint-primary">
-              <span>First step</span>
-              <strong>{scene.action}</strong>
-              <ArrowUpRight size={16} aria-hidden="true" />
-            </div>
-          ) : null}
-        </motion.div>
-      </motion.div>
-      <div className="hero-stage-caption">
-        <p>{scene.name}</p>
-        <div className="hero-stage-actions">
-          <button
-            type="button"
-            aria-pressed={revealed}
-            onClick={() => {
-              reveal(!revealed);
-              const box = stage.current?.getBoundingClientRect();
-              const header =
-                document
-                  .querySelector(".site-navigation")
-                  ?.getBoundingClientRect().height ?? 80;
-              if (
-                box &&
-                (box.top < header + 12 || box.bottom > window.innerHeight - 72)
-              )
-                window.scrollBy({
-                  top: box.top - header - 12,
-                  behavior: reduced ? "instant" : "smooth",
-                });
-            }}
+        {desktop ? (
+          <div
+            className="hero-showcase-browser browser-shell"
+            data-testid="hero-browser-illustration"
           >
-            {revealed ? (
-              <Smartphone size={15} aria-hidden="true" />
-            ) : (
-              <Layers3 size={15} aria-hidden="true" />
-            )}
-            {revealed ? "See the page" : "See the blocks"}
-          </button>
-          <Link href={`/inspiration/${scene.slug}`}>
-            Explore this page
-            <ArrowUpRight aria-hidden="true" size={16} />
-          </Link>
+            <BrowserChrome url="mytaplo.com/marlowe-and-finch" />
+            <div className="hero-barber-art">
+              <span className="hero-art-wordmark">
+                MARLOWE
+                <br />& FINCH<span>BARBERING, DONE WELL.</span>
+              </span>
+              <div className="hero-art-barber-photo">
+                <Image
+                  src="/photography/barber.webp"
+                  alt="A barber at work"
+                  fill
+                  sizes="650px"
+                />
+              </div>
+              <div className="hero-art-cuts">
+                <span>
+                  Good hair.
+                  <br />
+                  No fuss.
+                </span>
+                <div>
+                  <p>
+                    A cut & finish<strong>£22</strong>
+                  </p>
+                  <p>
+                    Skin fade<strong>£25</strong>
+                  </p>
+                  <span>
+                    Find your chair
+                    <ArrowUpRight size={15} aria-hidden="true" />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
+        <div className="hero-showcase-phone">
+          <div
+            className="phone-shell"
+            data-phone-static
+            data-testid="hero-phone-illustration"
+          >
+            <div className="phone-screen hero-illustration-screen">
+              <div className="hero-detailer-art">
+                <span className="hero-art-detail-mark">
+                  DETAIL
+                  <br />
+                  DEPT.
+                </span>
+                <strong>
+                  A little more
+                  <br />
+                  attention.
+                </strong>
+                <p>Car care. Without the compromise.</p>
+                <span className="hero-art-book">
+                  <CalendarDays aria-hidden="true" />
+                  Request a valet
+                </span>
+                <div className="hero-art-car-photo">
+                  <Image
+                    src="/photography/valet.webp"
+                    alt="Careful detailing of a car"
+                    fill
+                    sizes="350px"
+                    priority
+                  />
+                </div>
+                <span className="hero-art-detail-footer">
+                  Every detail. Taken care of.
+                </span>
+              </div>
+            </div>
+            <PhoneChrome />
+          </div>
         </div>
-      </div>
-    </div>
+        <Link className="hero-showcase-offer" href="/product/services">
+          <span className="hero-showcase-offer-label">
+            Your work, clearly.
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </span>
+          <strong>
+            More than
+            <br />a good look.
+          </strong>
+          <ul>
+            <li>
+              <span>Full valet</span>
+              <span>From £85</span>
+            </li>
+            <li>
+              <span>Paint protection</span>
+              <span>Let’s talk</span>
+            </li>
+          </ul>
+        </Link>
+      </motion.div>
+      <figcaption>
+        <span>Your business. Your own identity.</span>
+        <Link href="/inspiration">
+          Find your look
+          <ArrowUpRight size={16} aria-hidden="true" />
+        </Link>
+      </figcaption>
+    </figure>
   );
 }

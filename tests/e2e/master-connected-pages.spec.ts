@@ -79,27 +79,20 @@ for (const slug of [
     ).toEqual([]);
   });
 }
-test("home uses current renderer and shared phone hardware; design switching stays real", async ({
+test("home uses composed illustrations with shared hardware and working design discovery", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  const hero = page.locator(".hero-live-stage");
+  const hero = page.getByTestId("hero-showcase");
   await expect(hero.locator(".phone-hardware")).toBeVisible();
-  await expect(hero.locator("iframe")).toHaveAttribute(
-    "src",
-    "/appearance/frame?scenario=brookfield",
-  );
-  await hero.getByRole("button", { name: "Cafés", exact: true }).click();
-  await expect(hero.locator("iframe")).toHaveAttribute(
-    "src",
-    "/appearance/frame?scenario=corner",
-  );
+  await expect(hero.locator("iframe")).toHaveCount(0);
   await expect(
-    hero.getByRole("link", { name: "Explore this page" }),
-  ).toHaveAttribute("href", "/inspiration/no-6-coffee");
-  await page.getByRole("button", { name: "People", exact: true }).click();
-  await expect(page.getByTestId("feature-demo-team")).toBeVisible();
+    hero.getByRole("link", { name: "Find your look", exact: true }),
+  ).toHaveAttribute("href", "/inspiration");
+  await expect(
+    page.getByRole("group", { name: "Explore page features" }),
+  ).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
     390,
   );

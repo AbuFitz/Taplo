@@ -45,6 +45,7 @@ export const DesignRail = forwardRef<DesignRailHandle, Props>(
     const count = Children.count(children);
     const [active, setActive] = useState(Math.min(initialIndex, count - 1));
     const current = useRef(active);
+    const requested = useRef<number | null>(null);
     const notify = useRef(onIndexChange);
     const frame = useRef(0);
     const drag = useRef<{
@@ -86,6 +87,13 @@ export const DesignRail = forwardRef<DesignRailHandle, Props>(
           nearest = index;
         }
       });
+      // Keep an intentional target through smooth-scroll intermediate cards.
+      // Otherwise quick Next taps can be overwritten by an older scroll frame.
+      if (requested.current !== null) {
+        if (nearest === requested.current && distance < 0.08)
+          requested.current = null;
+        else return;
+      }
       if (nearest !== current.current) {
         current.current = nearest;
         setActive(nearest);
@@ -106,6 +114,7 @@ export const DesignRail = forwardRef<DesignRailHandle, Props>(
         const next = Math.max(0, Math.min(count - 1, index));
         const card = element.children[next] as HTMLElement | undefined;
         if (!card) return;
+        requested.current = immediate ? null : next;
         element.scrollTo({
           left:
             card.offsetLeft - element.clientWidth / 2 + card.offsetWidth / 2,
@@ -128,11 +137,17 @@ export const DesignRail = forwardRef<DesignRailHandle, Props>(
       goTo(initialIndex, true);
       const observer = new ResizeObserver(() => goTo(current.current, true));
       observer.observe(element);
+      const settled = () => {
+        requested.current = null;
+        measure();
+      };
+      element.addEventListener("scrollend", settled);
       return () => {
+        element.removeEventListener("scrollend", settled);
         observer.disconnect();
         cancelAnimationFrame(frame.current);
       };
-    }, [goTo, initialIndex]);
+    }, [goTo, initialIndex, measure]);
     const stopDrag = () => {
       const gesture = drag.current;
       drag.current = null;
@@ -163,9 +178,9 @@ export const DesignRail = forwardRef<DesignRailHandle, Props>(
             if (event.target !== event.currentTarget) return;
             const to =
               event.key === "ArrowRight"
-                ? active + 1
+                ? current.current + 1
                 : event.key === "ArrowLeft"
-                  ? active - 1
+                  ? current.current - 1
                   : event.key === "Home"
                     ? 0
                     : event.key === "End"
@@ -176,7 +191,13 @@ export const DesignRail = forwardRef<DesignRailHandle, Props>(
               goTo(to);
             }
           }}
+          onWheel={() => {
+            requested.current = null;
+            measure();
+          }}
           onPointerDown={(event) => {
+            requested.current = null;
+            measure();
             if (
               event.pointerType !== "mouse" ||
               event.button !== 0 ||
@@ -228,7 +249,7 @@ export const DesignRail = forwardRef<DesignRailHandle, Props>(
             disabled={active === 0}
             aria-label="Previous design"
             aria-controls={uid}
-            onClick={() => goTo(active - 1)}
+            onClick={() => goTo(current.current - 1)}
           >
             <ArrowLeft size={18} aria-hidden="true" />
           </button>
@@ -241,14 +262,14 @@ export const DesignRail = forwardRef<DesignRailHandle, Props>(
             />
           </div>
           <span className="sr-only" aria-live="polite">
-            Design {active + 1} of {count}
+            Design {current.current + 1} of {count}
           </span>
           <button
             type="button"
             disabled={active >= count - 1}
             aria-label="Next design"
             aria-controls={uid}
-            onClick={() => goTo(active + 1)}
+            onClick={() => goTo(current.current + 1)}
           >
             <ArrowRight size={18} aria-hidden="true" />
           </button>

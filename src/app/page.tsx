@@ -14,7 +14,6 @@ import { HomeBooking } from "@/features/marketing/home/HomeBooking";
 import { LookSwitcher } from "@/features/marketing/home/LookSwitcher";
 import { PlaqueScene } from "@/features/marketing/PlaqueScene";
 import { MonoField } from "@/features/marketing/MonoField";
-import { heroScenes } from "@/features/marketing/home/hero-scenes";
 import { LiveStage } from "@/features/marketing/home/LiveStage";
 import { taploCodeSvg } from "@/features/qr/taplo-code";
 
@@ -39,17 +38,20 @@ export default function Home() {
           <div className="grid gap-7 pb-10 lg:grid-cols-[1.25fr_1fr] lg:items-end lg:gap-24">
             <h1
               id="home-title"
-              className="font-display max-w-4xl text-[clamp(2.5rem,5vw,4.75rem)] font-medium leading-[1.04] tracking-[-.055em]"
+              className="font-display max-w-4xl text-[clamp(3rem,7vw,6.5rem)] font-medium leading-[1.04] tracking-[-.055em]"
             >
               Your business.
               <br />
               One useful page.
             </h1>
             <div className="max-w-md">
-              <p className="text-base leading-relaxed text-white/60">
-                Your services, prices, photos and stock on a page customers can
-                use. Take bookings, arrange viewings and answer enquiries from
-                one link.
+              <p className="text-base leading-relaxed text-white/65 sm:hidden">
+                The work you do. The details they need. One link that brings it
+                together.
+              </p>
+              <p className="hidden text-lg leading-relaxed text-white/65 sm:block">
+                Your services, prices, photos and stock. Give customers one
+                place to explore your business and take the next step.
               </p>
               <div className="mt-6 flex flex-wrap items-center gap-6">
                 <Link data-brand-action href={a.href} className={action}>
@@ -66,7 +68,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <LiveStage scenes={heroScenes()} />
+          <LiveStage />
         </section>
 
         <CoreFeatures />

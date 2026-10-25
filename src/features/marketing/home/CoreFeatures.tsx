@@ -1,97 +1,29 @@
-"use client";
-import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
-import { FeaturePlayground } from "../FeaturePlayground";
 import { ServicePricingDemo } from "../ServicePricingDemo";
-const ITEMS = [
-  {
-    slug: "services",
-    label: "Services",
-    title: "Good work. Clear prices.",
-    copy: "A menu, a package or a first conversation. Let people see what you offer.",
-  },
-  {
-    slug: "vehicles",
-    label: "Stock",
-    title: "A showroom in your pocket.",
-    copy: "Photos, facts and the right enquiry. Give every vehicle its own space.",
-  },
-  {
-    slug: "team",
-    label: "People",
-    title: "Make the introduction.",
-    copy: "Show who’s behind the work, and the services each person offers.",
-  },
-  {
-    slug: "design",
-    label: "Design",
-    title: "Recognisably yours.",
-    copy: "A strong starting look, with room for your identity and your content.",
-  },
-] as const;
+
+/** A single offer story, rather than another category chooser competing with design discovery. */
 export function CoreFeatures() {
-  const [selected, select] = useState(0);
-  const item = ITEMS[selected];
   return (
     <section className="home-core-features" aria-labelledby="core-title">
       <div className="home-core-inner">
         <div className="home-core-copy">
           <h2 id="core-title">
-            One link.
-            <br />A lot of possibility.
+            Show the work.
+            <br />
+            Make the next step easy.
           </h2>
-          <div
-            className="home-core-tabs"
-            role="group"
-            aria-label="Explore page features"
-          >
-            {ITEMS.map((entry, n) => (
-              <button
-                key={entry.slug}
-                type="button"
-                aria-pressed={n === selected}
-                onClick={() => select(n)}
-              >
-                <span
-                  className={`core-feature-mini core-feature-mini-${entry.slug}`}
-                  aria-hidden="true"
-                >
-                  {entry.slug === "vehicles" ? (
-                    <Image
-                      src="/taplo-demo/brookfield-golf.png"
-                      alt=""
-                      fill
-                      sizes="180px"
-                    />
-                  ) : (
-                    <>
-                      <i />
-                      <i />
-                      <i />
-                    </>
-                  )}
-                </span>
-                <span>{entry.label}</span>
-              </button>
-            ))}
-          </div>
-          <div aria-live="polite">
-            <h3>{item.title}</h3>
-            <p>{item.copy}</p>
-          </div>
-          <Link href={`/product/${item.slug}`} className="home-core-link">
-            Explore {item.label.toLowerCase()}
+          <p>
+            A service, a package or a first conversation. Put the price and the
+            useful details where people need them.
+          </p>
+          <Link href="/product/services" className="home-core-link">
+            Explore services
             <ArrowUpRight size={18} aria-hidden="true" />
           </Link>
         </div>
-        <div className="home-core-art" key={item.slug}>
-          {item.slug === "services" ? (
-            <ServicePricingDemo />
-          ) : (
-            <FeaturePlayground slug={item.slug} />
-          )}
+        <div className="home-core-art">
+          <ServicePricingDemo />
         </div>
       </div>
     </section>
