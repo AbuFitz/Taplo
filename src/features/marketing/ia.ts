@@ -9,30 +9,30 @@ export const PRODUCT_GROUPS: NavGroup[] = [
   {
     title: "Build your page",
     links: [
-      { href: "/product/design", label: "Looks and design", blurb: "Start from a look, then change anything." },
+      { href: "/product/design", label: "Looks and design", blurb: "Choose a design and make it your own." },
       { href: "/product/services", label: "Services and prices", blurb: "Price menus people can read at a glance." },
       { href: "/product/enquiries", label: "Contact and enquiries", blurb: "A clear way to ask a question or request a time." },
-      { href: "/product/messages", label: "Messages and reminders", blurb: "Text us, confirmations and reminders." },
+      { href: "/product/messages", label: "Messages and reminders", blurb: "Manage appointment confirmations and reminders." },
     ],
   },
   {
     title: "Take bookings",
     links: [
       { href: "/product/booking", label: "Booking", blurb: "Pick a service, a person and a time." },
-      { href: "/product/team", label: "Team profiles", blurb: "Introduce the people, book with them." },
+      { href: "/product/team", label: "Team profiles", blurb: "Introduce your team and their services." },
     ],
   },
   {
     title: "Show what you offer",
     links: [
       { href: "/product/products", label: "Products and links", blurb: "Your products, or ones you recommend." },
-      { href: "/product/vehicles", label: "Vehicle stock", blurb: "Specifications, price and honest status." },
-      { href: "/product/gallery-reviews", label: "Photos and reviews", blurb: "Pictures that open large, and your reviews on Google." },
+      { href: "/product/vehicles", label: "Vehicle stock", blurb: "Vehicle photos, specifications and availability." },
+      { href: "/product/gallery-reviews", label: "Photos and reviews", blurb: "Show your work and link to customer reviews." },
     ],
   },
   {
     title: "Share it",
-    links: [{ href: "/product/sharing", label: "Sharing and QR codes", blurb: "A link, a code for the counter, an image." }],
+    links: [{ href: "/product/sharing", label: "Sharing and QR codes", blurb: "Share your page with a link or QR code." }],
   },
 ]
 

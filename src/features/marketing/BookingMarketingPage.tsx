@@ -58,9 +58,9 @@ export function BookingMarketingPage({ product }: { product: ProductPage }) {
         <section className="booking-hero booking-section">
           <div className="booking-hero-copy">
             <h1>
-              Goodbye,
+              Take bookings.
               <br />
-              back and forth.
+              On your terms.
             </h1>
             <p className="booking-lead">
               Let customers choose a service, a team member and an available
@@ -95,9 +95,7 @@ export function BookingMarketingPage({ product }: { product: ProductPage }) {
         <section className="booking-section booking-control-section">
           <div className="booking-control-heading">
             <p className="booking-kicker">Availability</p>
-            <h2>
-              Set the hours that suit you.
-            </h2>
+            <h2>Set the hours that suit you.</h2>
             <p className="booking-lead">
               Customers see the times you can offer. You decide what goes into
               the diary.

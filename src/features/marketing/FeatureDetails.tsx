@@ -8,8 +8,7 @@ const DETAILS: Record<
 > = {
   design: {
     title: "Control the design.",
-    intro:
-      "Change the design without re-entering your content.",
+    intro: "Change the design without re-entering your content.",
     rows: [
       [
         "Profile",
@@ -108,8 +107,7 @@ const DETAILS: Record<
   },
   team: {
     title: "Give each person a profile.",
-    intro:
-      "Show who’s on your team and which services they provide.",
+    intro: "Show who’s on your team and which services they provide.",
     rows: [
       [
         "Their own profile",
@@ -147,7 +145,8 @@ const DETAILS: Record<
   },
   vehicles: {
     title: "The details buyers need.",
-    intro: "Put the specifications and photographs together on each vehicle listing.",
+    intro:
+      "Put the specifications and photographs together on each vehicle listing.",
     rows: [
       [
         "Useful specifications",
@@ -178,8 +177,8 @@ const DETAILS: Record<
         "Let customers read your reviews or leave one through your Google destination.",
       ],
       [
-        "Google reviews",
-        "Link to your Google listing so visitors can read reviews and leave their own.",
+        "After a visit",
+        "Give customers a direct link to leave a review on Google.",
       ],
     ],
     demo: "sora-fields",

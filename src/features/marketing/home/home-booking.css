@@ -1,5 +1,6 @@
 .home-booking {
-  background: #fff;
+  background: linear-gradient(#080808, #fff 130px);
+  padding-top: 130px;
   color: #111;
   overflow: clip;
 }

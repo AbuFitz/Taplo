@@ -17,7 +17,7 @@ for (const width of [320, 390, 768, 1440])
     await page.goto("/pricing");
     const chooser = page.getByTestId("plan-chooser");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "One page.Room to grow.",
+      "Choose the toolsyou need.",
     );
     await expect(
       page.getByRole("group", { name: "Find a suitable plan" }),

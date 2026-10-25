@@ -26,9 +26,9 @@ export function SiteFooter() {
       <div className="mx-auto max-w-[88rem] px-5 pb-7 pt-16 sm:px-8 sm:pt-20">
         <div className="flex flex-wrap items-end justify-between gap-8 border-b border-white/25 pb-14 sm:pb-20">
           <h2 className="font-display font-display-tight max-w-3xl text-[clamp(2.25rem,5vw,4.75rem)] leading-[1.03] tracking-[-0.045em]">
-            Your next customer.
+            Ready to build
             <br />
-            One page away.
+            your page?
           </h2>
           <Link
             data-brand-action
@@ -49,9 +49,7 @@ export function SiteFooter() {
               <TaploLogo tone="light" className="h-12" />
             </Link>
             <p className="mt-5 text-lg leading-relaxed text-white/85">
-              Your business.
-              <br />
-              All together.
+              A page for your business.
             </p>
             <a
               href={`mailto:${TAPLO_DOMAINS.email}`}
@@ -60,7 +58,8 @@ export function SiteFooter() {
               {TAPLO_DOMAINS.email}
             </a>
             <p className="mt-4 text-sm leading-relaxed text-white/70">
-              The work you do, the details people need and a useful next step.
+              Services, products, bookings and links, arranged around the way
+              you work.
             </p>
           </div>
           <FooterColumn

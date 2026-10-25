@@ -103,13 +103,13 @@ export default function PricingPage() {
       <SiteHeader />
       <main className="mx-auto w-full max-w-[88rem] px-5 py-14 sm:px-8 sm:py-20">
         <h1 className="font-display font-display-tight mt-4 max-w-4xl text-[clamp(2.5rem,7vw,5.5rem)] text-balance">
-          One page.
+          Choose the tools
           <br />
-          Room to grow.
+          you need.
         </h1>
         <p className="pricing-intro">
-          Start free. Add more ways to show your work, take bookings and bring
-          your team together.
+          Build your page on Free, add more with Core, or choose Pro for online
+          bookings. Business gives larger teams more room.
         </p>
 
         <div className="mt-10">

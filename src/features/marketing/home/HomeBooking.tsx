@@ -13,13 +13,13 @@ export function HomeBooking() {
       <div className="home-booking-inner">
         <div className="home-booking-copy">
           <h2 id="home-booking-title">
-            Less back and forth.
+            Your next booking
             <br />
-            More booked in.
+            starts here.
           </h2>
           <p>
-            Customers choose a service and an available time. Accept bookings
-            straight away or review requests first.
+            Show your services, prices and available times together. Let
+            customers book a slot, or send you a request to review.
           </p>
           <Link
             data-brand-action

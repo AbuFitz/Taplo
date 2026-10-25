@@ -9,14 +9,15 @@ for (const width of [320, 390, 768, 1440])
     await page.setViewportSize({ width, height: 950 });
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/inspiration");
-    await expect(page.getByRole("banner")).toHaveCount(0);
+    await expect(page.getByRole("banner")).toHaveCount(1);
     await expect(page.getByRole("contentinfo")).toHaveCount(0);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Design inspiration",
     );
     const first = page.getByTestId("design-card").first();
     await expect(first).toBeVisible();
-    expect((await first.boundingBox())!.y).toBeLessThan(170);
+    const mainTop = (await page.locator("main").boundingBox())!.y;
+    expect((await first.boundingBox())!.y - mainTop).toBeLessThan(170);
     await expect(first.locator("iframe")).toHaveAttribute(
       "data-loaded",
       "true",
@@ -44,14 +45,8 @@ for (const width of [320, 390, 768, 1440])
     await expect(page.getByText("conversation.", { exact: true })).toHaveCount(
       0,
     );
-    const work = page.getByTestId("home-work");
-    await work.scrollIntoViewIfNeeded();
-    await expect(work.locator("[data-scroll-reveal]")).toHaveCount(4);
-    await work.screenshot({ path: `work/home-work-${width}.png` });
-    const gradient = await work.evaluate(
-      (el) => getComputedStyle(el, "::before").backgroundImage,
-    );
-    expect(gradient).toContain("linear-gradient");
+    await expect(page.getByTestId("home-work")).toHaveCount(0);
+    await expect(page.locator("#sharing-h")).toHaveCount(0);
     await page.getByTestId("home-booking").scrollIntoViewIfNeeded();
     await expect(page.locator(".booking-art-service > strong")).toHaveText(
       "Initialassessment.",
@@ -99,20 +94,8 @@ for (const width of [320, 390, 768, 1440])
     ).toBe(width);
     expect(errors).toEqual([]);
   });
-test("scroll entrances settle and reduced motion disables travel", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.emulateMedia({ reducedMotion: "no-preference" });
-  await page.goto("/");
-  const work = page.getByTestId("home-work");
-  const reveal = work.locator("[data-scroll-reveal]").first();
-  await expect(reveal).toHaveAttribute("data-revealed", "false");
-  await work.scrollIntoViewIfNeeded();
-  await expect(reveal).toHaveAttribute("data-revealed", "true");
-  await expect
-    .poll(() => reveal.evaluate((e) => getComputedStyle(e).transform))
-    .toMatch(/none|matrix\(1, 0, 0, 1, 0, 0\)/);
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect(reveal).toHaveAttribute("data-revealed", "true");
+test("QR sharing product page remains available", async ({ page }) => {
+  await page.goto("/product/sharing");
+  await expect(page.locator("main")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 });

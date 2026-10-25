@@ -53,8 +53,8 @@ export default function HowItWorks() {
               <span>Taplo page.</span>
             </h1>
             <p>
-              Add your details, choose a design and try your page before
-              sharing it.
+              Add your details, choose a design and try your page before sharing
+              it.
             </p>
             <Link data-brand-action href={action.href} className="how-start">
               {action.label}
@@ -178,8 +178,8 @@ export default function HowItWorks() {
             </h2>
           </ScrollReveal>
           <p>
-            Check your page on mobile and desktop. Test your links and
-            booking flow, then make any changes you need.
+            Check your page on mobile and desktop. Test your links and booking
+            flow, then make any changes you need.
           </p>
           <div
             className="how-preview-art"
@@ -224,7 +224,7 @@ export default function HowItWorks() {
           className="how-questions"
           aria-labelledby="how-questions-title"
         >
-          <h2 id="how-questions-title">A few good questions.</h2>
+          <h2 id="how-questions-title">Before you start.</h2>
           <div>
             {FAQ.map((f) => (
               <details key={f.q}>

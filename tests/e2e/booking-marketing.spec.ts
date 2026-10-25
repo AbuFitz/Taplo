@@ -5,7 +5,7 @@ for (const width of [320, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/product/booking");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "Goodbye,back and forth.",
+      "Take bookings.On your terms.",
     );
     const demo = page.getByTestId("booking-marketing-demo");
     await demo.scrollIntoViewIfNeeded();

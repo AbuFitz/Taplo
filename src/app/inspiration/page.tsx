@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SiteHeader } from "@/features/marketing/Site";
 import { INDUSTRY_FILTERS } from "@/features/marketing/ia";
 import { EXAMPLES, describe } from "@/features/inspiration/examples";
 import { capabilityTags, styleTags } from "@/features/inspiration/facets";
@@ -50,6 +51,7 @@ export default async function InspirationPage({
   });
   return (
     <div className="design-library bg-[#080808] text-white [--foreground:#ffffff] [--background:#080808] [--muted:#242424] [--muted-foreground:#aaaaaa]">
+      <SiteHeader />
       <main className="mx-auto w-full max-w-[100rem] px-4 pb-12 pt-3 sm:px-7 sm:pt-5">
         <h1 className="sr-only">Design inspiration</h1>
         <Gallery

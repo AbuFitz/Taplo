@@ -1,5 +1,6 @@
 .home-presence {
-  background: #eae7df;
+  background: linear-gradient(#fff, #eeeae2 25%, #eeeae2 80%, #080808);
+  padding-bottom: 130px;
   color: #22211e;
   overflow: clip;
 }

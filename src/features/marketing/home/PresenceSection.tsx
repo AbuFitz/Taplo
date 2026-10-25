@@ -9,13 +9,14 @@ export function PresenceSection() {
       <div className="home-presence-inner">
         <div className="home-presence-copy">
           <h2 id="presence-title">
-            Already out there?
+            Keep the tools
             <br />
-            <span>Bring it together.</span>
+            <span>you already use.</span>
           </h2>
           <p>
-            Link your website, social profiles and booking service from your
-            Taplo page. Keep using the tools that work for you.
+            Already have a website, shop or booking link? Add them to Taplo
+            alongside your social profiles. Customers can find everything from
+            the same page.
           </p>
         </div>
         <div

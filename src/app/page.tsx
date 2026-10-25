@@ -7,25 +7,17 @@ import {
   SiteHeader,
   primaryAction,
 } from "@/features/marketing/Site";
-import { CoreFeatures } from "@/features/marketing/home/CoreFeatures";
 import "@/features/marketing/home/master-home.css";
 import { Film } from "@/features/marketing/Film";
 import { HomeBooking } from "@/features/marketing/home/HomeBooking";
 import { PresenceSection } from "@/features/marketing/home/PresenceSection";
-import { PlaqueScene } from "@/features/marketing/PlaqueScene";
 import { LiveStage } from "@/features/marketing/home/LiveStage";
-import { taploCodeSvg } from "@/features/qr/taplo-code";
 
 export const dynamic = "force-dynamic";
 const action =
   "inline-flex min-h-11 items-center justify-center gap-5 rounded-md bg-white px-5 text-sm font-semibold text-black outline-none hover:bg-neutral-200 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black";
 export default function Home() {
   const a = primaryAction();
-  const qr = taploCodeSvg(
-    "https://mytaplo.vercel.app/inspiration/no-6-coffee",
-    320,
-    "Example Taplo QR code",
-  );
   return (
     <div className="marketing-shell bg-[#080808] text-white">
       <SiteHeader />
@@ -39,18 +31,19 @@ export default function Home() {
               id="home-title"
               className="font-display max-w-4xl text-[clamp(3rem,7vw,6.5rem)] font-medium leading-[1.04] tracking-[-.055em]"
             >
-              Your business.
+              Your business,
               <br />
-              One useful page.
+              ready to share.
             </h1>
             <div className="max-w-md">
               <p className="text-base leading-relaxed text-white/65 sm:hidden">
-                The work you do. The details they need. One link that brings it
-                together.
+                Put your services, photos and links on a page that feels like
+                you. Give customers somewhere to book, browse or get in touch.
               </p>
               <p className="hidden text-lg leading-relaxed text-white/65 sm:block">
-                Your services, prices, photos and stock. Give customers one
-                place to explore your business and take the next step.
+                Put your services, photos, products and links on a page that
+                feels like you. Give customers somewhere to book, browse or get
+                in touch.
               </p>
               <div className="mt-6 flex flex-wrap items-center gap-6">
                 <Link data-brand-action href={a.href} className={action}>
@@ -70,37 +63,9 @@ export default function Home() {
           <LiveStage />
         </section>
 
-        <CoreFeatures />
         <HomeBooking />
 
         <PresenceSection />
-
-        <div className="home-sharing-surface bg-[#f7f7f7]">
-          <section
-            aria-labelledby="sharing-h"
-            className="marketing-light home-sharing-section mx-auto grid max-w-[88rem] items-center gap-10 px-5 py-16 text-black sm:px-8 sm:py-24 lg:grid-cols-[1fr_1.2fr] lg:gap-20"
-          >
-            <div>
-              <h2
-                id="sharing-h"
-                className="font-display max-w-lg text-[clamp(2rem,4vw,3.8rem)] font-medium leading-[1.06] tracking-[-.045em]"
-              >
-                Your page.
-                <br />
-                Out in the world.
-              </h2>
-              <p className="mt-5 max-w-sm text-base leading-relaxed text-black/65">
-                A branded plaque for your counter. A digital business card for
-                Apple Wallet, Google Wallet and Samsung Wallet. One code that
-                opens your business page.
-              </p>
-              <p className="mt-4 max-w-sm text-sm leading-relaxed text-black/60">
-                Physical plaques and digital wallet passes are in development.
-              </p>
-            </div>
-            <PlaqueScene code={qr} />
-          </section>
-        </div>
 
         <section
           id="film-h"
@@ -113,12 +78,13 @@ export default function Home() {
         <section className="mx-auto grid max-w-[88rem] gap-10 border-t border-white/15 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[.7fr_1.3fr]">
           <div>
             <h2 className="font-display text-[clamp(1.8rem,3.2vw,3rem)] font-medium tracking-[-.045em]">
-              Start free.
+              Start with a page.
               <br />
-              Add more when you need it.
+              Choose what comes next.
             </h2>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/55">
-              A plan for your next step.
+              Build on Free. Compare the booking, team and design tools in each
+              plan before you choose.
             </p>
             <Link
               href="/pricing"
