@@ -157,3 +157,7 @@
 .tp-gallery-mosaic[data-count="5"] .tp-gallery-caption {position:absolute;inset:auto 0 0;padding:25px 9px 9px;color:white;background:linear-gradient(transparent,#000b);border-radius:0 0 var(--tp-card-radius) var(--tp-card-radius);pointer-events:none;}
 
 .tp-photo-wall .tp-media {max-height:320px;}
+
+/* Optional service photography remains inside the whole card's hit area. */
+.tp-service-photo{position:relative;display:block;aspect-ratio:16/9;width:100%;overflow:hidden;border-radius:calc(var(--tp-radius,20px)*.6);flex-shrink:0}
+.tp-service-detail-photo{position:relative;aspect-ratio:16/10;width:100%;overflow:hidden;border-radius:20px}

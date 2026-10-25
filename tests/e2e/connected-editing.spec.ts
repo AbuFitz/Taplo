@@ -39,6 +39,7 @@ for (const width of [390, 1440]) {
     await form.getByLabel("YouTube", { exact: true }).fill("https://youtube.com/@stationroadtest")
     await expect(previewFrame(page).getByRole("link", { name: "YouTube", exact: true })).toHaveAttribute("href", "https://youtube.com/@stationroadtest")
     await expect(previewFrame(page).locator('[data-widget="social"]')).toBeInViewport({ ratio: 0.5 })
+    await page.getByRole("tab",{name:/Appearance/}).click()
     await page.getByRole("radio",{name:"Icon row",exact:true}).scrollIntoViewIfNeeded()
     const icons = page.frameLocator('iframe[title="Icon row section preview"]')
     await expect(icons.getByRole("link", { name: "YouTube", exact: true })).toHaveAttribute("href", "https://youtube.com/@stationroadtest")

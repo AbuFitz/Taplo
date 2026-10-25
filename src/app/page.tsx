@@ -141,7 +141,7 @@ export default function Home() {
               Add more when you need it.
             </h2>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/55">
-              One monthly price. No commission or contract.
+              A plan for your next step.
             </p>
             <Link
               href="/pricing"

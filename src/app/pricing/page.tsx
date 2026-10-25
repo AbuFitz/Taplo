@@ -105,8 +105,7 @@ export default function PricingPage() {
           />
         </div>
         <p className="mt-6 max-w-3xl text-sm leading-relaxed text-foreground/60">
-          Prices are per month, with no commission and no contract. Choose a
-          plan during setup.
+          Prices are per month. Choose a plan during setup.
         </p>
       </main>
       <SiteFooter />

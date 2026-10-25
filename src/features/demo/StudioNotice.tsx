@@ -19,7 +19,7 @@ export function StudioNotice() {
           className="size-1.5 rounded-full bg-emerald-600"
           aria-hidden="true"
         />
-        Studio<span className="hidden sm:inline"> preview</span>
+        <span className="hidden sm:inline">Interactive </span>preview
       </button>
       <Overlay
         open={open}
@@ -32,13 +32,14 @@ export function StudioNotice() {
       >
         <div className="grid gap-4 text-sm leading-relaxed text-neutral-600">
           <p>
-            Build and test with your own content. Your draft and test bookings
-            are saved on this device.
+            Build and test your full page free in your browser, with your own
+            content and no sign-up wall. Your draft and test bookings stay on
+            this device.
           </p>
           <p>
             Saving a preview does not publish a public page, charge a card or
-            send a message. Accounts, publishing and delivery services are not
-            connected in this preview.
+            send a message. Cloud publishing and checkout are planned for
+            launch.
           </p>
           <p>
             Keep a copy of important content before clearing your browser data.

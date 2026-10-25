@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { ArrowUpRight, CalendarCheck, Clock, MessageCircle } from "lucide-react"
+import { ProfileImage } from "../renderer/ProfileImage"
 import { Overlay } from "@/components/taplo/overlay"
 import { Button } from "@/components/ui/button"
 import { EnquiryForm } from "@/features/booking/ui/EnquiryForm"
@@ -36,6 +37,7 @@ export function ServiceCollection({ groups, variant, options, ctx, businessName,
     <button type="button" className="tp-service-open" data-layout={variant} data-lead={variant === "spotlight" && index === 0 || undefined} onClick={open(s.id)} aria-haspopup="dialog" data-testid="service-open">
       {tiles ? (
         <span className="tp-service-tile-content">
+          {s.image ? <span className="tp-service-photo"><ProfileImage image={s.image} sizes="(max-width: 640px) 90vw, 400px" /></span> : null}
           <span className="tp-service-tile-top"><span className="tp-service-name">{s.name}</span><ArrowUpRight aria-hidden="true" className="tp-service-arrow" /></span>
           {options.showDescriptions && s.description ? <span className="tp-muted tp-service-description tp-clamp">{s.description}</span> : null}
           <span className="tp-service-tile-bottom">
@@ -77,7 +79,7 @@ export function ServiceCollection({ groups, variant, options, ctx, businessName,
       <Overlay onCloseAutoFocus={event => { event.preventDefault(); if (!book && trigger.current?.isConnected) trigger.current.focus({preventScroll:true}) }} tone="page" kind="detail" open={svc !== null} onOpenChange={(o) => !o && setOpenId(null)} title={svc?.name ?? "Service"} description={svc ? [priceWording(svc), mins(svc.durationMinutes)].filter(Boolean).join(" · ") : undefined} testId="service-detail">
         {svc ? <Detail s={svc} ctx={ctx} businessName={businessName} slug={slug} providers={staffNames[svc.id] ?? []} onBook={() => { setOpenId(null); setBook(svc.id) }} /> : null}
       </Overlay>
-      {ctx ? <BookingFlow ctx={ctx} serviceId={book ?? undefined} open={book !== null} onOpenChange={(o) => !o && setBook(null)} key={book ?? "none"} title={book ? `Book ${all.find((s) => s.id === book)?.name ?? ""}` : undefined} /> : null}
+      {ctx ? <BookingFlow ctx={ctx} serviceId={book ?? undefined} open={book !== null} onCloseAutoFocus={event => { event.preventDefault(); trigger.current?.focus({preventScroll:true}) }} onOpenChange={(o) => !o && setBook(null)} key={book ?? "none"} title={book ? `Book ${all.find((s) => s.id === book)?.name ?? ""}` : undefined} /> : null}
     </>
   )
 }
@@ -87,11 +89,12 @@ function Detail({ s, ctx, businessName, slug, providers, onBook }: { s: Bookable
   const canBook = Boolean(ctx && isOnlineBookable(s) && eligibleStaff(ctx, s).length > 0)
   return (
     <div className="grid gap-4">
+      {s.image ? <div className="tp-service-detail-photo"><ProfileImage image={s.image} sizes="(max-width: 640px) 100vw, 660px" /></div> : null}
       {s.description ? <p className="leading-relaxed [overflow-wrap:anywhere]">{s.description}</p> : null}
       <dl className="tp-service-facts grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
         <div><dt className="text-tp-muted">Price</dt><dd className="font-semibold">{priceWording(s)}</dd></div>
         {s.durationMinutes ? <div><dt className="text-tp-muted">Time</dt><dd className="flex items-center gap-1 font-semibold"><Clock aria-hidden="true" className="size-3.5" />{mins(s.durationMinutes)}</dd></div> : null}
-        <div className="col-span-2"><dt className="text-tp-muted">How it works</dt><dd className="font-medium">{m === "instant" ? "Pick a time and it is confirmed straight away." : m === "request" ? "Pick a time and send a request. It is confirmed when the business accepts it." : "Arranged with the business directly. Send an enquiry; no time is reserved."}</dd></div>
+        <div className="col-span-2"><dt className="text-tp-muted">How it works</dt><dd className="font-medium">{canBook && m === "instant" ? "Pick a time and it is confirmed straight away." : canBook && m === "request" ? "Pick a time and send a request. It is confirmed when the business accepts it." : "Arranged with the business directly. Send an enquiry; no time is reserved."}</dd></div>
         {providers.length > 0 ? <div className="col-span-2"><dt className="text-tp-muted">Provided by</dt><dd className="font-medium">{providers.map((p) => p.name).join(", ")}</dd></div> : null}
       </dl>
       {canBook ? <Button className="min-h-12 bg-tp-accent text-tp-accent-fg hover:bg-tp-accent/90" onClick={onBook}><CalendarCheck />{m === "instant" ? "Book this" : "Request this"}</Button> : (

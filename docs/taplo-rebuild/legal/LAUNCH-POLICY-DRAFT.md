@@ -1,6 +1,6 @@
 # Taplo launch policies: working draft
 
-Prepared 25 October 2026. This document is not published terms, a compliance opinion or an approval claim. The supplied master handoff ends at Part 6; its promised legal Part 7 was absent. The operator name, address, company number (if applicable), privacy contact, provider contracts and retention decisions have not been supplied. The owner requested a reminder; it has already been delivered. Do not invent these facts or send another reminder automatically.
+Prepared 25 October 2026. This document is not published terms, a compliance opinion or an approval claim. The owner has now supplied Part 7: consolidate the browser-preview explanation into one interactive authoring badge, and remove repeated marketing status sections. This is a presentation requirement, not evidence that legal pages have been completed. The operator name, address, company number (if applicable), privacy contact, provider contracts and retention decisions have not been supplied. The owner requested a reminder; it has already been delivered. Do not invent these facts or send another reminder automatically.
 
 ## Facts and decisions to resolve before publication
 
@@ -46,7 +46,8 @@ Before handling real customer records for business owners, prepare a data-proces
 ## Primary references checked
 
 - ICO privacy-information checklist: https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/the-right-to-be-informed/what-privacy-information-should-we-provide/
-- ICO current lawful-basis explanation: https://ico.org.uk/consent
+- ICO storage guidance (includes local storage and other device access): https://ico.org.uk/for-organisations/direct-marketing-and-privacy-and-electronic-communications/guide-to-pecr/cookies-and-similar-technologies/
+- Northern Ireland government business website requirements: https://www.nibusinessinfo.co.uk/content/business-websites-legal-requirements
 - GOV.UK distance selling: https://www.gov.uk/online-and-distance-selling-for-businesses
 - GOV.UK online selling: https://www.gov.uk/online-and-distance-selling-for-businesses/online-selling
 

@@ -8,6 +8,7 @@ export interface BookableService {
   name: string
   description?: string
   group?: string
+  image?: BusinessContent["services"][number]["image"]
   priceMode: "fixed" | "from" | "quote" | "free"
   priceMinor?: number
   currency: string
@@ -47,7 +48,7 @@ export function buildContext(c: BusinessContent, config?: SchedulingConfig | nul
     slug: c.identity.slug,
     businessName: c.identity.name,
     timezone: (config ?? deriveConfig(c)).timezone,
-    services: c.services.filter((s) => !s.archived).map((s) => ({ id: s.id, name: s.name, description: s.description, group: s.group, priceMode: s.priceMode, priceMinor: s.priceMinor, currency: s.currency, durationMinutes: s.durationMinutes, bookingMode: s.bookingMode })),
+    services: c.services.filter((s) => !s.archived).map((s) => ({ id: s.id, name: s.name, description: s.description, group: s.group, image: s.image, priceMode: s.priceMode, priceMinor: s.priceMinor, currency: s.currency, durationMinutes: s.durationMinutes, bookingMode: s.bookingMode })),
     staff: c.staff.filter((s) => s.bookable !== false).map((s) => ({ id: s.id, name: s.name, role: s.role, photo: s.photo, serviceIds: s.serviceIds ?? null })),
     config: config ?? deriveConfig(c),
     contact: { phone: c.contacts.phone, whatsapp: c.contacts.whatsapp, email: c.contacts.email },

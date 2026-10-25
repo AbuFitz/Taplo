@@ -35,10 +35,10 @@ for (const width of [320, 390, 1440])
       .click();
     await expect(picker.locator("li").nth(1)).toContainText("Third photo");
     await picker
-      .getByRole("button", { name: "Include Second photo", exact: true })
+      .getByRole("button", { name: /^Include Second photo,/ })
       .click();
     await expect(
-      picker.getByRole("button", { name: "Include Second photo", exact: true }),
+      picker.getByRole("button", { name: /^Include Second photo,/ }),
     ).toHaveAttribute("aria-pressed", "false");
     await expect(previewFrame(page).getByTestId("gallery-open")).toHaveCount(2);
     await picker

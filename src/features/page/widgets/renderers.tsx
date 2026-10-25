@@ -124,7 +124,7 @@ function DocumentWidget({ w }: P) {
 
 /* ------------------------------------------------------------------ services / sales */
 function bookable(x: ServiceContent): BookableService {
-  return { id: x.id, name: x.name, description: x.description, group: x.group, priceMode: x.priceMode, priceMinor: x.priceMinor, currency: x.currency, durationMinutes: x.durationMinutes, bookingMode: x.bookingMode }
+  return { id: x.id, name: x.name, description: x.description, group: x.group, image: x.image, priceMode: x.priceMode, priceMinor: x.priceMinor, currency: x.currency, durationMinutes: x.durationMinutes, bookingMode: x.bookingMode }
 }
 
 /** Who provides each service, so the detail view can say so. People with serviceIds null provide every service. */

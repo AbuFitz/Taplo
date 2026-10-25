@@ -120,12 +120,13 @@ test.describe("records flow into blocks (nothing is copied)", () => {
     await pickOption(page, "Price", "Fixed price");
     await page.getByLabel("Amount (£)").fill("9");
     await page.getByRole("button", { name: "Save service" }).click();
+    await page.getByRole("button", { name: "Open menu", exact: true }).click();
     await page.getByRole("link", { name: "My page" }).first().click();
     await expect(preview(page).locator('[data-widget="serviceList"]')).toContainText("Nail trim");
     await openRow(page, "serviceList");
     // picking a subset by reference
-    await insp(page).getByRole("checkbox", { name: /Show all/ }).uncheck();
-    await insp(page).getByRole("checkbox", { name: /Nail trim/ }).uncheck();
+    await insp(page).getByRole("checkbox", { name: "Include new services automatically" }).uncheck();
+    await insp(page).getByRole("button", { name: /^Include Nail trim,/ }).click();
     await expect(preview(page).locator('[data-widget="serviceList"]')).not.toContainText("Nail trim");
     await expect(preview(page).locator('[data-widget="serviceList"]')).toContainText("Full groom");
   });

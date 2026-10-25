@@ -57,6 +57,7 @@ test("an owner chooses Large cards with real previews, undo, redo and persistenc
   const frame = previewFrame(page)
   const stock = frame.locator('.tp-products').first()
   const before = await stock.getAttribute("data-variant")
+  await page.getByRole("tab", { name: /Appearance/ }).click()
   await page.getByText("Large cards", { exact: true }).click()
   await expect(stock).toHaveAttribute("data-variant", "catalogue")
   await expect(page.frameLocator('iframe[title="Large cards section preview"]').locator('.tp-products').first()).toHaveAttribute("data-variant", "catalogue")

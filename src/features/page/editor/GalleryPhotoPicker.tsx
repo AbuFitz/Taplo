@@ -100,7 +100,7 @@ export function GalleryPhotoPicker({
               <div className="gallery-photo-tools">
                 <button
                   type="button"
-                  aria-label={`Include ${photo.name}`}
+                  aria-label={`Include ${photo.name}, ${included ? "On page" : "Hidden"}`}
                   aria-pressed={included}
                   className="gallery-photo-inclusion"
                   onClick={() =>

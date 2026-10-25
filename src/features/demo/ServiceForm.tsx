@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { ImageField } from "@/features/page/editor/controls"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -40,7 +41,7 @@ export function ServiceForm({ service, onChange, showErrors }: { service: Servic
 
   return (
     <div className="grid gap-4">
-      <TaploInput label="Service name" value={service.name} maxLength={120} error={errors.name} onChange={(e) => set({ name: e.target.value })} />
+      <TaploInput label="Service name" placeholder="e.g. Initial consultation" value={service.name} maxLength={120} error={errors.name} onChange={(e) => set({ name: e.target.value })} />
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="grid gap-1.5">
           <Label htmlFor={`${id}-mode`}>Price</Label>
@@ -89,8 +90,12 @@ export function ServiceForm({ service, onChange, showErrors }: { service: Servic
       </div>
       <div className="grid gap-1.5">
         <Label htmlFor={`${id}-desc`}>Description (optional)</Label>
-        <Textarea id={`${id}-desc`} rows={3} maxLength={1200} value={service.description ?? ""} onChange={(e) => set({ description: e.target.value || undefined })} />
+        <Textarea id={`${id}-desc`} placeholder="What’s included, who it’s for, and anything to know before booking." rows={3} maxLength={1200} value={service.description ?? ""} onChange={(e) => set({ description: e.target.value || undefined })} />
       </div>
+      <details className="rounded-2xl bg-muted/40 px-4 py-2">
+        <summary className="min-h-11 cursor-pointer py-3 text-sm font-medium">Service photo (optional)</summary>
+        <ImageField label="Service photo" value={service.image} onChange={image => set({ image: image ?? undefined })} defaultAlt={service.name || "Service photo"} purpose="photo" samples={false} />
+      </details>
       <fieldset className="grid gap-2">
         <legend className="mb-1 text-sm font-medium">Where does it happen?</legend>
         <div className="flex flex-wrap gap-x-5 gap-y-2">

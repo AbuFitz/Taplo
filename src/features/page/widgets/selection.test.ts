@@ -8,6 +8,7 @@ describe("selection keeps owner intent when records disappear", () => {
   it("keeps explicit ordering and distinguishes automatic, empty and missing selections", () => {
     const records = [{ id: "one" }, { id: "two" }]
     expect(referencedRecords(records, ["two", "missing", "one"])).toEqual([records[1], records[0]])
+    expect(referencedRecords(records, ["two", "two", 4, null, "one"])).toEqual([records[1], records[0]])
     expect(referencedRecords(records, [])).toEqual([])
     expect(referencedRecords(records, null)).toEqual(records)
     expect(selectedService(records, null)).toBe(records[0])

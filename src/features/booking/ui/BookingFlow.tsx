@@ -27,12 +27,12 @@ const STEP_NUMBER: Record<string, number> = { service: 1, person: 2, time: 3, de
  * It is one stepped flow in one overlay (a full-screen sheet on phones), never nested dialogs. The words for
  * each outcome come from OUTCOME so a confirmed appointment, a pending request and an enquiry are never confused.
  */
-export function BookingFlow({ ctx, trigger, serviceId, staffId, title, open: controlledOpen, onOpenChange }: { ctx: BookingContext; trigger?: React.ReactNode; serviceId?: string; staffId?: string; title?: string; open?: boolean; onOpenChange?: (o: boolean) => void }) {
+export function BookingFlow({ ctx, trigger, serviceId, staffId, title, open: controlledOpen, onOpenChange, onCloseAutoFocus }: { ctx: BookingContext; trigger?: React.ReactNode; serviceId?: string; staffId?: string; title?: string; open?: boolean; onOpenChange?: (o: boolean) => void; onCloseAutoFocus?: (event: Event) => void }) {
   const [inner, setInner] = React.useState(false)
   const open = controlledOpen ?? inner
   const setOpen = (o: boolean) => { setInner(o); onOpenChange?.(o) }
   return (
-    <Overlay tone="page" kind="detail" open={open} onOpenChange={setOpen} trigger={trigger} title={title ?? "Book with " + ctx.businessName} testId="booking-flow">
+    <Overlay tone="page" kind="detail" onCloseAutoFocus={onCloseAutoFocus} open={open} onOpenChange={setOpen} trigger={trigger} title={title ?? "Book with " + ctx.businessName} testId="booking-flow">
       <FlowBody ctx={ctx} preService={serviceId} preStaff={staffId} onClose={() => setOpen(false)} />
     </Overlay>
   )

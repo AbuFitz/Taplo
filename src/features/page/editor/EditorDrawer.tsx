@@ -29,7 +29,15 @@ export function EditorDrawer({ open, onOpenChange, snap, onSnap, side, title, on
   return (
     <Drawer.Root
       open={open}
-      onOpenChange={(o) => onOpenChange(o)}
+      onOpenChange={(o, details) => {
+        // Radix task dialogs have their own dismissal layer. Escape must not
+        // also close this Base UI sheet and destroy an unsaved record draft.
+        if (!o && details.reason === "escape-key" && document.querySelector('[data-overlay][data-state="open"]')) {
+          details.cancel()
+          return
+        }
+        onOpenChange(o)
+      }}
       modal={false}
       disablePointerDismissal
       swipeDirection={bottom ? "down" : "right"}

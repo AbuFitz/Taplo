@@ -1,0 +1,97 @@
+.service-picker {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.service-picker-auto {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+.service-picker ul {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.service-picker li {
+  min-width: 0;
+  border-radius: 20px;
+  padding: 4px 12px 6px;
+  background: var(--background);
+  box-shadow:
+    0 10px 24px -18px #0006,
+    0 0 0 1px color-mix(in srgb, var(--foreground) 9%, transparent);
+  transition: box-shadow 0.18s;
+}
+.service-picker li[data-included="false"] {
+  background: color-mix(in srgb, var(--foreground) 3%, var(--background));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 6%, transparent);
+}
+.service-picker-edit {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 68px;
+  padding: 10px 2px;
+  text-align: left;
+  border-radius: 12px;
+}
+.service-picker-edit > span {
+  flex: 1;
+  min-width: 0;
+}
+.service-picker-edit strong {
+  display: block;
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.service-picker-edit small {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
+.service-picker-edit > svg {
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+}
+.service-picker-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.service-picker-tools > span {
+  display: flex;
+  gap: 2px;
+}
+.service-picker-inclusion {
+  min-height: 44px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.service-picker-inclusion[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--foreground) 6%, transparent);
+  color: var(--foreground);
+  font-weight: 600;
+}
+.service-picker button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .service-picker li {
+    transition: none;
+  }
+}
