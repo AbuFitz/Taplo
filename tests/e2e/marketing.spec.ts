@@ -45,7 +45,9 @@ test.describe("navigation", () => {
     await page.keyboard.press("Tab");
     await expect(nav.getByRole("button", { name: "Designs" })).toBeFocused();
     await page.keyboard.press("Enter");
-    await expect(nav.getByRole("link", { name: "Clinics and practitioners", exact: true })).toHaveAttribute("href", "/inspiration?industry=health");
+    await expect(
+      nav.getByRole("link", { name: "Clinics and practitioners", exact: true }),
+    ).toHaveAttribute("href", "/inspiration?industry=health");
     await page.keyboard.press("Escape");
     await expect(nav.getByRole("button", { name: "Designs" })).toBeFocused();
   });
@@ -57,15 +59,15 @@ test.describe("navigation", () => {
     const nav = page.getByRole("navigation", { name: "Primary" });
     await nav.getByRole("button", { name: "Product" }).hover();
     await expect(
-      nav.getByRole("link", { name: /Everything Taplo does/ }),
+      nav.getByRole("link", { name: /Explore the platform/ }),
     ).toBeVisible();
     await page.mouse.move(640, 700);
     await expect(
-      nav.getByRole("link", { name: /Everything Taplo does/ }),
+      nav.getByRole("link", { name: /Explore the platform/ }),
     ).toBeHidden();
   });
 
-  test("the header offers Pricing, Log in and the one primary action", async ({
+  test("the header offers Pricing, Open Studio and the primary action", async ({
     page,
   }) => {
     await page.goto("/pricing");
@@ -74,10 +76,9 @@ test.describe("navigation", () => {
       "aria-current",
       "page",
     );
-    await expect(header.getByRole("link", { name: "Log in" })).toHaveAttribute(
-      "href",
-      "/dashboard",
-    );
+    await expect(
+      header.getByRole("link", { name: "Open Studio" }),
+    ).toHaveAttribute("href", "/dashboard");
     await expect(
       header.getByRole("link", { name: "Start free" }),
     ).toHaveAttribute("href", /\/onboarding|\/pricing/);
@@ -91,12 +92,14 @@ test.describe("navigation", () => {
     });
     const page = await ctx.newPage();
     await page.goto("/");
-    const trigger = page.getByRole("button", { name: "Menu" });
+    const trigger = page.getByRole("button", { name: "Explore features" });
     await trigger.click();
     const sheet = page.getByRole("dialog");
     await expect(sheet).toBeVisible();
-    await expect(sheet.getByRole("link", { name: /The platform/ })).toBeVisible();
-    await expect(sheet.getByRole("link", { name: "Booking" })).toBeVisible();
+    await expect(
+      sheet.getByRole("link", { name: /The platform/ }),
+    ).toBeVisible();
+    await expect(sheet.getByRole("link", { name: /^Booking/ })).toBeVisible();
     await expect(
       sheet.getByRole("link", { name: "Start free" }),
     ).toBeInViewport();
@@ -118,7 +121,7 @@ test.describe("navigation", () => {
 
 test.describe("product pages", () => {
   for (const l of PRODUCT_LINKS) {
-    test(`${l.label}: loads, says what works today, and has no sideways scroll on a phone`, async ({
+    test(`${l.label}: loads without development-status walls or sideways scroll on a phone`, async ({
       browser,
     }) => {
       const ctx = await browser.newContext({
@@ -127,22 +130,18 @@ test.describe("product pages", () => {
       const page = await ctx.newPage();
       await page.goto(l.href);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-      await expect(
-        page.getByTestId("status").getByRole("listitem").first(),
-      ).toBeVisible();
+      await expect(page.getByTestId("status")).toHaveCount(0);
       await noSideScroll(page);
       await ctx.close();
     });
   }
-  test("what is not connected is said in words, never implied", async ({
+  test("the interactive booking demo explains its outcome at the point of use", async ({
     page,
   }) => {
     await page.goto("/product/booking");
-    const s = page.getByTestId("status");
-    await expect(s).toContainText("Email or text confirmations");
-    await expect(s).toContainText("Needs an email or text provider");
-    await expect(s).toContainText("Deposits and payment");
-    await expect(s).toContainText("Needs a payment provider");
+    await expect(page.getByTestId("booking-marketing-demo")).toContainText(
+      "Nothing is sent or charged.",
+    );
   });
 });
 
@@ -206,12 +205,24 @@ test.describe("inspiration", () => {
       .locator("img")
       .first();
     await expect(first).toHaveAttribute("src", /ex-station-road-barbers-phone/);
-    await expect.poll(() => first.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    await expect
+      .poll(() =>
+        first.evaluate(
+          (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
+        ),
+      )
+      .toBe(true);
     await page.getByRole("radio", { name: "Desktop" }).check({ force: true });
     await expect(
       page.getByTestId("design-card").first().locator("img").first(),
     ).toHaveAttribute("src", /ex-station-road-barbers-desk/);
-    await expect.poll(() => first.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    await expect
+      .poll(() =>
+        first.evaluate(
+          (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
+        ),
+      )
+      .toBe(true);
   });
   test("using a design on an existing page changes the look and arrangement only; the owner's content and block order stay", async ({
     page,
@@ -219,9 +230,7 @@ test.describe("inspiration", () => {
     await page.goto("/dashboard");
     await page.evaluate(() => localStorage.clear());
     await page.reload();
-    await page
-      .getByRole("button", { name: "Try Jay’s Barbers" })
-      .click();
+    await page.getByRole("button", { name: "Try Jay’s Barbers" }).click();
     await page.waitForURL("**/dashboard/page");
     const before = await page.evaluate(() => {
       const s = JSON.parse(localStorage.getItem("taplo.demo.v2")!);
@@ -285,20 +294,28 @@ test.describe("inspiration", () => {
     await page.getByRole("button", { name: "Continue" }).click(); // → what you do
     await page.getByRole("button", { name: "Continue" }).click();
     await expect(page.getByTestId("goal")).toHaveCount(0);
-    await expect(page.getByRole("button",{name:"Phone calls",exact:true})).toBeVisible();
-    await page.getByRole("button", { name: "Phone calls", exact: true }).click();
+    await expect(
+      page.getByRole("button", { name: "Phone calls", exact: true }),
+    ).toBeVisible();
+    await page
+      .getByRole("button", { name: "Phone calls", exact: true })
+      .click();
     await page.getByLabel("Phone", { exact: true }).fill("01632 960987");
     await page.getByLabel("Phone", { exact: true }).blur();
     await page.getByRole("button", { name: "Continue" }).click(); // → first content
     await page.getByRole("button", { name: "Continue" }).click(); // → design
-    await expect(page.getByRole("radio",{name:"Photo",exact:true})).toBeAttached();
-    const owner = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!));
+    await expect(
+      page.getByRole("radio", { name: "Photo", exact: true }),
+    ).toBeAttached();
+    const owner = await page.evaluate(() =>
+      JSON.parse(localStorage.getItem("taplo.demo.v2")!),
+    );
     expect(owner.content.identity.name).toBe("Ridgeway Physio");
     expect(JSON.stringify(owner.content)).not.toContain("Hollin");
-    await page.getByRole("radio",{name:"Compact",exact:true}).check();
+    await page.getByRole("radio", { name: "Compact", exact: true }).check();
     await page.reload();
     await expect(
-      page.getByRole("radio", { name: "Compact",exact:true }),
+      page.getByRole("radio", { name: "Compact", exact: true }),
     ).toBeChecked(); // a refresh does not re-apply the example
   });
 });
@@ -333,13 +350,21 @@ test.describe("pricing", () => {
 });
 
 test.describe("film", () => {
-  test("continuous product reveal opens Product without playback overlays", async ({ page }) => {
-    await page.emulateMedia({reducedMotion:"reduce"});await page.goto("/")
-    const story=page.getByTestId("widget-orbit");await story.scrollIntoViewIfNeeded()
-    await expect(story.locator("video")).toHaveCount(0)
-    await expect(story.getByRole("link",{name:"Explore Taplo widgets",exact:true})).toHaveAttribute("href","/product")
-    await expect(page.getByText("Read the film",{exact:true})).toHaveCount(0)
-    await expect(story.locator("canvas")).toHaveCount(0)
+  test("continuous product reveal opens Product without playback overlays", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    const story = page.getByTestId("widget-orbit");
+    await story.scrollIntoViewIfNeeded();
+    await expect(story.locator("video")).toHaveCount(0);
+    await expect(
+      story.getByRole("link", { name: "Explore Taplo widgets", exact: true }),
+    ).toHaveAttribute("href", "/product");
+    await expect(page.getByText("Read the film", { exact: true })).toHaveCount(
+      0,
+    );
+    await expect(story.locator("canvas")).toHaveCount(0);
   });
 });
 

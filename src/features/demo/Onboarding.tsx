@@ -5,6 +5,7 @@ import { TAPLO_DOMAINS } from "@/lib/domains"
 import { Overlay } from "@/components/taplo/overlay"
 import "./onboarding-mobile.css"
 import { BusinessIcon } from "./BusinessIcon"
+import { StudioNotice } from "./StudioNotice"
 import { SetupDesign } from "./SetupDesign"
 import { SetupThemes } from "./SetupStyles"
 import { TaploLogo } from "@/components/taplo/brand"
@@ -196,7 +197,7 @@ export function Onboarding() {
       <nav aria-label="Progress" className="setup-progress mb-4">
         <div className="flex min-h-9 items-center gap-3">
           <Link href="/" aria-label="Taplo home" className="setup-home"><TaploLogo className="h-5" /></Link><div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div>
-
+          <StudioNotice />
         </div>
       </nav>
 

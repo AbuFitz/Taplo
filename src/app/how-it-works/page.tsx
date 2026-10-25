@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
-import { WHEN_UNAVAILABLE } from "@/lib/capabilities";
 import {
   SiteFooter,
   SiteHeader,
@@ -17,24 +16,20 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 const FAQ = [
   {
-    q: "Do I need a separate website or domain?",
-    a: "You can build your page without one. A Taplo page address and custom domains depend on publishing being connected; you do not need to buy a domain to explore the preview.",
+    q: "Can I keep my existing website?",
+    a: "Yes. Add a link to your website, shop or booking service. Use Taplo alongside the tools you already have.",
   },
   {
-    q: "Where is my page kept at the moment?",
-    a: `${WHEN_UNAVAILABLE.accounts} ${WHEN_UNAVAILABLE.publicPublishing}`,
-  },
-  {
-    q: "Can customers pay me through Taplo?",
-    a: "The preview takes no payments. You can try bookings and enquiries in the browser, or link a product to a shop you already use. Checkout on Taplo needs a payment service connected.",
+    q: "What should I add first?",
+    a: "Your name, a way to get in touch and one thing you offer. Add more when you are ready.",
   },
   {
     q: "Can I change the design later?",
-    a: "Your content stays put when the look changes. You can adjust the design with visual controls; the options available depend on your plan.",
+    a: "Yes. Your content stays in place while you change colours, type, backgrounds and profile arrangements.",
   },
   {
     q: "Do I have to fill everything in at once?",
-    a: "Start with the basics and one thing you offer. Add photos, people, hours and more services or stock when you are ready.",
+    a: "No. Skip optional steps, come back to a section and keep editing your draft.",
   },
 ];
 export default function HowItWorks() {
@@ -58,7 +53,8 @@ export default function HowItWorks() {
                 shape as you go, with room to keep making it yours.
               </p>
               <Link
-                data-brand-action href={a.href}
+                data-brand-action
+                href={a.href}
                 className="mt-7 inline-flex min-h-12 items-center gap-6 rounded-full bg-signal px-6 font-semibold text-white outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-signal/50"
               >
                 {a.label}
@@ -83,7 +79,10 @@ export default function HowItWorks() {
           </p>
           <SetupStory />
         </section>
-        <section aria-label="Product walkthroughs" className="mx-auto max-w-6xl px-5 pb-16 sm:px-8 sm:pb-24">
+        <section
+          aria-label="Product walkthroughs"
+          className="mx-auto max-w-6xl px-5 pb-16 sm:px-8 sm:pb-24"
+        >
           <Walkthroughs />
         </section>
         <section className="border-y border-foreground/15 bg-[#f6f4ec]">
@@ -107,7 +106,8 @@ export default function HowItWorks() {
               ))}
             </dl>
             <Link
-              data-brand-action href={a.href}
+              data-brand-action
+              href={a.href}
               className="mt-10 inline-flex min-h-12 items-center gap-6 rounded-full bg-signal px-6 font-semibold text-white outline-none hover:opacity-90 focus-visible:ring-3 focus-visible:ring-signal/50"
             >
               {a.label}

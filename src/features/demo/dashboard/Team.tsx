@@ -117,9 +117,10 @@ export function Team() {
       {!ent.teamPages ? (
         <p role="status" className="workspace-notice">
           Profiles are saved here. Show them on your page with Pro; offer
-          several bookable people with Business.
+          up to three bookable people with Pro or unlimited people with Business.
         </p>
       ) : null}
+      {ent.maxStaffBookable !== null && ent.onlineBooking && staff.filter(person => person.bookable !== false).length > ent.maxStaffBookable ? <p className="workspace-notice" role="status">Your plan makes the first {ent.maxStaffBookable} bookable people available to customers. Every profile and its hours stay saved. Business includes unlimited staff calendars.</p> : null}
       {removed ? (
         <div role="status" className="workspace-toast">
           <span>{removed.name} removed from your team.</span>

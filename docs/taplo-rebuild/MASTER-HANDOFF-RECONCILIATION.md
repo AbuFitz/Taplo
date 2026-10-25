@@ -1,5 +1,7 @@
 # Master handoff reconciliation, 25 October 2026
 
+> Priority update: the owner subsequently instructed master engineering first, engine afterwards. See MASTER-IMPLEMENTATION-DIRECTION.md and MASTER-ENGINEERING-STATUS.md for current execution; the sequencing and preserved plan boundaries below describe the earlier intake audit.
+
 Source: owner-supplied “TAPLO — Master Engineering, UI/UX, Motion & Legal Handoff Bible”, attachment 6048dc58-7208-4353-8281-58cc3b03572d. This maps its proposals to the actual repository at f3bcc55. It does not replace the owner's direct feedback, earlier constraints or the engine-first worklist. Proposed code and sales claims are reference material, not verified implementation.
 
 ## Material findings

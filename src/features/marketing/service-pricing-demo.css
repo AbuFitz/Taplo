@@ -1,0 +1,243 @@
+.service-pricing-demo {
+  width: 100%;
+  max-width: 620px;
+  margin: auto;
+  color: #101114;
+  min-width: 0;
+  padding: 12px 16px 40px;
+}
+.service-pricing-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+  margin: 0 12px 28px;
+}
+.service-pricing-switch legend {
+  float: left;
+  font-size: 12px;
+  color: #696b70;
+}
+.service-pricing-switch > div {
+  display: flex;
+  padding: 4px;
+  border-radius: 999px;
+  background: #e8e8e9;
+}
+.service-pricing-switch label {
+  position: relative;
+  cursor: pointer;
+}
+.service-pricing-switch input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.service-pricing-switch label > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 62px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #64656b;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
+}
+.service-pricing-switch label:has(:checked) > span {
+  color: #111;
+  background: #fff;
+  box-shadow: 0 2px 6px #0000000d;
+}
+.service-pricing-switch label:has(:focus-visible) > span {
+  outline: 2px solid #111;
+  outline-offset: 3px;
+}
+.service-pricing-stage {
+  position: relative;
+  max-width: 440px;
+  margin: auto;
+}
+.service-pricing-card {
+  position: relative;
+  padding: 28px;
+  border-radius: 24px;
+  background: #17191b;
+  color: #f6f6f7;
+  box-shadow:
+    0 32px 50px -30px #14171b88,
+    0 1px 0 #ffffff20 inset;
+}
+.service-pricing-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+.service-pricing-identity > span:first-child {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: #f3f4ee;
+  color: #172016;
+  border-radius: 10px;
+  font-weight: 650;
+  font-size: 20px;
+}
+.service-pricing-identity small {
+  display: block;
+  margin-top: 3px;
+  color: #9d9fa3;
+  font-size: 10px;
+}
+.service-pricing-type {
+  margin-left: auto;
+  color: #aeb0b5;
+  font-size: 10px;
+}
+.service-pricing-line {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 64px;
+  margin: 24px 0 16px;
+  overflow: hidden;
+}
+.service-pricing-line i {
+  height: 65%;
+  width: 24%;
+  border-radius: 60% 60% 10px 10px;
+  background: linear-gradient(140deg, #ffffff12, #ffffff05);
+  transform: skewX(-18deg);
+}
+.service-pricing-line i:nth-child(2) {
+  height: 100%;
+}
+.service-pricing-line i:nth-child(3) {
+  height: 80%;
+}
+.service-pricing-line i:last-child {
+  height: 45%;
+}
+.service-pricing-card h2 {
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1.06;
+  letter-spacing: -0.045em;
+  font-weight: 600;
+}
+.service-pricing-card > p {
+  font-size: 13px;
+  color: #b7b9be;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+.service-pricing-card ul {
+  display: grid;
+  gap: 8px;
+  padding: 20px 0 24px;
+  font-size: 12px;
+  color: #ced0d4;
+  list-style: none;
+}
+.service-pricing-card li::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  margin: 0 9px 2px 0;
+  background: #8c9f90;
+}
+.service-pricing-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.service-pricing-price strong {
+  font-size: 30px;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+}
+.service-pricing-price > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #b7b9be;
+}
+.service-pricing-card > button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 48px;
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: #f3f4ee;
+  color: #1a2019;
+  font-size: 13px;
+  font-weight: 600;
+}
+.service-pricing-card > button:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 5px;
+}
+.service-pricing-caption {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 94%;
+  margin: -4px auto 0;
+  padding: 18px 20px;
+  border-radius: 0 0 18px 18px;
+  background: #fff;
+  box-shadow: 0 24px 38px -26px #14171b77;
+}
+.service-pricing-caption > span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #455849;
+  flex-shrink: 0;
+}
+.service-pricing-caption p {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #676a6e;
+}
+@media (max-width: 767px) {
+  .service-pricing-demo {
+    padding: 8px 0 32px;
+  }
+  .service-pricing-switch {
+    margin-inline: 0;
+    gap: 8px;
+  }
+  .service-pricing-card {
+    padding: 24px;
+  }
+  .service-pricing-switch label > span {
+    min-width: 56px;
+    padding-inline: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .service-pricing-switch label > span {
+    transition: none;
+  }
+}

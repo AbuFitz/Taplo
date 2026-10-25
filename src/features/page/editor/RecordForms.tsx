@@ -125,7 +125,7 @@ export function RecordForm({ kind, value, onChange, showErrors, content, setup =
               <p className="text-xs text-muted-foreground">Customers can only book this person for these services.</p>
             </fieldset>
           ) : null}
-          <label className="flex items-center gap-3 text-sm"><Checkbox checked={value.bookable} onCheckedChange={(c) => onChange({ ...value, bookable: c === true })} />Customers can book this person (needs the Business plan)</label>
+          <label className="flex items-center gap-3 text-sm"><Checkbox checked={value.bookable} onCheckedChange={(c) => onChange({ ...value, bookable: c === true })} />Customers can book this person (Pro or Business)</label>
           <div className="grid gap-2"><span className="text-sm font-medium">Experience or qualifications (optional)</span>
             {value.credentials.map((c: string, i: number) => <div key={i} className="flex gap-2"><input aria-label={`Qualification ${i + 1}`} className="min-h-11 min-w-0 flex-1 rounded-xl border bg-transparent px-3 text-sm" value={c} maxLength={160} onChange={(e) => onChange({ ...value, credentials: value.credentials.map((x: string, n: number) => (n === i ? e.target.value : x)) })} /><Button type="button" variant="ghost" size="icon" className="size-11" aria-label="Remove" onClick={() => onChange({ ...value, credentials: value.credentials.filter((_: string, n: number) => n !== i) })}><Trash2 /></Button></div>)}
             {value.credentials.length < 8 ? <Button type="button" variant="outline" className="justify-self-start" onClick={() => onChange({ ...value, credentials: [...value.credentials, ""] })}><Plus /> Add one</Button> : null}

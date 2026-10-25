@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic"
 const action = "inline-flex min-h-11 items-center justify-center gap-5 rounded-md bg-white px-5 text-sm font-semibold text-black outline-none hover:bg-neutral-200 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
 export default function Home() {
   const a = primaryAction()
-  const qr = taploCodeSvg("https://taplo-lilac.vercel.app/inspiration/no-6-coffee", 320, "Example Taplo QR code")
+  const qr = taploCodeSvg("https://mytaplo.vercel.app/inspiration/no-6-coffee", 320, "Example Taplo QR code")
   return <div className="marketing-shell bg-[#080808] text-white">
     <SiteHeader />
     <main>
@@ -50,7 +50,6 @@ export default function Home() {
       <section aria-labelledby="film-h" className="mx-auto max-w-[88rem] border-t border-white/15 px-5 py-16 sm:px-8 sm:py-24"><div className="mb-8 flex flex-wrap items-end justify-between gap-4"><h2 id="film-h" className="font-display text-[clamp(1.8rem,3.2vw,3rem)] font-medium tracking-[-.045em]">A page that takes shape.<br />Then gets to work.</h2></div><Film /></section>
 
       <section className="mx-auto grid max-w-[88rem] gap-10 border-t border-white/15 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[.7fr_1.3fr]"><div><h2 className="font-display text-[clamp(1.8rem,3.2vw,3rem)] font-medium tracking-[-.045em]">Start free.<br />Add more when you need it.</h2><p className="mt-4 max-w-xs text-sm leading-relaxed text-white/55">One monthly price. No commission or contract.</p><Link href="/pricing" className="mt-5 inline-flex min-h-11 items-center gap-3 rounded text-sm text-white/80 outline-none hover:text-white focus-visible:ring-2 focus-visible:ring-white">Compare plans<ArrowUpRight aria-hidden="true" className="size-4" /></Link></div><ul className="divide-y divide-white/15 border-y border-white/15">{PLAN_IDS.map(id=><li key={id} className="grid gap-2 py-6 sm:grid-cols-[7rem_1fr_auto] sm:gap-5"><h3 className="text-lg font-medium">{PLANS[id].name}</h3><p className="text-sm leading-relaxed text-white/55">{PLANS[id].summary}</p><p className="text-sm font-medium tabular-nums">{PLANS[id].priceMinorGbp===0?'£0':`${formatMoney(PLANS[id].priceMinorGbp)} / month`}</p></li>)}</ul></section>
-      <p className="mx-auto max-w-[88rem] px-5 pb-4 text-xs leading-relaxed text-white/60 sm:px-8">Try the frontend with your own content. Public publishing, payments, notifications and imported Google reviews need their services connected. <Link href="/product" className="underline underline-offset-4">See feature availability.</Link></p>
     </main>
     <SiteFooter />
   </div>

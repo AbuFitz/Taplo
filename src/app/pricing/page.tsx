@@ -1,4 +1,3 @@
-import { WHEN_UNAVAILABLE, capabilities } from "@/lib/capabilities";
 import type { Metadata } from "next";
 import { PricingExperience } from "@/features/marketing/PricingExperience";
 import { PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
@@ -57,17 +56,17 @@ const ROWS: Row[] = [
   { label: "Team profiles", value: (e) => e.teamPages },
   {
     label: "Customers choose a person",
-    note: "Several people, each with their own hours.",
-    value: (e) => e.multiStaff,
+    note: "Each person has their own hours. Pro includes three staff calendars.",
+    value: (e) => e.maxStaffBookable === null ? "Unlimited" : e.maxStaffBookable > 0 ? String(e.maxStaffBookable) : false,
   },
   {
     label: "Deposits and payments",
-    note: "Not connected yet. A payment provider is needed before this can be switched on.",
+    note: "Requires a payment provider.",
     value: (e) => e.payments,
   },
   {
     label: "Email confirmations",
-    note: "Not connected yet. An email provider is needed.",
+    note: "Requires an email provider.",
     value: (e) => e.emailConfirmations,
   },
   { label: "Analytics", value: (e) => e.analytics },
@@ -89,11 +88,13 @@ export default function PricingPage() {
           Start with what you need.
         </h1>
         <p className="mt-6 max-w-2xl text-xl leading-relaxed text-foreground/70">
-          Start free. Add design options, appointments or a team when you need them.
+          Start free. Add design options, appointments or a team when you need
+          them.
         </p>
 
         <div className="mt-10">
-          <PricingExperience demo={demo}
+          <PricingExperience
+            demo={demo}
             rows={ROWS.map((r) => ({
               label: r.label,
               note: r.note,
@@ -104,9 +105,8 @@ export default function PricingPage() {
           />
         </div>
         <p className="mt-6 max-w-3xl text-sm leading-relaxed text-foreground/60">
-          {capabilities().payments
-            ? "Prices are per month, with no commission and no contract."
-            : `Prices are per month, with no commission and no contract. ${WHEN_UNAVAILABLE.payments} Plan choices are saved as a preference during setup. Features marked “not connected yet” switch on when their service is connected.`}
+          Prices are per month, with no commission and no contract. Choose a
+          plan during setup.
         </p>
       </main>
       <SiteFooter />

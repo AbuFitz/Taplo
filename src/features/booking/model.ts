@@ -92,3 +92,10 @@ export function icsFor(b: { id: string; serviceName: string; startsAt: number; e
 }
 
 export const WEEKDAY_ORDER = WEEKDAYS
+
+/** The public booking journey follows the same staff limit as pricing, without deleting saved people. */
+export function buildPlanContext(c: BusinessContent, ent: Pick<import("@/features/subscriptions/entitlements").Entitlements, "maxStaffBookable">): BookingContext {
+  const people = c.staff.filter(person => person.bookable !== false);
+  const staff = ent.maxStaffBookable === null ? people : people.slice(0, ent.maxStaffBookable);
+  return buildContext({ ...c, staff });
+}

@@ -15,7 +15,7 @@ import { ProfileImage } from "../renderer/ProfileImage"
 import type { PageViewModel, RenderWidget } from "../renderer/view-model"
 import { BookingAction, ItemDetail, PaymentAction, VideoEmbed, type BookingActionProps } from "./client"
 import { WidgetIcon } from "./WidgetIcon"
-import { buildContext, priceWording } from "@/features/booking/model"
+import { buildPlanContext, priceWording } from "@/features/booking/model"
 import { TeamMembers, type TeamMemberData } from "./TeamClient"
 import { ServiceCollection } from "./ServiceClient"
 import { Gallery } from "./GalleryClient"
@@ -68,7 +68,7 @@ export function bookingProps(vm: PageViewModel, extra: Partial<BookingActionProp
     onlineBooking: vm.onlineBooking,
     // The scheduling context (services with timing, people when the plan allows choosing, hours) travels with the action,
     // so the booking journey needs nothing else from the page.
-    booking: vm.onlineBooking ? buildContext(vm.ent.multiStaff ? b : { ...b, staff: [] }) : undefined,
+    booking: vm.onlineBooking ? buildPlanContext(b, vm.ent) : undefined,
     ...extra,
   }
 }
@@ -135,7 +135,7 @@ function providersByService(vm: PageViewModel) {
 }
 
 function serviceCtx(vm: PageViewModel) {
-  return vm.onlineBooking ? buildContext(vm.ent.multiStaff ? vm.business : { ...vm.business, staff: [] }) : undefined
+  return vm.onlineBooking ? buildPlanContext(vm.business, vm.ent) : undefined
 }
 
 function ServiceListWidget({ w, vm }: P) {
@@ -315,7 +315,7 @@ function TeamWidget({ w, vm }: P) {
     subjects: m.subjects, credentials: m.credentials ?? [], bookable: m.bookable !== false,
     services: [...svcById.values()].filter((x) => m.serviceIds === null || m.serviceIds === undefined || m.serviceIds.includes(x.id)).map((x) => ({ id: x.id, name: x.name, price: priceWording({ ...x, bookingMode: x.bookingMode } as never), minutes: x.durationMinutes })),
   }))
-  const ctx = vm.onlineBooking ? buildContext(vm.ent.multiStaff ? vm.business : { ...vm.business, staff: [] }) : undefined
+  const ctx = vm.onlineBooking ? buildPlanContext(vm.business, vm.ent) : undefined
   return (
     <Card title={s.title || vm.industry.terminology.team}>
       <TeamMembers members={members} variant={(s.variant as "list" | "swipe" | "grid" | "avatars") ?? "list"} ctx={ctx} />

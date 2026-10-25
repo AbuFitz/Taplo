@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Check, Clock3, SlidersHorizontal, CalendarDays, Users } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Clock3, SlidersHorizontal, CalendarDays, Users } from "lucide-react";
 import { SiteHeader, SiteFooter, primaryAction } from "./Site";
 import { MonoField } from "./MonoField";
 import { BookingDemo } from "./BookingDemo";
@@ -9,7 +9,7 @@ import { buildContext } from "@/features/booking/model";
 import { resolveStyle } from "@/features/page/themes/resolve";
 import { EXAMPLE_OVERRIDES } from "@/features/showcase/lab-state";
 import { Shot } from "./Shot";
-import { resolveStatus, type ProductPage } from "./product";
+import { type ProductPage } from "./product";
 import "@/features/page/renderer/page.css";
 import "./booking-marketing.css";
 
@@ -47,10 +47,6 @@ export function BookingMarketingPage({ product }: { product: ProductPage }) {
           {[{ Icon: Clock3, title: "Make room between appointments.", text: "Working hours, breaks, time off and buffers shape the available slots." }, { Icon: SlidersHorizontal, title: "Set how far ahead people book.", text: "Choose your minimum notice and booking window." }, { Icon: Users, title: "The right person for the service.", text: "Customers can choose from the people who provide that appointment." }, { Icon: CalendarDays, title: "Keep the whole diary in view.", text: "Switch between agenda, day, week and month. Block time when you need it." }].map(({ Icon, title, text }) => <article key={title}><Icon size={23} strokeWidth={1.5} aria-hidden="true" /><div><h3>{title}</h3><p>{text}</p></div></article>)}
         </div>
       </section>
-      <section className="booking-availability"><div className="booking-section booking-availability-grid">
-        <div><p className="booking-kicker">Inside the preview</p><h2>Try the journey.<br />Know what’s connected.</h2><p>Explore the working booking flow today. Live syncing, messages and payments need their service connections.</p></div>
-        <ul data-testid="status" className="booking-status-list">{resolveStatus(product.status).map((status) => <li key={status.label}>{status.state === "works" ? <Check size={17} aria-hidden="true" /> : <Clock3 size={17} aria-hidden="true" />}<div><h3>{status.label}</h3>{status.note && <p>{status.note}</p>}</div></li>)}</ul>
-      </div></section>
       <nav aria-label="Related features" className="booking-section booking-related"><p className="booking-kicker">Alongside booking</p>{product.related.map((slug) => <Link key={slug} href={`/product/${slug}`}>{slug === "team" ? "People behind the business" : slug === "services" ? "Services worth a closer look" : "A simpler way to enquire"}<ArrowUpRight size={22} aria-hidden="true" /></Link>)}</nav>
     </main>
     <SiteFooter />

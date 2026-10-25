@@ -91,8 +91,15 @@ const CATALOGUE: Example[] = [
   },
 ]
 
+// Commercial examples lead the catalogue; personal and creative starts remain available.
+const EXAMPLE_ORDER = ["jays-barbers", "hollin-physio", "harris-cars", "lune-nail-studio", "no-6-coffee", "detail-dept", "forge-strength", "dans-home-repairs", "maths-with-aisha", "sora-fields", "form-objects", "maya-builds"];
 // Superseded example routes remain available; the gallery leads with their new UK replacements.
-export const EXAMPLES = CATALOGUE.filter(e=>CURRENT_LOOKS.some(look=>look.id===EXAMPLE_LOOK[e.scenario]) && (COLLECTION_BRIEFS.some(b=>b.id===e.scenario) || ["station","detailer","brookfield","corner","oakfield","rowan","physio","gym"].includes(e.scenario)));
+const publishedExamples = CATALOGUE.filter(e=>CURRENT_LOOKS.some(look=>look.id===EXAMPLE_LOOK[e.scenario]) && (COLLECTION_BRIEFS.some(b=>b.id===e.scenario) || ["station","detailer","brookfield","corner","oakfield","rowan","physio","gym"].includes(e.scenario)));
+export const EXAMPLES = publishedExamples.sort((a,b) => {
+  const rank = (slug: string) => { const index = EXAMPLE_ORDER.indexOf(slug); return index < 0 ? EXAMPLE_ORDER.length : index; };
+  return rank(a.slug) - rank(b.slug);
+});
+
 const LEGACY_SLUGS: Record<string, string> = {"station-road-barbers": "jays-barbers", "parkside-valeting": "detail-dept", "brookfield-motors": "harris-cars", "corner-table-cafe": "no-6-coffee", "oakfield-home-repairs": "dans-home-repairs", "rowan-learning": "maths-with-aisha"}
 export const bySlug = (slug: string) => CATALOGUE.find((e) => e.slug === (LEGACY_SLUGS[slug] ?? slug))
 
