@@ -12,67 +12,69 @@ for (const width of [320, 390, 768, 1440])
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBe(width);
+    await expect(dock).toHaveCount(0);
+    await expect(header.getByRole("link", { name: "Open Studio" })).toHaveCount(
+      0,
+    );
+    await expect(
+      header.getByRole("link", { name: "Start free" }),
+    ).toBeVisible();
+    await expect(header.getByRole("button", { name: "Open menu" })).toHaveCount(
+      0,
+    );
+    const product = header.getByRole("button", {
+      name: "Product",
+      exact: true,
+    });
+    await product.click();
+    for (const slug of [
+      "design",
+      "services",
+      "enquiries",
+      "messages",
+      "booking",
+      "team",
+      "products",
+      "vehicles",
+      "gallery-reviews",
+      "sharing",
+    ])
+      await expect(header.locator(`a[href="/product/${slug}"]`)).toBeVisible();
     if (width < 768) {
-      await expect(dock).toHaveCount(0);
+      const designs = header.getByRole("button", {
+        name: "Designs",
+        exact: true,
+      });
+      await designs.click();
       await expect(
-        header.getByRole("link", { name: "Open Studio" }),
-      ).toHaveCount(0);
-      await expect(
-        header.getByRole("link", { name: "Start free" }),
+        header.getByRole("link", { name: "Explore all designs", exact: true }),
       ).toBeVisible();
-      const open = page.getByRole("button", {
-        name: "Open menu",
-        exact: true,
-      });
-      await open.click();
-      const sheet = page.getByRole("dialog", { name: "Taplo menu" });
-      await expect(sheet).toBeVisible();
-      await expect(sheet).toHaveCSS("opacity", "1");
-      await page.screenshot({ path: `work/master-feature-sheet-${width}.png` });
-      for (const slug of [
-        "design",
-        "services",
-        "enquiries",
-        "messages",
-        "booking",
-        "team",
-        "products",
-        "vehicles",
-        "gallery-reviews",
-        "sharing",
-      ])
-        await expect(sheet.locator(`a[href="/product/${slug}"]`)).toBeVisible();
-      expect(await sheet.evaluate((el) => el.scrollWidth)).toBeLessThanOrEqual(
-        width,
-      );
-      await page.keyboard.press("Escape");
-      await expect(open).toBeFocused();
-      await open.click();
-      await sheet.getByRole("link", { name: /Services and prices/ }).click();
-      await expect(page).toHaveURL(/\/product\/services$/);
-      await expect(sheet).toBeHidden();
-      await page
-        .getByRole("button", { name: "Open menu", exact: true })
-        .click();
-      await page.getByRole("button", { name: "Close menu" }).click();
-      await expect(page.getByRole("dialog")).toBeHidden();
-    } else {
-      await expect(dock).toBeHidden();
-      const product = header.getByRole("button", {
-        name: "Product",
-        exact: true,
-      });
-      await product.focus();
-      await product.press("Enter");
+      await product.click();
       await expect(
         header.getByRole("link", { name: /Services and prices/ }),
       ).toBeVisible();
-      await header.getByRole("link", { name: /Services and prices/ }).click();
-      await expect(page).toHaveURL(/\/product\/services$/);
-      await expect(
-        header.getByRole("button", { name: "Product", exact: true }),
-      ).toHaveAttribute("data-state", "closed");
     }
+    const car = header.locator('[data-product-icon="vehicles"]');
+    await expect(car.locator("circle")).toHaveCount(2);
+    await page.screenshot({ path: `work/master-feature-sheet-${width}.png` });
+    const openAxe = await new AxeBuilder({ page })
+      .include(".site-navigation")
+      .analyze();
+    expect(openAxe.violations).toEqual([]);
+    await page.keyboard.press("Escape");
+    await expect(product).toBeFocused();
+    await product.click();
+    await header.getByRole("link", { name: /Services and prices/ }).click();
+    await expect(page).toHaveURL(/\/product\/services$/);
+    await expect(product).toHaveAttribute("data-state", "closed");
+    await header.getByRole("button", { name: "Designs", exact: true }).click();
+    await header
+      .getByRole("link", { name: "Car dealers and garages", exact: true })
+      .click();
+    await expect(page).toHaveURL(/\/inspiration\?industry=motoring$/);
+    await expect(
+      header.getByRole("button", { name: "Designs", exact: true }),
+    ).toHaveAttribute("data-state", "closed");
     await expect(
       page.getByRole("heading", { name: "What’s available." }),
     ).toHaveCount(0);
@@ -83,22 +85,45 @@ for (const width of [320, 390, 768, 1440])
       .analyze();
     expect(results.violations).toEqual([]);
   });
-test("mobile menu closes on desktop resize and leaves the footer unobstructed", async ({
+test("shared menu dismisses on breakpoint change, closes outside and leaves the footer unobstructed", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/inspiration");
-  await page.getByRole("button", { name: "Open menu" }).click();
+  const product = page.getByRole("button", { name: "Product", exact: true });
+  await product.click();
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await expect(page.getByRole("dialog")).toBeHidden();
-  await expect(
-    page.getByRole("button", { name: "Product", exact: true }),
-  ).toBeFocused();
-  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(product).toHaveAttribute("data-state", "closed");
+  await expect(product).toBeFocused();
+  await product.press("Enter");
+  await expect(page.locator(".site-feature-link").first()).toBeVisible();
+  await page.mouse.click(5, 900);
+  await expect(product).toHaveAttribute("data-state", "closed");
+  await page.setViewportSize({ width: 320, height: 568 });
+  await expect(product).toHaveAttribute("data-state", "closed");
+  await product.click();
+  const sharing = page.locator('.site-navigation a[href="/product/sharing"]');
+  await sharing.scrollIntoViewIfNeeded();
+  await expect(sharing).toBeInViewport();
+  await sharing.click();
+  await expect(page).toHaveURL(/\/product\/sharing$/);
   const terms = page.getByRole("link", { name: "Terms", exact: true });
   await terms.scrollIntoViewIfNeeded();
   await expect(terms).toBeInViewport();
-  await expect(page.locator(".site-thumb-dock")).toHaveCount(0);
+});
+test("a local draft does not impersonate an authenticated account", async ({
+  page,
+}) => {
+  const { openEditorWithSample } = await import("./helpers");
+  await openEditorWithSample(page);
+  await page.goto("/");
+  const header = page.getByRole("banner", { name: "Taplo website" });
+  await expect(
+    header.getByRole("link", { name: "Open Studio", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    header.getByRole("link", { name: "Start free", exact: true }),
+  ).toHaveAttribute("href", "/onboarding");
 });
 test("authoring has one contextual preview explanation", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 844 });

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowUpRight, Search, X } from "lucide-react";
 import { MarketingPreview } from "@/features/marketing/MarketingPreview";
 import type { StyleOverrides } from "@/features/page/contracts/style";
+import { DesignRail } from "./DesignRail";
 import { UseDesign } from "./UseDesign";
 import { cn } from "@/lib/utils";
 import {
@@ -240,10 +241,11 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
           No matching designs. Try another search or remove a filter.
         </p>
       ) : (
-        <ul
-          className="design-gallery mt-8 grid grid-cols-[minmax(0,1fr)] gap-x-4 gap-y-9 sm:gap-x-8 sm:gap-y-12"
-          data-testid="gallery-list"
-          data-view={view}
+        <DesignRail
+          key={`${view}-${shown.map((item) => item.slug).join("-")}`}
+          label="Business and personal designs"
+          view={view}
+          testId="gallery-list"
         >
           {shown.map((d) => (
             <li key={d.slug} data-testid="design-card">
@@ -299,7 +301,7 @@ export function Gallery({ items, industries, initialIndustry }: GalleryProps) {
               </div>
             </li>
           ))}
-        </ul>
+        </DesignRail>
       )}
     </div>
   );

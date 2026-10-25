@@ -16,6 +16,7 @@ import { SetupBackdrop } from "./SetupBackdrop"
 import { motion } from "motion/react"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 import { SetupCanvas } from "./SetupCanvas"
+import { SetupPanel, type SetupSheetSize } from "./SetupPanel"
 import { SetupLoading } from "./SetupLoading"
 import * as React from "react"
 import Link from "next/link"
@@ -63,6 +64,10 @@ const STEP_TITLE: Record<OnboardingStep, string> = {
 
 const SETUP_STEPS = ONBOARDING_STEPS.filter(step => step !== "goal")
 
+const subscribeMobileSetup = (callback: () => void) => { const query = window.matchMedia("(max-width:1023px)"); query.addEventListener("change", callback); return () => query.removeEventListener("change", callback) }
+const mobileSetupSnapshot = () => window.matchMedia("(max-width:1023px)").matches
+const serverMobileSetupSnapshot = () => false
+
 const POPULAR = ["barber", "detailer", "car-dealer", "hospitality", "tutor", "plumber", "personal-trainer", "photographer", "other"]
 
 type Goal = "book" | "enquire" | "call" | "message"
@@ -91,6 +96,9 @@ export function Onboarding() {
   const shell = React.useRef<HTMLElement>(null)
   const reducedMotion = useReducedMotion()
   const [direction, setDirection] = React.useState(1)
+  const [sheetSize, setSheetSize] = React.useState<SetupSheetSize>("edit")
+  const mobileSetup = React.useSyncExternalStore(subscribeMobileSetup, mobileSetupSnapshot, serverMobileSetupSnapshot)
+  const revealCustomerDialog = React.useCallback(() => { if (mobileSetup) setSheetSize("preview") }, [mobileSetup])
   const navigated = React.useRef(false)
   React.useEffect(() => {
     const viewport = window.visualViewport
@@ -122,6 +130,7 @@ export function Onboarding() {
   const stepIndex = SETUP_STEPS.indexOf(step as Exclude<OnboardingStep, "goal">)
 
   const go = (to: OnboardingStep) => {
+    setSheetSize("edit")
     setShowErrors(false)
     setDirection(SETUP_STEPS.indexOf(to as Exclude<OnboardingStep, "goal">) >= stepIndex ? 1 : -1)
     navigated.current = true
@@ -202,11 +211,11 @@ export function Onboarding() {
       </nav>
 
       <div className="setup-workspace grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
-        <section aria-labelledby="step-title" className="min-w-0">
+        <SetupPanel preview={["business", "contacts", "widgets", "publish"].includes(step)} size={sheetSize} onSizeChange={setSheetSize}>
           <div className="setup-question-heading">{fromName || intent ? <p className="setup-origin">{fromName ? <span data-testid="from-example">Starting from {fromName}</span> : null}{fromName && intent ? " · " : ""}{intent ? <span data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}</p> : null}
           <motion.h1 key={step} initial={reducedMotion ? false : { opacity:0, x:direction*10 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34 }} tabIndex={-1} id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? setupJourney(c.identity.industryKey).heading : STEP_TITLE[step]}</motion.h1></div>
 
-          <motion.div className="setup-step-body" key={step} initial={reducedMotion ? false : { opacity:0, x:direction*16 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34, opacity:{duration:.16} }}>
+          <motion.div id="setup-controls" inert={mobileSetup && sheetSize === "preview"} className="setup-step-body" key={step} initial={reducedMotion ? false : { opacity:0, x:direction*16 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34, opacity:{duration:.16} }}>
           {step === "industry" ? (
             <div className="grid gap-7">
               <div className="grid gap-3">
@@ -282,10 +291,10 @@ export function Onboarding() {
           ) : (
             <div className="setup-next"><Button variant="outline" size="lg" onClick={back}>Back</Button></div>
           )}
-        </section>
+        </SetupPanel>
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="setup-canvas"><SetupCanvas src="/demo/preview" expanded={false} /></div>
+          <div className="setup-canvas"><SetupCanvas src="/demo/preview" expanded={false} fit={mobileSetup && sheetSize === "preview"} onOverlayOpen={revealCustomerDialog} /></div>
 
         </aside>
       </div>

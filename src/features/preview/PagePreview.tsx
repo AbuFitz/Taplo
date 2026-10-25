@@ -50,6 +50,8 @@ export interface PagePreviewProps {
   interactive?: boolean
   /** Space occupied by fixed parent navigation when revealing a customer dialog. */
   topInset?: number
+  /** Allow the authoring surface to reveal a customer dialog without reloading its document. */
+  onOverlayOpen?: () => void
   /** Show the top of a full phone viewport when the available mobile canvas is short. */
   cropDevice?: boolean
 }
@@ -77,7 +79,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, safeTop: 0, safeBottom: 0, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, resizeKey, topInset = 0, cropDevice = false }: PagePreviewProps) {
+export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
@@ -145,6 +147,7 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
     const onMessage = (e: MessageEvent<FromPreview>) => {
       if (e.origin !== window.location.origin || e.source !== frame.current?.contentWindow) return
       if (e.data?.type === "taplo:overlay-open") {
+        onOverlayOpen?.()
         // Make the whole dialog visible before its next tap. A smooth outer scroll moves iframe hit targets during the flow.
         const rect = host.current?.getBoundingClientRect()
         if (rect && (rect.top < topInset || rect.bottom > window.innerHeight)) {
@@ -156,7 +159,7 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
     }
     window.addEventListener("message", onMessage)
     return () => window.removeEventListener("message", onMessage)
-  }, [onSelect, post, topInset, prepareDocument])
+  }, [onSelect, post, topInset, prepareDocument, onOverlayOpen])
   React.useEffect(post, [post, L?.vw, L?.vh])
 
   const iframe = L ? (

@@ -39,8 +39,7 @@ for (const width of [390, 1440])
     expect((await read(page)).content.identity.logo.height).toBe(192);
     await page
       .getByRole("button", {
-        name: "Edit image: Add your logo or profile photo",
-        exact: true,
+        name: /Adjust your logo/,
       })
       .click();
     await expect(crop).toBeVisible();
@@ -188,8 +187,7 @@ for (const width of [320, 390])
     expect(alpha).toBeLessThan(255);
     await page
       .getByRole("button", {
-        name: "Edit image: Add your logo or profile photo",
-        exact: true,
+        name: /Adjust your logo/,
       })
       .click();
     await expect(crop).toBeVisible();

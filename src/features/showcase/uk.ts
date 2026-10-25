@@ -8,11 +8,15 @@ const INDUSTRY_KEYS: Record<keyof typeof inputs, string> = {
   "stillwater-detailing": "detailer", "common-room-barbers": "barber", "alder-motor-house": "car-dealer",
   "fieldwork-home-care": "handyman", "rowan-learning": "tutor", "sunday-counter": "hospitality",
 }
+const PUBLIC_SLUGS: Record<keyof typeof inputs, string> = {
+  "stillwater-detailing": "detail-dept", "common-room-barbers": "jays-barbers", "alder-motor-house": "harris-cars",
+  "fieldwork-home-care": "dans-home-repairs", "rowan-learning": "maths-with-aisha", "sunday-counter": "no-6-coffee",
+}
 function example(key: keyof typeof inputs, mode: "instant" | "request", logo: string): BusinessContentInput {
   const content = businessContentSchema.parse(inputs[key])
   return {
     ...content,
-    identity: { ...content.identity, industryKey: INDUSTRY_KEYS[key], logo: { src: `/taplo-demo/${logo}.svg`, alt: `${content.identity.name} example logo`, width: 240, height: 120 } },
+    identity: { ...content.identity, slug: PUBLIC_SLUGS[key], industryKey: INDUSTRY_KEYS[key], logo: { src: `/taplo-demo/${logo}.svg`, alt: `${content.identity.name} example logo`, width: 240, height: 120 } },
     hours: [...hours(["tue", "wed", "thu", "fri"], "09:00", "18:00"), ...hours(["sat"], "09:00", "16:00")],
     booking: { mode, onlineBookingReady: true },
     services: content.services.map((s) => ({ ...s, bookingMode: s.durationMinutes ? mode : "contact" })),
@@ -81,7 +85,7 @@ export const ROWAN: BusinessContentInput = {
 const corner = businessContentSchema.parse(inputs["sunday-counter"])
 export const CORNER: BusinessContentInput = {
   ...corner,
-  identity: { ...corner.identity, industryKey: "hospitality", logo: { src: "/taplo-demo/corner-table-mark.svg", alt: "No. 6 Coffee example wordmark", width: 280, height: 120 }, heroImage: { src: "/photography/coffee.webp", alt: "A neighbourhood café interior; photograph by Jan Wright", width: 1600, height: 1067, focal: { x: 50, y: 50 } } },
+  identity: { ...corner.identity, slug: PUBLIC_SLUGS["sunday-counter"], industryKey: "hospitality", logo: { src: "/taplo-demo/corner-table-mark.svg", alt: "No. 6 Coffee example wordmark", width: 280, height: 120 }, heroImage: { src: "/photography/coffee.webp", alt: "A neighbourhood café interior; photograph by Jan Wright", width: 1600, height: 1067, focal: { x: 50, y: 50 } } },
   about: "A coffee, a proper breakfast, a little time at the table. Browse the menu, check the opening times or ask about a larger visit.",
   hours: [...hours(["tue", "wed", "thu", "fri"], "08:00", "16:00"), ...hours(["sat"], "09:00", "16:00"), ...hours(["sun"], "09:00", "15:00")],
   booking: { mode: "contact", onlineBookingReady: false },

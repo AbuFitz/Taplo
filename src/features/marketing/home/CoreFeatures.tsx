@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { FeaturePlayground } from "../FeaturePlayground";
 import { ServicePricingDemo } from "../ServicePricingDemo";
@@ -53,7 +54,26 @@ export function CoreFeatures() {
                 aria-pressed={n === selected}
                 onClick={() => select(n)}
               >
-                {entry.label}
+                <span
+                  className={`core-feature-mini core-feature-mini-${entry.slug}`}
+                  aria-hidden="true"
+                >
+                  {entry.slug === "vehicles" ? (
+                    <Image
+                      src="/taplo-demo/brookfield-golf.png"
+                      alt=""
+                      fill
+                      sizes="180px"
+                    />
+                  ) : (
+                    <>
+                      <i />
+                      <i />
+                      <i />
+                    </>
+                  )}
+                </span>
+                <span>{entry.label}</span>
               </button>
             ))}
           </div>

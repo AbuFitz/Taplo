@@ -1,51 +1,40 @@
 "use client";
 import { businessAddress } from "@/lib/domains";
-import { useState, useSyncExternalStore } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { ArrowUpRight, Layers3, Smartphone } from "lucide-react";
+import {
+  motion,
+  useReducedMotion,
+  useMotionValue,
+  useSpring,
+  useMotionTemplate,
+} from "motion/react";
 import { PagePreview } from "@/features/preview/PagePreview";
 
-const SCENES = [
-  {
-    label: "Appointments",
-    name: "Hollin Physiotherapy",
-    slug: "hollin-physio",
-    scenario: "physio",
-  },
-  {
-    label: "Stock",
-    name: "Harris Cars",
-    slug: "harris-cars",
-    scenario: "brookfield",
-  },
-  {
-    label: "Portfolios",
-    name: "Sora Fields",
-    slug: "sora-fields",
-    scenario: "sora",
-  },
-  {
-    label: "Cafés",
-    name: "No. 6 Coffee",
-    slug: "no-6-coffee",
-    scenario: "corner",
-  },
-] as const;
+import type { HeroScene } from "./hero-scene-types";
 const subscribe = (callback: () => void) => {
   const query = matchMedia("(min-width:768px)");
   query.addEventListener("change", callback);
   return () => query.removeEventListener("change", callback);
 };
-export function LiveStage() {
+export function LiveStage({ scenes }: { scenes: HeroScene[] }) {
   const [selected, select] = useState(1);
+  const stage = useRef<HTMLDivElement>(null);
+  const [revealed, reveal] = useState(false);
+  const [hovered, hover] = useState(false);
+  const x = useMotionValue(300),
+    y = useMotionValue(180);
+  const sx = useSpring(x, { stiffness: 280, damping: 30 }),
+    sy = useSpring(y, { stiffness: 280, damping: 30 });
+  const lens = useMotionTemplate`radial-gradient(230px circle at ${sx}px ${sy}px, #000 0%, #000 68%, transparent 100%)`;
   const desktop = useSyncExternalStore(
     subscribe,
     () => matchMedia("(min-width:768px)").matches,
     () => false,
   );
   const reduced = useReducedMotion();
-  const scene = SCENES[selected];
+  const scene = scenes[selected];
   return (
     <div className="business-stage hero-stage hero-live-stage">
       <div
@@ -53,7 +42,7 @@ export function LiveStage() {
         role="group"
         aria-label="Try a business design"
       >
-        {SCENES.map((s, i) => (
+        {scenes.map((s, i) => (
           <button
             key={s.slug}
             type="button"
@@ -65,6 +54,7 @@ export function LiveStage() {
         ))}
       </div>
       <motion.div
+        ref={stage}
         className="hero-composition"
         key={scene.slug}
         drag={!desktop && !reduced ? "x" : false}
@@ -73,44 +63,147 @@ export function LiveStage() {
         onDragEnd={(_, info) => {
           if (Math.abs(info.offset.x) > 35)
             select(
-              (selected + (info.offset.x < 0 ? 1 : SCENES.length - 1)) %
-                SCENES.length,
+              (selected + (info.offset.x < 0 ? 1 : scenes.length - 1)) %
+                scenes.length,
             );
         }}
         initial={reduced ? false : { y: 14 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.35 }}
-        style={{ touchAction: "pan-y" }}
+        style={{ touchAction: "pan-y", perspective: 1400 }}
+        onPointerEnter={(event) => {
+          if (desktop && event.pointerType === "mouse" && !reduced) hover(true);
+        }}
+        onPointerLeave={() => hover(false)}
+        onPointerMove={(event) => {
+          if (desktop && event.pointerType === "mouse") {
+            const box = event.currentTarget.getBoundingClientRect();
+            x.set(event.clientX - box.left);
+            y.set(event.clientY - box.top);
+          }
+        }}
       >
-        {desktop ? (
-          <div className="hero-live-browser">
+        <motion.div
+          className="hero-demo-face"
+          animate={{
+            rotateY: !desktop && revealed && !reduced ? 180 : 0,
+          }}
+          transition={{ duration: reduced ? 0 : 0.42 }}
+        >
+          {desktop ? (
+            <div className="hero-live-browser">
+              <PagePreview
+                src={`/appearance/frame?scenario=${scene.scenario}`}
+                title={`${scene.name}, desktop`}
+                mode="desktop"
+                chrome
+                url={businessAddress(scene.slug)}
+                interactive={false}
+              />
+            </div>
+          ) : null}
+          <div className="hero-live-phone">
             <PagePreview
               src={`/appearance/frame?scenario=${scene.scenario}`}
-              title={`${scene.name}, desktop`}
-              mode="desktop"
+              title={`${scene.name}, phone`}
+              mode="device"
               chrome
-              url={businessAddress(scene.slug)}
               interactive={false}
+              cropDevice
             />
           </div>
-        ) : null}
-        <div className="hero-live-phone">
-          <PagePreview
-            src={`/appearance/frame?scenario=${scene.scenario}`}
-            title={`${scene.name}, phone`}
-            mode="device"
-            chrome
-            interactive={false}
-            cropDevice
-          />
-        </div>
+        </motion.div>
+        <motion.div
+          className="hero-blueprint"
+          aria-hidden={!revealed}
+          data-testid="hero-page-blocks"
+          animate={{
+            rotateY: !desktop && !revealed && !reduced ? -180 : 0,
+          }}
+          style={{
+            visibility: revealed || (desktop && hovered) ? "visible" : "hidden",
+            maskImage: desktop && !revealed ? lens : "none",
+            pointerEvents: "none",
+          }}
+          transition={{ duration: reduced ? 0 : 0.24 }}
+        >
+          <div className="hero-blueprint-heading">
+            <Layers3 size={18} aria-hidden="true" />
+            <span>Built from blocks</span>
+            <span>{scene.name}</span>
+          </div>
+          <div className="hero-blueprint-blocks">
+            {scene.blocks.map((block, index) => (
+              <article key={`${block.kind}-${index}`} data-kind={block.kind}>
+                <div>
+                  <span className="hero-blueprint-number" aria-hidden="true">
+                    0{index + 1}
+                  </span>
+                  <h2>{block.title}</h2>
+                </div>
+                {block.entries.length ? (
+                  <ul>
+                    {block.entries.map((entry, n) => (
+                      <li key={n}>
+                        <span>{entry.title}</span>
+                        <span>{entry.detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="hero-blueprint-lines" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
+          {scene.action ? (
+            <div className="hero-blueprint-primary">
+              <span>First step</span>
+              <strong>{scene.action}</strong>
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </div>
+          ) : null}
+        </motion.div>
       </motion.div>
       <div className="hero-stage-caption">
         <p>{scene.name}</p>
-        <Link href={`/inspiration/${scene.slug}`}>
-          Explore this page
-          <ArrowUpRight aria-hidden="true" size={16} />
-        </Link>
+        <div className="hero-stage-actions">
+          <button
+            type="button"
+            aria-pressed={revealed}
+            onClick={() => {
+              reveal(!revealed);
+              const box = stage.current?.getBoundingClientRect();
+              const header =
+                document
+                  .querySelector(".site-navigation")
+                  ?.getBoundingClientRect().height ?? 80;
+              if (
+                box &&
+                (box.top < header + 12 || box.bottom > window.innerHeight - 72)
+              )
+                window.scrollBy({
+                  top: box.top - header - 12,
+                  behavior: reduced ? "instant" : "smooth",
+                });
+            }}
+          >
+            {revealed ? (
+              <Smartphone size={15} aria-hidden="true" />
+            ) : (
+              <Layers3 size={15} aria-hidden="true" />
+            )}
+            {revealed ? "See the page" : "See the blocks"}
+          </button>
+          <Link href={`/inspiration/${scene.slug}`}>
+            Explore this page
+            <ArrowUpRight aria-hidden="true" size={16} />
+          </Link>
+        </div>
       </div>
     </div>
   );

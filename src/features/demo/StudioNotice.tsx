@@ -19,7 +19,7 @@ export function StudioNotice() {
           className="size-1.5 rounded-full bg-emerald-600"
           aria-hidden="true"
         />
-        Studio<span className="hidden sm:inline">preview</span>
+        Studio<span className="hidden sm:inline"> preview</span>
       </button>
       <Overlay
         open={open}

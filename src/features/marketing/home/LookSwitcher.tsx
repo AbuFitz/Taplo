@@ -3,30 +3,32 @@ import * as React from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { MarketingPreview } from "../MarketingPreview";
+import {
+  DesignRail,
+  type DesignRailHandle,
+} from "@/features/inspiration/DesignRail";
 import { HOME_DESIGNS } from "./designs";
 /** Each choice opens the same working business that is pictured; setup carries its arrangement. */
 export function LookSwitcher() {
   const [selected, select] = React.useState(3);
   const design = HOME_DESIGNS[selected];
+  const rail = React.useRef<DesignRailHandle>(null);
   return (
-    <div
-      className="home-designs grid items-center gap-8 lg:grid-cols-2 lg:gap-20"
-      data-testid="home-designs"
-    >
-      <div>
+    <div className="home-designs" data-testid="home-designs">
+      <div className="home-design-summary">
         <fieldset className="flex flex-wrap gap-2">
           <legend className="sr-only">Choose a page design</legend>
           {HOME_DESIGNS.map((item, i) => (
             <label
               key={item.slug}
-              className="cursor-pointer rounded-full border border-black/20 px-5 py-3 text-sm font-medium has-[:checked]:bg-black has-[:checked]:text-white has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-black has-[:focus-visible]:ring-offset-4"
+              className="relative cursor-pointer rounded-full border border-black/20 px-5 py-3 text-sm font-medium has-[:checked]:bg-black has-[:checked]:text-white has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-black has-[:focus-visible]:ring-offset-4"
             >
               <input
                 type="radio"
-                className="sr-only"
+                className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                 name="home-design"
                 checked={selected === i}
-                onChange={() => select(i)}
+                onChange={() => rail.current?.goTo(i)}
               />
               {item.label}
             </label>
@@ -60,15 +62,31 @@ export function LookSwitcher() {
           All designs
         </Link>
       </div>
-      <div className="home-design-art" key={design.slug}>
-        <div className="home-design-live-phone">
-          <MarketingPreview
-            scenario={design.scenario}
-            slug={design.slug}
-            name={design.name}
-          />
-        </div>
-      </div>
+      <DesignRail
+        ref={rail}
+        label="Starting designs"
+        initialIndex={3}
+        onIndexChange={select}
+        className="home-starting-rail"
+      >
+        {HOME_DESIGNS.map((item) => (
+          <li key={item.slug}>
+            <Link
+              href={`/inspiration/${item.slug}`}
+              aria-label={`Open ${item.name} design`}
+              className="design-stage"
+            >
+              <div className="design-surface">
+                <MarketingPreview
+                  scenario={item.scenario}
+                  slug={item.slug}
+                  name={item.name}
+                />
+              </div>
+            </Link>
+          </li>
+        ))}
+      </DesignRail>
     </div>
   );
 }

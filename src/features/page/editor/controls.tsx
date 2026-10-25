@@ -193,7 +193,7 @@ export function ImageField({ presentation = "standard", framing = "logo", label,
 
   return (
     <div className={cn("grid gap-2", presentation === "identity" && "setup-identity-upload")}>
-      {presentation === "identity" ? <button type="button" disabled={busy} className="setup-avatar-control" onClick={() => value ? void openFraming() : document.getElementById(inputId)?.click()} aria-label={value ? `Edit image: ${label}` : label}>
+      {presentation === "identity" ? <button type="button" disabled={busy} className="setup-avatar-control" onClick={() => value ? void openFraming() : document.getElementById(inputId)?.click()}>
         <span className="setup-avatar-picture">{value ? <span className="setup-avatar-image" data-framing={framing} style={{borderRadius:framing === "circle"?"50%":framing === "square"?"10px":0}}><Image src={value.src} alt="" fill sizes="96px" unoptimized className={framing === "logo"?"object-contain":"object-cover"} /></span> : <ImagePlus aria-hidden="true" className="size-7" />}{value ? <span className="setup-avatar-plus"><Pencil aria-hidden="true" className="size-3" /></span> : null}</span>
         <span>{busy ? "Preparing…" : value ? "Adjust your logo" : "Add a logo or photo"}<span className="setup-upload-meta">PNG, JPG or WebP. Optional.</span></span>
       </button> : <p className="text-sm font-medium">{label}</p>}

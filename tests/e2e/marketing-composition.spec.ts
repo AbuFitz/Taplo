@@ -204,14 +204,14 @@ test("homepage design choices use distinct working businesses and send the selec
       "harris-cars": "brookfield",
       "no-6-coffee": "corner",
     }[slug];
-    await expect(designs.locator("iframe")).toHaveAttribute(
+    const frame = designs
+      .getByRole("link", { name: `Open ${name} design`, exact: true })
+      .locator("iframe");
+    await expect(frame).toHaveAttribute(
       "src",
       `/appearance/frame?scenario=${scenario}`,
     );
-    await expect(designs.locator("iframe")).toHaveAttribute(
-      "data-loaded",
-      "true",
-    );
+    await expect(frame).toHaveAttribute("data-loaded", "true");
     await expect(designs.getByText(name, { exact: true })).toBeVisible();
     await expect(
       designs.getByRole("link", { name: "Use this design", exact: true }),

@@ -141,3 +141,24 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
  .setup-flow[data-mobile-layout=preview] .setup-avatar-picture { width:66px;height:66px; }
  .setup-flow[data-mobile-layout=preview] .setup-step-body>div { gap:18px; }
 }
+/* A draggable controls surface, independent of native field scrolling. */
+.setup-sheet-grip{display:none}
+@media(max-width:1023px){
+ .setup-flow[data-mobile-layout=preview] .setup-workspace{display:block;width:calc(100% + 44px);margin-inline:-22px;position:relative}
+ .setup-flow[data-mobile-layout=preview] .setup-workspace>.setup-panel{position:absolute;z-index:2;inset:auto 0 0;height:var(--setup-drag-height,var(--setup-sheet-height));min-height:92px;max-width:none;width:100%;margin:0;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;padding:0 22px;border-radius:28px 28px 0 0;background:#ffffffed;box-shadow:0 -16px 44px -36px #0005;backdrop-filter:blur(16px);transition:height .3s cubic-bezier(.22,.75,.2,1)}
+ .setup-flow[data-mobile-layout=preview] .setup-panel[style*="--setup-drag-height"]{transition:none}
+ .setup-flow[data-mobile-layout=preview] .setup-sheet-grip{display:grid;place-items:center;height:32px;min-width:68px;justify-self:center;touch-action:none;cursor:ns-resize;outline-offset:-3px;border-radius:12px}
+ .setup-sheet-grip>span{display:block;width:34px;height:4px;border-radius:99px;background:#999}
+ .setup-sheet-grip:focus-visible{outline:2px solid #111}
+ .setup-flow[data-mobile-layout=preview] .setup-workspace>aside{position:absolute;inset:0;visibility:visible;pointer-events:auto;height:100%;padding:8px 18px 0;mask-image:none;transition:padding-bottom .3s cubic-bezier(.22,.75,.2,1)}
+ .setup-flow[data-mobile-layout=preview] .setup-canvas{max-width:min(310px,82vw);height:100%;padding:4px 6px 0}
+ .setup-flow[data-mobile-layout=preview] .setup-workspace:has(>.setup-panel[data-sheet=preview])>aside{padding-bottom:110px}
+ .setup-panel[data-sheet=preview]>.setup-step-body,.setup-panel[data-sheet=preview]>.setup-next{display:none}
+ .setup-panel[data-sheet=preview] .setup-question-heading{pointer-events:none;text-align:center;align-self:start}
+ .setup-panel[data-sheet=preview] #step-title{font-size:18px!important;margin:0!important;line-height:1.3}
+ .setup-panel[data-sheet=preview] .setup-origin{display:none}
+ .setup-flow[data-keyboard=true] .setup-workspace>.setup-panel{height:100%;border-radius:0;grid-template-rows:auto minmax(0,1fr) auto;padding-top:8px;transition:none}
+ .setup-flow[data-keyboard=true] .setup-sheet-grip{display:none}
+ .setup-flow[data-keyboard=true] .setup-workspace>aside{visibility:hidden;pointer-events:none}
+}
+@media(prefers-reduced-motion:reduce){.setup-flow .setup-panel,.setup-flow .setup-workspace>aside{transition:none!important}}

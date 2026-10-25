@@ -14,6 +14,7 @@ import { HomeBooking } from "@/features/marketing/home/HomeBooking";
 import { LookSwitcher } from "@/features/marketing/home/LookSwitcher";
 import { PlaqueScene } from "@/features/marketing/PlaqueScene";
 import { MonoField } from "@/features/marketing/MonoField";
+import { heroScenes } from "@/features/marketing/home/hero-scenes";
 import { LiveStage } from "@/features/marketing/home/LiveStage";
 import { taploCodeSvg } from "@/features/qr/taplo-code";
 
@@ -65,7 +66,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <LiveStage />
+          <LiveStage scenes={heroScenes()} />
         </section>
 
         <CoreFeatures />
