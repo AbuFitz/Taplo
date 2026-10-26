@@ -187,6 +187,8 @@ export const businessContentSchema = z.object({
     tagline: optText(160),
     logo: imageSchema.optional(),
     heroImage: imageSchema.optional(),
+    /** The subject of the cover photograph lifted from its background (transparent PNG/WebP), for the Depth Cutout arrangement. */
+    heroCutout: imageSchema.optional(),
     industryKey: text(64),
     industryLabel: text(80),
   }),

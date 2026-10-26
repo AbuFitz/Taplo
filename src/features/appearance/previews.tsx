@@ -71,6 +71,11 @@ export function HeaderTile({ layout }: { layout: StyleSpec["header"]["layout"] }
       {layout === "banner" ? <><rect x="0" y="0" width="64" height="29" fill={soft} /><rect x="5" y="24" width="54" height="32" rx="6" fill="#f4f2ee" />{body(10, 30, 42)}</> : null}
       {layout === "floating" ? <><rect x="3" y="2" width="58" height="28" rx="5" fill={soft}/><rect x="8" y="22" width="48" height="31" rx="7" fill="#fff"/>{body(14,28,36)}</> : null}
       {layout === "portrait" ? <><rect x="40" y="4" width="20" height="30" rx="10" fill={soft}/>{body(5,10,30)}<rect x="5" y="43" width="54" height="6" rx="3" fill={ink}/></> : null}
+      {layout === "melt" ? <><defs><linearGradient id="mf" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="#f4f2ee" /><stop offset="1" stopColor="#8f8a80" /></linearGradient></defs><rect x="0" y="0" width="64" height="34" fill="url(#mf)" />{body(8, 30, 30)}</> : null}
+      {layout === "cutout" ? <><text x="32" y="22" textAnchor="middle" fontSize="15" fontWeight="800" fill={soft}>NAME</text><path d="M24 40 C24 26 28 20 32 20 C36 20 40 26 40 40Z" fill={ink} /><rect x="10" y="38" width="44" height="12" rx="6" fill="#fff" stroke={soft} /></> : null}
+      {layout === "split" ? <><path d="M0 0H64V26Q32 34 0 26Z" fill="#8f8a80" /><circle cx="14" cy="30" r="7" fill={ink} stroke="#f4f2ee" strokeWidth="2" /><circle cx="48" cy="33" r="3" fill={soft} /><circle cx="56" cy="33" r="3" fill={soft} />{body(8, 40, 30)}</> : null}
+      {layout === "bento" ? <><rect x="6" y="8" width="52" height="40" rx="9" fill="#fff" stroke={soft} /><circle cx="17" cy="19" r="5" fill={ink} /><rect x="26" y="15" width="22" height="3.5" rx="1.75" fill={ink} /><rect x="26" y="22" width="14" height="5" rx="2.5" fill="#9bd5a8" /><rect x="12" y="34" width="40" height="8" rx="4" fill={ink} /></> : null}
+      {layout === "type" ? <><text x="8" y="26" fontSize="17" fontWeight="800" fill={ink}>Aa</text><text x="8" y="40" fontSize="8" fontWeight="700" fill={ink}>NAME</text><rect x="8" y="46" width="22" height="3" rx="1.5" fill={soft} /></> : null}
       {layout === "minimal" ? <><rect x="9" y="14" width="40" height="7" rx="2" fill={ink} /><rect x="9" y="26" width="30" height="2.5" rx="1.25" fill={soft} /><rect x="9" y="34" width="46" height="1" fill={soft} /></> : null}
     </svg>
   )

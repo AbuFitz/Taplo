@@ -11,16 +11,23 @@ import { PagePreview } from "@/features/preview/PagePreview"
 import { Overlay } from "@/components/taplo/overlay"
 import { ApplyDesign } from "./ApplyDesign"
 import { exampleForScenario } from "./examples"
-import { SHOWCASE } from "./showcase-set"
+import { SHOWCASE, type Arrangement } from "./showcase-set"
 import "./design-gallery.css"
 
-type Pick = { scenario: Scenario; design: Design; note: string; logo?: false }
+type Pick = { scenario: Scenario; design: Design; note: string; logo?: false; arrangement?: Arrangement }
+
+const alignFor = (a?: Arrangement): "left" | "center" => (a === "cutout" || a === "bento" ? "center" : "left")
+/** The design with this page's own arrangement and (when it has no logo) a name-only profile. */
+function poseOf(pick: Pick) {
+  const header = { ...pick.design.overrides.header, ...(pick.arrangement ? { layout: pick.arrangement, align: alignFor(pick.arrangement) } : {}), ...(pick.logo === false ? { avatarShape: "none" as const } : {}) }
+  return { ...pick.design.overrides, header }
+}
 
 /** A whole handset: bezel, island and a screen showing the real page from the top. Nothing is cropped by the card. */
 function Phone({ pick, priority }: { pick: Pick; priority?: boolean }) {
   const sc = SCENARIOS[pick.scenario]
   const real = React.useMemo(() => ({ widgets: widgetsFor(pick.scenario) }), [pick.scenario])
-  const overrides = React.useMemo(() => (pick.logo === false ? { ...pick.design.overrides, header: { ...pick.design.overrides.header, avatarShape: "none" as const } } : undefined), [pick])
+  const overrides = React.useMemo(() => poseOf(pick), [pick])
   const own = React.useMemo(() => (pick.logo === false ? { ...sc.content, identity: { ...sc.content.identity, logo: undefined } } : sc.content), [sc, pick.logo])
   return (
     <span className="dg-phone" aria-hidden="true">
@@ -44,7 +51,7 @@ export function DesignGallery() {
       if (!design) return []
       const label = SCENARIOS[i.scenario].content.identity.name
       const hay = [label, i.note, design.name, SCENARIOS[i.scenario].label, g.title].join(" ").toLowerCase()
-      return !q || hay.includes(q) ? [{ scenario: i.scenario, design, note: i.note, logo: i.logo }] : []
+      return !q || hay.includes(q) ? [{ scenario: i.scenario, design, note: i.note, logo: i.logo, arrangement: i.arrangement }] : []
     }),
   })).filter((g) => g.items.length)
   return (
@@ -81,7 +88,7 @@ function Detail({ pick, onClose }: { pick: Pick; onClose: () => void }) {
   const [device, setDevice] = React.useState<"phone" | "computer">("phone")
   const name = SCENARIOS[pick.scenario].content.identity.name
   const demo = exampleForScenario(pick.scenario)
-  const src = `/appearance/frame?scenario=${pick.scenario}&look=${pick.design.id}${pick.logo === false ? "&logo=0" : ""}`
+  const src = `/appearance/frame?scenario=${pick.scenario}&look=${pick.design.id}${pick.logo === false ? "&logo=0" : ""}${pick.arrangement ? `&arr=${pick.arrangement}` : ""}`
   return (
     <Overlay open onOpenChange={(o) => !o && onClose()} kind="detail" title={name} description={pick.note} testId="design-detail" className="dg-detail"
       footer={<div className="dg-detail-actions sf-ui">{demo ? <Link className="dg-demo" href={`/inspiration/${demo.slug}`} onClick={onClose}>Open the demo</Link> : null}<ApplyDesign design={pick.design} className="sf-btn dg-use">Use this design</ApplyDesign></div>}>

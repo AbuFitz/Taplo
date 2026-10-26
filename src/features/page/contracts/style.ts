@@ -67,8 +67,15 @@ export const backgroundSchema = z.discriminatedUnion("kind", [
 ]);
 
 /** Only these reviewed arrangements are offered for new profile choices. Older stored values remain readable. */
-export const PROFILE_CHOICES = [{id:"side",name:"Compact"},{id:"centered",name:"Centred"},{id:"banner",name:"Photo"}] as const;
-export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal", "feature", "editorial", "banner", "floating", "portrait"] as const;
+/** The five profile arrangements offered everywhere. Older arrangements still render for pages that saved them. */
+export const PROFILE_CHOICES = [
+  { id: "melt", name: "Seamless Melt", line: "Full-width photo that dissolves into the page", needs: "photo" },
+  { id: "cutout", name: "Depth Cutout", line: "Your subject stands in front of your name", needs: "photo" },
+  { id: "split", name: "Architectural Split", line: "A cover and a badge bridging the seam", needs: "photo" },
+  { id: "bento", name: "Floating Bento", line: "One lifted card with everything in reach", needs: "none" },
+  { id: "type", name: "Editorial Poster", line: "Bold type, no photo needed", needs: "none" },
+] as const;
+export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal", "feature", "editorial", "banner", "floating", "portrait", "melt", "cutout", "split", "bento", "type"] as const;
 export const headerSchema = z.object({
   layout: z.enum(HEADER_LAYOUTS),
   /** "logo" shows the picture uncropped at its own proportions (for wide wordmarks); a wide logo is never cropped to a face shape regardless. */

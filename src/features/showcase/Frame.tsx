@@ -1,5 +1,6 @@
 "use client"
 
+import { HEADER_LAYOUTS } from "@/features/page/contracts/style"
 import * as React from "react"
 import { useSearchParams } from "next/navigation"
 import { PageRenderer, buildPageViewModel } from "@/features/page/renderer"
@@ -21,7 +22,9 @@ export function Frame() {
     const base = initialConfig(sc, q.get("look") ?? undefined)
     // `o` carries a URL-encoded JSON StyleOverrides, so marketing captures and shared links can pose any configuration of the engine.
     try { const raw = q.get("o"); if (raw) return { ...base, overrides: styleOverridesSchema.parse(JSON.parse(raw)) } } catch { /* an invalid pose falls back to the plain look */ }
-    return q.get("logo") === "0" ? { ...base, overrides: { ...base.overrides, header: { ...base.overrides.header, avatarShape: "none" as const } } } : base
+    const arr = q.get("arr")
+    const header = { ...base.overrides.header, ...(arr && (HEADER_LAYOUTS as readonly string[]).includes(arr) ? { layout: arr as (typeof HEADER_LAYOUTS)[number], align: arr === "cutout" || arr === "bento" ? ("center" as const) : ("left" as const) } : {}), ...(q.get("logo") === "0" ? { avatarShape: "none" as const } : {}) }
+    return Object.keys(header).length ? { ...base, overrides: { ...base.overrides, header: { ...base.overrides.header, ...header } } } : base
   })
 
   React.useEffect(() => {

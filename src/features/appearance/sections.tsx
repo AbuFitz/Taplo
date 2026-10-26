@@ -6,7 +6,7 @@ import { matchingFinish, withFinish } from "./finishes";
 import * as React from "react";
 import { Check, Lock, RotateCcw, X } from "lucide-react";
 import { ColorField, ImageField } from "@/features/page/editor/controls";
-import { DECORATIONS, type StyleSpec } from "@/features/page/contracts/style";
+import { DECORATIONS, PROFILE_CHOICES, type StyleSpec } from "@/features/page/contracts/style";
 import { FONT_LABELS } from "@/features/page/themes/fonts";
 import { LOOK_GROUPS } from "@/features/page/themes/discovery";
 import { PALETTES } from "@/features/page/themes/looks";
@@ -420,11 +420,7 @@ export function TypeControls({ m }: M) {
 }
 
 /* ------------------------------------------------------------------ header */
-const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] = [
-  ["side", "Compact"],
-  ["centered", "Centred"],
-  ["banner", "Photo"],
-];
+const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] = PROFILE_CHOICES.map((c) => [c.id, c.name]);
 export function HeaderControls({
   m,
   identity,
@@ -448,7 +444,7 @@ export function HeaderControls({
             header: {
               ...o.header,
               layout: v,
-              align: v === "centered" ? "center" : "left",
+              align: v === "centered" || v === "cutout" || v === "bento" ? "center" : "left",
             },
           }))
         }
@@ -468,6 +464,8 @@ export function HeaderControls({
         }))}
       />
       {spec.header.layout === "poster" ||
+      spec.header.layout === "melt" ||
+      spec.header.layout === "split" ||
       spec.header.layout === "cover" ||
       spec.header.layout === "banner" ? (
         <Field

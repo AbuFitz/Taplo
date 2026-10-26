@@ -3,6 +3,8 @@ import { BookingAction } from "../widgets/client"
 import { bookingProps } from "../widgets/renderers"
 import { ProfileImage } from "./ProfileImage"
 import { ProfileMark } from "./ProfileMark"
+import { HeaderStatus } from "./HeaderStatus"
+import { initialsOf } from "@/lib/validation"
 import type { PageAction, PageViewModel } from "./view-model"
 
 const ICON = { book: CalendarCheck, call: Phone, whatsapp: MessageCircle, email: Mail } as const
@@ -36,8 +38,8 @@ function IconActions({ vm, list, label }: { vm: PageViewModel; list: PageAction[
   )
 }
 
-function Actions({ vm }: { vm: PageViewModel }) {
-  const mode = vm.style.spec.header.actions
+function Actions({ vm, only }: { vm: PageViewModel; /** Show just the main action; the other channels are placed elsewhere in the arrangement. */ only?: "primary" }) {
+  const mode = only ? "primary" : vm.style.spec.header.actions
   if (mode === "none") return null
   const actions = headerActions(vm)
 
@@ -59,7 +61,7 @@ function Actions({ vm }: { vm: PageViewModel }) {
             </a>
           )
         ) : null}
-        {rest.length ? <IconActions vm={vm} list={rest} label="More ways to reach us" /> : null}
+        {rest.length && !only ? <IconActions vm={vm} list={rest} label="More ways to reach us" /> : null}
       </div>
     )
   }
@@ -96,12 +98,86 @@ function Text({ vm }: { vm: PageViewModel }) {
   )
 }
 
+/** Without a photograph the arrangement stays designed: a drifting colour field and the business monogram, never an empty upload box. */
+function Art({ vm }: { vm: PageViewModel }) {
+  return <div className="tp-art" aria-hidden="true"><span>{initialsOf(vm.business.identity.name)}</span></div>
+}
+
+function Shoulder({ vm }: { vm: PageViewModel }) {
+  const list = headerActions(vm).filter((a) => a.kind !== "book")
+  const map = vm.business.location.directionsUrl
+  if (!list.length && !map) return null
+  return (
+    <ul className="tp-actions tp-quick tp-shoulder" aria-label="Contact">
+      {list.map((a) => { const I = ICON[a.kind]; return <li key={a.kind}><a className="tp-icon-action" href={a.href} aria-label={a.label} data-event={a.event} {...external(a.kind)}><I aria-hidden="true" className="size-5" /></a></li> })}
+      {map ? <li><a className="tp-icon-action" href={map} aria-label="Directions" target="_blank" rel="noopener noreferrer"><MapPin aria-hidden="true" className="size-5" /></a></li> : null}
+    </ul>
+  )
+}
+
+/** The five arrangements: structure only. Colour, surface and typography come from the finish. */
+function Arrangement({ vm }: { vm: PageViewModel }) {
+  const h = vm.style.spec.header
+  const id = vm.business.identity
+  const cover = id.heroImage
+  const label = `${id.name} business profile`
+  const b = vm.business
+  if (h.layout === "melt") return (
+    <header aria-label={label} className="tp-header" data-layout="melt" data-align={h.align} data-cover={cover ? "" : undefined}>
+      <div className="tp-melt-media">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : <Art vm={vm} />}</div>
+      <div className="tp-melt-body"><Avatar vm={vm} /><Text vm={vm} /><Actions vm={vm} /></div>
+    </header>
+  )
+  if (h.layout === "cutout") {
+    const subject = id.heroCutout ?? cover
+    return (
+      <header aria-label={label} className="tp-header" data-layout="cutout" data-align="center" data-cut={id.heroCutout ? "true" : subject ? "photo" : undefined}>
+        <div className="tp-cut-stage">
+          <span className="tp-cut-type" aria-hidden="true">{id.name}</span>
+          <div className="tp-cut-subject">{subject ? <ProfileImage image={subject} sizes="(min-width:900px) 32rem, 90vw" priority className="object-contain object-bottom" /> : <Art vm={vm} />}</div>
+        </div>
+        <div className="tp-cut-body"><Text vm={vm} /><Actions vm={vm} /></div>
+      </header>
+    )
+  }
+  if (h.layout === "split") return (
+    <header aria-label={label} className="tp-header" data-layout="split" data-align="left" data-cover={cover ? "" : undefined}>
+      <div className="tp-split-cover">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : <Art vm={vm} />}</div>
+      <div className="tp-split-shoulder"><div className="tp-split-badge"><Avatar vm={vm} /></div><Shoulder vm={vm} /></div>
+      <div className="tp-split-body"><Text vm={vm} /><Actions vm={vm} only="primary" /></div>
+    </header>
+  )
+  if (h.layout === "bento") return (
+    <header aria-label={label} className="tp-header" data-layout="bento" data-align="left">
+      <div className="tp-bento-card">
+        <div className="tp-bento-top"><Avatar vm={vm} /><div className="tp-bento-id"><h1 className="tp-name">{id.name}</h1>{id.tagline ? <p className="tp-bio">{id.tagline}</p> : null}</div></div>
+        <div className="tp-bento-meta">
+          <HeaderStatus hours={b.hours} tz={b.location.timezone} />
+          {b.rating ? <span className="tp-badge-rating"><b>{b.rating.value.toFixed(1)}</b> · {b.rating.count} reviews on {b.rating.source[0]!.toUpperCase() + b.rating.source.slice(1)}</span> : null}
+          {h.showLocation && vm.locationLine ? <span className="tp-badge-place"><MapPin aria-hidden="true" className="size-3.5" />{vm.locationLine}</span> : null}
+        </div>
+        <Actions vm={vm} />
+      </div>
+    </header>
+  )
+  return (
+    <header aria-label={label} className="tp-header" data-layout="type" data-align="left">
+      <div className="tp-type-art" aria-hidden="true" />
+      <p className="tp-type-kicker">{id.industryLabel}{h.showLocation && vm.locationLine ? ` · ${vm.locationLine}` : ""}</p>
+      <h1 className="tp-name tp-type-name">{id.name}</h1>
+      {id.tagline ? <p className="tp-bio tp-type-bio">{id.tagline}</p> : null}
+      <Actions vm={vm} />
+    </header>
+  )
+}
+
 /** One header component, with schema-controlled arrangements chosen by the page style rather than the industry. */
 export function PageHeader({ vm }: { vm: PageViewModel }) {
   const { spec } = vm.style
   const h = spec.header
   const cover = vm.business.identity.heroImage
 
+  if (h.layout === "melt" || h.layout === "cutout" || h.layout === "split" || h.layout === "bento" || h.layout === "type") return <Arrangement vm={vm} />
   if (h.layout === "floating") return <header aria-label={`${vm.business.identity.name} business profile`} className="tp-header" data-layout="floating" data-align={h.align} data-cover={cover ? "" : undefined}>
     {cover ? <div className="tp-floating-cover"><ProfileImage image={cover} sizes="(min-width:900px) 50vw, 100vw" priority /></div> : null}
     <div className="tp-floating-intro"><Avatar vm={vm} /><Text vm={vm} /><Actions vm={vm} /></div>
