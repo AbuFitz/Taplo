@@ -1,5 +1,5 @@
-import { Overview } from "@/features/demo/dashboard/Overview"
+import { Studio } from "@/features/demo/dashboard/Studio"
 
 export default function Page() {
-  return <Overview />
+  return <Studio />
 }
