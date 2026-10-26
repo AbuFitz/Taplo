@@ -196,3 +196,23 @@
 .tp-services-shell[data-service-layout="showcase"] .tp-service-tile-top .tp-service-name{font-size:var(--tp-t-md);overflow-wrap:normal;hyphens:auto;line-height:1.15}
 .tp-services-shell[data-service-layout="showcase"] .tp-service-description{display:none}
 .tp-services-shell[data-service-layout="showcase"] .tp-service-tile{padding:var(--tp-s-2)}
+
+/* Next available: the next three days with free time, four times each, right on the page. */
+.tp-next{display:grid;gap:var(--tp-s-3)}
+.tp-next-head{display:flex;align-items:center;gap:var(--tp-s-3)}
+.tp-next-head svg{width:20px;height:20px;color:var(--tp-accent);flex:none}
+.tp-next-head h3{margin:0;font-size:var(--tp-t-md);font-weight:700}
+.tp-next-head p{margin:0;font-size:var(--tp-t-xs);color:var(--tp-muted)}
+.tp-next-days{list-style:none;margin:0;padding:0;display:grid;gap:var(--tp-s-2)}
+.tp-next-days li{display:grid;grid-template-columns:76px minmax(0,1fr);align-items:center;gap:var(--tp-s-3)}
+.tp-next-day{font-size:var(--tp-t-sm);font-weight:650}
+.tp-next-times{display:flex;flex-wrap:wrap;gap:var(--tp-s-2)}
+.tp-next-time{min-height:38px;padding:0 var(--tp-s-3);border-radius:999px;border:1px solid var(--tp-accent-line,var(--tp-line-strong));background:var(--tp-accent-soft,transparent);color:var(--tp-foreground);font-size:var(--tp-t-sm);font-weight:650;font-variant-numeric:tabular-nums;transition:background .2s,transform .15s}
+.tp-next-time:hover{background:var(--tp-accent);color:var(--tp-accent-foreground)}
+.tp-next-time:active{transform:scale(.96)}
+.tp-next-more{justify-self:start;padding:0;font-size:var(--tp-t-sm);font-weight:650;text-decoration:underline;text-underline-offset:4px;color:var(--tp-foreground)}
+.tp-next-none{margin:0;font-size:var(--tp-t-sm);color:var(--tp-muted)}
+.tp-next-skeleton{display:grid;gap:var(--tp-s-2)}.tp-next-skeleton span{height:38px;border-radius:999px;background:var(--tp-surface-2);opacity:.6}
+.tp-next-days li{grid-template-columns:minmax(0,1fr);gap:var(--tp-s-2)}
+.tp-next-times{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.tp-next-time{padding:0;min-height:40px}

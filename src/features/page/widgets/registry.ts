@@ -72,7 +72,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
   },
   booking: {
     type: "booking", version: 1, label: "Book or enquire", description: "Booking or enquiry button.", category: "sales", icon: "CalendarCheck", multiple: true, appearance: ["button", "card"],
-    fields: [{ kind: "text", key: "label", label: "Button text (optional)", max: 60 }, { kind: "record", key: "serviceId", label: "Preselect a service (optional)", source: "services" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "button", label: "Button" }, { value: "card", label: "Card with text" }] }],
+    fields: [{ kind: "text", key: "label", label: "Button text (optional)", max: 60 }, { kind: "record", key: "serviceId", label: "Preselect a service (optional)", source: "services" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "button", label: "Button" }, { value: "card", label: "Card with text" }, { value: "times", label: "Next available times" }] }],
     status: (s, c) => {
       if (s.serviceId) {
         const selected=selectedService(c.business.services,s.serviceId)

@@ -27,18 +27,18 @@ const STEP_NUMBER: Record<string, number> = { service: 1, person: 2, time: 3, de
  * It is one stepped flow in one overlay (a full-screen sheet on phones), never nested dialogs. The words for
  * each outcome come from OUTCOME so a confirmed appointment, a pending request and an enquiry are never confused.
  */
-export function BookingFlow({ ctx, trigger, serviceId, staffId, title, open: controlledOpen, onOpenChange, onCloseAutoFocus }: { ctx: BookingContext; trigger?: React.ReactNode; serviceId?: string; staffId?: string; title?: string; open?: boolean; onOpenChange?: (o: boolean) => void; onCloseAutoFocus?: (event: Event) => void }) {
+export function BookingFlow({ ctx, trigger, serviceId, staffId, slot, title, open: controlledOpen, onOpenChange, onCloseAutoFocus }: { ctx: BookingContext; trigger?: React.ReactNode; serviceId?: string; staffId?: string; /** A time already chosen on the page (the next-available strip): the journey opens with it selected. */ slot?: { date: string; startsAt: number }; title?: string; open?: boolean; onOpenChange?: (o: boolean) => void; onCloseAutoFocus?: (event: Event) => void }) {
   const [inner, setInner] = React.useState(false)
   const open = controlledOpen ?? inner
   const setOpen = (o: boolean) => { setInner(o); onOpenChange?.(o) }
   return (
     <Overlay tone="page" kind="detail" onCloseAutoFocus={onCloseAutoFocus} open={open} onOpenChange={setOpen} trigger={trigger} title={title ?? "Book with " + ctx.businessName} testId="booking-flow">
-      <FlowBody ctx={ctx} preService={serviceId} preStaff={staffId} onClose={() => setOpen(false)} />
+      <FlowBody ctx={ctx} preService={serviceId} preStaff={staffId} preSlot={slot} onClose={() => setOpen(false)} />
     </Overlay>
   )
 }
 
-function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext; preService?: string; preStaff?: string; onClose: () => void }) {
+function FlowBody({ ctx, preService, preStaff, preSlot, onClose }: { ctx: BookingContext; preService?: string; preStaff?: string; preSlot?: { date: string; startsAt: number }; onClose: () => void }) {
   const config = useSchedulingConfig(ctx.slug, ctx.config)
   const { state, update } = useBookingState(ctx.slug)
   const tz = config.timezone
@@ -49,8 +49,8 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
   const [service, setService] = React.useState<BookableService | null>(initialService)
   const [staff, setStaff] = React.useState<string | null>(preStaff ?? null)
   const [step, setStep] = React.useState<Step>(() => !initialService ? "service" : !isOnlineBookable(initialService) ? "enquiry" : !preStaff && ctx.staff.length > 0 && eligibleStaff(ctx, initialService).length > 1 ? "person" : "time")
-  const [pick, setPick] = React.useState<{ date: string; startsAt: number } | null>(null)
-  const [date, setDate] = React.useState<string | null>(null)
+  const [pick, setPick] = React.useState<{ date: string; startsAt: number } | null>(preSlot ?? null)
+  const [date, setDate] = React.useState<string | null>(preSlot?.date ?? null)
   const [more, setMore] = React.useState(false)
   const [form, setForm] = React.useState({ name: "", email: "", phone: "", notes: "" })
   const [errors, setErrors] = React.useState<Partial<Record<"name" | "email" | "phone" | "notes", string>>>({})

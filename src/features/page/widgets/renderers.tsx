@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils"
 import type { WidgetType } from "../contracts/widgets"
 import { ProfileImage } from "../renderer/ProfileImage"
 import type { PageViewModel, RenderWidget } from "../renderer/view-model"
+import { NextAvailable } from "./NextAvailable"
 import { BookingAction, ItemDetail, PaymentAction, VideoEmbed, type BookingActionProps } from "./client"
 import { WidgetIcon } from "./WidgetIcon"
 import { buildPlanContext, priceWording, serviceActionLabel } from "@/features/booking/model"
@@ -182,6 +183,7 @@ function BookingWidget({ w, vm }: P) {
   const s = w.settings as S
   const selected = s.serviceId ? selectedService(vm.business.services,s.serviceId) : undefined
   const props = bookingProps(vm, { label: s.label || serviceActionLabel(selected,vm.onlineBooking,vm.industry.terminology.booking), preselect: s.serviceId, thumbnail: w.appearance.thumbnail ? <Thumb w={w} /> : undefined, variant: s.variant === "card" ? "card" : "button", subtitle: s.variant === "card" ? (vm.onlineBooking ? "Pick a service and a time" : "Choose how to get in touch") : undefined })
+  if (s.variant === "times" && props.booking) return <NextAvailable ctx={props.booking} serviceId={s.serviceId as string | null} title={s.label as string | undefined} />
   return <BookingAction {...props} />
 }
 
