@@ -96,7 +96,7 @@ export function DesignGallery() {
     <div className="dg">
       <header className="dg-head">
         <h1>Pages for every kind of business.</h1>
-        <p>Every page here is a real Taplo page: a profile arrangement, a material and a design chosen to fit the business. Hover one to scroll it, open one to look closer, then make it yours.</p>
+        <p>Every page here is a real Taplo page: a profile arrangement, a material and a design chosen to fit the business. Hover to scroll a page, or open one to look closer, then make it yours.</p>
       </header>
       <div className="dg-bar" role="region" aria-label="Filter designs">
         <div className="dg-search"><Search aria-hidden="true" /><input type="search" aria-label="Search pages" placeholder="Search: florist, plumber, tutor…" value={query} onChange={(e) => setQuery(e.target.value)} />{query ? <button type="button" aria-label="Clear search" onClick={() => setQuery("")}><X /></button> : null}</div>
