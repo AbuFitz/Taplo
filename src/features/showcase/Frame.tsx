@@ -21,7 +21,7 @@ export function Frame() {
     const base = initialConfig(sc, q.get("look") ?? undefined)
     // `o` carries a URL-encoded JSON StyleOverrides, so marketing captures and shared links can pose any configuration of the engine.
     try { const raw = q.get("o"); if (raw) return { ...base, overrides: styleOverridesSchema.parse(JSON.parse(raw)) } } catch { /* an invalid pose falls back to the plain look */ }
-    return base
+    return q.get("logo") === "0" ? { ...base, overrides: { ...base.overrides, header: { ...base.overrides.header, avatarShape: "none" as const } } } : base
   })
 
   React.useEffect(() => {

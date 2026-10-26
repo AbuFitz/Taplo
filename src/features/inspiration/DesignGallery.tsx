@@ -20,11 +20,12 @@ type Pick = { scenario: Scenario; design: Design; note: string; logo?: false }
 function Phone({ pick, priority }: { pick: Pick; priority?: boolean }) {
   const sc = SCENARIOS[pick.scenario]
   const real = React.useMemo(() => ({ widgets: widgetsFor(pick.scenario) }), [pick.scenario])
+  const overrides = React.useMemo(() => (pick.logo === false ? { ...pick.design.overrides, header: { ...pick.design.overrides.header, avatarShape: "none" as const } } : undefined), [pick])
   const own = React.useMemo(() => (pick.logo === false ? { ...sc.content, identity: { ...sc.content.identity, logo: undefined } } : sc.content), [sc, pick.logo])
   return (
     <span className="dg-phone" aria-hidden="true">
       <span className="dg-phone-screen">
-        <DesignThumb design={pick.design} industryKey="" own={own} real={real} height={820} key={priority ? "p" : undefined} />
+        <DesignThumb design={pick.design} industryKey="" own={own} real={real} overrides={overrides} height={820} key={priority ? "p" : undefined} />
       </span>
       <span className="dg-island" />
     </span>
