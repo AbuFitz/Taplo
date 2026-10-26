@@ -629,3 +629,15 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 .tp-bento-top:has(.tp-logo) { flex-direction: column; align-items: flex-start; }
 .tp-header[data-layout="cutout"]:not([data-cut]) .tp-cut-subject { -webkit-mask-image: radial-gradient(60% 60% at 50% 55%, #000 30%, transparent 100%); mask-image: radial-gradient(60% 60% at 50% 55%, #000 30%, transparent 100%); }
 .tp-header[data-layout="cutout"]:not([data-cut]) .tp-art { background-color: transparent; }
+
+/* ---------- material finishes: how the sections are physically made. Each one sits on any colour. ---------- */
+[data-finish="frosted"] { --tp-fill: color-mix(in srgb, #fff 65%, transparent); }
+[data-finish="frosted"][data-tone="dark"] { --tp-fill: color-mix(in srgb, #fff 7%, transparent); }
+[data-finish="frosted"] .tp-card, [data-finish="frosted"] .tp-bento-card { background: var(--tp-fill); -webkit-backdrop-filter: blur(24px) saturate(1.4); backdrop-filter: blur(24px) saturate(1.4); border: 1px solid color-mix(in srgb, #fff 16%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent), 0 22px 44px -26px rgba(0, 0, 0, 0.5); }
+[data-finish="solid"] .tp-card, [data-finish="solid"] .tp-bento-card { background: var(--tp-surface); border: 0; box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 8%, transparent), 0 0 0 1px color-mix(in srgb, var(--tp-foreground) 9%, transparent), 0 2px 4px rgba(0, 0, 0, 0.1), 0 20px 36px -20px rgba(0, 0, 0, 0.5); }
+[data-finish="flat"] .tp-card { background: none; border: 0; border-top: 1px solid var(--tp-line-strong); border-radius: 0; box-shadow: none; padding-inline: 0; -webkit-backdrop-filter: none; backdrop-filter: none; }
+[data-finish="flat"] .tp-widget { border-bottom: 0; }
+[data-finish="flat"] .tp-card h2 { font-family: var(--tp-font-heading); letter-spacing: -0.01em; }
+[data-finish="grid"] .tp-card, [data-finish="grid"] .tp-bento-card { background: color-mix(in srgb, var(--tp-surface) 92%, var(--tp-foreground)); border: 1px solid var(--tp-line-strong); border-radius: 6px; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+[data-finish="grid"] :is(.tp-price, .tp-product-price) { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+[data-finish="grid"] .tp-card h2 { text-transform: uppercase; letter-spacing: 0.08em; font-size: var(--tp-t-sm); }

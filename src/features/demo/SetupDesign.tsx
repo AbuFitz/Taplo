@@ -3,7 +3,7 @@ import * as React from "react";
 import { Palette, ArrowRight } from "lucide-react";
 import { FinishPicker } from "@/features/appearance/FinishPicker";
 import { matchingFinish, withFinish } from "@/features/appearance/finishes";
-import { SetupMobileLayouts } from "./SetupStyles";
+import { SetupMobileLayouts, SetupMaterial } from "./SetupStyles";
 import { Overlay } from "@/components/taplo/overlay";
 import { Button } from "@/components/ui/button";
 import { ColorField } from "@/features/page/editor/controls";
@@ -398,8 +398,9 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
           </div>
         }
       </Overlay>
-      <div className="col-span-full mt-4">
+      <div className="col-span-full mt-4 grid gap-5">
         <SetupMobileLayouts />
+        <SetupMaterial />
       </div>
     </div>
   );

@@ -6,6 +6,8 @@ import { matchingFinish, withFinish } from "./finishes";
 import * as React from "react";
 import { Check, Lock, RotateCcw, X } from "lucide-react";
 import { ColorField, ImageField } from "@/features/page/editor/controls";
+import { FinishControl } from "./FinishControl";
+import { applyFinish } from "@/features/page/themes/designs";
 import { DECORATIONS, PROFILE_CHOICES, type StyleSpec } from "@/features/page/contracts/style";
 import { FONT_LABELS } from "@/features/page/themes/fonts";
 import { LOOK_GROUPS } from "@/features/page/themes/discovery";
@@ -96,6 +98,10 @@ export function LookPicker({ m }: M) {
       <p className="text-xs text-neutral-600">
         {m.look.description} Everything below stays editable.
       </p>
+      <div className="grid gap-2">
+        <p className="text-sm font-semibold text-neutral-900">Material</p>
+        <FinishControl value={m.spec.layout.finish} dark={m.resolved.attrs["data-tone"] === "dark"} onChange={(f) => m.apply((o) => applyFinish(o, f, m.resolved.attrs["data-tone"] === "dark"))} />
+      </div>
       {m.saved ? <SavedLooks m={m} /> : null}
     </div>
   );

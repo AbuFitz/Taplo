@@ -362,3 +362,22 @@ export function designsFor(industryKey: string, limit = 6): Design[] {
   const extra = fit.length < 4 ? NEUTRAL.map((id) => byId.get(id)!).filter((x) => x && !fit.includes(x)) : [];
   return [...fit, ...extra].slice(0, limit);
 }
+
+export type FinishId = NonNullable<NonNullable<StyleOverrides["layout"]>["finish"]>;
+export const FINISHES: { id: FinishId; name: string; line: string }[] = [
+  { id: "frosted", name: "Frosted glass", line: "Translucent panels that catch the light" },
+  { id: "solid", name: "Elevated solid", line: "Solid cards lifted off the canvas" },
+  { id: "flat", name: "Editorial flat", line: "No boxes, just hairlines and type" },
+  { id: "grid", name: "Industrial grid", line: "Tight tiles with exposed borders" },
+];
+/** Puts a material on a page's appearance. Colour, type and the profile arrangement stay exactly as they are. */
+export function applyFinish(o: StyleOverrides, finish: FinishId, dark: boolean): StyleOverrides {
+  const cards: Partial<NonNullable<StyleOverrides["cards"]>> = {
+    frosted: { surface: "glass" as const, opacity: dark ? 8 : 65, radius: "xl" as const, border: "thin" as const, shadow: "soft" as const },
+    solid: { surface: "solid" as const, opacity: 100, radius: "lg" as const, border: "none" as const, shadow: "soft" as const },
+    flat: { surface: "transparent" as const, opacity: 0, radius: "none" as const, border: "none" as const, shadow: "none" as const },
+    grid: { surface: "solid" as const, opacity: 100, radius: "sm" as const, border: "thin" as const, shadow: "none" as const },
+  }[finish];
+  const composition = { frosted: "stack", solid: "stack", flat: "ledger", grid: "bento" }[finish] as NonNullable<NonNullable<StyleOverrides["layout"]>["composition"]>;
+  return { ...o, cards: { ...o.cards, ...cards }, layout: { ...o.layout, finish, composition }, header: { ...o.header, surface: finish === "flat" ? "open" : o.header?.surface } };
+}

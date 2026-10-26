@@ -266,6 +266,7 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}, logoAc
       "data-density": spec.layout.density,
       "data-rhythm": spec.layout.rhythm ?? "even",
       "data-composition": spec.layout.composition ?? "stack",
+      "data-finish": spec.layout.finish ?? "none",
       "data-card-surface": spec.cards.surface,
       "data-btn-fill": spec.buttons.fill,
       "data-btn-icons": spec.buttons.showIcons ? "on" : "off",

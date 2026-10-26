@@ -119,6 +119,8 @@ export const layoutSchema = z.object({
   desktop: z.enum(["centered", "split", "columns"]),
   /** How the sections relate to each other and to the profile: stacked cards, a compact two-up grid, a sheet rising over the profile, or a frameless numbered ledger. */
   composition: z.enum(["stack", "bento", "sheet", "sheet-bold", "ledger"]).optional(),
+  /** The material the sections are made of: frosted glass, elevated solid, editorial flat (hairlines) or industrial grid (tiles). */
+  finish: z.enum(["frosted", "solid", "flat", "grid"]).optional(),
 });
 
 export const MOTION_LEVELS = ["none", "subtle", "lively"] as const;
