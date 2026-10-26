@@ -19,6 +19,7 @@ export interface PreparedImage {
   bytes: number;
   ink?: "dark" | "light" | "mixed";
   accent?: string;
+  tint?: string;
 }
 
 export async function prepareImage(
@@ -55,6 +56,21 @@ export async function prepareImage(
       ctx.drawImage(bitmap, 0, 0, width, height);
       let ink: PreparedImage["ink"];
       let accent: string | undefined;
+      let tint: string | undefined;
+      {
+        // The colour of the bottom edge: what a fade into the page should dissolve into.
+        const strip = document.createElement("canvas");
+        strip.width = 16; strip.height = 16;
+        const sc = strip.getContext("2d");
+        if (sc) {
+          sc.drawImage(canvas, 0, 0, 16, 16);
+          const d = sc.getImageData(0, 12, 16, 4).data;
+          let r = 0, g = 0, b = 0, n = 0;
+          for (let i = 0; i < d.length; i += 4) { r += d[i]!; g += d[i + 1]!; b += d[i + 2]!; n++; }
+          const hex = (v: number) => Math.round(v / n).toString(16).padStart(2, "0");
+          if (n) tint = `#${hex(r)}${hex(g)}${hex(b)}`;
+        }
+      }
       if (options.preserveAlpha) {
         const sample = document.createElement("canvas");
         sample.width = 64; sample.height = 64;
@@ -70,7 +86,7 @@ export async function prepareImage(
       for (const quality of mime === "image/png" ? [undefined] : [0.82, 0.7, 0.58, 0.46]) {
         const src = canvas.toDataURL(mime, quality);
         if (src.startsWith(`data:${mime};`) && src.length <= 380_000)
-          return { src, width, height, bytes: src.length, ...(ink ? { ink } : {}), ...(accent ? { accent } : {}) };
+          return { src, width, height, bytes: src.length, ...(ink ? { ink } : {}), ...(accent ? { accent } : {}), ...(tint && !options.preserveAlpha ? { tint } : {}) };
       }
       if (edge <= 160) break;
     }

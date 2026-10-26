@@ -38,6 +38,8 @@ export const imageSchema = z.object({
   ink: z.enum(["dark", "light", "mixed", "mono"]).optional(),
   /** Sampled from an uploaded identity; absent for monochrome marks. */
   accent: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
+  /** The average colour along the bottom edge of an uploaded photograph, so a fade into the page never leaves a harsh line. */
+  tint: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
 });
 export type ImageRef = z.infer<typeof imageSchema>;
 

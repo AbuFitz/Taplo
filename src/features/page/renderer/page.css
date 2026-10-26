@@ -589,7 +589,7 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 /* Seamless Melt */
 .tp-header[data-layout="melt"] { --melt-h: min(112cqi, 520px); }
 .tp-melt-media { position: absolute; inset: 0 0 auto 0; height: var(--melt-h); z-index: 0; -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 36%, rgba(0, 0, 0, 0.6) 64%, transparent 100%); mask-image: linear-gradient(to bottom, #000 0, #000 36%, rgba(0, 0, 0, 0.6) 64%, transparent 100%); }
-.tp-melt-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 45%, color-mix(in srgb, var(--tp-accent) 14%, transparent)); mix-blend-mode: soft-light; }
+.tp-melt-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, color-mix(in srgb, var(--melt-tint, var(--tp-accent)) 38%, transparent)); }
 .tp-melt-body { position: relative; z-index: 1; display: grid; gap: 12px; margin-top: calc(var(--melt-h) - 176px); padding: 0 20px 36px; justify-items: start; }
 .tp-header[data-layout="melt"] .tp-name { font-size: clamp(34px, 12cqi, 56px); }
 [data-header="melt"] .tp-widgets { position: relative; z-index: 2; margin-top: -24px; }

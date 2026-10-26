@@ -1,3 +1,4 @@
+import type * as React from "react"
 import { ArrowUpRight, CalendarCheck, Mail, MapPin, MessageCircle, Phone } from "lucide-react"
 import { BookingAction } from "../widgets/client"
 import { bookingProps } from "../widgets/renderers"
@@ -123,7 +124,7 @@ function Arrangement({ vm }: { vm: PageViewModel }) {
   const label = `${id.name} business profile`
   const b = vm.business
   if (h.layout === "melt") return (
-    <header aria-label={label} className="tp-header" data-layout="melt" data-align={h.align} data-cover={cover ? "" : undefined}>
+    <header aria-label={label} className="tp-header" data-layout="melt" data-align={h.align} data-cover={cover ? "" : undefined} style={cover?.tint ? ({ "--melt-tint": cover.tint } as React.CSSProperties) : undefined}>
       <div className="tp-melt-media">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : <Art vm={vm} />}</div>
       <div className="tp-melt-body">{id.logo ? <Avatar vm={vm} /> : null}<Text vm={vm} /><Actions vm={vm} /></div>
     </header>

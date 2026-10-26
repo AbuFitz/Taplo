@@ -9,7 +9,7 @@ for(let i=0;i<14;i++){
   const t=(await p.locator("#step-title").first().textContent().catch(()=>""))||""
   await p.screenshot({path:`docs/screens/r10/old-${w}-${String(n++).padStart(2,"0")}.png`})
   console.log(i,t)
-  if(/look|style|design/i.test(t)) break
+  if(/look|style|design/i.test(t)) { if(process.env.ARR){ await p.getByRole("radio",{name:process.env.ARR}).first().check({force:true}).catch(e=>console.log("arr",e.message.slice(0,80))); } if(process.env.MAT){ await p.getByRole("radio",{name:process.env.MAT}).first().click().catch(e=>console.log("mat",e.message.slice(0,80))) } await p.waitForTimeout(1200); await p.screenshot({path:`docs/screens/r10/old-${w}-final.png`}); break }
   const nm=p.getByLabel(/business name/i); if(await nm.count()&&!(await nm.first().inputValue())) await nm.first().fill("Marlowe & Finch")
   const sr=p.getByPlaceholder(/search/i); if(await sr.count()){ await sr.first().fill("barber"); await p.waitForTimeout(400); await p.getByText("Barber",{exact:true}).first().click().catch(()=>{}) }
   const em=p.getByLabel(/email/i); if(await em.count()&&!(await em.first().inputValue())) await em.first().fill("hello@marlowe.example")

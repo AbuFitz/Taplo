@@ -7,7 +7,7 @@ function Swatch({ id, dark }: { id: FinishId; dark: boolean }) {
   const bg = dark ? "#16181d" : "#f1efea"
   const ink = dark ? "#fff" : "#111"
   return (
-    <svg viewBox="0 0 80 52" className="h-14 w-full" aria-hidden="true">
+    <svg viewBox="0 0 80 52" preserveAspectRatio="xMidYMid slice" className="h-16 w-full" aria-hidden="true">
       <defs><linearGradient id={`fg-${id}`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={dark ? "#5b4bb7" : "#f2b8a2"} /><stop offset="1" stopColor={dark ? "#12506b" : "#a9c4f2"} /></linearGradient></defs>
       <rect width="80" height="52" fill={id === "frosted" ? `url(#fg-${id})` : bg} />
       {id === "frosted" ? <><rect x="8" y="9" width="64" height="34" rx="9" fill="#fff" fillOpacity={dark ? 0.12 : 0.62} stroke="#fff" strokeOpacity="0.5" /><rect x="14" y="16" width="30" height="4" rx="2" fill={ink} /><rect x="14" y="25" width="44" height="3" rx="1.5" fill={ink} opacity="0.35" /></> : null}
