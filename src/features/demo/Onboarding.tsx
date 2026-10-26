@@ -229,7 +229,7 @@ export function Onboarding() {
       </nav>
 
       <div className="setup-workspace grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
-        <SetupPanel preview={previewStep} size={sheetSize} onSizeChange={setSheetSize}>
+        <SetupPanel preview={previewStep} size={sheetSize} onSizeChange={setSheetSize} compact={step === "widgets"}>
           <div className="setup-question-heading">{fromName || intent || chosenDesign ? <p className="setup-origin">{chosenDesign ? <span data-testid="from-design">Starting with {chosenDesign.name}{intent ? " · " : ""}</span> : null}{fromName ? <span data-testid="from-example">Starting from {fromName}</span> : null}{fromName && intent ? " · " : ""}{intent ? <span data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}</p> : null}
           <motion.h1 key={step} initial={reducedMotion ? false : { opacity:0, x:direction*10 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34 }} tabIndex={-1} id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? setupJourney(c.identity.industryKey).heading : parts > 1 && part > 0 ? PART_TITLE[step as "business" | "reach"] : STEP_TITLE[step]}</motion.h1></div>
 

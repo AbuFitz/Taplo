@@ -15,11 +15,14 @@ export function SetupPanel({
   preview,
   size,
   onSizeChange,
+  compact = false,
 }: {
   children: ReactNode;
   preview: boolean;
   size: SetupSheetSize;
   onSizeChange: (size: SetupSheetSize) => void;
+  /** A visual step (designs, arrangements): the page keeps the top 55% and the sheet takes 45%. */
+  compact?: boolean;
 }) {
   const panel = useRef<HTMLElement>(null);
   const gesture = useRef<{
@@ -66,7 +69,7 @@ export function SetupPanel({
       style={
         {
           "--setup-sheet-height":
-            size === "preview" ? "92px" : size === "expanded" ? "100%" : "68%",
+            size === "preview" ? "92px" : size === "expanded" ? "100%" : compact ? "45%" : "68%",
         } as CSSProperties
       }
     >
