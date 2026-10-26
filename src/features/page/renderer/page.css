@@ -531,3 +531,48 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 @media (hover: none) { .tp-made-cta { max-width: 9rem; opacity: 0.85; } }
 @keyframes tp-made-turn { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .tp-made-mark { animation: none; } .tp-made-cta { transition: none; } }
+
+/* ======================================================================================
+   Compositions: how sections relate to each other and to the profile. The same widgets and
+   the same header; only their arrangement changes, so every design stays one maintainable system.
+   ====================================================================================== */
+[data-taplo-page] { overflow-x: clip; }
+
+/* Bento: a compact two-up grid. Short sections pair side by side; everything else spans the row. */
+[data-composition="bento"] .tp-widgets { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--tp-s-3); }
+[data-composition="bento"] .tp-widget { grid-column: 1 / -1; }
+[data-composition="bento"] .tp-widget[data-span="half"] { grid-column: auto; }
+[data-composition="bento"] .tp-widget[data-span="half"] > .tp-card { height: 100%; padding: var(--tp-s-4) var(--tp-s-3); }
+[data-composition="bento"] .tp-widget[data-span="half"] .tp-card > h2 { font-size: var(--tp-t-md); margin-bottom: var(--tp-s-3); }
+[data-composition="bento"] .tp-widget[data-span="half"] { font-size: var(--tp-t-sm); }
+
+/* Sheet: the profile is a colour field and the sections rise over it as one rounded sheet. */
+[data-composition^="sheet"] { --tp-sheet-hero: linear-gradient(180deg, color-mix(in srgb, var(--tp-accent) 20%, var(--tp-background)), color-mix(in srgb, var(--tp-accent) 7%, var(--tp-background))); }
+[data-composition="sheet-bold"] { --tp-sheet-hero: var(--tp-accent); }
+[data-composition^="sheet"] .tp-frame { padding: 0 0 3.5rem; gap: 0; }
+[data-composition^="sheet"] .tp-header { position: relative; isolation: isolate; padding: 3rem 1.25rem 4.25rem; }
+[data-composition^="sheet"] .tp-header::before { content: ""; position: absolute; inset: 0 -100vmax; z-index: -1; background: var(--tp-sheet-hero); }
+[data-composition^="sheet"] .tp-header:is([data-layout="banner"], [data-layout="poster"]) { margin: 0; width: auto; padding-top: 0; padding-inline: 0; }
+[data-composition^="sheet"] .tp-widgets { position: relative; z-index: 1; margin-top: -2.25rem; padding: 1.5rem 1rem 0.5rem; border-radius: 2rem 2rem 0 0; background: var(--tp-background); box-shadow: 0 -22px 44px -30px #0000004d; }
+[data-composition^="sheet"] [data-footer], [data-composition^="sheet"] footer { padding-inline: 1rem; }
+[data-composition="sheet-bold"] .tp-header { --tp-foreground: var(--tp-accent-foreground); --tp-muted: color-mix(in srgb, var(--tp-accent-foreground) 74%, transparent); --tp-btn-bg: var(--tp-accent-foreground); --tp-btn-text: var(--tp-accent); --tp-btn-border: var(--tp-accent-foreground); --tp-btn-hover: color-mix(in srgb, var(--tp-accent-foreground) 90%, var(--tp-accent)); color: var(--tp-foreground); }
+[data-composition="sheet-bold"] .tp-header .tp-quick .tp-icon-action { background: color-mix(in srgb, var(--tp-accent-foreground) 16%, transparent); color: var(--tp-accent-foreground); }
+@media (min-width: 900px) { [data-composition^="sheet"] .tp-frame { padding-top: 0; } [data-composition^="sheet"] .tp-header { padding-top: 4rem; } }
+
+/* Ledger: no boxes. Hairlines, numbered sections and generous type, like a printed page. */
+[data-composition="ledger"] .tp-frame { row-gap: var(--tp-s-6); }
+[data-composition="ledger"] .tp-widgets { gap: 0; counter-reset: ledger; border-top: 1px solid var(--tp-line-strong); }
+[data-composition="ledger"] .tp-widget { counter-increment: ledger; padding-block: var(--tp-s-6); border-bottom: 1px solid var(--tp-line-strong); --tp-card-bg: transparent; --tp-card-border-w: 0px; --tp-card-shadow: none; --tp-card-pad: 0px; --tp-card-blur: 0px; --tp-card-filter: none; }
+[data-composition="ledger"] .tp-widget:not([data-widget="booking"], [data-widget="link"], [data-widget="call"], [data-widget="whatsapp"], [data-widget="email"], [data-widget="share"], [data-widget="announcement"])::before { content: counter(ledger, decimal-leading-zero); display: block; margin-bottom: var(--tp-s-3); font-family: var(--tp-font-body); font-size: var(--tp-t-xs); font-weight: 600; letter-spacing: 0.16em; color: var(--tp-muted); }
+[data-composition="ledger"] .tp-card { backdrop-filter: none; -webkit-backdrop-filter: none; }
+[data-composition="ledger"] .tp-card > h2 { font-size: calc(var(--tp-t-2xl) * var(--tp-heading-scale, 1)); line-height: 1.05; letter-spacing: -0.03em; margin-bottom: var(--tp-s-5); }
+[data-composition="ledger"] .tp-widget[data-bare] > .tp-card > h2 { padding-inline: 0; }
+[data-composition="ledger"] .tp-name { font-size: calc(clamp(2.6rem, 13vw, 4.4rem) * var(--tp-heading-scale, 1)); line-height: 0.96; letter-spacing: -0.035em; }
+[data-composition="ledger"] .tp-header { padding-bottom: var(--tp-s-2); }
+
+/* An open profile stands directly on the page, with no surface of its own. */
+[data-header-surface="open"] .tp-header { background: transparent; box-shadow: none; padding: var(--tp-s-3) 0 var(--tp-s-2); border-radius: 0; }
+[data-header-surface="open"] .tp-header[data-layout="poster"] { padding: 0; }
+[data-header-surface="open"] .tp-header[data-layout="banner"][data-cover] { padding: 0; }
+[data-header-surface="open"] .tp-hero-media::after, [data-header-surface="open"] .tp-header[data-layout="banner"] .tp-profile-photo::after { background: linear-gradient(to bottom, transparent calc(100% - var(--tp-fade, 52%)), var(--tp-background)); }
+[data-composition^="sheet"] .tp-header { background: transparent; box-shadow: none; border-radius: 0; }

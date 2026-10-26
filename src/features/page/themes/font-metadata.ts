@@ -11,6 +11,14 @@ export const FONT_STACKS: Record<FontKey, string> = {
   bricolage: '"Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif',
   geist: '"Geist Variable", ui-sans-serif, system-ui, sans-serif',
   spaceGrotesk: '"Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif',
+  syne: '"Syne Variable", ui-sans-serif, system-ui, sans-serif',
+  unbounded: '"Unbounded Variable", ui-sans-serif, system-ui, sans-serif',
+  dmSerif: '"DM Serif Display", Georgia, "Times New Roman", serif',
+  newsreader: '"Newsreader Variable", Georgia, "Times New Roman", serif',
+  outfit: '"Outfit Variable", ui-sans-serif, system-ui, sans-serif',
+  instrumentSans: '"Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif',
+  youngSerif: '"Young Serif", Georgia, "Times New Roman", serif',
+  bodoni: '"Bodoni Moda Variable", Georgia, "Times New Roman", serif',
 };
 
 export const FONT_LABELS: Record<FontKey, string> = {
@@ -24,4 +32,12 @@ export const FONT_LABELS: Record<FontKey, string> = {
   bricolage: "Bricolage Grotesque · expressive",
   geist: "Geist · precise, modern",
   spaceGrotesk: "Space Grotesk · technical",
+  syne: "Syne · bold, creative",
+  unbounded: "Unbounded · wide, modern",
+  dmSerif: "DM Serif Display · classic display",
+  newsreader: "Newsreader · warm editorial",
+  outfit: "Outfit · geometric, friendly",
+  instrumentSans: "Instrument Sans · crisp, contemporary",
+  youngSerif: "Young Serif · characterful",
+  bodoni: "Bodoni Moda · fashion display",
 };

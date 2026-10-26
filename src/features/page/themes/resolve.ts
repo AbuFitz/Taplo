@@ -128,7 +128,7 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}, logoAc
   // Retired profile arrangements render through the reviewed set. Stored owner
   // data stays intact, while old drafts cannot reintroduce overlapping panels.
   const layout = spec.header.layout;
-  spec.header.layout = layout === "centered" ? "centered" : ["side", "minimal", "portrait"].includes(layout) ? "side" : "banner";
+  spec.header.layout = layout === "centered" || layout === "poster" || layout === "editorial" ? layout : ["side", "minimal", "portrait"].includes(layout) ? "side" : "banner";
 
   if (spec.background.kind === "shader" && spec.background.source === "logo" && logoAccent && /^#[0-9a-fA-F]{6}$/.test(logoAccent)) {
     const b = spec.background;
@@ -261,9 +261,11 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}, logoAc
       "data-decoration": spec.decoration,
       "data-motion": bg.kind === "gradient" && bg.motion ? "drift" : "none",
       "data-header": spec.header.layout,
+      "data-header-surface": spec.header.surface ?? "card",
       "data-desktop": spec.layout.desktop,
       "data-density": spec.layout.density,
       "data-rhythm": spec.layout.rhythm ?? "even",
+      "data-composition": spec.layout.composition ?? "stack",
       "data-card-surface": spec.cards.surface,
       "data-btn-fill": spec.buttons.fill,
       "data-btn-icons": spec.buttons.showIcons ? "on" : "off",

@@ -847,7 +847,7 @@ export function SurfaceControls({ m }: M) {
 }
 
 /* ------------------------------------------------------------------ wallpaper */
-type Wall = "solid" | "gradient" | "aurora" | "silk" | "grain" | "image";
+type Wall = "solid" | "gradient" | "aurora" | "silk" | "grain" | "warp" | "orbs" | "rays" | "swirl" | "smoke" | "image";
 export function WallpaperControls({ m }: M) {
   const { spec } = m;
   const [photoPicker, setPhotoPicker] = React.useState(false);

@@ -11,5 +11,13 @@ import "@fontsource/instrument-serif/400-italic.css";
 import "@fontsource-variable/bricolage-grotesque";
 import "@fontsource-variable/geist";
 import "@fontsource-variable/space-grotesk";
+import "@fontsource-variable/syne";
+import "@fontsource-variable/unbounded";
+import "@fontsource/dm-serif-display/400.css";
+import "@fontsource-variable/newsreader";
+import "@fontsource-variable/outfit";
+import "@fontsource-variable/instrument-sans";
+import "@fontsource/young-serif/400.css";
+import "@fontsource-variable/bodoni-moda";
 
 export { FONT_STACKS, FONT_LABELS } from "./font-metadata";

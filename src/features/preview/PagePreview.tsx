@@ -54,13 +54,19 @@ export interface PagePreviewProps {
   onOverlayOpen?: () => void
   /** Show the top of a full phone viewport when the available mobile canvas is short. */
   cropDevice?: boolean
+  /** Largest scale a cropped device may be shown at (1 = natural size). Lets setup move in close on what is being edited. */
+  maxScale?: number
+  /** Animate the handset between sizes and positions. */
+  smooth?: boolean
+  /** Part of the page to bring into view inside the frame (header, actions, offer, social, top). */
+  focus?: string
 }
 
 const MIN_DESKTOP = 1024
 const MAX_DESKTOP = 1440
 const READABLE = 0.72
 
-export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, device = { w: 390, h: 844 }, zoom: "fit" | "actual" = "fit", chrome = false, cropDevice = false) {
+export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, device = { w: 390, h: 844 }, zoom: "fit" | "actual" = "fit", chrome = false, cropDevice = false, maxScale = 1) {
   if (mode === "fill") return { vw: box.w, vh: box.h, scale: 1, pad: 0, bar: 0, safeTop: 0, safeBottom: 0, outerW: box.w, outerH: box.h }
   if (mode === "device") {
     const pad = chrome ? PHONE.bezel : 0
@@ -68,7 +74,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
     const safeBottom = 0
     const outerW = device.w + pad * 2
     const outerH = device.h + pad * 2
-    const scale = zoom === "actual" ? 1 : Math.min(1, Math.max(1,box.w - (chrome ? 8 : 0)) / outerW, cropDevice ? 1 : box.h / outerH)
+    const scale = zoom === "actual" ? 1 : Math.min(cropDevice ? maxScale : 1, Math.max(1,box.w - (chrome ? 8 : 0)) / outerW, cropDevice ? maxScale : box.h / outerH)
     return { vw: device.w, vh: device.h - safeTop - safeBottom, scale, pad, bar: 0, safeTop, safeBottom, outerW, outerH }
   }
   const bar = chrome ? 38 : 0
@@ -79,7 +85,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, safeTop: 0, safeBottom: 0, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen }: PagePreviewProps) {
+export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen, maxScale = 1, smooth = false, focus }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
@@ -134,7 +140,7 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
   }, [mode, zoom, resizeKey])
 
   const decorated = chrome && mode !== "fill"
-  const L = box ? layoutPreview(mode, box, device, zoom, decorated, cropDevice) : null
+  const L = box ? layoutPreview(mode, box, device, zoom, decorated, cropDevice, maxScale) : null
   React.useEffect(() => { if (L) onViewport?.({ w: L.vw, h: L.vh, scale: L.scale }) }, [L?.vw, L?.vh, L?.scale]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const setFrame = React.useCallback((el: HTMLIFrameElement | null) => { frame.current = el; frameRef?.(el) }, [frameRef])
@@ -163,6 +169,10 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
     return () => window.removeEventListener("message", onMessage)
   }, [onSelect, post, topInset, prepareDocument, onOverlayOpen])
   React.useEffect(post, [post, L?.vw, L?.vh])
+  React.useEffect(() => {
+    if (!focus || !loaded) return
+    frame.current?.contentWindow?.postMessage({ type: "taplo:focus", target: focus }, window.location.origin)
+  }, [focus, loaded])
 
   const iframe = L ? (
     <iframe
@@ -186,9 +196,9 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
       {/* Keep one DOM path for the iframe: changing viewport must not reload a booking or discard typed details. */}
       {L ? (
         <div className={cn("absolute inset-x-0 top-0 flex justify-center", mode === "device" && zoom !== "actual" && !cropDevice && "inset-y-0 items-center", zoom === "actual" && "relative")}>
-          <div style={{ width: L.outerW * L.scale, height: L.outerH * L.scale }} className="shrink-0">
+          <div style={{ width: L.outerW * L.scale, height: L.outerH * L.scale }} className={cn("shrink-0", smooth && "preview-camera")}>
             <div
-              className={cn("relative origin-top-left", decorated ? (mode === "device" ? "phone-shell" : "browser-shell") : "")}
+              className={cn("relative origin-top-left", smooth && "preview-camera", decorated ? (mode === "device" ? "phone-shell" : "browser-shell") : "")}
               style={{ width: L.outerW, height: L.outerH, padding: L.pad, transform: L.scale === 1 ? undefined : `scale(${L.scale})` }}
             >
               {L.bar ? <BrowserChrome url={url} height={L.bar} /> : null}

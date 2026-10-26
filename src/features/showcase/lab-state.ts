@@ -6,6 +6,7 @@ import { applySectionTreatment, type SectionTreatmentId } from "@/features/page/
 import type { StyleOverrides } from "@/features/page/contracts/style"
 import { DEFAULT_THEME_ID, getTheme } from "@/features/page/themes/catalogue"
 import { SCENARIOS, type Scenario } from "./content"
+import { applyRecipe, getDesign } from "@/features/page/themes/designs"
 
 /** What the showcase edits: exactly the owner editor's appearance model (starting look + the owner's changes). */
 export interface LabConfig {
@@ -77,7 +78,10 @@ export function widgetsFor(s: Scenario) {
 }
 
 export function toPage(cfg: LabConfig): PageDoc {
-  return { schemaVersion: 2, themeId: cfg.themeId, appearance: cfg.overrides, meta: { searchVisible: false, primaryAction: "auto" }, widgets: widgetsFor(cfg.scenario), savedLooks: [], savedStyles: [] }
+  // A design brings its own way of presenting each section; the content and the set of sections stay the scenario's.
+  const design = getDesign(cfg.themeId)
+  const widgets = design ? applyRecipe(widgetsFor(cfg.scenario), design.recipe) : widgetsFor(cfg.scenario)
+  return { schemaVersion: 2, themeId: cfg.themeId, appearance: cfg.overrides, meta: { searchVisible: false, primaryAction: "auto" }, widgets, savedLooks: [], savedStyles: [] }
 }
 
 export function toContent(cfg: LabConfig): BusinessContent {

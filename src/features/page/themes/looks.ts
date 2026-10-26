@@ -1,6 +1,7 @@
 import * as radix from "@radix-ui/colors";
 import { EXPANDED_LOOKS } from "./expanded";
 import { CURATED_DESIGNS } from "./curated";
+import { DESIGNS } from "./designs";
 import type { StyleOverrides } from "../contracts/style";
 
 /**
@@ -972,6 +973,7 @@ export const LOOKS: Look[] = [
   }),
   ...EXISTING_LOOKS,
   ...EXPANDED_LOOKS,
+  ...DESIGNS.map(({ id, name, blurb, overrides }): Look => ({ id, name, blurb, overrides })),
 ].map((look): Look => {
   const design = CURATED_DESIGNS[look.id];
   if (!design) return look;

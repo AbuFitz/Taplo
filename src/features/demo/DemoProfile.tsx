@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import Link from "next/link"
 import { EditBridge } from "@/features/page/editor/EditBridge"
 import { PageRenderer, buildPageViewModel } from "@/features/page/renderer"
@@ -62,9 +62,38 @@ export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetI
         </div>
       ) : null}
       <PageRenderer vm={vm} fragment={mode !== "draft" ? undefined : headerLayout ? { kind: "header" } : widgetId ? { kind: "widget", id: widgetId } : undefined} />
+      {mode === "draft" ? <FocusBridge /> : null}
       {editing && !headerLayout && !widgetId && !lookId && !savedLookId ? <EditBridge /> : null}
     </>
   )
+}
+
+const FOCUS_TARGETS: Record<string, string> = {
+  header: ".tp-header",
+  actions: ".tp-primary-slot, .tp-actions",
+  offer: '[data-widget="serviceList"], [data-widget="priceMenu"], [data-widget="products"], [data-widget="featuredService"], [data-widget="gallery"]',
+  social: '[data-widget="social"]',
+  booking: '[data-widget="booking"], .tp-primary-slot',
+  gallery: '[data-widget="gallery"]',
+  team: '[data-widget="team"]',
+  hours: '[data-widget="hours"]',
+}
+/** Lets the setup flow ask the page to scroll a part of itself into view, smoothly, so the preview follows what is being edited. */
+function FocusBridge() {
+  useEffect(() => {
+    if (window.parent === window) return
+    const onMessage = (event: MessageEvent<{ type?: string; target?: string }>) => {
+      if (event.origin !== window.location.origin || event.data?.type !== "taplo:focus") return
+      const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      const selector = event.data.target ? FOCUS_TARGETS[event.data.target] : undefined
+      const el = selector ? document.querySelector<HTMLElement>(selector) : null
+      const top = el ? Math.max(0, el.getBoundingClientRect().top + window.scrollY - 56) : 0
+      window.scrollTo({ top, behavior: calm ? "auto" : "smooth" })
+    }
+    window.addEventListener("message", onMessage)
+    return () => window.removeEventListener("message", onMessage)
+  }, [])
+  return null
 }
 
 function Message({ title, body, action }: { title: string; body?: string; action?: React.ReactNode }) {

@@ -30,7 +30,7 @@ export const textSchema = z.object({
 });
 
 /** Optional animated wallpaper. Always has a static equivalent: reduced motion, no WebGL and print all use `colors`. */
-export const SHADER_STYLES = ["aurora", "silk", "grain"] as const;
+export const SHADER_STYLES = ["aurora", "silk", "grain", "warp", "orbs", "rays", "swirl", "smoke"] as const;
 export const backgroundShaderSchema = z.object({
   kind: z.literal("shader"),
   style: z.enum(SHADER_STYLES),
@@ -80,6 +80,8 @@ export const headerSchema = z.object({
   showLocation: z.boolean(),
   /** How far the cover or hero photograph fades into the page: tested presets, not a free slider. */
   scrim: z.enum(["soft", "medium", "strong"]).default("medium"),
+  /** "card" sits the profile on its own raised surface; "open" lets it stand directly on the page. */
+  surface: z.enum(["card", "open"]).optional(),
 });
 
 export const buttonsSchema = z.object({
@@ -108,6 +110,8 @@ export const layoutSchema = z.object({
   rhythm: z.enum(["even", "editorial", "tight"]).optional(),
   /** Phones are always a single column. */
   desktop: z.enum(["centered", "split", "columns"]),
+  /** How the sections relate to each other and to the profile: stacked cards, a compact two-up grid, a sheet rising over the profile, or a frameless numbered ledger. */
+  composition: z.enum(["stack", "bento", "sheet", "sheet-bold", "ledger"]).optional(),
 });
 
 export const MOTION_LEVELS = ["none", "subtle", "lively"] as const;
