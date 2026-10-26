@@ -25,7 +25,7 @@ for(const width of [390,1440])test(`complete setup preserves real content, appea
  await page.getByLabel('Service 1 name').fill('Cut and finish');await page.getByLabel('Service 1 price').fill('35');await page.getByLabel('Service 1 minutes').fill('45');await next(page);
  await expect(page.getByRole('heading',{level:1})).toHaveText('Your page, your style.');await page.getByRole('radiogroup',{name:'Starting theme'}).getByRole('radio',{name:'Studio',exact:true}).check();
  await page.getByRole('button',{name:/Background & colours/}).click();const style=page.getByTestId('setup-design-dialog');await style.getByRole('button',{name:'Smoke gradient',exact:true}).click();await style.getByRole('button',{name:'Done',exact:true}).click();
- await page.getByTestId('setup-profile-choices').getByRole('radio',{name:'Centred',exact:true}).check();
+ await page.getByTestId('setup-profile-choices').getByRole('radio',{name:'Floating Bento',exact:true}).check();
  await shot(page,`design-${width}.png`);await next(page);await expect(page.getByRole('heading',{level:1})).toHaveText('Room to grow.');
  await expect(page.getByRole('radio',{name:'Choose Free',exact:true})).toBeEnabled();await page.getByRole('radio',{name:'Choose Pro',exact:true}).check();await expect(page.getByRole('radio',{name:'Choose Pro',exact:true})).toBeChecked();await shot(page,`plan-${width}.png`);
  await page.reload();await expect(page.getByRole('radio',{name:'Choose Pro',exact:true})).toBeChecked();await next(page);await expect(page.getByRole('heading',{level:1})).toHaveText('Review your page');

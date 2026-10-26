@@ -14,6 +14,7 @@ import { resolveEntitlements, type Entitlements } from "@/features/subscriptions
 import { cn } from "@/lib/utils"
 import { canPublish, hasUnpublishedChanges, publish, readiness, unpublish } from "../actions"
 import { useDraft } from "../hooks"
+import { UpcomingBookings } from "./UpcomingBookings"
 import "./studio.css"
 
 const DOCK = [
@@ -86,14 +87,14 @@ export function Studio() {
           {!canPublish(s) ? <p className="studio-note">To publish: {requiredLeft.map((c) => c.label.toLowerCase()).join(", ")}.</p> : <p className="studio-note">{WHEN_UNAVAILABLE.publicPublishing}</p>}
         </div>
 
-        <div className="studio-card" data-testid="upcoming-bookings">
+        <div className="studio-card">
           <h2>Waiting for you</h2>
           <dl className="studio-stats">
             <div><dt>Upcoming</dt><dd>{upcoming}</dd></div>
             <div><dt>Need a reply</dt><dd>{awaiting}</dd></div>
             <div><dt>Enquiries</dt><dd>{enquiries}</dd></div>
           </dl>
-          <Link href="/dashboard/bookings" className="studio-link">Open the diary</Link>
+          <UpcomingBookings />
         </div>
 
         {next.length ? (
