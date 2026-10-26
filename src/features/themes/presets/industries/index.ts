@@ -1,3 +1,4 @@
+import { designsFor } from "@/features/page/themes/designs";
 import { industryPresetSchema, type IndustryPreset } from "../../contracts/industry";
 import type { WidgetType } from "@/features/page/contracts/widgets";
 
@@ -109,7 +110,7 @@ const RAW: IndustryPreset[] = [
   preset("other", "Other / describe your business", "general", "contact", [], []),
 ];
 
-export const INDUSTRY_PRESETS: IndustryPreset[] = RAW.map((p) => industryPresetSchema.parse(p));
+export const INDUSTRY_PRESETS: IndustryPreset[] = RAW.map((p) => industryPresetSchema.parse(p)).map((p) => ({ ...p, suggestedThemeId: designsFor(p.id, 1)[0]?.id ?? p.suggestedThemeId }));
 export const OTHER_INDUSTRY_ID = "other";
 
 const byId = new Map(INDUSTRY_PRESETS.map((p) => [p.id, p]));

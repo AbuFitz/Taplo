@@ -12,7 +12,7 @@ describe("read-only look previews", () => {
         themeId: "clay",
         overrides: {
           colors: { accent: "#123456" },
-          header: { avatarShape: "arch" },
+          header: { avatarShape: "square" },
         },
       },
     ];
@@ -21,7 +21,7 @@ describe("read-only look previews", () => {
     expect(preview.themeId).toBe("clay");
     expect(preview.appearance).toEqual({
       colors: { accent: "#123456" },
-      header: { avatarShape: "arch" },
+      header: { avatarShape: "square" },
       motion: "none",
     });
     preview.appearance.colors!.accent = "#abcdef";

@@ -218,3 +218,6 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 .setup-zoom button:focus-visible{outline:2px solid #111;outline-offset:1px}
 @media(max-width:1023px){.setup-zoom{display:none}}
 @media(min-width:1024px){.setup-workspace>aside{padding-bottom:84px}.setup-canvas[data-zoom=in]{border-radius:26px;overflow:hidden;box-shadow:0 1px 2px #0000001a,0 24px 60px -24px #0000004d}}
+.setup-theme-snap{display:block;border-radius:14px;overflow:hidden;box-shadow:0 8px 20px -12px #0007;pointer-events:none;background:#eee}
+.setup-theme-snap .sf-thumb{border-radius:14px}
+.setup-theme-choice input:checked~.setup-theme-snap{outline:2px solid #111;outline-offset:3px}

@@ -103,6 +103,7 @@ export const EXAMPLES = publishedExamples.sort((a,b) => {
 });
 
 const LEGACY_SLUGS: Record<string, string> = {"station-road-barbers": "jays-barbers", "parkside-valeting": "detail-dept", "brookfield-motors": "harris-cars", "corner-table-cafe": "no-6-coffee", "oakfield-home-repairs": "dans-home-repairs", "rowan-learning": "maths-with-aisha"}
+export const exampleForScenario = (scenario: Scenario) => CATALOGUE.find((e) => e.scenario === scenario)
 export const bySlug = (slug: string) => CATALOGUE.find((e) => e.slug === (LEGACY_SLUGS[slug] ?? slug))
 
 const WIDGET_NAME: Partial<Record<WidgetType, string>> = {

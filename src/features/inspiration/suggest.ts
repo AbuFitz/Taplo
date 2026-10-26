@@ -1,6 +1,6 @@
 import { getWidget } from "@/features/page/widgets/registry"
 import { bySlug } from "./examples"
-import { CURRENT_LOOKS, type Look } from "@/features/page/themes/looks"
+import { LOOKS, type Look } from "@/features/page/themes/looks"
 import { SCENARIOS } from "@/features/showcase/content"
 import { EXAMPLE_LOOK, EXAMPLE_OVERRIDES, widgetsFor } from "@/features/showcase/lab-state"
 
@@ -9,8 +9,7 @@ import { suggestedLookIds } from "@/features/themes/presets/look-suggestions"
 /** Looks in the order worth showing for a kind of business; every look stays available. */
 export function suggestedLooks(industryKey: string): Look[] {
   const g = suggestedLookIds(industryKey)
-  const first = g.map((id) => CURRENT_LOOKS.find((l) => l.id === id)!).filter(Boolean)
-  return [...first, ...CURRENT_LOOKS.filter((l) => !g.includes(l.id))]
+  return g.map((id) => LOOKS.find((l) => l.id === id)!).filter(Boolean)
 }
 
 /** What "Start from this" needs from an example: the business kind, the look and the content types, never the sample content itself. */

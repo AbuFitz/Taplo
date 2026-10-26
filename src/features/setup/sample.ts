@@ -20,7 +20,7 @@ export function sampleContent(industryKey: string, own: BusinessContentInput): B
   const name = own.identity.name.trim()
   return {
     ...base,
-    identity: { ...base.identity, ...(name ? { name } : {}), ...(own.identity.logo ? { logo: own.identity.logo } : {}), ...(own.identity.tagline ? { tagline: own.identity.tagline } : {}), ...(own.identity.heroImage ? { heroImage: own.identity.heroImage } : {}) },
+    identity: { ...base.identity, ...(name ? { name } : {}), logo: own.identity.logo, ...(own.identity.tagline ? { tagline: own.identity.tagline } : {}), ...(own.identity.heroImage ? { heroImage: own.identity.heroImage } : {}) },
   }
 }
 export { SCENARIOS }

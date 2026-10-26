@@ -12,7 +12,7 @@ import {initialConfig,toPage,toContent} from './lab-state';
 import {buildPageViewModel} from '@/features/page/renderer/view-model';
 describe('authored business and personal design collection',()=>{
  it('provides a complete selectable design and valid page for every new identity',()=>{
-  expect(CURRENT_LOOKS.length).toBe(12);expect(COLLECTION_BRIEFS.length).toBe(24);for(const look of CURRENT_LOOKS)expect(EXAMPLES.some(e=>EXAMPLE_LOOK[e.scenario]===look.id),look.id).toBe(true);
+  expect(CURRENT_LOOKS.length).toBe(12);expect(COLLECTION_BRIEFS.length).toBe(36);for(const look of CURRENT_LOOKS)expect(EXAMPLES.some(e=>EXAMPLE_LOOK[e.scenario]===look.id),look.id).toBe(true);
   for(const b of COLLECTION_BRIEFS){expect(LOOKS.some(l=>l.id===b.look),b.id).toBe(true);expect(hasIndustryPreset(COLLECTION_SCENARIOS[b.id].content.identity.industryKey),b.id).toBe(true);const cfg=initialConfig(b.id),page=pageDocSchema.parse(toPage(cfg)),content=businessContentSchema.parse(toContent(cfg));const vm=buildPageViewModel(content,page,{plan:'business'});expect(vm.notes.filter(n=>n.includes('could not be read')),b.id).toEqual([]);expect(new Set(page.widgets.map(w=>w.id)).size).toBe(page.widgets.length);expect(vm.visible.length,b.id).toBeGreaterThanOrEqual(3);}
  });
  it('ships the original marks and actual image sources used by each page',()=>{for(const b of COLLECTION_BRIEFS){const c=toContent(initialConfig(b.id));for(const image of [c.identity.logo,c.identity.heroImage,...c.gallery.map(g=>g.image),...c.products.map(p=>p.image)].filter(Boolean)){expect(existsSync(`public${image!.src}`),`${b.id}: ${image!.src}`).toBe(true)}expect(c.testimonials).toEqual([]);expect(c.reviewLinks).toEqual([]);}});

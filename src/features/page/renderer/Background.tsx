@@ -8,9 +8,12 @@ import { backgroundCss } from "../themes/resolve";
 export function Background({
   vm,
   still = false,
+  thumb = false,
 }: {
   vm: PageViewModel;
   still?: boolean;
+  /** A miniature: no WebGL, but the colour field still drifts so a design looks alive on a shelf. */
+  thumb?: boolean;
 }) {
   const { spec } = vm.style;
   const b = spec.background;
@@ -29,7 +32,7 @@ export function Background({
           <div
             className="tp-bg-gradient"
             data-animate={
-              !still &&
+              (!still || thumb) &&
               (b.kind === "gradient"
                 ? b.motion
                 : b.kind === "shader" && b.motion !== false)
@@ -38,12 +41,12 @@ export function Background({
               {
                 background: backgroundCss(spec),
                 "--tp-wallpaper-duration": `${{ slow: 22, steady: 12, expressive: 7 }[b.kind === "gradient" || b.kind === "shader" ? (b.pace ?? "steady") : "steady"]}s`,
-                ...(still ? { animation: "none" } : {}),
+                ...(still && !thumb ? { animation: "none" } : {}),
               } as CSSProperties
             }
           />
         )}
-        {b.kind === "shader" && !still ? (
+        {b.kind === "shader" && !still && !thumb ? (
           <ShaderWallpaper
             style={b.style}
             colors={b.colors}

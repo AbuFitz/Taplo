@@ -9,13 +9,19 @@ import { useDemo, initialState } from "./store";
 import { PROFILE_CHOICES } from "@/features/page/contracts/style";
 import { ImageField } from "@/features/page/editor/controls";
 import { ChoicePreview } from "@/features/preview/ChoicePreview";
+import { designsFor, applyDesign, getDesign, type Design } from "@/features/page/themes/designs";
+import { DesignThumb } from "@/features/setup/DesignThumb";
 import { resolveStyle } from "@/features/page/themes/resolve";
 export function SetupThemes({ compact = false }: { compact?: boolean }) {
   const { state, update } = useDemo();
   const s = state ?? initialState();
   const [open, setOpen] = React.useState(false);
   const looks = suggestedLooks(s.content.identity.industryKey);
-  const visible = looks.slice(0,6);
+  const key = s.content.identity.industryKey;
+  const fitted = designsFor(key, 8);
+  const current = getDesign(s.page.themeId) ?? looks.find((l) => l.id === s.page.themeId);
+  const visible: Pick<Design, "id" | "name" | "overrides" | "recipe">[] = [...new Map([...(current ? [current] : []), ...fitted, ...(fitted.length < 4 ? looks.slice(0, 4) : [])].map((l) => [l.id, l] as const)).values()]
+    .slice(0, 6).map((l) => ({ id: l.id, name: l.name, overrides: l.overrides, recipe: (l as Design).recipe ?? {} }));
   const grid = (
     <>
       <div
@@ -31,17 +37,14 @@ export function SetupThemes({ compact = false }: { compact?: boolean }) {
               aria-label={look.name}
               checked={s.page.themeId === look.id}
               onChange={() =>
-                update((st) => ({
-                  ...st,
-                  page: {
-                    ...st.page,
-                    themeId: look.id,
-                    appearance: structuredClone(look.overrides),
-                  },
-                }))
+                update((st) => {
+                  const design = getDesign(look.id);
+                  if (design) return { ...st, page: applyDesign(st.page, design) };
+                  return { ...st, page: { ...st.page, themeId: look.id, appearance: structuredClone(look.overrides) } };
+                })
               }
             />
-            <ThemeSwatch look={look} />
+            <span className="setup-theme-snap" aria-hidden="true"><DesignThumb design={look} industryKey={key} own={s.content} height={640} /></span>
             <span>{look.name}</span>
           </label>
         ))}

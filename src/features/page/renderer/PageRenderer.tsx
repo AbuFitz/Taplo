@@ -37,7 +37,7 @@ export function PageRenderer({ vm, bare = false, fragment, still = false }: { vm
   const spans = vm.style.spec.layout.composition === "bento" ? bentoSpans(visible.map((w) => w.type as string)) : null
   return (
     <ThemeRoot family="page" cssVars={vm.style.cssVars} attrs={vm.style.attrs}>
-      <Background vm={vm} still={Boolean(fragment) || still} />
+      <Background vm={vm} still={Boolean(fragment)} thumb={still} />
       <div className="tp-frame">
         {bare || fragment?.kind === "widget" ? null : <PageHeader vm={vm} />}
         {fragment?.kind === "header" ? null : <main className="tp-widgets" aria-label="Page content">

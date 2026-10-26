@@ -505,8 +505,7 @@ export function HeaderControls({
                 ["circle", "Circle"],
                 ["rounded", "Soft square"],
                 ["none", "Name only"],
-                ...(spec.header.avatarShape === "arch" ||
-                spec.header.avatarShape === "square"
+                ...(spec.header.avatarShape === "square"
                   ? [[spec.header.avatarShape, "Current style"]]
                   : []),
               ] as [StyleSpec["header"]["avatarShape"], string][]

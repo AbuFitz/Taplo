@@ -2,7 +2,7 @@
  * Product pages. Every claim here is checked against docs/messaging.md ("Supported now").
  * Capability records remain separate from the public marketing copy.
  */
-import { CURRENT_LOOKS } from "@/features/page/themes/looks"
+import { DESIGNS } from "@/features/page/themes/designs"
 import { featureNote, featureState, type FeatureId } from "@/lib/feature-status"
 export type Status = { label: string; state: "works" | "needs"; requirement?: "connection" | "plan" | "platform"; note?: string; /** When set, state and note come from the central feature-status list. */ feature?: FeatureId }
 
@@ -22,7 +22,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
     title: "Make it your own.",
     lead: "Choose a design, add your logo and adjust the colours, fonts and layout. Preview your changes as you edit.",
     status: [
-      { label: `${CURRENT_LOOKS.length} starting looks, each usable for any business`, state: "works" },
+      { label: `${DESIGNS.length} designs, each usable for any business`, state: "works" },
       { label: "Colours, fonts, header, buttons, cards, wallpaper", state: "works" },
       { label: "Changes to one section, with a reset", state: "works" },
       { label: "Contrast suggestions while you choose colours", state: "works", note: "The editor helps you spot low-contrast combinations and suggests a readable option." },

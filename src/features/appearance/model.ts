@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import type { StyleOverrides, StyleSpec } from "@/features/page/contracts/style"
-import { CURRENT_LOOKS } from "@/features/page/themes/looks"
+import { DESIGNS } from "@/features/page/themes/designs"
 import { getTheme, THEMES, type ThemeDefinition } from "@/features/page/themes/catalogue"
 import { resolveStyle, type ResolvedStyle } from "@/features/page/themes/resolve"
 import type { FontKey } from "@/features/themes/contracts/tokens"
@@ -98,7 +98,7 @@ export function useAppearanceModel(host: AppearanceHost): AppearanceModel {
     }
     const totalChanges = (["colors", "text", "header", "buttons", "cards", "layout"] as Group[]).reduce((n, g) => n + keysOf(overrides, g).length, 0) + count("background", "decoration", "motion")
     return {
-      ...host, resolved, spec: resolved.spec, look, looks: [...CURRENT_LOOKS.map(l => THEMES.find(t => t.id === l.id)!), ...(!CURRENT_LOOKS.some(l => l.id === look.id) ? [look] : [])], has, count, reset, resetGroup, patch, setBackground, setPageColour, applyLook,
+      ...host, resolved, spec: resolved.spec, look, looks: [...DESIGNS.map(l => THEMES.find(t => t.id === l.id)).filter((t): t is ThemeDefinition => Boolean(t)), ...(!DESIGNS.some(l => l.id === look.id) ? [look] : [])], has, count, reset, resetGroup, patch, setBackground, setPageColour, applyLook,
       resetAll: () => setAppearance(themeId, {}), totalChanges,
     }
   }, [host, resolved, look, overrides, themeId, apply, setAppearance, notify])

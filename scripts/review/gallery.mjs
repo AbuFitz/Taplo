@@ -5,7 +5,7 @@ for (const [w,h,t] of [[1440,900,"d"],[390,844,"m"]]) {
   p.on("pageerror",e=>console.log("ERR",e.message.slice(0,200)))
   await p.goto("http://localhost:3000/inspiration"); await p.waitForTimeout(3500)
   await p.screenshot({path:`docs/screens/r9/gallery-${t}.png`})
-  await p.getByRole("button",{name:/Noir, open this design/}).click(); await p.waitForTimeout(2500)
+  await p.getByRole("button",{name:/Marlowe.*open this page/}).click(); await p.waitForTimeout(2500)
   await p.screenshot({path:`docs/screens/r9/gallery-detail-${t}.png`})
   await p.getByRole("link",{name:/Start with the Noir/}).click().catch(()=>{}); await p.waitForTimeout(2500)
   await p.screenshot({path:`docs/screens/r9/gallery-start-${t}.png`})

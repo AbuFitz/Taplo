@@ -695,6 +695,366 @@ export const COLLECTION_BRIEFS = [
       "A focused website with a clear purpose and content you can keep up to date.",
       "A small tool for a real problem, with scope and maintenance agreed first."
     ]
+  },
+  {
+    "id": "taco",
+    "name": "Taco Lorry",
+    "slug": "taco-lorry",
+    "look": "batch",
+    "label": "Street food truck",
+    "sector": "food",
+    "key": "other",
+    "line": "Tacos off the hatch. Different pitch every night.",
+    "town": "Hackney Wick",
+    "hero": null,
+    "heroScene": "taco",
+    "gallery": "grid",
+    "bio": "A one-truck taco kitchen with a regular rota of pitches and markets. Slow-cooked fillings, fresh tortillas and a short menu.",
+    "services": [
+      "Three taco box",
+      "Loaded fries",
+      "Catering the truck"
+    ],
+    "prices": [
+      11,
+      7,
+      null
+    ],
+    "descriptions": [
+      "Pick three: pulled pork, black bean or fried halloumi.",
+      "Crisp fries with slaw, lime and the house hot sauce.",
+      "The truck at your party or event, with a menu agreed first."
+    ]
+  },
+  {
+    "id": "groom",
+    "name": "Pawfect Wash",
+    "slug": "pawfect-wash",
+    "look": "ritual",
+    "label": "Mobile dog groomer",
+    "sector": "beauty",
+    "key": "other",
+    "line": "A bath, a trim and a very good boy. We come to you.",
+    "town": "Bath",
+    "hero": null,
+    "heroScene": "groom",
+    "gallery": "grid",
+    "bio": "A calm, fear-free grooming van for dogs of every size. Everything is done on your drive, one dog at a time.",
+    "services": [
+      "Bath and brush",
+      "Full groom",
+      "Puppy first wash"
+    ],
+    "prices": [
+      35,
+      60,
+      25
+    ],
+    "descriptions": [
+      "A warm bath, blow-dry and thorough brush-out.",
+      "Bath, trim and tidy for the coat and breed.",
+      "A gentle introduction to the van, the water and the dryer."
+    ]
+  },
+  {
+    "id": "surf",
+    "name": "Driftwood Surf School",
+    "slug": "driftwood-surf",
+    "look": "stride",
+    "label": "Surf school",
+    "sector": "fitness",
+    "key": "other",
+    "line": "Your first wave, properly taught.",
+    "town": "Newquay",
+    "hero": null,
+    "heroScene": "surf",
+    "gallery": "grid",
+    "bio": "Small-group surf lessons for all ages, all kit included. Qualified coaches, honest forecasts and a hot chocolate after.",
+    "services": [
+      "Beginner group lesson",
+      "Private lesson",
+      "Kids' summer course"
+    ],
+    "prices": [
+      35,
+      65,
+      160
+    ],
+    "descriptions": [
+      "Two hours in the water, kit included, groups of six.",
+      "One to one coaching on the day's best waves.",
+      "Five mornings of fun, safety and a first green wave."
+    ]
+  },
+  {
+    "id": "books",
+    "name": "Wren & Quill Books",
+    "slug": "wren-and-quill",
+    "look": "archive",
+    "label": "Independent bookshop",
+    "sector": "makers",
+    "key": "other",
+    "line": "Good books, handpicked. Read on.",
+    "town": "Hay-on-Wye",
+    "hero": null,
+    "heroScene": "books",
+    "gallery": "masonry",
+    "bio": "A small independent bookshop with new and second-hand shelves. Staff picks, signed copies and a corner for children.",
+    "services": [
+      "Book of the month",
+      "Signed first editions",
+      "Gift wrapping"
+    ],
+    "prices": [
+      14,
+      25,
+      3
+    ],
+    "descriptions": [
+      "A staff pick, with a short note inside the cover.",
+      "Signed copies from local authors, while stock lasts.",
+      "Brown paper, string and a handwritten tag."
+    ]
+  },
+  {
+    "id": "tattoo",
+    "name": "Saint Ink Tattoo",
+    "slug": "saint-ink",
+    "look": "cursor",
+    "label": "Tattoo studio",
+    "sector": "portfolios",
+    "key": "tattoo",
+    "line": "Custom and flash. Clean lines, no rush.",
+    "town": "Leeds",
+    "hero": null,
+    "heroScene": "tattoo",
+    "gallery": "masonry",
+    "bio": "A private two-chair studio. Bold traditional and fine line work, drawn for you and agreed before the day.",
+    "services": [
+      "Flash piece",
+      "Custom design",
+      "Touch-up"
+    ],
+    "prices": [
+      80,
+      150,
+      0
+    ],
+    "descriptions": [
+      "From the current flash sheet, priced by size.",
+      "A one to one consultation, then a drawing built around your idea.",
+      "Free touch-ups within three months of healing."
+    ]
+  },
+  {
+    "id": "driving",
+    "name": "Greenway Driving School",
+    "slug": "greenway-driving",
+    "look": "tempo",
+    "label": "Driving instructor",
+    "sector": "learning",
+    "key": "driving-instructor",
+    "line": "Learn calmly. Pass first time.",
+    "town": "Reading",
+    "hero": null,
+    "heroScene": "driving",
+    "gallery": "grid",
+    "bio": "Patient, DVSA-approved tuition in a dual-control car. Pay as you go or choose a block.",
+    "services": [
+      "Single lesson",
+      "Ten-lesson block",
+      "Pass Plus"
+    ],
+    "prices": [
+      38,
+      350,
+      null
+    ],
+    "descriptions": [
+      "An hour of tuition, pick-up from home or school.",
+      "Ten lessons at a lower hourly rate, paid in advance.",
+      "Extra confidence on motorways, night and bad weather."
+    ]
+  },
+  {
+    "id": "bnb",
+    "name": "Hollybank Guest House",
+    "slug": "hollybank",
+    "look": "habitat",
+    "label": "Seaside guest house",
+    "sector": "food",
+    "key": "other",
+    "line": "Six rooms by the harbour. Breakfast included.",
+    "town": "Whitby",
+    "hero": null,
+    "heroScene": "bnb",
+    "gallery": "carousel",
+    "bio": "A family-run guest house a short walk from the harbour. Comfortable rooms, a proper breakfast and a warm welcome.",
+    "services": [
+      "Double room",
+      "Family room",
+      "Weekend break"
+    ],
+    "prices": [
+      95,
+      130,
+      260
+    ],
+    "descriptions": [
+      "A comfortable double, breakfast included.",
+      "Sleeps four, with a view of the harbour.",
+      "Two nights with a fish and chip supper."
+    ]
+  },
+  {
+    "id": "dj",
+    "name": "Velvet Hour",
+    "slug": "velvet-hour",
+    "look": "occasion",
+    "label": "Wedding and event DJ",
+    "sector": "portfolios",
+    "key": "other",
+    "line": "The room full. Your song on.",
+    "town": "Glasgow",
+    "hero": null,
+    "heroScene": "dj",
+    "gallery": "grid",
+    "bio": "A wedding and private-party DJ with a lighting rig and a love of a packed dance floor. Your must-play list, always followed.",
+    "services": [
+      "Wedding evening",
+      "Private party",
+      "Corporate night"
+    ],
+    "prices": [
+      650,
+      420,
+      null
+    ],
+    "descriptions": [
+      "Setup, sound, lighting and four hours of music.",
+      "Three hours, a smaller rig and a flexible playlist.",
+      "Music and lighting built around your event."
+    ]
+  },
+  {
+    "id": "cakes",
+    "name": "Tiny Crumb Cakes",
+    "slug": "tiny-crumb",
+    "look": "social",
+    "label": "Cake maker",
+    "sector": "makers",
+    "key": "other",
+    "line": "Small cakes for big days.",
+    "town": "Cardiff",
+    "hero": null,
+    "heroScene": "cakes",
+    "gallery": "grid",
+    "bio": "A home bakery making celebration cakes and cupcake boxes to order. Flavours kept simple, finishes kept pretty.",
+    "services": [
+      "Celebration cake",
+      "Cupcake box of 12",
+      "Cake tasting box"
+    ],
+    "prices": [
+      55,
+      28,
+      18
+    ],
+    "descriptions": [
+      "Two tiers or more, flavours and finish agreed with you.",
+      "Twelve cupcakes in your choice of flavour and colour.",
+      "Four small slices to help you choose."
+    ]
+  },
+  {
+    "id": "bike",
+    "name": "Rook & Raven Bike Works",
+    "slug": "rook-and-raven",
+    "look": "repair",
+    "label": "Bike repair workshop",
+    "sector": "trades",
+    "key": "other",
+    "line": "Fixed properly. Back on the road.",
+    "town": "Edinburgh",
+    "hero": null,
+    "heroScene": "bike",
+    "gallery": "grid",
+    "bio": "An independent workshop for everyday bikes and e-bikes. Honest quotes, fast turnarounds and a free safety check.",
+    "services": [
+      "Safety check",
+      "Full service",
+      "Puncture and tyre"
+    ],
+    "prices": [
+      0,
+      95,
+      12
+    ],
+    "descriptions": [
+      "A free look-over with notes on anything to fix.",
+      "Gears, brakes, wheels and cables adjusted and cleaned.",
+      "Fitted while you wait, tubes and tyres at cost."
+    ]
+  },
+  {
+    "id": "calm",
+    "name": "Amara Lewis Counselling",
+    "slug": "amara-lewis",
+    "look": "still",
+    "label": "Counsellor",
+    "sector": "health",
+    "key": "other",
+    "line": "A quiet hour to think things through.",
+    "town": "Manchester",
+    "hero": null,
+    "heroScene": "calm",
+    "gallery": "grid",
+    "bio": "A warm, private counselling room and online sessions for adults. Gentle pace, no judgement, and a free first call.",
+    "services": [
+      "Free first call",
+      "Counselling session",
+      "Evening session"
+    ],
+    "prices": [
+      0,
+      65,
+      75
+    ],
+    "descriptions": [
+      "A short, private conversation to see if we are a fit.",
+      "Fifty minutes, in person or online.",
+      "A later slot for people who work days."
+    ]
+  },
+  {
+    "id": "garden",
+    "name": "Fernhill Gardens",
+    "slug": "fernhill-gardens",
+    "look": "advisory",
+    "label": "Garden designer and landscaper",
+    "sector": "trades",
+    "key": "landscaper",
+    "line": "Gardens that grow into themselves.",
+    "town": "Guildford",
+    "hero": null,
+    "heroScene": "garden",
+    "gallery": "carousel",
+    "bio": "Garden design and planting for homes across Surrey. From a tidy-up to a whole new layout, built by our own small crew.",
+    "services": [
+      "Garden design visit",
+      "Seasonal tidy",
+      "Planting scheme"
+    ],
+    "prices": [
+      120,
+      85,
+      null
+    ],
+    "descriptions": [
+      "A site visit and a written plan with costs.",
+      "A day of pruning, weeding, edging and mulch.",
+      "Beds designed and planted, with an aftercare note."
+    ]
   }
 ] as const;
 export type CollectionScenario = (typeof COLLECTION_BRIEFS)[number]["id"];

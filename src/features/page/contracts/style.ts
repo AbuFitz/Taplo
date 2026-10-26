@@ -72,7 +72,7 @@ export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal",
 export const headerSchema = z.object({
   layout: z.enum(HEADER_LAYOUTS),
   /** "logo" shows the picture uncropped at its own proportions (for wide wordmarks); a wide logo is never cropped to a face shape regardless. */
-  avatarShape: z.enum(["circle", "rounded", "square", "arch", "none", "logo"]),
+  avatarShape: z.enum(["circle", "rounded", "square", "none", "logo"]).or(z.literal("arch").transform(() => "rounded" as const)),
   avatarSize: z.enum(["sm", "md", "lg"]),
   align: z.enum(["left", "center"]),
   /** How the primary contact actions appear under the name. */

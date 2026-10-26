@@ -24,7 +24,7 @@ export function DesignThumb({ design, industryKey, own, overrides, height = 560,
     measure()
     const ro = new ResizeObserver(measure)
     ro.observe(el)
-    const io = new IntersectionObserver((e) => setVisible(e.some((x) => x.isIntersecting)), { rootMargin: "160px" })
+    const io = new IntersectionObserver((e) => { if (e.some((x) => x.isIntersecting)) setVisible(true) }, { rootMargin: "240px" })
     io.observe(el)
     return () => { ro.disconnect(); io.disconnect() }
   }, [])

@@ -38,7 +38,7 @@ export const DESIGNS: Design[] = [
     moods: ["Dark", "Colourful"], motion: "Moving background", suits: ["personal-trainer", "coach", "web-designer", "designer", "founder", "massage", "event-services"], swatch: ["#07080d", "#7c8cff", "#4b2c9b"],
     overrides: {
       colors: { background: "#07080d", text: "#f4f6ff", muted: "#aab2cf", surface: "#11131f", accent: "#8c9bff", accentText: "#07080d", border: "#272c48" },
-      background: { kind: "shader", style: "aurora", colors: ["#1c2166", "#5a2fb0", "#0c7fa6", "#8a3ffc"], base: "#07080d", motion: true, pace: "slow" },
+      background: { kind: "shader", style: "aurora", colors: ["#121850", "#3a1f80", "#085470", "#4f2299"], base: "#07080d", motion: true, pace: "slow" },
       text: { headingFont: "outfit", bodyFont: "inter", size: "md", headingCase: "normal", headingWeight: "bold", align: "center" },
       header: { layout: "centered", avatarShape: "rounded", avatarSize: "lg", align: "center", actions: "primary", showLocation: true, scrim: "strong" },
       buttons: { shape: "pill", fill: "solid", shadow: "soft", showIcons: true },
@@ -112,7 +112,7 @@ export const DESIGNS: Design[] = [
     id: "bloom", name: "Bloom", blurb: "Soft pastel light that drifts behind rounded, friendly cards. Gentle, personal, polished.",
     moods: ["Light", "Soft", "Colourful"], motion: "Moving background", suits: ["nails", "lashes-brows", "beauty-therapist", "makeup", "florist", "hairdresser", "vet", "music-teacher"], swatch: ["#ffe3dc", "#e0516b", "#d9e2ff"],
     overrides: {
-      colors: { background: "#fff4ef", text: "#2d1f22", muted: "#7a6468", surface: "#ffffff", accent: "#d63f66", accentText: "#ffffff", border: "#f1d9d6" },
+      colors: { background: "#fff4ef", text: "#2d1f22", muted: "#7a6468", surface: "#ffffff", accent: "#c2335a", accentText: "#ffffff", border: "#f1d9d6" },
       background: { kind: "shader", style: "swirl", colors: ["#ffd5cc", "#ffe9bf", "#dbe3ff", "#f6d6f0"], base: "#fff4ef", motion: true, pace: "slow" },
       text: { headingFont: "outfit", bodyFont: "inter", size: "md", headingCase: "normal", headingWeight: "bold", align: "center" },
       header: { layout: "centered", avatarShape: "circle", avatarSize: "lg", align: "center", actions: "primary", showLocation: true, scrim: "medium" },
@@ -130,7 +130,7 @@ export const DESIGNS: Design[] = [
       colors: { background: "#f2e6d9", text: "#3a2418", muted: "#7b5d4a", surface: "#fbf4ec", accent: "#b4492d", accentText: "#ffffff", border: "#e2d0bd" },
       background: { kind: "solid", color: "#f2e6d9" },
       text: { headingFont: "dmSerif", bodyFont: "inter", size: "md", headingCase: "normal", headingWeight: "regular", align: "center" },
-      header: { layout: "centered", avatarShape: "arch", avatarSize: "lg", align: "center", actions: "primary", showLocation: true, scrim: "medium" },
+      header: { layout: "centered", avatarShape: "rounded", avatarSize: "lg", align: "center", actions: "primary", showLocation: true, scrim: "medium" },
       buttons: { shape: "pill", fill: "solid", shadow: "none", showIcons: false },
       cards: { surface: "soft", opacity: 100, radius: "xl", border: "none", shadow: "none", padding: "roomy" },
       layout: { width: "regular", density: "comfortable", rhythm: "editorial", desktop: "centered", composition: "stack" },
@@ -218,7 +218,7 @@ export const DESIGNS: Design[] = [
     moods: ["Dark", "Editorial"], motion: "Moving background", suits: ["solicitor", "financial-adviser", "estate-agent", "accountant", "consultant", "architect", "interiors"], swatch: ["#0d1b2d", "#c9a45c", "#24415f"],
     overrides: {
       colors: { background: "#0d1b2d", text: "#f3efe6", muted: "#a9b5c6", surface: "#14283f", accent: "#c9a45c", accentText: "#0d1b2d", border: "#26415f" },
-      background: { kind: "shader", style: "smoke", colors: ["#1b3a5c", "#24506f", "#c9a45c"], base: "#0d1b2d", motion: true, pace: "slow" },
+      background: { kind: "shader", style: "smoke", colors: ["#1b3a5c", "#24506f", "#5a4a2a"], base: "#0d1b2d", motion: true, pace: "slow" },
       text: { headingFont: "fraunces", bodyFont: "inter", size: "md", headingCase: "normal", headingWeight: "regular", align: "center" },
       header: { layout: "centered", avatarShape: "logo", avatarSize: "md", align: "center", actions: "primary", showLocation: true, scrim: "strong" },
       buttons: { shape: "rounded", fill: "solid", shadow: "none", showIcons: false },
@@ -232,7 +232,7 @@ export const DESIGNS: Design[] = [
     id: "candy", name: "Candy", blurb: "Playful and punchy: chunky outlines, hard shadows, bright colour and lots of personality.",
     moods: ["Colourful", "Playful", "Bold", "Light"], motion: "Still", suits: ["tutor", "music-teacher", "vet", "event-services", "language-teacher", "hairdresser", "maker"], swatch: ["#fff2cc", "#ff4f8b", "#2a1b4d"],
     overrides: {
-      colors: { background: "#fff3d1", text: "#2a1b4d", muted: "#6b5a8e", surface: "#ffffff", accent: "#ff4f8b", accentText: "#ffffff", border: "#2a1b4d" },
+      colors: { background: "#fff3d1", text: "#2a1b4d", muted: "#6b5a8e", surface: "#ffffff", accent: "#ff4f8b", accentText: "#2a1b4d", border: "#2a1b4d" },
       background: { kind: "solid", color: "#fff3d1" },
       text: { headingFont: "bricolage", bodyFont: "outfit", size: "md", headingCase: "normal", headingWeight: "bold", align: "left" },
       header: { layout: "side", avatarShape: "circle", avatarSize: "lg", align: "left", actions: "primary", showLocation: true, scrim: "medium" },
@@ -262,7 +262,7 @@ export const DESIGNS: Design[] = [
     id: "sunrise", name: "Sunrise", blurb: "A warm gradient morning with a friendly rounded serif. Optimistic, human and easy to love.",
     moods: ["Colourful", "Soft", "Light"], motion: "Moving background", suits: ["coach", "tutor", "hospitality", "personal-trainer", "event-services", "massage", "founder"], swatch: ["#ffd9b8", "#d4572b", "#c9b6f5"],
     overrides: {
-      colors: { background: "#fff1e4", text: "#34231a", muted: "#7d6252", surface: "#fffaf5", accent: "#d4572b", accentText: "#ffffff", border: "#f0d5c0" },
+      colors: { background: "#fff1e4", text: "#34231a", muted: "#7d6252", surface: "#fffaf5", accent: "#bf4620", accentText: "#ffffff", border: "#f0d5c0" },
       background: { kind: "gradient", from: "#ffe3c9", to: "#e5d4fb", angle: 160, motion: true, pace: "slow" },
       text: { headingFont: "youngSerif", bodyFont: "inter", size: "md", headingCase: "normal", headingWeight: "regular", align: "left" },
       header: { layout: "side", avatarShape: "circle", avatarSize: "lg", align: "left", actions: "primary", showLocation: true, scrim: "medium" , surface: "open" },
@@ -331,4 +331,34 @@ export function describeChange(design: Design): string[] {
   out.push(`Layout: ${({ stack: "sections on cards", bento: "a compact grid", sheet: "a sheet over a colour field", "sheet-bold": "a sheet over a bold colour field", ledger: "open numbered sections" } as Record<string, string>)[comp]}`);
   if (design.motion === "Moving background") out.push("Background: slow, moving colour");
   return out;
+}
+
+/** Industries a design also suits beyond the first list, so every kind of business has several designs that belong to it. */
+const ALSO_SUITS: Record<string, string[]> = {
+  garage: ["barber", "tattoo", "locksmith", "pest-control", "plumber", "electrician"],
+  monochrome: ["barber", "tattoo", "designer", "photographer"],
+  terra: ["barber", "tattoo", "driving-instructor"],
+  quartz: ["plumber", "electrician", "builder", "cleaner", "handyman", "locksmith", "pest-control", "dentist", "driving-instructor", "car-dealer", "coach"],
+  marine: ["car-dealer", "plumber", "electrician", "builder", "surf"],
+  glasshouse: ["dentist", "cleaner", "vet", "hairdresser", "lashes-brows", "nails", "makeup", "florist"],
+  sunrise: ["driving-instructor", "physio", "dentist", "language-teacher", "music-teacher", "florist"],
+  bento: ["dentist", "language-teacher", "driving-instructor", "barber", "lashes-brows", "makeup", "web-designer", "founder"],
+  volt: ["sports-coach", "barber", "tattoo", "car-dealer", "detailer"],
+  bloom: ["event-services", "language-teacher", "massage"],
+  candy: ["hospitality", "florist", "founder", "illustrator"],
+  paper: ["estate-agent", "language-teacher", "coach", "dentist", "interiors", "illustrator", "maker"],
+  sheet: ["pest-control", "locksmith", "mechanic", "event-services", "web-designer"],
+  maison: ["estate-agent", "illustrator", "nails", "lashes-brows"],
+  noir: ["hairdresser", "massage", "event-services"],
+  borealis: ["filmmaker", "music-teacher", "tattoo"],
+};
+const PRIMARY = new Map(DESIGNS.map((x) => [x.id, new Set(x.suits)]));
+for (const x of DESIGNS) x.suits = [...new Set([...x.suits, ...(ALSO_SUITS[x.id] ?? [])])];
+
+const NEUTRAL = ["quartz", "paper", "monochrome", "glasshouse"];
+/** The designs that belong to a kind of business, best first. Never a design made for something else. */
+export function designsFor(industryKey: string, limit = 6): Design[] {
+  const fit = DESIGNS.filter((x) => x.suits.includes(industryKey)).sort((a, b) => Number(PRIMARY.get(b.id)!.has(industryKey)) - Number(PRIMARY.get(a.id)!.has(industryKey)));
+  const extra = fit.length < 4 ? NEUTRAL.map((id) => byId.get(id)!).filter((x) => x && !fit.includes(x)) : [];
+  return [...fit, ...extra].slice(0, limit);
 }

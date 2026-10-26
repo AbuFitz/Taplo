@@ -1,7 +1,11 @@
 import { createHash } from "node:crypto"
 import { existsSync, readFileSync, writeFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
-import { LOOKS } from "./themes/looks"
+import { LOOKS as ALL_LOOKS } from "./themes/looks"
+import { getDesign } from "./themes/designs"
+
+// Designs are drawn live from the renderer; only the older looks keep a rendered picture.
+const LOOKS = ALL_LOOKS.filter((l) => !getDesign(l.id))
 
 /** The look chooser shows pictures of each look. If a look changes, its picture must be regenerated (scripts/marketing/look-thumbs.mjs). */
 const MANIFEST = "public/looks/manifest.json"

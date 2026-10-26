@@ -1,13 +1,11 @@
 import { chromium } from "@playwright/test"
-const b = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome" })
-const out = "/home/user/taplo/docs/screens/r3-before/"
-for (const [n,u,w,h] of [["home-full-1440","/",1440,900],["home-full-390","/",390,844],["gallery-full-1440","/inspiration",1440,900],["product-full-1440","/product",1440,900],["pricing-full-1440","/pricing",1440,900]]) {
-  const c = await b.newContext({ viewport:{width:w,height:h}, reducedMotion:"reduce" }); const p = await c.newPage()
-  await p.goto("http://localhost:3100"+u,{waitUntil:"load"}); await p.waitForTimeout(1500)
-  // force reveal elements visible
-  await p.evaluate(async()=>{ for(let y=0;y<document.body.scrollHeight;y+=600){window.scrollTo(0,y);await new Promise(r=>setTimeout(r,120))} window.scrollTo(0,0)})
-  await p.waitForTimeout(500)
-  await p.screenshot({path:out+n+".png",fullPage:true}); console.log(n)
-  await c.close()
-}
-await b.close()
+const [url,out,w=1440,h=900]=process.argv.slice(2)
+const b=await chromium.launch({executablePath:"/opt/pw-browsers/chromium-1194/chrome-linux/chrome"})
+const p=await (await b.newContext({viewport:{width:+w,height:+h},reducedMotion:"reduce"})).newPage()
+p.on("console",m=>{if(m.type()==="error"||m.type()==="warning")console.log(m.type(),m.text().slice(0,300))})
+p.on("pageerror",e=>console.log("ERR",e.message.slice(0,300)))
+await p.goto(url);await p.waitForTimeout(2500)
+const H=await p.evaluate(()=>document.documentElement.scrollHeight)
+for(let y=0;y<H;y+=700){await p.evaluate(y=>scrollTo(0,y),y);await p.waitForTimeout(250)}
+await p.evaluate(()=>scrollTo(0,0));await p.waitForTimeout(800)
+await p.screenshot({path:out,fullPage:true});await b.close()

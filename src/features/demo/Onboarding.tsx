@@ -28,6 +28,7 @@ import { newWidget } from "@/features/page/starter"
 import { ImageField } from "@/features/page/editor/controls"
 import { getWidget } from "@/features/page/widgets/registry"
 import { buildPageViewModel } from "@/features/page/renderer"
+import { applyDesign, getDesign } from "@/features/page/themes/designs"
 import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures"
 import { OTHER_INDUSTRY_ID, getIndustryPreset, searchIndustries } from "@/features/themes/presets/industries"
 import { cn } from "@/lib/utils"
@@ -184,6 +185,15 @@ export function Onboarding() {
     })
   }, [ready, from]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // A design chosen in the gallery: setup begins with it on the page, and the preview shows it from the first step.
+  const [chosenDesign] = React.useState(() => { const id = params.get("design"); return id ? getDesign(id) ?? null : null })
+  React.useEffect(() => {
+    const d = chosenDesign
+    if (!ready || !d) return
+    window.history.replaceState(null, "", window.location.pathname)
+    update((x) => ({ ...x, page: applyDesign(x.page, d) }))
+  }, [ready, chosenDesign]) // eslint-disable-line react-hooks/exhaustive-deps
+
   if (!ready) return <SetupLoading />
 
   const c = s.content
@@ -220,7 +230,7 @@ export function Onboarding() {
 
       <div className="setup-workspace grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
         <SetupPanel preview={previewStep} size={sheetSize} onSizeChange={setSheetSize}>
-          <div className="setup-question-heading">{fromName || intent ? <p className="setup-origin">{fromName ? <span data-testid="from-example">Starting from {fromName}</span> : null}{fromName && intent ? " · " : ""}{intent ? <span data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}</p> : null}
+          <div className="setup-question-heading">{fromName || intent || chosenDesign ? <p className="setup-origin">{chosenDesign ? <span data-testid="from-design">Starting with {chosenDesign.name}{intent ? " · " : ""}</span> : null}{fromName ? <span data-testid="from-example">Starting from {fromName}</span> : null}{fromName && intent ? " · " : ""}{intent ? <span data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}</p> : null}
           <motion.h1 key={step} initial={reducedMotion ? false : { opacity:0, x:direction*10 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34 }} tabIndex={-1} id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? setupJourney(c.identity.industryKey).heading : parts > 1 && part > 0 ? PART_TITLE[step as "business" | "reach"] : STEP_TITLE[step]}</motion.h1></div>
 
           <motion.div id="setup-controls" inert={mobileSetup && sheetSize === "preview"} className="setup-step-body" key={step} initial={reducedMotion ? false : { opacity:0, x:direction*16 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34, opacity:{duration:.16} }}>

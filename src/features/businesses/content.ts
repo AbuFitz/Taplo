@@ -35,7 +35,7 @@ export const imageSchema = z.object({
   /** Keep illustrations and cutouts whole when a photograph-style crop is unsuitable. */
   fit: z.enum(["cover", "contain"]).optional(),
   /** Derived only for transparent identity uploads; supplies a contrasting backing without changing the pixels. */
-  ink: z.enum(["dark", "light", "mixed"]).optional(),
+  ink: z.enum(["dark", "light", "mixed", "mono"]).optional(),
   /** Sampled from an uploaded identity; absent for monochrome marks. */
   accent: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
 });
