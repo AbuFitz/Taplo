@@ -20,6 +20,7 @@ for (const width of [390, 1440]) test(`visual setup keeps each decision separate
   await next()
   await page.getByRole('button',{name:'Booking requests',exact:true}).click()
   await expect(page.getByRole('heading', { name: 'How should people reach you?' })).toBeVisible()
+  await openDetails(page)
   await expect(page.getByTestId('reach').getByRole('textbox')).toHaveCount(3)
   await openDetails(page);await page.getByLabel('Email', { exact: true }).fill('studio@example.com')
   await next()

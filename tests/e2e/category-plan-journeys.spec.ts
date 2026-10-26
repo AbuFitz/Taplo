@@ -25,7 +25,7 @@ for (const width of [390,1440]) test(`every category reaches its own first conte
 for (const width of [320,390,1440]) test(`plan illustrations are optional, accessible and preserve every preference at ${width}`,async({page})=>{
  await page.setViewportSize({width,height:900});await page.goto('/onboarding?from=hollin-physio');await page.getByLabel('Business name',{exact:true}).fill('North Clinic');
  // Reach the plan through the real setup; existing website remains optional.
- for(let i=0;i<2;i++)await page.getByRole('button',{name:'Continue',exact:true}).click();
+ await cont(page);await cont(page);
  await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await page.getByRole('button',{name:'Continue',exact:true}).click();await page.getByRole('button',{name:'Skip for now',exact:true}).click();await page.getByRole('button',{name:'Continue',exact:true}).click();
  for(const plan of PLAN_IDS){
   await page.getByRole('radio',{name:`Choose ${plan==='free'?'Free':plan==='core'?'Core':plan==='pro'?'Pro':'Business'}`,exact:true}).check();

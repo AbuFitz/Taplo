@@ -11,7 +11,7 @@ const Field = React.lazy(async () => {
   const { MeshGradient } = await import("@paper-design/shaders-react");
   return {
     default: ({ moving, light }: { moving: boolean; light: boolean }) => (
-      <MeshGradient width="100%" height="100%" colors={light ? ["#ffffff", "#d4d4d4", "#9a9a9a", "#f0f0f0"] : ["#050505", "#f5f5f5", "#777777", "#161616"]} distortion={light ? 0.75 : 0.65} swirl={light ? 0.3 : 0.18} grainMixer={0.08} grainOverlay={0.05} speed={moving ? 0.12 : 0} minPixelRatio={1} maxPixelCount={light ? 420000 : 650000} />
+      <MeshGradient width="100%" height="100%" colors={light ? ["#ffffff", "#d4d4d4", "#9a9a9a", "#f0f0f0"] : ["#050505", "#f5f5f5", "#777777", "#161616"]} distortion={light ? 0.75 : 0.65} swirl={light ? 0.3 : 0.18} grainMixer={0.08} grainOverlay={0.05} speed={moving ? 0.12 : 0} minPixelRatio={1} maxPixelCount={light ? 220000 : 380000} />
     ),
   };
 });

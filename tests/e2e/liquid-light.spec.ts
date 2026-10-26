@@ -1,4 +1,5 @@
 import {test,expect} from "@playwright/test";
+import { cont } from "./helpers";
 
 for(const width of [390,1440]) test(`the setup backdrop is one soft gradient field that stops for reduced motion at ${width}`,async({page})=>{
  await page.setViewportSize({width,height:900});await page.emulateMedia({reducedMotion:"no-preference"});
@@ -26,7 +27,7 @@ test("setup remains usable when WebGL is unavailable",async({page})=>{
  await page.setViewportSize({width:390,height:844});await page.goto("/onboarding");
  await page.getByLabel("Business name",{exact:true}).fill("North Street Studio");
  await expect(page.locator(".setup-backdrop canvas")).toHaveCount(0);
- await page.getByRole("button",{name:"Continue",exact:true}).click();
+ await cont(page);
  await expect(page.getByRole("heading",{level:1})).toHaveText("What do you do?");
  await expect(page.getByRole("button",{name:"Continue",exact:true})).toBeInViewport();
 });

@@ -51,7 +51,7 @@ test('website-only setup is valid, unsafe links and invalid contact drafts stay 
 
 test('a short keyboard viewport scrolls fields without a scrollbar or moving the action',async({page})=>{
  await page.setViewportSize({width:390,height:900});await page.goto('/onboarding');await page.getByLabel('Business name',{exact:true}).fill('Corner Studio');await page.setViewportSize({width:390,height:480});await expect(page.locator('.setup-flow')).toHaveAttribute('data-keyboard','true');
- const body=page.locator('.setup-step-body');await expect(body).toHaveCSS('scrollbar-width','none');await page.getByLabel('Short description (optional)').fill('Independent studio.');await expect(page.getByRole('button',{name:'Continue',exact:true})).toBeInViewport();expect(await page.evaluate(()=>scrollY)).toBe(0);
+ const body=page.locator('.setup-step-body');await expect(body).toHaveCSS('scrollbar-width','none');await page.getByRole('button',{name:'Continue',exact:true}).click();await page.getByLabel('Short description (optional)').fill('Independent studio.');await expect(page.getByRole('button',{name:'Continue',exact:true})).toBeInViewport();expect(await page.evaluate(()=>scrollY)).toBe(0);
 });
 
 test('message and call choices remain selected before details exist and reject mismatched channels',async({page})=>{
