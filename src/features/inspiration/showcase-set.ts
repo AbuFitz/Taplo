@@ -10,12 +10,12 @@ export interface ShowcaseGroup { id: string; title: string; line: string; items:
 
 export const SHOWCASE: ShowcaseGroup[] = [
   { id: "book", title: "Book a chair, a table or a slot", line: "Appointments first. The booking button leads and the prices sit right behind it.", items: [
-    { scenario: "barber", design: "noir", note: "Barbers. Black, brass and a full-width photograph.", arrangement: "melt" },
+    { scenario: "barber", design: "noir", note: "Barbers. Black, brass and a full-width photograph.", arrangement: "cutout" },
     { scenario: "lune", design: "bloom", note: "Nail artist. Soft pastel light behind rounded cards.", arrangement: "melt" },
     { scenario: "physio", design: "glasshouse", note: "Physiotherapy clinic. Light, airy and calm.", arrangement: "split" },
     { scenario: "liv", design: "sunrise", note: "Pilates teacher. A warm gradient morning.", arrangement: "melt" },
     { scenario: "slow", design: "terra", note: "Yoga teacher. Clay, sand and a characterful serif.", arrangement: "melt" },
-    { scenario: "station", design: "garage", note: "Neighbourhood barber. Tough, fast and local.", logo: false, arrangement: "split" },
+    { scenario: "station", design: "garage", note: "Neighbourhood barber. Tough, fast and local.", logo: false, arrangement: "cutout" },
     { scenario: "groom", design: "candy", note: "Mobile dog groomer. Friendly, bubbly, we come to you.", logo: false, arrangement: "split" },
     { scenario: "calm", design: "quartz", note: "Counsellor. A quiet page with a free first call.", logo: false, arrangement: "bento" },
     { scenario: "driving", design: "sunrise", note: "Driving instructor. Calm lessons, clear block prices.", logo: false, arrangement: "split" },
@@ -42,8 +42,8 @@ export const SHOWCASE: ShowcaseGroup[] = [
   { id: "make", title: "Made by hand, sold directly", line: "Objects, rails and collections that need a good photograph and a short path to ask.", items: [
     { scenario: "form", design: "paper", note: "Ceramics. A printed page with numbered pieces.", logo: false, arrangement: "type" },
     { scenario: "edit", design: "quartz", note: "Vintage clothing. The current rail, found once.", logo: false, arrangement: "type" },
-    { scenario: "dealer", design: "marine", note: "Used cars. Specs, status and honest availability.", arrangement: "split" },
-    { scenario: "brookfield", design: "quartz", note: "Independent forecourt. Readable stock cards.", arrangement: "split" },
+    { scenario: "dealer", design: "marine", note: "Used cars. Specs, status and honest availability.", arrangement: "cutout" },
+    { scenario: "brookfield", design: "quartz", note: "Independent forecourt. Readable stock cards.", arrangement: "cutout" },
     { scenario: "cakes", design: "bloom", note: "Cake maker. Small cakes for big days.", arrangement: "melt" },
     { scenario: "books", design: "maison", note: "Independent bookshop. Staff picks and signed copies.", logo: false, arrangement: "melt" },
   ] },

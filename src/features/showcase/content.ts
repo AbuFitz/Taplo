@@ -299,3 +299,16 @@ export const SCENARIOS: Record<Scenario, { label: string; content: BusinessConte
     ],
   },
 }
+
+/** Subjects lifted from the example photographs (in the browser, with the same tool owners use) for the Depth Cutout arrangement. */
+const CUTOUTS: Partial<Record<keyof typeof SCENARIOS, { file: string; width: number; height: number; alt: string }>> = {
+  barber: { file: "barber-cut", width: 600, height: 900, alt: "A barber's hands styling a client's hair" },
+  station: { file: "barber-cut", width: 600, height: 900, alt: "A barber's hands styling a client's hair" },
+  dealer: { file: "dealer-hero", width: 900, height: 506, alt: "A white SUV from the forecourt" },
+  brookfield: { file: "dealer-hero", width: 900, height: 506, alt: "A white SUV from the forecourt" },
+  gym: { file: "gym-hero", width: 900, height: 600, alt: "An athlete lifting a barbell" },
+}
+for (const [id, c] of Object.entries(CUTOUTS)) {
+  const sc = SCENARIOS[id as keyof typeof SCENARIOS]
+  if (sc && c) sc.content.identity.heroCutout = { src: `/showcase/cutouts/${c.file}.webp`, width: c.width, height: c.height, alt: c.alt, fit: "contain" }
+}

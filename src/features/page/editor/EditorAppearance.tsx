@@ -7,6 +7,7 @@ import { AppearancePanel, HeaderControls } from "@/features/appearance/sections"
 import { ChoiceGrid } from "@/features/appearance/controls"
 import { applyDesign, getDesign } from "@/features/page/themes/designs"
 import { newId } from "@/features/demo/actions"
+import { CutoutControl } from "./CutoutControl"
 import { ColourSuggestion } from "./ColourSuggestion"
 import { ImageField } from "./controls"
 import { ProfileSections } from "./ContentTab"
@@ -82,6 +83,7 @@ export function HeaderPanel({ ed, notify }: { ed: Editor; notify: (m: string, un
           {m.spec.header.avatarShape === "none" && c.identity.logo ? <p role="note" className="rounded-xl bg-black/[0.04] px-3 py-2 text-xs text-neutral-600">Your picture is saved, but this look shows no picture. Choose a picture shape below to show it.</p> : null}
           <ImageField purpose="cover" label="Cover picture" cropAspect={16 / 7} value={c.identity.heroImage ?? null} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1400}
             onChange={(v) => ed.setContent((x) => ({ ...x, identity: { ...x.identity, heroImage: v ?? undefined } }))} focalHint="Used by the Cover and Image hero headers. Choose the part that must always stay visible." />
+          {m.spec.header.layout === "cutout" ? <CutoutControl cover={c.identity.heroImage} value={c.identity.heroCutout} name={c.identity.name} onChange={(v) => ed.setContent((x) => ({ ...x, identity: { ...x.identity, heroCutout: v } }))} /> : null}
           <ColourSuggestion ed={ed} image={c.identity.heroImage ?? c.identity.logo} notify={notify} />
         </div>
       </Disclosure>
