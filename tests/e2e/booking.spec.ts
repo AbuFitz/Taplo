@@ -127,14 +127,14 @@ test.describe("customer booking journey", () => {
     await expect(trigger).toBeFocused()
   })
 
-  test("on a phone the journey is a full-screen sheet with no horizontal scroll, and times show the visitor's own time zone when it differs", async ({ browser }) => {
+  test("on a phone the journey is a floating sheet with no horizontal scroll, and times show the visitor's own time zone when it differs", async ({ browser }) => {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, timezoneId: "America/New_York" })
     const page = await ctx.newPage()
     await open(page)
     await reach(page, "time")
     const box = (await flow(page).boundingBox())!
-    expect(box.width).toBeGreaterThanOrEqual(388)
-    expect(box.height).toBeGreaterThanOrEqual(840)
+    expect(box.width).toBeGreaterThanOrEqual(366)
+    expect(box.height).toBeGreaterThanOrEqual(480)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await expect(flow(page).getByText(/your time/).first()).toBeVisible()
     await ctx.close()

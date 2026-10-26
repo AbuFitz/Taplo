@@ -6,6 +6,7 @@ import { ArrowLeft, X } from "lucide-react"
 import { usePortalContainer } from "@/components/ui/portal-container"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import "./overlay.css"
 
 /**
  * Taplo's one overlay foundation, built on Radix Dialog (focus trap, focus return, Escape, scroll lock,
