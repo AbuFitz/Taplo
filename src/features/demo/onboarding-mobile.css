@@ -205,3 +205,16 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 .setup-social-grid button[aria-pressed=true][data-filled]::after{box-shadow:0 0 0 2px #111}
 .setup-social-more{color:#555!important}
 @media(max-width:380px){.setup-social-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* Viewing the page in and out (computer only): close up, the whole phone, or the page large. */
+.setup-canvas[data-zoom=in]{max-width:none;padding:0}
+.setup-zoom{position:absolute;z-index:3;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:4px;padding:5px;border-radius:999px;background:#fff;box-shadow:0 1px 0 #fff inset,0 1px 2px #0000001a,0 14px 30px -12px #00000066}
+.setup-zoom button{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;color:#111;transition:background .2s,transform .2s}
+.setup-zoom button:hover:not(:disabled){background:#f1f1f3}
+.setup-zoom button:active:not(:disabled){transform:scale(.92)}
+.setup-zoom button:disabled{opacity:.3}
+.setup-zoom button svg{width:18px;height:18px}
+.setup-zoom span{min-width:92px;text-align:center;font-size:13px;font-weight:600;color:#222}
+.setup-zoom button:focus-visible{outline:2px solid #111;outline-offset:1px}
+@media(max-width:1023px){.setup-zoom{display:none}}
+@media(min-width:1024px){.setup-workspace>aside{padding-bottom:84px}.setup-canvas[data-zoom=in]{border-radius:26px;overflow:hidden;box-shadow:0 1px 2px #0000001a,0 24px 60px -24px #0000004d}}

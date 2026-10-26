@@ -40,8 +40,8 @@
   [data-overlay][data-overlay-tone="page"] { transform-origin: 50% 60%; }
 }
 @keyframes tp-pop-in {
-  from { opacity: 0; transform: perspective(900px) translateY(18px) rotateX(5deg) scale(0.96); }
-  to { opacity: 1; transform: perspective(900px) translateY(0) rotateX(0) scale(1); }
+  from { transform: perspective(900px) translateY(18px) rotateX(5deg) scale(0.96); }
+  to { transform: perspective(900px) translateY(0) rotateX(0) scale(1); }
 }
 @media (min-width: 640px) and (prefers-reduced-motion: no-preference) {
   [data-overlay][data-overlay-tone="page"][data-state="open"] { animation: tp-pop-in 0.38s cubic-bezier(0.22, 1, 0.36, 1) both; }

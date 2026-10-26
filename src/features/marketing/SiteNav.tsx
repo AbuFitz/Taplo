@@ -22,6 +22,7 @@ import {
   Users,
 } from "lucide-react";
 import { TaploLogo } from "@/components/taplo/brand";
+import { HomeLink } from "@/components/taplo/home-link";
 import { PRODUCT_GROUPS, INDUSTRY_FILTERS } from "./ia";
 import "./site-navigation.css";
 
@@ -130,14 +131,13 @@ export function SiteNav({ cta, ctaHref }: { cta: string; ctaHref: string }) {
         className="site-navigation"
       >
         <div className="site-navigation-bar">
-          <Link
-            href="/"
+          <HomeLink
             aria-label="Taplo home"
             className="site-navigation-brand"
             onClick={close}
           >
             <TaploLogo tone="light" className="h-7" />
-          </Link>
+          </HomeLink>
           <NavigationMenu.Root
             key={mobile ? "mobile" : "desktop"}
             value={openedPath === path ? menu : ""}
@@ -319,9 +319,9 @@ export function SiteNav({ cta, ctaHref }: { cta: string; ctaHref: string }) {
           }}
         >
           <div className="site-feature-sheet-header">
-            <Link href="/" aria-label="Taplo home" onClick={close}>
+            <HomeLink aria-label="Taplo home" onClick={close}>
               <TaploLogo tone="light" className="h-7" />
-            </Link>
+            </HomeLink>
             <Dialog.Title className="sr-only">Taplo menu</Dialog.Title>
             <Dialog.Close aria-label="Close menu" className="site-menu-close">
               <X size={23} aria-hidden="true" />

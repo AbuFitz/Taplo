@@ -20,7 +20,7 @@ import { SetupLoading } from "./SetupLoading"
 import * as React from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Check, Plus, Trash2 } from "lucide-react"
+import { Check, Minus, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { SLUG_PROBLEM_MESSAGE } from "@/features/businesses/slug"
@@ -129,6 +129,7 @@ export function Onboarding() {
   const step: OnboardingStep = s.step === "goal" ? "reach" : (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "widgets"
   const stepIndex = SETUP_STEPS.indexOf(step as Exclude<OnboardingStep, "goal">)
 
+  const [zoom, setZoom] = React.useState<"out" | "base" | "in">("base")
   const [part, setPart] = React.useState(0)
   // On a phone, a long step is spread over two screens so each one asks for one kind of thing.
   const parts = mobileSetup ? ({ business: 2, reach: 2 } as Partial<Record<OnboardingStep, number>>)[step] ?? 1 : 1
@@ -306,7 +307,14 @@ export function Onboarding() {
         </SetupPanel>
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="setup-canvas"><SetupCanvas src="/demo/preview" expanded={false} fit={mobileSetup && sheetSize === "preview"} onOverlayOpen={revealCustomerDialog} /></div>
+          <div className="setup-canvas" data-zoom={mobileSetup ? "base" : zoom}><SetupCanvas src="/demo/preview" expanded={!mobileSetup && zoom === "in"} fit={(mobileSetup && sheetSize === "preview") || (!mobileSetup && zoom === "out")} onOverlayOpen={revealCustomerDialog} /></div>
+          {!mobileSetup ? (
+            <div className="setup-zoom" role="group" aria-label="Preview size">
+              <button type="button" aria-label="Zoom out to see the whole phone" disabled={zoom === "out"} onClick={() => setZoom(zoom === "in" ? "base" : "out")}><Minus aria-hidden="true" /></button>
+              <span aria-live="polite">{zoom === "out" ? "Whole phone" : zoom === "in" ? "Large" : "Close up"}</span>
+              <button type="button" aria-label="Zoom in to see the page larger" disabled={zoom === "in"} onClick={() => setZoom(zoom === "out" ? "base" : "in")}><Plus aria-hidden="true" /></button>
+            </div>
+          ) : null}
 
         </aside>
       </div>

@@ -1,0 +1,30 @@
+/* Scroll-in motion. The scale of each effect follows the screen: gentle on a phone, broader on a desktop. */
+:root {
+  --fx-dist: 14px;
+  --fx-step: 55ms;
+  --fx-dur: 0.7s;
+  --fx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (min-width: 768px) {
+  :root { --fx-dist: 22px; --fx-step: 70ms; --fx-dur: 0.85s; }
+}
+@media (min-width: 1280px) {
+  :root { --fx-dist: 32px; --fx-step: 85ms; --fx-dur: 1s; }
+}
+html[data-fx="on"] [data-reveal] {
+  opacity: 0;
+  transition:
+    opacity var(--fx-dur) var(--fx-ease) calc(var(--fx-i, 0) * var(--fx-step)),
+    transform calc(var(--fx-dur) + 0.15s) var(--fx-ease) calc(var(--fx-i, 0) * var(--fx-step)),
+    filter var(--fx-dur) var(--fx-ease) calc(var(--fx-i, 0) * var(--fx-step));
+}
+html[data-fx="on"] [data-reveal="up"] { transform: translate3d(0, var(--fx-dist), 0); }
+html[data-fx="on"] [data-reveal="heading"] { transform: translate3d(0, calc(var(--fx-dist) * 1.3), 0); filter: blur(6px); }
+html[data-fx="on"] [data-reveal="figure"] { transform: translate3d(0, var(--fx-dist), 0) scale(0.965); }
+html[data-fx="on"] [data-reveal][data-in] { opacity: 1; transform: none; filter: none; }
+@media (prefers-reduced-motion: reduce) {
+  html[data-fx="on"] [data-reveal] { opacity: 1; transform: none; filter: none; transition: none; }
+}
+/* The navigation settles once the page has moved. */
+html[data-scrolled] .site-navigation-bar { box-shadow: 0 18px 44px -22px #000c; }
+.site-navigation-bar { transition: box-shadow 0.35s ease; }

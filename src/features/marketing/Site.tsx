@@ -3,8 +3,10 @@ import "./illustrations.css";
 import { TAPLO_DOMAINS } from "@/lib/domains";
 import { ArrowRight } from "lucide-react";
 import { TaploLogo } from "@/components/taplo/brand";
+import { HomeLink } from "@/components/taplo/home-link";
 import { demoModeEnabled } from "@/lib/env";
 import { SiteNav } from "./SiteNav";
+import { ScrollEffects } from "./ScrollEffects";
 import { PRODUCT_GROUPS } from "./ia";
 
 /** Shared primary destination and wording across the site. */
@@ -18,7 +20,12 @@ export function primaryAction() {
 }
 export function SiteHeader() {
   const a = primaryAction();
-  return <SiteNav cta={a.label} ctaHref={a.href} />;
+  return (
+    <>
+      <SiteNav cta={a.label} ctaHref={a.href} />
+      <ScrollEffects />
+    </>
+  );
 }
 export function SiteFooter() {
   const a = primaryAction();
@@ -42,13 +49,12 @@ export function SiteFooter() {
         </div>
         <div className="grid gap-x-10 gap-y-12 py-12 sm:grid-cols-2 lg:grid-cols-[1.25fr_1fr_1fr_0.9fr] lg:py-16">
           <div className="max-w-xs">
-            <Link
-              href="/"
+            <HomeLink
               aria-label="Taplo home"
               className="inline-flex rounded outline-none focus-visible:ring-3 focus-visible:ring-white"
             >
               <TaploLogo tone="light" className="h-12" />
-            </Link>
+            </HomeLink>
             <p className="mt-5 text-lg leading-relaxed text-white/85">
               A page for your business.
             </p>
