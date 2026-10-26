@@ -129,18 +129,6 @@ function Arrangement({ vm }: { vm: PageViewModel }) {
       <div className="tp-melt-body">{id.logo ? <Avatar vm={vm} /> : null}<Text vm={vm} /><Actions vm={vm} /></div>
     </header>
   )
-  if (h.layout === "cutout") {
-    const subject = id.heroCutout ?? cover
-    return (
-      <header aria-label={label} className="tp-header" data-layout="cutout" data-align="center" data-cut={id.heroCutout ? "true" : subject ? "photo" : undefined}>
-        <div className="tp-cut-stage">
-          <span className="tp-cut-type" aria-hidden="true">{id.name}</span>
-          <div className="tp-cut-subject">{subject ? <ProfileImage image={subject} sizes="(min-width:900px) 32rem, 90vw" priority className="object-contain object-bottom" /> : <Art vm={vm} />}</div>
-        </div>
-        <div className="tp-cut-body"><Text vm={vm} /><Actions vm={vm} /></div>
-      </header>
-    )
-  }
   if (h.layout === "split") return (
     <header aria-label={label} className="tp-header" data-layout="split" data-align="left" data-cover={cover ? "" : undefined}>
       <div className="tp-split-cover">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : <Art vm={vm} />}</div>
@@ -178,7 +166,7 @@ export function PageHeader({ vm }: { vm: PageViewModel }) {
   const h = spec.header
   const cover = vm.business.identity.heroImage
 
-  if (h.layout === "melt" || h.layout === "cutout" || h.layout === "split" || h.layout === "bento" || h.layout === "type") return <Arrangement vm={vm} />
+  if (h.layout === "melt" || h.layout === "split" || h.layout === "bento" || h.layout === "type") return <Arrangement vm={vm} />
   if (h.layout === "floating") return <header aria-label={`${vm.business.identity.name} business profile`} className="tp-header" data-layout="floating" data-align={h.align} data-cover={cover ? "" : undefined}>
     {cover ? <div className="tp-floating-cover"><ProfileImage image={cover} sizes="(min-width:900px) 50vw, 100vw" priority /></div> : null}
     <div className="tp-floating-intro"><Avatar vm={vm} /><Text vm={vm} /><Actions vm={vm} /></div>

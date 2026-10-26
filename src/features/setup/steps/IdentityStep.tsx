@@ -59,7 +59,7 @@ export function IdentityStep() {
           <div className="sf-arrange" role="radiogroup" aria-label="Profile arrangement">
             {PROFILE_CHOICES.map((item) => (
               <label key={item.id} className="sf-arrange-choice" data-on={layout === item.id}>
-                <input type="radio" name="profile-arrangement" aria-label={item.name} checked={layout === item.id} onChange={() => setHeader({ layout: item.id, align: item.id === "cutout" || item.id === "bento" ? "center" : "left" })} />
+                <input type="radio" name="profile-arrangement" aria-label={item.name} checked={layout === item.id} onChange={() => setHeader({ layout: item.id, align: item.id === "bento" ? "center" : "left" })} />
                 <ChoicePreview src={`/demo/preview?header=${item.id}`} title={`${item.name} profile preview`} height={430} />
                 <span>{item.name}</span>
               </label>

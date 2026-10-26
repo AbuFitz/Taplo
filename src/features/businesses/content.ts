@@ -32,7 +32,7 @@ export const imageSchema = z.object({
   width: z.number().int().positive().optional(),
   height: z.number().int().positive().optional(),
   focal: focalSchema.optional(),
-  /** Keep illustrations and cutouts whole when a photograph-style crop is unsuitable. */
+  /** Keep illustrations whole when a photograph-style crop is unsuitable. */
   fit: z.enum(["cover", "contain"]).optional(),
   /** Derived only for transparent identity uploads; supplies a contrasting backing without changing the pixels. */
   ink: z.enum(["dark", "light", "mixed", "mono"]).optional(),
@@ -189,8 +189,6 @@ export const businessContentSchema = z.object({
     tagline: optText(160),
     logo: imageSchema.optional(),
     heroImage: imageSchema.optional(),
-    /** The subject of the cover photograph lifted from its background (transparent PNG/WebP), for the Depth Cutout arrangement. */
-    heroCutout: imageSchema.optional(),
     industryKey: text(64),
     industryLabel: text(80),
   }),

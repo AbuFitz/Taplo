@@ -43,7 +43,7 @@ for (const g of SHOWCASE) for (const item of g.items) {
   const design = getDesign(item.design)
   if (!design || item.scenario === "fixnow" || item.scenario === "brightlearn") continue
   EXAMPLE_LOOK[item.scenario] = design.id
-  EXAMPLE_OVERRIDES[item.scenario] = { header: { ...(item.arrangement ? { layout: item.arrangement, align: item.arrangement === "cutout" || item.arrangement === "bento" ? "center" : "left" } : {}), ...(item.logo === false ? { avatarShape: "none" } : {}) } } as StyleOverrides
+  EXAMPLE_OVERRIDES[item.scenario] = { header: { ...(item.arrangement ? { layout: item.arrangement, align: item.arrangement === "bento" ? "center" : "left" } : {}), ...(item.logo === false ? { avatarShape: "none" } : {}) } } as StyleOverrides
 }
 
 /** A scenario on its own look opens as the designed example; an explicit look (the looks sheet, the lab) shows that look plain. */

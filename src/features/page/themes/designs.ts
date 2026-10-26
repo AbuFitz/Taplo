@@ -384,7 +384,7 @@ export function applyFinish(o: StyleOverrides, finish: FinishId, dark: boolean):
 
 /** The profile arrangement a page wears, on top of whichever design it has. Unknown names change nothing. */
 export function withArrangement(page: PageDoc, arrangement?: string): PageDoc {
-  if (!arrangement || !["melt", "cutout", "split", "bento", "type"].includes(arrangement)) return page;
-  const align = arrangement === "cutout" || arrangement === "bento" ? "center" : "left";
+  if (!arrangement || !["melt", "split", "bento", "type"].includes(arrangement)) return page;
+  const align = arrangement === "bento" ? "center" : "left";
   return { ...page, appearance: { ...page.appearance, header: { ...page.appearance.header, layout: arrangement as NonNullable<StyleOverrides["header"]>["layout"], align } } };
 }

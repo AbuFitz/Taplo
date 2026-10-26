@@ -31,7 +31,7 @@ const BUSINESS = [
 const STYLES = ["Seamless blend", "Frosted glass", "Dark noir", "Warm editorial", "Bento grid"] as const
 type StyleTag = (typeof STYLES)[number]
 
-const alignFor = (a?: Arrangement): "left" | "center" => (a === "cutout" || a === "bento" ? "center" : "left")
+const alignFor = (a?: Arrangement): "left" | "center" => (a === "bento" ? "center" : "left")
 /** The design with this page's own arrangement and (when it has no logo) a name-only profile. */
 function poseOf(pick: Pick) {
   const header = { ...pick.design.overrides.header, ...(pick.arrangement ? { layout: pick.arrangement, align: alignFor(pick.arrangement) } : {}), ...(pick.logo === false ? { avatarShape: "none" as const } : {}) }

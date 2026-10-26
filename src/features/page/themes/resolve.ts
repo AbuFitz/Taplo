@@ -128,7 +128,7 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}, logoAc
   // Retired profile arrangements render through the reviewed set. Stored owner
   // data stays intact, while old drafts cannot reintroduce overlapping panels.
   const layout = spec.header.layout;
-  spec.header.layout = ["centered", "poster", "editorial", "melt", "cutout", "split", "bento", "type"].includes(layout) ? layout : ["side", "minimal", "portrait"].includes(layout) ? "side" : "banner";
+  spec.header.layout = ["centered", "poster", "editorial", "melt", "split", "bento", "type"].includes(layout) ? layout : ["side", "minimal", "portrait"].includes(layout) ? "side" : "banner";
 
   if (spec.background.kind === "shader" && spec.background.source === "logo" && logoAccent && /^#[0-9a-fA-F]{6}$/.test(logoAccent)) {
     const b = spec.background;

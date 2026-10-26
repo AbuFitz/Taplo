@@ -450,7 +450,7 @@ export function HeaderControls({
             header: {
               ...o.header,
               layout: v,
-              align: v === "centered" || v === "cutout" || v === "bento" ? "center" : "left",
+              align: v === "centered" || v === "bento" ? "center" : "left",
             },
           }))
         }
