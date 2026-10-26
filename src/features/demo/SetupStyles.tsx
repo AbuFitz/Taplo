@@ -4,7 +4,6 @@ import { Palette, ArrowUpRight } from "lucide-react";
 import { Overlay } from "@/components/taplo/overlay";
 import { Button } from "@/components/ui/button";
 import { suggestedLooks } from "@/features/inspiration/suggest";
-import { ThemeSwatch } from "./ThemeSwatch";
 import { useDemo, initialState } from "./store";
 import { PROFILE_CHOICES } from "@/features/page/contracts/style";
 import { ImageField } from "@/features/page/editor/controls";
