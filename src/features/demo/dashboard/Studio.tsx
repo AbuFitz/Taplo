@@ -8,7 +8,7 @@ import { businessAddress } from "@/lib/domains"
 import { WHEN_UNAVAILABLE } from "@/lib/capabilities"
 import { PagePreview } from "@/features/preview/PagePreview"
 import { useOwner } from "@/features/booking/ui/owner/useOwner"
-import { nowMs } from "@/features/booking/clock"
+import { useClientNow } from "@/features/booking/clock"
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans"
 import { resolveEntitlements, type Entitlements } from "@/features/subscriptions/entitlements"
 import { cn } from "@/lib/utils"
@@ -42,8 +42,7 @@ export function Studio() {
   const { state: s, patch, ent } = useDraft()
   const { state: bk } = useOwner()
   const [copied, setCopied] = React.useState(false)
-  const [now, setNow] = React.useState(0)
-  React.useEffect(() => setNow(nowMs()), [])
+  const now = useClientNow() ?? 0
   if (!s || !ent) return null
   const checks = readiness(s)
   const requiredLeft = checks.filter((c) => c.required && !c.done)

@@ -6,7 +6,7 @@ import { BookingFlow } from "@/features/booking/ui/BookingFlow"
 import { getAvailability } from "@/features/booking/availability"
 import { eligibleStaff, isOnlineBookable, type BookingContext } from "@/features/booking/model"
 import { useBookingState, useSchedulingConfig } from "@/features/booking/demo-adapter"
-import { nowMs } from "@/features/booking/clock"
+import { useClientNow } from "@/features/booking/clock"
 import { formatClock, localParts } from "@/features/booking/time"
 
 /** Four times spread across the day, so the choice is a real choice and not four neighbouring quarter-hours. */
@@ -27,10 +27,9 @@ const dayLabel = (date: string, today: string) => {
 export function NextAvailable({ ctx, serviceId, title }: { ctx: BookingContext; serviceId?: string | null; title?: string }) {
   const config = useSchedulingConfig(ctx.slug, ctx.config)
   const { state } = useBookingState(ctx.slug)
-  const [now, setNow] = React.useState<number | null>(null)
+  const now = useClientNow()
   const [pick, setPick] = React.useState<{ date: string; startsAt: number } | null>(null)
   const [more, setMore] = React.useState(false)
-  React.useEffect(() => setNow(nowMs()), [])
   const service = ctx.services.find((s) => s.id === serviceId && isOnlineBookable(s)) ?? ctx.services.find(isOnlineBookable)
   const tz = config.timezone
   const days = React.useMemo(() => {
