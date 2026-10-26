@@ -23,7 +23,7 @@ export function ScaledPhone({ children, glow, className }: { children: React.Rea
   }, [])
   return (
     <span ref={host} className={`scaled-phone ${className ?? ""}`} style={{ aspectRatio: `${outerW} / ${outerH}`, ...(glow ? ({ "--glow": glow } as React.CSSProperties) : {}) }}>
-      <span className="phone-shell scaled-phone-shell" style={{ width: outerW, height: outerH, padding: PHONE.bezel, transform: w ? `scale(${w / outerW})` : undefined, visibility: w ? "visible" : "hidden" }}>
+      <span className="phone-shell scaled-phone-shell" style={{ width: outerW, height: outerH, padding: PHONE.bezel, transform: `scale(${w ? w / outerW : 0})`, visibility: w ? "visible" : "hidden" }}>
         <span className="phone-screen scaled-phone-screen" style={{ width: PHONE.width, height: PHONE.height }}>{children}</span>
         <PhoneChrome />
       </span>

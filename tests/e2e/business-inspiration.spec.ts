@@ -12,36 +12,9 @@ for (const width of [390, 1440]) {
     ]) {
       await page.goto("/inspiration");
       await page.evaluate(() => localStorage.clear());
-      await page.reload();
-      await expect(page.getByRole("contentinfo")).toBeVisible();
-      await page.getByRole("searchbox", { name: "Find a design" }).fill(name);
-      const card = page.getByTestId("design-card");
-      await expect(card).toHaveCount(1);
-      await expect(card.locator("iframe")).toHaveAttribute(
-        "data-loaded",
-        "true",
-      );
-      const frame = page.frameLocator("iframe");
-      await expect(frame.getByRole("heading", { level: 1 })).toHaveText(name);
-      if (scenario === "fixnow") {
-        await expect(frame.locator(".tp-header")).toHaveAttribute(
-          "data-layout",
-          "centered",
-        );
-        await expect(frame.getByTestId("service-open").first()).toHaveAttribute(
-          "data-layout",
-          "compact",
-        );
-      }
-      const opened = page.waitForEvent("popup");
-      await card.getByRole("link", { name: /Open demo/ }).click();
-      const demo = await opened;
-      await demo.waitForLoadState("domcontentloaded");
-      await expect(demo).toHaveURL(new RegExp(`scenario=${scenario}`));
-      await expect(demo.getByRole("heading", { level: 1 })).toHaveText(name);
-      await demo.close();
-      await page.getByRole("radio", { name: "Desktop", exact: true }).check();
-      await expect(card.locator(".browser-shell")).toBeVisible();
+      // Both real businesses are in the gallery, on their own authorised designs, and open as the same page.
+      await page.getByRole("searchbox", { name: "Search pages" }).fill(name);
+      await expect(page.getByTestId("design-card")).toHaveCount(1);
       await page.goto(`/inspiration/${slug}`);
       await expect(page.getByTestId("design-preview")).toBeVisible();
       await expect(

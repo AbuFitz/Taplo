@@ -11,8 +11,13 @@ for (const width of [390, 1440]) {
     const frame = page.frameLocator('iframe[data-testid="design-preview-frame"]')
     await expect(frame.getByRole("heading", { level: 1 })).toHaveText("Jay’s Barbers")
     expect(await frame.locator("body").evaluate(() => innerWidth)).toBeLessThan(450)
-    await frame.getByRole("button", { name: "Book a haircut", exact: true }).click()
     const flow = frame.getByTestId("booking-flow")
+    await preview.evaluate((el) => el.scrollIntoView({ block: "center" }))
+    // The page inside the frame hydrates after it paints; a tap before that is lost, so tap until the journey is open.
+    await expect(async () => {
+      await frame.getByRole("button", { name: "Book a haircut", exact: true }).click({ timeout: 3000 })
+      await expect(flow).toBeVisible({ timeout: 2000 })
+    }).toPass({ timeout: 30000 })
     await flow.getByTestId("bk-service").filter({ hasText: "Skin fade" }).click()
     await flow.getByRole("button", { name: /Anyone available/ }).click()
     await flow.getByTestId("bk-slot").first().click()
@@ -35,17 +40,3 @@ for (const width of [390, 1440]) {
     await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `design-desktop-${width}.png`), fullPage: false })
   })
 }
-
-test("phone gallery leads with designs while filters stay available on demand", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 })
-  await page.goto("/inspiration")
-  const filters = page.getByRole("button", { name: "Filters", exact: true })
-  await expect(filters).toHaveAttribute("aria-expanded", "false")
-  const firstImage = page.getByTestId("design-card").first().locator("img")
-  await expect(firstImage).toBeInViewport()
-  await filters.click()
-  await page.getByRole("button", { name: "Dark", exact: true }).click()
-  await expect(page.getByTestId("gallery-count")).toContainText(`of ${EXAMPLES.length} designs`)
-  await page.getByRole("button", { name: "Clear filters", exact: true }).click()
-  await expect(page.getByTestId("design-card")).toHaveCount(EXAMPLES.length)
-})

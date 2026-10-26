@@ -495,12 +495,12 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
   padding: 0 16px 0 12px;
   border-radius: 999px;
   font-size: var(--tp-t-xs);
-  color: color-mix(in srgb, currentColor 72%, transparent);
-  background: color-mix(in srgb, currentColor 6%, transparent);
+  color: var(--tp-muted);
+  background: color-mix(in srgb, var(--tp-foreground) 6%, transparent);
   overflow: hidden;
   transition: background 0.3s, color 0.3s;
 }
-.tp-made strong { font-weight: 650; color: currentColor; }
+.tp-made strong { font-weight: 650; color: var(--tp-foreground); }
 .tp-made-mark {
   flex-shrink: 0;
   width: 14px;

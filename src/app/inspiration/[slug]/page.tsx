@@ -50,16 +50,17 @@ export default async function ExamplePage({
             <span aria-hidden="true" className="px-2">
               /
             </span>
-            <span>{f.lookName}</span>
+            <span>{f.name}</span>
           </nav>
           <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_22rem] lg:items-end lg:gap-16">
             <div>
               <h1 className="font-display font-display-tight text-[clamp(2.75rem,5.6vw,4.5rem)]">
-                {f.lookName}
+                {f.name}
               </h1>
               <p className="mt-3 text-sm text-foreground/60">
+                On the {f.lookName} design ·{" "}
                 <Link
-                  href={`/inspiration?industry=${e.industry}`}
+                  href="/inspiration"
                   className="underline underline-offset-4"
                 >
                   {industry.label}
@@ -110,10 +111,9 @@ export default async function ExamplePage({
                         />
                       </div>
                     </div>
-                    <h3 className="mt-4 font-display text-2xl">{g.lookName}</h3>
-                    <span className="sr-only">{g.name}</span>
+                    <h3 className="mt-4 font-display text-2xl">{g.name}</h3>
                     <p className="mt-1 text-sm text-foreground/65">
-                      {g.industryLabel}
+                      {g.lookName} · {g.industryLabel}
                     </p>
                   </Link>
                 </li>
