@@ -1,6 +1,6 @@
 import { SetupLoading } from "@/features/demo/SetupLoading"
 import { Suspense } from "react"
-import { Onboarding } from "@/features/setup/SetupFlow"
+import { Onboarding } from "@/features/demo/Onboarding"
 
 export default function Page() {
   // useSearchParams (plan and "start from this" choices) needs a boundary.
