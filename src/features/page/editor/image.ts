@@ -62,7 +62,7 @@ export async function prepareImage(
         const strip = document.createElement("canvas");
         strip.width = 16; strip.height = 16;
         const sc = strip.getContext("2d");
-        if (sc) {
+        if (sc && typeof sc.getImageData === "function") {
           sc.drawImage(canvas, 0, 0, 16, 16);
           const d = sc.getImageData(0, 12, 16, 4).data;
           let r = 0, g = 0, b = 0, n = 0;
