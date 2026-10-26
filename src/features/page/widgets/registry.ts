@@ -73,7 +73,14 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
   booking: {
     type: "booking", version: 1, label: "Book or enquire", description: "Booking or enquiry button.", category: "sales", icon: "CalendarCheck", multiple: true, appearance: ["button", "card"],
     fields: [{ kind: "text", key: "label", label: "Button text (optional)", max: 60 }, { kind: "record", key: "serviceId", label: "Preselect a service (optional)", source: "services" }, { kind: "select", key: "variant", label: "Style", options: [{ value: "button", label: "Button" }, { value: "card", label: "Card with text" }] }],
-    status: (_s, c) => (c.onlineBooking || c.business.contacts.phone || c.business.contacts.whatsapp || c.business.contacts.email ? READY : channelEmpty("Add a contact method so customers can enquire.")),
+    status: (s, c) => {
+      if (s.serviceId) {
+        const selected=selectedService(c.business.services,s.serviceId)
+        if(!selected) return {state:"empty",reason:"Choose an available service for this button.",fix:"services"}
+        if(isHttpUrl(selected.externalUrl)) return READY
+      }
+      return c.onlineBooking || c.business.contacts.phone || c.business.contacts.whatsapp || c.business.contacts.email || c.business.services.some(service=>isHttpUrl(service.externalUrl)) ? READY : channelEmpty("Add a contact method so customers can enquire.")
+    },
   },
   products: {
     type: "products", version: 1, label: "Products", description: "Things you sell.", category: "sales", icon: "ShoppingBag", multiple: true, appearance: ["card"],

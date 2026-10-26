@@ -293,7 +293,7 @@ export function WidgetFields({
                 key={f.key}
                 label={f.label}
                 value={(v as string | null) || undefined}
-                inheritLabel="Automatic"
+                inheritLabel={stored.type === "booking" ? "Let customers choose" : "First available service"}
                 options={opts.map((o) => ({ value: o.id, label: o.label }))}
                 onChange={(x) => set(f.key, x ?? null)}
               />

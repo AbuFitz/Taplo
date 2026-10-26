@@ -28,6 +28,7 @@ for (const width of [320, 390, 768, 1440])
       await orbit.screenshot({
         path: path.join(process.env.TAPLO_REVIEW_DIR, `orbit-${width}.png`),
       });
+    await page.goto("/product/sharing");
     const plaque = page.getByTestId("plaque-experience");
     await plaque.scrollIntoViewIfNeeded();
     await expect(plaque.locator(".plaque-stack-layer")).toHaveCount(2);

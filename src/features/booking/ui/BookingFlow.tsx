@@ -258,7 +258,7 @@ function FlowBody({ ctx, preService, preStaff, onClose }: { ctx: BookingContext;
             <a className="tp-btn" href={service.externalUrl} target="_blank" rel="noopener noreferrer">{service.externalLabel || "View on website"}<ArrowUpRight className="size-4" aria-hidden="true" /></a>
           </> : <>
             <p className="text-sm text-tp-muted">This service is arranged with the business directly. No time is reserved by sending this.</p>
-            <EnquiryForm slug={ctx.slug} businessName={ctx.businessName} services={ctx.services.map((s) => ({ id: s.id, name: s.name }))} serviceId={service.id} onDone={() => undefined} />
+            <EnquiryForm slug={ctx.slug} businessName={ctx.businessName} services={ctx.services.filter(s=>!s.externalUrl).map((s) => ({ id: s.id, name: s.name }))} serviceId={service.id} onDone={() => undefined} />
           </>}
         </section>
       ) : null}

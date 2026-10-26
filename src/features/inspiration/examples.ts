@@ -8,7 +8,7 @@ import { SCENARIOS, type Scenario } from "@/features/showcase/content"
 import type { WidgetType } from "@/features/page/contracts/widgets"
 
 /**
- * The inspiration gallery. Every example is a fictional business rendered by the real page engine with real
+ * The inspiration gallery. Fictional examples and owner-authorised real businesses use the real page engine with real
  * widgets; nothing here is a screenshot of something else. An example is a starting point, not a template:
  * "Start from this" fills in a look and a set of content types that can all be changed afterwards.
  */
@@ -25,6 +25,8 @@ export interface Example {
 }
 
 const CATALOGUE: Example[] = [
+  {slug:"fixnowmechanics",scenario:"fixnow",industry:"motoring",hook:"Mobile diagnostics and repairs, with compact prices and a direct quote link.",notes:["A lifted business profile keeps contact details easy to reach.","Compact services open full details and the existing quote destination.","Actual workshop and product content supplied by FixNow’s websites."],highlights:["Compact service prices","Existing quote and tracking links","Real dash cam products"]},
+  {slug:"brightlearn",scenario:"brightlearn",industry:"learning",hook:"Online maths tuition with monthly programmes and a free introduction.",notes:["A clear tutor identity and a separate introductory service.","Group and one-to-one programmes show the monthly price and lesson details.","Existing programme and contact destinations remain available."],highlights:["Monthly programme prices","Small-group and one-to-one tuition","Existing programme links"]},
   ...COLLECTION_BRIEFS.map(b=>({slug:b.slug,scenario:b.id,industry:b.sector,hook:b.line,notes:[b.bio,"An original identity and a page composed with the editable Taplo engine.","All sample content is illustrative. Start from this design with your own details."],highlights:[b.label,"Original brand mark",b.sector==="portfolios"?"Selected work and project enquiries":"Clear offers and enquiries"]})),
   { slug: "no-6-coffee", scenario: "corner", industry: "food", hook: "A neighbourhood café. The menu, the opening times and a place at the table.", notes: ["An open menu keeps drinks and food easy to scan; opening times sit on a quiet separate surface.", "Coffee and food show prices without starting appointment bookings.", "A larger visit starts an enquiry, not a confirmed reservation."], highlights: ["A proper grouped menu", "Opening times at a glance", "Group enquiries without booking menu items"] },
   { slug: "dans-home-repairs", scenario: "oakfield", industry: "trades", hook: "Small repairs, shelves and fittings. Explain the job before agreeing the visit.", notes: ["The compact introduction puts the business and the next step before the service details.", "Service cards explain from prices, estimates and first conversations.", "Requests and enquiries let the scope be agreed before the visit."], highlights: ["From and quote prices", "Visit requests", "Service area instead of a private address"] },
@@ -92,9 +94,9 @@ const CATALOGUE: Example[] = [
 ]
 
 // Commercial examples lead the catalogue; personal and creative starts remain available.
-const EXAMPLE_ORDER = ["jays-barbers", "hollin-physio", "harris-cars", "lune-nail-studio", "no-6-coffee", "detail-dept", "forge-strength", "dans-home-repairs", "maths-with-aisha", "sora-fields", "form-objects", "maya-builds"];
+const EXAMPLE_ORDER = ["jays-barbers", "hollin-physio", "harris-cars", "lune-nail-studio", "no-6-coffee", "detail-dept", "fixnowmechanics", "brightlearn", "forge-strength", "dans-home-repairs", "maths-with-aisha", "sora-fields", "form-objects", "maya-builds"];
 // Superseded example routes remain available; the gallery leads with their new UK replacements.
-const publishedExamples = CATALOGUE.filter(e=>CURRENT_LOOKS.some(look=>look.id===EXAMPLE_LOOK[e.scenario]) && (COLLECTION_BRIEFS.some(b=>b.id===e.scenario) || ["station","detailer","brookfield","corner","oakfield","rowan","physio","gym"].includes(e.scenario)));
+const publishedExamples = CATALOGUE.filter(e=>CURRENT_LOOKS.some(look=>look.id===EXAMPLE_LOOK[e.scenario]) && (COLLECTION_BRIEFS.some(b=>b.id===e.scenario) || ["station","detailer","brookfield","corner","oakfield","rowan","physio","gym","fixnow","brightlearn"].includes(e.scenario)));
 export const EXAMPLES = publishedExamples.sort((a,b) => {
   const rank = (slug: string) => { const index = EXAMPLE_ORDER.indexOf(slug); return index < 0 ? EXAMPLE_ORDER.length : index; };
   return rank(a.slug) - rank(b.slug);

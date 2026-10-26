@@ -14,6 +14,7 @@ import {
   Palette,
   Users,
 } from "lucide-react";
+import { PRODUCT_ILLUSTRATIONS } from "./product-illustrations";
 import type { ProductPage } from "./product";
 import "./feature-playground.css";
 
@@ -27,7 +28,7 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
     enquiries: ["A project", "A service", "A viewing"],
     messages: ["Confirm", "Remind", "Update"],
     team: ["Alex", "Jamie", "Morgan"],
-    products: ["F70 Pro", "Q200", "X800"],
+    products: PRODUCT_ILLUSTRATIONS.map((product) => product.tab),
     vehicles: ["Available", "Reserved", "Sold"],
     "gallery-reviews": ["Golf", "CX-5", "MINI"],
     booking: ["Consultation", "Follow-up", "Online"],
@@ -49,6 +50,7 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
     <div
       className="feature-playground"
       data-feature={slug}
+      onDragStart={(event) => event.preventDefault()}
       data-testid={`feature-demo-${slug}`}
     >
       <fieldset className="feature-demo-switch">
@@ -130,9 +132,7 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
                   <MessageCircle size={18} aria-hidden="true" />
                   <span>Your enquiry</span>
                 </div>
-                <h2>
-                  Send an enquiry.
-                </h2>
+                <h2>Send an enquiry.</h2>
                 <div className="feature-enquiry-subject">
                   <small>About</small>
                   <strong>{viewing}</strong>
@@ -168,9 +168,11 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
                 </div>
                 <h2>
                   {
-                    ["Booking confirmed.", "See you tomorrow.", "Booking updated."][
-                      choice
-                    ]
+                    [
+                      "Booking confirmed.",
+                      "See you tomorrow.",
+                      "Booking updated.",
+                    ][choice]
                   }
                 </h2>
                 <div className="feature-message-bubble">
@@ -233,34 +235,31 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
             ) : slug === "products" ? (
               <>
                 <div className="feature-demo-top">
-                  <span>FIXNOW MECHANICS</span>
+                  <span>DRIVE ESSENTIALS</span>
                   <span>0{choice + 1} / 03</span>
                 </div>
                 <div className="feature-product-photo">
                   <Image
-                    src={[
-                      "/businesses/fixnow/thinkware-f70-pro.jpg",
-                      "/businesses/fixnow/thinkware-q200.jpg",
-                      "/businesses/fixnow/thinkware-x800.jpg",
-                    ][choice]}
-                    alt={["Thinkware F70 Pro front dash cam kit", "Thinkware Q200 front and rear dash cam kit", "Thinkware X800 touchscreen dash cam kit"][choice]}
+                    src={PRODUCT_ILLUSTRATIONS[choice].image}
+                    alt={PRODUCT_ILLUSTRATIONS[choice].name}
                     fill
                     sizes="(min-width:768px) 500px, 90vw"
                   />
                 </div>
-                <h2>Thinkware {labels[choice]}</h2>
+                <h2>{PRODUCT_ILLUSTRATIONS[choice].name}</h2>
                 <div className="feature-mini-block">
-                  <span>{["Full HD front dash cam", "2K front & rear dash cam", "2K touchscreen dash cam"][choice]}</span>
-                  <strong>{["£125", "£219", "£249"][choice]}</strong>
+                  <span>{PRODUCT_ILLUSTRATIONS[choice].detail}</span>
+                  <strong>{PRODUCT_ILLUSTRATIONS[choice].price}</strong>
                 </div>
-                <p>{["32GB card and hardwire kit included.", "Front and rear cameras with a GPS mount.", "Front and rear cameras with a touchscreen display."][choice]}</p>
-                <a
-                  href={`https://shop.fixnowmechanics.co.uk/shop/${["thinkware-f70-pro-32gb-front-dash-cam", "thinkware-q200-2k-front-rear-dash-cam-with-gps-mount", "thinkware-x800-2k-front-rear-dash-cam-with-touchscreen"][choice]}`}
-                  className="feature-demo-action"
+                <p>{PRODUCT_ILLUSTRATIONS[choice].description}</p>
+                <span
+                  className="feature-demo-action feature-illustrated-action"
+                  aria-hidden="true"
+                  data-illustrative-action
                 >
                   View in shop
                   <ArrowUpRight size={17} aria-hidden="true" />
-                </a>
+                </span>
               </>
             ) : slug === "vehicles" ? (
               <>
@@ -321,9 +320,7 @@ export function FeaturePlayground({ slug }: { slug: ProductPage["slug"] }) {
                     </div>
                   ))}
                 </div>
-                <h2>
-                  Browse the gallery.
-                </h2>
+                <h2>Browse the gallery.</h2>
                 <Link
                   href="/inspiration/harris-cars"
                   className="feature-demo-action"

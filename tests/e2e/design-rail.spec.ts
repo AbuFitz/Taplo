@@ -46,7 +46,7 @@ test("gallery carousel filtering and viewport controls keep real links", async (
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/inspiration");
   const rail = page.getByTestId("gallery-list");
-  await expect(rail.locator(":scope>li")).toHaveCount(12);
+  await expect(rail.locator(":scope>li")).toHaveCount(14);
   await rail.focus();
   await page.keyboard.press("End");
   await expect(
@@ -56,7 +56,7 @@ test("gallery carousel filtering and viewport controls keep real links", async (
     .getByRole("group", { name: "Page categories", exact: true })
     .getByRole("button", { name: "Car dealers and garages", exact: true })
     .click();
-  await expect(rail.locator(":scope>li")).toHaveCount(2);
+  await expect(rail.locator(":scope>li")).toHaveCount(3);
   await expect(
     page.getByRole("button", { name: "Previous design", exact: true }),
   ).toBeDisabled();
@@ -105,7 +105,7 @@ test("quick repeated Next taps keep the intended design and adoption link", asyn
     await page
       .getByRole("button", { name: "Next design", exact: true })
       .click();
-  await expect(page.getByText("Design 4 of 12", { exact: true })).toHaveCount(
+  await expect(page.getByText("Design 4 of 14", { exact: true })).toHaveCount(
     1,
   );
   await expect

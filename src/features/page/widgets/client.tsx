@@ -1,16 +1,16 @@
 "use client"
 
 import * as React from "react"
-import { ArrowRight, CalendarCheck, CreditCard, Mail, MessageCircle, Phone, Play } from "lucide-react"
+import { ArrowRight, ArrowUpRight, CalendarCheck, CreditCard, Globe, Mail, MessageCircle, Phone, Play } from "lucide-react"
 import { TaploButton } from "@/components/taplo/taplo-button"
 import { TaploModal } from "@/components/taplo/taplo-modal"
 import { BookingFlow } from "@/features/booking/ui/BookingFlow"
 import { EnquiryForm } from "@/features/booking/ui/EnquiryForm"
 import type { BookingContext } from "@/features/booking/model"
-import { telHref, videoEmbed, whatsappHref } from "@/lib/validation"
+import { isHttpUrl, telHref, videoEmbed, whatsappHref } from "@/lib/validation"
 import { cn } from "@/lib/utils"
 
-export interface BookingChoice { id: string; name: string }
+export interface BookingChoice { id: string; name: string; externalUrl?:string; externalLabel?:string }
 
 export interface BookingActionProps {
   businessName: string
@@ -39,6 +39,20 @@ export interface BookingActionProps {
 /** A page row that opens a themed dialog. Online booking links onward; otherwise it opens the business's own channels. */
 export function BookingAction(p: BookingActionProps) {
   const service = p.services.find((s) => s.id === p.preselect)
+  if (!p.topic && isHttpUrl(service?.externalUrl)) return <a
+    className={p.variant === "card" ? "tp-tile tp-booking-tile" : "tp-btn"}
+    data-variant={p.variant ?? "button"}
+    {...(p.hero ? {"data-primary":"","data-hero":""} : {})}
+    href={service.externalUrl} target="_blank" rel="noopener noreferrer"
+    aria-label={p.variant === "card" ? undefined : `${p.label}: ${service.name}`}
+  >{p.variant === "card" ? <>
+    <span className="tp-booking-tile-top">{p.thumbnail ?? <Globe aria-hidden="true" />}<ArrowUpRight aria-hidden="true" /></span>
+    <span className="tp-booking-tile-title">{p.label}</span>
+    <span className="tp-booking-tile-action">{service.name}<ArrowUpRight aria-hidden="true" /></span>
+  </> : <>{p.thumbnail ?? <Globe aria-hidden="true" className="size-5" />}<span className="tp-btn-main"><span className="tp-btn-label">{p.label}</span></span><ArrowUpRight aria-hidden="true" className="size-4" /></>}</a>
+  const externalChoices = !p.topic && !p.preselect ? p.services.filter(s=>isHttpUrl(s.externalUrl)) : []
+  const localChoices = p.services.filter(s=>!isHttpUrl(s.externalUrl))
+  const externalOnly = externalChoices.length>0 && localChoices.length===0
   const subject = p.topic ?? service?.name
   const message = subject ? `Hi ${p.businessName}, I'd like to ask about: ${subject}.` : `Hi ${p.businessName}, I'd like to ask about your services.`
   const trigger = p.variant === "card" ? (
@@ -59,7 +73,7 @@ export function BookingAction(p: BookingActionProps) {
   if (p.booking && !p.topic) return <BookingFlow ctx={p.booking} trigger={trigger} serviceId={p.preselect ?? undefined} staffId={p.staffId} title={p.label} />
   const hasChannel = Boolean(p.phone || p.whatsapp || p.email)
   return (
-    <TaploModal trigger={trigger} title={p.topic ? `Ask about ${p.topic}` : p.label} description={hasChannel ? "Choose how you’d like to get in touch, or send a message." : "Send a message and the business will reply."}>
+    <TaploModal trigger={trigger} title={p.topic ? `Ask about ${p.topic}` : p.label} description={externalOnly ? "Choose a service to continue on the business’s website." : hasChannel ? "Choose how you’d like to get in touch, or send a message." : "Send a message and the business will reply."}>
       <div className="grid gap-4">
         {p.topic ? <p className="text-sm text-tp-muted">About: <strong className="text-tp-fg">{p.topic}</strong></p> : null}
         {hasChannel ? (
@@ -69,10 +83,11 @@ export function BookingAction(p: BookingActionProps) {
             {p.email ? <TaploButton tone="secondary" size="lg" href={`mailto:${p.email}?subject=${encodeURIComponent(`Enquiry: ${subject ?? p.businessName}`)}&body=${encodeURIComponent(message)}`}><Mail aria-hidden="true" /> Email</TaploButton> : null}
           </div>
         ) : null}
-        <details className="rounded-xl border border-tp-border p-3 [&[open]>summary]:mb-3" open={!hasChannel}>
+        {externalChoices.length ? <ul className="grid gap-2" aria-label="Services on the business website">{externalChoices.map(choice=><li key={choice.id}><a className="tp-btn" href={choice.externalUrl} target="_blank" rel="noopener noreferrer"><span className="tp-btn-main"><span className="tp-btn-label">{choice.name}</span></span><ArrowUpRight aria-hidden="true" className="size-4" /></a></li>)}</ul> : null}
+        {!externalOnly ? <details className="rounded-xl border border-tp-border p-3 [&[open]>summary]:mb-3" open={!hasChannel}>
           <summary className="flex min-h-11 cursor-pointer list-none items-center font-semibold [&::-webkit-details-marker]:hidden">Send a message instead</summary>
-          <EnquiryForm slug={p.slug} businessName={p.businessName} services={p.services} serviceId={p.preselect ?? undefined} topic={p.topic} item={p.item} />
-        </details>
+          <EnquiryForm slug={p.slug} businessName={p.businessName} services={localChoices} serviceId={p.preselect ?? undefined} topic={p.topic} item={p.item} />
+        </details> : null}
       </div>
     </TaploModal>
   )

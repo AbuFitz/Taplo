@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { SiteFooter, SiteHeader } from "@/features/marketing/Site";
 import { ArrowLink } from "@/features/marketing/Scenes";
-import { Shot } from "@/features/marketing/Shot";
+import { MarketingPreview } from "@/features/marketing/MarketingPreview";
 import { DesignPreview } from "@/features/inspiration/DesignPreview";
 import { EXAMPLES, bySlug, describe } from "@/features/inspiration/examples";
 import { INDUSTRY_FILTERS } from "@/features/marketing/ia";
@@ -102,16 +102,16 @@ export default async function ExamplePage({
                     className="group block outline-none focus-visible:ring-3 focus-visible:ring-ring/60"
                   >
                     <div className="px-4 py-6">
-                      <Shot
-                        id={`ex-${g.assetSlug}-phone` as never}
-                        alt={`${g.name}'s page in the ${g.lookName} design`}
-                        width={220}
-                        cropTo={320}
-                        fluid
-                        className="mx-auto transition-transform group-hover:-translate-y-1 motion-reduce:transition-none"
-                      />
+                      <div className="mx-auto max-w-[220px] transition-transform group-hover:-translate-y-1 motion-reduce:transition-none">
+                        <MarketingPreview
+                          scenario={o.scenario}
+                          slug={o.slug}
+                          name={g.name}
+                        />
+                      </div>
                     </div>
                     <h3 className="mt-4 font-display text-2xl">{g.lookName}</h3>
+                    <span className="sr-only">{g.name}</span>
                     <p className="mt-1 text-sm text-foreground/65">
                       {g.industryLabel}
                     </p>

@@ -62,12 +62,6 @@ export default async function ProductPageRoute({
                     {a.label}
                     <ArrowRight aria-hidden="true" className="size-4" />
                   </Link>
-                  <a
-                    href="#feature-detail"
-                    className="inline-flex min-h-11 items-center rounded font-semibold underline underline-offset-4 outline-none focus-visible:ring-3 focus-visible:ring-current"
-                  >
-                    See details
-                  </a>
                 </div>
               </div>
               {p.slug === "services" ? (

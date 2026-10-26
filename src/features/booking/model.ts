@@ -8,6 +8,7 @@ export interface BookableService {
   id: string
   name: string
   description?: string
+  inclusions?: string[]
   group?: string
   image?: BusinessContent["services"][number]["image"]
   priceMode: "fixed" | "from" | "quote" | "free"
@@ -52,7 +53,7 @@ export function buildContext(c: BusinessContent, config?: SchedulingConfig | nul
     slug: c.identity.slug,
     businessName: c.identity.name,
     timezone: (config ?? deriveConfig(c)).timezone,
-    services: c.services.filter((s) => !s.archived).map((s) => ({ id: s.id, name: s.name, description: s.description, group: s.group, image: s.image, priceMode: s.priceMode, priceMinor: s.priceMinor, currency: s.currency, priceUnit: s.priceUnit, externalUrl: s.externalUrl, externalLabel: s.externalLabel, durationMinutes: s.durationMinutes, bookingMode: s.bookingMode })),
+    services: c.services.filter((s) => !s.archived).map((s) => ({ id: s.id, name: s.name, description: s.description, inclusions: s.inclusions, group: s.group, image: s.image, priceMode: s.priceMode, priceMinor: s.priceMinor, currency: s.currency, priceUnit: s.priceUnit, externalUrl: s.externalUrl, externalLabel: s.externalLabel, durationMinutes: s.durationMinutes, bookingMode: s.bookingMode })),
     staff: c.staff.filter((s) => s.bookable !== false).map((s) => ({ id: s.id, name: s.name, role: s.role, photo: s.photo, serviceIds: s.serviceIds ?? null })),
     config: config ?? deriveConfig(c),
     contact: { phone: c.contacts.phone, whatsapp: c.contacts.whatsapp, email: c.contacts.email },
@@ -60,6 +61,14 @@ export function buildContext(c: BusinessContent, config?: SchedulingConfig | nul
 }
 
 export const isOnlineBookable = (s: BookableService) => !s.externalUrl && (s.bookingMode === "instant" || s.bookingMode === "request") && Boolean(s.durationMinutes)
+
+/** Labels describe the selected service's actual destination, including plan-limited contact fallback. */
+export function serviceActionLabel(service: BookableService | undefined, onlineBooking: boolean, fallback: string): string {
+  if (!service) return fallback
+  if (service.externalUrl) return service.externalLabel || "View on website"
+  if (onlineBooking && isOnlineBookable(service)) return service.bookingMode === "request" ? "Request a time" : "Book a time"
+  return "Ask about this"
+}
 
 /** Who can do a service. [""] when the business has no staff list. */
 export function eligibleStaff(ctx: BookingContext, service: BookableService): string[] {

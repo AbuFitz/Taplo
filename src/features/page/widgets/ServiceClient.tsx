@@ -40,6 +40,7 @@ export function ServiceCollection({ groups, variant, options, ctx, businessName,
           {s.image ? <span className="tp-service-photo"><ProfileImage image={s.image} sizes="(max-width: 640px) 90vw, 400px" /></span> : null}
           <span className="tp-service-tile-top"><span className="tp-service-name">{s.name}</span><ArrowUpRight aria-hidden="true" className="tp-service-arrow" /></span>
           {options.showDescriptions && s.description ? <span className="tp-muted tp-service-description tp-clamp">{s.description}</span> : null}
+          {variant === "spotlight" && s.inclusions?.length ? <span className="tp-service-inclusions">{s.inclusions.slice(0,3).map((item,i)=><span key={i}><span aria-hidden="true">•</span>{item}</span>)}</span> : null}
           <span className="tp-service-tile-bottom">
             {options.showPrices ? <span className="tp-price">{price(s)}</span> : null}
             {options.showDuration && s.durationMinutes ? <span className="tp-service-time"><Clock aria-hidden="true" />{mins(s.durationMinutes)}</span> : null}
@@ -84,6 +85,23 @@ export function ServiceCollection({ groups, variant, options, ctx, businessName,
   )
 }
 
+/** The featured block opens the same detail and booking path as the service list. */
+export function ServiceDetailButton({service,ctx,businessName,slug,providers}:{service:BookableService;ctx?:BookingContext;businessName:string;slug:string;providers:{id:string;name:string}[]}) {
+  const [open,setOpen]=React.useState(false)
+  const [book,setBook]=React.useState(false)
+  const trigger=React.useRef<HTMLButtonElement>(null)
+  const restore=(event:Event)=>{event.preventDefault();trigger.current?.focus({preventScroll:true})}
+  return <>
+    <Overlay tone="page" kind="detail" title={service.name} description={[priceWording(service),mins(service.durationMinutes)].filter(Boolean).join(" · ")} open={open} onOpenChange={setOpen} testId="service-detail"
+      trigger={<button ref={trigger} type="button" className="tp-service-detail-link">View details<ArrowUpRight aria-hidden="true" className="size-4" /></button>}
+      onCloseAutoFocus={event=>{if(book) event.preventDefault()}}
+    >
+      <Detail s={service} ctx={ctx} businessName={businessName} slug={slug} providers={providers} onBook={()=>{setOpen(false);setBook(true)}} />
+    </Overlay>
+    {ctx?<BookingFlow ctx={ctx} serviceId={service.id} open={book} onOpenChange={setBook} onCloseAutoFocus={restore} title={`Book ${service.name}`} />:null}
+  </>
+}
+
 function Detail({ s, ctx, businessName, slug, providers, onBook }: { s: BookableService; ctx?: BookingContext; businessName: string; slug: string; providers: { id: string; name: string }[]; onBook: () => void }) {
   const m = modeOf(s)
   const canBook = Boolean(ctx && isOnlineBookable(s) && eligibleStaff(ctx, s).length > 0)
@@ -91,6 +109,7 @@ function Detail({ s, ctx, businessName, slug, providers, onBook }: { s: Bookable
     <div className="grid gap-4">
       {s.image ? <div className="tp-service-detail-photo"><ProfileImage image={s.image} sizes="(max-width: 640px) 100vw, 660px" /></div> : null}
       {s.description ? <p className="leading-relaxed [overflow-wrap:anywhere]">{s.description}</p> : null}
+      {s.inclusions?.length ? <section aria-labelledby={`included-${s.id}`} className="tp-service-included-detail"><h3 id={`included-${s.id}`}>What’s included</h3><ul className="tp-service-inclusions">{s.inclusions.map((item,i)=><li key={i}><span aria-hidden="true">•</span>{item}</li>)}</ul></section> : null}
       <dl className="tp-service-facts grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
         <div><dt className="text-tp-muted">Price</dt><dd className="font-semibold">{priceWording(s)}</dd></div>
         {s.durationMinutes ? <div><dt className="text-tp-muted">Time</dt><dd className="flex items-center gap-1 font-semibold"><Clock aria-hidden="true" className="size-3.5" />{mins(s.durationMinutes)}</dd></div> : null}

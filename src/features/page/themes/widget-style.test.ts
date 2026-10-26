@@ -45,3 +45,8 @@ describe("effective block surfaces", () => {
     expect(widgetStyle(page, {})).toEqual({ vars: {}, attrs: {} });
   });
 });
+
+it('page-level button hover keeps the foreground readable when its explicit text differs from the accent text',()=>{
+ const resolved=resolveStyle('clean',{colors:{accent:'#2563eb',accentText:'#111111'},buttons:{fill:'solid',background:'#2563eb',text:'#ffffff'}});
+ expect(contrastRatio(resolved.cssVars['--tp-btn-text'],resolved.cssVars['--tp-btn-hover'])).toBeGreaterThanOrEqual(4.5);
+});

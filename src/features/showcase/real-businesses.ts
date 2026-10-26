@@ -8,6 +8,7 @@ import type { WidgetType } from "@/features/page/contracts/widgets";
 const fix = "https://www.fixnowmechanics.co.uk";
 const learn = "https://www.brightlearntutoring.co.uk";
 const image = (src: string, alt: string) => ({src, alt});
+const quietLink = (id:string,label:string,url:string) => ({...newWidget("link",{label,url,variant:"compact"}),id,appearance:{buttonFill:"soft" as const,buttonShape:"rounded" as const}});
 const block = (id: string, type: WidgetType, settings: Record<string, unknown>, raised = false) => ({
   ...newWidget(type, settings), id, ...(raised ? {appearance:applySectionTreatment({},"raised")} : {}),
 });
@@ -15,8 +16,8 @@ const block = (id: string, type: WidgetType, settings: Record<string, unknown>, 
 export const FIXNOW: BusinessContentInput = {
   identity: {
     name:"FixNow Mechanics", slug:"fixnowmechanics", industryKey:"mechanic", industryLabel:"Mobile mechanic",
-    logo:{...image("/businesses/fixnow/wordmark.svg","FixNow Mechanics"),width:640,height:130,ink:"light"},
-    tagline:"Diagnostics, servicing and repairs at your home or workplace in Hemel Hempstead and nearby towns.",
+    logo:{...image("/businesses/fixnow/wordmark.svg","FixNow Mechanics"),width:640,height:130},
+    tagline:"Diagnostics, servicing and repairs at your home or workplace.",
     heroImage:{...image("/businesses/fixnow/van.jpg","FixNow Mechanics service van"),width:1344,height:768,focal:{x:50,y:50}},
   },
   location:{mode:"service_area",locality:"Hemel Hempstead & nearby towns",timezone:"Europe/London"},
@@ -90,12 +91,12 @@ export const BRIGHTLEARN: BusinessContentInput = {
 export const REAL_BUSINESS_STYLES: Record<"fixnow"|"brightlearn",StyleOverrides> = {
   fixnow:{
     colors:{background:"#101114",surface:"#24262b",text:"#ffffff",muted:"#bec1c9",accent:"#f2b602",accentText:"#16140b",border:"#42454e"},
-    background:{kind:"gradient",from:"#101114",to:"#272924",angle:145,motion:true,pace:"slow"},
-    header:{layout:"banner",align:"left",avatarShape:"logo",actions:"icons",showLocation:true,scrim:"soft"},
+    background:{kind:"solid",color:"#101114"},
+    header:{layout:"centered",align:"left",avatarShape:"logo",avatarSize:"md",actions:"icons",showLocation:true},
     text:{headingFont:"geist",bodyFont:"inter",size:"md",headingWeight:"bold",headingCase:"normal",align:"left"},
     cards:{surface:"solid",opacity:100,radius:"lg",border:"none",shadow:"soft",padding:"comfortable"},
     buttons:{shape:"rounded",fill:"solid",shadow:"soft",showIcons:true},
-    layout:{desktop:"split",width:"wide",density:"comfortable",rhythm:"editorial"},motion:"subtle",decoration:"none",
+    layout:{desktop:"split",width:"wide",density:"comfortable",rhythm:"even"},motion:"subtle",decoration:"grain",
   },
   brightlearn:{
     colors:{background:"#e8edf4",surface:"#ffffff",text:"#1b293d",muted:"#506077",accent:"#243d68",accentText:"#ffffff",border:"#c4cdda"},
@@ -110,16 +111,16 @@ export const REAL_BUSINESS_STYLES: Record<"fixnow"|"brightlearn",StyleOverrides>
 export const REAL_BUSINESSES = {
   fixnow:{label:"FixNow Mechanics",content:FIXNOW,widgets:()=>[
     block("fn-quote","link",{label:"Get a quote",subtitle:"Check your postcode and tell us about your vehicle",url:`${fix}/estimate`,variant:"button"}),
-    block("fn-services","serviceList",{title:"Mobile servicing and repairs",variant:"cards",showDuration:false},true),
-    block("fn-shop","products",{title:"From the FixNow shop",variant:"swipe"}),
-    block("fn-all-products","link",{label:"Browse the full shop",url:"https://shop.fixnowmechanics.co.uk/shop",variant:"compact"}),
-    block("fn-coverage","text",{title:"We come to you",body:FIXNOW.about,variant:"note"},true),
-    block("fn-gallery","gallery",{title:"On the road",variant:"filmstrip"}),
+    block("fn-services","serviceList",{title:"Mobile servicing and repairs",variant:"compact",showDuration:false},true),
+    block("fn-coverage","text",{title:"We come to you",body:FIXNOW.about,variant:"body"},true),
+    block("fn-gallery","gallery",{title:"On the road",variant:"mosaic"}),
+    block("fn-shop","products",{title:"Dash cams from our shop",variant:"swipe"}),
+    quietLink("fn-all-products","Browse the full shop","https://shop.fixnowmechanics.co.uk/shop"),
     block("fn-faq","faq",{title:"Before you book",variant:"cards"},true),
-    block("fn-track","link",{label:"Track your job",url:`${fix}/track`,variant:"card"}),
-    block("fn-reviews","link",{label:"FixNow on Google",url:"https://share.google/9KkDSrnHkdPoeQLMl",variant:"compact"}),
+    quietLink("fn-track","Track your job",`${fix}/track`),
+    quietLink("fn-reviews","FixNow on Google","https://share.google/9KkDSrnHkdPoeQLMl"),
     block("fn-social","social",{variant:"icons"}),
-    block("fn-website","link",{label:"FixNow website",url:fix,variant:"compact"}),
+    quietLink("fn-website","FixNow website",fix),
   ]},
   brightlearn:{label:"BrightLearn Tutoring",content:BRIGHTLEARN,widgets:()=>[
     block("bl-intro","featuredService",{serviceId:"bl-intro",headline:"New to BrightLearn?"},true),

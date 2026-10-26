@@ -16,7 +16,8 @@ describe("related inspiration", () => {
   it("keeps automotive visitors near automotive and home-service designs", () => {
     const matches = relatedExamples(bySlug("harris-cars")!);
     expect(matches[0].slug).toBe("detail-dept");
-    expect(matches[1].industry).toBe("trades");
+    expect(matches[1].slug).toBe("fixnowmechanics");
+    expect(matches[2].industry).toBe("trades");
   });
   it("offers a related appointment business to a barber before creative portfolios", () => {
     expect(relatedExamples(bySlug("jays-barbers")!)[0].industry).toBe("beauty");

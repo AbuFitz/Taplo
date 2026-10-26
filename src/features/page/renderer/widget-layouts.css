@@ -118,6 +118,7 @@
 .tp-gallery.tp-gallery-single{grid-template-columns:minmax(0,1fr)}.tp-photo-wall.tp-gallery-single{column-count:1}.tp-gallery-single .tp-media{aspect-ratio:4/3}
 
 /* Gallery is a set of photographic objects, never an unbounded poster. */
+.tp-gallery-open .tp-media {width:100%;}
 .tp-gallery-open {display:block;width:100%;border-radius:var(--tp-card-radius);outline-offset:5px;}
 .tp-gallery-mosaic {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--tp-s-3);list-style:none;margin:0;padding:0;}
 .tp-gallery-mosaic>li {position:relative;min-width:0;}
@@ -161,3 +162,17 @@
 /* Optional service photography remains inside the whole card's hit area. */
 .tp-service-photo{position:relative;display:block;aspect-ratio:16/9;width:100%;overflow:hidden;border-radius:calc(var(--tp-radius,20px)*.6);flex-shrink:0}
 .tp-service-detail-photo{position:relative;aspect-ratio:16/10;width:100%;overflow:hidden;border-radius:20px}
+
+/* Service/package details share the same content record across every presentation. */
+.tp-featured-photo{position:relative;width:100%;aspect-ratio:16/10;overflow:hidden;border-radius:calc(var(--tp-radius,20px)*.7)}
+.tp-featured-actions{display:grid;gap:10px}
+.tp-featured-actions .tp-btn{width:100%}
+.tp-service-detail-link{display:inline-flex;justify-content:center;align-items:center;gap:12px;min-height:44px;padding:8px 12px;font-size:var(--tp-t-sm);font-weight:600;border-radius:var(--tp-btn-radius);color:var(--tp-muted);text-decoration:underline;text-underline-offset:4px}
+.tp-service-inclusions{display:grid;gap:9px;margin-block:18px;font-size:var(--tp-t-sm);line-height:1.55;list-style:none;padding:0}
+.tp-service-inclusions>li,.tp-service-inclusions>span{display:flex;gap:10px;align-items:baseline;overflow-wrap:anywhere}
+.tp-service-inclusions>li>span:first-child,.tp-service-inclusions>span>span:first-child{flex-shrink:0;color:var(--tp-accent)}
+.tp-service-included-detail h3{font-weight:650;font-size:var(--tp-t-md)}
+.tp-service-included-detail .tp-service-inclusions{margin-bottom:0}
+.tp-service-tile .tp-service-inclusions{margin-block:12px;color:var(--tp-muted)}
+
+.tp-featured-service>.tp-service-inclusions,.tp-featured-service>.tp-featured-terms{margin-block:0}

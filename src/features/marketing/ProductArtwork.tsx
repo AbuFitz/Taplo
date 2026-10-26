@@ -7,16 +7,16 @@ import { cn } from "@/lib/utils";
 type Slug = ProductPage["slug"];
 export const PRODUCT_TONES: Record<Slug, { background: string; ink: string }> =
   {
-    design: { background: "#e8e8e8", ink: "#111111" },
-    services: { background: "#f4f4f4", ink: "#080808" },
+    design: { background: "#e3e8e2", ink: "#111111" },
+    services: { background: "#eee9e1", ink: "#080808" },
     booking: { background: "#ffffff", ink: "#111111" },
-    team: { background: "#e6e6e6", ink: "#080808" },
-    products: { background: "#ededed", ink: "#111111" },
-    vehicles: { background: "#e3e3e3", ink: "#111111" },
-    "gallery-reviews": { background: "#ededed", ink: "#111111" },
-    enquiries: { background: "#e6e6e6", ink: "#080808" },
+    team: { background: "#e8e6ef", ink: "#080808" },
+    products: { background: "#e5edf1", ink: "#111111" },
+    vehicles: { background: "#e5e8e6", ink: "#111111" },
+    "gallery-reviews": { background: "#f0e9de", ink: "#111111" },
+    enquiries: { background: "#e8e3df", ink: "#080808" },
     sharing: { background: "#111111", ink: "#ffffff" },
-    messages: { background: "#ffffff", ink: "#111111" },
+    messages: { background: "#e8eef0", ink: "#111111" },
   };
 const LABELS: Record<Slug, string> = {
   design: "Jay’s Barbers's same content in four editable looks",
@@ -29,7 +29,8 @@ const LABELS: Record<Slug, string> = {
     "An illustrative UK forecourt photograph and the actual Harris Cars vehicle detail",
   "gallery-reviews":
     "An illustrative shop photograph opened in Taplo's actual photo viewer",
-  enquiries: "The actual Detail Dept. enquiry form and local preview confirmation",
+  enquiries:
+    "The actual Detail Dept. enquiry form and local preview confirmation",
   sharing: "The café sharing popup and a working business page",
   messages:
     "The current enquiry interface alongside messaging and appointment symbols",

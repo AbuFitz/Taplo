@@ -15,9 +15,9 @@ import { ProfileImage } from "../renderer/ProfileImage"
 import type { PageViewModel, RenderWidget } from "../renderer/view-model"
 import { BookingAction, ItemDetail, PaymentAction, VideoEmbed, type BookingActionProps } from "./client"
 import { WidgetIcon } from "./WidgetIcon"
-import { buildPlanContext, priceWording } from "@/features/booking/model"
+import { buildPlanContext, priceWording, serviceActionLabel } from "@/features/booking/model"
 import { TeamMembers, type TeamMemberData } from "./TeamClient"
-import { ServiceCollection } from "./ServiceClient"
+import { ServiceCollection, ServiceDetailButton } from "./ServiceClient"
 import { Gallery } from "./GalleryClient"
 import { Hours } from "./HoursClient"
 import { Collection } from "./Collection"
@@ -61,7 +61,7 @@ export function bookingProps(vm: PageViewModel, extra: Partial<BookingActionProp
   return {
     businessName: b.identity.name,
     slug: b.identity.slug,
-    services: b.services.map((s) => ({ id: s.id, name: s.name })),
+    services: b.services.map((s) => ({ id: s.id, name: s.name, externalUrl:s.externalUrl, externalLabel:s.externalLabel })),
     phone: b.contacts.phone,
     whatsapp: b.contacts.whatsapp,
     email: b.contacts.email,
@@ -124,7 +124,7 @@ function DocumentWidget({ w }: P) {
 
 /* ------------------------------------------------------------------ services / sales */
 function bookable(x: ServiceContent): BookableService {
-  return { id: x.id, name: x.name, description: x.description, group: x.group, image: x.image, priceMode: x.priceMode, priceMinor: x.priceMinor, currency: x.currency, priceUnit: x.priceUnit, externalUrl: x.externalUrl, externalLabel: x.externalLabel, durationMinutes: x.durationMinutes, bookingMode: x.bookingMode }
+  return { id: x.id, name: x.name, description: x.description, inclusions: x.inclusions, group: x.group, image: x.image, priceMode: x.priceMode, priceMinor: x.priceMinor, currency: x.currency, priceUnit: x.priceUnit, externalUrl: x.externalUrl, externalLabel: x.externalLabel, durationMinutes: x.durationMinutes, bookingMode: x.bookingMode }
 }
 
 /** Who provides each service, so the detail view can say so. People with serviceIds null provide every service. */
@@ -165,17 +165,23 @@ function FeaturedServiceWidget({ w, vm }: P) {
   const svc = selectedService(vm.business.services, s.serviceId)
   if (!svc) return null
   return <Card className="tp-featured-service">
+    {svc.image ? <div className="tp-featured-photo"><ProfileImage image={svc.image} sizes="(max-width:640px) 90vw, 600px" /></div> : null}
     {s.headline ? <p className="tp-muted tp-featured-eyebrow">{s.headline}</p> : null}
     <h2>{svc.name}</h2>
-    {svc.description ? <p className="tp-muted tp-featured-description">{svc.description}</p> : null}
+    {svc.description ? <p className="tp-muted tp-featured-description tp-clamp">{svc.description}</p> : null}
+    {svc.inclusions?.length ? <ul className="tp-service-inclusions" aria-label="Included in this service">{svc.inclusions.slice(0,3).map((item,i)=><li key={i}><span aria-hidden="true">•</span>{item}</li>)}</ul> : null}
     <div className="tp-featured-terms"><span className="tp-price">{formatPrice(svc)}</span>{svc.durationMinutes ? <span className="tp-muted">{formatDuration(svc.durationMinutes)}</span> : null}</div>
-    {svc.externalUrl ? <a className="tp-btn" href={svc.externalUrl} target="_blank" rel="noopener noreferrer">{svc.externalLabel || "View on website"}<ArrowUpRight aria-hidden="true" className="size-4" /></a> : <BookingAction {...bookingProps(vm, { label: s.ctaLabel || (vm.onlineBooking && svc.bookingMode === "request" ? "Request a time" : vm.onlineBooking && svc.bookingMode === "instant" ? "Book a time" : "Ask about this"), preselect: svc.id })} />}
+    <div className="tp-featured-actions">
+      <BookingAction {...bookingProps(vm, { label: s.ctaLabel || serviceActionLabel(bookable(svc),vm.onlineBooking,"Ask about this"), preselect: svc.id })} />
+      <ServiceDetailButton service={bookable(svc)} ctx={serviceCtx(vm)} businessName={vm.business.identity.name} slug={vm.business.identity.slug} providers={providersByService(vm)[svc.id] ?? []} />
+    </div>
   </Card>
 }
 
 function BookingWidget({ w, vm }: P) {
   const s = w.settings as S
-  const props = bookingProps(vm, { label: s.label || vm.industry.terminology.booking, preselect: s.serviceId, thumbnail: w.appearance.thumbnail ? <Thumb w={w} /> : undefined, variant: s.variant === "card" ? "card" : "button", subtitle: s.variant === "card" ? (vm.onlineBooking ? "Pick a service and a time" : "Choose how to get in touch") : undefined })
+  const selected = s.serviceId ? selectedService(vm.business.services,s.serviceId) : undefined
+  const props = bookingProps(vm, { label: s.label || serviceActionLabel(selected,vm.onlineBooking,vm.industry.terminology.booking), preselect: s.serviceId, thumbnail: w.appearance.thumbnail ? <Thumb w={w} /> : undefined, variant: s.variant === "card" ? "card" : "button", subtitle: s.variant === "card" ? (vm.onlineBooking ? "Pick a service and a time" : "Choose how to get in touch") : undefined })
   return <BookingAction {...props} />
 }
 

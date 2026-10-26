@@ -10,7 +10,7 @@ for (const width of [320, 390, 768, 1440])
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/inspiration");
     await expect(page.getByRole("banner")).toHaveCount(1);
-    await expect(page.getByRole("contentinfo")).toHaveCount(0);
+    await expect(page.getByRole("contentinfo")).toHaveCount(1);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Design inspiration",
     );
@@ -27,7 +27,7 @@ for (const width of [320, 390, 768, 1440])
     await page.getByRole("searchbox", { name: "Find a design" }).fill("Maya");
     await expect(page.getByTestId("design-card")).toHaveCount(1);
     await page.getByRole("button", { name: "Clear search" }).click();
-    await expect(page.getByTestId("design-card")).toHaveCount(12);
+    await expect(page.getByTestId("design-card")).toHaveCount(14);
     await page.goto("/");
     await expect(page.locator(".hero-showcase-offer")).toHaveCount(0);
     const capture = page.getByTestId("hero-showcase").locator("img");

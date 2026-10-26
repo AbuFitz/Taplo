@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { ServiceInclusions } from "./ServiceInclusions"
 import { isHttpUrl } from "@/lib/validation"
 import { ImageField } from "@/features/page/editor/controls"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -23,12 +24,14 @@ const BOOKING_LABEL: Record<(typeof SERVICE_BOOKING_MODES)[number], string> = {
   instant: "Customer books a time and it is confirmed",
 }
 
-export function serviceErrors(s: ServiceContent): Partial<Record<"name" | "price" | "duration" | "link", string>> {
-  const e: Partial<Record<"name" | "price" | "duration" | "link", string>> = {}
+export function serviceErrors(s: ServiceContent): Partial<Record<"name" | "price" | "duration" | "link" | "inclusions", string>> {
+  const e: Partial<Record<"name" | "price" | "duration" | "link" | "inclusions", string>> = {}
   if (!s.name.trim()) e.name = "Give the service a name."
   if ((s.priceMode === "fixed" || s.priceMode === "from") && s.priceMinor === undefined) e.price = "Enter a price, or choose “Quote on request”."
   if (!s.externalUrl && s.bookingMode === "instant" && !s.durationMinutes) e.duration = "Instant booking needs a duration."
   if (s.externalUrl && !isHttpUrl(s.externalUrl)) e.link = "Enter a full web address starting with https://."
+  if ((s.inclusions?.length ?? 0)>8) e.inclusions="Use up to eight included items."
+  else if (s.inclusions?.some(item=>!item.trim() || item.length>140)) e.inclusions="Fill in each included item, or remove the empty row."
   return e
 }
 
@@ -107,6 +110,7 @@ export function ServiceForm({ service, onChange, showErrors }: { service: Servic
         <Label htmlFor={`${id}-desc`}>Description (optional)</Label>
         <Textarea id={`${id}-desc`} placeholder="What’s included, who it’s for, and anything to know before booking." rows={3} maxLength={1200} value={service.description ?? ""} onChange={(e) => set({ description: e.target.value || undefined })} />
       </div>
+      <ServiceInclusions items={service.inclusions ?? []} onChange={inclusions=>set({inclusions})} error={errors.inclusions} />
       <details className="rounded-2xl bg-muted/40 px-4 py-2">
         <summary className="min-h-11 cursor-pointer py-3 text-sm font-medium">Service photo (optional)</summary>
         <ImageField label="Service photo" value={service.image} onChange={image => set({ image: image ?? undefined })} defaultAlt={service.name || "Service photo"} purpose="photo" samples={false} />

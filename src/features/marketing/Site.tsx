@@ -1,4 +1,5 @@
 import Link from "next/link";
+import "./illustrations.css";
 import { TAPLO_DOMAINS } from "@/lib/domains";
 import { ArrowRight } from "lucide-react";
 import { TaploLogo } from "@/components/taplo/brand";

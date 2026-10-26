@@ -364,6 +364,8 @@
   }
 }
 
-.feature-product-photo{position:relative;height:240px;margin:20px 0;background:#fff;border-radius:18px;overflow:hidden}
-.feature-product-photo img{object-fit:contain;padding:16px}
+.feature-product-photo{position:relative;height:240px;margin:20px 0;background:radial-gradient(ellipse at 50% 65%,#ddd9d0,transparent 65%);overflow:visible}
+.feature-product-photo img{object-fit:contain;padding:0}
 @media(max-width:420px){.feature-product-photo{height:200px}}
+
+.feature-illustrated-action{pointer-events:none;cursor:default;user-select:none;}

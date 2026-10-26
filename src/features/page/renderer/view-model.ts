@@ -1,3 +1,4 @@
+import { serviceActionLabel } from "@/features/booking/model";
 import { businessContentSchema, type BusinessContent, type BusinessContentInput } from "@/features/businesses/content";
 import { resolveEntitlements, type Entitlements, type SubscriptionStatus } from "@/features/subscriptions/entitlements";
 import type { PlanId } from "@/features/subscriptions/plans";
@@ -122,9 +123,10 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
 
   const k = business.contacts;
   const bookingWidget = widgets.find((w) => w.type === "booking" && !w.hidden && w.status.state === "ready");
+  const bookingService = bookingWidget?.settings.serviceId ? selectedService(business.services,bookingWidget.settings.serviceId) : undefined
   const actions: PageAction[] = [];
   // A ready booking widget is a booking action even when online booking is not set up: it opens the enquiry. Without this the widget is promoted into a header slot that has no button for it, and the action disappears.
-  if (onlineBooking || bookingWidget) actions.push({ kind: "book", label: bookingLabel(industry.terminology.booking, business.booking.mode), href: `/${business.identity.slug}/book`, event: "booking_click" });
+  if (onlineBooking || bookingWidget) actions.push({ kind: "book", label: serviceActionLabel(bookingService,onlineBooking,bookingLabel(industry.terminology.booking, business.booking.mode)), href: bookingService?.externalUrl || `/${business.identity.slug}/book`, event: "booking_click" });
   if (k.phone) actions.push({ kind: "call", label: "Call", href: telHref(k.phone), event: "call_click" });
   if (k.whatsapp) actions.push({ kind: "whatsapp", label: "WhatsApp", href: whatsappHref(k.whatsapp, `Hi ${business.identity.name}, I found you on Taplo.`), event: "whatsapp_click" });
   if (k.email) actions.push({ kind: "email", label: "Email", href: `mailto:${k.email}` });
@@ -138,7 +140,7 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
   let primary: PageViewModel["primary"] = null;
   if (primaryMode && chosen) {
     const found = actions.find((a) => a.kind === chosen);
-    if (chosen === "book") primary = { kind: "book", label: (bookingWidget?.settings.label as string | undefined) || bookingLabel(industry.terminology.booking, business.booking.mode), href: found?.href ?? "", event: "booking_click" };
+    if (chosen === "book") primary = { kind: "book", label: (bookingWidget?.settings.label as string | undefined) || found?.label || bookingLabel(industry.terminology.booking, business.booking.mode), href: found?.href ?? "", event: "booking_click" };
     else if (found) primary = { kind: found.kind, label: found.kind === "call" ? "Call" : found.label, href: found.href, event: found.event };
   }
   // The booking widget stands in for the header's own booking button (the main action, or one of the header's buttons) so a

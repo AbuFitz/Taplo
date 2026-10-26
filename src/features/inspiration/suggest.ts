@@ -34,9 +34,11 @@ export function exampleStart(slug: string) {
       if (w.type === "text") { settings.body = ""; delete settings.title }
       if (w.type === "image") { settings.image = undefined; delete settings.caption; delete settings.linkUrl }
       if (w.type === "announcement") { settings.text = ""; delete settings.linkUrl; delete settings.linkLabel }
-      if (w.type === "link") { settings.url = ""; delete settings.subtitle }
+      if (w.type === "link") { settings.url = ""; settings.label = "Add a link"; delete settings.subtitle }
       if (w.type === "enquiry") { delete settings.title; delete settings.intro; settings.buttonLabel = "Get in touch" }
-      return { type: w.type, settings, appearance: structuredClone(w.appearance) }
+      const appearance = structuredClone(w.appearance)
+      delete appearance.thumbnail
+      return { type: w.type, settings, appearance }
     }),
   }
 }

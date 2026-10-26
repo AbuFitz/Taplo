@@ -1,0 +1,34 @@
+/* Decorative artwork behaves like a placed image; real form fields and page text remain usable. */
+:where(
+  .widget-orbit-world,
+  .plaque-object,
+  .feature-demo-card,
+  .service-pricing-stage,
+  .presence-art,
+  .booking-illustration,
+  .product-scene,
+  .how-opening-art,
+  .how-design-art,
+  .how-review-art,
+  .marketing-live-preview
+) {
+  -webkit-user-select: none;
+  user-select: none;
+}
+:where(
+    .widget-orbit-world,
+    .plaque-object,
+    .feature-demo-card,
+    .service-pricing-stage,
+    .presence-art,
+    .booking-illustration,
+    .product-scene,
+    .how-opening-art,
+    .how-design-art,
+    .how-review-art,
+    .marketing-live-preview
+  )
+  img {
+  -webkit-user-drag: none;
+  user-select: none;
+}

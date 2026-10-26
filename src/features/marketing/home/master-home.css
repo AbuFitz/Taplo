@@ -229,3 +229,61 @@
 .home-designs .home-design-summary .font-display {
   font-size: clamp(25px, 3vw, 36px);
 }
+
+/* A cool, light plan chapter separates pricing from the dark product composition. */
+.home-plans {
+  background: #e8eef2;
+  color: #172a38;
+}
+.home-plans-inner {
+  max-width: 88rem;
+  margin: auto;
+  padding: 72px 20px;
+  display: grid;
+  gap: 38px;
+}
+.home-plans-intro,
+.home-plan-summary {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #4c6070;
+}
+.home-plans-intro {
+  margin-top: 18px;
+  max-width: 32ch;
+}
+.home-plans-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  margin-top: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #244d68;
+}
+.home-plans-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 5px;
+  border-radius: 4px;
+}
+.home-plans-list {
+  border-block: 1px solid #c7d3dc;
+}
+.home-plans-list > li + li {
+  border-top: 1px solid #c7d3dc;
+}
+.home-plans-list h3 {
+  color: #172a38;
+}
+@media (min-width: 768px) {
+  .home-plans-inner {
+    padding: 88px 32px;
+  }
+}
+@media (min-width: 1024px) {
+  .home-plans-inner {
+    grid-template-columns: 0.7fr 1.3fr;
+    gap: 80px;
+  }
+}

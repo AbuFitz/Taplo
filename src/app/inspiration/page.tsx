@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SiteHeader } from "@/features/marketing/Site";
+import { SiteHeader, SiteFooter } from "@/features/marketing/Site";
 import { INDUSTRY_FILTERS } from "@/features/marketing/ia";
 import { EXAMPLES, describe } from "@/features/inspiration/examples";
 import { capabilityTags, styleTags } from "@/features/inspiration/facets";
@@ -63,6 +63,7 @@ export default async function InspirationPage({
           initialIndustry={initialIndustry}
         />
       </main>
+      <SiteFooter />
     </div>
   );
 }

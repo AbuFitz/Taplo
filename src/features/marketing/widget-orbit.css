@@ -21,43 +21,11 @@
   width: 290px;
   height: 350px;
   z-index: 0;
-  transform: rotate(-27deg) rotateY(-24deg);
+  transform: rotate(9deg);
   filter: drop-shadow(16px 30px 18px #0008);
 }
-.orbit-sculpture::before,
-.orbit-sculpture::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: conic-gradient(
-    from 20deg,
-    #d7d7d5,
-    #fefefc 12%,
-    #797b7e 21%,
-    #ededec 29%,
-    #45484d 40%,
-    #c3c6c6 51%,
-    #fff 60%,
-    #76787c 70%,
-    #d1d2d2 82%,
-    #fff 91%,
-    #d7d7d5
-  );
-  mask: radial-gradient(ellipse, transparent 53%, #000 54%);
-  box-shadow: inset 2px 3px 5px #fff9;
-}
-.orbit-sculpture::after {
-  inset: 13px 11px;
-  opacity: 0.7;
-  background: conic-gradient(#fff, #777, #eee, #333, #fff);
-  mask: radial-gradient(
-    ellipse,
-    transparent 65%,
-    #000 66%,
-    #000 71%,
-    transparent 72%
-  );
+.orbit-sculpture img {
+  object-fit: contain;
 }
 .widget-orbit-core {
   position: absolute;
@@ -71,13 +39,11 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  transform: translate(-50%, -50%) rotateY(-12deg) rotateX(5deg) rotateZ(-5deg);
+  transform: translate(-50%, -50%) rotateY(-4deg) rotateZ(-2deg);
   border-radius: 30px;
   background: linear-gradient(145deg, #48434e 0%, #242129 47%, #141217 100%);
   color: #f5f2e8;
   box-shadow:
-    5px 6px 0 -2px #747078,
-    10px 12px 0 -5px #242229,
     20px 40px 65px -24px #000d,
     0 1px 0 #ffffff55 inset;
   overflow: hidden;
@@ -340,12 +306,12 @@
   }
   .orbit-sculpture {
     left: auto;
-    right: 7%;
-    top: 8%;
-    width: 47%;
+    right: -2%;
+    top: -2%;
+    width: 54%;
     max-width: 220px;
-    height: 226px;
-    transform: rotate(24deg) rotateY(-23deg);
+    height: 200px;
+    transform: rotate(9deg);
   }
   .widget-orbit-core {
     width: 65%;
@@ -355,7 +321,7 @@
     padding: 70px 23px 23px;
     gap: 14px;
     border-radius: 26px;
-    transform: translate(-50%, -50%) rotateY(-9deg) rotateX(4deg) rotateZ(-5deg);
+    transform: translate(-50%, -50%) rotateY(-4deg) rotateZ(-2deg);
   }
   .orbit-profile-mark {
     position: absolute;
@@ -484,7 +450,7 @@
     filter: drop-shadow(16px 30px 18px #0008) brightness(1);
   }
   50% {
-    filter: drop-shadow(10px 24px 15px #0008) brightness(1.18);
+    filter: drop-shadow(10px 24px 15px #0008) brightness(1.04);
   }
 }
 @keyframes orbit-action {

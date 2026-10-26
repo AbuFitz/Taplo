@@ -239,7 +239,7 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}, logoAc
     "--tp-radius-sm": `calc(${RADIUS[spec.cards.radius]} * 0.5)`,
     "--tp-radius-md": `calc(${RADIUS[spec.cards.radius]} * 0.75)`,
     "--tp-btn-sheen": spec.buttons.fill === "solid" && spec.buttons.shadow !== "hard" ? "inset 0 1px 0 0 rgb(255 255 255 / 0.2)" : "0 0 0 0 transparent",
-    "--tp-btn-hover": spec.buttons.fill === "solid" ? roles.accentHover : "transparent",
+    "--tp-btn-hover": spec.buttons.fill === "solid" ? (contrastRatio(btn.text,roles.accentHover)>=4.5 ? roles.accentHover : btn.bg) : "transparent",
     "--tp-btn-bg": btn.bg,
     "--tp-btn-text": btn.text,
     "--tp-btn-border": btn.border,

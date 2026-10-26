@@ -52,7 +52,7 @@ function Actions({ vm }: { vm: PageViewModel }) {
           p.kind === "book" && vm.promotedWidgetId ? (
             // The wrapper has a box of its own, so a tap on the main action selects the booking widget while editing
             // (buttons ignore the pointer in the editor).
-            <div className="tp-primary-slot" data-widget-id={vm.promotedWidgetId}><BookingAction {...bookingProps(vm, { label: p.label, variant: "button", hero: true })} /></div>
+            <div className="tp-primary-slot" data-widget-id={vm.promotedWidgetId}><BookingAction {...bookingProps(vm, { label: p.label, variant: "button", hero: true, preselect: String(vm.widgets.find(w=>w.id===vm.promotedWidgetId)?.settings.serviceId || "") || undefined })} /></div>
           ) : (
             <a className="tp-btn" data-hero="" data-primary="" data-event={p.event} href={p.href} {...external(p.kind)}>
               {PI ? <PI aria-hidden="true" className="size-5" /> : null}<span className="tp-btn-main"><span className="tp-btn-label">{p.label}</span></span><ArrowUpRight aria-hidden="true" className="size-4" />
@@ -69,7 +69,7 @@ function Actions({ vm }: { vm: PageViewModel }) {
     <div className="tp-actions">
       {actions.map((a) => {
         const I = ICON[a.kind]
-        if (a.kind === "book" && vm.promotedWidgetId) return <div key={a.kind} className="tp-primary-slot" data-widget-id={vm.promotedWidgetId} style={{ width: "auto" }}><BookingAction {...bookingProps(vm, { label: String(vm.widgets.find((w) => w.id === vm.promotedWidgetId)?.settings.label || a.label), variant: "button" })} /></div>
+        if (a.kind === "book" && vm.promotedWidgetId) return <div key={a.kind} className="tp-primary-slot" data-widget-id={vm.promotedWidgetId} style={{ width: "auto" }}><BookingAction {...bookingProps(vm, { label: String(vm.widgets.find((w) => w.id === vm.promotedWidgetId)?.settings.label || a.label), preselect: String(vm.widgets.find(w=>w.id===vm.promotedWidgetId)?.settings.serviceId || "") || undefined, variant: "button" })} /></div>
         return (
           <a key={a.kind} className="tp-btn" data-inline="" {...(a.kind === "book" ? { "data-primary": "" } : {})} data-event={a.event} href={a.href} {...external(a.kind)}>
             <I aria-hidden="true" className="size-4" /><span className="tp-btn-label">{a.label}</span><ArrowUpRight aria-hidden="true" className="size-3.5 opacity-70" />

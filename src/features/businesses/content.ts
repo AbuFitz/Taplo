@@ -49,6 +49,8 @@ export const serviceSchema = z.object({
   id: text(64),
   name: text(120),
   description: optText(1200),
+  /** Ordered inclusions for packages and detailed services; stored once, referenced by all blocks. */
+  inclusions: z.array(text(140)).max(8).optional(),
   group: optText(80),
   priceMode: z.enum(PRICE_MODES),
   /** Integer minor units (pence). Required for fixed/from. */

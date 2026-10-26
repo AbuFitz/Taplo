@@ -75,43 +75,41 @@ export default function Home() {
           <Film />
         </section>
 
-        <section className="mx-auto grid max-w-[88rem] gap-10 border-t border-white/15 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[.7fr_1.3fr]">
-          <div>
-            <h2 className="font-display text-[clamp(1.8rem,3.2vw,3rem)] font-medium tracking-[-.045em]">
-              Start with a page.
-              <br />
-              Choose what comes next.
-            </h2>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/55">
-              Build on Free. Compare the booking, team and design tools in each
-              plan before you choose.
-            </p>
-            <Link
-              href="/pricing"
-              className="mt-5 inline-flex min-h-11 items-center gap-3 rounded text-sm text-white/80 outline-none hover:text-white focus-visible:ring-2 focus-visible:ring-white"
-            >
-              Compare plans
-              <ArrowUpRight aria-hidden="true" className="size-4" />
-            </Link>
+        <section className="home-plans" data-testid="home-plans">
+          <div className="home-plans-inner">
+            <div>
+              <h2 className="font-display text-[clamp(1.8rem,3.2vw,3rem)] font-medium tracking-[-.045em]">
+                Start with a page.
+                <br />
+                Choose what comes next.
+              </h2>
+              <p className="home-plans-intro">
+                Build on Free. Compare the booking, team and design tools in
+                each plan before you choose.
+              </p>
+              <Link href="/pricing" className="home-plans-link">
+                Compare plans
+                <ArrowUpRight aria-hidden="true" className="size-4" />
+              </Link>
+            </div>
+            <ul className="home-plans-list">
+              {PLAN_IDS.map((id) => (
+                <li
+                  key={id}
+                  data-plan={id}
+                  className="grid gap-2 py-6 sm:grid-cols-[7rem_1fr_auto] sm:gap-5"
+                >
+                  <h3 className="text-lg font-medium">{PLANS[id].name}</h3>
+                  <p className="home-plan-summary">{PLANS[id].summary}</p>
+                  <p className="text-sm font-medium tabular-nums">
+                    {PLANS[id].priceMinorGbp === 0
+                      ? "£0"
+                      : `${formatMoney(PLANS[id].priceMinorGbp)} / month`}
+                  </p>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul className="divide-y divide-white/15 border-y border-white/15">
-            {PLAN_IDS.map((id) => (
-              <li
-                key={id}
-                className="grid gap-2 py-6 sm:grid-cols-[7rem_1fr_auto] sm:gap-5"
-              >
-                <h3 className="text-lg font-medium">{PLANS[id].name}</h3>
-                <p className="text-sm leading-relaxed text-white/55">
-                  {PLANS[id].summary}
-                </p>
-                <p className="text-sm font-medium tabular-nums">
-                  {PLANS[id].priceMinorGbp === 0
-                    ? "£0"
-                    : `${formatMoney(PLANS[id].priceMinorGbp)} / month`}
-                </p>
-              </li>
-            ))}
-          </ul>
         </section>
       </main>
       <SiteFooter />

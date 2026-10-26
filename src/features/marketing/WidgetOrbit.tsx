@@ -67,6 +67,7 @@ export function WidgetOrbit() {
     <div
       ref={host}
       className="widget-orbit"
+      onDragStart={(event) => event.preventDefault()}
       data-testid="widget-orbit"
       data-active={active && !reduced}
     >
@@ -76,7 +77,15 @@ export function WidgetOrbit() {
         aria-label="Animated illustration of a ceramics studio, workshop, calendar, work and social links"
       >
         <div ref={world} className="widget-orbit-world" aria-hidden="true">
-          <div className="orbit-sculpture" />
+          <div className="orbit-sculpture">
+            <Image
+              src="/marketing/products/concept-ceramic.webp"
+              alt=""
+              fill
+              sizes="(min-width:900px) 290px, 47vw"
+              draggable={false}
+            />
+          </div>
           <div className="widget-orbit-core">
             <div className="orbit-profile-mark">f.</div>
             <span className="orbit-profile-name">
