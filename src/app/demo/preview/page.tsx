@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { DemoProfile } from "@/features/demo/DemoProfile"
 import { HEADER_LAYOUTS } from "@/features/page/contracts/style"
 
-export const metadata: Metadata = { title: "Preview (demo)", robots: { index: false, follow: false } }
+export const metadata: Metadata = { title: "Your page", robots: { index: false, follow: false } }
 
 export default async function Page({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const { edit, header, widget, variant, look, savedLook, savedStyle, treatment } = await searchParams

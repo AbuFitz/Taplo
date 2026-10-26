@@ -1,3 +1,4 @@
+import { cont, openDetails } from './helpers';
 import { expect, test } from "@playwright/test"
 import AxeBuilder from "@axe-core/playwright"
 import path from "node:path"
@@ -8,7 +9,7 @@ for (const width of [390, 1440]) test(`visual setup keeps each decision separate
   await page.goto('/onboarding')
   await page.getByLabel('Business name', { exact: true }).fill('North Street Studio')
   await expect(page.getByLabel('A line under your name')).not.toBeVisible()
-  const next = () => page.getByRole('button', { name: 'Continue', exact: true }).click()
+  const next = () => cont(page)
   await next()
   await expect(page.getByRole('list', { name: 'Kinds of business' }).locator('img')).toHaveCount(0)
   await page.getByRole('button', { name: 'Barber', exact: true }).click()
@@ -18,9 +19,9 @@ for (const width of [390, 1440]) test(`visual setup keeps each decision separate
   await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? 'test-results', `setup-business-types-${width}.png`) })
   await next()
   await page.getByRole('button',{name:'Booking requests',exact:true}).click()
-  await expect(page.getByRole('heading', { name: 'Connect your business.' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'How should people reach you?' })).toBeVisible()
   await expect(page.getByTestId('reach').getByRole('textbox')).toHaveCount(3)
-  await page.getByLabel('Email', { exact: true }).fill('studio@example.com')
+  await openDetails(page);await page.getByLabel('Email', { exact: true }).fill('studio@example.com')
   await next()
   await page.getByLabel('Service 1 name').fill('Haircut')
   await page.getByLabel('Service 1 price').fill('22')

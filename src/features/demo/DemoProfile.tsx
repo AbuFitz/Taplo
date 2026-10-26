@@ -39,7 +39,7 @@ export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetI
         return w.id === widgetId && field?.kind === "select" && field.options.some((o) => o.value === variant) ? { ...w, settings: { ...w.settings, variant } } : w
       }) }
     }
-    return buildPageViewModel(parsed.data, page, { plan: source.plan })
+    return buildPageViewModel(parsed.data, page, { plan: source.plan, draftAction: mode === "draft" && !state?.published })
   }, [source, mode, headerLayout, widgetId, variant, lookId, savedLookId, savedStyleId, treatmentId])
 
   if (!ready) return <Message title="Loading…" />
@@ -49,7 +49,7 @@ export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetI
     ) : (
       <Message
         title="Nothing published at this address"
-        body="Pages you publish in demo mode live only in the browser that created them. For an example anyone can open, see the sample profiles."
+        body="Pages you publish here live only in the browser that created them. For an example anyone can open, see the sample profiles."
         action={<span className="flex gap-4"><Link className="underline" href="/dashboard/page">My page</Link><Link className="underline" href="/demo/profiles">Sample profiles</Link></span>}
       />
     )
@@ -58,7 +58,7 @@ export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetI
     <>
       {mode === "published" ? (
         <div role="note" className="relative z-10 bg-amber-300 px-4 py-2 text-center text-sm font-medium text-black">
-          Preview of your published page. It opens in this browser only; a public address needs publishing, which is not connected yet.
+          Your published page. It opens in this browser only; a public address needs publishing, which is not connected yet.
         </div>
       ) : null}
       <PageRenderer vm={vm} fragment={mode !== "draft" ? undefined : headerLayout ? { kind: "header" } : widgetId ? { kind: "widget", id: widgetId } : undefined} />

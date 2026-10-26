@@ -1,3 +1,4 @@
+import { openDetails } from './helpers';
 import { expect, test } from "@playwright/test"
 import path from "node:path"
 
@@ -47,7 +48,7 @@ for (const width of [390, 1440]) test(`theme choices show actual style samples a
   const next = () => page.getByRole("button", { name: "Continue", exact: true }).click()
   await page.getByLabel("Business name", { exact: true }).fill("North Street Studio"); await next()
   await page.getByRole("button", { name: "Barber", exact: true }).click(); await next()
-  await page.getByLabel("Email", { exact: true }).fill("studio@example.com"); await next()
+  await openDetails(page);await page.getByLabel("Email", { exact: true }).fill("studio@example.com"); await next()
   await page.getByLabel("Service 1 name").fill("Cut and finish")
   await page.getByLabel("Service 1 price").fill("28")
   await page.getByLabel("Service 1 minutes").fill("30"); await next()

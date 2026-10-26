@@ -1,3 +1,4 @@
+import { cont, openDetails } from "./helpers";
 import { test, expect } from "@playwright/test";
 
 for (const width of [320, 390, 768]) test(`mobile setup gives early decisions the canvas at ${width}`, async ({ page }) => {
@@ -51,15 +52,15 @@ test("closing a chooser does not steal focus from the next field while typing", 
   await page.setViewportSize({ width:390, height:844 });
   await page.goto("/onboarding");
   await page.getByLabel("Business name", { exact:true }).fill("North Street Studio");
-  await page.getByRole("button", { name:"Continue", exact:true }).click();
+  await cont(page);
   await page.getByRole("button", { name:"Barber", exact:true }).click();
   await page.getByRole("button", { name:"Continue", exact:true }).click();
   await page.getByRole("button",{name:"Phone calls",exact:true}).click();
-  await page.getByRole("button",{name:"More ways to connect",exact:true}).click();
-  await page.getByRole("button",{name:"Done",exact:true}).click();
+  await openDetails(page);
+  await page.getByRole("button",{name:"Instagram",exact:true}).click();
+  await page.getByLabel("Instagram profile").fill("northstreet");
   await page.getByLabel("Phone", { exact:true }).pressSequentially("01632 960123", { delay:60 });
-  await expect(page.getByRole("dialog")).toBeHidden();
-  await expect(page.getByLabel("Phone", { exact:true })).toHaveValue("01632 960123");
+    await expect(page.getByLabel("Phone", { exact:true })).toHaveValue("01632 960123");
   await expect(page.getByLabel("Phone", { exact:true })).toBeFocused();
   await page.getByRole("button", { name:"Continue", exact:true }).click();
   await expect(page.getByRole("heading", { level:1 })).toHaveText("Add your first service");

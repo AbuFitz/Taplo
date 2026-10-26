@@ -1,3 +1,4 @@
+import { openDetails } from './helpers';
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import sharp from "sharp";
@@ -59,7 +60,7 @@ for (const width of [390, 1440])
     await expect(page.getByTestId("goal")).toHaveCount(0);
     await expect(page.getByTestId("reach").getByRole("textbox")).toHaveCount(3);
     await page.getByRole("button",{name:"Booking requests",exact:true}).click();
-    await page.getByLabel("Email", { exact: true }).fill("owner@example.com");
+    await openDetails(page);await page.getByLabel("Email", { exact: true }).fill("owner@example.com");
     await next();
     await page.getByLabel("Service 1 name").fill("Diagnostic inspection");
     await page.getByLabel("Service 1 minutes").fill("45");
@@ -210,7 +211,7 @@ test("partial service text survives back and reload, custom businesses work, and
     .click();
   await page.getByLabel("Describe your business").fill("Repair workshop");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await page.getByLabel("Email", { exact: true }).fill("owner@example.com");
+  await openDetails(page);await page.getByLabel("Email", { exact: true }).fill("owner@example.com");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByLabel("Service 1 name").fill("Initial assessment");
   await page.getByRole("button", { name: "Continue", exact: true }).click();

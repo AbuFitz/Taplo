@@ -9,8 +9,6 @@ import {
   X,
 } from "lucide-react";
 import { TaploInput } from "@/components/taplo/taplo-input";
-import { Overlay } from "@/components/taplo/overlay";
-import { Button } from "@/components/ui/button";
 import { safeUrl, normalizePhone } from "@/lib/validation";
 import { useDemo, initialState } from "./store";
 import { newWidget } from "@/features/page/starter";
@@ -36,10 +34,13 @@ const websiteUrl = (value: string) => {
     : undefined;
 };
 export function SetupConnections({
+  part,
   goal,
   onGoalChange,
   onValidity,
 }: {
+  /** On a phone the step is two screens: 0 chooses the main button, 1 takes the details. Undefined shows everything. */
+  part?: number;
   goal: "book" | "enquire" | "call" | "message";
   onGoalChange: (goal: "book" | "enquire" | "call" | "message") => void;
   onValidity: (valid: boolean) => void;
@@ -201,11 +202,11 @@ export function SetupConnections({
   const count = chosen.length;
   return (
     <div className="setup-connections" data-testid="reach">
-      <p className="setup-connection-note">
-        Use Taplo alongside your website, booking tool and social profiles.
+      <p className="setup-connection-note" hidden={part === 1}>
+        Pick your main button. It shows on your page as you choose.
       </p>
-      <fieldset>
-        <legend className="setup-layout-heading">Your main action</legend>
+      <fieldset hidden={part === 1}>
+        <legend className="setup-layout-heading">Main button</legend>
         <div className="setup-primary-choices">
           {(
             [
@@ -227,118 +228,101 @@ export function SetupConnections({
           ))}
         </div>
       </fieldset>
-      {field(
-        "website",
-        "Website or booking link (optional)",
-        "yourbusiness.co.uk",
-      )}
-      {field("email", "Email", "hello@yourbusiness.co.uk", "email")}
-      {field("phone", "Phone", "07700 900123", "tel")}
-      <Overlay
-        open={more}
-        onOpenChange={(open) => {
-          setMore(open);
-          if (!open) setEditing(null);
-        }}
-        title="More ways to connect"
-        trigger={
-          <button type="button" className="setup-edit-row">
-            <MessagesSquare aria-hidden="true" />
-            <span>
-              More ways to connect{count ? <span>{count} selected</span> : null}
-            </span>
-          </button>
-        }
-        footer={
-          <Button
-            className="w-full min-h-11"
-            onClick={() => {
-              if (editing) {
-                setTouched((t) => ({ ...t, [editing]: true }));
-                if (!errors[editing]) setEditing(null);
-              } else setMore(false);
-            }}
-          >
-            {editing ? "Save link" : "Done"}
-          </Button>
-        }
-      >
-        {editing ? (
-          <button
-            type="button"
-            className="setup-secondary"
-            onClick={() => setEditing(null)}
-          >
-            All platforms
-          </button>
-        ) : (
+      <div className="grid gap-5" hidden={part === 0}>
+        {field(
+          "website",
+          "Website or booking link (optional)",
+          "yourbusiness.co.uk",
+        )}
+        {field("email", "Email", "hello@yourbusiness.co.uk", "email")}
+        {field("phone", "Phone", "07700 900123", "tel")}
+        <fieldset className="setup-social" data-testid="social-links">
+          <legend className="setup-layout-heading">Social profiles</legend>
           <div
-            className="setup-social-picker"
+            className="setup-social-grid"
             role="group"
             aria-label="Social platforms"
           >
-            {[{ id: "whatsapp", label: "WhatsApp" }, ...SOCIAL_PLATFORMS].map(
-              (p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  aria-pressed={chosen.includes(p.id)}
-                  onClick={() => {
-                    if (!chosen.includes(p.id)) setChosen((v) => [...v, p.id]);
-                    setEditing(p.id);
-                  }}
-                >
-                  <SocialIcon platform={p.id} className="size-6" />
-                  <span>{p.label}</span>
-                </button>
-              ),
-            )}
+            {[{ id: "whatsapp", label: "WhatsApp" }, ...SOCIAL_PLATFORMS]
+              .slice(0, more ? undefined : 6)
+              .map((p) => {
+                const filled =
+                  p.id === "whatsapp"
+                    ? Boolean(draft.whatsapp)
+                    : Boolean(draft.socials[p.id]);
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    aria-pressed={editing === p.id}
+                    data-filled={filled || undefined}
+                    onClick={() => {
+                      if (!chosen.includes(p.id))
+                        setChosen((v) => [...v, p.id]);
+                      setEditing(editing === p.id ? null : p.id);
+                    }}
+                  >
+                    <SocialIcon platform={p.id} className="size-6" />
+                    <span>{p.label}</span>
+                  </button>
+                );
+              })}
+            <button
+              type="button"
+              className="setup-social-more"
+              aria-expanded={more}
+              onClick={() => setMore((v) => !v)}
+            >
+              <MessagesSquare aria-hidden="true" />
+              <span>{more ? "Fewer" : "More"}</span>
+            </button>
           </div>
-        )}
-        <div className="grid gap-6 mt-6">
-          {(editing ? [editing] : []).map((id) => {
-            const platform = SOCIAL_PLATFORMS.find((p) => p.id === id);
-            return (
-              <div key={id} className="setup-social-field">
-                <span className="setup-social-glyph">
-                  <SocialIcon platform={id} />
-                </span>
-                <div>
-                  {id === "whatsapp" ? (
-                    field("whatsapp", "WhatsApp", "+44 7700 900123", "tel")
-                  ) : (
-                    <TaploInput
-                      label={`${platform!.label} profile`}
-                      placeholder={`${platform!.host}/${platform!.prefix}yourbusiness`}
-                      autoCapitalize="none"
-                      autoCorrect="off"
-                      value={draft.socials[id] ?? ""}
-                      onChange={(e) =>
-                        commit(
-                          {
-                            ...draft,
-                            socials: { ...draft.socials, [id]: e.target.value },
+          {editing ? (
+            <div className="setup-social-field" key={editing}>
+              <span className="setup-social-glyph">
+                <SocialIcon platform={editing} />
+              </span>
+              <div>
+                {editing === "whatsapp" ? (
+                  field("whatsapp", "WhatsApp number", "+44 7700 900123", "tel")
+                ) : (
+                  <TaploInput
+                    label={`${SOCIAL_PLATFORMS.find((p) => p.id === editing)!.label} profile`}
+                    placeholder={`${SOCIAL_PLATFORMS.find((p) => p.id === editing)!.host}/${SOCIAL_PLATFORMS.find((p) => p.id === editing)!.prefix}yourbusiness`}
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    autoFocus
+                    value={draft.socials[editing] ?? ""}
+                    onChange={(e) =>
+                      commit(
+                        {
+                          ...draft,
+                          socials: {
+                            ...draft.socials,
+                            [editing]: e.target.value,
                           },
-                          id,
-                        )
-                      }
-                      onBlur={() => setTouched((t) => ({ ...t, [id]: true }))}
-                      error={touched[id] ? errors[id] : undefined}
-                    />
-                  )}
-                </div>
-                <button
-                  type="button"
-                  aria-label={`Remove ${platform?.label ?? "WhatsApp"}`}
-                  onClick={() => remove(id)}
-                >
-                  <X size={18} aria-hidden="true" />
-                </button>
+                        },
+                        editing,
+                      )
+                    }
+                    onBlur={() =>
+                      setTouched((t) => ({ ...t, [editing]: true }))
+                    }
+                    error={touched[editing] ? errors[editing] : undefined}
+                  />
+                )}
               </div>
-            );
-          })}
-        </div>
-      </Overlay>
+              <button
+                type="button"
+                aria-label={`Remove ${editing === "whatsapp" ? "WhatsApp" : SOCIAL_PLATFORMS.find((p) => p.id === editing)!.label}`}
+                onClick={() => remove(editing)}
+              >
+                <X size={18} aria-hidden="true" />
+              </button>
+            </div>
+          ) : null}
+        </fieldset>
+      </div>
     </div>
   );
 }

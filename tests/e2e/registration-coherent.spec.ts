@@ -1,9 +1,10 @@
+import { cont, openDetails } from './helpers';
 import {test,expect,type Page} from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import sharp from "sharp";
 import path from "node:path";
 const read=(page:Page)=>page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!));
-const next=(page:Page)=>page.getByRole('button',{name:'Continue',exact:true}).click();
+const next=(page:Page)=>cont(page);
 async function identity(page:Page){await page.getByLabel('Business name',{exact:true}).fill('North Street Studio');await page.getByLabel('Short description (optional)').fill('Independent studio in St Albans.');await next(page);await page.getByRole('button',{name:'Barber',exact:true}).click();await next(page);}
 const shot=async(page:Page,name:string)=>{await page.evaluate(()=>Promise.all(document.getAnimations().filter(a=>a.effect?.getComputedTiming().iterations!==Infinity).map(a=>a.finished.catch(()=>{}))));if(process.env.TAPLO_REVIEW_DIR)await page.screenshot({path:path.join(process.env.TAPLO_REVIEW_DIR,name),fullPage:false});};
 
@@ -12,7 +13,7 @@ for(const width of [320,390,768,1440])test(`registration identity has readable l
  await expect(page.getByTestId('sandbox-badge')).toHaveCount(0);await expect(page.getByRole('button',{name:'View full size'})).toHaveCount(0);
  await expect(page.getByLabel('Short description (optional)')).toHaveAttribute('placeholder',/Independent hair studio/);
  const label=page.locator('label').filter({hasText:/^Business name$/});expect(await label.evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(16);
- await expect(page.locator('.setup-avatar-picture')).toHaveCSS('background-color','rgba(0, 0, 0, 0)');
+ await expect(page.locator('.setup-avatar-picture')).toHaveCSS('background-color','rgb(255, 255, 255)');
  await expect(page.getByRole('button',{name:'Continue',exact:true})).toBeInViewport();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await shot(page,`identity-${width}.png`);
@@ -20,7 +21,7 @@ for(const width of [320,390,768,1440])test(`registration identity has readable l
 
 for(const width of [390,1440])test(`complete setup preserves real content, appearance, plan and review edits at ${width}`,async({page})=>{
  await page.setViewportSize({width,height:900});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/onboarding');await identity(page);
- await page.getByRole('button',{name:'Booking requests',exact:true}).click();await page.getByLabel('Website or booking link (optional)').fill('studio.example.com/book');await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await next(page);
+ await page.getByRole('button',{name:'Booking requests',exact:true}).click();await (await openDetails(page),page.getByLabel('Website or booking link')).fill('studio.example.com/book');await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await next(page);
  await page.getByLabel('Service 1 name').fill('Cut and finish');await page.getByLabel('Service 1 price').fill('35');await page.getByLabel('Service 1 minutes').fill('45');await next(page);
  await expect(page.getByRole('heading',{level:1})).toHaveText('Your page, your style.');await page.getByRole('radiogroup',{name:'Starting theme'}).getByRole('radio',{name:'Studio',exact:true}).check();
  await page.getByRole('button',{name:/Background & colours/}).click();const style=page.getByTestId('setup-design-dialog');await style.getByRole('button',{name:'Smoke gradient',exact:true}).click();await style.getByRole('button',{name:'Done',exact:true}).click();
@@ -45,7 +46,7 @@ for(const width of [390,1440])test(`logo is confirmed first, keeps alpha, and re
 });
 
 test('website-only setup is valid, unsafe links and invalid contact drafts stay blocked across reload',async({page})=>{
- await page.goto('/onboarding');await identity(page);await page.getByRole('button',{name:'Links & enquiries',exact:true}).click();const web=page.getByLabel('Website or booking link (optional)');await web.fill('javascript:alert(1)');await next(page);await expect(page.getByRole('heading',{level:1})).toHaveText('Connect your business.');await page.reload();await expect(web).toHaveValue('javascript:alert(1)');await web.fill('brightlearn.co.uk');await next(page);await expect(page.getByTestId('first-services')).toBeVisible();expect((await read(page)).content.contacts.website).toBe('https://brightlearn.co.uk');
+ await page.goto('/onboarding');await identity(page);await page.getByRole('button',{name:'Links & enquiries',exact:true}).click();const web=(await openDetails(page),page.getByLabel('Website or booking link'));await web.fill('javascript:alert(1)');await next(page);await expect(page.getByRole('heading',{level:1})).toHaveText('How should people reach you?');await page.reload();await expect(web).toHaveValue('javascript:alert(1)');await web.fill('brightlearn.co.uk');await next(page);await expect(page.getByTestId('first-services')).toBeVisible();expect((await read(page)).content.contacts.website).toBe('https://brightlearn.co.uk');
 });
 
 test('a short keyboard viewport scrolls fields without a scrollbar or moving the action',async({page})=>{
@@ -54,8 +55,8 @@ test('a short keyboard viewport scrolls fields without a scrollbar or moving the
 });
 
 test('message and call choices remain selected before details exist and reject mismatched channels',async({page})=>{
- await page.goto('/onboarding');await identity(page);await page.getByRole('button',{name:'Messages',exact:true}).click();await expect(page.getByRole('button',{name:'Messages',exact:true})).toHaveAttribute('aria-pressed','true');await page.getByLabel('Website or booking link (optional)').fill('studio.example.com');await next(page);await expect(page.locator('#why-disabled')).toContainText('email or WhatsApp');
- await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await next(page);await expect(page.getByTestId('first-services')).toBeVisible();await page.getByRole('button',{name:'Back',exact:true}).click();await expect(page.getByLabel('Website or booking link (optional)')).toHaveValue('https://studio.example.com');
+ await page.goto('/onboarding');await identity(page);await page.getByRole('button',{name:'Messages',exact:true}).click();await expect(page.getByRole('button',{name:'Messages',exact:true})).toHaveAttribute('aria-pressed','true');await (await openDetails(page),page.getByLabel('Website or booking link')).fill('studio.example.com');await next(page);await expect(page.locator('#why-disabled')).toContainText('email or WhatsApp');
+ await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await next(page);await expect(page.getByTestId('first-services')).toBeVisible();await page.getByRole('button',{name:'Back',exact:true}).click();await expect((await openDetails(page),page.getByLabel('Website or booking link'))).toHaveValue('https://studio.example.com');
 });
 
 test('corrupt images cannot be applied and cancellation leaves the page unchanged',async({page})=>{

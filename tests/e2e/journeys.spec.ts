@@ -1,3 +1,4 @@
+import { openDetails } from './helpers';
 import { expect, test, type Page } from "@playwright/test";
 import { closeSheet, openStructure, selectPart, pickLook, addWidget, openEditorWithSample, insp, openRow, openSection, pngFile, previewFrame, previewOrder, row, rowOrder } from "./helpers";
 
@@ -24,7 +25,7 @@ test.describe("onboarding", () => {
   test("setup preserves owner-entered content through review and browser-only publishing",async({page})=>{
     await page.goto('/onboarding');await page.getByLabel('Business name',{exact:true}).fill('Paws & Polish');await page.getByRole('button',{name:'Continue',exact:true}).click()
     await page.getByRole('button',{name:'Use a different business type',exact:true}).click();await page.getByLabel('Describe your business').fill('Dog groomer');await page.getByRole('button',{name:'Continue',exact:true}).click()
-    await page.getByLabel('Email',{exact:true}).fill('hello@example.com');await page.getByRole('button',{name:'Continue',exact:true}).click()
+    await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('hello@example.com');await page.getByRole('button',{name:'Continue',exact:true}).click()
     await page.getByLabel('Service 1 name').fill('Full groom');await page.getByLabel('Service 1 price').fill('45');await page.getByRole('button',{name:'Continue',exact:true}).click();await page.getByRole('button',{name:'Continue',exact:true}).click()
     await page.getByRole('button',{name:'Continue',exact:true}).click();
     await expect(page.getByRole('heading',{name:'Review your page',exact:true})).toBeVisible();await page.getByRole('button',{name:'Publish my page',exact:true}).click()

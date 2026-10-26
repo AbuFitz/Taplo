@@ -1,3 +1,4 @@
+import { openDetails } from './helpers';
 import {expect,test} from '@playwright/test'
 import path from 'node:path'
 for(const width of [320,390,768,1440])test(`setup gives the phone canvas back to the business at ${width}`,async({page})=>{
@@ -18,7 +19,7 @@ for(const width of[390,1440])test(`starting-design and plan context never displa
   await page.setViewportSize({width,height:844});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/onboarding?from=jays-barbers&plan=pro')
   await page.getByLabel('Business name',{exact:true}).fill('North Street Barbers');await page.getByRole('button',{name:'Continue',exact:true}).click()
   await page.getByRole('button',{name:'Barber',exact:true}).click();await page.getByRole('button',{name:'Continue',exact:true}).click()
-  await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await page.getByRole('button',{name:'Continue',exact:true}).click()
+  await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await page.getByRole('button',{name:'Continue',exact:true}).click()
   await page.getByLabel('Service 1 name').fill('Haircut');await page.getByLabel('Service 1 price').fill('25');await page.getByLabel('Service 1 minutes').fill('30');await page.getByRole('button',{name:'Continue',exact:true}).click();await page.getByRole('button',{name:'Continue',exact:true}).click()
   await page.getByRole('button',{name:'Continue',exact:true}).click();
   const title=page.getByRole('heading',{name:'Review your page',exact:true});await expect(title).toBeInViewport({ratio:1})

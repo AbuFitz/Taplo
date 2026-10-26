@@ -29,6 +29,7 @@ export function applyIndustry(s: DemoState, industryKey: string, label?: string)
       ...s.page,
       themeId: untouchedTheme ? fresh.themeId : s.page.themeId,
       widgets: untouchedWidgets ? fresh.widgets : s.page.widgets,
+      meta: { ...s.page.meta, primaryAction: next.suggestedBookingMode === "contact" ? "auto" : "book" },
     },
   };
 }

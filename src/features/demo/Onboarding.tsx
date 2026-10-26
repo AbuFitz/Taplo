@@ -50,11 +50,12 @@ const STEP_LABEL: Record<OnboardingStep, string> = {
   publish: "Review",
   plan: "Plan",
 }
+const PART_TITLE = { business: "Tell people what you do.", reach: "Add your details." } as const
 const STEP_TITLE: Record<OnboardingStep, string> = {
   business: "Make it yours.",
   industry: "What do you do?",
   goal: "Choose the first step.",
-  reach: "Connect your business.",
+  reach: "How should people reach you?",
   widgets: "Your page, your style.",
   plan: "Room to grow.",
   contacts: "Add your first content",
@@ -128,7 +129,14 @@ export function Onboarding() {
   const step: OnboardingStep = s.step === "goal" ? "reach" : (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "widgets"
   const stepIndex = SETUP_STEPS.indexOf(step as Exclude<OnboardingStep, "goal">)
 
+  const [part, setPart] = React.useState(0)
+  // On a phone, a long step is spread over two screens so each one asks for one kind of thing.
+  const parts = mobileSetup ? ({ business: 2, reach: 2 } as Partial<Record<OnboardingStep, number>>)[step] ?? 1 : 1
+  const lastPart = part >= parts - 1
+  // The phone preview stays in view while the main button is chosen, so the choice is seen on the page at once.
+  const previewStep = ["business", "contacts", "widgets", "publish"].includes(step) || (step === "reach" && parts > 1 && part === 0)
   const go = (to: OnboardingStep) => {
+    setPart(0)
     setSheetSize("edit")
     setShowErrors(false)
     setDirection(SETUP_STEPS.indexOf(to as Exclude<OnboardingStep, "goal">) >= stepIndex ? 1 : -1)
@@ -141,7 +149,7 @@ export function Onboarding() {
     shell.current?.querySelector<HTMLElement>("#step-title")?.focus({ preventScroll: true })
   }, [step])
   const next = () => {if(step === "reach")update(x=>({...x,setupDrafts:{...x.setupDrafts,connections:undefined}}));if(step === "plan" && !s.setupDrafts?.planIntent)update(x=>({...x,setupDrafts:{...x.setupDrafts,planIntent:"free"}}));if(s.setupDrafts?.reviewEdit){go("publish");update(x=>({...x,setupDrafts:{...x.setupDrafts,reviewEdit:false}}))}else go(SETUP_STEPS[Math.min(stepIndex + 1, SETUP_STEPS.length - 1)]!)}
-  const back = () => {if(s.setupDrafts?.reviewEdit){go("publish");update(x=>({...x,setupDrafts:{...x.setupDrafts,reviewEdit:false}}))}else go(SETUP_STEPS[Math.max(stepIndex - 1, 0)]!)}
+  const back = () => {if(part>0){setPart(part-1);return}if(s.setupDrafts?.reviewEdit){go("publish");update(x=>({...x,setupDrafts:{...x.setupDrafts,reviewEdit:false}}))}else go(SETUP_STEPS[Math.max(stepIndex - 1, 0)]!)}
 
   // A plan chosen on the pricing page carries into setup (and stays through every step) without taking payment.
   // Read from the router, not window.location: on a client-side navigation (pricing → setup) the address has not changed yet when this first renders.
@@ -189,11 +197,12 @@ export function Onboarding() {
     widgets: true,
     publish: canPublish(s),
   }
+  const partValid = lastPart ? valid[step] : step === "business" ? valid.business : true
   const why: Record<OnboardingStep, string> = {
     industry: "Choose what you do.",
     goal: "",
     plan: "",
-    reach: goalOf(s) === "call" ? "Add the phone number people should call." : goalOf(s) === "message" ? "Add an email or WhatsApp number for messages." : "Add a website, email or phone number to continue.",
+    reach: goalOf(s) === "call" ? "Add the phone number people should call." : goalOf(s) === "message" ? "Add an email or WhatsApp number so people can message you." : "Add one way to reach you: a phone number, email or website.",
     business: "Add a name and a valid web address.",
     contacts: "Finish the service name and price, or choose quote/free pricing. Save any vehicle or photos you started.",
     widgets: "",
@@ -201,7 +210,7 @@ export function Onboarding() {
   }
 
   return (
-    <div className="setup-scene"><SetupBackdrop phase={stepIndex} /><main ref={shell} data-preview-expanded="false" data-step={step} data-mobile-layout={["business", "contacts", "widgets", "publish"].includes(step) ? "preview" : "focus"} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
+    <div className="setup-scene"><SetupBackdrop phase={stepIndex} /><main ref={shell} data-preview-expanded="false" data-step={step} data-mobile-layout={previewStep ? "preview" : "focus"} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
       <nav aria-label="Progress" className="setup-progress mb-4">
         <div className="flex min-h-9 items-center gap-3">
           <Link href="/" aria-label="Taplo home" className="setup-home"><TaploLogo className="h-9" /></Link><div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div>
@@ -209,9 +218,9 @@ export function Onboarding() {
       </nav>
 
       <div className="setup-workspace grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
-        <SetupPanel preview={["business", "contacts", "widgets", "publish"].includes(step)} size={sheetSize} onSizeChange={setSheetSize}>
+        <SetupPanel preview={previewStep} size={sheetSize} onSizeChange={setSheetSize}>
           <div className="setup-question-heading">{fromName || intent ? <p className="setup-origin">{fromName ? <span data-testid="from-example">Starting from {fromName}</span> : null}{fromName && intent ? " · " : ""}{intent ? <span data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}</p> : null}
-          <motion.h1 key={step} initial={reducedMotion ? false : { opacity:0, x:direction*10 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34 }} tabIndex={-1} id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? setupJourney(c.identity.industryKey).heading : STEP_TITLE[step]}</motion.h1></div>
+          <motion.h1 key={step} initial={reducedMotion ? false : { opacity:0, x:direction*10 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34 }} tabIndex={-1} id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? setupJourney(c.identity.industryKey).heading : parts > 1 && part > 0 ? PART_TITLE[step as "business" | "reach"] : STEP_TITLE[step]}</motion.h1></div>
 
           <motion.div id="setup-controls" inert={mobileSetup && sheetSize === "preview"} className="setup-step-body" key={step} initial={reducedMotion ? false : { opacity:0, x:direction*16 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34, opacity:{duration:.16} }}>
           {step === "industry" ? (
@@ -248,10 +257,11 @@ export function Onboarding() {
             </div>
           ) : null}
 
-          {step === "reach" ? <SetupConnections goal={goalOf(s)} onGoalChange={goal=>update(x=>applyGoal(x,goal))} onValidity={setConnectionsValid}/> : null}
+          {step === "reach" ? <SetupConnections part={parts > 1 ? part : undefined} goal={goalOf(s)} onGoalChange={goal=>update(x=>applyGoal(x,goal))} onValidity={setConnectionsValid}/> : null}
 
           {step === "business" ? (
             <div className="grid gap-5">
+              <div className="grid gap-5" hidden={parts > 1 && part > 0}>
               <ImageField presentation="identity" framing={s.page.appearance.header?.avatarShape === "circle"?"circle":s.page.appearance.header?.avatarShape === "square"?"square":"logo"} purpose="identity" samples={false} onFramingChange={shape=>update(x=>({...x,page:{...x.page,appearance:{...x.page.appearance,header:{...x.page.appearance.header,avatarShape:shape}}}}))} label="Add your logo or profile photo" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
               <TaploInput label="Business name" placeholder="e.g. North Street Studio" value={c.identity.name} maxLength={100} autoComplete="organization" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
               <div className="setup-address" data-testid="setup-address">
@@ -264,12 +274,15 @@ export function Onboarding() {
                 <TaploInput label="Web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />
               ) : null}
 
+              </div>
+              <div className="grid gap-5" hidden={parts > 1 && part === 0}>
               <TaploInput label="Short description (optional)" placeholder="e.g. Independent hair studio in St Albans." value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
               <Overlay trigger={<button type="button" className="setup-secondary">Add a cover photo</button>} open={profileOpen} onOpenChange={setProfileOpen} title="Cover photo" footer={<Button className="min-h-11 w-full" onClick={()=>setProfileOpen(false)}>Done</Button>}><div className="grid gap-5">
 
 
               <ImageField purpose="cover" samples={false} label="Cover photo (optional)" cropAspect={16 / 9} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1600} value={c.identity.heroImage ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, heroImage: v ?? undefined } } }))} />
               </div></Overlay>
+              </div>
             </div>
           ) : null}
 
@@ -284,8 +297,8 @@ export function Onboarding() {
             <div className="setup-next mt-8 flex flex-wrap items-center gap-3">
               {step === "contacts" && !s.setupDrafts?.reviewEdit ? <button type="button" className="setup-skip setup-secondary" onClick={()=>go("widgets")}>Skip for now</button> : null}
               {stepIndex > 0 ? <Button variant="outline" size="lg" onClick={back}>Back</Button> : null}
-              <Button className="flex-1 bg-signal text-white hover:bg-[#333333] sm:flex-none sm:min-w-40" size="lg" onClick={() => (valid[step] ? next() : setShowErrors(true))} aria-describedby={!valid[step] && showErrors ? "why-disabled" : undefined}>{s.setupDrafts?.reviewEdit?"Save changes":"Continue"}</Button>
-              {!valid[step] && showErrors ? <p id="why-disabled" role="alert" className="text-sm text-destructive">{why[step]}</p> : null}
+              <Button className="flex-1 bg-signal text-white hover:bg-[#333333] sm:flex-none sm:min-w-40" size="lg" onClick={() => (partValid ? (lastPart ? next() : (setShowErrors(false), setPart(part + 1))) : setShowErrors(true))} aria-describedby={!partValid && showErrors ? "why-disabled" : undefined}>{s.setupDrafts?.reviewEdit?"Save changes":"Continue"}</Button>
+              {!partValid && showErrors ? <p id="why-disabled" role="alert" className="text-sm text-destructive">{why[step]}</p> : null}
             </div>
           ) : (
             <div className="setup-next"><Button variant="outline" size="lg" onClick={back}>Back</Button></div>

@@ -1,3 +1,4 @@
+import { cont, openDetails } from './helpers';
 import {test,expect} from '@playwright/test';
 import {INDUSTRY_PRESETS} from '../../src/features/themes/presets/industries';
 import {setupJourney} from '../../src/features/demo/setup-journey';
@@ -9,12 +10,12 @@ for (const width of [390,1440]) test(`every category reaches its own first conte
  await page.setViewportSize({width,height:900});
  for(const category of INDUSTRY_PRESETS){
   await page.goto('/onboarding');await page.evaluate(()=>localStorage.clear());await page.reload({waitUntil:'domcontentloaded'});
-  await page.getByLabel('Business name',{exact:true}).fill('North Studio');await page.getByRole('button',{name:'Continue',exact:true}).click();
+  await page.getByLabel('Business name',{exact:true}).fill('North Studio');await cont(page);
   const search=page.getByLabel('Search businesses',{exact:true});await search.fill(category.label);
   await page.getByRole('button',{name:category.label,exact:true}).click();
   if(category.id==='other')await page.getByLabel('Describe your business',{exact:true}).fill('Independent studio');
   await page.getByRole('button',{name:'Continue',exact:true}).click();
-  await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await page.getByRole('button',{name:'Continue',exact:true}).click();
+  await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await page.getByRole('button',{name:'Continue',exact:true}).click();
   await expect(page.getByRole('heading',{level:1}),category.id).toHaveText(setupJourney(category.id).heading);
   if(setupJourney(category.id).kind==='service')await expect(page.getByLabel('Service 1 name')).toHaveAttribute('placeholder',category.suggestedServices[0]?.name??'e.g. Initial consultation');
   await expect(page.getByRole('button',{name:'Skip for now',exact:true})).toBeVisible();
@@ -25,7 +26,7 @@ for (const width of [320,390,1440]) test(`plan illustrations are optional, acces
  await page.setViewportSize({width,height:900});await page.goto('/onboarding?from=hollin-physio');await page.getByLabel('Business name',{exact:true}).fill('North Clinic');
  // Reach the plan through the real setup; existing website remains optional.
  for(let i=0;i<2;i++)await page.getByRole('button',{name:'Continue',exact:true}).click();
- await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await page.getByRole('button',{name:'Continue',exact:true}).click();await page.getByRole('button',{name:'Skip for now',exact:true}).click();await page.getByRole('button',{name:'Continue',exact:true}).click();
+ await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await page.getByRole('button',{name:'Continue',exact:true}).click();await page.getByRole('button',{name:'Skip for now',exact:true}).click();await page.getByRole('button',{name:'Continue',exact:true}).click();
  for(const plan of PLAN_IDS){
   await page.getByRole('radio',{name:`Choose ${plan==='free'?'Free':plan==='core'?'Core':plan==='pro'?'Pro':'Business'}`,exact:true}).check();
   await page.locator('.plan-experience button').click();const dialog=page.getByRole('dialog');await expect(dialog).toBeVisible();

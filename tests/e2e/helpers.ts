@@ -174,3 +174,17 @@ export const look = (page: Page, id: string) =>
   page
     .getByRole("radiogroup", { name: "Look" })
     .locator(`label[data-choice="${id}"]`);
+
+/** Continue, hopping the phone-only second screen of the business step. */
+export async function cont(page: import("@playwright/test").Page) {
+  const btn = page.getByRole("button", { name: "Continue", exact: true })
+  await btn.click()
+  if ((page.viewportSize()?.width ?? 1440) < 1024) {
+    await page.waitForTimeout(350)
+    if (/^Tell people what you do\./.test((await page.getByRole("heading", { level: 1 }).textContent()) ?? "")) await btn.click()
+  }
+}
+/** On a phone the contact step opens on the main-button choice; move on to the details screen. */
+export async function openDetails(page: import("@playwright/test").Page) {
+  if ((page.viewportSize()?.width ?? 1440) < 1024 && (await page.getByText("Pick your main button").isVisible())) await page.getByRole("button", { name: "Continue", exact: true }).click()
+}

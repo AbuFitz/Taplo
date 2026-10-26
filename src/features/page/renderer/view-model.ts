@@ -60,6 +60,8 @@ export interface BuildOptions {
   /** Overrides the theme only for synthetic demo links (?theme=). Never used for real pages. */
   themeOverride?: string;
   now?: Date;
+  /** Setup only: show the chosen main action before its details exist, so the draft reflects each choice at once. It links nowhere. */
+  draftAction?: boolean;
 }
 
 /** The booking button says what will happen: a request is never worded as a booking. */
@@ -142,6 +144,11 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
     const found = actions.find((a) => a.kind === chosen);
     if (chosen === "book") primary = { kind: "book", label: (bookingWidget?.settings.label as string | undefined) || found?.label || bookingLabel(industry.terminology.booking, business.booking.mode), href: found?.href ?? "", event: "booking_click" };
     else if (found) primary = { kind: found.kind, label: found.kind === "call" ? "Call" : found.label, href: found.href, event: found.event };
+  }
+  if (opts.draftAction && primaryMode && !primary && pref !== "none") {
+    primary = pref === "auto"
+      ? { kind: "email", label: "Get in touch", href: "#" }
+      : { kind: pref, label: { book: "Book now", call: "Call", whatsapp: "WhatsApp", email: "Message" }[pref], href: "#" };
   }
   // The booking widget stands in for the header's own booking button (the main action, or one of the header's buttons) so a
   // page never shows two booking buttons. Header icons cannot carry a booking flow, so there the widget stays in the list.

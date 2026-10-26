@@ -1,3 +1,4 @@
+import { openDetails } from './helpers';
 import { expect, test } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import path from 'node:path'
@@ -13,7 +14,7 @@ for(const width of [320,390,768,1440])test(`mobile-led setup has seven steps, a 
   const next=()=>page.getByRole('button',{name:'Continue',exact:true}).click()
   await next();await page.getByRole('button',{name:'Barber',exact:true}).click();await next()
   await page.getByRole('button',{name:'Booking requests',exact:true}).click()
-  await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await next()
+  await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await next()
   await page.getByLabel('Service 1 name').fill('Haircut');await page.getByLabel('Service 1 price').fill('25');await page.getByLabel('Service 1 minutes').fill('30');await next()
   await page.getByRole('radio',{name:'Centred',exact:true}).check();await page.getByRole('button',{name:/Background & colours/}).click();await page.getByTestId('setup-design-dialog').getByRole('button',{name:'Silver gradient',exact:true}).click();await page.getByTestId('setup-design-dialog').getByRole('button',{name:'Done',exact:true}).click()
   await expect(frame.locator('[data-taplo-page]')).toHaveAttribute('data-motion','drift')
