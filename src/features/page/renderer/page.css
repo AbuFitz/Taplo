@@ -630,3 +630,12 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 [data-finish="grid"] .tp-card, [data-finish="grid"] .tp-bento-card { background: color-mix(in srgb, var(--tp-surface) 92%, var(--tp-foreground)); border: 1px solid var(--tp-line-strong); border-radius: 6px; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
 [data-finish="grid"] :is(.tp-price, .tp-product-price) { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
 [data-finish="grid"] .tp-card h2 { text-transform: uppercase; letter-spacing: 0.08em; font-size: var(--tp-t-sm); }
+/* The bento card and the split badge are their own surfaces: they read against themselves, whatever colour the header composition gives the rest of the profile. */
+.tp-header[data-layout="bento"] .tp-bento-card { --tp-foreground: var(--tp-ink); --tp-muted: var(--tp-ink-muted); --tp-btn-bg: var(--tp-page-btn-bg); --tp-btn-text: var(--tp-page-btn-text); --tp-btn-border: var(--tp-page-btn-border); color: var(--tp-ink); }
+.tp-header[data-layout="bento"] .tp-bento-card .tp-quick .tp-icon-action { background: var(--tp-surface-2); color: var(--tp-ink); }
+.tp-split-badge { color: var(--tp-ink); }
+.tp-split-shoulder .tp-shoulder { width: auto; margin-left: auto; justify-content: flex-end; }
+.tp-split-body, .tp-melt-body, .tp-bento-id, .tp-bento-top > * { min-width: 0; }
+.tp-header:is([data-layout="split"], [data-layout="melt"], [data-layout="bento"], [data-layout="type"]) .tp-name { text-wrap: balance; }
+.tp-header:is([data-layout="melt"], [data-layout="split"], [data-layout="bento"], [data-layout="type"]) { grid-template-columns: minmax(0, 1fr); }
+.tp-split-body, .tp-melt-body, .tp-bento-card, .tp-header[data-layout="type"] { grid-template-columns: minmax(0, 1fr); }

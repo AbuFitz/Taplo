@@ -203,6 +203,9 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}, logoAc
   const cssVars: Record<string, string> = {
     "--tp-background": pageBg,
     "--tp-foreground": spec.colors.text,
+    // The page's own ink and button colours, which a header composition may override for itself but a lifted card must not inherit.
+    "--tp-ink": spec.colors.text,
+    "--tp-ink-muted": spec.colors.muted,
     "--tp-muted": spec.colors.muted,
     "--tp-surface": spec.colors.surface,
     "--tp-accent": spec.colors.accent,
@@ -241,6 +244,9 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}, logoAc
     "--tp-btn-sheen": spec.buttons.fill === "solid" && spec.buttons.shadow !== "hard" ? "inset 0 1px 0 0 rgb(255 255 255 / 0.2)" : "0 0 0 0 transparent",
     "--tp-btn-hover": spec.buttons.fill === "solid" ? (contrastRatio(btn.text,roles.accentHover)>=4.5 ? roles.accentHover : btn.bg) : "transparent",
     "--tp-btn-bg": btn.bg,
+    "--tp-page-btn-bg": btn.bg,
+    "--tp-page-btn-text": btn.text,
+    "--tp-page-btn-border": btn.border,
     "--tp-btn-text": btn.text,
     "--tp-btn-border": btn.border,
     "--tp-btn-radius": BTN_RADIUS[spec.buttons.shape],

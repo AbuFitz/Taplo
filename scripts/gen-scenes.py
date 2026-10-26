@@ -120,7 +120,9 @@ for k,v in S.items():open(f"{OUT}/{k}.svg","w").write(v)
 # marks
 def mark(id,icon,name,sub,col,font="Georgia,serif"):
     name=name.replace('&','&amp;');sub=sub.replace('&','&amp;')
-    s=f'<svg xmlns="http://www.w3.org/2000/svg" width="360" height="128" viewBox="0 0 360 128" fill="{col}" color="{col}" role="img" aria-label="{name} original mark"><g>{icon}</g><text x="116" y="62" font-family="{font}" font-size="25" font-weight="700" letter-spacing="-1">{name}</text><text x="117" y="82" font-family="Arial,sans-serif" font-size="9" letter-spacing="2">{sub}</text></svg>'
+    n=len(name.replace('&amp;','&'))
+    tl=min(212,round(n*19.5))
+    s=f'<svg xmlns="http://www.w3.org/2000/svg" width="360" height="128" viewBox="0 0 360 128" fill="{col}" color="{col}" role="img" aria-label="{name} original mark"><g transform="translate(8 4)">{icon}</g><text x="138" y="70" font-family="{font}" font-size="34" font-weight="700" letter-spacing="-1" textLength="{tl}" lengthAdjust="spacingAndGlyphs">{name}</text><text x="139" y="96" font-family="Arial,sans-serif" font-size="11" letter-spacing="2" textLength="{min(212,round(len(sub)*8.2))}" lengthAdjust="spacing">{sub}</text></svg>'
     open(f"{MK}/{id}.svg","w").write(s)
 ic=lambda p,fill="none":f'<path d="{p}" fill="{fill}" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>'
 mark("taco",ic("M24 78 a40 40 0 0 1 80 0z","currentColor"),"Taco Lorry","STREET FOOD · HACKNEY WICK","#d94f2b","Arial Black,Arial,sans-serif")
