@@ -39,6 +39,8 @@ export function setName(s: DemoState, name: string): DemoState {
 }
 
 export function setSlug(s: DemoState, raw: string): DemoState {
+  // Clearing the address hands it back to the business name.
+  if (!normalizeSlug(raw)) return setName({ ...s, slugEdited: false }, s.content.identity.name);
   return { ...s, slugEdited: true, content: { ...s.content, identity: { ...s.content.identity, slug: normalizeSlug(raw) } } };
 }
 

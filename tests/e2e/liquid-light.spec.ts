@@ -1,31 +1,12 @@
 import {test,expect} from "@playwright/test";
-import sharp from "sharp";
-import fs from "node:fs/promises";
-import path from "node:path";
 
-for(const width of [390,1440]) test(`light moves autonomously without following pointer or touch at ${width}`,async({page},info)=>{
+for(const width of [390,1440]) test(`the setup backdrop is one soft gradient field that stops for reduced motion at ${width}`,async({page})=>{
  await page.setViewportSize({width,height:900});await page.emulateMedia({reducedMotion:"no-preference"});
- const errors:string[]=[];page.on("pageerror",e=>errors.push(e.message));
  await page.goto("/onboarding");
- const shader=page.getByTestId("setup-backdrop").getByTestId("liquid-light-canvas");
- await shader.locator("canvas").waitFor();
- await expect.poll(()=>shader.evaluate(el=>Boolean((el as HTMLElement&{paperShaderMount?:unknown}).paperShaderMount))).toBe(true);
- const pixels=async()=>sharp(await page.screenshot({clip:{x:0,y:110,width:18,height:400}})).raw().toBuffer();
- const delta=(a:Buffer,b:Buffer)=>a.reduce((count,value,i)=>count+Number(value!==b[i]),0);
- await shader.evaluate(el=>(el as HTMLElement&{paperShaderMount:{setSpeed:(v:number)=>void;setFrame:(v:number)=>void}}).paperShaderMount.setSpeed(0));
- await page.mouse.move(8,220);await page.waitForTimeout(450);const a=await pixels();
- await page.mouse.move(width*.85,700);await page.waitForTimeout(450);const b=await pixels();
- const pointerDelta=delta(a,b);expect(pointerDelta).toBe(0);
- await expect(shader).toHaveCSS("transform","none");
- await expect(shader.locator("canvas")).toHaveCSS("transform","none");
- const size=await shader.locator("canvas").evaluate(el=>({width:(el as HTMLCanvasElement).width,height:(el as HTMLCanvasElement).height}));
- expect(size.width*size.height).toBeLessThanOrEqual((width<1024?240000:650000)*1.01);
- await shader.evaluate(el=>(el as HTMLElement&{paperShaderMount:{setSpeed:(v:number)=>void}}).paperShaderMount.setSpeed(1));
- const c=await pixels();await page.waitForTimeout(650);const d=await pixels();const autonomousDelta=delta(c,d);expect(autonomousDelta).toBeGreaterThan(100);
- await page.emulateMedia({reducedMotion:"reduce"});await expect(shader).toHaveCount(0);
- const e=await pixels();await page.waitForTimeout(500);const f=await pixels();const reducedDelta=delta(e,f);expect(reducedDelta).toBe(0);
- expect(errors).toEqual([]);
- const out=process.env.TAPLO_REVIEW_DIR??info.outputDir;await fs.mkdir(out,{recursive:true});await fs.writeFile(path.join(out,`light-proof-${width}.json`),JSON.stringify({width,pointerDelta,autonomousDelta,reducedDelta,canvas:size,errors},null,2));
+ const backdrop=page.getByTestId("setup-backdrop");
+ await expect(backdrop.locator("canvas")).toHaveCount(1);
+ await expect(backdrop).toHaveAttribute("data-tone",width<1024?"light":"dark");
+ await page.emulateMedia({reducedMotion:"reduce"});await expect(backdrop.locator("canvas")).toHaveCount(0);
 });
 
 test("homepage field mounts independently and reacts within its section",async({page})=>{

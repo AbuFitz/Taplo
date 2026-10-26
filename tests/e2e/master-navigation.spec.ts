@@ -131,24 +131,6 @@ test("a local draft does not impersonate an authenticated account", async ({
     header.getByRole("link", { name: "Start free", exact: true }),
   ).toHaveAttribute("href", "/onboarding");
 });
-test("authoring has one contextual preview explanation", async ({ page }) => {
-  await page.setViewportSize({ width: 320, height: 844 });
-  await page.goto("/onboarding");
-  await page.getByRole("button", { name: "About this Studio preview" }).click();
-  const dialog = page.getByRole("dialog", { name: "Your Studio preview" });
-  await expect(dialog).toContainText("does not publish a public page");
-  await page.keyboard.press("Escape");
-  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
-    320,
-  );
-  await page.goto("/dashboard");
-  await expect(
-    page.getByRole("heading", { name: "Set up your business page." }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "About this Studio preview" }),
-  ).toBeVisible();
-});
 
 for (const width of [390, 1440])
   test(`services illustration responds to pricing and opens context at ${width}px`, async ({

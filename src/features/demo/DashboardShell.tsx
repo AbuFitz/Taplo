@@ -27,7 +27,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { StudioNotice } from "./StudioNotice";
 import { Welcome } from "./Welcome";
 import { getIndustryPreset } from "@/features/themes/presets/industries";
 import { useDemo } from "./store";
@@ -145,7 +144,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <span>{label}</span>
             </div>
             <div className="ml-auto flex items-center gap-2">
-              <StudioNotice />
               {state ? (
                 <Link href="/dashboard/settings" className="portal-plan-link">
                   {state.plan} plan

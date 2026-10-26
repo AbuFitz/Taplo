@@ -283,7 +283,7 @@
 }
 @media (min-width: 1024px) {
   .home-plans-inner {
-    grid-template-columns: 0.7fr 1.3fr;
+    grid-template-columns: 0.95fr 1.05fr;
     gap: 80px;
   }
 }

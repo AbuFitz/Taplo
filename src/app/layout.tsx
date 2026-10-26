@@ -4,7 +4,7 @@ import "@fontsource-variable/space-grotesk/wght.css";
 import "./globals.css";
 import { TAPLO_DOMAINS } from "@/lib/domains";
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", interactiveWidget: "resizes-content" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#ffffff", interactiveWidget: "resizes-content" };
 
 export const metadata: Metadata = {
   icons: { icon: [{ url: "/logo/favicon.svg", type: "image/svg+xml" }, { url: "/logo/favicon-32.png", sizes: "32x32", type: "image/png" }, { url: "/logo/favicon-64.png", sizes: "64x64", type: "image/png" }], apple: "/logo/apple-touch-icon.png" },

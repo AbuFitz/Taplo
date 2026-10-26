@@ -524,3 +524,4 @@
     gap: 8px;
   }
 }
+html:has(.home-dark){background:#080808}

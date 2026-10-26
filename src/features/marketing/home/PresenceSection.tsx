@@ -1,6 +1,14 @@
-import { ArrowUpRight, Globe, CalendarDays } from "lucide-react";
+import { ArrowUpRight, Globe, CalendarDays, ShoppingBag, MapPin } from "lucide-react";
 import { SocialIcon } from "@/features/page/widgets/social-icons";
 import "./presence-section.css";
+
+const TOOLS = [
+  { name: "Your website", note: "Projects and services", Icon: Globe },
+  { name: "Instagram", note: "Latest work and updates", Icon: () => <SocialIcon platform="instagram" /> },
+  { name: "Book a call", note: "Choose a time on Calendly", Icon: CalendarDays },
+  { name: "Your shop", note: "Open the full range", Icon: ShoppingBag },
+  { name: "Find us", note: "Directions and opening hours", Icon: MapPin },
+];
 
 /** Illustrative links, deliberately not simulated external account connections. */
 export function PresenceSection() {
@@ -22,7 +30,7 @@ export function PresenceSection() {
         <div
           className="presence-art"
           role="img"
-          aria-label="Illustration of a website, Instagram and a booking link gathered on one Taplo page"
+          aria-label="A website, Instagram, a booking link, a shop and a map, all gathered on one Taplo page"
         >
           <div className="presence-url">
             <span className="presence-monogram">n.</span>
@@ -31,29 +39,16 @@ export function PresenceSection() {
             </span>
             <ArrowUpRight />
           </div>
-          <div className="presence-links">
-            <div>
-              <Globe />
-              <span>
-                Our website<small>Projects and services</small>
-              </span>
-              <ArrowUpRight />
-            </div>
-            <div>
-              <SocialIcon platform="instagram" />
-              <span>
-                On Instagram<small>Latest work and studio updates</small>
-              </span>
-              <ArrowUpRight />
-            </div>
-            <div>
-              <CalendarDays />
-              <span>
-                Book a call<small>Choose a time on Calendly</small>
-              </span>
-              <ArrowUpRight />
-            </div>
-          </div>
+          <ul className="presence-list" aria-hidden="true">
+            {TOOLS.map(({ name, note, Icon }) => (
+              <li key={name}>
+                <Icon />
+                <span className="presence-word">{name}</span>
+                <small>{note}</small>
+                <ArrowUpRight className="presence-arrow" />
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

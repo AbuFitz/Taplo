@@ -5,7 +5,6 @@ import { TAPLO_DOMAINS } from "@/lib/domains"
 import { Overlay } from "@/components/taplo/overlay"
 import "./onboarding-mobile.css"
 import { BusinessIcon } from "./BusinessIcon"
-import { StudioNotice } from "./StudioNotice"
 import { SetupDesign } from "./SetupDesign"
 import { SetupThemes } from "./SetupStyles"
 import { TaploLogo } from "@/components/taplo/brand"
@@ -205,8 +204,7 @@ export function Onboarding() {
     <div className="setup-scene"><SetupBackdrop phase={stepIndex} /><main ref={shell} data-preview-expanded="false" data-step={step} data-mobile-layout={["business", "contacts", "widgets", "publish"].includes(step) ? "preview" : "focus"} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
       <nav aria-label="Progress" className="setup-progress mb-4">
         <div className="flex min-h-9 items-center gap-3">
-          <Link href="/" aria-label="Taplo home" className="setup-home"><TaploLogo className="h-5" /></Link><div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div>
-          <StudioNotice />
+          <Link href="/" aria-label="Taplo home" className="setup-home"><TaploLogo className="h-9" /></Link><div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div>
         </div>
       </nav>
 
@@ -256,10 +254,11 @@ export function Onboarding() {
             <div className="grid gap-5">
               <ImageField presentation="identity" framing={s.page.appearance.header?.avatarShape === "circle"?"circle":s.page.appearance.header?.avatarShape === "square"?"square":"logo"} purpose="identity" samples={false} onFramingChange={shape=>update(x=>({...x,page:{...x.page,appearance:{...x.page.appearance,header:{...x.page.appearance.header,avatarShape:shape}}}}))} label="Add your logo or profile photo" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
               <TaploInput label="Business name" placeholder="e.g. North Street Studio" value={c.identity.name} maxLength={100} autoComplete="organization" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
-              <div className="setup-address">
-                <span className="text-muted-foreground">{TAPLO_DOMAINS.host}/{c.identity.slug || "your-name"}</span>{" "}
+              <div className="setup-address" data-testid="setup-address">
+                <span className="setup-address-label">Your link</span>
+                <span className="setup-address-url" aria-live="polite"><span className="text-muted-foreground">{TAPLO_DOMAINS.host}/</span><strong>{c.identity.slug || "your-name"}</strong></span>
                 <button type="button" onClick={() => setEditSlug((v) => !v)} aria-expanded={editSlug || (showErrors && slugErrs.length > 0)} className="setup-secondary">{editSlug ? "Done" : "Change"}</button>
-                {slugErrs.length && c.identity.slug ? <span className="block text-destructive">{SLUG_PROBLEM_MESSAGE[slugErrs[0]!]}</span> : null}
+                {slugErrs.length && c.identity.slug ? <span className="setup-address-error text-destructive">{SLUG_PROBLEM_MESSAGE[slugErrs[0]!]}</span> : null}
               </div>
               {editSlug || (showErrors && slugErrs.length) ? (
                 <TaploInput label="Web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />

@@ -1,3 +1,4 @@
+import type { Viewport } from "next";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { PLANS, PLAN_IDS } from "@/features/subscriptions/plans";
@@ -16,10 +17,18 @@ import { LiveStage } from "@/features/marketing/home/LiveStage";
 export const dynamic = "force-dynamic";
 const action =
   "inline-flex min-h-11 items-center justify-center gap-5 rounded-md bg-white px-5 text-sm font-semibold text-black outline-none hover:bg-neutral-200 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black";
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  interactiveWidget: "resizes-content",
+  themeColor: "#080808",
+};
+
 export default function Home() {
   const a = primaryAction();
   return (
-    <div className="marketing-shell bg-[#080808] text-white">
+    <div className="marketing-shell home-dark bg-[#080808] text-white">
       <SiteHeader />
       <main>
         <section

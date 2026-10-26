@@ -3,7 +3,6 @@
 import { businessAddress } from "@/lib/domains"
 
 import * as React from "react"
-import { StudioNotice } from "@/features/demo/StudioNotice"
 import { Redo2, Undo2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -72,7 +71,7 @@ export function MyPage() {
         <p className="truncate text-sm font-semibold leading-tight">{s.content.identity.name || "Your page"}</p>
         <p className={cn("truncate text-xs leading-tight", ed.storageFailed ? "text-destructive" : "text-muted-foreground")} data-testid="save-state">{saveText}</p>
       </div>
-      <div className="ml-auto flex items-center gap-1.5"><span className="hidden xl:inline-flex"><StudioNotice /></span>
+      <div className="ml-auto flex items-center gap-1.5">
         <Button variant="ghost" size="icon" className="size-11" onClick={ed.undo} disabled={!ed.canUndo} aria-label="Undo" data-testid="undo"><Undo2 /></Button>
         <Button variant="ghost" size="icon" className="size-11" onClick={ed.redo} disabled={!ed.canRedo} aria-label="Redo" data-testid="redo"><Redo2 /></Button>
         <Button asChild variant="outline" className="min-h-11"><a href="/demo/preview" target="_blank" rel="noreferrer" data-testid="full-preview">Preview</a></Button>

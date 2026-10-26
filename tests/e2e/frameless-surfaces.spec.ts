@@ -39,7 +39,7 @@ test("mobile motion preference changes keep setup intact and stop tonal motion",
   await page.goto("/onboarding");
   await page.getByLabel("Business name", { exact: true }).fill("North Street Studio");
   const field = page.getByTestId("setup-backdrop");
-  await expect(field.locator(".liquid-light")).toHaveAttribute("data-active", "true");
+  await expect(field.locator("canvas")).toHaveCount(1);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(field).toHaveAttribute("data-reduced-motion", "true");
   await expect(field.locator("canvas")).toHaveCount(0);
