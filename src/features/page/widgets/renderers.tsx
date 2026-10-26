@@ -143,7 +143,7 @@ function ServiceListWidget({ w, vm }: P) {
   const list = serviceListItems(vm.business.services, s, vm.ctx.featuredServiceIds)
   return (
     <Card title={s.title}>
-      <ServiceCollection groups={[{ items: list.map(bookable) }]} variant={s.variant === "tiles" ? "tiles" : s.variant === "cards" ? "cards" : s.variant === "compact" ? "compact" : s.variant === "spotlight" ? "spotlight" : "rows"} options={{ showPrices: s.showPrices !== false, showDuration: s.showDuration !== false, showDescriptions: s.showDescriptions !== false }}
+      <ServiceCollection groups={[{ items: list.map(bookable) }]} variant={s.variant === "tiles" ? "tiles" : s.variant === "cards" ? "cards" : s.variant === "compact" ? "compact" : s.variant === "spotlight" ? "spotlight" : s.variant === "index" ? "index" : s.variant === "showcase" ? "showcase" : "rows"} options={{ showPrices: s.showPrices !== false, showDuration: s.showDuration !== false, showDescriptions: s.showDescriptions !== false }}
         ctx={serviceCtx(vm)} businessName={vm.business.identity.name} slug={vm.business.identity.slug} staffNames={providersByService(vm)} />
     </Card>
   )

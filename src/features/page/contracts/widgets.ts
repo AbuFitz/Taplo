@@ -37,7 +37,7 @@ export const settingsSchemas = {
   social: z.object({ variant: z.enum(["icons", "list"]).default("icons"), platforms: z.array(z.string()).nullable().default(null) }),
   serviceList: z.object({
     title, serviceIds: ids, group: z.string().max(80).optional(),
-    variant: z.enum(["list", "cards", "tiles", "compact", "spotlight"]).default("list"),
+    variant: z.enum(["list", "cards", "tiles", "compact", "spotlight", "index", "showcase"]).default("list"),
     showPrices: z.boolean().default(true), showDuration: z.boolean().default(true), showDescriptions: z.boolean().default(true),
     limit: z.number().int().min(1).max(50).optional(),
     excludeFeatured: z.boolean().default(false),

@@ -76,6 +76,9 @@ const SECTION_LAYOUTS: Partial<Record<Scenario,Record<string,Record<string,unkno
   rowan:{serviceList:{variant:"cards"},faq:{variant:"cards"}},
   trades:{enquiry:{variant:"card"},faq:{variant:"cards"},hours:{variant:"status"}},
   gym:{serviceList:{variant:"spotlight"},offers:{variant:"cards"}},
+  // Density is a per-business choice: scannable index rows, photo-led grids, or roomy cards.
+  calm:{serviceList:{variant:"index"}}, driving:{serviceList:{variant:"index"}}, bike:{serviceList:{variant:"index"}}, current:{serviceList:{variant:"index"}}, slate:{serviceList:{variant:"index"}},
+  groom:{serviceList:{variant:"showcase"}}, garden:{serviceList:{variant:"showcase"}}, surf:{serviceList:{variant:"showcase"}}, cakes:{serviceList:{variant:"showcase"}}, books:{serviceList:{variant:"showcase"}},
 }
 export function widgetsFor(s: Scenario) {
   if (!widgetCache.has(s)) widgetCache.set(s, SCENARIOS[s].widgets().map(w => {

@@ -20,7 +20,7 @@ const mins = (m?: number) => (m ? (m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? 
  * Booking from the detail closes it and opens the booking journey: one overlay at a time.
  */
 export function ServiceCollection({ groups, variant, options, ctx, businessName, slug, staffNames }: {
-  groups: ServiceGroup[]; variant: "rows" | "cards" | "tiles" | "compact" | "spotlight" | "menu" | "menu-panels" | "menu-compact"; options: ServiceViewOptions
+  groups: ServiceGroup[]; variant: "rows" | "cards" | "tiles" | "compact" | "spotlight" | "index" | "showcase" | "menu" | "menu-panels" | "menu-compact"; options: ServiceViewOptions
   ctx?: BookingContext; businessName: string; slug: string; staffNames: Record<string, { id: string; name: string; serviceIds: string[] | null }[]>
 }) {
   const trigger = React.useRef<HTMLButtonElement | null>(null)
@@ -31,13 +31,13 @@ export function ServiceCollection({ groups, variant, options, ctx, businessName,
   const open = (id: string) => (event: React.MouseEvent<HTMLButtonElement>) => { trigger.current = event.currentTarget; setOpenId(id) }
   const price = (s: BookableService) => (options.showPrices ? priceWording(s) : "")
 
-  const tiles = variant === "cards" || variant === "tiles" || variant === "spotlight"
+  const tiles = variant === "cards" || variant === "tiles" || variant === "spotlight" || variant === "showcase"
   const menu = variant === "menu" || variant === "menu-panels" || variant === "menu-compact"
   const row = (s: BookableService, index: number) => (
     <button type="button" className="tp-service-open" data-layout={variant} data-lead={variant === "spotlight" && index === 0 || undefined} onClick={open(s.id)} aria-haspopup="dialog" data-testid="service-open">
       {tiles ? (
         <span className="tp-service-tile-content">
-          {s.image ? <span className="tp-service-photo"><ProfileImage image={s.image} sizes="(max-width: 640px) 90vw, 400px" /></span> : null}
+          {s.image ? <span className="tp-service-photo"><ProfileImage image={s.image} sizes="(max-width: 640px) 90vw, 400px" /></span> : variant === "showcase" ? <span className="tp-service-photo tp-service-art" aria-hidden="true"><span>{s.name.trim().slice(0, 1)}</span></span> : null}
           <span className="tp-service-tile-top"><span className="tp-service-name">{s.name}</span><ArrowUpRight aria-hidden="true" className="tp-service-arrow" /></span>
           {options.showDescriptions && s.description ? <span className="tp-muted tp-service-description tp-clamp">{s.description}</span> : null}
           {variant === "spotlight" && s.inclusions?.length ? <span className="tp-service-inclusions">{s.inclusions.slice(0,3).map((item,i)=><span key={i}><span aria-hidden="true">•</span>{item}</span>)}</span> : null}
@@ -45,6 +45,12 @@ export function ServiceCollection({ groups, variant, options, ctx, businessName,
             {options.showPrices ? <span className="tp-price">{price(s)}</span> : null}
             {options.showDuration && s.durationMinutes ? <span className="tp-service-time"><Clock aria-hidden="true" />{mins(s.durationMinutes)}</span> : null}
           </span>
+        </span>
+      ) : variant === "index" ? (
+        <span className="tp-index-row">
+          <span className="tp-index-name"><span className="tp-service-name">{s.name}</span>{options.showDuration && s.durationMinutes ? <span className="tp-index-time">{mins(s.durationMinutes)}</span> : null}</span>
+          {options.showPrices ? <span className="tp-price">{price(s)}</span> : null}
+          <span className="tp-index-book">{isOnlineBookable(s) ? "Book" : "Ask"}</span>
         </span>
       ) : menu ? (
         <span className="tp-menu-item">

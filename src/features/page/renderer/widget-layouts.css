@@ -176,3 +176,23 @@
 .tp-service-tile .tp-service-inclusions{margin-block:12px;color:var(--tp-muted)}
 
 .tp-featured-service>.tp-service-inclusions,.tp-featured-service>.tp-featured-terms{margin-block:0}
+
+/* Index: one scannable line per service with a Book chip. Showcase: two-up photo cards. */
+.tp-services-shell[data-service-layout="index"] .tp-rows{display:grid;gap:0}
+.tp-index-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:var(--tp-s-3);width:100%;padding:var(--tp-s-3) 0;border-bottom:1px solid var(--tp-line);text-align:left}
+.tp-index-name{display:flex;flex-direction:column;min-width:0;gap:2px}
+.tp-index-time{font-size:var(--tp-t-xs);color:var(--tp-muted)}
+.tp-index-book{display:inline-flex;align-items:center;justify-content:center;min-height:32px;padding:0 var(--tp-s-3);border-radius:999px;background:var(--tp-accent);color:var(--tp-accent-foreground);font-size:var(--tp-t-xs);font-weight:700}
+.tp-services-shell[data-service-layout="index"] li:last-child .tp-index-row{border-bottom:0}
+.tp-services-shell[data-service-layout="showcase"] .tp-service-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tp-services-shell[data-service-layout="showcase"] .tp-service-tile-content{min-height:0;gap:var(--tp-s-2)}
+.tp-services-shell[data-service-layout="showcase"] .tp-service-photo{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;border-radius:var(--tp-radius-md,12px)}
+.tp-service-art{display:grid;place-items:center;background:radial-gradient(70% 70% at 25% 20%,color-mix(in srgb,var(--tp-accent) 55%,var(--tp-surface)),transparent 70%),radial-gradient(70% 70% at 85% 85%,color-mix(in srgb,var(--tp-foreground) 18%,var(--tp-surface)),transparent 70%),var(--tp-surface-2)}
+.tp-service-art span{font-family:var(--tp-font-heading);font-weight:700;font-size:44px;line-height:1;color:color-mix(in srgb,var(--tp-foreground) 38%,transparent)}
+.tp-services-shell[data-service-layout="showcase"] .tp-service-tile-top .tp-service-name{font-size:var(--tp-t-md)}
+.tp-services-shell[data-service-layout="showcase"] .tp-service-tile-bottom .tp-price{font-size:var(--tp-t-md)}
+.tp-services-shell[data-service-layout="showcase"] .tp-service-art{display:grid;place-items:center;background:linear-gradient(135deg,color-mix(in srgb,var(--tp-accent) 30%,var(--tp-surface)),color-mix(in srgb,var(--tp-accent) 8%,var(--tp-surface-2)))}
+.tp-services-shell[data-service-layout="showcase"] .tp-service-art span{display:block;text-align:center}
+.tp-services-shell[data-service-layout="showcase"] .tp-service-tile-top .tp-service-name{font-size:var(--tp-t-md);overflow-wrap:normal;hyphens:auto;line-height:1.15}
+.tp-services-shell[data-service-layout="showcase"] .tp-service-description{display:none}
+.tp-services-shell[data-service-layout="showcase"] .tp-service-tile{padding:var(--tp-s-2)}
