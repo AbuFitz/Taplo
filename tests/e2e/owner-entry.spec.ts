@@ -8,7 +8,7 @@ for (const width of [390, 1440]) {
     for (const name of ["Jay’s Barbers", "Detail Dept.", "Harris Cars"]) {
       test(`opens ${name} as an editable draft and keeps it after a reload`, async ({ page }) => {
         await page.goto("/dashboard")
-        await expect(page.getByRole("heading", { name: "Your business. A page that feels like it." })).toBeVisible()
+        await expect(page.getByRole("heading", { name: "Set up your business page." })).toBeVisible()
         const pictures = page.locator('button[aria-label^="Try "] img')
         await expect(pictures).toHaveCount(6)
         await expect.poll(() => pictures.evaluateAll((imgs) => imgs.filter((i) => i.getBoundingClientRect().top < innerHeight).every((i) => (i as HTMLImageElement).complete && (i as HTMLImageElement).naturalWidth > 0))).toBe(true)
