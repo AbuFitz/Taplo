@@ -10,6 +10,7 @@ import { newWidget } from "@/features/page/starter"
 import type { WidgetType } from "@/features/page/contracts/widgets"
 import { exampleStart } from "@/features/inspiration/suggest"
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans"
+import { applyDesign, getDesign } from "@/features/page/themes/designs"
 import { ONBOARDING_STEPS, initialState, useDemo, type OnboardingStep } from "@/features/demo/store"
 import { SetupLoading } from "@/features/demo/SetupLoading"
 import { applyIndustry, canPublish, hasContactChannel, slugProblems } from "@/features/demo/actions"
@@ -29,6 +30,7 @@ import { FinishStep } from "./steps/FinishStep"
 import "./setup.css"
 
 const subscribeMobile = (cb: () => void) => { const q = window.matchMedia("(max-width:1023px)"); q.addEventListener("change", cb); return () => q.removeEventListener("change", cb) }
+const subscribeShort = (cb: () => void) => { window.addEventListener("resize", cb); return () => window.removeEventListener("resize", cb) }
 
 const BLOCKED: Record<string, string> = {
   business: "Add your business name to continue.",
@@ -42,6 +44,9 @@ export function Onboarding() {
   const router = useRouter()
   const reduced = useReducedMotion()
   const mobile = React.useSyncExternalStore(subscribeMobile, () => window.matchMedia("(max-width:1023px)").matches, () => false)
+  // On a short computer screen a long step is split in two, exactly as on a phone, so nothing needs scrolling to find.
+  const short = React.useSyncExternalStore(subscribeShort, () => window.innerHeight < 860, () => false)
+  const split = mobile || short
   const { ready, state, update } = useDemo()
   const s = state ?? initialState()
   const step = (s.step === "goal" ? "reach" : (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "widgets") as Exclude<OnboardingStep, "goal">
@@ -54,9 +59,9 @@ export function Onboarding() {
   const [valid, setValid] = React.useState(true)
   const navigated = React.useRef(false)
 
-  const parts = mobile && def.parts ? def.parts.length : 1
+  const parts = split && def.parts ? def.parts.length : 1
   const last = part >= parts - 1
-  const here = mobile && def.parts ? def.parts[Math.min(part, def.parts.length - 1)]! : null
+  const here = split && def.parts ? def.parts[Math.min(part, def.parts.length - 1)]! : null
   const title = step === "contacts" && (!here || part === 0) ? setupJourney(s.content.identity.industryKey).heading : here?.title ?? def.title
   const view = here?.view ?? def.view
   const focus = here?.focus ?? def.focus
@@ -109,6 +114,14 @@ export function Onboarding() {
     })
   }, [ready, from]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // A design chosen in the gallery: setup begins with it applied, and every later step builds on that choice.
+  const [chosenDesign] = React.useState(() => { const id = params.get("design"); return id ? getDesign(id) ?? null : null })
+  React.useEffect(() => {
+    if (!ready || !chosenDesign) return
+    window.history.replaceState(null, "", window.location.pathname)
+    update((x) => ({ ...x, page: applyDesign(x.page, chosenDesign) }))
+  }, [ready, chosenDesign]) // eslint-disable-line react-hooks/exhaustive-deps
+
   if (!ready) return <SetupLoading />
 
   const c = s.content
@@ -147,7 +160,7 @@ export function Onboarding() {
 
   const finish = step === "publish"
   const stage = mobile && finish ? "large" : def.stage
-  const ctx = { s, update, part: mobile && def.parts ? part : undefined, mobile, showErrors, setValid }
+  const ctx = { s, update, part: split && def.parts ? part : undefined, mobile, showErrors, setValid }
   const hasSheet = mobile && stage !== "hidden"
 
   return (
@@ -166,7 +179,7 @@ export function Onboarding() {
           <section className="sf-panel" aria-labelledby="sf-title">
             {hasSheet ? <button type="button" className="sf-grip" aria-label={peek ? "Back to editing" : "See more of your page"} aria-expanded={!peek} onClick={() => setPeek((v) => !v)}><span /></button> : null}
             <div className="sf-head">
-              {from || intent ? <p className="sf-origin">{from ? <span data-testid="from-example">Starting from {from.name}</span> : null}{from && intent ? " · " : ""}{intent ? <span data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}</p> : null}
+              {from || intent || chosenDesign ? <p className="sf-origin">{from ? <span data-testid="from-example">Starting from {from.name}</span> : null}{chosenDesign ? <span data-testid="from-design">Starting with {chosenDesign.name}</span> : null}{(from || chosenDesign) && intent ? " · " : ""}{intent ? <span data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}</p> : null}
               <motion.h1 key={`${step}-${part}`} id="sf-title" tabIndex={-1} initial={reduced ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 380, damping: 34 }}>{title}</motion.h1>
             </div>
             <motion.div key={`${step}-${part}`} className="sf-scroll" id="sf-controls" inert={peek} initial={reduced ? false : { opacity: 0, x: direction * 14 }} animate={{ opacity: 1, x: 0 }} transition={{ type: "spring", stiffness: 380, damping: 34, opacity: { duration: 0.16 } }}>

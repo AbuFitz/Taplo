@@ -279,10 +279,16 @@ export const DESIGN_IDS = DESIGNS.map((x) => x.id);
 const byId = new Map(DESIGNS.map((x) => [x.id, x]));
 export const getDesign = (id: string): Design | undefined => byId.get(id);
 
+/** What every design starts from, so choosing a design always gives that design's presentation and never a blend of two. */
+const BASE_VARIANTS: Record<string, Record<string, unknown>> = {
+  serviceList: { variant: "list" }, priceMenu: { variant: "menu" }, hours: { variant: "list" }, location: { variant: "card" },
+  faq: { variant: "list" }, reviews: { variant: "cards" }, gallery: { variant: "mosaic" }, team: { variant: "list" }, text: { variant: "body" },
+};
+
 /** Applies a design's recipe to a page's sections. Content is never touched; only how each section is presented and ordered. */
 export function applyRecipe(widgets: PageDoc["widgets"], recipe: DesignRecipe): PageDoc["widgets"] {
   const styled = widgets.map((w) => {
-    const variant = recipe.variants?.[w.type];
+    const variant = BASE_VARIANTS[w.type] || recipe.variants?.[w.type] ? { ...BASE_VARIANTS[w.type], ...recipe.variants?.[w.type] } : undefined;
     const treatment = recipe.treatments?.[w.type];
     return { ...w, ...(variant ? { settings: { ...w.settings, ...variant } } : {}), ...(treatment ? { appearance: applySectionTreatment(w.appearance, treatment) } : {}) };
   });
@@ -295,4 +301,34 @@ export function applyRecipe(widgets: PageDoc["widgets"], recipe: DesignRecipe): 
 /** The one way a design is put on a page: register, change design in the dashboard, and "Use this design" all go through here. */
 export function applyDesign(page: PageDoc, design: Design): PageDoc {
   return { ...page, themeId: design.id, appearance: structuredClone(design.overrides) as StyleOverrides, widgets: applyRecipe(page.widgets, design.recipe) };
+}
+
+export interface KeepOptions { colours?: boolean; type?: boolean; background?: boolean }
+/**
+ * Putting a design on an existing page. Content is never touched; the owner chooses whether their current colours and typeface
+ * are kept. Anything the design sets that the owner chose to keep is carried over unchanged.
+ */
+export function applyDesignKeeping(page: PageDoc, design: Design, keep: KeepOptions = {}): PageDoc {
+  const next = applyDesign(page, design);
+  const old = page.appearance ?? {};
+  const a = next.appearance as StyleOverrides;
+  const merged: StyleOverrides = {
+    ...a,
+    ...(keep.colours && old.colors ? { colors: { ...a.colors, ...old.colors } } : {}),
+    ...(keep.type && old.text ? { text: { ...a.text, headingFont: old.text.headingFont ?? a.text?.headingFont, bodyFont: old.text.bodyFont ?? a.text?.bodyFont } as StyleOverrides["text"] } : {}),
+    ...(keep.background && old.background ? { background: old.background } : {}),
+  };
+  return { ...next, appearance: merged };
+}
+
+/** A plain-language account of what a design changes, for the confirmation shown before it is applied. */
+export function describeChange(design: Design): string[] {
+  const o = design.overrides;
+  const out: string[] = [];
+  out.push(`Colours: ${design.moods[0]?.toLowerCase() ?? "new"} palette with ${o.colors?.accent ? "its own accent" : "an accent"}`);
+  out.push(`Typeface: ${o.text?.headingFont ?? "new"} headings`);
+  const comp = o.layout?.composition ?? "stack";
+  out.push(`Layout: ${({ stack: "sections on cards", bento: "a compact grid", sheet: "a sheet over a colour field", "sheet-bold": "a sheet over a bold colour field", ledger: "open numbered sections" } as Record<string, string>)[comp]}`);
+  if (design.motion === "Moving background") out.push("Background: slow, moving colour");
+  return out;
 }

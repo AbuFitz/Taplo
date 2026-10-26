@@ -576,3 +576,8 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 [data-header-surface="open"] .tp-header[data-layout="banner"][data-cover] { padding: 0; }
 [data-header-surface="open"] .tp-hero-media::after, [data-header-surface="open"] .tp-header[data-layout="banner"] .tp-profile-photo::after { background: linear-gradient(to bottom, transparent calc(100% - var(--tp-fade, 52%)), var(--tp-background)); }
 [data-composition^="sheet"] .tp-header { background: transparent; box-shadow: none; border-radius: 0; }
+[data-composition^="sheet"][data-header-surface="open"] .tp-header { padding: 3rem 1.25rem 4.25rem; }
+[data-composition^="sheet"][data-header-surface="open"] .tp-header:is([data-layout="banner"], [data-layout="poster"]) { padding: 0 0 3.5rem; }
+@media (min-width: 900px) { [data-composition^="sheet"][data-header-surface="open"] .tp-header { padding-top: 4rem; } }
+/* Bento tiles: short sections never break words, and their content wraps by word. */
+[data-composition="bento"] .tp-widget[data-span="half"] * { overflow-wrap: normal; word-break: normal; hyphens: auto; }
