@@ -5,6 +5,7 @@ import { Disclosure } from "@/features/appearance/controls"
 import { useAppearanceModel, type AppearanceHost } from "@/features/appearance/model"
 import { AppearancePanel, HeaderControls } from "@/features/appearance/sections"
 import { ChoiceGrid } from "@/features/appearance/controls"
+import { applyDesign, getDesign } from "@/features/page/themes/designs"
 import { newId } from "@/features/demo/actions"
 import { ColourSuggestion } from "./ColourSuggestion"
 import { ImageField } from "./controls"
@@ -21,7 +22,8 @@ function useEditorAppearance(ed: Editor, notify: (m: string, undoable?: boolean)
     overrides: page.appearance,
     canSwitchLook: ed.vm?.ent.themeSwitching ?? true,
     apply: (fn, coalesce) => setAppearance(fn, coalesce ? `ap:${coalesce}` : undefined),
-    setAppearance: (themeId, appearance) => setPage((p) => ({ ...p, themeId, appearance })),
+    // Choosing one of the designs brings its whole presentation (section styles included), as the gallery does; undo restores it.
+    setAppearance: (themeId, appearance) => setPage((p) => { const d = getDesign(themeId); return d && Object.keys(appearance).length === 0 ? applyDesign(p, d) : { ...p, themeId, appearance } }),
     notify,
     saved: {
       limit: 12,

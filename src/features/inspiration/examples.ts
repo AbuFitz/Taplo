@@ -2,7 +2,8 @@ import { COLLECTION_BRIEFS } from "@/features/showcase/collection"
 import { googleReviewUrl } from "@/features/page/widgets/google-reviews"
 import type { IndustryId } from "@/features/marketing/ia"
 import { FONT_LABELS } from "@/features/page/themes/font-metadata"
-import { LOOKS, CURRENT_LOOKS } from "@/features/page/themes/looks"
+import { ALL_SHOWCASE } from "./showcase-set"
+import { LOOKS } from "@/features/page/themes/looks"
 import { EXAMPLE_LOOK, EXAMPLE_OVERRIDES } from "@/features/showcase/lab-state"
 import { SCENARIOS, type Scenario } from "@/features/showcase/content"
 import type { WidgetType } from "@/features/page/contracts/widgets"
@@ -96,7 +97,7 @@ const CATALOGUE: Example[] = [
 // Commercial examples lead the catalogue; personal and creative starts remain available.
 const EXAMPLE_ORDER = ["jays-barbers", "hollin-physio", "harris-cars", "lune-nail-studio", "no-6-coffee", "detail-dept", "fixnowmechanics", "brightlearn", "forge-strength", "dans-home-repairs", "maths-with-aisha", "sora-fields", "form-objects", "maya-builds"];
 // Superseded example routes remain available; the gallery leads with their new UK replacements.
-const publishedExamples = CATALOGUE.filter(e=>CURRENT_LOOKS.some(look=>look.id===EXAMPLE_LOOK[e.scenario]) && (COLLECTION_BRIEFS.some(b=>b.id===e.scenario) || ["station","detailer","brookfield","corner","oakfield","rowan","physio","gym","fixnow","brightlearn"].includes(e.scenario)));
+const publishedExamples = CATALOGUE.filter(e=>LOOKS.some(look=>look.id===EXAMPLE_LOOK[e.scenario]) && (COLLECTION_BRIEFS.some(b=>b.id===e.scenario) || ALL_SHOWCASE.some(i=>i.scenario===e.scenario) || ["fixnow","brightlearn"].includes(e.scenario)));
 export const EXAMPLES = publishedExamples.sort((a,b) => {
   const rank = (slug: string) => { const index = EXAMPLE_ORDER.indexOf(slug); return index < 0 ? EXAMPLE_ORDER.length : index; };
   return rank(a.slug) - rank(b.slug);

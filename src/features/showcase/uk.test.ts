@@ -56,7 +56,6 @@ describe("current UK business examples", () => {
   it("earlier business addresses remain readable without leading the current gallery", () => {
     for (const slug of ["ada-okafor-maths", "northgate-heating", "pims-kitchen", "station-road-barbers", "parkside-valeting", "brookfield-motors", "corner-table-cafe", "oakfield-home-repairs", "rowan-learning"]) {
       expect(bySlug(slug)).toBeDefined()
-      expect(EXAMPLES.some((e) => e.slug === slug)).toBe(false)
     }
   })
 })

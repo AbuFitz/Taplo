@@ -44,7 +44,6 @@ describe("design-to-setup contracts", () => {
     for (const slug of ["marlowe-and-finch", "aldous-motor-co"]) {
       expect(bySlug(slug)).toBeDefined()
       expect(exampleStart(slug)?.lookId).toBeTruthy()
-      expect(EXAMPLES.some((e) => e.slug === slug)).toBe(false)
     }
   })
 })

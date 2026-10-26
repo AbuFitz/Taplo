@@ -5,6 +5,7 @@ import type { PageDoc } from "@/features/page/contracts/page"
 import { applySectionTreatment, type SectionTreatmentId } from "@/features/page/section-treatments"
 import type { StyleOverrides } from "@/features/page/contracts/style"
 import { DEFAULT_THEME_ID, getTheme } from "@/features/page/themes/catalogue"
+import { SHOWCASE } from "@/features/inspiration/showcase-set"
 import { SCENARIOS, type Scenario } from "./content"
 import { applyRecipe, getDesign } from "@/features/page/themes/designs"
 
@@ -35,6 +36,14 @@ export const EXAMPLE_OVERRIDES: Record<Scenario, StyleOverrides> = {
   gym: { header: { layout: "banner", avatarShape: "logo", align: "left", scrim: "strong" },  layout: { desktop: "columns", width: "wide", rhythm: "editorial" } },
   trades: { header: { layout: "banner", avatarShape: "circle", avatarSize: "lg", align: "center" }, layout: { desktop: "centered", width: "regular" } },
   dealer: { layout: { desktop: "columns", width: "wide" } },
+}
+
+/** Every business in the gallery is shown on the design chosen for it, so its demo page matches what the gallery shows. */
+for (const g of SHOWCASE) for (const item of g.items) {
+  const design = getDesign(item.design)
+  if (!design || item.scenario === "fixnow" || item.scenario === "brightlearn") continue
+  EXAMPLE_LOOK[item.scenario] = design.id
+  EXAMPLE_OVERRIDES[item.scenario] = item.logo === false ? { header: { avatarShape: "none" } } : {}
 }
 
 /** A scenario on its own look opens as the designed example; an explicit look (the looks sheet, the lab) shows that look plain. */
