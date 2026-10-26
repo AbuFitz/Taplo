@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { Check } from "lucide-react"
 import { Overlay } from "@/components/taplo/overlay"
 import { useDemo } from "@/features/demo/store"
-import { applyDesignKeeping, describeChange, type Design } from "@/features/page/themes/designs"
+import { applyDesignKeeping, describeChange, withArrangement, type Design } from "@/features/page/themes/designs"
 import { DesignThumb } from "@/features/setup/DesignThumb"
 import { cn } from "@/lib/utils"
 import "@/features/setup/setup.css"
@@ -17,30 +17,31 @@ import "./design-gallery.css"
  * design chosen, and every later step builds on it. Someone with a page sees exactly what will change and what will not
  * before anything does, and can keep their own colours or typeface.
  */
-export function ApplyDesign({ design, industry, className, children }: { design: Design; industry?: string; className?: string; children?: React.ReactNode }) {
+export function ApplyDesign({ design, industry, arrangement, className, children }: { design: Design; industry?: string; arrangement?: string; className?: string; children?: React.ReactNode }) {
   const { state, ready } = useDemo()
   const owner = ready && state?.onboarded ? state : null
   const [open, setOpen] = React.useState(false)
   const label = children ?? "Use this design"
-  if (!owner) return <Link data-brand-action href={`/onboarding?design=${design.id}`} className={cn("sf-use", className)} aria-label={`Start with the ${design.name} design`} data-testid="start-design">{label}</Link>
+  if (!owner) return <Link data-brand-action href={`/onboarding?design=${design.id}${arrangement ? `&arr=${arrangement}` : ""}`} className={cn("sf-use", className)} aria-label={`Start with the ${design.name} design`} data-testid="start-design">{label}</Link>
   const applied = owner.page.themeId === design.id
   return (
     <>
       <button type="button" className={cn("sf-use", className)} onClick={() => setOpen(true)} aria-label={applied ? `${design.name} is on your page` : `Use the ${design.name} design`}>{applied ? <><Check aria-hidden="true" />On your page</> : label}</button>
-      {open ? <ApplyDialog design={design} industry={industry} onClose={() => setOpen(false)} /> : null}
+      {open ? <ApplyDialog design={design} industry={industry} arrangement={arrangement} onClose={() => setOpen(false)} /> : null}
     </>
   )
 }
 
-function ApplyDialog({ design, industry, onClose }: { design: Design; industry?: string; onClose: () => void }) {
+function ApplyDialog({ design, industry, arrangement, onClose }: { design: Design; industry?: string; arrangement?: string; onClose: () => void }) {
   const { state, update } = useDemo()
   const router = useRouter()
   const s = state!
   const [keepColours, setKeepColours] = React.useState(false)
   const [keepType, setKeepType] = React.useState(false)
   const key = industry ?? s.content.identity.industryKey
-  const after = React.useMemo(() => applyDesignKeeping(s.page, design, { colours: keepColours, type: keepType }), [s.page, design, keepColours, keepType])
-  const apply = () => { update((x) => ({ ...x, page: applyDesignKeeping(x.page, design, { colours: keepColours, type: keepType }) })); onClose(); router.push("/dashboard/page") }
+  const withArr = React.useCallback((page: typeof s.page) => withArrangement(applyDesignKeeping(page, design, { colours: keepColours, type: keepType }), arrangement), [design, keepColours, keepType, arrangement]) // eslint-disable-line react-hooks/exhaustive-deps
+  const after = React.useMemo(() => withArr(s.page), [s.page, withArr])
+  const apply = () => { update((x) => ({ ...x, page: withArr(x.page) })); onClose(); router.push("/dashboard/page") }
   return (
     <Overlay open onOpenChange={(o) => !o && onClose()} kind="detail" title={`Use ${design.name} on your page`} description="Here is exactly what will change." testId="apply-design"
       footer={<div className="flex gap-2"><button type="button" className="sf-btn" data-kind="ghost" onClick={onClose}>Cancel</button><button type="button" className="sf-btn flex-1" data-kind="primary" onClick={apply}>Apply this design</button></div>}>

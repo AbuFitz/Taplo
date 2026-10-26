@@ -1,20 +1,35 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { Search, X } from "lucide-react"
-import { getDesign, type Design } from "@/features/page/themes/designs"
+import { getDesign, FINISHES, type Design } from "@/features/page/themes/designs"
+import { PROFILE_CHOICES } from "@/features/page/contracts/style"
 import { DesignThumb } from "@/features/setup/DesignThumb"
 import { SCENARIOS, type Scenario } from "@/features/showcase/content"
 import { widgetsFor } from "@/features/showcase/lab-state"
 import { PagePreview } from "@/features/preview/PagePreview"
+import { ScaledPhone } from "@/features/preview/ScaledPhone"
+import { PHONE } from "@/features/preview/PhoneChrome"
 import { Overlay } from "@/components/taplo/overlay"
 import { ApplyDesign } from "./ApplyDesign"
 import { exampleForScenario } from "./examples"
-import { SHOWCASE, type Arrangement } from "./showcase-set"
+import { ALL_SHOWCASE, type Arrangement } from "./showcase-set"
+import Link from "next/link"
 import "./design-gallery.css"
 
-type Pick = { scenario: Scenario; design: Design; note: string; logo?: false; arrangement?: Arrangement }
+type Pick = { scenario: Scenario; design: Design; note: string; logo?: false; arrangement?: Arrangement; group: string }
+
+const BUSINESS = [
+  { id: "salon", label: "Salons & barbers", of: "barber lune station tattoo groom" },
+  { id: "clinic", label: "Clinics & wellness", of: "physio calm slow liv" },
+  { id: "trade", label: "Trades & auto", of: "trades fixnow oakfield current detailer dealer brookfield bike garden driving" },
+  { id: "food", label: "Food & hospitality", of: "cafe corner hours taco bnb" },
+  { id: "shop", label: "Shops & makers", of: "form edit petal books cakes" },
+  { id: "studio", label: "Studios & creatives", of: "sora ellis field pace after slate twelve nami dune maya leon eden dj alba arlo" },
+  { id: "coach", label: "Coaches & tutors", of: "gym north good brightlearn rowan tutor surf" },
+] as const
+const STYLES = ["Seamless blend", "Frosted glass", "Dark noir", "Warm editorial", "Bento grid"] as const
+type StyleTag = (typeof STYLES)[number]
 
 const alignFor = (a?: Arrangement): "left" | "center" => (a === "cutout" || a === "bento" ? "center" : "left")
 /** The design with this page's own arrangement and (when it has no logo) a name-only profile. */
@@ -22,63 +37,94 @@ function poseOf(pick: Pick) {
   const header = { ...pick.design.overrides.header, ...(pick.arrangement ? { layout: pick.arrangement, align: alignFor(pick.arrangement) } : {}), ...(pick.logo === false ? { avatarShape: "none" as const } : {}) }
   return { ...pick.design.overrides, header }
 }
+function stylesOf(p: Pick): StyleTag[] {
+  const out: StyleTag[] = []
+  const d = p.design
+  if (p.arrangement === "melt") out.push("Seamless blend")
+  if (d.overrides.cards?.surface === "glass") out.push("Frosted glass")
+  if (d.moods.includes("Dark")) out.push("Dark noir")
+  if (d.moods.includes("Editorial") && !d.moods.includes("Dark")) out.push("Warm editorial")
+  if (p.arrangement === "bento" || d.overrides.layout?.composition === "bento") out.push("Bento grid")
+  return out
+}
+const arrangementName = (a?: Arrangement) => PROFILE_CHOICES.find((c) => c.id === a)?.name
+const frameSrc = (p: Pick) => `/appearance/frame?scenario=${p.scenario}&look=${p.design.id}${p.logo === false ? "&logo=0" : ""}${p.arrangement ? `&arr=${p.arrangement}` : ""}`
 
-/** A whole handset: bezel, island and a screen showing the real page from the top. Nothing is cropped by the card. */
-function Phone({ pick, priority }: { pick: Pick; priority?: boolean }) {
+/** One handset: the page as a still, or (when active) the page itself, scrollable and tappable inside the frame. */
+function Phone({ pick, active }: { pick: Pick; active: boolean }) {
   const sc = SCENARIOS[pick.scenario]
   const real = React.useMemo(() => ({ widgets: widgetsFor(pick.scenario) }), [pick.scenario])
-  const overrides = React.useMemo(() => poseOf(pick), [pick])
   const own = React.useMemo(() => (pick.logo === false ? { ...sc.content, identity: { ...sc.content.identity, logo: undefined } } : sc.content), [sc, pick.logo])
+  const overrides = React.useMemo(() => poseOf(pick), [pick])
   return (
-    <span className="dg-phone" aria-hidden="true">
-      <span className="dg-phone-screen">
-        <DesignThumb design={pick.design} industryKey="" own={own} real={real} overrides={overrides} height={820} key={priority ? "p" : undefined} />
-      </span>
-      <span className="dg-island" />
-    </span>
+    <ScaledPhone glow={pick.design.swatch[1]}>
+      {active
+        ? <iframe title={`${sc.content.identity.name}, live`} src={frameSrc(pick)} style={{ width: PHONE.width, height: PHONE.height, border: 0, display: "block", background: "#fff" }} />
+        : <DesignThumb design={pick.design} industryKey="" own={own} real={real} overrides={overrides} height={PHONE.height} />}
+    </ScaledPhone>
   )
 }
 
-/** The design shelf: different businesses, each on the design made for it. Open one to see it properly. */
+/** Round-robin the groups so neighbours are never the same kind of business. */
+function interleave<T extends { group: string }>(items: T[]): T[] {
+  const buckets = new Map<string, T[]>()
+  for (const i of items) buckets.set(i.group, [...(buckets.get(i.group) ?? []), i])
+  const lists = [...buckets.values()]
+  const out: T[] = []
+  for (let n = 0; lists.some((l) => n < l.length); n++) for (const l of lists) if (n < l.length) out.push(l[n]!)
+  return out
+}
+
 export function DesignGallery() {
   const [query, setQuery] = React.useState("")
+  const [biz, setBiz] = React.useState<string | null>(null)
+  const [style, setStyle] = React.useState<StyleTag | null>(null)
   const [open, setOpen] = React.useState<Pick | null>(null)
+  const [active, setActive] = React.useState<string | null>(null)
+  const timer = React.useRef<number | undefined>(undefined)
+  const all = React.useMemo<Pick[]>(() => interleave(ALL_SHOWCASE.flatMap((i) => { const design = getDesign(i.design); return design ? [{ scenario: i.scenario, design, note: i.note, logo: i.logo, arrangement: i.arrangement, group: i.group }] : [] })), [])
   const q = query.trim().toLowerCase()
-  const groups = SHOWCASE.map((g) => ({
-    ...g,
-    items: g.items.flatMap((i) => {
-      const design = getDesign(i.design)
-      if (!design) return []
-      const label = SCENARIOS[i.scenario].content.identity.name
-      const hay = [label, i.note, design.name, SCENARIOS[i.scenario].label, g.title].join(" ").toLowerCase()
-      return !q || hay.includes(q) ? [{ scenario: i.scenario, design, note: i.note, logo: i.logo, arrangement: i.arrangement }] : []
-    }),
-  })).filter((g) => g.items.length)
+  const shown = all.filter((p) => {
+    const name = SCENARIOS[p.scenario].content.identity.name
+    if (biz && !BUSINESS.find((b) => b.id === biz)!.of.split(" ").includes(p.scenario)) return false
+    if (style && !stylesOf(p).includes(style)) return false
+    return !q || [name, p.note, p.design.name, SCENARIOS[p.scenario].label, arrangementName(p.arrangement) ?? ""].join(" ").toLowerCase().includes(q)
+  })
+  const hover = (key: string) => { window.clearTimeout(timer.current); timer.current = window.setTimeout(() => setActive(key), 380) }
+  const leave = () => { window.clearTimeout(timer.current); setActive(null) }
   return (
     <div className="dg">
       <header className="dg-head">
         <h1>Pages for every kind of business.</h1>
-        <p>Barbers and bakers, plumbers and photographers. Each page is a real Taplo page on a design made for it. Open one to look closer, then make it yours.</p>
-        <div className="dg-search"><Search aria-hidden="true" /><input type="search" aria-label="Search pages" placeholder="Search: florist, plumber, tutor…" value={query} onChange={(e) => setQuery(e.target.value)} />{query ? <button type="button" aria-label="Clear search" onClick={() => setQuery("")}><X /></button> : null}</div>
-        <nav className="dg-jump" aria-label="Sections">{SHOWCASE.map((g) => <a key={g.id} href={`#${g.id}`}>{g.title}</a>)}</nav>
+        <p>Every page here is a real Taplo page: a profile arrangement, a material and a design chosen to fit the business. Hover one to scroll it, open one to look closer, then make it yours.</p>
       </header>
-      {groups.map((g) => (
-        <section key={g.id} id={g.id} className="dg-group">
-          <div className="dg-group-head"><h2>{g.title}</h2><p>{g.line}</p></div>
-          <ul className="dg-shelf" data-testid="gallery-list">
-            {g.items.map((p) => (
-              <li key={p.scenario} className="dg-item" data-testid="design-card">
-                <div className="dg-open">
-                  <Phone pick={p} />
-                  <button type="button" className="dg-hit" onClick={() => setOpen(p)} aria-label={`${SCENARIOS[p.scenario].content.identity.name}, open this page`} />
-                </div>
-                <div className="dg-meta"><h3>{SCENARIOS[p.scenario].content.identity.name}</h3><p>{p.note}</p><span className="dg-tag">{p.design.name}</span></div>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
-      {groups.length === 0 ? <p className="dg-empty">Nothing matches. Try a different word.</p> : null}
+      <div className="dg-bar" role="region" aria-label="Filter designs">
+        <div className="dg-search"><Search aria-hidden="true" /><input type="search" aria-label="Search pages" placeholder="Search: florist, plumber, tutor…" value={query} onChange={(e) => setQuery(e.target.value)} />{query ? <button type="button" aria-label="Clear search" onClick={() => setQuery("")}><X /></button> : null}</div>
+        <div className="dg-row" role="group" aria-label="Business type"><button type="button" aria-pressed={biz === null} onClick={() => setBiz(null)}>All</button>{BUSINESS.map((b) => <button key={b.id} type="button" aria-pressed={biz === b.id} onClick={() => setBiz(biz === b.id ? null : b.id)}>{b.label}</button>)}</div>
+        <div className="dg-row" role="group" aria-label="Visual style"><span>Style</span>{STYLES.map((s) => <button key={s} type="button" aria-pressed={style === s} onClick={() => setStyle(style === s ? null : s)}>{s}</button>)}</div>
+      </div>
+      <ul className="dg-shelf" data-testid="gallery-list">
+        {shown.map((p) => {
+          const key = p.scenario
+          const name = SCENARIOS[p.scenario].content.identity.name
+          const live = active === key
+          return (
+            <li key={key} className="dg-item" data-testid="design-card" onPointerEnter={(e) => { if (e.pointerType === "mouse") hover(key) }} onPointerLeave={leave} onFocus={() => hover(key)} onBlur={leave}>
+              <div className="dg-open">
+                <Phone pick={p} active={live} />
+                {!live ? <button type="button" className="dg-hit" onClick={() => setOpen(p)} aria-label={`${name}, open this page`} /> : null}
+              </div>
+              <div className="dg-meta">
+                <h3>{name}</h3>
+                <p>{p.note}</p>
+                <div className="dg-tagrow"><span className="dg-tag">{arrangementName(p.arrangement) ?? p.design.name}</span><span className="dg-tag">{p.design.name}</span></div>
+                <div className="dg-acts"><button type="button" onClick={() => setOpen(p)}>Look closer</button></div>
+              </div>
+            </li>
+          )
+        })}
+      </ul>
+      {shown.length === 0 ? <p className="dg-empty">Nothing matches. Try a different word or clear a filter.</p> : null}
       {open ? <Detail pick={open} onClose={() => setOpen(null)} /> : null}
     </div>
   )
@@ -88,19 +134,20 @@ function Detail({ pick, onClose }: { pick: Pick; onClose: () => void }) {
   const [device, setDevice] = React.useState<"phone" | "computer">("phone")
   const name = SCENARIOS[pick.scenario].content.identity.name
   const demo = exampleForScenario(pick.scenario)
-  const src = `/appearance/frame?scenario=${pick.scenario}&look=${pick.design.id}${pick.logo === false ? "&logo=0" : ""}${pick.arrangement ? `&arr=${pick.arrangement}` : ""}`
   return (
     <Overlay open onOpenChange={(o) => !o && onClose()} kind="detail" title={name} description={pick.note} testId="design-detail" className="dg-detail"
-      footer={<div className="dg-detail-actions sf-ui">{demo ? <Link className="dg-demo" href={`/inspiration/${demo.slug}`} onClick={onClose}>Open the demo</Link> : null}<ApplyDesign design={pick.design} className="sf-btn dg-use">Use this design</ApplyDesign></div>}>
+      footer={<div className="dg-detail-actions sf-ui">{demo ? <Link className="dg-demo" href={`/inspiration/${demo.slug}`} onClick={onClose}>Open the demo</Link> : null}<ApplyDesign design={pick.design} arrangement={pick.arrangement} className="sf-btn dg-use">Use this design</ApplyDesign></div>}>
       <div className="dg-detail-body sf-ui">
         <div className="dg-detail-view" data-device={device}>
-          <PagePreview key={`${device}-${pick.scenario}`} src={src} title={`${name} on the ${pick.design.name} design`} mode={device === "phone" ? "device" : "desktop"} chrome url="yourname.mytaplo.com" />
+          <PagePreview key={`${device}-${pick.scenario}`} src={frameSrc(pick)} title={`${name} on the ${pick.design.name} design`} mode={device === "phone" ? "device" : "desktop"} chrome url="yourname.mytaplo.com" />
         </div>
         <div className="dg-detail-side">
           <div className="sf-seg" role="radiogroup" aria-label="Preview size">
             {(["phone", "computer"] as const).map((d) => <label key={d} data-on={device === d}><input type="radio" name="dg-device" aria-label={d === "phone" ? "Phone" : "Computer"} checked={device === d} onChange={() => setDevice(d)} /><span>{d === "phone" ? "Phone" : "Computer"}</span></label>)}
           </div>
-          <div className="dg-detail-group"><h3>Design</h3><p className="dg-detail-note"><strong>{pick.design.name}.</strong> {pick.design.blurb}</p></div>
+          <div className="dg-detail-group"><h3>How it is made</h3>
+            <dl className="dg-facts"><dt>Arrangement</dt><dd>{arrangementName(pick.arrangement) ?? "As designed"}</dd><dt>Design</dt><dd>{pick.design.name}. {pick.design.blurb}</dd><dt>Material</dt><dd>{FINISHES.find((f) => f.id === pick.design.overrides.layout?.finish)?.name ?? "Set by the design"}</dd></dl>
+          </div>
           <div className="dg-detail-group"><h3>The feel</h3><div className="dg-tags">{pick.design.moods.map((m) => <span key={m}>{m}</span>)}{pick.design.motion === "Moving background" ? <span>Moving background</span> : null}</div></div>
           <p className="dg-detail-note">Every colour, typeface and layout can be changed afterwards. Your own content always stays yours.</p>
         </div>

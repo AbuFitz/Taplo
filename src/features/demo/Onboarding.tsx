@@ -28,7 +28,7 @@ import { newWidget } from "@/features/page/starter"
 import { ImageField } from "@/features/page/editor/controls"
 import { getWidget } from "@/features/page/widgets/registry"
 import { buildPageViewModel } from "@/features/page/renderer"
-import { applyDesign, getDesign } from "@/features/page/themes/designs"
+import { applyDesign, getDesign, withArrangement } from "@/features/page/themes/designs"
 import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures"
 import { OTHER_INDUSTRY_ID, getIndustryPreset, searchIndustries } from "@/features/themes/presets/industries"
 import { cn } from "@/lib/utils"
@@ -186,11 +186,12 @@ export function Onboarding() {
 
   // A design chosen in the gallery: setup begins with it on the page, and the preview shows it from the first step.
   const [chosenDesign] = React.useState(() => { const id = params.get("design"); return id ? getDesign(id) ?? null : null })
+  const [arr] = React.useState(() => params.get("arr") ?? undefined)
   React.useEffect(() => {
     const d = chosenDesign
     if (!ready || !d) return
     window.history.replaceState(null, "", window.location.pathname)
-    update((x) => ({ ...x, page: applyDesign(x.page, d) }))
+    update((x) => ({ ...x, page: withArrangement(applyDesign(x.page, d), arr) }))
   }, [ready, chosenDesign]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!ready) return <SetupLoading />

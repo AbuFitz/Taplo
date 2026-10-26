@@ -125,7 +125,7 @@ function Arrangement({ vm }: { vm: PageViewModel }) {
   if (h.layout === "melt") return (
     <header aria-label={label} className="tp-header" data-layout="melt" data-align={h.align} data-cover={cover ? "" : undefined}>
       <div className="tp-melt-media">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : <Art vm={vm} />}</div>
-      <div className="tp-melt-body"><Avatar vm={vm} /><Text vm={vm} /><Actions vm={vm} /></div>
+      <div className="tp-melt-body">{id.logo ? <Avatar vm={vm} /> : null}<Text vm={vm} /><Actions vm={vm} /></div>
     </header>
   )
   if (h.layout === "cutout") {
@@ -143,7 +143,7 @@ function Arrangement({ vm }: { vm: PageViewModel }) {
   if (h.layout === "split") return (
     <header aria-label={label} className="tp-header" data-layout="split" data-align="left" data-cover={cover ? "" : undefined}>
       <div className="tp-split-cover">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : <Art vm={vm} />}</div>
-      <div className="tp-split-shoulder"><div className="tp-split-badge"><Avatar vm={vm} /></div><Shoulder vm={vm} /></div>
+      <div className="tp-split-shoulder">{id.logo ? <div className="tp-split-badge"><Avatar vm={vm} /></div> : <span />}<Shoulder vm={vm} /></div>
       <div className="tp-split-body"><Text vm={vm} /><Actions vm={vm} only="primary" /></div>
     </header>
   )
