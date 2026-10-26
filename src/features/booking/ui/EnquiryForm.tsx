@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check } from "lucide-react"
+import { Check, Paperclip } from "lucide-react"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -19,6 +19,7 @@ type Field = "name" | "email" | "phone" | "message"
  * and in preview mode the confirmation says it was saved in this browser, not sent.
  */
 export function EnquiryForm({ slug, businessName, services, serviceId, topic, item, submitLabel = "Send enquiry", onDone }: { slug: string; businessName: string; services: { id: string; name: string }[]; serviceId?: string; topic?: string; item?: { id: string; kind: "product" | "vehicle" }; submitLabel?: string; onDone?: () => void }) {
+  const subject = topic ?? services.find((s) => s.id === serviceId)?.name ?? null
   const formId = React.useId()
   const serviceFieldId = `${formId}-service`
   const messageFieldId = `${formId}-message`
@@ -58,6 +59,13 @@ export function EnquiryForm({ slug, businessName, services, serviceId, topic, it
 
   return (
     <form onSubmit={submit} noValidate className="grid gap-4" data-testid="enquiry-form">
+      {subject ? (
+        // The thing being asked about travels with the message, and the customer sees that it does.
+        <div className="flex items-center gap-3 rounded-2xl border border-tp-border bg-tp-surface-2 px-3.5 py-2.5" data-testid="enquiry-pinned">
+          <Paperclip aria-hidden="true" className="size-4 shrink-0 text-tp-muted" />
+          <span className="min-w-0"><span className="block text-xs text-tp-muted">Asking about</span><span className="block truncate font-semibold">{subject}</span></span>
+        </div>
+      ) : null}
       {status === "error" ? <p role="alert" className="rounded-xl border border-amber-500/50 bg-amber-50 px-3 py-2 text-sm text-amber-950">Your browser could not save this (storage is full or blocked). Your message is still here; try again.</p> : null}
       <TaploInput label="Your name" autoComplete="name" value={form.name} error={errors.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
       <TaploInput label="Email" type="email" autoComplete="email" inputMode="email" value={form.email} error={errors.email} hint="Email or phone is enough." onChange={(e) => setForm({ ...form, email: e.target.value })} />
