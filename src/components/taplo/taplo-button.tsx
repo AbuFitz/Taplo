@@ -7,9 +7,9 @@ type Size = "md" | "lg"
 
 /** Static maps: classes are literal so Tailwind keeps them in production. */
 const TONE: Record<Tone, string> = {
-  primary: "bg-tp-accent text-tp-accent-fg hover:bg-tp-accent/90 border-transparent",
-  secondary: "bg-transparent text-tp-fg border-tp-fg/40 hover:bg-tp-fg/10",
-  ghost: "bg-transparent text-tp-fg hover:bg-tp-fg/10 border-transparent",
+  primary: "bg-tp-accent text-tp-accent-fg hover:bg-tp-accent/90 dark:bg-tp-accent dark:hover:bg-tp-accent/90 border-transparent",
+  secondary: "bg-transparent text-tp-fg border-tp-fg/40 hover:bg-tp-fg/10 dark:bg-transparent dark:border-tp-fg/40 dark:hover:bg-tp-fg/10",
+  ghost: "bg-transparent text-tp-fg hover:bg-tp-fg/10 dark:bg-transparent dark:hover:bg-tp-fg/10 border-transparent",
 }
 const SIZE: Record<Size, string> = {
   md: "min-h-11 px-4 text-sm",
