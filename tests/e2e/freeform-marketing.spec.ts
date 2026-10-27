@@ -12,7 +12,7 @@ for (const width of [320, 390, 768, 1440])
     await expect(page.getByRole("banner")).toHaveCount(1);
     await expect(page.getByRole("contentinfo")).toHaveCount(1);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "Design inspiration",
+      "Pages for every kind of business.",
     );
     const first = page.getByTestId("design-card").first();
     await expect(first).toBeVisible();

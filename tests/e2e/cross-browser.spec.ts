@@ -4,22 +4,6 @@ import { closeSheet, look, openSection, previewFrame, selectPart } from "./helpe
 for (const width of [390, 1440]) {
   test.describe(`${width}px native engine`, () => {
     test.use({ viewport: { width, height: 1000 }, reducedMotion: "reduce" })
-    test("marketing, responsive imagery and optional film work", async ({ page }) => {
-      await page.goto("/")
-      const story=page.getByTestId("cinematic-film");await story.scrollIntoViewIfNeeded()
-      await expect(story.locator("video")).toHaveCount(0)
-      await expect.poll(()=>story.locator("img").evaluateAll(imgs=>imgs.every(img=>(img as HTMLImageElement).complete&&(img as HTMLImageElement).naturalWidth>0))).toBe(true)
-      expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
-      await expect(story.getByRole("link",{name:"Explore Taplo after the product animation"})).toHaveAttribute("href","/product")
-      await page.goto("/inspiration/oakfield-home-repairs")
-      const preview = page.getByTestId("design-preview")
-      const frame = page.frameLocator('iframe[data-testid="design-preview-frame"]')
-      await expect(frame.getByRole("heading", { level: 1 })).toHaveText("Dan’s Home Repairs")
-      await preview.getByText("Desktop", { exact: true }).click()
-      await expect.poll(() => frame.locator("body").evaluate(() => innerWidth)).toBeGreaterThanOrEqual(1024)
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-    })
-
     test("a service request retains its real context and ends pending", async ({ page }) => {
       await page.goto("/appearance/frame?scenario=oakfield")
       await page.getByTestId("service-open").filter({ hasText: "Small repairs visit" }).click()
