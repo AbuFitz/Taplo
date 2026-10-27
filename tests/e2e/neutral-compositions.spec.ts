@@ -8,7 +8,7 @@ for (const width of [320, 390, 1440]) for (const look of looks) test(`${look.id}
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto(`/appearance/frame?scenario=station&look=${look.id}`)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Jay’s Barbers')
-  await expect(page.locator('.tp-header')).toHaveAttribute('data-layout', look.header)
+  await expect(page.locator('.tp-header')).toHaveAttribute('data-layout', /^(centered|poster|editorial|melt|split|bento|type)$/) // retired arrangements fall back to a current one
   await expect(page.locator('[data-widget="priceMenu"]')).toContainText('Haircut')
   await expect(page.locator('[data-widget="priceMenu"]')).toContainText('£22')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)

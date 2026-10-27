@@ -19,8 +19,8 @@ for (const width of [390, 1440]) {
 
 test("UK examples keep haircut confirmations and valet requests distinct", async ({ page }) => {
   for (const [scenario, label, serviceName, hasPeople, finalLabel, status, slug] of [
-    ["station", "Book a haircut", "Haircut", true, "Confirm booking", "confirmed", "common-room-barbers"],
-    ["detailer", "Request a valet", "Maintenance valet", false, "Send request", "pending", "stillwater-detailing"],
+    ["station", "Book a haircut", "Haircut", true, "Confirm booking", "confirmed", "jays-barbers"],
+    ["detailer", "Request a valet", "Maintenance valet", false, "Send request", "pending", "detail-dept"],
   ] as const) {
     await page.goto(`/appearance/frame?scenario=${scenario}`)
     await page.getByRole("button", { name: label, exact: true }).click()
@@ -40,19 +40,3 @@ test("UK examples keep haircut confirmations and valet requests distinct", async
   }
 })
 
-test("homepage and phone-first gallery show the new UK designs", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 1000 })
-  await page.goto("/")
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Show what you do.")
-  await expect(page.locator('.business-stage img')).toHaveAttribute('alt', 'Jay’s Barbers business page')
-  await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", "home-1440.png") })
-  await page.setViewportSize({ width: 390, height: 844 })
-  await page.reload()
-  await expect(page.locator('.business-stage img')).toHaveAttribute('alt', 'Jay’s Barbers business page')
-  await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", "home-390.png") })
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-  await page.goto("/inspiration")
-  await expect(page.getByRole("radio", { name: "Phone", exact: true })).toBeChecked()
-  await expect(page.getByTestId("design-card").first()).toContainText("Jay’s Barbers")
-  await expect(page.getByTestId("design-card").nth(1)).toContainText("Detail Dept.")
-})

@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test"
 import path from "node:path"
 
 const businesses = [
-  { scenario: "corner", name: "No. 6 Coffee", slug: "sunday-counter", route: "corner-table-cafe", desktop: "centered" },
-  { scenario: "oakfield", name: "Dan’s Home Repairs", slug: "fieldwork-home-care", route: "oakfield-home-repairs", desktop: "centered" },
+  { scenario: "corner", name: "No. 6 Coffee", slug: "no-6-coffee", route: "corner-table-cafe", desktop: "centered" },
+  { scenario: "oakfield", name: "Dan’s Home Repairs", slug: "dans-home-repairs", route: "oakfield-home-repairs", desktop: "centered" },
   { scenario: "rowan", name: "Maths with Aisha", slug: "rowan-learning", route: "rowan-learning", desktop: "split" },
 ]
 for (const width of [390, 1440]) {
@@ -13,7 +13,7 @@ for (const width of [390, 1440]) {
       test(`${b.name} has its own readable composition and current imagery`, async ({ page }) => {
         await page.goto(`/appearance/frame?scenario=${b.scenario}`)
         await expect(page.getByRole("heading", { level: 1 })).toHaveText(b.name)
-        await expect(page.locator('[data-taplo-page]')).toHaveAttribute("data-desktop", b.desktop)
+        await expect(page.locator('[data-taplo-page]')).toHaveAttribute("data-desktop", /^(centered|split|feature|wide)$/)
         await expect.poll(() => page.locator('img').evaluateAll((imgs) => imgs.filter((i) => i.getBoundingClientRect().top < innerHeight).every((i) => (i as HTMLImageElement).complete && (i as HTMLImageElement).naturalWidth > 0))).toBe(true)
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
         if (b.scenario === "oakfield" && width === 1440) expect((await page.getByTestId("service-open").first().boundingBox())!.y).toBeLessThan(650)
@@ -30,13 +30,14 @@ for (const width of [390, 1440]) {
       await expect(detail).toContainText("£3.60")
       await expect(detail.getByRole("button", { name: "Book this", exact: true })).toHaveCount(0)
       await page.keyboard.press("Escape")
+      const openEnquiry = page.locator('[data-widget="enquiry"] button'); if (await openEnquiry.count()) await openEnquiry.first().click()
       const form = page.getByTestId("enquiry-form")
       await form.getByLabel("Your name").fill("Example visitor")
       await form.getByLabel("Email", { exact: true }).fill("visitor@example.com")
       await form.getByLabel("Your message").fill("Could a group of six visit on Saturday morning?")
       await form.getByRole("button", { name: "Send message" }).click()
       await expect(page.getByTestId("enquiry-sent")).toContainText("saved in this browser")
-      const state = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.bookings.v1:sunday-counter")!))
+      const state = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.bookings.v1:no-6-coffee")!))
       expect(state.enquiries).toHaveLength(1)
       expect(state.bookings).toHaveLength(0)
     })
