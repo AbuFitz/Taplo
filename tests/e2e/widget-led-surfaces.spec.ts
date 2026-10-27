@@ -111,6 +111,6 @@ test("the plaque tilts directly and settles when interaction leaves the section"
   await expect(stage).toHaveAttribute("data-engaged", "false");
   await page.keyboard.press("ArrowRight");
   await expect(stage).toHaveAttribute("data-engaged", "true");
-  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight)); // the plaque sits mid-page, so the footer is out of its view
   await expect(stage).toHaveAttribute("data-engaged", "false");
 });
