@@ -170,7 +170,7 @@ html:has([data-taplo-page]) { scrollbar-width: thin; scrollbar-color: color-mix(
 .tp-actions .tp-btn[data-inline] > svg:last-child { display: none; }
 .tp-btn-main { flex: 1; min-width: 0; display: grid; }
 .tp-btn-label { overflow-wrap: anywhere; line-height: 1.2; }
-.tp-btn-sub { font-size: var(--tp-t-sm); font-weight: 400; color: color-mix(in srgb, currentColor 82%, transparent); }
+.tp-btn-sub { font-size: var(--tp-t-sm); font-weight: 400; color: color-mix(in srgb, currentColor 94%, transparent); }
 .tp-btn-thumb { position: relative; width: 2.5rem; height: 2.5rem; border-radius: calc(var(--tp-btn-radius) * 0.6); overflow: hidden; flex: none; }
 .tp-btn[data-variant="compact"] { min-height: 2.875rem; font-weight: 500; }
 .tp-btn[data-variant="card"] { min-height: 4.25rem; }

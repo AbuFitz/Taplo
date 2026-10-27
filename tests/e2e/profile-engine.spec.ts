@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test"
+import { openSection } from "./helpers"
 import AxeBuilder from "@axe-core/playwright"
 import sharp from "sharp"
 import path from "node:path"
@@ -36,6 +37,7 @@ for (const width of [390,1440]) test(`transparent wide logo keeps its full compo
   await page.setViewportSize({ width,height:950 })
   await openEditorWithSample(page,'Barber')
   await selectPart(page,'page')
+  await openSection(page,/^Look/)
   await page.getByRole('radiogroup',{name:'Look',exact:true}).locator('label[data-choice="noir"]').click()
   await selectPart(page,'header')
   await insp(page).locator('summary').filter({hasText:/^Logo and cover/}).click()
@@ -58,8 +60,8 @@ for (const width of [390,1440]) test(`transparent wide logo keeps its full compo
   await expect(page.getByTestId('crop-dialog')).toHaveCount(0)
   const cover=await page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!).content.identity.heroImage)
   expect(cover).toMatchObject({width:600,height:900})
-  await page.getByRole('radiogroup',{name:'Header arrangement',exact:true}).locator('label[data-choice="centered"]').click()
-  await expect(previewFrame(page).locator('.tp-header')).toHaveAttribute('data-layout','centered')
+  await page.getByRole('radiogroup',{name:'Header arrangement',exact:true}).locator('label[data-choice="split"]').click()
+  await expect(previewFrame(page).locator('.tp-header')).toHaveAttribute('data-layout','split')
   await expect(logo).toHaveAttribute('data-ink','dark')
   await page.getByTestId('undo').click()
   await expect(previewFrame(page).locator('.tp-header')).not.toHaveAttribute('data-layout','centered')
