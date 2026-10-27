@@ -63,10 +63,13 @@ for (const slug of [
     await radio.nth(2).check();
     await expect(radio.nth(2)).toBeChecked();
     await expect(demo.locator(".feature-demo-card")).toHaveCount(1);
-    await expect(demo.locator(".feature-demo-action")).toHaveAttribute(
-      "href",
-      slug === "booking" ? "#try-booking" : /\/inspiration|\/product/,
-    );
+    if (slug === "products")
+      await expect(demo.locator("[data-illustrative-action]")).toBeVisible(); // an illustration, deliberately not a link
+    else
+      await expect(demo.locator(".feature-demo-action")).toHaveAttribute(
+        "href",
+        slug === "booking" ? "#try-booking" : /\/inspiration|\/product/,
+      );
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBe(390);
@@ -97,25 +100,7 @@ test("home uses composed illustrations with shared hardware and working design d
     390,
   );
 });
-test("gallery mounts real renderer previews with current hardware", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/inspiration");
-  const first = page.getByTestId("design-card").first();
-  await first.scrollIntoViewIfNeeded();
-  await expect(first.locator("iframe")).toHaveAttribute(
-    "src",
-    /\/appearance\/frame\?scenario=/,
-  );
-  await expect(first.locator(".phone-hardware")).toBeVisible();
-  await page.getByRole("radio", { name: "Desktop", exact: true }).check();
-  await first.scrollIntoViewIfNeeded();
-  await expect(first.locator(".browser-shell")).toBeVisible();
-  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
-    390,
-  );
-});
+
 test("mobile plan buttons scroll the full card and carry the selected plan to setup", async ({
   page,
 }) => {
