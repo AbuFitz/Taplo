@@ -58,8 +58,15 @@ export function useAppearanceModel(host: AppearanceHost): AppearanceModel {
 
   return React.useMemo<AppearanceModel>(() => {
     const has: AppearanceModel["has"] = (g, k) => (overrides as Record<string, Record<string, unknown> | undefined>)[g]?.[k] !== undefined
+    // A design stores its whole recipe as overrides; only what the owner has moved away from that recipe counts as a change.
+    const base = DESIGNS.find((d) => d.id === themeId)?.overrides as Record<string, unknown> | undefined
+    const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b)
     const count: AppearanceModel["count"] = (...parts) =>
-      parts.reduce((n, p) => n + (p === "background" || p === "decoration" || p === "motion" ? (overrides[p] !== undefined ? 1 : 0) : keysOf(overrides, p).length), 0)
+      parts.reduce((n, p) => {
+        if (p === "background" || p === "decoration" || p === "motion") return n + (overrides[p] !== undefined && !same(overrides[p], base?.[p]) ? 1 : 0)
+        const baseGroup = (base?.[p] ?? {}) as Record<string, unknown>
+        return n + keysOf(overrides, p).filter((k) => !same((overrides as Record<string, Record<string, unknown>>)[p]![k], baseGroup[k])).length
+      }, 0)
     const reset: AppearanceModel["reset"] = (g, k) =>
       apply((o) => {
         const grp = { ...((o as Record<string, Record<string, unknown>>)[g] ?? {}) }
@@ -96,7 +103,7 @@ export function useAppearanceModel(host: AppearanceHost): AppearanceModel {
       setAppearance(id, {})
       notify?.(replaced ? `${next.name} applied. Your earlier style changes were replaced.` : `${next.name} applied.`, true)
     }
-    const totalChanges = (["colors", "text", "header", "buttons", "cards", "layout"] as Group[]).reduce((n, g) => n + keysOf(overrides, g).length, 0) + count("background", "decoration", "motion")
+    const totalChanges = count("colors", "text", "header", "buttons", "cards", "layout", "background", "decoration", "motion")
     return {
       ...host, resolved, spec: resolved.spec, look, looks: [...DESIGNS.map(l => THEMES.find(t => t.id === l.id)).filter((t): t is ThemeDefinition => Boolean(t)), ...(!DESIGNS.some(l => l.id === look.id) ? [look] : [])], has, count, reset, resetGroup, patch, setBackground, setPageColour, applyLook,
       resetAll: () => setAppearance(themeId, {}), totalChanges,
