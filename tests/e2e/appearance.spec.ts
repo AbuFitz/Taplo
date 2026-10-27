@@ -75,6 +75,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
     await page.goto("/appearance");
     await choice(page, "Look", "Night");                                                   // a dark page, so a dark text colour is the unreadable one
     const accent = () => frame(page).locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-accent").trim());
+    await expect.poll(accent).toBe("#c8a35a");                                              // the look has landed in the preview before the colour is measured
     const before = await accent();
     await page.locator("details").evaluateAll((all) => all.forEach((d) => { (d as HTMLDetailsElement).open = true }));
     await page.getByRole("button", { name: /Accent: choose colour/ }).click();
