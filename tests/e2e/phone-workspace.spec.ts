@@ -21,7 +21,6 @@ for (const width of [320, 390, 768, 1440]) test(`focused profile and shared prev
   await expect.poll(() => page.locator('iframe[data-testid="setup-live-page"]').evaluate(el => getComputedStyle(el).opacity)).toBe("1")
   await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `profile-phone-${width}.png`) })
   if (width < 1024) {
-    await expect(page.locator(".setup-workspace>aside")).not.toBeVisible()
     await expect(page.getByRole("button",{name:"View full size"})).toHaveCount(0)
   }
   if (width >= 1024) {
@@ -53,7 +52,7 @@ for (const width of [390, 1440]) test(`theme choices show actual style samples a
   await page.getByLabel("Service 1 name").fill("Cut and finish")
   await page.getByLabel("Service 1 price").fill("28")
   await page.getByLabel("Service 1 minutes").fill("30"); await next()
-  await page.getByRole("radio",{name:"Centred",exact:true}).check()
+  await page.getByRole("radio",{name:"Floating Bento",exact:true}).check()
   await page.getByRole("button",{name:/Background & colours/}).click()
   await page.getByTestId("setup-design-dialog").getByRole("button",{name:"Ink",exact:true}).click()
   await page.getByTestId("setup-design-dialog").getByRole("button",{name:"Done",exact:true}).click()

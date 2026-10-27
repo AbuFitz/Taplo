@@ -1,4 +1,4 @@
-import { cont, openDetails } from './helpers';
+import { cont, openDetails, openSection } from './helpers';
 import { expect, test } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import path from 'node:path'
@@ -16,7 +16,7 @@ for(const width of [320,390,768,1440])test(`mobile-led setup has seven steps, a 
   await page.getByRole('button',{name:'Booking requests',exact:true}).click()
   await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await next()
   await page.getByLabel('Service 1 name').fill('Haircut');await page.getByLabel('Service 1 price').fill('25');await page.getByLabel('Service 1 minutes').fill('30');await next()
-  await page.getByRole('radio',{name:'Centred',exact:true}).check();await page.getByRole('button',{name:/Background & colours/}).click();await page.getByTestId('setup-design-dialog').getByRole('button',{name:'Silver gradient',exact:true}).click();await page.getByTestId('setup-design-dialog').getByRole('button',{name:'Done',exact:true}).click()
+  await page.getByRole('radio',{name:'Floating Bento',exact:true}).check();await page.getByRole('button',{name:/Background & colours/}).click();await page.getByTestId('setup-design-dialog').getByRole('button',{name:'Silver gradient',exact:true}).click();await page.getByTestId('setup-design-dialog').getByRole('button',{name:'Done',exact:true}).click()
   await expect(frame.locator('[data-taplo-page]')).toHaveAttribute('data-motion','drift')
   await expect(frame.getByRole('heading',{level:1})).toBeInViewport({ratio:.99})
   await expect(page.getByRole('button',{name:'Continue',exact:true})).toBeInViewport()
@@ -24,12 +24,13 @@ for(const width of [320,390,768,1440])test(`mobile-led setup has seven steps, a 
   await expect(page.getByRole('button',{name:'View full size'})).toHaveCount(0)
   await page.screenshot({path:path.join(process.env.TAPLO_REVIEW_DIR??'test-results',`setup-six-${width}.png`)})
   const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();expect(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([])
-  await page.reload();await expect(page.getByRole('radio',{name:'Centred',exact:true})).toBeChecked();await next();await next()
+  await page.reload();await expect(page.getByRole('radio',{name:'Floating Bento',exact:true})).toBeChecked();await next();await next()
   await page.getByRole('button',{name:'Publish my page',exact:true}).click();await expect(page.getByRole('status')).toContainText('Saved as your page')
 })
 for(const width of [390,1440])test(`uploaded logo colours drive linked gradients, replacement and reload at ${width}`,async({page})=>{
   await page.setViewportSize({width,height:950});await openEditorWithSample(page,'Barber');await selectPart(page,'page')
-  await page.getByRole('radiogroup',{name:'Look',exact:true}).locator('label[data-choice="silver"]').click()
+  await openSection(page,/^Look/)
+  await page.getByRole('radiogroup',{name:'Look',exact:true}).locator('label[data-choice="quartz"]').click()
   await selectPart(page,'header')
   const upload=async(color:string)=>{const buffer=await sharp({create:{width:240,height:120,channels:4,background:color}}).png().toBuffer();await page.locator('input[type="file"]').first().setInputFiles({name:'business-logo.png',mimeType:'image/png',buffer});await page.getByTestId('crop-dialog').getByRole('button',{name:'Use image',exact:true}).click()}
   await upload('#cc3311')
