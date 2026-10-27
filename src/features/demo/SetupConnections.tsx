@@ -205,6 +205,26 @@ export function SetupConnections({
       <p className="setup-connection-note" hidden={part === 1}>
         Pick your main button. It shows on your page as you choose.
       </p>
+      <fieldset hidden={part === 1} data-testid="goal-intent">
+        <legend className="setup-layout-heading">What would you like customers to do?</legend>
+        <p className="setup-connection-note">Choose any. This only shapes what we suggest next; nothing is switched on until you set it up.</p>
+        <div className="setup-primary-choices">
+          {([
+            { id: "book", label: "Book with me" },
+            { id: "call", label: "Call me" },
+            { id: "message", label: "Message me" },
+            { id: "browse", label: "See my work" },
+            { id: "buy", label: "Buy from me" },
+          ] as const).map(({ id, label }) => {
+            const on = (s.setupDrafts?.goals ?? []).includes(id);
+            return (
+              <button type="button" key={id} aria-pressed={on} onClick={() => update((x) => { const cur = x.setupDrafts?.goals ?? []; const goals = on ? cur.filter((g) => g !== id) : [...cur, id]; return { ...x, setupDrafts: { ...x.setupDrafts, goals } }; })}>
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
       <fieldset hidden={part === 1}>
         <legend className="setup-layout-heading">Main button</legend>
         <div className="setup-primary-choices">
@@ -234,6 +254,7 @@ export function SetupConnections({
           "Website or booking link (optional)",
           "yourbusiness.co.uk",
         )}
+        <p className="setup-connection-note -mt-3">Taplo links to it. It doesn’t copy your website or sync bookings made there.</p>
         {field("email", "Email", "hello@yourbusiness.co.uk", "email")}
         {field("phone", "Phone", "07700 900123", "tel")}
         <fieldset className="setup-social" data-testid="social-links">

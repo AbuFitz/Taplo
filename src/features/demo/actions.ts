@@ -20,7 +20,9 @@ export function applyIndustry(s: DemoState, industryKey: string, label?: string)
   const starters = (id: string) => (design ? applyRecipe(starterWidgets(id), design.recipe) : starterWidgets(id));
   const untouchedWidgets = JSON.stringify(s.page.widgets.map((w) => [w.type, w.hidden, w.appearance, w.settings])) === JSON.stringify(starters(prev.id).map((w) => [w.type, w.hidden, w.appearance, w.settings]));
   const previousDefaultLook = getTheme(suggestedLookIds(prev.id)[0]!)?.id ?? DEFAULT_THEME_ID;
-  const untouchedTheme = s.page.themeId === previousDefaultLook && Object.keys(s.page.appearance).length === 0;
+  // The blank start page carries only the type-led header, which is not an owner choice.
+  const onlyStartHeader = JSON.stringify(s.page.appearance) === JSON.stringify({ header: { layout: "masthead", align: "left" } });
+  const untouchedTheme = s.page.themeId === previousDefaultLook && (Object.keys(s.page.appearance).length === 0 || onlyStartHeader);
   const fresh = newPage(next.id);
   return {
     ...s,
@@ -70,7 +72,15 @@ export interface Check {
 export function readiness(s: DemoState): Check[] {
   const c = s.content;
   const activeServices = (c.services ?? []).filter((x) => !x.archived);
+  const goals = s.setupDrafts?.goals ?? [];
+  const goalChecks: Check[] = [
+    goals.includes("book") ? { id: "goal-book", label: "You want bookings: add a service with a duration", done: activeServices.some((x) => Boolean(x.durationMinutes)), required: false, href: "/dashboard/services" } : null,
+    goals.includes("call") ? { id: "goal-call", label: "You want calls: add a phone number", done: Boolean(c.contacts.phone), required: false, href: "/dashboard/page" } : null,
+    goals.includes("message") ? { id: "goal-message", label: "You want messages: add WhatsApp or email", done: Boolean(c.contacts.whatsapp || c.contacts.email), required: false, href: "/dashboard/page" } : null,
+    goals.includes("buy") ? { id: "goal-buy", label: "You want sales: add your first product", done: (c.products ?? []).some((x) => !x.archived), required: false, href: "/dashboard/services" } : null,
+  ].filter((x): x is Check => x !== null);
   return [
+    ...goalChecks,
     { id: "industry", label: "Say what kind of business it is", done: s.onboarded || Boolean(c.identity.industryLabel), required: true, href: "/dashboard/page" },
     { id: "name", label: "Name and web address", done: Boolean(c.identity.name) && slugProblems(c.identity.slug).length === 0, required: true, href: "/dashboard/page" },
     { id: "contact", label: "At least one way to contact you", done: hasContactChannel(c), required: true, href: "/dashboard/page" },

@@ -41,7 +41,7 @@ function ApplyDialog({ design, industry, arrangement, onClose }: { design: Desig
   const key = industry ?? s.content.identity.industryKey
   const withArr = React.useCallback((page: typeof s.page) => withArrangement(applyDesignKeeping(page, design, { colours: keepColours, type: keepType }), arrangement), [design, keepColours, keepType, arrangement]) // eslint-disable-line react-hooks/exhaustive-deps
   const after = React.useMemo(() => withArr(s.page), [s.page, withArr])
-  const apply = () => { update((x) => ({ ...x, page: withArr(x.page) })); onClose(); router.push("/dashboard/page") }
+  const apply = () => { update((x) => { const page = withArr(x.page); return { ...x, page: { ...page, meta: { ...page.meta, appliedFrom: { designId: design.id, ...(arrangement ? { arrangement } : {}), at: new Date().toISOString() } } } } }); onClose(); router.push("/dashboard/page") }
   return (
     <Overlay open onOpenChange={(o) => !o && onClose()} kind="detail" title={`Use ${design.name} on your page`} description="Here is exactly what will change." testId="apply-design"
       footer={<div className="flex gap-2"><button type="button" className="sf-btn" data-kind="ghost" onClick={onClose}>Cancel</button><button type="button" className="sf-btn flex-1" data-kind="primary" onClick={apply}>Apply this design</button></div>}>
