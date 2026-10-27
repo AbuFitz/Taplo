@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils"
 import { canPublish, hasUnpublishedChanges, publish, readiness } from "@/features/demo/actions"
 import { PreviewFrame } from "@/features/demo/ui"
 import { DashboardMenu } from "@/features/demo/DashboardShell"
+import { getDesign } from "@/features/page/themes/designs"
+import { PROFILE_CHOICES } from "@/features/page/contracts/style"
 import { EditorPanel } from "./EditorPanel"
 import { MobileEditor } from "./MobileEditor"
 import { CONTENT, type Selection } from "./selection"
@@ -83,6 +85,12 @@ export function MyPage() {
   const banners = (
     <>
       {ed.storageFailed ? <p role="alert" className="mb-3 rounded-md border border-amber-400 bg-amber-100 px-3 py-2 text-sm text-amber-950">Your browser couldn’t save your latest changes (storage is full or blocked). Remove a large picture, or they’ll be lost on reload.</p> : null}
+      {s.page.meta.appliedFrom ? (() => {
+        const from = s.page.meta.appliedFrom!
+        const arr = PROFILE_CHOICES.find((c) => c.id === from.arrangement)?.name
+        const when = new Date(from.at)
+        return <p className="mb-3 rounded-md border bg-muted/50 px-3 py-2 text-xs text-muted-foreground" data-testid="design-provenance">Look started from {getDesign(from.designId)?.name ?? from.designId}{arr ? ` with the ${arr} profile` : ""}{Number.isNaN(when.getTime()) ? "" : `, applied ${when.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`}. Your content was not changed; Undo steps back.</p>
+      })() : null}
       {s.notes?.length ? (
         <div role="status" className="mb-3 flex items-start justify-between gap-3 rounded-md border bg-muted/50 px-3 py-2 text-xs text-muted-foreground" data-testid="upgrade-note">
           <span>{s.notes.join(" ")}</span>

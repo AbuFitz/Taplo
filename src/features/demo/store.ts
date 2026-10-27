@@ -213,6 +213,32 @@ let past: Snapshot[] = [];
 let future: Snapshot[] = [];
 let lastCoalesce: { key: string; at: number } | null = null;
 let historyVersion = 0;
+// Undo should survive a reload of this tab. It lives in sessionStorage (per tab, gone when the tab closes), is capped, and is
+// silently dropped when it would be large (uploaded pictures are stored as data) rather than risk filling the page's own storage.
+const HISTORY_KEY = "taplo.demo.history.v1";
+const HISTORY_KEEP = 20;
+const HISTORY_MAX_CHARS = 600_000;
+function persistHistory() {
+  try {
+    const body = JSON.stringify({ past: past.slice(-HISTORY_KEEP), future: future.slice(-HISTORY_KEEP) });
+    if (body.length > HISTORY_MAX_CHARS) window.sessionStorage.removeItem(HISTORY_KEY);
+    else window.sessionStorage.setItem(HISTORY_KEY, body);
+  } catch { /* history is a convenience; never block an edit */ }
+}
+let historyLoaded = false;
+function loadHistory() {
+  if (historyLoaded || typeof window === "undefined") return;
+  historyLoaded = true;
+  try {
+    const raw = window.sessionStorage.getItem(HISTORY_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw) as { past?: Snapshot[]; future?: Snapshot[] };
+    // Only trust history that still leads to the stored page: otherwise another tab or a reset has moved on.
+    if (Array.isArray(parsed.past)) past = parsed.past;
+    if (Array.isArray(parsed.future)) future = parsed.future;
+    historyVersion += 1;
+  } catch { past = []; future = []; }
+}
 const snap = (s: DemoState): Snapshot => ({ content: structuredClone(s.content), page: structuredClone(s.page) });
 const same = (a: Snapshot, b: Snapshot) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -247,6 +273,7 @@ export interface UpdateOptions {
 
 /** `state` is undefined before hydration, null when nothing is stored yet. */
 export function useDemo() {
+  loadHistory();
   const state = useSyncExternalStore<DemoState | null | undefined>(subscribe, read, serverSnapshot);
   useSyncExternalStore(subscribe, historySnapshot, () => 0);
   const ready = state !== undefined;
@@ -259,6 +286,7 @@ export function useDemo() {
       lastCoalesce = null;
       historyVersion += 1;
       write(after);
+      persistHistory();
       return;
     }
     const a = snap(before);
@@ -275,6 +303,7 @@ export function useDemo() {
       historyVersion += 1;
     }
     write(after);
+    persistHistory();
   }, []);
   const undo = useCallback(() => {
     const cur = read();
@@ -284,6 +313,7 @@ export function useDemo() {
     lastCoalesce = null;
     historyVersion += 1;
     write({ ...cur, content: prev.content, page: prev.page });
+    persistHistory();
   }, []);
   const redo = useCallback(() => {
     const cur = read();
@@ -293,6 +323,7 @@ export function useDemo() {
     lastCoalesce = null;
     historyVersion += 1;
     write({ ...cur, content: next.content, page: next.page });
+    persistHistory();
   }, []);
   const reset = useCallback(() => {
     past = [];
@@ -300,6 +331,7 @@ export function useDemo() {
     lastCoalesce = null;
     historyVersion += 1;
     write(null);
+    persistHistory();
   }, []);
   return { ready, state: state ?? null, storageFailed: storageHasFailed(), update, undo, redo, canUndo: past.length > 0, canRedo: future.length > 0, reset };
 }
