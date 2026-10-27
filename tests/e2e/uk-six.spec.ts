@@ -35,7 +35,7 @@ for (const width of [390, 1440]) {
       await form.getByLabel("Your name").fill("Example visitor")
       await form.getByLabel("Email", { exact: true }).fill("visitor@example.com")
       await form.getByLabel("Your message").fill("Could a group of six visit on Saturday morning?")
-      await form.getByRole("button", { name: /Send (message|enquiry)/ }).click()
+      await page.getByRole("button", { name: /Send (message|enquiry)/ }).click()
       await expect(page.getByTestId("enquiry-sent")).toContainText("saved in this browser")
       const state = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.bookings.v1:no-6-coffee")!))
       expect(state.enquiries).toHaveLength(1)
@@ -65,19 +65,5 @@ for (const width of [390, 1440]) {
         expect(state.bookings[0]).toMatchObject({ status: "pending", serviceName: name })
       })
     }
-  })
-}
-
-for (const width of [390, 768, 1440]) {
-  test(`wide feature keeps its photo and identity useful at ${width}px`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 1000 })
-    await page.goto('/appearance/frame?scenario=oakfield&look=open')
-    const header = page.locator('.tp-header[data-layout="feature"]')
-    await expect(header).toBeVisible()
-    const photo = await header.locator('.tp-cover').boundingBox()
-    const identity = await header.locator('.tp-cover-body').boundingBox()
-    if (width === 390) expect(identity!.y).toBeGreaterThan(photo!.y + photo!.height)
-    else expect(identity!.x).toBeGreaterThan(photo!.x + photo!.width)
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   })
 }

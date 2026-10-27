@@ -19,12 +19,11 @@ for (const width of [320, 390, 1440]) for (const look of looks) test(`${look.id}
 })
 
 test('section rhythm updates the real page, undoes and survives reload without changing content', async ({ page }) => {
-  const { openEditorWithSample, selectPart, previewFrame } = await import('./helpers')
+  const { openEditorWithSample, selectPart, previewFrame, openSection } = await import('./helpers')
   await openEditorWithSample(page, 'Barber')
   await selectPart(page, 'page')
   const before = await page.evaluate(() => JSON.parse(localStorage.getItem('taplo.demo.v2')!))
-  const summary = page.locator('summary').filter({ hasText: /^Layout and motion/ })
-  await summary.click()
+  await openSection(page, /^Layout and motion/)
   await page.getByRole('radiogroup', { name: 'Section rhythm', exact: true }).getByText('Spacious', { exact: true }).click()
   const root = previewFrame(page).locator('[data-taplo-page]')
   await expect(root).toHaveAttribute('data-rhythm', 'editorial')
