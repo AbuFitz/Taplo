@@ -1,4 +1,4 @@
-import { openDetails } from './helpers';
+import { cont, openDetails } from './helpers';
 import { expect, test } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import path from 'node:path'
@@ -11,7 +11,7 @@ for(const width of [320,390,768,1440])test(`mobile-led setup has seven steps, a 
   const frame=page.frameLocator('[data-testid="setup-live-page"]')
   await expect(frame.getByRole('heading',{level:1})).toHaveText('North Street Barbers')
   await expect(page.getByRole('progressbar',{name:'Setup progress'})).toHaveAttribute('aria-valuemax','7')
-  const next=()=>page.getByRole('button',{name:'Continue',exact:true}).click()
+  const next=()=>cont(page)
   await next();await page.getByRole('button',{name:'Barber',exact:true}).click();await next()
   await page.getByRole('button',{name:'Booking requests',exact:true}).click()
   await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await next()

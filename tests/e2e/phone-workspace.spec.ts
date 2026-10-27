@@ -1,4 +1,4 @@
-import { openDetails } from './helpers';
+import { cont, openDetails } from './helpers';
 import { expect, test } from "@playwright/test"
 import path from "node:path"
 
@@ -8,6 +8,7 @@ for (const width of [320, 390, 768, 1440]) test(`focused profile and shared prev
   const phone = page.locator(".setup-canvas .phone-shell")
   const frame = page.frameLocator('iframe[data-testid="setup-live-page"]')
   await page.getByLabel("Business name", { exact: true }).fill("North Street Studio")
+  if (width < 1024) await page.getByRole("button", { name: "Continue", exact: true }).click()
   await page.getByLabel("Short description (optional)", { exact: true }).fill("Independent hair studio in St Albans.")
   await expect(frame.getByRole("heading", { level: 1, includeHidden:true })).toHaveText("North Street Studio")
   await expect(phone.locator(".phone-island")).toHaveCount(1)
@@ -45,7 +46,7 @@ for (const width of [320, 390, 768, 1440]) test(`focused profile and shared prev
 for (const width of [390, 1440]) test(`theme choices show actual style samples at ${width}`, async ({ page }) => {
   await page.setViewportSize({ width, height: 900 })
   await page.goto("/onboarding")
-  const next = () => page.getByRole("button", { name: "Continue", exact: true }).click()
+  const next = () => cont(page)
   await page.getByLabel("Business name", { exact: true }).fill("North Street Studio"); await next()
   await page.getByRole("button", { name: "Barber", exact: true }).click(); await next()
   await openDetails(page);await page.getByLabel("Email", { exact: true }).fill("studio@example.com"); await next()
