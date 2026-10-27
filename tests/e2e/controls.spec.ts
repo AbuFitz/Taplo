@@ -52,7 +52,7 @@ const C: Control[] = [
   // Wallpaper
   { id: "wallpaper-gradient", part: "page", open: "Wallpaper", more: "Fine-tune background", run: radio("Wallpaper", "gradient"), probe: at("data-bg"), expect: "gradient" },
   { id: "wallpaper-shader", part: "page", open: "Wallpaper", more: "Fine-tune background", run: radio("Wallpaper", "aurora"), probe: at("data-bg"), expect: "shader" },
-  { id: "wallpaper-drift", part: "page", open: "Wallpaper", more: "Fine-tune background", also: radio("Wallpaper", "gradient"), run: toggle("Slowly drifting colours"), probe: at("data-motion"), expect: "none" },
+  { id: "wallpaper-drift", part: "page", open: "Wallpaper", more: "Fine-tune background", also: async (page) => { await radio("Wallpaper", "gradient")(page); await page.waitForTimeout(1500) }, run: toggle("Slowly drifting colours"), probe: at("data-motion"), expect: "none" },
   { id: "wallpaper-angle", part: "page", open: "Wallpaper", more: "Fine-tune background", also: radio("Wallpaper", "gradient"), run: slider("Angle", 90), probe: css(".tp-bg-gradient", "background-image") },
   { id: "pattern", part: "page", open: "Wallpaper", more: "Fine-tune background", run: radio("Pattern", "dots"), probe: at("data-decoration"), expect: "dots" },
   // Header
