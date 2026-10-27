@@ -33,7 +33,7 @@ Status words: **Done** (verified in a browser or test this session), **Partial**
 | Open blend | `melt` (refined: no placeholder art without a photo) | Done |
 | Centred identity | `identity` (new) | Done |
 | Editorial cover | `masthead` (new) | Done |
-| Side-by-side | `duo` (new; stacks below 19rem container width) | Done at 390; 320 not yet rendered |
+| Side-by-side | `duo` (new; stacks below 19rem container width) | Done at 390 and in the width test (320 included); not yet eyeballed at 320 |
 | Floating profile | `lifted` (new) | Done |
 | Earlier arrangements kept | `split`, `bento`, `type` and legacy layouts still render | Done |
 
@@ -57,9 +57,9 @@ What I could not see from the study: its fallback-state wording beyond the toggl
 Gallery renders through the real engine (`src/features/inspiration/DesignGallery.tsx`). It does not yet offer the three new arrangement ids as filters; `showcase-set.ts` assigns arrangements by hand.
 
 ## Responsive, accessibility, data integrity (section 5)
-- Arrangement sheet checked at 390 only. 320/375/430/768/1024/wide **not yet** rendered for the new layouts.
+- Every arrangement (all nine) is asserted free of horizontal overflow at 320, 375, 430, 768, 1024 and 1440 (`tests/e2e/arrangement-sheet.spec.ts`, "widths and accessibility"; passes on the dev build). Visual review of those widths: set `TAPLO_SHEET=1` to write `docs/review/arrangements/w<width>-<id>.png`; not yet looked at by eye.
 - No horizontal overflow at 390 in any of 90 renders (asserted in the spec).
-- axe not yet run on the six new arrangements.
+- axe (default rule set, header region only) reports no violations for all nine arrangements at those six widths with the barber sample. Not run: full page, dark finishes, other businesses.
 - Preview/draft divergence found and fixed: see below.
 
 ## Preview not reflecting changes (user report)

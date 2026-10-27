@@ -42,3 +42,24 @@ test.describe("profile arrangement sheet", () => {
     })
   }
 })
+
+import AxeBuilder from "@axe-core/playwright"
+test.describe("profile arrangements: widths and accessibility", () => {
+  test.setTimeout(600_000)
+  test("no overflow and no axe violations in the header at every width", async ({ page }) => {
+    for (const arr of PROFILE_CHOICES) {
+      const s = { ...initialState(), onboarded: true, step: "publish" as const, content: structuredClone(SCENARIOS.barber.content), page: { ...newPage("other"), themeId: "paper", appearance: { header: { layout: arr.id, align: arr.id === "identity" || arr.id === "bento" ? "center" : "left" } }, widgets: widgetsFor("barber") } }
+      await page.goto("/dashboard", { waitUntil: "domcontentloaded" })
+      await page.evaluate((v) => localStorage.setItem("taplo.demo.v2", JSON.stringify(v)), s)
+      for (const width of [320, 375, 430, 768, 1024, 1440]) {
+        await page.setViewportSize({ width, height: 900 })
+        await page.goto("/demo/preview", { waitUntil: "networkidle" })
+        await expect(page.locator(`[data-layout="${arr.id}"]`)).toBeVisible()
+        expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), `${arr.id} overflows at ${width}`).toBe(false)
+        const res = await new AxeBuilder({ page }).include("header[data-layout]").analyze()
+        expect(res.violations.map((v) => `${arr.id}@${width}: ${v.id}`), `${arr.id}@${width}`).toEqual([])
+        if (process.env.TAPLO_SHEET) await page.screenshot({ path: path.join(OUT, `w${width}-${arr.id}.png`), clip: { x: 0, y: 0, width, height: 700 } })
+      }
+    }
+  })
+})
