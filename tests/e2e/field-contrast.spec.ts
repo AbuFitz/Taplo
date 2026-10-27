@@ -17,8 +17,15 @@ test("typed enquiry input stays readable in every starting look", async ({ page 
         const rgb = Array.from(ctx.getImageData(0, 0, 1, 1).data).slice(0, 3).map((x) => x / 255).map((x) => x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4)
         return rgb[0]! * .2126 + rgb[1]! * .7152 + rgb[2]! * .0722
       }
-      const a = luminance(css.color), b = luminance(css.backgroundColor)
-      return { color: css.color, background: css.backgroundColor, ratio: (Math.max(a, b) + .05) / (Math.min(a, b) + .05) }
+      // The field's own tint is translucent: the reader sees it over whatever sits behind it, so composite the whole stack.
+      const stack: string[] = []
+      for (let n: Element | null = el; n; n = n.parentElement) stack.unshift(getComputedStyle(n).backgroundColor)
+      ctx.clearRect(0, 0, 1, 1)
+      for (const c of stack) { ctx.fillStyle = c; ctx.fillRect(0, 0, 1, 1) }
+      const [r, g, bl] = Array.from(ctx.getImageData(0, 0, 1, 1).data)
+      const flat = `rgb(${r}, ${g}, ${bl})`
+      const a = luminance(css.color), b = luminance(flat)
+      return { color: css.color, background: flat, ratio: (Math.max(a, b) + .05) / (Math.min(a, b) + .05) }
     })
     if (result.ratio < 4.5) failures.push({ look: theme.id, ...result })
   }
