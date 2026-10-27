@@ -76,6 +76,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
     await choice(page, "Look", "Night");                                                   // a dark page, so a dark text colour is the unreadable one
     const accent = () => frame(page).locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-accent").trim());
     const before = await accent();
+    await page.locator("details").evaluateAll((all) => all.forEach((d) => { (d as HTMLDetailsElement).open = true }));
     await page.getByRole("button", { name: /Accent: choose colour/ }).click();
     const area = page.locator(".react-colorful__saturation");
     const b = (await area.boundingBox())!;
@@ -106,7 +107,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
     // phone frame shows the identical configuration
     const m = frame(page, "Mobile preview");
     await expect(m.getByRole("heading", { level: 1 })).toHaveText("Aldous Motor Co.");
-    expect(await attr(page, "data-header", "Mobile preview")).toBe("cover");
+    expect(await attr(page, "data-header", "Mobile preview")).toBe("side");
   });
 
   test("the showcase carries no developer commentary", async ({ page }) => {
@@ -129,7 +130,7 @@ test.describe("appearance lab on a phone", () => {
     await page.getByRole("radiogroup", { name: "Look" }).scrollIntoViewIfNeeded();
     await choice(page, "Look", "Clean");
     await page.getByRole("radiogroup", { name: "Preview" }).locator("label", { hasText: "Phone" }).click();
-    await expect.poll(() => page.frameLocator('iframe[title="Mobile preview"]').locator("[data-taplo-page]").getAttribute("data-header")).toBe("centered");
+    await expect.poll(() => page.frameLocator('iframe[title="Mobile preview"]').locator("[data-taplo-page]").getAttribute("data-header")).toBe("editorial");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 });
@@ -144,7 +145,7 @@ test("changing a look keeps the current example preview and open customer conten
   await expect(faq.locator("xpath=parent::details")).toHaveAttribute("open", "")
   const stamp = await preview.locator("body").evaluate(() => performance.timeOrigin)
   await choice(page, "Look", "Night")
-  await expect.poll(() => preview.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-accent").trim())).toBe("#c6f432")
+  await expect.poll(() => preview.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-accent").trim())).toBe("#c8a35a")
   expect(await preview.locator("body").evaluate(() => performance.timeOrigin)).toBe(stamp)
   await expect(faq.locator("xpath=parent::details")).toHaveAttribute("open", "")
 })
