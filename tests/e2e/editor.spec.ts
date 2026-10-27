@@ -178,6 +178,8 @@ test.describe("My page editor", () => {
     // reset one section, then everything
     const textSection = await openSection(page, /^Type/);
     await textSection.getByRole("radio", { name: "Large" }).locator("xpath=ancestor::label").click();
+    await buttonsSection.getByRole("radio", { name: "Pill" }).locator("xpath=ancestor::label").click();
+    await expect(buttonsSection.locator("summary").first()).toContainText("changed");
     await buttonsSection.getByRole("button", { name: /Reset this section/ }).click();
     await expect(buttonsSection.locator("summary").first()).not.toContainText("changed");
     await expect(textSection.locator("summary").first()).toContainText("changed");
