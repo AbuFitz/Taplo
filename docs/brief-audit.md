@@ -9,6 +9,14 @@ Status words: **Done** (verified in a browser or test this session), **Partial**
 - `playwright.config.ts` serves `next start` on :3100, a **production build**: edits are invisible to tests until `next build`. Use `BASE_URL=http://localhost:3000` against the dev server.
 - Nothing is deployed or merged. The private study site was not reachable; the uploaded standalone HTML of the study was used instead.
 
+## Test triage after this pass (dev server, `BASE_URL=http://localhost:3000`)
+- Fixed: specs still asserting the old 4 profile choices or the name "Seamless Melt" (`curated-setup-blocks`, `mobile-setup-priority`, `connected-editing`).
+- Passing when run alone: setup, registration, profile-engine, profile-style and the arrangement width/axe test; unit suite 345 passed.
+- `category-plan-journeys` "plan illustrations" passes at 390 and 1440 and times out at 320 (60 s budget; four reloads and a click stuck at scroll-into-view). Treated as load/timing sensitivity at 320, not proven to be a product defect.
+- `appearance` "changing a look keeps the current example preview...": FAQ `<details>` open state not preserved in the preview frame. Open; failed in the earlier full run too.
+- Not re-run since the last edits: `saved-looks`, `profiles` render matrix, `category-plan-journeys` 48-category loops (540 s timeouts under 3 workers).
+- A full-suite run was not repeated; the earlier full run was 788 passed / 10 failed.
+
 ## Journey (brief section 1)
 | Item | Status | Evidence |
 |---|---|---|
