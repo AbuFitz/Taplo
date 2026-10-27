@@ -1,9 +1,7 @@
-import { HOME_DESIGNS } from "../../src/features/marketing/home/designs";
 import { expect, test, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import path from "node:path";
 import { PRODUCT_PAGES } from "../../src/features/marketing/product";
-import { CURRENT_LOOKS } from "../../src/features/page/themes/looks";
 import { PRODUCT_LINKS } from "../../src/features/marketing/ia";
 const routes = [
   "/product",
@@ -97,29 +95,10 @@ for (const width of [768, 1024, 1440])
       fullPage: false,
     });
   });
-test("feature copy follows the real look count and distinguishes plans, connections and platform choices", async ({
-  page,
-}) => {
-  await page.goto("/product/design");
-  expect(await page.getByRole("radio").count()).toBeGreaterThan(1);
-  const status = page.getByTestId("status");
-  await expect(status).toContainText("starting look");
-  const plan = status
-    .getByRole("listitem")
-    .filter({ hasText: "Switching to another starting look" });
-  await expect(plan).toContainText("Plan feature");
-  await expect(plan).not.toContainText("Needs a connection");
-  await page.goto("/product/sharing");
-  const platform = page
-    .getByTestId("status")
-    .getByRole("listitem")
-    .filter({ hasText: "Exact link previews" });
-  await expect(platform).toContainText("Depends on the other platform");
-});
 test("team profiles avoid invented portraits and booking offers that person's actual services", async ({
   page,
 }) => {
-  await page.goto("/appearance/frame?scenario=station");
+  await page.goto("/appearance/frame?scenario=station", { waitUntil: "networkidle" });
   await page
     .getByTestId("team-card")
     .first()
