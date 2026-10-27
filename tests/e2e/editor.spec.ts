@@ -147,7 +147,7 @@ test.describe("My page editor", () => {
     // an optional look can still be a starting point; content and widgets stay exactly as they were
     await openSection(page, /^Look/);
     const seen = new Set<string>();
-    for (const id of ["forge", "open", "atelier", "clay", "orchard"]) {
+    for (const id of ["garage", "paper", "maison", "terra", "bloom"]) {
       await look(page, id).click();
       await expect(look(page, id).locator("input")).toBeChecked();
       await expect.poll(async () => frame.locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-background").trim())).toBe(getTheme(id)!.style.colors.background);
@@ -161,14 +161,14 @@ test.describe("My page editor", () => {
     await selectPart(page, "page");
 
     // owner's custom values on top
-    await look(page, "open").click();
+    await look(page, "paper").click();
     const buttonsSection = await openSection(page, "Buttons");
     await buttonsSection.getByRole("radio", { name: "Square" }).locator("xpath=ancestor::label").click();
     await openSection(page, "Button colours");
     await page.getByRole("textbox", { name: "Button colour hex value", exact: true }).fill("#0a7a3b");
     await expect(buttonsSection.locator("summary").first()).toContainText("changed");
     await expect.poll(() => frame.locator(".tp-btn").first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
-    await look(page, "forge").click();       // a different starting look replaces the owner's changes, and says so
+    await look(page, "garage").click();       // a different starting look replaces the owner's changes, and says so
     await expect(page.getByTestId("notice")).toContainText("replaced");
     await expect(buttonsSection.locator("summary").first()).not.toContainText("changed");
     await buttonsSection.getByRole("radio", { name: "Square" }).locator("xpath=ancestor::label").click();
