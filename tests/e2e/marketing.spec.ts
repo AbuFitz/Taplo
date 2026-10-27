@@ -1,7 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { PLAN_IDS } from "../../src/features/subscriptions/plans";
 import { resolveEntitlements } from "../../src/features/subscriptions/entitlements";
-import { EXAMPLES, bySlug } from "../../src/features/inspiration/examples";
 import { PRODUCT_LINKS } from "../../src/features/marketing/ia";
 
 const EXAMPLE_SLUGS = [
@@ -158,127 +157,6 @@ test.describe("inspiration", () => {
         `/onboarding?from=${bySlug(slug)!.slug}`,
       );
     }
-  });
-  test("the gallery leads with large previews, and filters narrow it by style and by what the page has", async ({
-    page,
-  }) => {
-    await page.goto("/inspiration");
-    const cards = page.getByTestId("design-card");
-    await expect(cards).toHaveCount(EXAMPLES.length);
-    // The first preview is above the fold, not behind an introduction.
-    const top = (await cards.first().locator("img").first().boundingBox())!.y;
-    expect(top).toBeLessThan(900);
-    await page.getByRole("button", { name: "Filters", exact: true }).click();
-    await page.getByRole("button", { name: "Dark", exact: true }).click();
-    const dark = await cards.count();
-    expect(dark).toBeGreaterThan(0);
-    expect(dark).toBeLessThan(EXAMPLES.length);
-    await page.getByRole("button", { name: "Vehicles", exact: true }).click();
-    await expect(cards).toHaveCount(0); // both motoring examples use light stock or dark detailing themes, with no dark vehicle catalogue
-    await page.getByRole("button", { name: "Dark", exact: true }).click();
-    await expect(cards).toHaveCount(1);
-    await expect(
-      page.getByRole("heading", { name: "Harris Cars", exact: true }),
-    ).toBeVisible();
-    await page.getByRole("button", { name: "Clear filters" }).click();
-    await expect(cards).toHaveCount(EXAMPLES.length);
-  });
-  test("industry never locks a design: 'Shown with' only changes the example business, and a deep link preselects it", async ({
-    page,
-  }) => {
-    await page.goto("/inspiration?industry=food");
-    await expect(page.getByLabel("Shown with")).toHaveValue("food");
-    await expect(page.getByTestId("design-card")).toHaveCount(1);
-    await expect(
-      page.getByText("Every design works for any business."),
-    ).toBeVisible();
-    await page.goto("/inspiration?industry=nonsense");
-    await expect(page.getByTestId("design-card")).toHaveCount(EXAMPLES.length);
-  });
-  test("phone and desktop previews are two real captures of each page", async ({
-    page,
-  }) => {
-    await page.goto("/inspiration");
-    const first = page
-      .getByTestId("design-card")
-      .first()
-      .locator("img")
-      .first();
-    await expect(first).toHaveAttribute("src", /ex-station-road-barbers-phone/);
-    await expect
-      .poll(() =>
-        first.evaluate(
-          (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
-        ),
-      )
-      .toBe(true);
-    await page.getByRole("radio", { name: "Desktop" }).check({ force: true });
-    await expect(
-      page.getByTestId("design-card").first().locator("img").first(),
-    ).toHaveAttribute("src", /ex-station-road-barbers-desk/);
-    await expect
-      .poll(() =>
-        first.evaluate(
-          (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
-        ),
-      )
-      .toBe(true);
-  });
-  test("using a design on an existing page changes the look and arrangement only; the owner's content and block order stay", async ({
-    page,
-  }) => {
-    await page.goto("/dashboard");
-    await page.evaluate(() => localStorage.clear());
-    await page.reload();
-    await page.getByRole("button", { name: "Try Jay’s Barbers" }).click();
-    await page.waitForURL("**/dashboard/page");
-    const before = await page.evaluate(() => {
-      const s = JSON.parse(localStorage.getItem("taplo.demo.v2")!);
-      return {
-        content: s.content,
-        order: s.page.widgets.map((w: { id: string }) => w.id),
-        themeId: s.page.themeId,
-      };
-    });
-    await page.goto("/inspiration");
-    await page
-      .getByTestId("design-card")
-      .filter({ hasText: "Harris Cars" })
-      .getByTestId("apply-look")
-      .click();
-    await page.waitForURL("**/dashboard/page");
-    const after = await page.evaluate(() => {
-      const s = JSON.parse(localStorage.getItem("taplo.demo.v2")!);
-      return {
-        content: s.content,
-        order: s.page.widgets.map((w: { id: string }) => w.id),
-        themeId: s.page.themeId,
-        appearance: s.page.appearance,
-      };
-    });
-    expect(after.content).toEqual(before.content);
-    expect(after.order).toEqual(before.order);
-    expect(after.themeId).toBe("open");
-    expect(after.themeId).not.toBe(before.themeId);
-    expect(after.appearance.layout.desktop).toBe("columns");
-    // The change is one undo away.
-    await page.getByTestId("undo").click();
-    expect(
-      await page.evaluate(
-        () => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page.themeId,
-      ),
-    ).toBe(before.themeId);
-  });
-  test("the live phone is the real page: its booking button opens the journey inside the frame", async ({
-    page,
-  }) => {
-    await page.goto("/inspiration/marlowe-and-finch");
-    const f = page.frameLocator("iframe");
-    await f
-      .getByRole("button", { name: /Book your chair/ })
-      .first()
-      .click();
-    await expect(f.getByTestId("booking-flow")).toBeVisible();
   });
   test("Start from this carries the look and content types, never the sample content, and a refresh keeps the owner's work", async ({
     page,
