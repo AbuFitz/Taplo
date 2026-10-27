@@ -89,6 +89,7 @@ for (const width of [390, 1440]) {
         ),
         fullPage: true,
       });
+      await openSection(page, /^Look/);
       await shelf.getByRole("button", { name: "Delete Carbon shop" }).click();
       expect((await draft(page)).page.savedLooks).toHaveLength(0);
       expect((await draft(page)).page.themeId).toBe("volt");
@@ -204,6 +205,7 @@ test("full shelves keep earlier looks and section styles rather than evicting th
   await expect(page.getByTestId("my-page")).toBeVisible();
   const before = await draft(page);
   await selectPart(page, "page");
+  await openSection(page, /^Look/);
   const shelf = page.getByTestId("saved-looks");
   await shelf.getByLabel("Name this look").fill("A new look");
   await expect(
