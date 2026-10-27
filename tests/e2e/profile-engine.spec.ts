@@ -36,7 +36,7 @@ for (const width of [390,1440]) test(`transparent wide logo keeps its full compo
   await page.setViewportSize({ width,height:950 })
   await openEditorWithSample(page,'Barber')
   await selectPart(page,'page')
-  await page.getByRole('radiogroup',{name:'Look',exact:true}).locator('label[data-choice="ink"]').click()
+  await page.getByRole('radiogroup',{name:'Look',exact:true}).locator('label[data-choice="noir"]').click()
   await selectPart(page,'header')
   await insp(page).locator('summary').filter({hasText:/^Logo and cover/}).click()
   const buffer=await sharp(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300"><path fill="#111111" d="M20 100h1160v100H20z"/></svg>')).png().toBuffer()
