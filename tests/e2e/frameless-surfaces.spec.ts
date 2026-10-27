@@ -1,4 +1,4 @@
-import { cont } from "./helpers";
+import { cont, openDetails } from "./helpers";
 import { test, expect } from "@playwright/test";
 
 test("mobile motion preference changes keep setup intact and stop tonal motion", async ({ page }) => {
