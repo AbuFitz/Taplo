@@ -55,7 +55,7 @@ for (const width of [390,1440]) test(`transparent wide logo keeps its full compo
   expect(alpha).toBe(0)
   const coverBuffer=await sharp({create:{width:600,height:900,channels:3,background:'#777777'}}).jpeg().toBuffer()
   await page.getByLabel('Cover picture: upload a picture').setInputFiles({name:'portrait-work.jpg',mimeType:'image/jpeg',buffer:coverBuffer})
-  await page.getByTestId("crop-apply").click();
+  await page.getByRole('button',{name:'Keep whole image',exact:true}).click();await page.getByTestId("crop-apply").click();
   await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!).content.identity.heroImage?.height)).toBe(900)
   await expect(page.getByTestId('crop-dialog')).toHaveCount(0)
   const cover=await page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!).content.identity.heroImage)
