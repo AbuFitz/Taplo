@@ -49,11 +49,8 @@ for (const width of [320, 390, 768, 1440])
     expect(axe.violations).toEqual([]);
     await page.goto("/inspiration");
     await expect(page.locator(".design-library>.liquid-light")).toHaveCount(0);
-    await page
-      .getByRole("group", { name: "Page categories" })
-      .getByRole("button", { name: "All designs", exact: true })
-      .click();
-    await expect(page.getByTestId("design-card").first()).toBeVisible();
+    await expect(page.getByRole("group", { name: "Business type" }).getByRole("button", { name: "All", exact: true })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByRole("heading", { level: 2 }).first()).toBeVisible();
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,

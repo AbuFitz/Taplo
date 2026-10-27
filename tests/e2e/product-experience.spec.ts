@@ -32,6 +32,7 @@ for (const width of [390, 1440])
       page,
     }) => {
       await page.setViewportSize({ width, height: 1000 });
+      await page.emulateMedia({ reducedMotion: "reduce" }); // scroll reveals finish instantly, so contrast is measured on settled text
       await page.goto(route);
       await imagesReady(page);
       await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);

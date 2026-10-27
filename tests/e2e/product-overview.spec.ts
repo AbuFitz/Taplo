@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 for(const width of [320,390,768,1440]) {
  test(`product tools have usable tabs and relevant destinations at ${width}`,async({page})=>{
   const errors:string[]=[]; page.on('pageerror',e=>errors.push(e.message));
-  await page.setViewportSize({width,height:1000});await page.goto('/product');
+  await page.setViewportSize({width,height:1000});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/product');
   const experience=page.getByTestId('product-experience');
   for(const [tab,scene,href] of [
    ['Show your work','work','/product/gallery-reviews'],
