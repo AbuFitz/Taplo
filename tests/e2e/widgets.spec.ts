@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test"
 import jsQR from "jsqr"
 
 const FRAME = (s = "barber", look = "night") => `/appearance/frame?scenario=${s}&look=${look}`
-const open = async (page: Page, url: string) => { await page.goto(url); await page.evaluate(() => localStorage.clear()); await page.reload(); await expect(page.getByRole("heading", { level: 1 })).toBeVisible() }
+const open = async (page: Page, url: string) => { await page.goto(url); await page.evaluate(() => localStorage.clear()); await page.reload({ waitUntil: "networkidle" }); await expect(page.getByRole("heading", { level: 1 })).toBeVisible() }
 
 test.describe("team", () => {
   test("compact swipe cards open an expanded profile with services, qualifications and booking with that person", async ({ page }) => {
@@ -128,12 +128,12 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
     await open(page, FRAME("trades", "colour"))
     const openEnquiry = page.locator('[data-widget="enquiry"] button'); if (await openEnquiry.count()) await openEnquiry.first().click()
     const form = page.getByTestId("enquiry-form")
-    await form.getByRole("button", { name: /Send message/ }).click()
+    await form.getByRole("button", { name: /Send (message|enquiry)/ }).click()
     await expect(form.getByRole("alert").first()).toBeVisible()
     await form.getByRole("textbox", { name: "Your name" }).fill("Ruth")
     await form.getByRole("textbox", { name: "Phone (optional)" }).fill("07700 900123")
     await form.getByRole("textbox", { name: "Your message" }).fill("My boiler is leaking, can you come tomorrow?")
-    await form.getByRole("button", { name: /Send message/ }).click()
+    await form.getByRole("button", { name: /Send (message|enquiry)/ }).click()
     await expect(page.getByTestId("enquiry-sent")).toContainText("No time was reserved")
     await expect(page.getByTestId("enquiry-sent")).toContainText("not emailed or texted")
   })

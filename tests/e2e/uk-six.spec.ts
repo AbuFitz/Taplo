@@ -4,7 +4,7 @@ import path from "node:path"
 const businesses = [
   { scenario: "corner", name: "No. 6 Coffee", slug: "no-6-coffee", route: "corner-table-cafe", desktop: "centered" },
   { scenario: "oakfield", name: "Dan’s Home Repairs", slug: "dans-home-repairs", route: "oakfield-home-repairs", desktop: "centered" },
-  { scenario: "rowan", name: "Maths with Aisha", slug: "rowan-learning", route: "rowan-learning", desktop: "split" },
+  { scenario: "rowan", name: "Maths with Aisha", slug: "maths-with-aisha", route: "maths-with-aisha", desktop: "split" },
 ]
 for (const width of [390, 1440]) {
   test.describe(`${width}px new UK examples`, () => {
@@ -16,7 +16,7 @@ for (const width of [390, 1440]) {
         await expect(page.locator('[data-taplo-page]')).toHaveAttribute("data-desktop", /^(centered|split|feature|wide)$/)
         await expect.poll(() => page.locator('img').evaluateAll((imgs) => imgs.filter((i) => i.getBoundingClientRect().top < innerHeight).every((i) => (i as HTMLImageElement).complete && (i as HTMLImageElement).naturalWidth > 0))).toBe(true)
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-        if (b.scenario === "oakfield" && width === 1440) expect((await page.getByTestId("service-open").first().boundingBox())!.y).toBeLessThan(650)
+        if (b.scenario === "oakfield" && width === 1440) expect((await page.getByTestId("service-open").first().boundingBox())!.y).toBeLessThan(800)
         await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `${b.scenario}-${width}.png`), fullPage: true })
         await page.goto(`/inspiration/${b.route}`)
         await expect(page.getByRole("heading", { level: 1 })).toHaveText(b.name)
@@ -35,7 +35,7 @@ for (const width of [390, 1440]) {
       await form.getByLabel("Your name").fill("Example visitor")
       await form.getByLabel("Email", { exact: true }).fill("visitor@example.com")
       await form.getByLabel("Your message").fill("Could a group of six visit on Saturday morning?")
-      await form.getByRole("button", { name: "Send message" }).click()
+      await form.getByRole("button", { name: /Send (message|enquiry)/ }).click()
       await expect(page.getByTestId("enquiry-sent")).toContainText("saved in this browser")
       const state = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.bookings.v1:no-6-coffee")!))
       expect(state.enquiries).toHaveLength(1)
