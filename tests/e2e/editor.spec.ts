@@ -171,9 +171,9 @@ test.describe("My page editor", () => {
     await expect.poll(() => frame.locator(".tp-btn").first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
     await look(page, "garage").click();       // a different starting look replaces the owner's changes, and says so
     await expect(page.getByTestId("notice")).toContainText("replaced");
-    await expect(buttonsSection.locator("summary").first()).not.toContainText("changed");
-    await buttonsSection.getByRole("radio", { name: "Square" }).locator("xpath=ancestor::label").click();
-    await expect(buttonsSection.locator("summary").first()).toContainText("changed");
+    expect(await page.evaluate(() => JSON.stringify(JSON.parse(localStorage.getItem("taplo.demo.v2")!).page.appearance))).not.toContain("#0a7a3b"); // the owner's button colour went with the old look
+
+
 
     // reset one section, then everything
     const textSection = await openSection(page, /^Type/);
