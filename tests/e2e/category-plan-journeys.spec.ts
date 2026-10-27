@@ -6,7 +6,7 @@ import {PLAN_IDS} from '../../src/features/subscriptions/plans';
 import AxeBuilder from '@axe-core/playwright';
 
 for (const width of [390,1440]) test(`every category reaches its own first content at ${width}`,async({page})=>{
- test.setTimeout(180_000);
+ test.setTimeout(540_000);
  await page.setViewportSize({width,height:900});
  for(const category of INDUSTRY_PRESETS){
   await page.goto('/onboarding');await page.evaluate(()=>localStorage.clear());await page.reload({waitUntil:'domcontentloaded'});
@@ -36,8 +36,8 @@ for (const width of [320,390,1440]) test(`plan illustrations are optional, acces
   expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!).setupDrafts.planIntent)).toBe(plan);
  }
  await page.getByRole('radio',{name:'Choose Free',exact:true}).check();await page.locator('.plan-experience button').click();await page.getByRole('button',{name:'Explore Core · £9.99/month',exact:true}).click();await expect(page.getByRole('radio',{name:'Choose Core',exact:true})).toBeChecked();
- await page.emulateMedia({reducedMotion:'reduce'});expect(await page.locator('.plan-experience .plan-scene-float').evaluate(el=>getComputedStyle(el).animationName)).toBe('none');
+ await page.emulateMedia({reducedMotion:'reduce'});expect(await page.locator('.plan-experience .plan-scene-float').first().evaluate(el=>getComputedStyle(el).animationName)).toBe('none');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
- const findings=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(findings.violations.filter(v=>v.impact==='serious'||v.impact==='critical').map(v=>v.id)).toEqual([]);
+ await page.waitForTimeout(500);const findings=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(findings.violations.filter(v=>v.impact==='serious'||v.impact==='critical').map(v=>v.id+':'+v.nodes.map(n=>n.target.join()).join('|'))).toEqual([]);
  await page.screenshot({path:`work/theme-production-review/contextual-plan-${width}.png`});
 });

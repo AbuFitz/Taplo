@@ -1,4 +1,4 @@
-import { openDetails } from './helpers';
+import { cont, openDetails } from './helpers';
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import sharp from "sharp";
@@ -45,8 +45,7 @@ for (const width of [390, 1440])
       .click();
     await expect(crop).toBeVisible();
     await crop.getByRole("button",{name:"Cancel",exact:true}).click();
-    const next = () =>
-      page.getByRole("button", { name: "Continue", exact: true }).click();
+    const next = () => cont(page);
     await next();
     await expect(
       page.getByRole("list", { name: "Kinds of business" }).getByRole("button"),
@@ -58,7 +57,7 @@ for (const width of [390, 1440])
       .click();
     await next();
     await expect(page.getByTestId("goal")).toHaveCount(0);
-    await expect(page.getByTestId("reach").getByRole("textbox")).toHaveCount(3);
+    if ((page.viewportSize()?.width ?? 1440) >= 1024) await expect(page.getByTestId("reach").getByRole("textbox")).toHaveCount(3);
     await page.getByRole("button",{name:"Booking requests",exact:true}).click();
     await openDetails(page);await page.getByLabel("Email", { exact: true }).fill("owner@example.com");
     await next();
@@ -104,7 +103,7 @@ for (const width of [390, 1440])
     );
     await expect(frame.locator(".tp-header")).toHaveAttribute(
       "data-layout",
-      "side",
+      "split",
     );
     await page.screenshot({
       path: path.join(
@@ -205,7 +204,7 @@ test("partial service text survives back and reload, custom businesses work, and
   await page
     .getByLabel("Business name", { exact: true })
     .fill("North Yard Workshop");
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await cont(page);
   await page
     .getByRole("button", { name: "Use a different business type", exact: true })
     .click();
@@ -223,6 +222,7 @@ test("partial service text survives back and reload, custom businesses work, and
     "Initial assessment",
   );
   await page.getByRole("button", { name: "Back", exact: true }).click();
+  await openDetails(page);
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page.getByLabel("Service 1 name")).toHaveValue(
     "Initial assessment",

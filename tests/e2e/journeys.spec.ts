@@ -52,7 +52,7 @@ test.describe("onboarding", () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
     await page.getByLabel("Business name").fill("Clearpath");
     await expect(page.getByRole("button", { name: "Expand preview" })).toHaveCount(0);
-    await expect(page.locator(".setup-canvas")).toBeHidden();
+    await expect(page.locator(".setup-canvas")).toBeVisible();
     await expect(page.frameLocator('iframe[data-testid="setup-live-page"]').getByRole("heading", { level: 1 })).toHaveText("Clearpath");
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
   });
@@ -97,7 +97,7 @@ test.describe("records flow into blocks (nothing is copied)", () => {
     await page.getByRole("button", { name: "Add offer" }).click();
     await expect(page.getByText("Expired · hidden")).toBeVisible();
 
-    await page.getByRole("link", { name: "My page" }).first().click();
+    await page.goto("/dashboard/page");
     await addWidget(page, /^Products/);
     await expect(preview(page).locator('[data-widget="products"]')).toContainText("Oatmeal dog shampoo");
     await expect(preview(page).locator('[data-widget="products"]')).toContainText("£8.50");
@@ -108,7 +108,7 @@ test.describe("records flow into blocks (nothing is copied)", () => {
 
     await page.goto("/dashboard/products");
     await page.getByRole("button", { name: "Archive" }).first().click();
-    await page.getByRole("link", { name: "My page" }).first().click();
+    await page.goto("/dashboard/page");
     await expect(row(page, "products")).toContainText("Needs a first entry");
     await expect(preview(page).locator('[data-widget="products"]')).toHaveCount(0);
   });
@@ -122,7 +122,7 @@ test.describe("records flow into blocks (nothing is copied)", () => {
     await page.getByLabel("Amount (£)").fill("9");
     await page.getByRole("button", { name: "Save service" }).click();
     await page.getByRole("button", { name: "Open menu", exact: true }).click();
-    await page.getByRole("link", { name: "My page" }).first().click();
+    await page.goto("/dashboard/page");
     await expect(preview(page).locator('[data-widget="serviceList"]')).toContainText("Nail trim");
     await openRow(page, "serviceList");
     // picking a subset by reference

@@ -59,13 +59,11 @@ for (const width of [390, 1440]) test(`visual setup keeps each decision separate
   expect(draft.published.page.appearance.colors.background).toBe('#000000')
 })
 
-for (const width of [390, 1440]) test(`homepage examples are frameless previews at ${width}`, async ({ page }) => {
+for (const width of [390, 1440]) test(`homepage shows the real rendered page in a handset without an embedded frame at ${width}`, async ({ page }) => {
   await page.setViewportSize({width,height:950});await page.goto('/')
-  await expect(page.locator('.business-stage .hero-phone img')).toHaveAttribute('alt','No. 6 Coffee business page')
-  await expect(page.locator('.business-stage iframe')).toHaveCount(0)
-  await page.getByRole('button',{name:'Car dealer',exact:true}).click()
-  await expect(page.locator('.business-stage .hero-phone img')).toHaveAttribute('alt','Harris Cars business page')
-  await expect(page.locator('.business-stage a')).toHaveAttribute('href','/inspiration/harris-cars')
+  const stage=page.getByTestId('hero-showcase')
+  await expect(stage.locator('img')).toHaveAttribute('alt',/Detail Dept\. Taplo page/)
+  await expect(stage.locator('iframe')).toHaveCount(0)
 })
 
 test('Google review setup preserves old records but never publishes them as Google content', async ({ page }) => {

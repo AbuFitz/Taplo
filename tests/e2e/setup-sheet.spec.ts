@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { cont } from "./helpers";
 for (const width of [320, 390, 768])
   test(`setup sheet reveals the actual page and preserves the form at ${width}`, async ({
     page,
@@ -55,7 +56,7 @@ for (const width of [320, 390, 768])
     await expect(page.getByLabel("Business name", { exact: true })).toHaveValue(
       "North Studio",
     );
-    await page.getByRole("button", { name: "Continue", exact: true }).click();
+    await cont(page);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "What do you do?",
     );
