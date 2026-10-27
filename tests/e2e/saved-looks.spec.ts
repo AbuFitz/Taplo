@@ -162,9 +162,13 @@ for (const width of [390, 1440]) {
         ),
         fullPage: true,
       });
+      if (!(await shelf.getByRole("button", { name: "Delete Deep blue", exact: true }).count())) {
+        await openRow(page, "priceMenu"); // the inspector can close behind an applied style; reselect the block
+        await insp(page).getByRole("tab", { name: "Appearance" }).click();
+      }
       await shelf
         .getByRole("button", { name: "Delete Deep blue", exact: true })
-        .click({ force: true });
+        .click();
       expect((await draft(page)).page.savedStyles).toHaveLength(0);
       expect(
         (await draft(page)).page.widgets.find(
