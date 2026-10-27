@@ -102,7 +102,11 @@ test("the plaque tilts directly and settles when interaction leaves the section"
         .evaluate((el) => getComputedStyle(el).transform),
     )
     .not.toBe("none");
+  await page.mouse.move(2, 2); // the pointer leaves, so only the keyboard is steering from here
+  await expect(stage).toHaveAttribute("data-engaged", "false");
   await stage.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(stage).toHaveAttribute("data-engaged", "true");
   await page.keyboard.press("Escape");
   await expect(stage).toHaveAttribute("data-engaged", "false");
   await page.keyboard.press("ArrowRight");
