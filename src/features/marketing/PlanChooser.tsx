@@ -50,6 +50,8 @@ export function PlanChooser({
 }) {
   const rail = useRef<HTMLUListElement>(null);
   const requested = useRef<PlanId | null>(null);
+  // A resize reflows the rail and moves its scroll position; those scrolls are layout, not the visitor choosing another plan.
+  const settlingUntil = useRef(0);
   const fromScroll = useRef<PlanId | null>(null);
   const selectedRef = useRef(selected);
   useEffect(() => {
@@ -78,6 +80,7 @@ export function PlanChooser({
     const query = window.matchMedia("(max-width:767px)");
     const align = () => {
       requested.current = null;
+      settlingUntil.current = performance.now() + 400;
       if (!query.matches) return;
       const card = el.querySelector<HTMLElement>(
         `[data-plan="${selectedRef.current}"]`,
@@ -123,6 +126,7 @@ export function PlanChooser({
         onScroll={() => {
           const el = rail.current;
           if (!el || !window.matchMedia("(max-width:767px)").matches) return;
+          if (performance.now() < settlingUntil.current) return;
           const cards = Array.from(
             el.querySelectorAll<HTMLElement>("[data-plan]"),
           );
