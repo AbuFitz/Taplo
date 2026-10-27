@@ -126,7 +126,7 @@ test.describe("service detail, gallery, hours, enquiry, share", () => {
 
   test("the inline contact form validates, keeps input, and confirms honestly", async ({ page }) => {
     await open(page, FRAME("trades", "colour"))
-    const openEnquiry = page.locator('[data-widget="enquiry"] button'); if (await openEnquiry.count()) await openEnquiry.first().click()
+    const openEnquiry = page.locator('[data-widget="enquiry"] button'); if (!(await page.getByTestId("enquiry-form").count()) && await openEnquiry.count()) await openEnquiry.first().click()
     const form = page.getByTestId("enquiry-form")
     await page.getByRole("button", { name: /Send (message|enquiry)/ }).click()
     await expect(form.getByRole("alert").first()).toBeVisible()

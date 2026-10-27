@@ -30,7 +30,7 @@ for (const width of [390, 1440]) {
       await expect(detail).toContainText("£3.60")
       await expect(detail.getByRole("button", { name: "Book this", exact: true })).toHaveCount(0)
       await page.keyboard.press("Escape")
-      const openEnquiry = page.locator('[data-widget="enquiry"] button'); if (await openEnquiry.count()) await openEnquiry.first().click()
+      const openEnquiry = page.locator('[data-widget="enquiry"] button'); if (!(await page.getByTestId("enquiry-form").count()) && await openEnquiry.count()) await openEnquiry.first().click()
       const form = page.getByTestId("enquiry-form")
       await form.getByLabel("Your name").fill("Example visitor")
       await form.getByLabel("Email", { exact: true }).fill("visitor@example.com")
