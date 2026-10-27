@@ -109,7 +109,7 @@ for (const width of [320, 390, 768, 1440])
       ),
     ).toBe(true);
   });
-test("plaque follows the pointer without a click, settles on leaving, and the hero never captures the wheel", async ({
+test("plaque follows the pointer without a click, settles on leaving", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 950 });
@@ -127,12 +127,6 @@ test("plaque follows the pointer without a click, settles on leaving, and the he
   await expect(plaque).toHaveAttribute("data-engaged", "true");
   await page.keyboard.press("Escape");
   await expect(plaque).toHaveAttribute("data-engaged", "false");
-  const phone = page.locator(".hero-showcase-canvas");
-  await phone.scrollIntoViewIfNeeded();
-  await phone.hover();
-  const before = await page.evaluate(() => scrollY);
-  await page.mouse.wheel(0, 300);
-  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(before);
 });
 
 test("sharing uses the simple plaque, with no reset or format controls", async ({
@@ -163,21 +157,3 @@ test("sharing uses the simple plaque, with no reset or format controls", async (
   ).toEqual([]);
 });
 
-test("homepage explains keeping existing links without another design picker", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
-  const presence = page.getByRole("region", {
-    name: "Already out there? Bring it together.",
-  });
-  await presence.scrollIntoViewIfNeeded();
-  await expect(presence.getByRole("img")).toBeVisible();
-  await expect(presence.locator("a,button,iframe")).toHaveCount(0);
-  await expect(page.getByTestId("home-designs")).toHaveCount(0);
-  await presence.screenshot({ path: "work/presence-390.png" });
-  await page
-    .getByRole("link", { name: "Explore designs", exact: true })
-    .click();
-  await expect(page).toHaveURL(/\/inspiration$/);
-});

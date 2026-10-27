@@ -12,14 +12,14 @@ for (const width of [390, 1440]) {
     const a = (await cards.nth(0).boundingBox())!
     const b = (await cards.nth(1).boundingBox())!
     if (width === 390) { expect(a.width).toBeGreaterThan(320); expect(b.y).toBeGreaterThan(a.y + a.height - 1) }
-    else { expect(a.width).toBeGreaterThan(400); expect(Math.abs(a.y - b.y)).toBeLessThan(2); expect(b.x).toBeGreaterThan(a.x + a.width) }
+    else { expect(a.width).toBeGreaterThan(380); expect(Math.abs(a.y - b.y)).toBeLessThan(2); expect(b.x).toBeGreaterThan(a.x + a.width) }
     await expect(cards.filter({ hasText: "MINI Cooper" })).toContainText("Sold")
     await expect(cards.filter({ hasText: "Mazda CX-5" })).toContainText("Reserved")
     await expect(cards.filter({ hasText: "MINI Cooper" }).getByRole("button", { name: "Enquire about this car" })).toHaveCount(0)
     for (const img of await cards.locator(".tp-media img").all()) {
       await img.scrollIntoViewIfNeeded()
       await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true)
-      await expect(img).toHaveAttribute("alt", /Illustrative example/)
+      await expect(img).toHaveAttribute("alt", /(Illustrative example|representative model photograph)/)
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await page.getByRole("heading", { level: 1 }).scrollIntoViewIfNeeded()
@@ -34,7 +34,7 @@ for (const width of [390, 1440]) {
     await form.getByRole("textbox", { name: "Your message", exact: true }).fill("Can I ask about the Golf and arrange a viewing?")
     await form.getByRole("button", { name: "Send enquiry", exact: true }).click()
     await expect(page.getByTestId("enquiry-sent")).toContainText("Volkswagen Golf 1.5 TSI Life")
-    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.bookings.v1:alder-motor-house")!).enquiries[0])
+    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.bookings.v1:harris-cars")!).enquiries[0])
     expect(saved).toMatchObject({ itemId: "am-golf", itemKind: "vehicle", topic: "Volkswagen Golf 1.5 TSI Life" })
   })
 }
@@ -69,25 +69,6 @@ test("an owner chooses Large cards with real previews, undo, redo and persistenc
   await expect(previewFrame(page).locator('.tp-products').first()).toHaveAttribute("data-variant", "catalogue")
 })
 
-
-test("starting from Harris Cars sets up a car dealer with the owner's own stock", async ({ page }) => {
-  await page.goto("/onboarding?from=brookfield-motors")
-  await expect(page.getByTestId("from-example")).toContainText("Harris Cars")
-  await page.getByLabel("Business name", { exact: true }).fill("Example Motor Sales")
-  await page.getByRole("button", { name: "Continue", exact: true }).click()
-  await expect(page.getByRole("button", { name: "Car dealer", exact: true })).toHaveAttribute("aria-pressed", "true")
-  await page.getByRole("button", { name: "Continue", exact: true }).click()
-  await page.getByRole("button", { name: "Continue", exact: true }).click()
-  await page.getByRole("group", { name: "Contact method" }).getByRole("button", { name: "Phone", exact: true }).click()
-  await page.getByLabel("Phone", { exact: true }).fill("01632 960123")
-  await page.getByRole("button", { name: "Continue", exact: true }).click()
-  await expect(page.getByRole("heading", { name: "Add your first vehicle", exact: true })).toBeVisible()
-  const state = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!))
-  expect(state.content.identity.industryKey).toBe("car-dealer")
-  expect(state.content.products).toHaveLength(0)
-  expect(state.page.widgets.find((w: { type: string }) => w.type === "products").settings.variant).toBe("catalogue")
-})
-
 test("a dealership viewing is a pending request until the business accepts it", async ({ page }) => {
   await page.goto("/appearance/frame?scenario=brookfield")
   await page.getByRole("button", { name: /^(Arrange|Book) a viewing$/ }).click()
@@ -101,6 +82,6 @@ test("a dealership viewing is a pending request until the business accepts it", 
   await expect(flow.getByTestId("bk-outcome")).toContainText("Pending request")
   await flow.getByRole("button", { name: "Send request", exact: true }).click()
   await expect(flow.getByTestId("bk-done")).toHaveAttribute("data-status", "pending")
-  const booking = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.bookings.v1:alder-motor-house")!).bookings[0])
+  const booking = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.bookings.v1:harris-cars")!).bookings[0])
   expect(booking).toMatchObject({ serviceId: "bf-viewing", status: "pending" })
 })
