@@ -170,10 +170,12 @@ export async function pickLook(page: Page, id: string) {
 }
 
 /** The starting-look choice with this id, in the shared Look selector. */
+/** Retired starting looks and the current design that stands in for each. */
+export const LEGACY_LOOK: Record<string, string> = { ink: "noir", night: "noir", forge: "garage", open: "paper", atelier: "maison", clay: "terra", orchard: "bloom", clean: "paper", colour: "bloom", showroom: "garage", photo: "noir", service: "bento" };
 export const look = (page: Page, id: string) =>
   page
     .getByRole("radiogroup", { name: "Look" })
-    .locator(`label[data-choice="${id}"]`);
+    .locator(`label[data-choice="${LEGACY_LOOK[id] ?? id}"]`);
 
 /** Continue, hopping the phone-only second screen of the business step. */
 export async function cont(page: import("@playwright/test").Page) {

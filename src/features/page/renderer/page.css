@@ -495,7 +495,7 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
   padding: 0 16px 0 12px;
   border-radius: 999px;
   font-size: var(--tp-t-xs);
-  color: var(--tp-muted);
+  color: color-mix(in srgb, var(--tp-foreground) 74%, var(--tp-background));
   background: color-mix(in srgb, var(--tp-foreground) 6%, transparent);
   overflow: hidden;
   transition: background 0.3s, color 0.3s;

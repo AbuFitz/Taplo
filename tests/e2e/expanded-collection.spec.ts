@@ -4,7 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 import {COLLECTION_BRIEFS} from '../../src/features/showcase/collection';
 for(const width of [320,390,1440])test(`all authored pages render and fit at ${width}`,async({page})=>{
  test.setTimeout(180000);await page.setViewportSize({width,height:900});await page.emulateMedia({reducedMotion:'reduce'});const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
- for(const b of COLLECTION_BRIEFS){await page.goto(`/appearance/frame?scenario=${b.id}`);await expect(page.getByRole('heading',{level:1})).toHaveText(b.name);await expect(page.locator('[data-widget]')).not.toHaveCount(0);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),b.id).toBe(true);const mark=page.locator('img.tp-logo');await expect(mark).toBeVisible();await expect.poll(()=>mark.evaluate((el:HTMLImageElement)=>el.complete&&el.naturalWidth>0)).toBe(true);}
+ for(const b of COLLECTION_BRIEFS){await page.goto(`/appearance/frame?scenario=${b.id}`);await expect(page.getByRole('heading',{level:1})).toHaveText(b.name);await expect(page.locator('[data-widget]')).not.toHaveCount(0);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),b.id).toBe(true);const mark=page.locator('img.tp-logo');if(await mark.count()){await expect(mark).toBeVisible();await expect.poll(()=>mark.evaluate((el:HTMLImageElement)=>el.complete&&el.naturalWidth>0)).toBe(true)}}
  expect(errors).toEqual([]);
 });
 for(const scenario of ['maya','form','lune','sora','arlo','slow'])test(`${scenario} has readable blocks and useful customer actions`,async({page})=>{

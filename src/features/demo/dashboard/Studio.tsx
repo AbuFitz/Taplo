@@ -56,6 +56,7 @@ export function Studio() {
   const discover = DISCOVER.filter((d) => !ent[d.key]).map((d) => ({ ...d, plan: firstPlanWith(d.key) })).filter((d) => d.plan).slice(0, 2)
   return (
     <div className="studio" data-testid="studio">
+      <h1 className="sr-only">{s.content.identity.name}</h1>
       <nav className="studio-dock" aria-label="Studio">
         {DOCK.map(({ href, label, Icon, ...rest }, i) => (
           <Link key={i} href={href} className="studio-dock-item" aria-label={label}>

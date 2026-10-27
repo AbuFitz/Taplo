@@ -39,7 +39,7 @@ test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", ()
 
   test("themed booking dialog", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
-    for (const theme of ["night", "colour", "showroom", "clean"]) {
+    for (const theme of ["noir", "bloom", "garage", "paper"]) {
       await page.goto(`/demo-cafe?theme=${theme}`, { waitUntil: "networkidle" });
       await page.locator('.tp-actions-primary button, [data-widget="booking"] button').first().click();
       await expect(page.getByRole("dialog")).toBeVisible();

@@ -5,7 +5,9 @@ const expect = baseExpect.configure({ timeout: 15_000 });
 
 const frame = (page: Page, title = "Desktop preview") => page.frameLocator(`iframe[title="${title}"]`);
 const attr = async (page: Page, name: string, title?: string) => (await frame(page, title).locator("[data-taplo-page]").getAttribute(name)) ?? "";
+const LEGACY_LABEL: Record<string, string> = { Night: "Noir", Clean: "Paper", Colour: "Bloom", Photo: "Noir", Showroom: "Garage" };
 const choice = async (page: Page, group: string, label: string | RegExp) => {
+  if (group === "Look" && typeof label === "string") label = LEGACY_LABEL[label] ?? label;
   const g = page.locator(`[role="radiogroup"][aria-label="${group}"]`);
   // Sections are collapsed disclosures; open the one that holds this control, as a person would.
   await g.first().evaluate((el) => { for (let d = el.closest("details"); d; d = d.parentElement?.closest("details") ?? null) d.open = true; });
