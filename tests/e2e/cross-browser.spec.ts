@@ -19,7 +19,7 @@ for (const width of [390, 1440]) {
       await expect(flow.getByTestId("bk-outcome")).toContainText(/request/i)
       await flow.getByRole("button", { name: "Send request", exact: true }).click()
       await expect(flow.getByTestId("bk-done")).toHaveAttribute("data-status", "pending")
-      const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.bookings.v1:fieldwork-home-care")!).bookings[0])
+      const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.bookings.v1:dans-home-repairs")!).bookings[0])
       expect(saved).toMatchObject({ serviceName: "Small repairs visit", priceLabel: "From £65", status: "pending" })
     })
 

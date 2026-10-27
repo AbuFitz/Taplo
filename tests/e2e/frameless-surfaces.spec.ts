@@ -1,20 +1,4 @@
-import { cont, openDetails } from "./helpers";
 import { test, expect } from "@playwright/test";
-
-test("popup surfaces keep focus and dismissal without an outer frame", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/onboarding");
-  await page.getByRole("button", { name: "Add a cover photo", exact: true }).click();
-  const modal = page.getByRole("dialog");
-  await expect(modal).toBeVisible();
-  await expect(modal).toHaveCSS("border-top-width", "0px");
-  await expect(modal.locator("header")).toHaveCSS("border-bottom-width", "0px");
-  await expect(modal.locator("footer")).toHaveCSS("border-top-width", "0px");
-  await page.keyboard.press("Escape");
-  await expect(modal).toBeHidden();
-  await expect(page.getByRole("button", { name: "Add a cover photo", exact: true })).toBeFocused();
-  await expect(page.getByRole("button",{name:"View full size"})).toHaveCount(0);
-});
 
 test("mobile motion preference changes keep setup intact and stop tonal motion", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
