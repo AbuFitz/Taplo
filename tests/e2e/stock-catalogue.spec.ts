@@ -33,9 +33,9 @@ for (const width of [390, 1440]) {
     await form.getByLabel("Email", { exact: true }).fill("buyer@example.com")
     await form.getByRole("textbox", { name: "Your message", exact: true }).fill("Can I ask about the Golf and arrange a viewing?")
     await form.getByRole("button", { name: "Send enquiry", exact: true }).click()
-    await expect(page.getByTestId("enquiry-sent")).toContainText("Volkswagen Golf 1.5 TSI Life")
+    await expect(page.getByTestId("enquiry-sent")).toContainText("Volkswagen Golf 1.5 TSI Style")
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.bookings.v1:harris-cars")!).enquiries[0])
-    expect(saved).toMatchObject({ itemId: "am-golf", itemKind: "vehicle", topic: "Volkswagen Golf 1.5 TSI Life" })
+    expect(saved).toMatchObject({ itemId: "am-golf", itemKind: "vehicle", topic: "Volkswagen Golf 1.5 TSI Style" })
   })
 }
 

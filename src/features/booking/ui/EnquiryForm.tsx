@@ -53,7 +53,7 @@ export function EnquiryForm({ slug, businessName, services, serviceId, topic, it
         <div className="grid size-11 place-items-center rounded-full bg-tp-accent text-tp-accent-fg"><Check aria-hidden="true" className="size-5" /></div>
         <h3 ref={sent} tabIndex={-1} className="font-tp-heading text-xl outline-none">Enquiry saved</h3>
         <p className="text-sm text-tp-muted">{topic ? `Your enquiry about ${topic} is saved in this browser.` : "Your enquiry is saved in this browser."} No time was reserved.</p>
-        <p className="text-xs text-tp-muted">{businessName} was not emailed or texted in this preview.</p>
+        <p className="text-xs text-tp-muted">{businessName} was not emailed or texted.</p>
       </div>
     )
 
