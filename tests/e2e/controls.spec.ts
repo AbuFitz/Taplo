@@ -46,15 +46,15 @@ const C: Control[] = [
   // Type
   { id: "type-pair", part: "page", open: "Type", run: radio("Font pair", "warm"), probe: cv("--tp-font-heading") },
   { id: "type-size", part: "page", open: "Type", run: radio("Text size", "lg"), probe: cv("--tp-scale"), expect: "1.1" },
-  { id: "type-case", part: "page", open: "Type", more: "More type options", run: radio("Heading case", "upper"), probe: cv("--tp-heading-case"), expect: "uppercase" },
+  { id: "type-case", part: "page", open: "Type", more: "More type options", run: radio("Heading case", "normal"), probe: cv("--tp-heading-case"), expect: "none" },
   { id: "type-weight", part: "page", open: "Type", more: "More type options", run: radio("Heading weight", "regular"), probe: cv("--tp-heading-weight"), expect: "500" },
   { id: "type-align", part: "page", open: "Type", more: "More type options", run: radio("Text alignment", "center"), probe: cv("--tp-text-align"), expect: "center" },
   // Wallpaper
-  { id: "wallpaper-gradient", part: "page", open: "Wallpaper", run: radio("Wallpaper", "gradient"), probe: at("data-bg"), expect: "gradient" },
-  { id: "wallpaper-shader", part: "page", open: "Wallpaper", run: radio("Wallpaper", "aurora"), probe: at("data-bg"), expect: "shader" },
-  { id: "wallpaper-drift", part: "page", open: "Wallpaper", also: radio("Wallpaper", "gradient"), run: toggle("Slowly drifting colours"), probe: at("data-motion"), expect: "drift" },
-  { id: "wallpaper-angle", part: "page", open: "Wallpaper", also: radio("Wallpaper", "gradient"), run: slider("Angle", 90), probe: css(".tp-bg-gradient", "background-image") },
-  { id: "pattern", part: "page", open: "Wallpaper", run: radio("Pattern", "dots"), probe: at("data-decoration"), expect: "dots" },
+  { id: "wallpaper-gradient", part: "page", open: "Wallpaper", more: "Fine-tune background", run: radio("Wallpaper", "gradient"), probe: at("data-bg"), expect: "gradient" },
+  { id: "wallpaper-shader", part: "page", open: "Wallpaper", more: "Fine-tune background", run: radio("Wallpaper", "aurora"), probe: at("data-bg"), expect: "shader" },
+  { id: "wallpaper-drift", part: "page", open: "Wallpaper", more: "Fine-tune background", also: radio("Wallpaper", "gradient"), run: toggle("Slowly drifting colours"), probe: at("data-motion"), expect: "drift" },
+  { id: "wallpaper-angle", part: "page", open: "Wallpaper", more: "Fine-tune background", also: radio("Wallpaper", "gradient"), run: slider("Angle", 90), probe: css(".tp-bg-gradient", "background-image") },
+  { id: "pattern", part: "page", open: "Wallpaper", more: "Fine-tune background", run: radio("Pattern", "dots"), probe: at("data-decoration"), expect: "dots" },
   // Header
   { id: "header-layout", part: "header", run: radio("Header arrangement", "split"), probe: at("data-header"), expect: "split" },
   { id: "header-shape", part: "header", run: radio("Picture style", "circle"), probe: sub(".tp-avatar", "data-shape"), expect: "circle" },
@@ -65,12 +65,12 @@ const C: Control[] = [
   { id: "header-fade", part: "header", also: async (page) => { await radio("Header arrangement", "split")(page); await radio("Photo fade", "soft")(page) }, run: radio("Photo fade", "strong"), probe: cv("--tp-fade"), expect: "74%" },
   // Buttons
   { id: "button-style", part: "page", open: "Buttons", run: radio("Button style", "outline"), probe: at("data-btn-fill"), expect: "outline" },
-  { id: "button-shape", part: "page", open: "Buttons", run: radio("Button shape", "square"), probe: cv("--tp-btn-radius") },
+  { id: "button-shape", part: "page", open: "Buttons", run: radio("Button shape", "pill"), probe: cv("--tp-btn-radius") },
   { id: "button-shadow", part: "page", open: "Buttons", run: radio("Button shadow", "hard"), probe: cv("--tp-btn-shadow") },
   { id: "button-icons", part: "page", open: "Buttons", run: toggle("Icons on buttons"), probe: at("data-btn-icons"), expect: "off" },
   // Cards
   { id: "card-surface", part: "page", open: "Cards", run: radio("Card surface", "glass"), probe: at("data-card-surface"), expect: "glass" },
-  { id: "card-corners", part: "page", open: "Cards", run: radio("Corners", "none"), probe: cv("--tp-card-radius"), expect: "0px" },
+  { id: "card-corners", part: "page", open: "Cards", run: radio("Corners", "lg"), probe: cv("--tp-card-radius") },
   { id: "card-border", part: "page", open: "Cards", more: "More card options", run: radio("Border", "thick"), probe: cv("--tp-card-border-w"), expect: "2.5px" },
   { id: "card-shadow", part: "page", open: "Cards", more: "More card options", run: radio("Card shadow", "hard"), probe: cv("--tp-card-shadow") },
   { id: "card-padding", part: "page", open: "Cards", more: "More card options", run: radio("Spacing inside", "roomy"), probe: cv("--tp-card-pad"), expect: "1.5rem" },
@@ -96,7 +96,7 @@ test.describe("design controls change the rendered page, undo, and persist", () 
       await openEditorWithSample(page, "Barber")
       await page.waitForTimeout(600)
       // Every control is exercised from the same known start. The sample barber opens in the Service design, whose values already equal several of the targets below (and whose light page rejects light text), so the Midnight look is chosen first through the Look control.
-      if (c.id !== "look") { await selectPart(page, "page"); await radio("Look", "terra")(page); await page.waitForTimeout(400) }
+      if (c.id !== "look") { await selectPart(page, "page"); await radio("Look", "noir")(page); await page.waitForTimeout(400) }
       await go(page, c)
       const before = await c.probe(page)
       await c.run(page)
