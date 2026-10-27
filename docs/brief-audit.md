@@ -25,7 +25,7 @@ Status words: **Done** (verified in a browser or test this session), **Partial**
 | Identity first ("Make it yours."), no logo/image/tagline required | Done | `docs/review/journey/1440-01-start.png` |
 | Name-only draft looks designed | **Done**: a blank start page now uses the type-led Editorial cover (`src/features/demo/store.ts` `initialState`); it stays "fresh" so choosing a category still applies that category's default look. The pre-name skeleton is only the page loading | `docs/review/journey/1440-02-name.png` (re-captured) |
 | First creative moment with a strong recommended look already applied | Partial: designs and arrangements come after contacts, not right after identity | `docs/review/journey/design-1440.png` |
-| "What do you do?" with Other and multi-category | Partial: four featured types plus search and "Use a different business type"; single category only | `1440-03-step-1.png` |
+| "What do you do?" with Other and multi-category | **Done**: Other with a write-in exists; "I also do" lets a business add up to two further kinds of work, which add service suggestions and never change the design (`identity.alsoKeys`, `tests/e2e/also-categories.spec.ts`). Category is still not used to pick arrangements | `1440-03-step-1.png` |
 | Goals multi-select, intent separate from configured booking | **Done**: "What would you like customers to do?" (book, call, message, see work, buy) is stored as `setupDrafts.goals`, separate from the real "Main button" setting; each chosen goal adds a Studio next-step until it is genuinely set up (`src/features/demo/actions.ts` `readiness`, `goals.test.ts`) | `src/features/demo/SetupConnections.tsx` |
 | Optional first content / contact | Done (Skip for now on contact and content steps) | `tests/e2e/curated-setup-blocks.spec.ts` |
 | Example content labelled and never saved as real | **Missing**: no "Example" labelling concept found in setup or starter data | `src/features/page/starter.ts` |
@@ -56,7 +56,7 @@ What I could not see from the study: its fallback-state wording beyond the toggl
 |---|---|
 | Content, arrangement, finish kept separate in data | Partial: `header.layout` (arrangement), `layout.finish`, design recipe and content are separate keys; widget presentation lives on each widget; asset treatment (crop/fit/focal, scrim) lives on `ImageRef` and `header.scrim` |
 | Applying a design preserves business data | Done: `applyDesign` touches `appearance` only; "Use this design" says so (`src/features/inspiration/UseDesign.tsx`) |
-| Undo / provenance | Partial: undo in editor (`store.ts` history, in memory only; lost on reload). "Use this design" now records `page.meta.appliedFrom` (design id, arrangement, time); the editor does not display it yet |
+| Undo / provenance | **Done within limits**: undo now survives a reload of the same tab (sessionStorage, last 20 steps, dropped when large; `tests/e2e/undo-reload.spec.ts`). "Use this design" records `page.meta.appliedFrom` and the editor shows "Look started from …" (`MyPage.tsx`). Undo does not survive closing the tab |
 | Versioned schemas | Partial: `PAGE_SCHEMA_VERSION` for pages; arrangement choice is not separately versioned |
 | No destructive background removal | Done: none exists |
 | Image-library licensing | Checked from repository records: see `docs/asset-licences.md`. Three CC BY-SA car photos and the unlabelled `taplo-demo` / `looks` images are open items |
@@ -65,7 +65,7 @@ What I could not see from the study: its fallback-state wording beyond the toggl
 Gallery renders through the real engine (`src/features/inspiration/DesignGallery.tsx`). It now has a Profile filter for the six study directions, and 18 showcase pages were reassigned to the new arrangements by hand in `showcase-set.ts`. Contact sheets for a barber, mobile detailer, two trades, two retail, two tutors, two creatives and two hybrid/other pages: `docs/review/businesses/sheet-businesses.png`.
 
 ## Responsive, accessibility, data integrity (section 5)
-- Every arrangement (all nine) is asserted free of horizontal overflow at 320, 375, 430, 768, 1024 and 1440 (`tests/e2e/arrangement-sheet.spec.ts`, "widths and accessibility"; passes on the dev build). Visual review of those widths: set `TAPLO_SHEET=1` to write `docs/review/arrangements/w<width>-<id>.png`; not yet looked at by eye.
+- Every arrangement (all nine) is asserted free of horizontal overflow at 320, 375, 430, 768, 1024 and 1440 (`tests/e2e/arrangement-sheet.spec.ts`, "widths and accessibility"; passes on the dev build). Visual review done at 320, 768 and 1440 for the six study directions: `docs/review/arrangements/sheet-widths-{320,768,1440}.png`. Findings: side-by-side stacks cleanly at 320, nothing clips or overlaps; open blend becomes very tall at 768 (the photo is capped at 520px but still dominates the first screen).
 - No horizontal overflow at 390 in any of 90 renders (asserted in the spec).
 - axe (default rule set, header region only) reports no violations for all nine arrangements at those six widths with the barber sample. Not run: full page, dark finishes, other businesses.
 - Preview/draft divergence found and fixed: see below.
