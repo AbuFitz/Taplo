@@ -15,12 +15,14 @@ for (const width of [390, 1440]) {
     await expect(choices.locator("img").first()).toHaveAttribute("src", source!)
     await expect(choices.locator('input[value="arch"]')).toHaveCount(0)
     const avatar = previewFrame(page).locator(".tp-header .tp-avatar")
-    const start = await avatar.getAttribute("data-shape")
+    const before = await previewFrame(page).locator(".tp-header .tp-avatar").count()
+    const start = before ? await avatar.getAttribute("data-shape") : null
     const target = start === "circle" ? "rounded" : "circle" // always move to a shape the design is not already using
     await choices.locator(`label[data-choice="${target}"]`).click()
     await expect(avatar).toHaveAttribute("data-shape", target)
     await page.getByTestId("undo").click()
-    await expect(avatar).toHaveAttribute("data-shape", start!)
+    if (start) await expect(avatar).toHaveAttribute("data-shape", start)
+    else await expect(avatar).not.toHaveAttribute("data-shape", target)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `profile-picker-${width}.png`), fullPage: true })
   })
