@@ -171,7 +171,7 @@ export async function pickLook(page: Page, id: string) {
 
 /** The starting-look choice with this id, in the shared Look selector. */
 /** Retired starting looks and the current design that stands in for each. */
-export const LEGACY_LOOK: Record<string, string> = { ink: "noir", night: "noir", forge: "garage", open: "paper", atelier: "maison", clay: "terra", orchard: "bloom", clean: "paper", colour: "bloom", showroom: "garage", photo: "noir", service: "bento" };
+export const LEGACY_LOOK: Record<string, string> = { ink: "noir", night: "noir", forge: "garage", open: "paper", atelier: "maison", clay: "terra", orchard: "bloom", clean: "paper", colour: "bloom", showroom: "garage", photo: "noir", service: "bento", apex: "volt", silver: "quartz" };
 export const look = (page: Page, id: string) =>
   page
     .getByRole("radiogroup", { name: "Look" })

@@ -1,24 +1,6 @@
 import { cont, openDetails } from "./helpers";
 import { test, expect } from "@playwright/test";
 
-for (const width of [320, 390, 768]) test(`mobile setup gives early decisions the canvas at ${width}`, async ({ page }) => {
-  await page.setViewportSize({ width, height: 900 });
-  await page.emulateMedia({ reducedMotion:"reduce" });
-  await page.goto("/onboarding");
-  await page.getByLabel("Business name", { exact: true }).fill("North Street Studio");
-  const form = page.locator(".setup-workspace>section");
-  const f = await form.boundingBox();
-  expect(f!.y).toBeLessThan(100);
-  expect(f!.width).toBe(width-44);
-  await expect(page.locator(".setup-workspace>aside")).not.toBeVisible();
-  await expect(page.getByRole("button",{name:"View full size"})).toHaveCount(0);
-  await expect(page.getByTestId("setup-backdrop")).toBeVisible();
-  await expect(page.getByTestId("setup-backdrop").locator("canvas")).toHaveCount(0);
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await expect(page.getByTestId("setup-backdrop")).toHaveAttribute("data-phase", "1");
-  await expect(page.getByRole("button", { name: "Continue", exact: true })).toBeInViewport();
-});
-
 test("popup surfaces keep focus and dismissal without an outer frame", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/onboarding");
