@@ -450,7 +450,7 @@ export function HeaderControls({
             header: {
               ...o.header,
               layout: v,
-              align: v === "centered" || v === "bento" ? "center" : "left",
+              align: v === "centered" || v === "bento" || v === "identity" ? "center" : "left",
             },
           }))
         }
@@ -471,6 +471,8 @@ export function HeaderControls({
       />
       {spec.header.layout === "poster" ||
       spec.header.layout === "melt" ||
+      spec.header.layout === "framed" ||
+      spec.header.layout === "lifted" ||
       spec.header.layout === "split" ||
       spec.header.layout === "cover" ||
       spec.header.layout === "banner" ? (

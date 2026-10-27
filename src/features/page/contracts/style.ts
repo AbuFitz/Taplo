@@ -69,12 +69,17 @@ export const backgroundSchema = z.discriminatedUnion("kind", [
 /** Only these reviewed arrangements are offered for new profile choices. Older stored values remain readable. */
 /** The five profile arrangements offered everywhere. Older arrangements still render for pages that saved them. */
 export const PROFILE_CHOICES = [
-  { id: "melt", name: "Seamless Melt", line: "Full-width photo that dissolves into the page", needs: "photo" },
+  { id: "framed", name: "Framed blend", line: "A photo fades into a contained profile with an overlapping mark", needs: "none" },
+  { id: "melt", name: "Open blend", line: "The photo flows into the page; identity and content read as one", needs: "none" },
+  { id: "identity", name: "Centred identity", line: "A cover frames a centred, prominent mark", needs: "none" },
+  { id: "masthead", name: "Editorial cover", line: "Type leads; the photo follows as a supporting chapter", needs: "none" },
+  { id: "duo", name: "Side by side", line: "Identity and photo share one compact introduction", needs: "none" },
+  { id: "lifted", name: "Floating profile", line: "An identity panel rests on the photo, then hands off to content", needs: "none" },
   { id: "split", name: "Architectural Split", line: "A cover and a badge bridging the seam", needs: "photo" },
   { id: "bento", name: "Floating Bento", line: "One lifted card with everything in reach", needs: "none" },
   { id: "type", name: "Editorial Poster", line: "Bold type, no photo needed", needs: "none" },
 ] as const;
-export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal", "feature", "editorial", "banner", "floating", "portrait", "melt", "split", "bento", "type"] as const;
+export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal", "feature", "editorial", "banner", "floating", "portrait", "melt", "split", "bento", "type", "framed", "identity", "masthead", "duo", "lifted"] as const;
 export const headerSchema = z.object({
   layout: z.enum(HEADER_LAYOUTS),
   /** "logo" shows the picture uncropped at its own proportions (for wide wordmarks); a wide logo is never cropped to a face shape regardless. */

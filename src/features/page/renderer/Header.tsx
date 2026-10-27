@@ -11,10 +11,10 @@ import type { PageAction, PageViewModel } from "./view-model"
 const ICON = { book: CalendarCheck, call: Phone, whatsapp: MessageCircle, email: Mail } as const
 const WIDGET_FOR: Partial<Record<PageAction["kind"], string>> = { call: "call", whatsapp: "whatsapp", email: "email" }
 
-function Avatar({ vm }: { vm: PageViewModel }) {
+function Avatar({ vm, shape }: { vm: PageViewModel; /** Arrangements that set the mark inline show it at its own proportions. */ shape?: "logo" }) {
   const { spec } = vm.style
   const { identity } = vm.business
-  return <ProfileMark image={identity.logo} name={identity.name} shape={spec.header.avatarShape} size={spec.header.avatarSize} priority />
+  return <ProfileMark image={identity.logo} name={identity.name} shape={shape && identity.logo ? shape : spec.header.avatarShape} size={shape ? "sm" : spec.header.avatarSize} priority />
 }
 
 /** Channels the owner already placed as their own widget are not repeated in the header. */
@@ -129,6 +129,41 @@ function Arrangement({ vm }: { vm: PageViewModel }) {
       <div className="tp-melt-body">{id.logo ? <Avatar vm={vm} /> : null}<Text vm={vm} /><Actions vm={vm} /></div>
     </header>
   )
+  if (h.layout === "framed") return (
+    <header aria-label={label} className="tp-header" data-layout="framed" data-align="left" data-cover={cover ? "" : undefined}>
+      <div className="tp-fr-card">
+        {cover ? <div className="tp-fr-media"><ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /></div> : null}
+        <div className="tp-fr-body">{id.logo ? <Avatar vm={vm} /> : null}<Text vm={vm} /><Actions vm={vm} /></div>
+      </div>
+    </header>
+  )
+  if (h.layout === "identity") return (
+    <header aria-label={label} className="tp-header" data-layout="identity" data-align="center" data-cover={cover ? "" : undefined}>
+      {cover ? <div className="tp-id-media"><ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /></div> : null}
+      <div className="tp-id-body">{id.logo ? <Avatar vm={vm} /> : null}<Text vm={vm} /><Actions vm={vm} /></div>
+    </header>
+  )
+  if (h.layout === "masthead") return (
+    <header aria-label={label} className="tp-header" data-layout="masthead" data-align="left" data-cover={cover ? "" : undefined}>
+      <p className="tp-ms-rule"><span>{id.industryLabel}</span>{h.showLocation && vm.locationLine ? <span>{vm.locationLine}</span> : null}</p>
+      <div className="tp-ms-body">{id.logo ? <Avatar vm={vm} shape="logo" /> : null}<Text vm={vm} /><Actions vm={vm} /></div>
+      {cover ? <div className="tp-ms-media"><ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /></div> : null}
+    </header>
+  )
+  if (h.layout === "duo") return (
+    <header aria-label={label} className="tp-header" data-layout="duo" data-align="left" data-cover={cover ? "" : undefined}>
+      <div className="tp-duo-card">
+        <div className="tp-duo-body">{id.logo ? <Avatar vm={vm} shape="logo" /> : null}<Text vm={vm} /><Actions vm={vm} only="primary" /></div>
+        {cover ? <div className="tp-duo-media"><ProfileImage image={cover} sizes="(min-width:900px) 20rem, 45vw" priority /></div> : null}
+      </div>
+    </header>
+  )
+  if (h.layout === "lifted") return (
+    <header aria-label={label} className="tp-header" data-layout="lifted" data-align="left" data-cover={cover ? "" : undefined}>
+      {cover ? <div className="tp-lf-media"><ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /></div> : null}
+      <div className="tp-lf-panel">{id.logo ? <Avatar vm={vm} shape="logo" /> : null}<Text vm={vm} /><Actions vm={vm} /></div>
+    </header>
+  )
   if (h.layout === "split") return (
     <header aria-label={label} className="tp-header" data-layout="split" data-align="left" data-cover={cover ? "" : undefined}>
       <div className="tp-split-cover">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : <Art vm={vm} />}</div>
@@ -166,7 +201,7 @@ export function PageHeader({ vm }: { vm: PageViewModel }) {
   const h = spec.header
   const cover = vm.business.identity.heroImage
 
-  if (h.layout === "melt" || h.layout === "split" || h.layout === "bento" || h.layout === "type") return <Arrangement vm={vm} />
+  if (["melt", "split", "bento", "type", "framed", "identity", "masthead", "duo", "lifted"].includes(h.layout)) return <Arrangement vm={vm} />
   if (h.layout === "floating") return <header aria-label={`${vm.business.identity.name} business profile`} className="tp-header" data-layout="floating" data-align={h.align} data-cover={cover ? "" : undefined}>
     {cover ? <div className="tp-floating-cover"><ProfileImage image={cover} sizes="(min-width:900px) 50vw, 100vw" priority /></div> : null}
     <div className="tp-floating-intro"><Avatar vm={vm} /><Text vm={vm} /><Actions vm={vm} /></div>
