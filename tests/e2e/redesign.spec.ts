@@ -31,6 +31,9 @@ for(const width of [390,1440])test(`uploaded logo colours drive linked gradients
   await page.setViewportSize({width,height:950});await openEditorWithSample(page,'Barber');await selectPart(page,'page')
   await openSection(page,/^Look/)
   await page.getByRole('radiogroup',{name:'Look',exact:true}).locator('label[data-choice="quartz"]').click()
+  await openSection(page,/^Fine-tune background/)
+  await page.getByRole('radiogroup',{name:'Wallpaper',exact:true}).getByText('Gradient',{exact:true}).click()
+  await page.getByLabel('Follow my logo').check()
   await selectPart(page,'header')
   const upload=async(color:string)=>{const buffer=await sharp({create:{width:240,height:120,channels:4,background:color}}).png().toBuffer();await page.locator('input[type="file"]').first().setInputFiles({name:'business-logo.png',mimeType:'image/png',buffer});await page.getByTestId('crop-dialog').getByRole('button',{name:'Use image',exact:true}).click()}
   await upload('#cc3311')
