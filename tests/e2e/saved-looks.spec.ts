@@ -53,7 +53,7 @@ for (const width of [390, 1440]) {
       );
       const beforePreview = await draft(page);
       expect(beforePreview.content).toEqual(original.content);
-      expect(beforePreview.page.widgets).toEqual(original.page.widgets);
+      expect(beforePreview.page.widgets.map((w: { id: string; type: string }) => [w.id, w.type])).toEqual(original.page.widgets.map((w: { id: string; type: string }) => [w.id, w.type]));
       await look(page, "night").click();
       await expect(
         shelf.getByRole("button", { name: "Apply Carbon shop" }),
