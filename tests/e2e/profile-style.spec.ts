@@ -7,7 +7,7 @@ for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 })
     await openEditorWithSample(page, "Barber")
     await selectPart(page, "header")
-    await page.getByRole("radio", { name: "Floating Bento", exact: true }).check() // an arrangement that shows the profile picture
+    await page.getByRole("radiogroup", { name: "Header arrangement", exact: true }).locator('label[data-choice="bento"]').click() // an arrangement that shows the profile picture
     const choices = page.getByRole("radiogroup", { name: "Picture style", exact: true })
     await expect(choices).toBeVisible()
     const image = previewFrame(page).locator(".tp-header .tp-avatar img, .tp-header .tp-logo").first()
