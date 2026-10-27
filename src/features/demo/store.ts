@@ -132,6 +132,9 @@ function migrateLegacy(): DemoState | null {
 }
 
 function read(): DemoState | null {
+  // Storage refused the latest write (full/blocked) but may still hold the previous state: the
+  // in-memory copy is newer and must win, otherwise the edit vanishes from every view.
+  if (storageFailed && memoryNewer) return cachedState;
   let raw: string | null = null;
   try {
     raw = window.localStorage.getItem(KEY);
@@ -155,18 +158,50 @@ function read(): DemoState | null {
 
 /** True when the browser refused to save (quota/blocked). The tab keeps working in memory. */
 let storageFailed = false;
+let memoryNewer = false;
 export const storageHasFailed = () => storageFailed;
 
+/**
+ * When storage is blocked or full the other documents (the live preview iframe) cannot see a change
+ * through the `storage` event, so the new state is also handed over directly. Without this the editor
+ * and its preview silently diverge until the next reload.
+ */
+const CHANNEL = "taplo.demo.sync";
+let channel: BroadcastChannel | null | undefined;
+function bus() {
+  if (channel !== undefined) return channel;
+  try {
+    channel = typeof BroadcastChannel === "undefined" ? null : new BroadcastChannel(CHANNEL);
+    channel?.addEventListener("message", (e: MessageEvent) => {
+      if (!storageFailed && !e.data?.failed) return; // healthy storage: the storage event already covers this
+      try {
+        const next = e.data?.state ? hydrate(stateSchema.parse(e.data.state)) : null;
+        cachedRaw = undefined;
+        cachedState = next;
+        storageFailed = true;
+        memoryNewer = true;
+        emit();
+      } catch { /* ignore malformed message */ }
+    });
+  } catch { channel = null; }
+  return channel;
+}
+
 function write(next: DemoState | null) {
+  let failed = false;
   try {
     if (next) window.localStorage.setItem(KEY, JSON.stringify(next));
     else window.localStorage.removeItem(KEY);
     storageFailed = false;
+    memoryNewer = false;
   } catch {
+    failed = true;
+    memoryNewer = true;
     storageFailed = true;
     cachedRaw = undefined;
     cachedState = next; // storage blocked or full: keep working in-memory for this tab
   }
+  if (failed) { try { bus()?.postMessage({ failed: true, state: next }); } catch { /* too large to clone: nothing more to do */ } }
   emit();
 }
 
@@ -185,10 +220,17 @@ function subscribe(cb: () => void) {
   const onStorage = (e: StorageEvent) => {
     if (e.key === KEY || e.key === null) cb(); // fires in OTHER documents: how the preview iframe updates live
   };
+  // A tab restored from the back/forward cache or woken from sleep may hold a stale render.
+  const onWake = () => { if (document.visibilityState !== "hidden") cb(); };
   window.addEventListener("storage", onStorage);
+  window.addEventListener("pageshow", onWake);
+  document.addEventListener("visibilitychange", onWake);
+  bus();
   return () => {
     listeners.delete(cb);
     window.removeEventListener("storage", onStorage);
+    window.removeEventListener("pageshow", onWake);
+    document.removeEventListener("visibilitychange", onWake);
   };
 }
 
@@ -260,3 +302,7 @@ export function useDemo() {
   }, []);
   return { ready, state: state ?? null, storageFailed: storageHasFailed(), update, undo, redo, canUndo: past.length > 0, canRedo: future.length > 0, reset };
 }
+
+/** Non-React access to the same store (used by tests and by code outside components). */
+export const readDemoState = () => read();
+export const writeDemoState = (next: DemoState | null) => write(next);
