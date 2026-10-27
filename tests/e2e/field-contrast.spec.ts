@@ -4,7 +4,8 @@ import { THEMES } from "../../src/features/page/themes/catalogue"
 test("typed enquiry input stays readable in every starting look", async ({ page }) => {
   const failures: { look: string; color: string; background: string; ratio: number }[] = []
   for (const theme of THEMES) {
-    await page.goto(`/appearance/frame?scenario=detailer&look=${theme.id}`)
+    await page.goto(`/appearance/frame?scenario=detailer&look=${theme.id}`, { waitUntil: "networkidle" })
+    await page.locator('[data-widget="enquiry"] button').click()
     const input = page.getByRole("textbox", { name: "Your name", exact: true })
     await input.fill("Example customer")
     const result = await input.evaluate((el) => {

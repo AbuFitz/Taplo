@@ -51,7 +51,7 @@ test('collections measure actual gaps and visible items, support Home/End, and h
 
 for(const width of[390,1440])test(`team profile keeps its booking action reachable and hands over one overlay at ${width}`,async({page})=>{
   await page.setViewportSize({width,height:700});await page.emulateMedia({reducedMotion:'reduce'})
-  await page.goto('/appearance/frame?scenario=station')
+  await page.goto('/appearance/frame?scenario=station',{waitUntil:'networkidle'})
   await page.getByTestId('team-card').first().getByRole('button',{name:/View profile/}).click()
   const profile=page.getByTestId('team-profile');const book=profile.getByRole('button',{name:/Book with/})
   await expect(book).toBeInViewport({ratio:1})
