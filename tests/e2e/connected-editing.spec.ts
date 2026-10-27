@@ -6,7 +6,7 @@ test("header choices render and update the owner's actual content without changi
   await openEditorWithSample(page)
   const before = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page)
   await selectPart(page, "header")
-  for (const label of ["Compact", "Cover", "Wide feature", "Image hero", "Text-led"]) {
+  for (const label of ["Seamless Melt", "Architectural Split", "Floating Bento", "Editorial Poster"]) {
     await page.getByRole("radio", { name: label, exact: true }).scrollIntoViewIfNeeded()
     const frame = page.frameLocator(`iframe[title="${label} header preview"]`)
     await expect(frame.locator(".tp-name")).toHaveText("Marlowe & Finch")
@@ -15,7 +15,7 @@ test("header choices render and update the owner's actual content without changi
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page)).toEqual(before)
   await openSection(page, "Your name and description")
   await page.getByLabel("Business name", { exact: true }).fill("Jay’s Barbers Test")
-  for (const label of ["Compact", "Cover", "Wide feature", "Image hero", "Text-led"]) {
+  for (const label of ["Seamless Melt", "Architectural Split", "Floating Bento", "Editorial Poster"]) {
     await page.getByRole("radio", { name: label, exact: true }).scrollIntoViewIfNeeded()
     await expect(page.frameLocator(`iframe[title="${label} header preview"]`).locator(".tp-name")).toHaveText("Jay’s Barbers Test")
   }
