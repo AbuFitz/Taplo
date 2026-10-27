@@ -299,8 +299,10 @@ export function applyRecipe(widgets: PageDoc["widgets"], recipe: DesignRecipe): 
 }
 
 /** The one way a design is put on a page: register, change design in the dashboard, and "Use this design" all go through here. */
-export function applyDesign(page: PageDoc, design: Design): PageDoc {
-  return { ...page, themeId: design.id, appearance: structuredClone(design.overrides) as StyleOverrides, widgets: applyRecipe(page.widgets, design.recipe) };
+export function applyDesign(page: PageDoc, design: Design, opts: { reorder?: boolean } = {}): PageDoc {
+  // A design restyles blocks; it only arranges them while a page is still being set up. An owner's block order is theirs.
+  const recipe = opts.reorder ? design.recipe : { ...design.recipe, order: undefined };
+  return { ...page, themeId: design.id, appearance: structuredClone(design.overrides) as StyleOverrides, widgets: applyRecipe(page.widgets, recipe) };
 }
 
 export interface KeepOptions { colours?: boolean; type?: boolean; background?: boolean }

@@ -191,7 +191,7 @@ export function Onboarding() {
     const d = chosenDesign
     if (!ready || !d) return
     window.history.replaceState(null, "", window.location.pathname)
-    update((x) => ({ ...x, page: withArrangement(applyDesign(x.page, d), arr) }))
+    update((x) => ({ ...x, page: withArrangement(applyDesign(x.page, d, { reorder: true }), arr) }))
   }, [ready, chosenDesign]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!ready) return <SetupLoading />

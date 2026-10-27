@@ -39,7 +39,7 @@ export function SetupThemes({ compact = false }: { compact?: boolean }) {
               onChange={() =>
                 update((st) => {
                   const design = getDesign(look.id);
-                  if (design) return { ...st, page: applyDesign(st.page, design) };
+                  if (design) return { ...st, page: applyDesign(st.page, design, { reorder: true }) };
                   return { ...st, page: { ...st.page, themeId: look.id, appearance: structuredClone(look.overrides) } };
                 })
               }
