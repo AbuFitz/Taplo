@@ -43,7 +43,7 @@ for (const width of [390,1440]) test(`transparent wide logo keeps its full compo
   await insp(page).locator('summary').filter({hasText:/^Logo and cover/}).click()
   const buffer=await sharp(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300"><path fill="#111111" d="M20 100h1160v100H20z"/></svg>')).png().toBuffer()
   await page.getByLabel('Logo or profile picture: upload a picture').setInputFiles({name:'wide-mark.png',mimeType:'image/png',buffer})
-  await page.getByTestId("crop-dialog").getByRole("button", {name:"Use image",exact:true}).click();
+  await page.getByTestId("crop-apply").click();
   await expect(page.getByTestId('crop-dialog')).toHaveCount(0)
   const logo=previewFrame(page).locator('.tp-header .tp-logo')
   await expect(logo).toHaveAttribute('data-ink','dark')
@@ -55,7 +55,7 @@ for (const width of [390,1440]) test(`transparent wide logo keeps its full compo
   expect(alpha).toBe(0)
   const coverBuffer=await sharp({create:{width:600,height:900,channels:3,background:'#777777'}}).jpeg().toBuffer()
   await page.getByLabel('Cover picture: upload a picture').setInputFiles({name:'portrait-work.jpg',mimeType:'image/jpeg',buffer:coverBuffer})
-  await page.getByTestId("crop-dialog").getByRole("button", {name:"Use image",exact:true}).click();
+  await page.getByTestId("crop-apply").click();
   await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!).content.identity.heroImage?.height)).toBe(900)
   await expect(page.getByTestId('crop-dialog')).toHaveCount(0)
   const cover=await page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!).content.identity.heroImage)
