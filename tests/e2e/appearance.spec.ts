@@ -5,7 +5,7 @@ const expect = baseExpect.configure({ timeout: 15_000 });
 
 const frame = (page: Page, title = "Desktop preview") => page.frameLocator(`iframe[title="${title}"]`);
 const attr = async (page: Page, name: string, title?: string) => (await frame(page, title).locator("[data-taplo-page]").getAttribute(name)) ?? "";
-const LEGACY_LABEL: Record<string, string> = { Night: "Noir", Clean: "Paper", Colour: "Bloom", Photo: "Noir", Showroom: "Garage" };
+const LEGACY_LABEL: Record<string, string> = { Night: "Noir", Clean: "Paper", Colour: "Bloom", Photo: "Terra", Showroom: "Garage" };
 const choice = async (page: Page, group: string, label: string | RegExp) => {
   if (group === "Look" && typeof label === "string") label = LEGACY_LABEL[label] ?? label;
   const g = page.locator(`[role="radiogroup"][aria-label="${group}"]`);
@@ -42,11 +42,11 @@ test.describe("Appearance lab: one engine, four configurations", () => {
     const f = frame(page);
     // The lab opens on the barber's own design (High Street). This walk-through starts from the Night look so every step changes something.
     await choice(page, "Look", "Night");
-    await expect.poll(() => attr(page, "data-header")).toBe("side");
+    await expect.poll(() => attr(page, "data-header")).toBe("poster");
     await expect(page.getByTestId("lab-reset")).toBeDisabled();                             // untouched look
 
-    await choice(page, "Header arrangement", "Text-led");
-    await expect.poll(() => attr(page, "data-header")).toBe("centered");
+    await choice(page, "Header arrangement", "Editorial Poster");
+    await expect.poll(() => attr(page, "data-header")).toBe("type");
     await choice(page, "Button shape", "Square");
     await expect.poll(() => f.locator(".tp-btn").first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
     await choice(page, "Card surface", "Frosted");
@@ -65,7 +65,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
 
     // reset returns to the look, and is itself undoable
     await page.getByTestId("lab-reset").click();
-    await expect.poll(() => attr(page, "data-header")).toBe("side");
+    await expect.poll(() => attr(page, "data-header")).toBe("poster");
     await expect(page.getByTestId("lab-reset")).toBeDisabled();
     await page.getByTestId("lab-undo").click();
     await expect.poll(() => attr(page, "data-bg")).toBe("shader");
