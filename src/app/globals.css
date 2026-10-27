@@ -437,6 +437,7 @@ html:has(.marketing-shell) { scroll-padding-top:80px; }
 
 /* Spatial sharing: the same scannable face above two material layers. */
 .plaque-stage{height:510px;perspective:1100px}.plaque-object{width:290px;height:385px;transform-style:preserve-3d}.plaque-front{padding:28px 30px 20px}.plaque-code{width:190px}.plaque-invitation{margin-block:20px 15px}.plaque-foot{font-size:10px;margin-top:15px}.plaque-signature{margin-top:17px}
+[data-testid="plaque-experience"]{overflow-x:clip}
 .plaque-stack-layer{position:absolute;inset:0;border-radius:24px;display:flex;align-items:flex-end;padding:26px;background:linear-gradient(140deg,#eee,#969696);color:#333;font-weight:600;font-size:18px;box-shadow:0 22px 35px -15px #0005;backface-visibility:hidden}
 .plaque-stack-layer-near{transform:translate3d(21px,-15px,-30px) rotateZ(7deg)}.plaque-stack-layer-far{transform:translate3d(-23px,-30px,-60px) rotateZ(-7deg);background:linear-gradient(130deg,#777,#202020);color:#ddd}
 .hero-desktop{height:calc(100% + 100px)!important}.hero-desktop figure.browser-shell{height:100%;overflow:hidden}.hero-composition{isolation:isolate}

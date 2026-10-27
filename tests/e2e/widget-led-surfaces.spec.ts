@@ -89,7 +89,7 @@ test("the plaque tilts directly and settles when interaction leaves the section"
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await page.goto("/");
+  await page.goto("/product/sharing");
   const stage = page.locator(".plaque-stage");
   await stage.scrollIntoViewIfNeeded();
   const box = (await stage.boundingBox())!;
