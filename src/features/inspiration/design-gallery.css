@@ -26,7 +26,7 @@
 .dg-open:hover{transform:translateY(-6px) scale(1.012)}
 .dg-hit:focus-visible{outline:2.5px solid #fff;outline-offset:6px}
 .dg-meta{display:grid;gap:4px;padding:0 6px}
-.dg-meta h3{margin:0;font-size:17px;font-weight:650;letter-spacing:-.02em}
+.dg-meta h2{margin:0;font-size:17px;font-weight:650;letter-spacing:-.02em}
 .dg-meta p{margin:0;font-size:13.5px;line-height:1.45;color:#9a9aa0}
 .dg-tag{justify-self:start;margin-top:4px;padding:4px 11px;border-radius:99px;background:#ffffff14;color:#d8d8dc;font-size:12px;font-weight:650}
 .dg-empty{padding:60px 0;text-align:center;color:#999}
@@ -85,5 +85,5 @@
 .dg-facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:13.5px;line-height:1.45}
 .dg-facts dt{font-weight:700;color:#444}
 .dg-facts dd{margin:0;color:#666}
-.dg-meta h3{margin:0}
+.dg-meta h2{margin:0}
 .dg-item .dg-open{margin-bottom:2px}

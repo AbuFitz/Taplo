@@ -115,7 +115,7 @@ export function DesignGallery() {
                 {!live ? <button type="button" className="dg-hit" onClick={() => setOpen(p)} aria-label={`${name}, open this page`} /> : null}
               </div>
               <div className="dg-meta">
-                <h3>{name}</h3>
+                <h2>{name}</h2>
                 <p>{p.note}</p>
                 <div className="dg-tagrow"><span className="dg-tag">{arrangementName(p.arrangement) ?? p.design.name}</span><span className="dg-tag">{p.design.name}</span></div>
                 <div className="dg-acts"><button type="button" onClick={() => setOpen(p)}>Look closer</button></div>
