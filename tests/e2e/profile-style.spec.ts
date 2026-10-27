@@ -22,7 +22,7 @@ for (const width of [390, 1440]) {
     await expect(avatar).toHaveAttribute("data-shape", target)
     await page.getByTestId("undo").click()
     if (start) await expect(avatar).toHaveAttribute("data-shape", start)
-    else await expect(avatar).not.toHaveAttribute("data-shape", target)
+    else await expect(avatar).toHaveCount(0)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `profile-picker-${width}.png`), fullPage: true })
   })
