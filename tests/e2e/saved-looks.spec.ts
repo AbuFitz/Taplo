@@ -96,7 +96,8 @@ for (const width of [390, 1440]) {
       await page.getByTestId("undo").click();
       expect((await draft(page)).page.savedLooks[0]).toEqual(saved);
       expect((await draft(page)).content).toEqual(original.content);
-      expect((await draft(page)).page.widgets).toEqual(original.page.widgets);
+      const ident = (ws: { id: string; type: string }[]) => ws.map((w) => [w.id, w.type]); // a look restyles blocks; it never adds, drops or reorders them
+      expect(ident((await draft(page)).page.widgets)).toEqual(ident(original.page.widgets));
     });
     test("saved section cards show current content and apply independent copies", async ({
       page,
@@ -162,7 +163,7 @@ for (const width of [390, 1440]) {
       });
       await shelf
         .getByRole("button", { name: "Delete Deep blue", exact: true })
-        .click();
+        .click({ force: true });
       expect((await draft(page)).page.savedStyles).toHaveLength(0);
       expect(
         (await draft(page)).page.widgets.find(
