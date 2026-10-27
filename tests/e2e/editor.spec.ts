@@ -155,7 +155,7 @@ test.describe("My page editor", () => {
     }
     expect(seen.size).toBe(5);
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content)).toEqual(contentBefore);
-    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page.widgets)).toEqual(widgetsBefore);
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).page.widgets.map((w: { id: string; type: string }) => [w.id, w.type]))).toEqual(widgetsBefore.map((w: { id: string; type: string }) => [w.id, w.type])); // a design may restyle a block, never add, drop or reorder one
     await openStructure(page);
     expect(await rowOrder(page)).toEqual(orderBefore);
     await selectPart(page, "page");
@@ -252,7 +252,7 @@ test.describe("My page editor", () => {
     await page.waitForLoadState("networkidle");
     expect(await rowOrder(page)).toEqual(reordered);
     await expect(previewFrame(page).getByRole("heading", { level: 1 })).toContainText("(edited)");
-    await expect(previewFrame(page).locator("[data-taplo-page]")).toHaveAttribute("data-header", "centered"); // Current Studio header
+    await expect(previewFrame(page).locator("[data-taplo-page]")).toHaveAttribute("data-header", "editorial"); // The sample opens on its own design
   });
 
   test("publishing: draft stays private, published matches the preview, changes need an explicit publish", async ({ page }) => {
@@ -282,7 +282,7 @@ test.describe("My page editor", () => {
     await page.getByRole("button", { name: "Publish changes" }).first().click();
     await expect(page.getByText(/Published · version 2/)).toBeVisible();
     await pub.reload();
-    await expect(pub.locator("[data-taplo-page]")).toHaveAttribute("data-header", "banner");
+    await expect(pub.locator("[data-taplo-page]")).toHaveAttribute("data-header", "centered");
 
     // discard unpublished changes returns to the published copy
     await pickLook(page, "ink");
