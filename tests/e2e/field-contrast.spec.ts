@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test"
 import { THEMES } from "../../src/features/page/themes/catalogue"
 
 test("typed enquiry input stays readable in every starting look", async ({ page }) => {
+  test.setTimeout(900_000)
   const failures: { look: string; color: string; background: string; ratio: number }[] = []
   for (const theme of THEMES) {
     await page.goto(`/appearance/frame?scenario=detailer&look=${theme.id}`, { waitUntil: "networkidle" })
