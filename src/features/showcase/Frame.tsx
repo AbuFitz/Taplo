@@ -23,7 +23,7 @@ export function Frame() {
     // `o` carries a URL-encoded JSON StyleOverrides, so marketing captures and shared links can pose any configuration of the engine.
     try { const raw = q.get("o"); if (raw) return { ...base, overrides: styleOverridesSchema.parse(JSON.parse(raw)) } } catch { /* an invalid pose falls back to the plain look */ }
     const arr = q.get("arr")
-    const header = { ...base.overrides.header, ...(arr && (HEADER_LAYOUTS as readonly string[]).includes(arr) ? { layout: arr as (typeof HEADER_LAYOUTS)[number], align: arr === "bento" ? ("center" as const) : ("left" as const) } : {}), ...(q.get("logo") === "0" ? { avatarShape: "none" as const } : {}) }
+    const header = { ...base.overrides.header, ...(arr && (HEADER_LAYOUTS as readonly string[]).includes(arr) ? { layout: arr as (typeof HEADER_LAYOUTS)[number], align: (arr === "bento" || arr === "identity") ? ("center" as const) : ("left" as const) } : {}), ...(q.get("logo") === "0" ? { avatarShape: "none" as const } : {}) }
     return Object.keys(header).length ? { ...base, overrides: { ...base.overrides, header: { ...base.overrides.header, ...header } } } : base
   })
 

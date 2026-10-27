@@ -31,7 +31,7 @@ const BUSINESS = [
 const STYLES = ["Seamless blend", "Frosted glass", "Dark noir", "Warm editorial", "Bento grid"] as const
 type StyleTag = (typeof STYLES)[number]
 
-const alignFor = (a?: Arrangement): "left" | "center" => (a === "bento" ? "center" : "left")
+const alignFor = (a?: Arrangement): "left" | "center" => (a === "bento" || a === "identity" ? "center" : "left")
 /** The design with this page's own arrangement and (when it has no logo) a name-only profile. */
 function poseOf(pick: Pick) {
   const header = { ...pick.design.overrides.header, ...(pick.arrangement ? { layout: pick.arrangement, align: alignFor(pick.arrangement) } : {}), ...(pick.logo === false ? { avatarShape: "none" as const } : {}) }
@@ -79,6 +79,7 @@ export function DesignGallery() {
   const [query, setQuery] = React.useState("")
   const [biz, setBiz] = React.useState<string | null>(null)
   const [style, setStyle] = React.useState<StyleTag | null>(null)
+  const [arr, setArr] = React.useState<Arrangement | null>(null)
   const [open, setOpen] = React.useState<Pick | null>(null)
   const [active, setActive] = React.useState<string | null>(null)
   const timer = React.useRef<number | undefined>(undefined)
@@ -88,6 +89,7 @@ export function DesignGallery() {
     const name = SCENARIOS[p.scenario].content.identity.name
     if (biz && !BUSINESS.find((b) => b.id === biz)!.of.split(" ").includes(p.scenario)) return false
     if (style && !stylesOf(p).includes(style)) return false
+    if (arr && p.arrangement !== arr) return false
     return !q || [name, p.note, p.design.name, SCENARIOS[p.scenario].label, arrangementName(p.arrangement) ?? ""].join(" ").toLowerCase().includes(q)
   })
   const hover = (key: string) => { window.clearTimeout(timer.current); timer.current = window.setTimeout(() => setActive(key), 380) }
@@ -102,6 +104,7 @@ export function DesignGallery() {
         <div className="dg-search"><Search aria-hidden="true" /><input type="search" aria-label="Search pages" placeholder="Search: florist, plumber, tutor…" value={query} onChange={(e) => setQuery(e.target.value)} />{query ? <button type="button" aria-label="Clear search" onClick={() => setQuery("")}><X /></button> : null}</div>
         <div className="dg-row" role="group" aria-label="Business type"><button type="button" aria-pressed={biz === null} onClick={() => setBiz(null)}>All</button>{BUSINESS.map((b) => <button key={b.id} type="button" aria-pressed={biz === b.id} onClick={() => setBiz(biz === b.id ? null : b.id)}>{b.label}</button>)}</div>
         <div className="dg-row" role="group" aria-label="Visual style"><span>Style</span>{STYLES.map((s) => <button key={s} type="button" aria-pressed={style === s} onClick={() => setStyle(style === s ? null : s)}>{s}</button>)}</div>
+        <div className="dg-row" role="group" aria-label="Profile arrangement"><span>Profile</span>{PROFILE_CHOICES.slice(0, 6).map((c) => <button key={c.id} type="button" aria-pressed={arr === c.id} onClick={() => setArr(arr === c.id ? null : c.id)}>{c.name}</button>)}</div>
       </div>
       <ul className="dg-shelf" data-testid="gallery-list">
         {shown.map((p) => {

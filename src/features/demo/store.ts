@@ -77,7 +77,8 @@ export function initialState(): DemoState {
     onboarded: false,
     plan: "business", // the review default shows every capability; switch in Settings to see gating
     content: blankContent(),
-    page: newPage("other"),
+    // A name alone already reads as a designed page: type leads and nothing waits for a logo or photo.
+    page: (() => { const p = newPage("other"); return { ...p, appearance: { ...p.appearance, header: { layout: "masthead" as const, align: "left" as const } } }; })(),
     slugEdited: false,
     published: null,
   };
