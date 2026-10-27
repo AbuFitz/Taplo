@@ -118,7 +118,7 @@ export function Onboarding() {
     return () => { document.removeEventListener("focusin",focusSync);document.removeEventListener("focusout",focusSync);viewport?.removeEventListener("resize", sync); viewport?.removeEventListener("scroll", sync); window.removeEventListener("resize", sync) }
   }, [])
   const router = useRouter()
-  const { ready, state, update } = useDemo()
+  const { ready, state, update, storageFailed } = useDemo()
   const [showErrors, setShowErrors] = React.useState(false)
   const [contentValid,setContentValid]=React.useState(true)
   const [query, setQuery] = React.useState("")
@@ -227,6 +227,7 @@ export function Onboarding() {
           <Link href="/" aria-label="Taplo home" className="setup-home"><TaploLogo className="h-9" /></Link><div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div>
         </div>
       </nav>
+      {storageFailed ? <p role="alert" className="mb-4 rounded-md border border-amber-400 bg-amber-100 px-3 py-2 text-sm text-amber-950" data-testid="storage-failed">Your browser couldn’t save your latest changes (storage is full or blocked). They are showing here, but may be lost if you reload. Remove a large picture to continue safely.</p> : null}
 
       <div className="setup-workspace grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
         <SetupPanel preview={previewStep} size={sheetSize} onSizeChange={setSheetSize} compact={step === "widgets"}>
