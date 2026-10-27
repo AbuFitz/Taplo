@@ -161,6 +161,7 @@ test.describe("My page editor", () => {
     await selectPart(page, "page");
 
     // owner's custom values on top
+    await openSection(page, /^Look/);
     await look(page, "paper").click();
     const buttonsSection = await openSection(page, "Buttons");
     await buttonsSection.getByRole("radio", { name: "Square" }).locator("xpath=ancestor::label").click();

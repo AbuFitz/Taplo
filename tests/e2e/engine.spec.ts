@@ -38,8 +38,8 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
 
     // header arrangement + logo shape + size
     await selectPart(page, "header");
-    await insp(page).locator('label[data-choice="cover"]').click();
-    await expect(frame.locator('.tp-header[data-layout="cover"]')).toHaveCount(1);
+    await insp(page).locator('label[data-choice="split"]').click();
+    await expect(frame.locator('.tp-header[data-layout="split"]')).toHaveCount(1);
     await insp(page).getByRole("radio", { name: "Soft square", exact: true }).locator("xpath=ancestor::label").click();
     await expect(frame.locator('.tp-avatar[data-shape="rounded"]')).toHaveCount(1);
 

@@ -63,7 +63,7 @@ export function MyPage() {
   const changed = hasUnpublishedChanges(s)
   const effective = gone ? CONTENT : selection
 
-  const saveText = ed.storageFailed ? "Not saved: browser storage is full or blocked" : s.published ? (changed ? "Draft saved · unpublished changes" : "Preview saved") : "Draft saved"
+  const saveText = ed.storageFailed ? "Not saved: browser storage is full or blocked" : s.published ? (changed ? "Draft saved · unpublished changes" : "Saved · live") : "Draft saved"
   const toolbar = (
     <div className="flex items-center gap-2" role="toolbar" aria-label="Page actions">
       <DashboardMenu className="-ml-2" />
@@ -75,7 +75,7 @@ export function MyPage() {
         <Button variant="ghost" size="icon" className="size-11" onClick={ed.undo} disabled={!ed.canUndo} aria-label="Undo" data-testid="undo"><Undo2 /></Button>
         <Button variant="ghost" size="icon" className="size-11" onClick={ed.redo} disabled={!ed.canRedo} aria-label="Redo" data-testid="redo"><Redo2 /></Button>
         <Button asChild variant="outline" className="min-h-11"><a href="/demo/preview" target="_blank" rel="noreferrer" data-testid="full-preview">Preview</a></Button>
-        <Button className="min-h-11" disabled={!canPublish(s)} onClick={() => { ed.update((x) => publish(x)); notify("Preview saved on this device.") }} data-testid="publish">{s.published ? (changed ? "Publish changes" : "Published") : "Publish"}</Button>
+        <Button className="min-h-11" disabled={!canPublish(s)} onClick={() => { ed.update((x) => publish(x)); notify("Saved on this device.") }} data-testid="publish">{s.published ? (changed ? "Publish changes" : "Published") : "Publish"}</Button>
       </div>
     </div>
   )
