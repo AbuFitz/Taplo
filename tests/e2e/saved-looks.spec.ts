@@ -66,12 +66,12 @@ for (const width of [390, 1440]) {
         "solid",
       );
       await shelf.getByRole("button", { name: "Apply Carbon shop" }).click();
-      expect((await draft(page)).page.themeId).toBe("apex");
+      expect((await draft(page)).page.themeId).toBe("volt");
       await closeSheet(page);
       await page.getByTestId("undo").click();
-      expect((await draft(page)).page.themeId).toBe("night");
+      expect((await draft(page)).page.themeId).toBe("noir");
       await page.getByTestId("redo").click();
-      expect((await draft(page)).page.themeId).toBe("apex");
+      expect((await draft(page)).page.themeId).toBe("volt");
       await page.reload();
       await expect(page.getByTestId("my-page")).toBeVisible();
       await selectPart(page, "page");
@@ -91,7 +91,7 @@ for (const width of [390, 1440]) {
       });
       await shelf.getByRole("button", { name: "Delete Carbon shop" }).click();
       expect((await draft(page)).page.savedLooks).toHaveLength(0);
-      expect((await draft(page)).page.themeId).toBe("apex");
+      expect((await draft(page)).page.themeId).toBe("volt");
       await closeSheet(page);
       await page.getByTestId("undo").click();
       expect((await draft(page)).page.savedLooks[0]).toEqual(saved);
