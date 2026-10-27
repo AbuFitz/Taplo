@@ -28,7 +28,7 @@ export function applyIndustry(s: DemoState, industryKey: string, label?: string)
     ...s,
     content: {
       ...s.content,
-      identity: { ...s.content.identity, industryKey: next.id, industryLabel: label ?? next.label },
+      identity: { ...s.content.identity, industryKey: next.id, industryLabel: label ?? next.label, ...(s.content.identity.alsoKeys ? { alsoKeys: s.content.identity.alsoKeys.filter((k) => k !== next.id) } : {}) },
       booking: { ...s.content.booking, mode: next.suggestedBookingMode },
     },
     page: {

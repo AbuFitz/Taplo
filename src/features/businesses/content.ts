@@ -191,6 +191,8 @@ export const businessContentSchema = z.object({
     heroImage: imageSchema.optional(),
     industryKey: text(64),
     industryLabel: text(80),
+    /** Further kinds of work the business does. They add suggestions; they never change the design. */
+    alsoKeys: z.array(text(64)).max(2).optional(),
   }),
   location: z.object({
     mode: z.enum(LOCATION_MODES),

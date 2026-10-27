@@ -252,6 +252,19 @@ export function Onboarding() {
                     )
                   })}
                 </ul>
+                {state !== null && Boolean(c.identity.industryLabel.trim()) && c.identity.industryKey !== OTHER_INDUSTRY_ID ? (
+                  <fieldset className="grid gap-2" data-testid="also-categories">
+                    <legend className="text-sm font-medium">I also do (optional)</legend>
+                    <div className="flex flex-wrap gap-2">
+                      {POPULAR.filter((id) => id !== c.identity.industryKey && id !== OTHER_INDUSTRY_ID).slice(0, 8).map((id) => {
+                        const on = (c.identity.alsoKeys ?? []).includes(id)
+                        const full = !on && (c.identity.alsoKeys ?? []).length >= 2
+                        return <button key={id} type="button" aria-pressed={on} disabled={full} className={cn("min-h-10 rounded-full border px-3 text-sm disabled:opacity-40", on ? "bg-[#111111] text-white" : "bg-card")} onClick={() => update((x) => { const cur = x.content.identity.alsoKeys ?? []; return { ...x, content: { ...x.content, identity: { ...x.content.identity, alsoKeys: on ? cur.filter((k) => k !== id) : [...cur, id] } } } })}>{getIndustryPreset(id).label}</button>
+                      })}
+                    </div>
+                    <p className="text-xs text-muted-foreground">Adds suggestions only. Your page design stays your choice.</p>
+                  </fieldset>
+                ) : null}
                 {state !== null && Boolean(c.identity.industryLabel.trim()) ? <SetupThemes compact/> : null}
                 <button type="button" className="setup-secondary justify-self-start" onClick={()=>{setOtherOpen(true);update(x=>applyIndustry(x,OTHER_INDUSTRY_ID,""))}}>Use a different business type</button>
                 {state !== null && (otherOpen || c.identity.industryKey === OTHER_INDUSTRY_ID && c.identity.industryLabel !== "") ? (
@@ -368,7 +381,8 @@ function FirstServices({onValidity}:{onValidity:(valid:boolean)=>void}) {
   }
   const patch = (id: string, p: Partial<Row>) => sync(rows.map((r) => (r.id === id ? { ...r, ...p } : r)))
   const used = new Set(rows.map((r) => r.name.trim().toLowerCase()))
-  const suggestions = industry.suggestedServices.filter((x) => !used.has(x.name.toLowerCase())).slice(0, 3)
+  const extra = (s.content.identity.alsoKeys ?? []).flatMap((k) => getIndustryPreset(k).suggestedServices)
+  const suggestions = [...industry.suggestedServices, ...extra].filter((x) => !used.has(x.name.toLowerCase())).slice(0, 3)
   const add = (name = "") => {
     const row = { id: newId("svc"), name, price: "", minutes: "" }
     setFocus(name ? `${row.id}-price` : `${row.id}-name`)

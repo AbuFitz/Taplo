@@ -12,3 +12,14 @@ describe("what customers should do is intent, not configuration", () => {
     expect(open).toEqual(["goal-book", "goal-call"])
   })
 })
+
+import { applyIndustry } from "./actions"
+describe("also-do categories", () => {
+  it("never repeat the primary category and keep the design untouched", () => {
+    const base = applyIndustry(initialState(), "barber")
+    const withAlso = { ...base, content: { ...base.content, identity: { ...base.content.identity, alsoKeys: ["detailer", "tutor"] } } }
+    const moved = applyIndustry(withAlso, "detailer")
+    expect(moved.content.identity.alsoKeys).toEqual(["tutor"])
+    expect(applyIndustry(withAlso, "barber").page.themeId).toBe(withAlso.page.themeId)
+  })
+})
