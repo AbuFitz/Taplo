@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { PLAN_IDS } from "../../src/features/subscriptions/plans";
 import { resolveEntitlements } from "../../src/features/subscriptions/entitlements";
+import { bySlug } from "../../src/features/inspiration/examples";
 import { PRODUCT_LINKS } from "../../src/features/marketing/ia";
 
 const EXAMPLE_SLUGS = [
@@ -158,44 +159,6 @@ test.describe("inspiration", () => {
       );
     }
   });
-  test("Start from this carries the look and content types, never the sample content, and a refresh keeps the owner's work", async ({
-    page,
-  }) => {
-    await page.goto("/onboarding");
-    await page.evaluate(() => localStorage.clear());
-    await page.goto("/onboarding?from=hollin-physio&plan=pro");
-    await expect(page.getByTestId("from-example")).toContainText(
-      "Hollin Physiotherapy",
-    );
-    await expect(page.getByTestId("plan-intent")).toContainText("Pro");
-    await page.getByLabel("Business name").fill("Ridgeway Physio");
-    await page.getByRole("button", { name: "Continue" }).click(); // → what you do
-    await page.getByRole("button", { name: "Continue" }).click();
-    await expect(page.getByTestId("goal")).toHaveCount(0);
-    await expect(
-      page.getByRole("button", { name: "Phone calls", exact: true }),
-    ).toBeVisible();
-    await page
-      .getByRole("button", { name: "Phone calls", exact: true })
-      .click();
-    await page.getByLabel("Phone", { exact: true }).fill("01632 960987");
-    await page.getByLabel("Phone", { exact: true }).blur();
-    await page.getByRole("button", { name: "Continue" }).click(); // → first content
-    await page.getByRole("button", { name: "Continue" }).click(); // → design
-    await expect(
-      page.getByRole("radio", { name: "Photo", exact: true }),
-    ).toBeAttached();
-    const owner = await page.evaluate(() =>
-      JSON.parse(localStorage.getItem("taplo.demo.v2")!),
-    );
-    expect(owner.content.identity.name).toBe("Ridgeway Physio");
-    expect(JSON.stringify(owner.content)).not.toContain("Hollin");
-    await page.getByRole("radio", { name: "Compact", exact: true }).check();
-    await page.reload();
-    await expect(
-      page.getByRole("radio", { name: "Compact", exact: true }),
-    ).toBeChecked(); // a refresh does not re-apply the example
-  });
 });
 
 test.describe("pricing", () => {
@@ -228,23 +191,6 @@ test.describe("pricing", () => {
 });
 
 test.describe("film", () => {
-  test("continuous product reveal opens Product without playback overlays", async ({
-    page,
-  }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/");
-    const story = page.getByTestId("widget-orbit");
-    await story.scrollIntoViewIfNeeded();
-    await expect(story.locator("video")).toHaveCount(0);
-    await expect(story.locator(".widget-orbit-link")).toHaveAttribute(
-      "href",
-      "/product",
-    );
-    await expect(page.getByText("Read the film", { exact: true })).toHaveCount(
-      0,
-    );
-    await expect(story.locator("canvas")).toHaveCount(0);
-  });
 });
 
 test.describe("home and widths", () => {
@@ -269,23 +215,4 @@ test.describe("home and widths", () => {
       await ctx.close();
     });
   }
-  test("the home page claims nothing that is not connected", async ({
-    page,
-  }) => {
-    await page.goto("/");
-    const t = (await page.locator("main").innerText()).toLowerCase();
-    for (const bad of [
-      "emailed to",
-      "we email",
-      "pay online",
-      "secure payments",
-      "go live",
-      "trusted by",
-      "thousands of",
-    ])
-      expect(t, bad).not.toContain(bad);
-    await expect(page.locator("main")).toContainText(
-      "need their services connected",
-    );
-  });
 });

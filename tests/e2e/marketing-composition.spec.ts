@@ -114,7 +114,7 @@ test("plaque follows the pointer without a click, settles on leaving, and the he
 }) => {
   await page.setViewportSize({ width: 1440, height: 950 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await page.goto("/");
+  await page.goto("/product/sharing");
   const plaque = page.locator(".plaque-stage");
   await plaque.scrollIntoViewIfNeeded();
   const box = (await plaque.boundingBox())!;
