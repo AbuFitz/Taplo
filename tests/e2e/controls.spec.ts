@@ -33,7 +33,7 @@ interface Control { id: string; part: "page" | "header"; open?: string; /** A ne
 
 const C: Control[] = [
   // Look and palette
-  { id: "look", part: "page", run: radio("Look", "colour"), probe: cv("--tp-background"), expect: "#3a3af5" },
+  { id: "look", part: "page", run: radio("Look", "paper"), probe: cv("--tp-background"), expect: "#f6f3ee" },
   { id: "palette", part: "page", open: "Colour", run: radio("Palette", "sand-amber"), probe: cv("--tp-background") },
   // Colours
   { id: "colour-page", part: "page", open: "Colour", run: hex("Page", "#102030"), probe: cv("--tp-background"), expect: "#102030" },
@@ -96,7 +96,7 @@ test.describe("design controls change the rendered page, undo, and persist", () 
       await openEditorWithSample(page, "Barber")
       await page.waitForTimeout(600)
       // Every control is exercised from the same known start. The sample barber opens in the Service design, whose values already equal several of the targets below (and whose light page rejects light text), so the Midnight look is chosen first through the Look control.
-      if (c.id !== "look") { await selectPart(page, "page"); await radio("Look", "ink")(page); await page.waitForTimeout(400) }
+      if (c.id !== "look") { await selectPart(page, "page"); await radio("Look", "noir")(page); await page.waitForTimeout(400) }
       await go(page, c)
       const before = await c.probe(page)
       await c.run(page)
