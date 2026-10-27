@@ -14,7 +14,7 @@ for (const width of [320, 390, 768, 1440])
     });
     await page.setViewportSize({ width, height: 950 });
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/pricing");
+    await page.goto("/pricing", { waitUntil: "networkidle" });
     const chooser = page.getByTestId("plan-chooser");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Choose the toolsyou need.",
@@ -120,7 +120,7 @@ test("fast mobile plan choices keep the last intention, comparison and setup lin
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await page.goto("/pricing");
+  await page.goto("/pricing", { waitUntil: "networkidle" });
   const choices = page.getByRole("group", {
     name: "Choose a plan",
     exact: true,
@@ -147,7 +147,7 @@ test("comparison selection aligns the corresponding card after changing screen s
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/pricing");
+  await page.goto("/pricing", { waitUntil: "networkidle" });
   const compare = page.getByRole("group", { name: "Compare a plan" });
   await compare.getByRole("radio", { name: "Pro", exact: true }).check();
   await page.setViewportSize({ width: 1440, height: 950 });
@@ -171,7 +171,7 @@ test("manual horizontal browsing updates the selected plan without snapping back
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/pricing");
+  await page.goto("/pricing", { waitUntil: "networkidle" });
   const rail = page.getByRole("list", { name: "Plan options", exact: true });
   await rail.scrollIntoViewIfNeeded();
   await rail.hover();
