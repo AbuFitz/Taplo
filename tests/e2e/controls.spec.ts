@@ -20,7 +20,7 @@ async function disclosure(page: Page, title: string) {
   const open = await sum.evaluate((el) => (el.parentElement as HTMLDetailsElement).open)
   if (!open) await sum.click()
 }
-const radio = (group: string, value: string) => async (page: Page) => { await page.getByRole("radiogroup", { name: group, exact: true }).locator("label", { has: page.locator(`input[value="${value}"]`) }).first().click() }
+const radio = (group: string, value: string) => async (page: Page) => { if (group === "Look") await disclosure(page, "Look"); await page.getByRole("radiogroup", { name: group, exact: true }).locator("label", { has: page.locator(`input[value="${value}"]`) }).first().click() }
 const toggle = (label: string) => async (page: Page) => { await page.getByRole("switch", { name: label }).click() }
 const MORE = new Set(["Secondary text", "Text on accent", "Borders"])
 const hex = (label: string, value: string) => async (page: Page) => {
