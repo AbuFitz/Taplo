@@ -96,7 +96,7 @@ test("mobile menu closes on desktop resize and leaves the footer unobstructed", 
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/inspiration");
+  await page.goto("/pricing");
   await page.getByRole("button", { name: "Open menu" }).click();
   await page.setViewportSize({ width: 1440, height: 1000 });
   await expect(page.getByRole("dialog")).toBeHidden();
