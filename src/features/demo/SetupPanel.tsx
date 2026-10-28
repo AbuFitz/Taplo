@@ -69,7 +69,9 @@ export function SetupPanel({
       style={
         {
           "--setup-sheet-height":
-            size === "preview" ? "92px" : size === "expanded" ? "100%" : compact ? "45%" : "68%",
+            size === "preview" ? "92px" : size === "expanded" ? "100%" : "auto",
+          "--setup-sheet-max": size === "edit" ? (compact ? "78%" : "70%") : "100%",
+          "--setup-sheet-min": compact ? "52%" : "36%",
         } as CSSProperties
       }
     >

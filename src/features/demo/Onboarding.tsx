@@ -5,7 +5,7 @@ import { TAPLO_DOMAINS } from "@/lib/domains"
 import { Overlay } from "@/components/taplo/overlay"
 import "./onboarding-mobile.css"
 import { BusinessIcon } from "./BusinessIcon"
-import { SetupDesign } from "./SetupDesign"
+import { accountsConfigured, connect, session } from "./account"
 import { SetupLook } from "./SetupLook"
 import { TaploLogo } from "@/components/taplo/brand"
 import { SetupDetails } from "./SetupDetails"
@@ -135,7 +135,10 @@ export function Onboarding() {
   const parts = mobileSetup ? ({ reach: 2 } as Partial<Record<OnboardingStep, number>>)[step] ?? 1 : 1
   const lastPart = part >= parts - 1
   // The phone preview stays in view while the main button is chosen, so the choice is seen on the page at once.
-  const previewStep = ["business", "contacts", "widgets", "publish"].includes(step) || (step === "reach" && parts > 1 && part === 0)
+  // On a computer the handset zooms out to show the whole page, but only once a category has been chosen (never before), and it stays out.
+  const categoryChosen = state !== null && Boolean(s.content.identity.industryLabel.trim())
+  const revealed = !mobileSetup && (stepIndex > SETUP_STEPS.indexOf("industry") || (step === "industry" && categoryChosen))
+  const previewStep = ["business", "industry", "goal", "reach", "contacts", "widgets", "publish"].includes(step)
   // The phone's own chrome (status bar, address bar, overscroll) must read as part of the screen behind it, never a white strip.
   React.useEffect(() => {
     const color = mobileSetup && previewStep ? "#0b0b0c" : "#ffffff"
@@ -330,7 +333,7 @@ export function Onboarding() {
 
           {step === "widgets" ? <WidgetsStep /> : null}
           {step === "plan" ? <SetupPlans inline /> : null}
-          {step === "publish" ? <PublishStep onStudio={() => router.push("/dashboard")} onEdit={to=>{go(to);update(x=>({...x,setupDrafts:{...x.setupDrafts,reviewEdit:true}}))}} /> : null}
+          {step === "publish" ? <PublishStep onStudio={() => router.push("/dashboard")} /> : null}
 
           </motion.div>
           {step !== "publish" ? (
@@ -346,7 +349,7 @@ export function Onboarding() {
         </SetupPanel>
 
         <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="setup-canvas"><SetupCanvas src="/demo/preview" expanded={false} fit={mobileSetup && sheetSize === "preview"} onOverlayOpen={revealCustomerDialog} /></div>
+          <div className="setup-canvas" data-reveal={revealed} inert={step === "publish"}><SetupCanvas src="/demo/preview" expanded={false} fit={(mobileSetup && (sheetSize === "preview" || step === "publish")) || revealed} onOverlayOpen={revealCustomerDialog} /></div>
 
         </aside>
       </div>
@@ -356,7 +359,7 @@ export function Onboarding() {
 
 /** Mobile page composition, starting theme and fine adjustment are separate choices. */
 function WidgetsStep() {
- return <div className="grid gap-7"><p className="setup-lede text-[0.95rem] text-muted-foreground">A look is already on your page. Try another, or change the colours. You can change all of it later without losing anything.</p><SetupLook/></div>;
+ return <div className="grid gap-7"><p className="setup-lede text-[0.95rem] text-muted-foreground">A look is already on your page. Try another, or change the colours.</p><SetupLook/></div>;
 }
 
 const toPounds = (minor?: number) => (minor === undefined ? "" : (minor / 100).toFixed(minor % 100 === 0 ? 0 : 2))
@@ -470,52 +473,47 @@ function FirstContent({onValidity}:{onValidity:(valid:boolean)=>void}) {
   )
 }
 
-function PublishStep({ onStudio, onEdit }: { onStudio: () => void; onEdit: (step:OnboardingStep) => void }) {
+function PublishStep({ onStudio }: { onStudio: () => void }) {
   const { state, update } = useDemo()
   const s = state ?? initialState()
-  const checks = readiness(s)
-  const ok = canPublish(s)
   const parsed = parseContent(s.content)
   const vm = React.useMemo(() => (parsed.success && parsed.data.identity.name ? buildPageViewModel(parsed.data, s.page, { plan: s.plan }) : null), [parsed, s.page, s.plan])
   const label = (type: string) => getWidget(type as WidgetType)?.label ?? type
   const shown = vm ? vm.widgets.filter((w) => w.status.state === "ready").map((w) => label(w.type)) : []
-  const waiting = vm ? vm.widgets.filter((w) => w.status.state !== "ready").map((w) => label(w.type)) : []
-  const [copied, setCopied] = React.useState(false)
+  const [signedIn, setSignedIn] = React.useState(false)
+  const [phase, setPhase] = React.useState<"idle" | "connecting" | "done">("idle")
+  const [failure, setFailure] = React.useState("")
+  const configured = accountsConfigured()
+  React.useEffect(() => { void session().then((r) => setSignedIn(r.signedIn)) }, [])
+  const toStudio = () => { update((x) => ({ ...x, onboarded: true })); onStudio() }
+  const create = async () => {
+    setPhase("connecting"); setFailure("")
+    const r = await connect()
+    if (r.ok) { setPhase("done"); window.setTimeout(toStudio, 900); return }
+    setPhase("idle")
+    setFailure(r.reason === "cancelled" ? "Sign-up was cancelled. Your draft is still here." : r.reason === "not-configured" ? WHEN_UNAVAILABLE.accounts : "That didn’t work. Your draft is unchanged, so you can try again.")
+  }
   return (
-    <div className="grid gap-5">
-      <p className="text-sm text-muted-foreground">Your page is taking shape. Check the details before you save it.</p>
-      <div className="grid gap-1" aria-label="Page checklist">{[{label:'Business name and image',step:'business' as const,done:Boolean(s.content.identity.logo)},{label:'Description',step:'business' as const,done:Boolean(s.content.identity.tagline)},{label:'Services, stock or work',step:'contacts' as const,done:Boolean(s.content.services?.some(x=>!x.archived)||s.content.products?.some(x=>!x.archived)||s.content.gallery?.length)},{label:'Layout and colours',step:'widgets' as const,done:true}].map(item=><button key={item.label} type="button" className="setup-edit-row" onClick={()=>onEdit(item.step)}><span className="grid size-6 place-items-center rounded-full bg-neutral-100 text-xs">{item.done?<Check aria-hidden="true" className="size-3"/>:'+'}</span><span>{item.label}</span><span className="ml-auto text-xs text-muted-foreground">{item.done?'Edit':'Add'}</span></button>)}</div>
-      <SetupDetails /><SetupDesign /><button type="button" className="setup-edit-row" onClick={()=>onEdit("plan")}><span>{PLANS[s.setupDrafts?.planIntent??"free"].name} plan</span><span className="ml-auto setup-secondary">Change</span></button>
-      {checks.some((c) => c.required && !c.done) ? (
-        <ul className="grid gap-2" aria-label="Still needed">
-          {checks.filter((c) => c.required && !c.done).map((c) => <li key={c.id} className="flex items-center gap-2 text-sm text-destructive"><span className="size-1.5 rounded-full bg-destructive" aria-hidden="true" />{c.label}</li>)}
-        </ul>
-      ) : null}
-      {checks.some((c) => !c.required && !c.done && c.id !== "published") || waiting.length ? (
-        <div className="grid gap-2 border-t pt-4 text-sm" data-testid="finish-later">
-          <p className="font-semibold">Add next</p>
-          <ul className="grid gap-1 text-muted-foreground">
-            {checks.filter((c) => !c.required && !c.done && c.id !== "published").map((c) => <li key={c.id}>{c.label}</li>)}
-            {waiting.length ? <li>{waiting.join(", ")}</li> : null}
-          </ul>
-        </div>
-      ) : null}
+    <div className="grid gap-5" data-testid="finish-step">
+      <p className="text-sm text-muted-foreground">This is your draft. It is not public, and nothing here is published until you choose to.</p>
       <span className="sr-only" data-testid="page-summary">{shown.length ? `On your page: ${shown.join(", ")}.` : ""}</span>
-      {s.published ? (
-        <div role="status" className="rounded-lg border border-green-600/40 bg-green-50 p-4 text-sm text-green-950">
-          <p className="font-semibold">{capabilities().publicPublishing ? "Published" : "Saved as your page"} · version {s.published.version}</p>
-          <p className="mt-1">View it at <Link className="underline" href={`/demo/p/${s.published.content.identity.slug}`} target="_blank">/demo/p/{s.published.content.identity.slug}</Link> in this browser.</p>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <Button size="sm" variant="outline" onClick={() => { void navigator.clipboard?.writeText(`${window.location.origin}/demo/p/${s.published!.content.identity.slug}`).then(() => setCopied(true)).catch(() => undefined) }}>{copied ? "Link copied" : "Copy link"}</Button>
-            <span className="text-xs">{WHEN_UNAVAILABLE.publicPublishing}</span>
-          </div>
+      {phase === "done" ? (
+        <p role="status" className="setup-finish-done"><Check aria-hidden="true" /> Account connected. Opening Studio…</p>
+      ) : signedIn ? (
+        <Button size="lg" data-testid="save-draft" onClick={toStudio}>Open Studio</Button>
+      ) : configured ? (
+        <div className="grid gap-3" data-testid="account-step">
+          <p className="text-sm">Create an account to keep this page and open Studio.</p>
+          <Button size="lg" disabled={phase === "connecting"} onClick={() => void create()}>{phase === "connecting" ? "Connecting…" : "Create account"}</Button>
+          {failure ? <p role="alert" className="text-sm text-destructive">{failure}</p> : null}
         </div>
-      ) : null}
-      <div className="flex flex-wrap gap-3">
-        <Button size="lg" data-testid="save-draft" onClick={() => { update((x) => ({ ...x, onboarded: true })); onStudio() }}>Save draft and open Studio</Button>
-        <Button size="lg" variant="outline" disabled={!ok} onClick={() => update((x) => ({ ...publish(x), onboarded: true }))}>{s.published ? "Publish changes" : "Publish now"}</Button>
-      </div>
-      <p className="text-xs text-muted-foreground" data-testid="draft-note">{s.published ? "" : "Your page is saved as a draft. Nothing is public until you choose Publish, here or later in Studio. Examples are never published."} {capabilities().accounts ? "" : WHEN_UNAVAILABLE.accounts + " "}{ok ? WHEN_UNAVAILABLE.publicPublishing : "To publish you still need: " + checks.filter((c) => c.required && !c.done).map((c) => c.label.toLowerCase()).join(", ") + "."}</p>
+      ) : (
+        <div className="grid gap-3" data-testid="account-step">
+          <p className="text-sm" data-testid="draft-note">Accounts aren’t connected yet, so this draft is kept in this browser only and can’t be saved to an account.</p>
+          <Button size="lg" data-testid="save-draft" onClick={toStudio}>Open Studio</Button>
+          <p className="text-xs text-muted-foreground" data-testid="dev-route-note">Testing route: this opens Studio without an account and is only available in this testing environment.</p>
+        </div>
+      )}
     </div>
   )
 }

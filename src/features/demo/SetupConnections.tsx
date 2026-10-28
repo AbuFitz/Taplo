@@ -38,7 +38,7 @@ type GoalId = "book" | "contact" | "services" | "products" | "work";
 /** Plain-language choices, ordered for the kind of business. Every business can choose any of them. */
 function goalChoices(industryKey: string): { id: GoalId; label: string }[] {
   const kind = setupJourney(industryKey).kind;
-  const label: Record<GoalId, string> = { book: "Book an appointment", contact: "Get in touch", services: "Explore services", products: kind === "vehicle" ? "Browse stock" : "Browse products", work: "See my work" };
+  const label: Record<GoalId, string> = { book: "Book an appointment", contact: "Get in touch", services: "Explore services", products: kind === "vehicle" ? "Browse stock" : "Browse products", work: "See the work" };
   const order: GoalId[] = kind === "product" || kind === "vehicle" ? ["products", "contact", "work", "services", "book"] : kind === "photo" ? ["work", "contact", "book", "services", "products"] : ["book", "contact", "services", "work", "products"];
   return order.map((id) => ({ id, label: label[id] }));
 }

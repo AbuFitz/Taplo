@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { PLANS, PLAN_IDS } from "@/features/subscriptions/plans";
 import { useDemo, initialState } from "./store";
 import "./setup-plans.css";
-import { PlanExperience } from "./PlanExperience";
 
 /** A preference, never a paid activation. Definitions and prices stay in the locked plan model. */
 export function SetupPlans({ inline = false }: { inline?: boolean }) {
@@ -20,53 +19,36 @@ export function SetupPlans({ inline = false }: { inline?: boolean }) {
       : s.content.booking?.mode !== "contact"
         ? "pro"
         : "core";
+  // Prices, limits and any industry-based theme limits have not been approved, so they are shown as provisional and the theme limits are not shown at all.
+  const features = (id: (typeof PLAN_IDS)[number]) => PLANS[id].highlights.filter((h) => !/theme/i.test(h)).slice(0, 5);
   const content = (
     <div className="setup-plans-content" data-testid="setup-plans">
-      <fieldset className="setup-plan-tabs">
+      <fieldset className="setup-plan-list">
         <legend className="sr-only">Choose a plan preference</legend>
         {PLAN_IDS.map((id) => (
-          <label
-            key={id}
-            className="setup-plan-choice"
-            data-selected={selected === id}
-          >
+          <label key={id} className="setup-plan-card" data-selected={selected === id}>
             <input
               type="radio"
               name="setup-plan"
               aria-label={`Choose ${PLANS[id].name}`}
               checked={selected === id}
-              onChange={() =>
-                update((st) => ({
-                  ...st,
-                  setupDrafts: { ...st.setupDrafts, planIntent: id },
-                }))
-              }
+              onChange={() => update((st) => ({ ...st, setupDrafts: { ...st.setupDrafts, planIntent: id } }))}
             />
-            <span className="setup-plan-name">{PLANS[id].name}</span>
-            <span className="setup-plan-price">
-              £{(PLANS[id].priceMinorGbp / 100).toFixed(id === "free" ? 0 : 2)}
-              <small>/month</small>
+            <span className="setup-plan-head">
+              <span className="setup-plan-name">{PLANS[id].name}</span>
+              <span className="setup-plan-price">
+                {id === "free" ? "£0" : `£${(PLANS[id].priceMinorGbp / 100).toFixed(2)}`}
+                <small>/month</small>
+              </span>
             </span>
-            {id === suggested && selected !== id ? (
-              <span className="setup-plan-badge">Fits you</span>
-            ) : null}
+            <span className="setup-plan-summary">{PLANS[id].summary}</span>
+            <ul className="setup-plan-features">{features(id).map((f) => <li key={f}>{f}</li>)}</ul>
+            {id === suggested && selected !== id ? <span className="setup-plan-badge">Fits you</span> : null}
           </label>
         ))}
       </fieldset>
-      <PlanExperience
-        plan={selected}
-        industryKey={s.content.identity.industryKey}
-        name={s.content.identity.name}
-        onChoose={(id) =>
-          update((st) => ({
-            ...st,
-            setupDrafts: { ...st.setupDrafts, planIntent: id },
-          }))
-        }
-      />
-      <p className="setup-plan-disclosure">
-        Your choice is saved as a preference. No payment or subscription is
-        started.
+      <p className="setup-plan-disclosure" data-testid="plan-disclosure">
+        Prices and plan limits are provisional and may change before launch. Choosing a plan saves a preference only: no payment is taken and nothing is subscribed.
       </p>
     </div>
   );

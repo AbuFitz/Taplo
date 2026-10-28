@@ -165,7 +165,7 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 .setup-sheet-grip{display:none}
 @media(max-width:1023px){
  .setup-flow[data-mobile-layout=preview] .setup-workspace{display:block;width:calc(100% + 44px);margin-inline:-22px;position:relative}
- .setup-flow[data-mobile-layout=preview] .setup-workspace>.setup-panel{position:absolute;z-index:2;inset:auto 0 0;height:var(--setup-drag-height,var(--setup-sheet-height));min-height:92px;max-width:none;width:100%;margin:0;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;padding:0 22px;border-radius:28px 28px 0 0;background:color-mix(in srgb,#fff 86%,transparent);-webkit-backdrop-filter:blur(26px) saturate(1.4);backdrop-filter:blur(26px) saturate(1.4);box-shadow:0 1px 0 #fff inset,0 -14px 40px -22px #0006;transition:height .3s cubic-bezier(.22,.75,.2,1)}
+ .setup-flow[data-mobile-layout=preview] .setup-workspace>.setup-panel{position:absolute;z-index:2;inset:auto 0 0;height:var(--setup-drag-height,var(--setup-sheet-height));min-height:92px;max-height:var(--setup-sheet-max,100%);max-width:none;width:100%;margin:0;display:flex;flex-direction:column;padding:0 22px;border-radius:28px 28px 0 0;background:color-mix(in srgb,#fff 86%,transparent);-webkit-backdrop-filter:blur(26px) saturate(1.4);backdrop-filter:blur(26px) saturate(1.4);box-shadow:0 1px 0 #fff inset,0 -14px 40px -22px #0006;transition:height .3s cubic-bezier(.22,.75,.2,1)}
  .setup-flow[data-mobile-layout=preview] .setup-panel[style*="--setup-drag-height"]{transition:none}
  .setup-flow[data-mobile-layout=preview] .setup-sheet-grip{display:grid;place-items:center;height:32px;min-width:68px;justify-self:center;touch-action:none;cursor:ns-resize;outline-offset:-3px;border-radius:12px}
  .setup-sheet-grip>span{display:block;width:34px;height:4px;border-radius:99px;background:#999}
@@ -254,7 +254,7 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 .setup-look-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 14px;padding:4px}
 .setup-look-tile{position:relative;display:flex;flex-direction:column;gap:8px;min-width:0;cursor:pointer;scroll-margin:12px 8px 28px}
 .setup-look-tile input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2}
-.setup-look-art{display:block;border-radius:16px;overflow:hidden;box-shadow:0 8px 20px -12px #0007;background:#eee;aspect-ratio:390/520;position:relative}
+.setup-look-art{display:block;border-radius:16px;overflow:hidden;box-shadow:0 8px 20px -12px #0007;background:#eee;aspect-ratio:5/4;position:relative}
 .setup-look-art .sf-thumb{border-radius:16px}
 .setup-look-tile input:checked~.setup-look-art{outline:2px solid #111;outline-offset:3px}
 .setup-look-tile:has(:focus-visible) .setup-look-art{outline:3px solid #537abc;outline-offset:3px}
@@ -269,3 +269,33 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 .setup-look-motion input{width:22px;height:22px;margin-top:2px;accent-color:#111;flex:none}
 .setup-look-motion span{display:grid;gap:2px;font-size:14px;color:#222}
 .setup-look-motion small{font-size:12.5px;color:#666;line-height:1.4}
+
+/* The sheet is as tall as what it holds, up to a ceiling, so a short step never leaves a tall empty sheet over the page. */
+@media (max-width:1023px){
+  .setup-flow[data-mobile-layout=preview] .setup-panel>.setup-sheet-grip,.setup-flow[data-mobile-layout=preview] .setup-panel>.setup-next{flex:none}
+  .setup-flow[data-mobile-layout=preview] .setup-panel>.setup-question-heading{flex:none}
+  .setup-flow[data-mobile-layout=preview] .setup-panel>.setup-step-body{flex:1 1 auto;min-height:0}
+  .setup-flow[data-mobile-layout=preview] .setup-panel[data-sheet=edit]{min-height:var(--setup-sheet-min,40%)}
+}
+.setup-look-tabs{position:sticky;top:0;z-index:3;box-shadow:0 0 0 8px #f4f4f6}
+
+/* Skip sits in the action row beside Back and Continue instead of adding a row to the footer. */
+@media (max-width:1023px){
+  .setup-next:has(.setup-skip){padding-top:14px;min-height:76px;flex-wrap:nowrap}
+  .setup-skip{flex:none!important;flex-basis:auto!important;order:2!important;margin:0!important;justify-content:center;min-height:52px!important;padding-inline:10px!important;font-size:14px}
+  .setup-next:has(.setup-skip)>[data-variant=default]{order:3}
+  .setup-next:has(.setup-skip)>[data-variant=outline]{order:1}
+}
+/* With the keyboard open, the form takes the whole visible area; the handset steps aside and returns when it closes. */
+.setup-flow[data-keyboard=true] .setup-workspace>.setup-panel{max-height:100%!important;min-height:100%}
+
+.look-art{position:absolute;inset:0;display:grid;align-content:center;gap:9px;padding:16px 14px;isolation:isolate}
+.look-art-card{display:flex;align-items:center;gap:9px;padding:9px;border-radius:13px;box-shadow:0 6px 16px -8px #0003}
+.look-art-avatar{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:9px;font-size:13px;font-weight:700;line-height:1}
+.look-art-lines{flex:1;display:grid;gap:5px;min-width:0}
+.look-art-lines i{display:block;height:5px;border-radius:4px;width:84%}
+.look-art-lines i+i{width:52%}
+.look-art-block{display:block;height:24px;border-radius:10px;box-shadow:0 4px 12px -8px #0003}
+.look-art-action{display:block;height:9px;width:78%;justify-self:center;border-radius:8px}
+.setup-look-tile{scroll-margin-top:76px}
+.setup-look-tabs{box-shadow:0 0 0 6px #f4f4f6,0 8px 8px 0 #f4f4f6}

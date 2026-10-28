@@ -6,11 +6,36 @@ import { designsFor, applyDesign, getDesign, type Design } from "@/features/page
 import { COLOURWAYS, applyColourway, getColourway, type Colourway } from "@/features/page/themes/colourways";
 import type { PageDoc } from "@/features/page/contracts/page";
 import type { StyleOverrides } from "@/features/page/contracts/style";
-import { DesignThumb } from "@/features/setup/DesignThumb";
+import { shaderFallbackCss } from "@/features/page/themes/resolve";
+import { FONT_STACKS } from "@/features/page/themes/font-metadata";
 import { useDemo, initialState, type DemoState } from "./store";
 import { SetupMobileLayouts } from "./SetupStyles";
 
 type Tab = "looks" | "colours";
+type Art = { colors: NonNullable<StyleOverrides["colors"]>; background: NonNullable<StyleOverrides["background"]>; font?: keyof typeof FONT_STACKS };
+
+const bgCss = (b: Art["background"]): string =>
+  b.kind === "solid" ? b.color : b.kind === "gradient" ? `linear-gradient(${b.angle}deg,${b.from},${b.to})` : b.kind === "shader" ? shaderFallbackCss(b) : "#ddd";
+
+/** A small, calm picture of a look: its background, a card with an avatar and name, a block and the main action, drawn from the look's own colours. */
+function LookArt({ art, name }: { art: Art; name: string }) {
+  const c = art.colors;
+  return (
+    <span className="look-art" aria-hidden="true" style={{ background: bgCss(art.background), backgroundColor: c.background }}>
+      <span className="look-art-card" style={{ background: c.surface }}>
+        <span className="look-art-avatar" style={{ background: c.accent, color: c.accentText }}>{(name.trim()[0] ?? "T").toUpperCase()}</span>
+        <span className="look-art-lines"><i style={{ background: c.text, opacity: 0.78 }} /><i style={{ background: c.text, opacity: 0.35 }} /></span>
+      </span>
+      <span className="look-art-block" style={{ background: c.surface }} />
+      <span className="look-art-action" style={{ background: c.accent }} />
+    </span>
+  );
+}
+
+const artOf = (o: StyleOverrides, cw?: Colourway): Art => {
+  const base = { colors: o.colors as Art["colors"], background: o.background as Art["background"] };
+  return cw ? { colors: cw.colors, background: cw.background } : base;
+};
 type Tile = Pick<Design, "id" | "name" | "overrides" | "recipe">;
 
 /** What a page would look like if this colourway were put on it, without touching anything else. */
@@ -110,9 +135,7 @@ export function SetupLook() {
           {tiles.map((tile) => (
             <label className="setup-look-tile" key={tile.id}>
               <input type="radio" name="look" aria-label={tile.name} checked={s.page.themeId === tile.id} onChange={() => chooseLook(tile)} />
-              <span className="setup-look-art" aria-hidden="true">
-                <DesignThumb design={tile} industryKey={key} own={s.content} height={600} overrides={withColours(tile.overrides, pinned, motion)} />
-              </span>
+              <span className="setup-look-art"><LookArt art={artOf(tile.overrides, pinned)} name={s.content.identity.name} /></span>
               <span className="setup-look-name">{tile.name}</span>
             </label>
           ))}
@@ -123,9 +146,7 @@ export function SetupLook() {
             {colourTiles.map((t) => (
               <label className="setup-look-tile" key={t.id}>
                 <input type="radio" name="colours" aria-label={t.name} checked={selectedColour === t.id} onChange={() => (t.cw ? chooseColourway(t.cw) : ownColours())} />
-                <span className="setup-look-art" aria-hidden="true">
-                  {design ? <DesignThumb design={design} industryKey={key} own={s.content} height={600} overrides={t.cw ? withColours(base, t.cw, false) : base} /> : null}
-                </span>
+                <span className="setup-look-art"><LookArt art={artOf(base, t.cw)} name={s.content.identity.name} /></span>
                 <span className="setup-look-name">{t.name}</span>
                 <span className="setup-look-kind">{t.kind}</span>
               </label>
