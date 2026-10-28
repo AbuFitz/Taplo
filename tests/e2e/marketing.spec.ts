@@ -55,7 +55,7 @@ test.describe("navigation", () => {
   test("with a mouse, hovering opens a menu and moving away closes it", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "networkidle" });
     const nav = page.getByRole("navigation", { name: "Primary" });
     await nav.getByRole("button", { name: "Product" }).hover();
     await expect(

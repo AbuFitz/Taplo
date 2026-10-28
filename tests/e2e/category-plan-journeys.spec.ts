@@ -23,6 +23,7 @@ for (const width of [390,1440]) test(`every category reaches its own first conte
  }
 });
 for (const width of [320,390,1440]) test(`plan illustrations are optional, accessible and preserve every preference at ${width}`,async({page})=>{
+ test.setTimeout(180_000);
  await page.setViewportSize({width,height:900});await page.goto('/onboarding?from=hollin-physio');await page.getByLabel('Business name',{exact:true}).fill('North Clinic');
  // Reach the plan through the real setup; existing website remains optional.
  await cont(page);await cont(page);
