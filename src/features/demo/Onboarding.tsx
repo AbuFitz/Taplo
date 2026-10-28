@@ -136,6 +136,18 @@ export function Onboarding() {
   const lastPart = part >= parts - 1
   // The phone preview stays in view while the main button is chosen, so the choice is seen on the page at once.
   const previewStep = ["business", "contacts", "widgets", "publish"].includes(step) || (step === "reach" && parts > 1 && part === 0)
+  // The phone's own chrome (status bar, address bar, overscroll) must read as part of the screen behind it, never a white strip.
+  React.useEffect(() => {
+    const color = mobileSetup && previewStep ? "#0b0b0c" : "#ffffff"
+    const html = document.documentElement
+    const before = { bg: html.style.backgroundColor, body: document.body.style.backgroundColor }
+    let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+    const created = !meta
+    if (!meta) { meta = document.createElement("meta"); meta.name = "theme-color"; document.head.append(meta) }
+    const content = meta.content
+    meta.setAttribute("content", color); html.style.backgroundColor = color; document.body.style.backgroundColor = color
+    return () => { html.style.backgroundColor = before.bg; document.body.style.backgroundColor = before.body; if (created) meta.remove(); else meta.setAttribute("content", content) }
+  }, [mobileSetup, previewStep])
   const go = (to: OnboardingStep) => {
     setPart(0)
     setSheetSize("edit")

@@ -22,6 +22,7 @@ test("closing a chooser does not steal focus from the next field while typing", 
   await cont(page);
   await page.getByRole("button", { name:"Barber", exact:true }).click();
   await page.getByRole("button", { name:"Continue", exact:true }).click();
+  await page.getByRole("button", { name:"Continue", exact:true }).click();
   await page.getByRole("button",{name:"Phone calls",exact:true}).click();
   await openDetails(page);
   await page.getByRole("button",{name:"Instagram",exact:true}).click();

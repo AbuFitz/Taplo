@@ -229,3 +229,13 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
   .setup-flow[data-mobile-layout=preview] .setup-progress [role=progressbar]{background:#ffffff33}
   .setup-flow[data-mobile-layout=preview] .setup-progress [role=progressbar]>span{background:#fff}
 }
+
+/* The Continue strip takes the sheet's own surface on a phone instead of a separate white band. */
+@media (max-width:1023px){
+  .setup-flow[data-mobile-layout=preview] .setup-next::before{background:transparent}
+}
+
+/* One even sheet surface: no see-through patches where the handset or backdrop sits behind the form. */
+@media (max-width:1023px){
+  .setup-flow[data-mobile-layout=preview] .setup-workspace>.setup-panel{background:#f4f4f6;-webkit-backdrop-filter:none;backdrop-filter:none}
+}

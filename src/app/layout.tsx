@@ -3,6 +3,7 @@ import "@fontsource-variable/inter/wght.css";
 import "@fontsource-variable/space-grotesk/wght.css";
 import "./globals.css";
 import { TAPLO_DOMAINS } from "@/lib/domains";
+import { ChromeColour } from "@/components/taplo/chrome-colour";
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#ffffff", interactiveWidget: "resizes-content" };
 
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className="h-full antialiased">
       <body className="flex min-h-full flex-col font-sans">
+        <ChromeColour />
         {children}
       </body>
     </html>

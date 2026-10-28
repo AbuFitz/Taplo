@@ -28,6 +28,8 @@ export function ThemeRoot({
   // scoped surface. Keep them on the page colour, including after live edits.
   React.useEffect(() => {
     if (!el || family !== "page") return
+    // Only a page that fills the screen owns the browser chrome; one shown inside a card or handset must not recolour it.
+    if (el.getBoundingClientRect().width < window.innerWidth * 0.95 || el.closest("[data-preview-mode], .phone-shell, .scaled-phone")) { el.setAttribute("data-taplo-ready", "true"); return }
     const doc = document
     const color = cssVars["--tp-background"]
     if (!color) return
