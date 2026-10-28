@@ -40,16 +40,15 @@ export function EditBridge() {
       if (el?.closest(".tp-header")) return { kind: "header" }
       return null
     }
-    let lastSelectAt = 0
+    let touchSelectAt = -1e9
     const choose = (e: Event) => {
-      lastSelectAt = performance.now()
       send({ type: "taplo:select", selection: pick(e) ?? { kind: "content" } })
     }
     const onClick = (e: MouseEvent) => {
       // The editor owns every click in the page while editing.
       e.preventDefault()
       e.stopPropagation()
-      if (performance.now() - lastSelectAt < 400) return // already handled by the touch path below
+      if (performance.now() - touchSelectAt < 400) return // the touch path below already handled this tap
       choose(e)
     }
     // iOS Safari does not always synthesise a click for a tap on content that is not itself interactive, so a still touch
@@ -60,6 +59,7 @@ export function EditBridge() {
       const d = down; down = null
       if (!d || e.pointerType !== "touch") return
       if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 10 || performance.now() - d.t > 600) return
+      touchSelectAt = performance.now()
       choose(e)
     }
     const onMessage = (e: MessageEvent<ToPreview>) => {
