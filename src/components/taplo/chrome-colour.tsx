@@ -36,7 +36,7 @@ export function ChromeColour() {
       let strip = document.getElementById("taplo-chrome-strip")
       if (!strip) {
         strip = document.createElement("div"); strip.id = "taplo-chrome-strip"; strip.setAttribute("aria-hidden", "true")
-        strip.style.cssText = "position:fixed;top:0;left:0;right:0;height:max(env(safe-area-inset-top),1px);pointer-events:none;z-index:2147483000"
+        strip.style.cssText = "position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);pointer-events:none;z-index:2147483000"
         document.body.prepend(strip)
       }
       strip.style.backgroundColor = colour
