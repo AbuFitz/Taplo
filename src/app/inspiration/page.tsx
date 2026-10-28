@@ -24,10 +24,10 @@ export default function InspirationPage() {
             <Link href="/onboarding" className="ig-cta" data-brand-action>Start free</Link>
           </nav>
         </header>
-        <main className="ig-scroll">
-          <DesignGallery />
+        <div className="ig-scroll">
+          <main><DesignGallery /></main>
           <footer className="ig-foot"><Link href="/credits">Credits</Link><Link href="/legal/terms">Terms</Link><Link href="/legal/privacy">Privacy</Link></footer>
-        </main>
+        </div>
       </div>
     </div>
   );
