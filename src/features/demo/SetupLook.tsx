@@ -4,11 +4,12 @@ import { Undo2 } from "lucide-react";
 import { STARTING_LOOKS, applyStartingLook, getStartingLook, startingLookOf, type StartingLook } from "@/features/page/themes/starting-looks";
 import { PALETTES, applyPalette, getPalette, logoPalette, lookStillBackground, originalPalette, palettesFor, type Palette } from "@/features/page/themes/palettes";
 import { readsWell } from "@/features/page/themes/image-palette";
-import { shaderFallbackCss } from "@/features/page/themes/resolve";
-import { type StyleOverrides } from "@/features/page/contracts/style";
+import { recommendArrangement } from "@/features/page/themes/arrangement";
+import { shaderFallbackCss, resolveStyle } from "@/features/page/themes/resolve";
+import { PROFILE_CHOICES, type StyleOverrides } from "@/features/page/contracts/style";
 import type { PageDoc } from "@/features/page/contracts/page";
 import { useDemo, initialState, type DemoState } from "./store";
-import { SetupArrangement } from "./SetupArrangement";
+import { SetupMobileLayouts } from "./SetupStyles";
 
 type Tab = "looks" | "colours";
 type Background = NonNullable<StyleOverrides["background"]>;
@@ -93,6 +94,10 @@ export function SetupLook() {
     setNote("");
   };
 
+  const suggestion = recommendArrangement(s.content.identity);
+  const currentLayout = resolveStyle(s.page.themeId, s.page.appearance).spec.header.layout;
+  const useSuggestion = () => update((st) => ({ ...st, page: { ...st.page, appearance: { ...st.page.appearance, header: { ...st.page.appearance.header, layout: suggestion.id, align: suggestion.id === "bento" || suggestion.id === "identity" ? "center" : "left" } } as StyleOverrides } }));
+
   const original = originalPalette(look);
   const palettes: Palette[] = [original, ...palettesFor(look), ...(logoOffer ? [logoOffer] : [])];
   const chosen = drafts.palette ?? "original";
@@ -135,7 +140,16 @@ export function SetupLook() {
       <p className="setup-look-note" role="status" aria-live="polite">{note}</p>
       {drafts.colourUndo ? <button type="button" className="setup-look-undo" onClick={undo}><Undo2 aria-hidden="true" /> Undo last change</button> : null}
 
-      <SetupArrangement />
+      <details className="setup-more setup-look-more" data-testid="more-styling">
+        <summary className="setup-secondary cursor-pointer list-none">Profile arrangement · Optional</summary>
+        <div className="mt-4 grid gap-5">
+          <div className="setup-look-suggest" data-testid="arrangement-suggestion">
+            <p><b>Suggested: {PROFILE_CHOICES.find((c) => c.id === suggestion.id)?.name}</b><small>{suggestion.why}</small></p>
+            {currentLayout !== suggestion.id ? <button type="button" className="setup-look-use" onClick={useSuggestion}>Use this</button> : <small>Already in use</small>}
+          </div>
+          <SetupMobileLayouts />
+        </div>
+      </details>
     </div>
   );
 }

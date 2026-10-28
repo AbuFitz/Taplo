@@ -55,31 +55,30 @@ export function SetupPlans({ inline = false }: { inline?: boolean }) {
   // Features come from the same entitlement resolver the pricing page and the editor use, so this list cannot drift from what a plan does.
   const goals = s.setupDrafts?.goals ?? [];
   const recommended = goals.includes("book") ? PLAN_IDS.find((id) => resolveEntitlements(id, "active").onlineBooking) : undefined;
+  const list = planFeatures(selected);
+  const price = (id: PlanId) => (id === "free" ? "£0" : `£${(PLANS[id].priceMinorGbp / 100).toFixed(2)}`);
   const content = (
     <div className="setup-plans-content" data-testid="setup-plans">
-      <fieldset className="setup-plan-list">
+      <fieldset className="setup-plan-switch">
         <legend className="sr-only">Choose a plan preference</legend>
-        {PLAN_IDS.map((id) => {
-          const on = selected === id;
-          const list = planFeatures(id);
-          return (
-            <label key={id} className="setup-plan-card" data-plan={id} data-selected={on}>
-              <input type="radio" name="setup-plan" aria-label={`Choose ${PLANS[id].name}`} checked={on} onChange={() => update((st) => ({ ...st, setupDrafts: { ...st.setupDrafts, planIntent: id } }))} />
-              <span className="setup-plan-head">
-                <span className="setup-plan-name">{PLANS[id].name}{id === recommended ? <em>Matches your goals</em> : null}</span>
-                <span className="setup-plan-price">{id === "free" ? "£0" : `£${(PLANS[id].priceMinorGbp / 100).toFixed(2)}`}<small>/month</small></span>
-              </span>
-              <span className="setup-plan-line">{DESCRIPTIONS[id]}</span>
-              {on ? (
-                <span className="setup-plan-open">
-                  <ul className="setup-plan-features">{list.map((f) => <li key={f}><Check aria-hidden="true" />{f}</li>)}</ul>
-                  {id === recommended ? <span className="setup-plan-why">You chose online booking, and this plan includes online bookings.</span> : null}
-                </span>
-              ) : null}
-            </label>
-          );
-        })}
+        {PLAN_IDS.map((id) => (
+          <label key={id} className="setup-plan-tab" data-plan={id} data-selected={selected === id}>
+            <input type="radio" name="setup-plan" aria-label={`Choose ${PLANS[id].name}`} checked={selected === id} onChange={() => update((st) => ({ ...st, setupDrafts: { ...st.setupDrafts, planIntent: id } }))} />
+            <span className="setup-plan-tab-name">{PLANS[id].name}</span>
+            <span className="setup-plan-tab-price">{price(id)}</span>
+          </label>
+        ))}
       </fieldset>
+      <section className="setup-plan-card" data-plan={selected} aria-live="polite" data-testid="plan-card">
+        <header className="setup-plan-top">
+          <h2 className="setup-plan-title">{PLANS[selected].name}</h2>
+          {selected === recommended ? <em>Matches your goals</em> : null}
+        </header>
+        <p className="setup-plan-price">{price(selected)}<small>/month</small></p>
+        <p className="setup-plan-line">{DESCRIPTIONS[selected]}</p>
+        <ul className="setup-plan-features">{list.map((f) => <li key={f}><span><Check aria-hidden="true" /></span>{f}</li>)}</ul>
+        {selected === recommended ? <p className="setup-plan-why">You chose online booking, and this plan includes online bookings.</p> : null}
+      </section>
       <p className="setup-plan-notice" data-testid="plan-disclosure">
         <Info aria-hidden="true" />
         <span>Prices and limits are provisional. Choosing a plan saves a preference only; nothing is charged.</span>

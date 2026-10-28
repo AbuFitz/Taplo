@@ -28,11 +28,11 @@ for (const width of [320,390,1440]) test(`plans are a compact comparison with an
  await cont(page);await cont(page);await cont(page);
  await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await page.getByRole('button',{name:'Continue',exact:true}).click();await page.getByRole('button',{name:'Skip for now',exact:true}).click();
  await expect(page.getByRole('heading',{level:1})).toHaveText('Room to grow.');
- await expect(page.locator('.setup-panel').locator('.plan-experience, .plan-scene-profile, .phone-shell, [data-testid="setup-plans"] svg, [data-testid="setup-plans"] img')).toHaveCount(0);
+ await expect(page.locator('.setup-panel').locator('.plan-experience, .plan-scene-profile, .phone-shell, [data-testid="setup-plans"] img')).toHaveCount(0);
  await expect(page.getByRole('button',{name:/See how it looks/i})).toHaveCount(0);
  await expect(page.getByTestId('setup-plans')).not.toContainText(/theme/i);
  await expect(page.getByTestId('plan-disclosure')).toContainText('provisional');
- await expect(page.getByTestId('plan-disclosure')).toContainText('no payment is taken');
+ await expect(page.getByTestId('plan-disclosure')).toContainText('nothing is charged');
  for(const plan of PLAN_IDS){
   const name=plan==='free'?'Free':plan==='core'?'Core':plan==='pro'?'Pro':'Business';
   await page.getByRole('radio',{name:`Choose ${name}`,exact:true}).check({force:true});

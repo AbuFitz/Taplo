@@ -439,28 +439,7 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 .setup-cover-add{justify-self:start;font-size:14px;color:#5b6270;text-decoration:underline;text-underline-offset:3px;min-height:36px;padding:0 2px}
 .setup-cover-add:hover{color:#16181d}
 
-/* Profile arrangement: a quiet row that opens its own task. */
-.arr-trigger{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:56px;padding:10px 4px 10px 0;margin-top:6px;border-top:1px solid #e6e6e2;text-align:left;color:#16181d}
-.arr-trigger b{display:block;font-size:15px;font-weight:600}
-.arr-trigger small{display:block;margin-top:2px;font-size:13px;color:#5b6270}
-.arr-trigger svg{width:20px;height:20px;color:#5b6270;flex:none}
-.arr-body{display:grid;gap:18px}
-.arr-demo{justify-self:center;width:min(100%,15.5rem);border-radius:28px;overflow:hidden;background:#f3f3f1;box-shadow:0 0 0 1px #e3e3df,0 18px 30px -22px #0007;max-height:20rem}
-.arr-demo>span{aspect-ratio:390/520!important}
-.arr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,9rem),1fr));gap:14px 10px;border:0;margin:0;padding:0;min-width:0}
-.arr-tile{position:relative;display:grid;gap:7px;cursor:pointer}
-.arr-tile input{position:absolute;opacity:0;inset:0;width:100%;height:100%;cursor:pointer;z-index:2}
-.arr-art{position:relative;display:block;aspect-ratio:245/168;border-radius:22px;background:#f4f4f2;box-shadow:inset 0 0 0 1px #e6e6e2;overflow:hidden;container-type:inline-size}
-.arr-drawing{position:absolute;inset:0;width:100%;height:100%}
-.arr-art em{position:absolute;top:8px;right:8px;font-style:normal;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:#fff;color:#3d4350;box-shadow:0 0 0 1px #e3e3df}
-.arr-name{font-size:13.5px;font-weight:500;color:#5b6270;text-align:left;padding-left:2px}
-.arr-tile input:checked~.arr-art{outline:2px solid #111;outline-offset:3px}
-.arr-tile input:checked~.arr-name{color:#111;font-weight:600}
-.arr-tile:has(:focus-visible) .arr-art{outline:3px solid #537abc;outline-offset:3px}
 .setup-address{box-shadow:none!important}
-.arr-demo-wrap{position:sticky;top:-1px;z-index:3;display:flex;justify-content:center;padding:2px 0 12px;background:#fff}
-.arr-demo{justify-self:auto;max-height:12.5rem}
-@media (min-width:640px){.arr-demo{max-height:19rem}}
 
 /* Looks: the reference proportions, taken from its 246 x 168 tile. Content sits toward the top; every size scales with the tile's width. */
 .setup-look-art{border-radius:24px}

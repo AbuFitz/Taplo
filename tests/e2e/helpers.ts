@@ -208,7 +208,9 @@ export async function openMoreStyling(page: import("@playwright/test").Page) {
   const more = page.getByTestId("more-styling")
   await more.waitFor({ state: "attached" })
   await page.waitForLoadState("networkidle")
-  // Profile arrangement is its own dialog; its choices are reachable once it is open.
-  if (!(await page.getByTestId("setup-profile-choices").isVisible().catch(() => false))) await more.click({ force: true })
-  await page.getByTestId("setup-profile-choices").waitFor({ state: "visible" })
+  await expect.poll(async () => {
+    if (await more.evaluate((el) => (el as HTMLDetailsElement).open).catch(() => false)) return true
+    await more.locator("summary").click({ force: true, timeout: 2000 }).catch(() => undefined)
+    return more.evaluate((el) => (el as HTMLDetailsElement).open).catch(() => false)
+  }, { timeout: 15000 }).toBe(true)
 }
