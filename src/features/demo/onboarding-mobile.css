@@ -113,7 +113,7 @@
 .setup-profile-diagram[data-kind=banner] i{background:linear-gradient(#666,#eee)}
 .setup-profile-diagram[data-kind=poster] i{height:60px;grid-row:1/4}.setup-profile-diagram[data-kind=poster] b{position:absolute;bottom:20px;left:8px;background:#fff;width:60%}.setup-profile-diagram[data-kind=poster] em{display:none}
 .setup-avatar-image{position:relative;display:block;width:100%;height:100%;overflow:hidden;background:transparent}
-.setup-upload-meta{display:block;margin-top:6px;color:#777;font-size:12px;font-weight:400}
+.setup-upload-meta{display:block;margin-top:6px;color:#5b6270;font-size:12px;font-weight:400}
 .setup-step-body [aria-label="Common services"] button{border:0;background:#f1f1f3;border-radius:8px;font-size:13px;color:#333}
 
 html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;overscroll-behavior:none}
