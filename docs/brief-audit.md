@@ -12,7 +12,10 @@ Status words: **Done** (verified in a browser or test this session), **Partial**
 ## Verification
 - Full Playwright runs, Chromium only: (1) dev server, 2 workers: 795 passed / 7 failed; (2) **production build**, 3 workers: 799 passed / 3 failed; (3) production build after the final asset, undo-storage and licence changes, 3 workers: **785 passed / 17 failed / 7 skipped**.
 - Of run 3's 17 failures, **16 pass when re-run** with 2 workers (`--last-failed`): they were timeouts and click races under three-worker load (category loop of 48 businesses, plan reloads, hover and navigation timing, card-alignment measurement). The 17th, `curated-setup-blocks` at 390, passes alone in 38 s but hit its 60 s budget under load, so its timeout is now 150 s.
-- Not done: a fourth full pass with that last timeout change, and any browser other than Chromium. Unit suite 346 passed; `tsc --noEmit` clean.
+- After the last timeout change, `curated-setup-blocks` passes 5/5 on the production build.
+- **Firefox** (`playwright.firefox.config.ts`, production build): cross-browser, booking, setup-header, arrangement width/axe sheet, also-categories and undo-reload specs: **24 passed, 2 skipped, 0 failed**. WebKit was not installed or run; a full Firefox suite was not run.
+- Example content: service and product records can carry `example: true`; while any active one exists the page cannot be published (`readiness` id `example`, `goals.test.ts`).
+- Not done: a fourth full Chromium pass after the last small changes. Unit suite 347 passed; `tsc --noEmit` clean.
 - Earlier correction stands: the `design-preview` failure was a spec tapping repeatedly during load, not a hydration bug in the app.
 - A stale `next start` process serving an old build produced a false mass failure once; always stop the old server before rebuilding.
 
