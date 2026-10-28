@@ -237,7 +237,7 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 
 /* One even sheet surface: no see-through patches where the handset or backdrop sits behind the form. */
 @media (max-width:1023px){
-  .setup-flow[data-mobile-layout=preview] .setup-workspace>.setup-panel{background:#f4f4f6;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .setup-flow[data-mobile-layout=preview] .setup-workspace>.setup-panel{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}
 }
 
 /* Keep the selection ring and the label under each tile in view when a choice is scrolled to or focused. */
@@ -277,7 +277,7 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
   .setup-flow[data-mobile-layout=preview] .setup-panel>.setup-step-body{flex:1 1 auto;min-height:0}
   .setup-flow[data-mobile-layout=preview] .setup-panel[data-sheet=edit]{min-height:var(--setup-sheet-min,40%)}
 }
-.setup-look-tabs{position:sticky;top:0;z-index:3;box-shadow:0 0 0 8px #f4f4f6}
+.setup-look-tabs{position:sticky;top:0;z-index:3;box-shadow:0 0 0 8px #fff}
 
 /* Skip sits in the action row beside Back and Continue instead of adding a row to the footer. */
 @media (max-width:1023px){
@@ -298,4 +298,4 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 .look-art-block{display:block;height:24px;border-radius:10px;box-shadow:0 4px 12px -8px #0003}
 .look-art-action{display:block;height:9px;width:78%;justify-self:center;border-radius:8px}
 .setup-look-tile{scroll-margin-top:76px}
-.setup-look-tabs{box-shadow:0 0 0 6px #f4f4f6,0 8px 8px 0 #f4f4f6}
+.setup-look-tabs{box-shadow:0 0 0 6px #fff,0 8px 8px 0 #fff}
