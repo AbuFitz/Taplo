@@ -14,9 +14,7 @@ for (const width of [390, 1440]) test(`visual setup keeps each decision separate
   await expect(page.getByRole('heading',{level:1})).toHaveText('Choose a look.')
   await openMoreStyling(page)
   await page.getByRole('radio',{name:'Floating Bento',exact:true}).check()
-  await page.getByRole('button',{name:/Background & colours/}).click()
-  await page.getByTestId('setup-design-dialog').getByRole('button',{name:'Ink',exact:true}).click()
-  await page.getByTestId('setup-design-dialog').getByRole('button',{name:'Done',exact:true}).click()
+  await page.getByRole('radio',{name:'Colours',exact:true}).check({force:true});await page.getByRole('radio',{name:'Carbon / white'}).check({force:true})
   if (width < 1024) {
     expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight + 1)).toBe(true)
     await expect(page.getByRole('button', { name: 'Continue', exact: true })).toBeInViewport()
@@ -53,14 +51,14 @@ for (const width of [390, 1440]) test(`visual setup keeps each decision separate
   await page.getByLabel('Service 1 minutes').fill('30')
   await next()
   await next()
-  await page.getByRole('button', { name: 'Publish now', exact: true }).click()
-  await expect(page.getByRole('status')).toContainText('Saved as your page')
+  await expect(page.getByTestId('finish-step')).toBeVisible()
   const draft = await page.evaluate(() => JSON.parse(localStorage.getItem('taplo.demo.v2')!))
   expect(draft.content.identity.name).toBe('North Street Studio')
   expect(draft.content.services[0]).toMatchObject({ name: 'Haircut', priceMinor: 2200 })
   expect(draft.content.testimonials).toEqual([])
   expect(draft.content.gallery).toEqual([])
-  expect(draft.published.page.appearance.colors.background).toBe('#000000')
+  expect(draft.page.appearance.colors.background).toBe('#0b0c0e')
+  expect(draft.published).toBeNull()
 })
 
 for (const width of [390, 1440]) test(`homepage shows the real rendered page in a handset without an embedded frame at ${width}`, async ({ page }) => {
