@@ -62,6 +62,7 @@ for (const width of [320, 390, 768])
     );
     await expect(grip).toBeVisible();
     await page.getByRole("button", { name: "Back", exact: true }).click();
+    await page.getByRole("button", { name: "Back", exact: true }).click();
     await expect(page.getByLabel("Business name", { exact: true })).toHaveValue(
       "North Studio",
     );

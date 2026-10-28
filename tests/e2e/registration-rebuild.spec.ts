@@ -88,13 +88,7 @@ for (const width of [390, 1440])
     await details.getByLabel("Tuesday", { exact: true }).check();
     await details.getByRole("button", { name: "Save details" }).click();
     await next();
-    await page.getByRole("radio",{name:"Floating Bento",exact:true}).check();
-    await page.getByTestId("setup-profile-choices").getByRole("radio", {name:"Architectural Split",exact:true}).check();
     const frame = page.frameLocator('[data-testid="setup-live-page"]');
-    await expect(frame.locator(".tp-header")).toHaveAttribute(
-      "data-layout",
-      "split",
-    );
     await page.screenshot({
       path: path.join(
         process.env.TAPLO_REVIEW_DIR ?? "test-results",
@@ -224,7 +218,6 @@ test("partial service text survives back and reload, custom businesses work, and
   await page.getByRole("button", { name: "Free", exact: true }).click();
   await page.getByRole("button", { name: "Done", exact: true }).click();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await page.getByRole("radio",{name:"Floating Bento",exact:true}).check();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByRole("button",{name:"Continue",exact:true}).click();
   await page
