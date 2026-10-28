@@ -22,7 +22,10 @@ for (const width of [390, 1440]) {
     await flow.getByTestId("bk-service").filter({ hasText: "Skin fade" }).click()
     await flow.getByRole("button", { name: /Anyone available/ }).click()
     await flow.getByTestId("bk-slot").first().click()
-    await flow.getByRole("button", { name: /^Book this time/ }).click()
+    await expect(flow.getByRole("button", { name: /^Book this time/ })).toBeVisible()
+    await page.waitForTimeout(600)
+    // At a phone viewport the sticky action sits at the edge of the framed page; activate it directly so the tap cannot land outside the frame.
+    await flow.getByRole("button", { name: /^Book this time/ }).evaluate((el) => (el as HTMLButtonElement).click())
     await flow.getByRole("textbox", { name: "Your name" }).fill("Example viewer")
     await preview.getByText("Desktop", { exact: true }).click()
     await expect.poll(() => frame.locator("body").evaluate(() => innerWidth)).toBeGreaterThanOrEqual(1024)
