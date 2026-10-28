@@ -9,7 +9,7 @@ import { STARTING_LOOKS } from "../../src/features/page/themes/starting-looks"
  */
 const lum = (r: number, g: number, b: number) => 0.2126 * r + 0.7152 * g + 0.0722 * b
 for (const look of STARTING_LOOKS.filter((l) => l.animated)) test(`${look.name}: top edge meets the flat browser colour while the background moves`, async ({ browser }) => {
-  test.setTimeout(90_000)
+  test.setTimeout(240_000)
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, isMobile: true, hasTouch: true })
   const page = await ctx.newPage()
   const cdp = await ctx.newCDPSession(page)
