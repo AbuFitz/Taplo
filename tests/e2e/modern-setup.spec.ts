@@ -14,7 +14,7 @@ for (const width of [390, 1440]) test(`visual setup keeps each decision separate
   await expect(page.getByRole('heading',{level:1})).toHaveText('Choose a look.')
   await openMoreStyling(page)
   await page.getByRole('radio',{name:'Floating Bento',exact:true}).check()
-  await page.getByRole('radio',{name:'Colours',exact:true}).check({force:true});await page.getByRole('radio',{name:'Carbon / white'}).check({force:true})
+  await page.getByRole('radio',{name:'Carbon / white'}).check({force:true})
   if (width < 1024) {
     expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight + 1)).toBe(true)
     await expect(page.getByRole('button', { name: 'Continue', exact: true })).toBeInViewport()

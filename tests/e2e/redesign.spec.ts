@@ -13,7 +13,7 @@ for(const width of [320,390,768,1440])test(`mobile-led setup has eight steps, a 
   await expect(page.getByRole('progressbar',{name:'Setup progress'})).toHaveAttribute('aria-valuemax','8')
   const next=()=>cont(page)
   await cont(page,{keepLook:true})
-  await page.getByRole('radio',{name:'Colours',exact:true}).check({force:true});await page.getByRole('radio',{name:'Silver / ink'}).check({force:true})
+  await page.getByRole('radio',{name:'Silver / ink'}).check({force:true})
   await expect(frame.locator('[data-taplo-page]')).toHaveAttribute('data-tone','light',{timeout:15000})
   await expect(frame.locator('[data-taplo-page]')).toHaveAttribute('data-motion',/none|subtle/)
   await next();await page.getByRole('button',{name:'Barber',exact:true}).click();await next()
