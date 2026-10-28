@@ -24,13 +24,15 @@ async function healthy(page: Page, errors: string[], label: string, width: numbe
   const m = await page.evaluate(() => ({
     overflow: document.documentElement.scrollWidth - window.innerWidth,
     h1: document.querySelectorAll("h1").length,
-    broken: [...document.images].filter((i) => !i.complete || i.naturalWidth === 0).length,
+    // A lazy image the engine has not needed yet is not broken; a finished load with no pixels is.
+    broken: [...document.images].filter((i) => i.complete && i.naturalWidth === 0).length,
+    brokenSrc: [...document.images].filter((i) => i.complete && i.naturalWidth === 0).map((i) => i.currentSrc || i.src).slice(0, 3),
     deadLinks: [...document.querySelectorAll("a")].filter((a) => !a.getAttribute("href") || a.getAttribute("href") === "#").length,
     smallTargets: [...document.querySelectorAll("[data-taplo-page] .tp-btn, [data-taplo-page] .tp-icon-action")].filter((e) => e.getBoundingClientRect().height < 40 && e.getBoundingClientRect().height > 0).length,
   }));
   expect(m.overflow, `overflow ${label}@${width}`).toBeLessThanOrEqual(0);
   expect(m.h1, `h1 ${label}`).toBe(1);
-  expect(m.broken, `broken images ${label}`).toBe(0);
+  expect(m.broken, `broken images ${label}: ${m.brokenSrc.join(" | ")}`).toBe(0);
   expect(m.deadLinks, `dead links ${label}`).toBe(0);
   expect(m.smallTargets, `tap targets ${label}`).toBe(0);
 }

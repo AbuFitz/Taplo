@@ -10,7 +10,7 @@ for (const width of [390, 1440]) {
       ["FixNow Mechanics", "fixnow", "fixnowmechanics"],
       ["BrightLearn Tutoring", "brightlearn", "brightlearn"],
     ]) {
-      await page.goto("/inspiration");
+      await page.goto("/inspiration", { waitUntil: "networkidle" });
       await page.evaluate(() => localStorage.clear());
       // Both real businesses are in the gallery, on their own authorised designs, and open as the same page.
       await page.getByRole("searchbox", { name: "Search pages" }).fill(name);
