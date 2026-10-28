@@ -370,3 +370,36 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 @media (max-width:1023px){
   .setup-flow[data-step=publish][data-mobile-layout=preview] .setup-workspace>.setup-panel[data-sheet=edit]{max-height:62%}
 }
+
+/* Look pictures (wide, as in the reference): a card with a mark tile and two lines, a block, and the action pill. */
+.setup-look-art{aspect-ratio:245/168;border-radius:22px}
+.look-art{padding:9% 7% 6%;gap:7%;align-content:center}
+.look-art-card{display:flex;align-items:center;gap:8%;padding:5% 6%;border-radius:12px;min-height:0;box-shadow:none}
+.look-art-mark{flex:none;display:block;width:10%;aspect-ratio:1;min-width:14px;border-radius:5px}
+.look-art-lines{flex:1;display:grid;gap:9px;min-width:0}
+.look-art-lines i{display:block;height:4px;border-radius:3px;width:100%}
+.look-art-lines i+i{width:56%}
+.look-art-block{display:block;height:15%;border-radius:8px}
+.look-art-action{display:block;height:6%;min-height:7px;width:88%;justify-self:center;border-radius:99px}
+.look-art-aa{display:none}
+/* Colour pictures (wide pills with two discs, as in the reference). */
+.setup-colour-art{display:block;aspect-ratio:217/77;border-radius:14px;overflow:hidden;position:relative}
+.colour-art{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:14px}
+.colour-art-disc{display:block;width:34px;height:34px;border-radius:50%}
+.colour-art-disc+.colour-art-disc{margin-left:-6px}
+.setup-colour-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,8.5rem),1fr))!important;gap:14px 10px!important}
+.setup-colour-name{text-align:center;font-weight:500;font-size:13.5px;color:#555}
+.setup-look-tile input:checked~.setup-colour-art{outline:2px solid #111;outline-offset:3px}
+.setup-look-tile:has(:focus-visible) .setup-colour-art{outline:3px solid #537abc;outline-offset:3px}
+.setup-look-tile input:checked~.setup-colour-name{color:#111;font-weight:600}
+.setup-look-swatches{display:none}
+
+/* The form scales with the screen. Up to 1440 x 880 it simply fills what it is given; on larger monitors the whole card is scaled up
+   (and sized so its scaled box still fits the screen), so type, controls and handset stay in proportion instead of floating small. */
+@media (min-width:1024px){
+  .setup-flow{--z:1;position:absolute;left:50%;top:50%;margin:0!important;transform-origin:center;transform:translate(-50%,-50%) scale(var(--z));
+    width:min(calc(100vw - 56px),1440px);height:min(calc(100dvh - 56px),880px)}
+}
+@media (min-width:1800px) and (min-height:1000px){.setup-flow{--z:1.2;width:min(calc((100vw - 56px) / 1.2),1440px);height:min(calc((100dvh - 56px) / 1.2),880px)}}
+@media (min-width:2400px) and (min-height:1300px){.setup-flow{--z:1.5;width:min(calc((100vw - 56px) / 1.5),1440px);height:min(calc((100dvh - 56px) / 1.5),880px)}}
+@media (min-width:3200px) and (min-height:1700px){.setup-flow{--z:2;width:min(calc((100vw - 56px) / 2),1440px);height:min(calc((100dvh - 56px) / 2),880px)}}

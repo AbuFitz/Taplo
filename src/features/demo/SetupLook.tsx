@@ -1,13 +1,11 @@
 "use client";
 import * as React from "react";
 import { Undo2 } from "lucide-react";
-import { getDesign } from "@/features/page/themes/designs";
 import { STARTING_LOOKS, applyStartingLook, getStartingLook, startingLookOf, type StartingLook } from "@/features/page/themes/starting-looks";
 import { PALETTES, applyPalette, getPalette, logoPalette, lookStillBackground, originalPalette, palettesFor, type Palette } from "@/features/page/themes/palettes";
 import { recommendArrangement } from "@/features/page/themes/arrangement";
 import { readsWell } from "@/features/page/themes/image-palette";
 import { shaderFallbackCss, resolveStyle } from "@/features/page/themes/resolve";
-import { FONT_STACKS } from "@/features/page/themes/font-metadata";
 import { PROFILE_CHOICES, type StyleOverrides } from "@/features/page/contracts/style";
 import type { PageDoc } from "@/features/page/contracts/page";
 import { useDemo, initialState, type DemoState } from "./store";
@@ -20,19 +18,28 @@ const bgCss = (b: Background): string =>
   b.kind === "solid" ? b.color : b.kind === "gradient" ? `linear-gradient(${b.angle}deg,${b.from},${b.to})` : b.kind === "shader" ? shaderFallbackCss(b) : "#ddd";
 
 /**
- * A small abstract drawing of the result, in the manner of the old page-finish pictures: the look's own background effect built from
- * the palette, a card with a type specimen in the look's typeface, a block and the main action. No name, no logo, no tick.
+ * The look picture: a small abstract drawing of the result. The look's own background effect built from the palette, a card with a
+ * mark tile and two lines, a block and the main action. No name, no logo, no letters.
  */
-function Art({ look, palette }: { look: StartingLook; palette: Palette }) {
-  const font = FONT_STACKS[(getDesign(look.design)?.overrides.text?.headingFont ?? "inter") as keyof typeof FONT_STACKS];
+function LookArt({ look, palette }: { look: StartingLook; palette: Palette }) {
   return (
     <span className="look-art" aria-hidden="true" style={{ background: bgCss(lookStillBackground(look, palette.id === "original" ? undefined : palette)), backgroundColor: palette.base }}>
-      <span className="look-art-card" style={{ background: palette.surface, color: palette.text, boxShadow: `0 0 0 1px ${palette.border}` }}>
-        <b className="look-art-aa" style={{ fontFamily: font }}>Aa</b>
+      <span className="look-art-card" style={{ background: palette.surface, boxShadow: `0 0 0 1px ${palette.border}` }}>
+        <i className="look-art-mark" style={{ background: palette.accent }} />
         <span className="look-art-lines"><i style={{ background: palette.text, opacity: 0.78 }} /><i style={{ background: palette.muted }} /></span>
       </span>
       <span className="look-art-block" style={{ background: palette.surface, boxShadow: `0 0 0 1px ${palette.border}` }} />
       <span className="look-art-action" style={{ background: palette.accent }} />
+    </span>
+  );
+}
+
+/** The colour picture: the palette's ground, with its card surface and its action colour as two overlapping discs. */
+function ColourArt({ look, palette }: { look: StartingLook; palette: Palette }) {
+  return (
+    <span className="colour-art" aria-hidden="true" style={{ background: bgCss(lookStillBackground(look, palette.id === "original" ? undefined : palette)), backgroundColor: palette.base, boxShadow: `inset 0 0 0 1px ${palette.border}` }}>
+      <i className="colour-art-disc" style={{ background: palette.surface, boxShadow: `0 0 0 1px ${palette.border}, 0 4px 10px -2px #0006` }} />
+      <i className="colour-art-disc" style={{ background: palette.accent, boxShadow: "0 4px 10px -2px #0006" }} />
     </span>
   );
 }
@@ -111,7 +118,7 @@ export function SetupLook() {
           {STARTING_LOOKS.map((l) => (
             <label className="setup-look-tile" key={l.id}>
               <input type="radio" name="look" aria-label={l.name} checked={look.id === l.id} onChange={() => chooseLook(l)} />
-              <span className="setup-look-art"><Art look={l} palette={paletteOf(drafts.palette, l) ?? originalPalette(l)} /></span>
+              <span className="setup-look-art"><LookArt look={l} palette={paletteOf(drafts.palette, l) ?? originalPalette(l)} /></span>
               <span className="setup-look-name">{l.name}</span>
             </label>
           ))}
@@ -119,15 +126,12 @@ export function SetupLook() {
       ) : (
         <div className="grid gap-3">
           <p className="setup-look-for">Colours for <b>{look.name}</b>. They change the background tones, cards, text, borders and button together; the look’s type and effect stay.</p>
-          <div className="setup-look-grid" role="radiogroup" aria-label="Colours">
+          <div className="setup-look-grid setup-colour-grid" role="radiogroup" aria-label="Colours">
             {palettes.map((p) => (
               <label className="setup-look-tile" key={p.id}>
                 <input type="radio" name="palette" aria-label={p.id === "original" ? "This look’s own colours" : p.name} checked={chosen === p.id} onChange={() => choosePalette(p.id === "original" ? undefined : p)} />
-                <span className="setup-look-art"><Art look={look} palette={p} /></span>
-                <span className="setup-look-name">{p.id === "original" ? "This look’s own" : p.name}</span>
-                <span className="setup-look-swatches" aria-hidden="true">
-                  {[p.base, p.surface, p.text, p.border, p.accent].map((c, i) => <i key={i} style={{ background: c }} />)}
-                </span>
+                <span className="setup-colour-art"><ColourArt look={look} palette={p} /></span>
+                <span className="setup-look-name setup-colour-name">{p.id === "original" ? "This look’s own" : p.name}</span>
               </label>
             ))}
           </div>

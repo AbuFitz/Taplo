@@ -2,7 +2,7 @@ import { test, expect, type Page } from "@playwright/test"
 import sharp from "sharp"
 import { cont } from "./helpers"
 import { STARTING_LOOKS, applyStartingLook } from "../../src/features/page/themes/starting-looks"
-import { applyPalette, palettesFor, originalPalette } from "../../src/features/page/themes/palettes"
+import { applyPalette, palettesFor } from "../../src/features/page/themes/palettes"
 import { newPage } from "../../src/features/page/starter"
 
 /**
@@ -43,12 +43,13 @@ for (let c = 0; c < chunks; c++) test(`palettes on real content, part ${c + 1}`,
         const r = el.getBoundingClientRect()
         if (r.width < 8 || r.height < 6 || r.bottom < 0 || r.top > innerHeight) continue
         const cs = getComputedStyle(el)
-        const m = cs.color.match(/[\\d.]+/g)!.map(Number)
-        const bgm = cs.backgroundColor.match(/[\\d.]+/g)!.map(Number)
-        out.push({ label: q, x: r.x, y: r.y, w: r.width, h: r.height, color: m.slice(0, 3), bg: bgm.length === 3 || bgm[3]! > 0.95 ? bgm.slice(0, 3) : null })
+        const rgba = (css: string) => { const c = document.createElement("canvas"); c.width = c.height = 1; const x = c.getContext("2d", { willReadFrequently: true })!; x.clearRect(0, 0, 1, 1); x.fillStyle = css; x.fillRect(0, 0, 1, 1); return [...x.getImageData(0, 0, 1, 1).data] }
+        const m = rgba(cs.color), bgm = rgba(cs.backgroundColor)
+        out.push({ label: q, x: r.x, y: r.y, w: r.width, h: r.height, color: m.slice(0, 3), bg: bgm[3]! > 245 ? bgm.slice(0, 3) : null })
       }
       return out
     })
+    expect(picks.length, `${look.name} + ${p?.name ?? "own"}: text found to measure`).toBeGreaterThanOrEqual(4)
     await view.addStyleTag({ content: "*{color:transparent!important;text-shadow:none!important;caret-color:transparent!important} svg{opacity:0!important}" })
     const shot = await sharp(await view.screenshot()).raw().toBuffer({ resolveWithObject: true })
     for (const el of picks) {
@@ -73,5 +74,4 @@ for (let c = 0; c < chunks; c++) test(`palettes on real content, part ${c + 1}`,
     await view.close()
   }
   expect(failures, failures.join("\n")).toEqual([])
-  void originalPalette
 })

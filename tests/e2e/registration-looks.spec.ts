@@ -51,7 +51,7 @@ for (const width of [390, 1440]) {
     await expect(page.getByRole("radio", { name: "Carbon / white", exact: true })).toHaveCount(0)
     await expect(page.getByRole("radio", { name: "This look’s own colours" })).toBeChecked()
     const own = (await state(page)).page.appearance.colors.background
-    await page.getByRole("radio", { name: "Wine", exact: true }).check({ force: true })
+    await page.getByRole("radio", { name: "Wine & rose", exact: true }).check({ force: true })
     let s = await state(page)
     expect(s.page.appearance.colors.background).toBe("#140a0f")
     expect(s.page.appearance.colors.accent).toBe("#f4a9c0")
@@ -75,7 +75,7 @@ for (const width of [390, 1440]) {
     // Back on a dark look, choose a palette, then reset to the look's own and undo.
     await page.getByRole("radio", { name: "Black / ember", exact: true }).check({ force: true })
     await page.getByRole("radio", { name: "Colours", exact: true }).check({ force: true })
-    await page.getByRole("radio", { name: "Forest", exact: true }).check({ force: true })
+    await page.getByRole("radio", { name: "Forest & jade", exact: true }).check({ force: true })
     expect((await state(page)).page.appearance.colors.background).toBe("#0a130d")
     await page.getByRole("radio", { name: "This look’s own colours" }).check({ force: true })
     expect((await state(page)).page.appearance.colors.background).toBe(own)
