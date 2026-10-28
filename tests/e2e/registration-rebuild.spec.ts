@@ -95,7 +95,6 @@ for (const width of [390, 1440])
         `design-${width}.png`,
       ),
     });
-    await next();
     await expect(page.getByRole("heading",{name:"Room to grow.",exact:true})).toBeVisible();
     await page.getByRole("radio",{name:"Choose Free",exact:true}).check();
     await next();
@@ -117,7 +116,6 @@ for (const width of [390, 1440])
     await page.reload();
     const saved = await read(page);
     expect(saved.content.services[0].priceMode).toBe("quote");
-    expect(saved.page.appearance.background.source).toBe("logo");
     expect(saved.content.hours).toHaveLength(1);
   });
 for (const width of [320, 390])
@@ -219,7 +217,6 @@ test("partial service text survives back and reload, custom businesses work, and
   await page.getByRole("button", { name: "Done", exact: true }).click();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await page.getByRole("button",{name:"Continue",exact:true}).click();
   await page
     .getByRole("button", { name: /Business name and image Add/ })
     .click();

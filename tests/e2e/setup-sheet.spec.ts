@@ -73,6 +73,7 @@ for (const width of [320, 390, 768])
           document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
+    await page.waitForTimeout(900);
     const axe = await new AxeBuilder({ page }).include(".setup-flow").analyze();
     expect(axe.violations).toEqual([]);
     await page.screenshot({ path: `work/setup-sheet-${width}.png` });
