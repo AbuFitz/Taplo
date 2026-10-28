@@ -6,6 +6,7 @@ import { businessContentSchema, type BusinessContentInput } from "@/features/bus
 import type { PageDoc } from "@/features/page/contracts/page";
 import { fromLegacyConfig, migratePage } from "@/features/page/migrate";
 import { newPage } from "@/features/page/starter";
+import { applyDesign, getDesign } from "@/features/page/themes/designs";
 import { PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
 
 /**
@@ -31,6 +32,10 @@ export interface DemoState {
   /** How the page looks and is arranged. Separate from the records above. */
   page: PageDoc;
   slugEdited: boolean;
+  /** Show example items in the live draft while the page is being built. Off hides them; they are never saved or published. */
+  showExamples?: boolean;
+  /** The owner dismissed the Studio checklist. */
+  checklistHidden?: boolean;
   published: null | { at: string; version: number; content: BusinessContentInput; page: PageDoc; plan: PlanId };
   /** Plain-language notes for the owner (e.g. after an automatic upgrade). Dismissible. */
   notes?: string[];
@@ -46,6 +51,8 @@ const stateSchema = z.object({
   content: z.unknown(),
   page: z.unknown(),
   slugEdited: z.boolean(),
+  showExamples: z.boolean().optional(),
+  checklistHidden: z.boolean().optional(),
   published: z.unknown().nullable(),
   notes: z.array(z.string()).optional(),
   setupDrafts: z.object({reviewEdit:z.boolean().optional(),goals:z.array(z.enum(["book","contact","services","products","work","call","message","browse","buy"])).optional(),connections:z.object({email:z.string(),phone:z.string(),whatsapp:z.string(),website:z.string(),instagram:z.string(),socials:z.record(z.string(),z.string()).optional()}).optional(),planIntent:z.enum(PLAN_IDS).optional(),backgroundEdited:z.boolean().optional(),services:z.array(z.object({id:z.string(),name:z.string(),price:z.string(),minutes:z.string(),priceMode:z.enum(["fixed","from","quote","free"]).optional()})).optional(),record:z.object({kind:z.enum(["vehicle","photo","product"]),value:z.unknown()}).optional()}).optional(),
@@ -79,7 +86,13 @@ export function initialState(): DemoState {
     plan: "business", // the review default shows every capability; switch in Settings to see gating
     content: blankContent(),
     // A name alone already reads as a designed page: type leads and nothing waits for a logo or photo.
-    page: (() => { const p = newPage("other"); return { ...p, appearance: { ...p.appearance, header: { layout: "masthead" as const, align: "left" as const } } }; })(),
+    page: (() => {
+      // A curated look is on the page from the first keystroke: type-led, calm, and not tied to any kind of business.
+      const p = newPage("other");
+      const design = getDesign("paper");
+      const styled = design ? applyDesign(p, design, { reorder: false }) : p;
+      return { ...styled, appearance: { ...styled.appearance, header: { ...styled.appearance.header, layout: "masthead" as const, align: "left" as const } } };
+    })(),
     slugEdited: false,
     published: null,
   };

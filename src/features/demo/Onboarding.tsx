@@ -63,7 +63,7 @@ const STEP_TITLE: Record<OnboardingStep, string> = {
   publish: "Review your page",
 }
 
-const SETUP_STEPS = ONBOARDING_STEPS.filter(step => step !== "goal")
+const SETUP_STEPS = ONBOARDING_STEPS
 
 const subscribeMobileSetup = (callback: () => void) => { const query = window.matchMedia("(max-width:1023px)"); query.addEventListener("change", callback); return () => query.removeEventListener("change", callback) }
 const mobileSetupSnapshot = () => window.matchMedia("(max-width:1023px)").matches
@@ -127,8 +127,8 @@ export function Onboarding() {
   const [otherOpen, setOtherOpen] = React.useState(false)
   const [connectionsValid,setConnectionsValid]=React.useState(true)
   const s = state ?? initialState()
-  const step: OnboardingStep = s.step === "goal" ? "reach" : (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "widgets"
-  const stepIndex = SETUP_STEPS.indexOf(step as Exclude<OnboardingStep, "goal">)
+  const step: OnboardingStep = (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "widgets"
+  const stepIndex = SETUP_STEPS.indexOf(step as OnboardingStep)
 
   const [part, setPart] = React.useState(0)
   // On a phone, a long step is spread over two screens so each one asks for one kind of thing.
@@ -140,7 +140,7 @@ export function Onboarding() {
     setPart(0)
     setSheetSize("edit")
     setShowErrors(false)
-    setDirection(SETUP_STEPS.indexOf(to as Exclude<OnboardingStep, "goal">) >= stepIndex ? 1 : -1)
+    setDirection(SETUP_STEPS.indexOf(to as OnboardingStep) >= stepIndex ? 1 : -1)
     navigated.current = true
     if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
     update((x) => ({ ...x, step: to }))
@@ -295,7 +295,8 @@ export function Onboarding() {
             </div>
           ) : null}
 
-          {step === "reach" ? <SetupConnections part={parts > 1 ? part : undefined} goal={goalOf(s)} onGoalChange={goal=>update(x=>applyGoal(x,goal))} onValidity={setConnectionsValid}/> : null}
+          {step === "goal" ? <SetupConnections section="goals" goal={goalOf(s)} onGoalChange={goal=>update(x=>applyGoal(x,goal))} onValidity={setConnectionsValid}/> : null}
+          {step === "reach" ? <SetupConnections section="contact" part={parts > 1 ? part : undefined} goal={goalOf(s)} onGoalChange={goal=>update(x=>applyGoal(x,goal))} onValidity={setConnectionsValid}/> : null}
 
           {step === "business" ? (
             <div className="grid gap-5">

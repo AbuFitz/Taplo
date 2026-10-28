@@ -11,6 +11,7 @@ import {
 import { TaploInput } from "@/components/taplo/taplo-input";
 import { safeUrl, normalizePhone } from "@/lib/validation";
 import { useDemo, initialState } from "./store";
+import { setupJourney } from "./setup-journey";
 import { newWidget } from "@/features/page/starter";
 import { SOCIAL_PLATFORMS, socialUrl } from "@/features/page/social-platforms";
 import { SocialIcon } from "@/features/page/widgets/social-icons";
@@ -33,7 +34,16 @@ const websiteUrl = (value: string) => {
       : `https://${text}`
     : undefined;
 };
+type GoalId = "book" | "contact" | "services" | "products" | "work";
+/** Plain-language choices, ordered for the kind of business. Every business can choose any of them. */
+function goalChoices(industryKey: string): { id: GoalId; label: string }[] {
+  const kind = setupJourney(industryKey).kind;
+  const label: Record<GoalId, string> = { book: "Book an appointment", contact: "Get in touch", services: "Explore services", products: kind === "vehicle" ? "Browse stock" : "Browse products", work: "See my work" };
+  const order: GoalId[] = kind === "product" || kind === "vehicle" ? ["products", "contact", "work", "services", "book"] : kind === "photo" ? ["work", "contact", "book", "services", "products"] : ["book", "contact", "services", "work", "products"];
+  return order.map((id) => ({ id, label: label[id] }));
+}
 export function SetupConnections({
+  section,
   part,
   goal,
   onGoalChange,
@@ -41,6 +51,8 @@ export function SetupConnections({
 }: {
   /** On a phone the step is two screens: 0 chooses the main button, 1 takes the details. Undefined shows everything. */
   part?: number;
+  /** "goals" shows only what customers should do; "contact" only how they reach the business. Omitted shows both. */
+  section?: "goals" | "contact";
   goal: "book" | "enquire" | "call" | "message";
   onGoalChange: (goal: "book" | "enquire" | "call" | "message") => void;
   onValidity: (valid: boolean) => void;
@@ -202,20 +214,14 @@ export function SetupConnections({
   const count = chosen.length;
   return (
     <div className="setup-connections" data-testid="reach">
-      <p className="setup-connection-note" hidden={part === 1}>
+      <p className="setup-connection-note" hidden={part === 1 || section === "goals"}>
         Pick your main button. It shows on your page as you choose.
       </p>
-      <fieldset hidden={part === 1} data-testid="goal-intent">
-        <legend className="setup-layout-heading">What would you like customers to do?</legend>
-        <p className="setup-connection-note">Choose any. This only shapes what we suggest next; nothing is switched on until you set it up.</p>
+      <fieldset hidden={part === 1 || section === "contact"} data-testid="goal-intent">
+        <legend className="sr-only">What would you like customers to do?</legend>
+        <p className="setup-connection-note">Choose what matters to you. You can add more later. This shapes what we suggest next; nothing is switched on until you set it up.</p>
         <div className="setup-primary-choices">
-          {([
-            { id: "book", label: "Book with me" },
-            { id: "call", label: "Call me" },
-            { id: "message", label: "Message me" },
-            { id: "browse", label: "See my work" },
-            { id: "buy", label: "Buy from me" },
-          ] as const).map(({ id, label }) => {
+          {goalChoices(s.content.identity.industryKey).map(({ id, label }) => {
             const on = (s.setupDrafts?.goals ?? []).includes(id);
             return (
               <button type="button" key={id} aria-pressed={on} onClick={() => update((x) => { const cur = x.setupDrafts?.goals ?? []; const goals = on ? cur.filter((g) => g !== id) : [...cur, id]; return { ...x, setupDrafts: { ...x.setupDrafts, goals } }; })}>
@@ -225,7 +231,7 @@ export function SetupConnections({
           })}
         </div>
       </fieldset>
-      <fieldset hidden={part === 1}>
+      <fieldset hidden={part === 1 || section === "goals"}>
         <legend className="setup-layout-heading">Main button</legend>
         <div className="setup-primary-choices">
           {(
@@ -248,7 +254,7 @@ export function SetupConnections({
           ))}
         </div>
       </fieldset>
-      <div className="grid gap-5" hidden={part === 0}>
+      <div className="grid gap-5" hidden={part === 0 || section === "goals"}>
         {field(
           "website",
           "Website or booking link (optional)",

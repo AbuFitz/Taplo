@@ -31,6 +31,8 @@
 .studio-list a:hover{background:#0000000a}
 .studio-list i{margin-left:auto;font-size:11.5px;font-style:normal;color:#888}
 .studio-dot{width:18px;height:18px;border-radius:50%;border:2px solid #0000002e;flex:none}
+.studio-dot-done{background:#111;border-color:#111;box-shadow:inset 0 0 0 3px #fff}
+.studio-list li[data-done=true]{opacity:.62}
 .studio-discover .studio-list a{align-items:flex-start;padding:10px 8px}
 .studio-discover strong{display:block;font-size:14px}
 .studio-discover small{display:block;margin-top:2px;font-size:12.5px;line-height:1.4;color:#666}

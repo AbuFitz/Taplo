@@ -98,10 +98,23 @@ export function Studio() {
           <UpcomingBookings />
         </div>
 
-        {next.length ? (
-          <div className="studio-card">
-            <h2>Next up</h2>
-            <ul className="studio-list">{next.map((c) => <li key={c.id}><Link href={c.href}><span className="studio-dot" aria-hidden="true" />{c.label}{!c.required ? <i>optional</i> : null}</Link></li>)}</ul>
+        {!s.checklistHidden ? (
+          <div className="studio-card" data-testid="studio-checklist">
+            <div className="studio-row"><h2>Your checklist</h2><button type="button" className="studio-note underline" onClick={() => patch((x) => ({ ...x, checklistHidden: true }))}>Hide</button></div>
+            <ul className="studio-list">
+              {checks.filter((c) => c.id !== "published").sort((a, b) => Number(a.done) - Number(b.done)).slice(0, 7).map((c) => (
+                <li key={c.id} data-done={c.done}><Link href={c.href}><span className={cn("studio-dot", c.done && "studio-dot-done")} aria-hidden="true" />{c.label}{c.done ? <i>done</i> : !c.required ? <i>optional</i> : null}</Link></li>
+              ))}
+            </ul>
+            <p className="studio-note">Do these in any order. Choosing a goal in setup does not set it up: each item is ticked only when it exists.</p>
+          </div>
+        ) : null}
+
+        {!(s.content.services ?? []).some((x) => !x.archived) ? (
+          <div className="studio-card" data-testid="examples-card">
+            <h2>Examples</h2>
+            <p className="studio-note">{s.showExamples === false ? "Your page shows only what you have added." : "Your page shows example items so you can see what it could be. They are labelled, never saved as yours and never published."}</p>
+            <Button variant="outline" onClick={() => patch((x) => ({ ...x, showExamples: x.showExamples === false }))}>{s.showExamples === false ? "Show examples" : "Hide examples"}</Button>
           </div>
         ) : null}
 

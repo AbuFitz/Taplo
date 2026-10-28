@@ -7,6 +7,7 @@ import { PageRenderer, buildPageViewModel } from "@/features/page/renderer"
 import { parseContent, useDemo } from "./store"
 import type { StyleSpec } from "@/features/page/contracts/style"
 import { getWidget } from "@/features/page/widgets/registry"
+import { withExamples } from "./examples"
 import { previewAppearance, previewWidgetStyle, previewSectionTreatment } from "@/features/page/preview-appearance"
 
 /**
@@ -27,7 +28,7 @@ export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetI
     // A draft in progress may not have every required field yet; the preview fills gaps with neutral placeholders (publishing still requires the real values).
     const id = source.content.identity
     const content = mode === "draft" ? { ...source.content, identity: { ...id, name: id.name || "Your business name", industryKey: id.industryKey || "other", industryLabel: id.industryLabel || "Your business", slug: id.slug || "your-page" } } : source.content
-    const parsed = parseContent(content)
+    const parsed = parseContent(mode === "draft" && state?.showExamples !== false ? withExamples(content) : content)
     if (!parsed.success || !parsed.data.identity.name) return null
     let page = mode === "draft" ? previewAppearance(source.page, { lookId, savedLookId }) : source.page
     if (mode === "draft" && treatmentId) page = previewSectionTreatment(page, widgetId, treatmentId)
@@ -40,7 +41,7 @@ export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetI
       }) }
     }
     return buildPageViewModel(parsed.data, page, { plan: source.plan, draftAction: mode === "draft" && !state?.published })
-  }, [source, mode, headerLayout, widgetId, variant, lookId, savedLookId, savedStyleId, treatmentId])
+  }, [source, mode, headerLayout, widgetId, variant, lookId, savedLookId, savedStyleId, treatmentId, state?.showExamples])
 
   if (!ready) return <Message title="Loading…" />
   if (!vm) {

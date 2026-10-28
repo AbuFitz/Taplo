@@ -22,17 +22,17 @@ describe("design-to-setup contracts", () => {
     expect(dealer.industryKey).toBe("car-dealer")
     expect(dealer.widgets.find((w) => w.type === "products")!.settings.variant).toBe("catalogue")
   })
-  it("changing a fresh industry follows its new default without replacing an owner's chosen design", () => {
-    const dealer = applyIndustry(initialState(), "car-dealer")
-    const dealerDefault = designsFor("car-dealer", 1)[0]!.id
-    expect(dealer.page.themeId).toBe(dealerDefault)
+  it("choosing a category never replaces the look the page starts with or the one an owner chose", () => {
+    const start = initialState()
+    const dealer = applyIndustry(start, "car-dealer")
+    expect(dealer.page.themeId).toBe(start.page.themeId)
     expect(dealer.page.widgets.find((w) => w.type === "products")!.settings.variant).toBe("catalogue")
-    expect(applyIndustry(dealer, "barber").page.themeId).toBe("noir")
+    expect(applyIndustry(dealer, "barber").page.themeId).toBe(start.page.themeId)
     const chosen = { ...dealer, page: { ...dealer.page, themeId: "night" } }
     expect(applyIndustry(chosen, "barber").page.themeId).toBe("night")
     const customised = { ...dealer, page: { ...dealer.page, appearance: { colors: { accent: "#334455" } } } }
     expect(applyIndustry(customised, "barber").page.appearance).toEqual(customised.page.appearance)
-    expect(applyIndustry(customised, "barber").page.themeId).toBe(dealerDefault)
+    expect(applyIndustry(customised, "barber").page.themeId).toBe(dealer.page.themeId)
   })
   it("changing industry keeps section choices that the owner has customised", () => {
     const dealer = applyIndustry(initialState(), "car-dealer")

@@ -21,7 +21,7 @@ export function applyIndustry(s: DemoState, industryKey: string, label?: string)
   const untouchedWidgets = JSON.stringify(s.page.widgets.map((w) => [w.type, w.hidden, w.appearance, w.settings])) === JSON.stringify(starters(prev.id).map((w) => [w.type, w.hidden, w.appearance, w.settings]));
   const previousDefaultLook = getTheme(suggestedLookIds(prev.id)[0]!)?.id ?? DEFAULT_THEME_ID;
   // The blank start page carries only the type-led header, which is not an owner choice.
-  const onlyStartHeader = JSON.stringify(s.page.appearance) === JSON.stringify({ header: { layout: "masthead", align: "left" } });
+  const onlyStartHeader = s.page.themeId === "paper" && !s.setupDrafts?.backgroundEdited && s.page.appearance.header?.layout === "masthead";
   const untouchedTheme = s.page.themeId === previousDefaultLook && (Object.keys(s.page.appearance).length === 0 || onlyStartHeader);
   const fresh = newPage(next.id);
   return {
@@ -33,7 +33,7 @@ export function applyIndustry(s: DemoState, industryKey: string, label?: string)
     },
     page: {
       ...s.page,
-      themeId: untouchedTheme ? fresh.themeId : s.page.themeId,
+      themeId: s.page.themeId, // the look is the owner's; a category suggests content, never taste
       widgets: untouchedWidgets ? (design ? applyRecipe(fresh.widgets, design.recipe) : fresh.widgets) : s.page.widgets,
       meta: { ...s.page.meta, primaryAction: next.suggestedBookingMode === "contact" ? "auto" : "book" },
     },
