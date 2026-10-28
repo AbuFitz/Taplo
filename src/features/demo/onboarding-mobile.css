@@ -461,3 +461,18 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 .arr-demo-wrap{position:sticky;top:-1px;z-index:3;display:flex;justify-content:center;padding:2px 0 12px;background:#fff}
 .arr-demo{justify-self:auto;max-height:12.5rem}
 @media (min-width:640px){.arr-demo{max-height:19rem}}
+
+/* Looks: the reference proportions, taken from its 246 x 168 tile. Content sits toward the top; every size scales with the tile's width. */
+.setup-look-art{border-radius:24px}
+.look-art{border-radius:24px}
+.look-art{padding:9.8cqw 6.5cqw 0;gap:4.8cqw;align-content:start}
+.look-art-card{padding:5.8cqw 5cqw 5.8cqw 6cqw;gap:3.3cqw;border-radius:5.8cqw}
+.look-art-mark{width:9.4cqw;border-radius:2.6cqw}
+.look-art-lines{gap:5cqw}
+.look-art-lines i{height:1.7cqw}
+.look-art-lines i+i{width:65%;height:1.5cqw}
+.look-art-block{height:11cqw;border-radius:4.2cqw}
+.look-art-action{height:4cqw;width:87%;margin-top:.5cqw}
+/* Colours: a white frame with a fine inner frame, the two colours centred inside. */
+.setup-colour-art{border-radius:16px;box-shadow:0 0 0 1px #e3e3df,0 8px 16px -12px #0004}
+.colour-art::after{content:"";position:absolute;inset:6px;border-radius:11px;box-shadow:inset 0 0 0 1px #ebebe7;pointer-events:none}

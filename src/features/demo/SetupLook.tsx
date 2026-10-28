@@ -22,7 +22,7 @@ const bgCss = (b: Background): string =>
  */
 function LookArt({ look, palette }: { look: StartingLook; palette: Palette }) {
   return (
-    <span className="look-art" aria-hidden="true" style={{ background: bgCss(lookStillBackground(look, palette.id === "original" ? undefined : palette)), backgroundColor: palette.base }}>
+    <span className="look-art" aria-hidden="true" style={{ background: bgCss(lookStillBackground(look, palette.id === "original" ? undefined : palette)), backgroundColor: palette.base, boxShadow: `inset 0 0 0 1px ${palette.tone === "dark" ? "#ffffff1c" : "#0000001a"}` }}>
       <span className="look-art-card" style={{ background: palette.surface, boxShadow: `0 0 0 1px ${palette.border}` }}>
         <i className="look-art-mark" style={{ background: palette.accent }} />
         <span className="look-art-lines"><i style={{ background: palette.text, opacity: 0.78 }} /><i style={{ background: palette.muted }} /></span>
