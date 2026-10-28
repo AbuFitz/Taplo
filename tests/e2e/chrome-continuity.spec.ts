@@ -26,6 +26,8 @@ for (const look of STARTING_LOOKS.filter((l) => l.animated)) test(`${look.name}:
   await view.goto(src!, { waitUntil: "networkidle" })
   await view.waitForTimeout(1500)
   const base = await view.evaluate(() => getComputedStyle(document.querySelector("[data-taplo-page]")!).getPropertyValue("--tp-background").trim())
+  const scrim = await view.evaluate(() => getComputedStyle(document.querySelector("[data-taplo-page]")!, "::before").height)
+  expect(scrim, "the scrim fills the simulated safe area").toBe("47px")
   const meta = await view.evaluate(() => document.querySelector('meta[name="theme-color"]')?.getAttribute("content"))
   expect(meta?.toLowerCase()).toBe(base.toLowerCase())
   const shots: Buffer[] = []
