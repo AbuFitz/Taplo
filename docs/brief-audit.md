@@ -10,10 +10,11 @@ Status words: **Done** (verified in a browser or test this session), **Partial**
 - Nothing is deployed or merged. The private study site was not reachable; the uploaded standalone HTML of the study was used instead.
 
 ## Verification
-- Run 1, dev server, 2 workers, after the feature edits: 795 passed, 7 failed, 7 skipped. Each failure was fixed (spec timing or a stale assumption) and passed when re-run alone.
-- Run 2, **production build** (`next build` then `next start`, 3 workers), after the licence/asset changes: **799 passed, 3 failed, 7 skipped** (1.1 h). The three were: `curated-setup-blocks` x2 (the arrangement radios reflow while previews load; the spec now skips the stability wait) and `design-preview` at 390 (a tap during React's early-click replay never opened the booking journey; the spec now waits for the framed page's ready flag). All three pass when re-run on the production build.
-- Not repeated: a third full run with the final spec edits. Chromium only. Unit suite 346 passed; `tsc --noEmit` clean.
-- Correction: I earlier called the `design-preview` failure a hydration race in the app. Evidence does not support that: after the framed page reports `data-taplo-ready`, a single tap opens the journey every time (4/4); the failing spec tapped repeatedly from the first second, and a repeat tap on an open dialog toggles it. It is a spec issue, not a product defect.
+- Full Playwright runs, Chromium only: (1) dev server, 2 workers: 795 passed / 7 failed; (2) **production build**, 3 workers: 799 passed / 3 failed; (3) production build after the final asset, undo-storage and licence changes, 3 workers: **785 passed / 17 failed / 7 skipped**.
+- Of run 3's 17 failures, **16 pass when re-run** with 2 workers (`--last-failed`): they were timeouts and click races under three-worker load (category loop of 48 businesses, plan reloads, hover and navigation timing, card-alignment measurement). The 17th, `curated-setup-blocks` at 390, passes alone in 38 s but hit its 60 s budget under load, so its timeout is now 150 s.
+- Not done: a fourth full pass with that last timeout change, and any browser other than Chromium. Unit suite 346 passed; `tsc --noEmit` clean.
+- Earlier correction stands: the `design-preview` failure was a spec tapping repeatedly during load, not a hydration bug in the app.
+- A stale `next start` process serving an old build produced a false mass failure once; always stop the old server before rebuilding.
 
 ## Journey (brief section 1)
 | Item | Status | Evidence |
