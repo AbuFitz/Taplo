@@ -1,43 +1,34 @@
-/* Plan choice, in the language of the pricing page: warm tonal surfaces, large light price numerals, one-line promises, small check lists. */
+/* Room to grow: one quiet list. Every row is the same white surface with dark text; the chosen row takes its plan's soft tint and opens to its checklist. */
 .setup-plans-content{display:grid;gap:14px}
-.setup-plan-list{display:grid;gap:10px;border:0;padding:0;margin:0;min-width:0}
-.setup-plan-card{position:relative;display:grid;gap:4px;padding:18px 18px 16px;border-radius:24px;background:#eeece5;color:#25231f;cursor:pointer;box-shadow:0 1px 0 #fff9 inset,0 14px 24px -20px #0008;transition:box-shadow .2s,transform .2s}
-.setup-plan-card[data-plan=core]{background:#e8e6dd}
-.setup-plan-card[data-plan=pro]{background:#dcd2eb}
-.setup-plan-card[data-plan=business]{background:#292a27;color:#f5f1e8;box-shadow:0 1px 0 #ffffff29 inset,0 14px 24px -20px #000}
+.setup-plan-list{display:grid;gap:8px;border:0;padding:0;margin:0;min-width:0}
+.setup-plan-card{--tint:#f3f1ea;position:relative;display:grid;gap:2px;padding:16px 18px;border-radius:20px;background:#fff;color:#1b1c1f;cursor:pointer;box-shadow:inset 0 0 0 1px #e3e3df;transition:background .2s,box-shadow .2s}
+.setup-plan-card[data-plan=core]{--tint:#ebe8dd}
+.setup-plan-card[data-plan=pro]{--tint:#e9e2f4}
+.setup-plan-card[data-plan=business]{--tint:#e4e5e2}
+.setup-plan-card:hover{box-shadow:inset 0 0 0 1px #c9c9c4}
+.setup-plan-card[data-selected=true]{background:var(--tint);box-shadow:inset 0 0 0 2px #1b1c1f}
 .setup-plan-card input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2}
-.setup-plan-card[data-selected=true]{box-shadow:0 0 0 2px #161715,0 18px 30px -20px #000a}
-.setup-plan-card[data-plan=business][data-selected=true]{box-shadow:0 0 0 2px #f5f1e8,0 18px 30px -20px #000}
 .setup-plan-card:has(:focus-visible){outline:3px solid #537abc;outline-offset:3px}
-.setup-plan-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-.setup-plan-name{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:24px;font-weight:500;letter-spacing:-.04em;line-height:1.1}
-.setup-plan-name em{font-style:normal;font-size:10.5px;font-weight:600;letter-spacing:0;padding:4px 8px;border-radius:6px;background:#0000000f}
-.setup-plan-card[data-plan=business] .setup-plan-name em{background:#ffffff1f}
-.setup-plan-price{font-size:30px;font-weight:500;letter-spacing:-.065em;line-height:1.1;white-space:nowrap;opacity:1}
-.setup-plan-price small{font-size:11px;font-weight:400;letter-spacing:0;margin-left:4px;color:#57534b}
-.setup-plan-card[data-plan=business] .setup-plan-price small{color:#bcb9b0}
-.setup-plan-line{font-size:13.5px;line-height:1.45;color:#57534b}
-.setup-plan-card[data-plan=business] .setup-plan-line{color:#bcb9b0}
-.setup-plan-open{display:grid;gap:10px;margin-top:8px;padding-top:12px;border-top:1px solid #00000014}
-.setup-plan-card[data-plan=business] .setup-plan-open{border-top-color:#ffffff1f}
-.setup-plan-features{display:grid;gap:9px;margin:0;padding:0;list-style:none;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr))}
-.setup-plan-features li{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.45}
-.setup-plan-features svg{flex:none;width:14px;height:14px;margin-top:3px;color:#777165}
-.setup-plan-card[data-plan=business] .setup-plan-features svg{color:#bcb9b0}
-.setup-plan-why{font-size:12.5px;line-height:1.45;color:#4a463f}
-.setup-plan-card[data-plan=business] .setup-plan-why{color:#d6d3ca}
-.setup-plan-state{display:inline-flex;align-items:center;gap:6px;justify-self:start;margin-top:8px;min-height:34px;padding:0 14px;border-radius:999px;background:#161715;color:#fff;font-size:12px;font-weight:600}
-.setup-plan-state svg{width:13px;height:13px;stroke-width:3}
-.setup-plan-card:not([data-selected=true]) .setup-plan-state{background:transparent;color:inherit;box-shadow:inset 0 0 0 1px #00000026}
-.setup-plan-card[data-plan=business] .setup-plan-state{background:#eeeae0;color:#23231f}
-.setup-plan-card[data-plan=business]:not([data-selected=true]) .setup-plan-state{background:transparent;color:inherit;box-shadow:inset 0 0 0 1px #ffffff40}
-.setup-plan-notice{display:flex;gap:10px;align-items:flex-start;margin:0;padding:2px 4px;color:#55555c;font-size:12.5px;line-height:1.45}
-.setup-plan-notice svg{flex:none;width:15px;height:15px;margin-top:1px}
-
-/* The whole card is the control: a radio dot says so, no extra button row. */
-.setup-plan-name::before{content:"";flex:none;width:18px;height:18px;margin-right:2px;border-radius:50%;box-shadow:inset 0 0 0 1.5px #00000066;background:transparent;transition:box-shadow .2s,background .2s}
-.setup-plan-card[data-selected=true] .setup-plan-name::before{background:#161715;box-shadow:inset 0 0 0 4px #161715,inset 0 0 0 9px #fff}
-.setup-plan-card[data-plan=business] .setup-plan-name::before{box-shadow:inset 0 0 0 1.5px #ffffff80}
-.setup-plan-card[data-plan=business][data-selected=true] .setup-plan-name::before{background:#f5f1e8;box-shadow:inset 0 0 0 4px #f5f1e8,inset 0 0 0 9px #292a27}
-.setup-plan-name{align-items:center}
-.setup-plan-card{padding-bottom:16px}
+.setup-plan-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.setup-plan-name{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.15;color:#1b1c1f}
+.setup-plan-name::before{content:"";flex:none;width:18px;height:18px;border-radius:50%;box-shadow:inset 0 0 0 1.5px #8b8d94;background:transparent;transition:box-shadow .2s}
+.setup-plan-card[data-selected=true] .setup-plan-name::before{box-shadow:inset 0 0 0 5.5px #1b1c1f,inset 0 0 0 9px #fff}
+.setup-plan-name em{font-style:normal;font-size:11px;font-weight:600;letter-spacing:0;padding:3px 8px;border-radius:999px;background:#1b1c1f12;color:#3d3f46}
+.setup-plan-price{font-size:26px;font-weight:400;letter-spacing:-.05em;line-height:1;white-space:nowrap;color:#1b1c1f}
+.setup-plan-price small{font-size:12px;font-weight:400;letter-spacing:0;margin-left:3px;color:#5d6068}
+.setup-plan-line{padding-left:28px;font-size:14px;line-height:1.4;color:#5d6068}
+.setup-plan-open{display:grid;gap:10px;margin:12px 0 0 28px;padding-top:12px;border-top:1px solid #1b1c1f1f}
+.setup-plan-features{display:grid;gap:8px 18px;margin:0;padding:0;list-style:none;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr))}
+.setup-plan-features li{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;line-height:1.4;color:#2a2c31}
+.setup-plan-features svg{flex:none;width:14px;height:14px;margin-top:3px;color:#1b1c1f}
+.setup-plan-why{font-size:13px;line-height:1.45;color:#4a4d55}
+.setup-plan-notice{display:flex;gap:8px;align-items:flex-start;margin:2px 2px 0;color:#5d6068;font-size:12.5px;line-height:1.45}
+.setup-plan-notice svg{flex:none;width:14px;height:14px;margin-top:2px}
+@media (max-width:420px){
+  .setup-plan-card{padding:14px 14px}
+  .setup-plan-name{font-size:18px;gap:8px}
+  .setup-plan-price{font-size:22px}
+  .setup-plan-line{padding-left:26px;font-size:13px}
+  .setup-plan-open{margin-left:26px}
+  .setup-plan-features{grid-template-columns:1fr}
+}

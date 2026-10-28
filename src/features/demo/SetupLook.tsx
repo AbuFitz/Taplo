@@ -3,13 +3,12 @@ import * as React from "react";
 import { Undo2 } from "lucide-react";
 import { STARTING_LOOKS, applyStartingLook, getStartingLook, startingLookOf, type StartingLook } from "@/features/page/themes/starting-looks";
 import { PALETTES, applyPalette, getPalette, logoPalette, lookStillBackground, originalPalette, palettesFor, type Palette } from "@/features/page/themes/palettes";
-import { recommendArrangement } from "@/features/page/themes/arrangement";
 import { readsWell } from "@/features/page/themes/image-palette";
-import { shaderFallbackCss, resolveStyle } from "@/features/page/themes/resolve";
-import { PROFILE_CHOICES, type StyleOverrides } from "@/features/page/contracts/style";
+import { shaderFallbackCss } from "@/features/page/themes/resolve";
+import { type StyleOverrides } from "@/features/page/contracts/style";
 import type { PageDoc } from "@/features/page/contracts/page";
 import { useDemo, initialState, type DemoState } from "./store";
-import { SetupMobileLayouts } from "./SetupStyles";
+import { SetupArrangement } from "./SetupArrangement";
 
 type Tab = "looks" | "colours";
 type Background = NonNullable<StyleOverrides["background"]>;
@@ -37,9 +36,9 @@ function LookArt({ look, palette }: { look: StartingLook; palette: Palette }) {
 /** The colour picture: the palette's ground, with its card surface and its action colour as two overlapping discs. */
 function ColourArt({ look, palette }: { look: StartingLook; palette: Palette }) {
   return (
-    <span className="colour-art" aria-hidden="true" style={{ background: bgCss(lookStillBackground(look, palette.id === "original" ? undefined : palette)), backgroundColor: palette.base, boxShadow: `inset 0 0 0 1px ${palette.border}` }}>
-      <i className="colour-art-disc" style={{ background: palette.surface, boxShadow: `0 0 0 1px ${palette.border}, 0 4px 10px -2px #0006` }} />
-      <i className="colour-art-disc" style={{ background: palette.accent, boxShadow: "0 4px 10px -2px #0006" }} />
+    <span className="colour-art" aria-hidden="true">
+      <i className="colour-art-disc" style={{ background: palette.base, boxShadow: "0 0 0 1px #0000001f, 0 4px 10px -3px #0004" }} />
+      <i className="colour-art-disc" style={{ background: palette.accent, boxShadow: "0 0 0 1px #0000001a, 0 4px 10px -3px #0004" }} />
     </span>
   );
 }
@@ -94,10 +93,6 @@ export function SetupLook() {
     setNote("");
   };
 
-  const suggestion = recommendArrangement(s.content.identity);
-  const currentLayout = resolveStyle(s.page.themeId, s.page.appearance).spec.header.layout;
-  const useSuggestion = () => update((st) => ({ ...st, page: { ...st.page, appearance: { ...st.page.appearance, header: { ...st.page.appearance.header, layout: suggestion.id, align: suggestion.id === "bento" || suggestion.id === "identity" ? "center" : "left" } } as StyleOverrides } }));
-
   const original = originalPalette(look);
   const palettes: Palette[] = [original, ...palettesFor(look), ...(logoOffer ? [logoOffer] : [])];
   const chosen = drafts.palette ?? "original";
@@ -125,13 +120,12 @@ export function SetupLook() {
         </div>
       ) : (
         <div className="grid gap-3">
-          <p className="setup-look-for">Colours for <b>{look.name}</b>. They change the background tones, cards, text, borders and button together; the look’s type and effect stay.</p>
           <div className="setup-look-grid setup-colour-grid" role="radiogroup" aria-label="Colours">
             {palettes.map((p) => (
               <label className="setup-look-tile" key={p.id}>
-                <input type="radio" name="palette" aria-label={p.id === "original" ? "This look’s own colours" : p.name} checked={chosen === p.id} onChange={() => choosePalette(p.id === "original" ? undefined : p)} />
+                <input type="radio" name="palette" aria-label={p.id === "original" ? "Original colours" : p.name} checked={chosen === p.id} onChange={() => choosePalette(p.id === "original" ? undefined : p)} />
                 <span className="setup-colour-art"><ColourArt look={look} palette={p} /></span>
-                <span className="setup-look-name setup-colour-name">{p.id === "original" ? "This look’s own" : p.name}</span>
+                <span className="setup-look-name setup-colour-name">{p.id === "original" ? "Original" : p.name}</span>
               </label>
             ))}
           </div>
@@ -141,16 +135,7 @@ export function SetupLook() {
       <p className="setup-look-note" role="status" aria-live="polite">{note}</p>
       {drafts.colourUndo ? <button type="button" className="setup-look-undo" onClick={undo}><Undo2 aria-hidden="true" /> Undo last change</button> : null}
 
-      <details className="setup-more setup-look-more" data-testid="more-styling">
-        <summary className="setup-secondary cursor-pointer list-none">Profile arrangement · Optional</summary>
-        <div className="mt-4 grid gap-5">
-          <div className="setup-look-suggest" data-testid="arrangement-suggestion">
-            <p><b>Suggested: {PROFILE_CHOICES.find((c) => c.id === suggestion.id)?.name}</b><small>{suggestion.why}</small></p>
-            {currentLayout !== suggestion.id ? <button type="button" className="setup-look-use" onClick={useSuggestion}>Use this</button> : <small>Already in use</small>}
-          </div>
-          <SetupMobileLayouts />
-        </div>
-      </details>
+      <SetupArrangement />
     </div>
   );
 }

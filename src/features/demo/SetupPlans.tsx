@@ -82,7 +82,7 @@ export function SetupPlans({ inline = false }: { inline?: boolean }) {
       </fieldset>
       <p className="setup-plan-notice" data-testid="plan-disclosure">
         <Info aria-hidden="true" />
-        <span>Prices and plan limits are provisional and may change before launch. Choosing a plan saves a preference only: no payment is taken and nothing is subscribed.</span>
+        <span>Prices and limits are provisional. Choosing a plan saves a preference only; nothing is charged.</span>
       </p>
     </div>
   );

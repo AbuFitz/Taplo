@@ -31,16 +31,16 @@ export interface Palette {
 
 const ON_LIGHT = "#101216";
 export const PALETTES: Palette[] = [
-  { id: "teal", name: "Teal & mint", tone: "dark", base: "#0a1416", glow: ["#0f5a58", "#0b2d33"], surface: "#13262a", text: "#e9f7f5", muted: "#aecac7", border: "#2a4a52", accent: "#7fe3d4", accentText: ON_LIGHT },
-  { id: "gold", name: "Bronze & gold", tone: "dark", base: "#0f0d09", glow: ["#6b5320", "#2b2210"], surface: "#1c1810", text: "#f7f1e3", muted: "#d6ceb9", border: "#40382a", accent: "#e8c56d", accentText: ON_LIGHT },
-  { id: "forest", name: "Forest & jade", tone: "dark", base: "#0a130d", glow: ["#25683d", "#0f2c1b"], surface: "#14231a", text: "#ebf7ee", muted: "#c5ddcc", border: "#2b4a35", accent: "#9fe3b2", accentText: ON_LIGHT },
-  { id: "wine", name: "Wine & rose", tone: "dark", base: "#140a0f", glow: ["#7a2447", "#33111f"], surface: "#25141b", text: "#fcf0f4", muted: "#d6aebd", border: "#4c2733", accent: "#f4a9c0", accentText: ON_LIGHT },
-  { id: "ink", name: "Ink & lilac", tone: "dark", base: "#0d0b1a", glow: ["#4531a0", "#1c1640"], surface: "#181530", text: "#f0edff", muted: "#b8b2e0", border: "#352e6a", accent: "#c7bcff", accentText: ON_LIGHT },
-  { id: "sage", name: "Sage & pine", tone: "light", base: "#edf1ec", glow: ["#cfe2d0", "#f8fbf7"], surface: "#ffffff", text: "#1f2d24", muted: "#506557", border: "#cfdbd0", accent: "#2f5d42", accentText: "#ffffff" },
-  { id: "sand", name: "Sand & amber", tone: "light", base: "#f3eee4", glow: ["#e6d3ad", "#fbf8f1"], surface: "#fffdf8", text: "#3a2f20", muted: "#665941", border: "#e1d6c2", accent: "#8a5a1f", accentText: "#ffffff" },
-  { id: "sky", name: "Slate & indigo", tone: "light", base: "#ecf2f9", glow: ["#c9ddf4", "#f6f9fd"], surface: "#ffffff", text: "#1b2a3d", muted: "#495f7a", border: "#d1ddeb", accent: "#1f5fbf", accentText: "#ffffff" },
-  { id: "blush", name: "Blush & crimson", tone: "light", base: "#f7ecea", glow: ["#ecc9c4", "#fdf7f4"], surface: "#fffaf7", text: "#4a2f33", muted: "#6f5055", border: "#e8d1cd", accent: "#9a3f55", accentText: "#ffffff" },
-  { id: "lilac", name: "Mauve & violet", tone: "light", base: "#f0edf7", glow: ["#d8d0ee", "#faf9fe"], surface: "#ffffff", text: "#2a2540", muted: "#5b547b", border: "#dad4ea", accent: "#5b3fc4", accentText: "#ffffff" },
+  { id: "teal", name: "Teal", tone: "dark", base: "#0a1416", glow: ["#0f5a58", "#0b2d33"], surface: "#13262a", text: "#e9f7f5", muted: "#aecac7", border: "#2a4a52", accent: "#7fe3d4", accentText: ON_LIGHT },
+  { id: "gold", name: "Bronze", tone: "dark", base: "#0f0d09", glow: ["#6b5320", "#2b2210"], surface: "#1c1810", text: "#f7f1e3", muted: "#d6ceb9", border: "#40382a", accent: "#e8c56d", accentText: ON_LIGHT },
+  { id: "forest", name: "Forest", tone: "dark", base: "#0a130d", glow: ["#25683d", "#0f2c1b"], surface: "#14231a", text: "#ebf7ee", muted: "#c5ddcc", border: "#2b4a35", accent: "#9fe3b2", accentText: ON_LIGHT },
+  { id: "wine", name: "Wine", tone: "dark", base: "#140a0f", glow: ["#7a2447", "#33111f"], surface: "#25141b", text: "#fcf0f4", muted: "#d6aebd", border: "#4c2733", accent: "#f4a9c0", accentText: ON_LIGHT },
+  { id: "ink", name: "Ink", tone: "dark", base: "#0d0b1a", glow: ["#4531a0", "#1c1640"], surface: "#181530", text: "#f0edff", muted: "#b8b2e0", border: "#352e6a", accent: "#c7bcff", accentText: ON_LIGHT },
+  { id: "sage", name: "Sage", tone: "light", base: "#edf1ec", glow: ["#cfe2d0", "#f8fbf7"], surface: "#ffffff", text: "#1f2d24", muted: "#506557", border: "#cfdbd0", accent: "#2f5d42", accentText: "#ffffff" },
+  { id: "sand", name: "Sand", tone: "light", base: "#f3eee4", glow: ["#e6d3ad", "#fbf8f1"], surface: "#fffdf8", text: "#3a2f20", muted: "#665941", border: "#e1d6c2", accent: "#8a5a1f", accentText: "#ffffff" },
+  { id: "sky", name: "Slate", tone: "light", base: "#ecf2f9", glow: ["#c9ddf4", "#f6f9fd"], surface: "#ffffff", text: "#1b2a3d", muted: "#495f7a", border: "#d1ddeb", accent: "#1f5fbf", accentText: "#ffffff" },
+  { id: "blush", name: "Blush", tone: "light", base: "#f7ecea", glow: ["#ecc9c4", "#fdf7f4"], surface: "#fffaf7", text: "#4a2f33", muted: "#6f5055", border: "#e8d1cd", accent: "#9a3f55", accentText: "#ffffff" },
+  { id: "lilac", name: "Mauve", tone: "light", base: "#f0edf7", glow: ["#d8d0ee", "#faf9fe"], surface: "#ffffff", text: "#2a2540", muted: "#5b547b", border: "#dad4ea", accent: "#5b3fc4", accentText: "#ffffff" },
 ];
 
 /** The look's own colours, expressed as a palette so every look is handled the same way. */

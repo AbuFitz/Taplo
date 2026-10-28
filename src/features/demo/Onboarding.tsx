@@ -303,29 +303,21 @@ export function Onboarding() {
           {step === "business" ? (
             <div className="grid gap-5">
               <div className="grid gap-5" hidden={parts > 1 && part > 0}>
-              <p className="setup-lede text-[0.95rem] text-muted-foreground">Start with your business name. You can add the rest whenever you’re ready.</p>
               <TaploInput label="Business name" autoFocus={!mobileSetup} placeholder="e.g. North Street Studio" value={c.identity.name} maxLength={100} autoComplete="organization" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
-              <ImageField presentation="identity" framing={s.page.appearance.header?.avatarShape === "circle"?"circle":s.page.appearance.header?.avatarShape === "square"?"square":"logo"} purpose="identity" samples={false} onFramingChange={shape=>update(x=>({...x,page:{...x.page,appearance:{...x.page.appearance,header:{...x.page.appearance.header,avatarShape:shape}}}}))} label="Add a logo or photo · Optional" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
               <div className="setup-address" data-testid="setup-address">
-                <span className="setup-address-label">Your link</span>
-                <span className="setup-address-url" aria-live="polite"><span className="text-muted-foreground">{TAPLO_DOMAINS.host}/</span><strong>{c.identity.slug || "your-name"}</strong></span>
-                <button type="button" onClick={() => setEditSlug((v) => !v)} aria-expanded={editSlug || (showErrors && slugErrs.length > 0)} className="setup-secondary">{editSlug ? "Done" : "Change"}</button>
+                <span className="setup-address-url" aria-live="polite"><span>{TAPLO_DOMAINS.host}/</span><strong>{c.identity.slug || "your-name"}</strong></span>
+                <button type="button" onClick={() => setEditSlug((v) => !v)} aria-expanded={editSlug || (showErrors && slugErrs.length > 0)} className="setup-address-edit">{editSlug ? "Done" : "Change"}</button>
                 {slugErrs.length && c.identity.slug ? <span className="setup-address-error text-destructive">{SLUG_PROBLEM_MESSAGE[slugErrs[0]!]}</span> : null}
               </div>
               {editSlug || (showErrors && slugErrs.length) ? (
                 <TaploInput label="Web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />
               ) : null}
-
-              </div>
-              <details className="setup-more grid gap-4" data-testid="business-more"><summary className="setup-secondary cursor-pointer list-none">Add a description or cover photo · Optional</summary>
-              <div className="mt-4 grid gap-5">
-              <TaploInput label="Short description (optional)" placeholder="e.g. Independent hair studio in St Albans." value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
-              <Overlay trigger={<button type="button" className="setup-secondary">Add a cover photo</button>} open={profileOpen} onOpenChange={setProfileOpen} title="Cover photo" footer={<Button className="min-h-11 w-full" onClick={()=>setProfileOpen(false)}>Done</Button>}><div className="grid gap-5">
-
-
+              <TaploInput label="Short description" placeholder="e.g. Independent hair studio in St Albans." value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
+              <ImageField presentation="identity" framing={s.page.appearance.header?.avatarShape === "circle"?"circle":s.page.appearance.header?.avatarShape === "square"?"square":"logo"} purpose="identity" samples={false} onFramingChange={shape=>update(x=>({...x,page:{...x.page,appearance:{...x.page.appearance,header:{...x.page.appearance.header,avatarShape:shape}}}}))} label="Add a logo or photo · Optional" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
+              <Overlay trigger={<button type="button" className="setup-cover-add">{c.identity.heroImage ? "Change cover photo" : "Add a cover photo"}</button>} open={profileOpen} onOpenChange={setProfileOpen} title="Cover photo" footer={<Button className="min-h-11 w-full" onClick={()=>setProfileOpen(false)}>Done</Button>}><div className="grid gap-5">
               <ImageField purpose="cover" samples={false} label="Cover photo (optional)" cropAspect={16 / 9} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1600} value={c.identity.heroImage ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, heroImage: v ?? undefined } } }))} />
               </div></Overlay>
-              </div></details>
+              </div>
             </div>
           ) : null}
 
@@ -359,7 +351,7 @@ export function Onboarding() {
 
 /** Mobile page composition, starting theme and fine adjustment are separate choices. */
 function WidgetsStep() {
- return <div className="grid gap-7"><p className="setup-lede text-[0.95rem] text-muted-foreground">A look is already on your page. Try another, or adjust the colours.</p><SetupLook/></div>;
+ return <div className="grid gap-7"><SetupLook/></div>;
 }
 
 const toPounds = (minor?: number) => (minor === undefined ? "" : (minor / 100).toFixed(minor % 100 === 0 ? 0 : 2))
