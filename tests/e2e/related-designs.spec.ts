@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 for (const width of [390, 1440])
   test(`relevant design alternatives open correctly at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto("/inspiration/harris-cars");
+    await page.goto("/inspiration/harris-cars", { waitUntil: "networkidle" });
     const related = page.getByRole("region", { name: "Related designs" });
     const links = related.locator("ul a");
     await expect(links).toHaveCount(3);
