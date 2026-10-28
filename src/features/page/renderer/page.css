@@ -704,3 +704,17 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 /* Quick actions that sit over a photograph carry their own surface so they stay legible. */
 .tp-split-shoulder .tp-icon-action { background: var(--tp-surface); color: var(--tp-ink); box-shadow: var(--tp-shadow-2); }
 .tp-header[data-layout="masthead"] .tp-name { font-size: calc(clamp(2.2rem, 11.5cqi, 4.4rem) * var(--tp-heading-scale, 1)); }
+
+/* Photo fades into the page itself, not into a flat copy of its colour: a mask lets whatever is behind (including a moving background) show through, so no band or seam appears while it animates. */
+[data-header-surface="open"] .tp-hero-media,
+.tp-header[data-layout="poster"]:not([data-cover]) .tp-hero-media { background: transparent; }
+[data-header-surface="open"] .tp-hero-media { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--tp-fade, 52%)), transparent 100%); mask-image: linear-gradient(to bottom, #000 calc(100% - var(--tp-fade, 52%)), transparent 100%); }
+[data-header-surface="open"] .tp-hero-media::after,
+[data-header-surface="open"] .tp-header[data-layout="banner"] .tp-profile-photo::after { background: none; }
+[data-header-surface="open"] .tp-header[data-layout="banner"] .tp-profile-photo { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--tp-fade, 52%)), transparent 100%); mask-image: linear-gradient(to bottom, #000 calc(100% - var(--tp-fade, 52%)), transparent 100%); }
+
+/* The phone's own status bar and home-indicator areas can only show one flat colour (the page colour). While a background moves, a soft scrim carries the moving field into that flat colour inside the safe areas, so the edge to the browser's chrome stays continuous. It is zero-height where there is no safe area. */
+[data-taplo-page]:has(.tp-bg-gradient[data-animate="true"])::before,
+[data-taplo-page]:has(.tp-bg-gradient[data-animate="true"])::after { content: ""; position: fixed; left: 0; right: 0; pointer-events: none; z-index: 40; }
+[data-taplo-page]:has(.tp-bg-gradient[data-animate="true"])::before { top: 0; height: env(safe-area-inset-top, 0px); background: linear-gradient(to bottom, var(--tp-background), color-mix(in srgb, var(--tp-background) 0%, transparent)); }
+[data-taplo-page]:has(.tp-bg-gradient[data-animate="true"])::after { bottom: 0; height: env(safe-area-inset-bottom, 0px); background: linear-gradient(to top, var(--tp-background), color-mix(in srgb, var(--tp-background) 0%, transparent)); }

@@ -36,7 +36,7 @@ export const COLOURWAYS: Colourway[] = [
     id: "cobalt", name: "Cobalt / ice", kind: "Deep colour", tone: "dark",
     colors: { background: "#101b3b", text: "#edf3ff", muted: "#a9b9d8", surface: "#1c3054", accent: "#a7caff", accentText: "#101216", border: "#2f4876" },
     background: still({ kind: "gradient", from: "#122656", to: "#10172e", angle: 155, motion: false }),
-    moving: { kind: "gradient", from: "#122656", to: "#10172e", angle: 155, motion: true, pace: "slow" },
+    moving: { kind: "shader", style: "warp", colors: ["#1d3f86", "#10172e"], base: "#10172e", anchors: ["12% 0%", "88% 100%"], motion: true, pace: "slow" },
   },
   {
     id: "ember", name: "Black / ember", kind: "Dark glow", tone: "dark",
@@ -48,7 +48,7 @@ export const COLOURWAYS: Colourway[] = [
     id: "plum", name: "Plum / pearl", kind: "Deep colour", tone: "dark",
     colors: { background: "#261d2c", text: "#f8edf5", muted: "#cfb9cc", surface: "#48324b", accent: "#ecdfef", accentText: "#101216", border: "#5d4561" },
     background: { kind: "gradient", from: "#3d2941", to: "#201b28", angle: 145, motion: false },
-    moving: { kind: "gradient", from: "#3d2941", to: "#201b28", angle: 145, motion: true, pace: "slow" },
+    moving: { kind: "shader", style: "orbs", colors: ["#4d3452", "#201b28"], base: "#201b28", anchors: ["0% 0%", "100% 100%"], motion: true, pace: "slow" },
   },
   {
     id: "violet", name: "Blue / violet", kind: "Dark gradient", tone: "dark",

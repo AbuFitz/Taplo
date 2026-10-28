@@ -359,7 +359,7 @@ export function Onboarding() {
 
 /** Mobile page composition, starting theme and fine adjustment are separate choices. */
 function WidgetsStep() {
- return <div className="grid gap-7"><p className="setup-lede text-[0.95rem] text-muted-foreground">A look is already on your page. Try another, or change the colours.</p><SetupLook/></div>;
+ return <div className="grid gap-7"><p className="setup-lede text-[0.95rem] text-muted-foreground">A look is already on your page. Try another, or adjust the colours.</p><SetupLook/></div>;
 }
 
 const toPounds = (minor?: number) => (minor === undefined ? "" : (minor / 100).toFixed(minor % 100 === 0 ? 0 : 2))
