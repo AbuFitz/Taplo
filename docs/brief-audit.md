@@ -9,13 +9,12 @@ Status words: **Done** (verified in a browser or test this session), **Partial**
 - `playwright.config.ts` serves `next start` on :3100, a **production build**: edits are invisible to tests until `next build`. Use `BASE_URL=http://localhost:3000` against the dev server.
 - Nothing is deployed or merged. The private study site was not reachable; the uploaded standalone HTML of the study was used instead.
 
-## Test triage after this pass (dev server, `BASE_URL=http://localhost:3000`)
-- Fixed: specs still asserting the old 4 profile choices or the name "Seamless Melt" (`curated-setup-blocks`, `mobile-setup-priority`, `connected-editing`).
-- Passing when run alone: setup, registration, profile-engine, profile-style and the arrangement width/axe test; unit suite 345 passed.
-- `category-plan-journeys` "plan illustrations" passes at 390 and 1440 and times out at 320 (60 s budget; four reloads and a click stuck at scroll-into-view). Treated as load/timing sensitivity at 320, not proven to be a product defect.
-- `appearance` "changing a look keeps the current example preview...": FAQ `<details>` open state not preserved in the preview frame. Open; failed in the earlier full run too.
-- Not re-run since the last edits: `saved-looks`, `profiles` render matrix, `category-plan-journeys` 48-category loops (540 s timeouts under 3 workers).
-- A full-suite run was not repeated; the earlier full run was 788 passed / 10 failed.
+## Verification (dev server, `BASE_URL=http://localhost:3000`, 2 workers)
+- Full Playwright run after the final feature edits: **795 passed, 7 failed, 7 skipped** (1.8 h).
+- The 7 failures were each re-run alone after a fix or a timing change, and all pass: `curated-setup-blocks` x2 (the Split preview is off-screen with nine choices, so the spec now scrolls to it); `category-plan-journeys` plan illustrations x3 (four reloads per spec exceeded 60 s under load; budget raised to 180 s); `marketing` hover menu (hover happened before hydration; now waits for network idle, 3/3 passes); `appearance` FAQ-in-preview (timing; passes alone).
+- These were verified individually, not by a second full run. The Playwright config also serves a production build on :3100, which is stale unless rebuilt; all runs above used the dev server.
+- Unit suite: 345 passed. `tsc --noEmit` clean. ESLint on the touched folders: warnings only.
+- Not done: a production build and a run against it; a second full pass; cross-browser (Chromium only).
 
 ## Journey (brief section 1)
 | Item | Status | Evidence |
