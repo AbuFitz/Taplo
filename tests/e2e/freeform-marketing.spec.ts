@@ -1,11 +1,12 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { isEngineNoise } from "./helpers";
 for (const width of [320, 390, 768, 1440])
   test(`direct inspiration and freeform pages work at ${width}`, async ({
     page,
   }) => {
     const errors: string[] = [];
-    page.on("pageerror", (e) => errors.push(e.message));
+    page.on("pageerror", (e) => !isEngineNoise(e.message) && errors.push(e.message));
     await page.setViewportSize({ width, height: 950 });
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/inspiration");

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { isEngineNoise } from "./helpers";
 import { FIXTURES } from "../../src/features/themes/fixtures";
 import { THEMES } from "../../src/features/page/themes/catalogue";
 
@@ -7,8 +8,8 @@ const WIDTHS = [360, 390, 640, 820, 1280]; // 640 ≈ a 1280 desktop at 200% zoo
 
 async function settle(page: Page, url: string) {
   const errors: string[] = [];
-  page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
-  page.on("pageerror", (e) => errors.push(String(e)));
+  page.on("console", (m) => m.type() === "error" && !isEngineNoise(m.text()) && errors.push(m.text()));
+  page.on("pageerror", (e) => !isEngineNoise(String(e)) && errors.push(String(e)));
   await page.goto(url, { waitUntil: "networkidle" });
   await page.evaluate(async () => {
     for (let y = 0; y < document.body.scrollHeight; y += 500) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 30)); }

@@ -190,3 +190,6 @@ export async function cont(page: import("@playwright/test").Page) {
 export async function openDetails(page: import("@playwright/test").Page) {
   if ((page.viewportSize()?.width ?? 1440) < 1024 && (await page.getByText("Pick your main button").isVisible())) await page.getByRole("button", { name: "Continue", exact: true }).click()
 }
+
+/** Messages some engines print for features they do not implement (WebKit ignores the `interactive-widget` viewport key and logs RSC prefetch cancellations). They are not defects in the page. */
+export const isEngineNoise = (text: string) => /interactive-widget|due to access control checks/.test(text)

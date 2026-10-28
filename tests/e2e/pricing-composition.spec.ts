@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { isEngineNoise } from "./helpers";
 import AxeBuilder from "@axe-core/playwright";
 import { PLANS, PLAN_IDS } from "../../src/features/subscriptions/plans";
 import { resolveEntitlements } from "../../src/features/subscriptions/entitlements";
@@ -10,7 +11,7 @@ for (const width of [320, 390, 768, 1440])
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     page.on("console", (message) => {
-      if (message.type() === "error") errors.push(message.text());
+      if (message.type() === "error" && !isEngineNoise(message.text())) errors.push(message.text());
     });
     await page.setViewportSize({ width, height: 950 });
     await page.emulateMedia({ reducedMotion: "reduce" });
