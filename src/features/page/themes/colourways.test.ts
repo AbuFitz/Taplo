@@ -27,10 +27,12 @@ describe("approved colourways", () => {
   it("recolours without touching type, arrangement or widgets, and can be recognised", () => {
     const page = newPage("barber");
     const next = applyColourway(page, COLOURWAYS[1]!);
+    type A = { text?: unknown; header?: unknown; background?: { motion?: boolean } };
+    const ap = (p: typeof page) => p.appearance as unknown as A;
     expect(next.widgets).toEqual(page.widgets);
-    expect((next.appearance as any).text).toEqual((page.appearance as any).text);
-    expect((next.appearance as any).header).toEqual((page.appearance as any).header);
+    expect(ap(next).text).toEqual(ap(page).text);
+    expect(ap(next).header).toEqual(ap(page).header);
     expect(colourwayOf(next)?.id).toBe("cobalt");
-    expect((applyColourway(page, COLOURWAYS[1]!, { motion: true }).appearance as any).background.motion).toBe(true);
+    expect(ap(applyColourway(page, COLOURWAYS[1]!, { motion: true })).background?.motion).toBe(true);
   });
 });

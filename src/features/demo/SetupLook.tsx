@@ -42,10 +42,6 @@ const artOf = (o: StyleOverrides, cw?: Colourway): Art => {
 };
 type Tile = Pick<Design, "id" | "name" | "overrides" | "recipe">;
 
-/** What a page would look like if this colourway were put on it, without touching anything else. */
-const withColours = (base: StyleOverrides, cw: Colourway | undefined, motion: boolean): StyleOverrides =>
-  cw ? (applyColourway({ appearance: base } as PageDoc, cw, { motion }).appearance as StyleOverrides) : base;
-
 /**
  * One calm choice instead of five technical ones. Looks set type, arrangement and how sections sit; Colours set colour and background.
  * Colours chosen by the owner stay when the look changes, and the look's own palette is always one explicit tap away. Nothing moves
@@ -67,7 +63,7 @@ export function SetupLook() {
   const current = getDesign(s.page.themeId) ?? looks.find((l) => l.id === s.page.themeId);
   const pool = [...new Map([...(current ? [current] : []), ...fitted, ...(fitted.length < 4 ? looks.slice(0, 4) : [])].map((l) => [l.id, l] as const)).values()];
   const [frozen, setFrozen] = React.useState<{ key: string; ids: string[] }>({ key, ids: pool.slice(0, 6).map((l) => l.id) });
-  React.useEffect(() => { if (frozen.key !== key) setFrozen({ key, ids: pool.slice(0, 6).map((l) => l.id) }); }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
+  if (frozen.key !== key) setFrozen({ key, ids: pool.slice(0, 6).map((l) => l.id) });
   const ids = frozen.key === key ? frozen.ids : pool.slice(0, 6).map((l) => l.id);
   const known = new Map([...looks, ...fitted, ...(current ? [current] : [])].map((l) => [l.id, l] as const));
   const tiles: Tile[] = ids.flatMap((id) => { const l = known.get(id); return l ? [{ id: l.id, name: l.name, overrides: l.overrides, recipe: (l as Design).recipe ?? {} }] : []; });
@@ -142,7 +138,6 @@ export function SetupLook() {
     ...COLOURWAYS.map((cw) => ({ id: cw.id, name: cw.name, kind: cw.kind, cw })),
   ];
   const selectedColour = pinned ? pinned.id : "own";
-  const design = getDesign(s.page.themeId) ?? tiles[0];
 
   return (
     <div className="setup-look" data-testid="setup-look">
