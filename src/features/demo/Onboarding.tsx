@@ -136,6 +136,14 @@ export function Onboarding() {
   const lastPart = part >= parts - 1
   // The phone preview stays in view while the main button is chosen, so the choice is seen on the page at once.
   // On a computer the handset zooms out to show the whole page, but only once a category has been chosen (never before), and it stays out.
+  // After setup the form clears away and the real draft is shown whole for a moment; the account step is available as soon as that settles.
+  const [revealDone, setRevealDone] = React.useState(false)
+  React.useEffect(() => {
+    if (step !== "publish" || reducedMotion) return
+    const t = window.setTimeout(() => setRevealDone(true), 1200)
+    return () => { window.clearTimeout(t); setRevealDone(false) }
+  }, [step, reducedMotion])
+  const finishPhase = step === "publish" && !reducedMotion && !revealDone ? "reveal" : "account"
   const categoryChosen = state !== null && Boolean(s.content.identity.industryLabel.trim())
   const revealed = !mobileSetup && (stepIndex > SETUP_STEPS.indexOf("industry") || (step === "industry" && categoryChosen))
   const previewStep = ["business", "industry", "goal", "reach", "contacts", "widgets", "publish"].includes(step)
@@ -236,7 +244,7 @@ export function Onboarding() {
   }
 
   return (
-    <div className="setup-scene"><SetupBackdrop phase={stepIndex} /><main ref={shell} data-preview-expanded="false" data-step={step} data-mobile-layout={previewStep ? "preview" : "focus"} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
+    <div className="setup-scene"><SetupBackdrop phase={stepIndex} /><main ref={shell} data-preview-expanded="false" data-step={step} data-finish={step === "publish" ? finishPhase : undefined} data-mobile-layout={previewStep ? "preview" : "focus"} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
       <nav aria-label="Progress" className="setup-progress mb-4">
         <div className="flex min-h-9 items-center gap-3">
           <Link href="/" aria-label="Taplo home" className="setup-home"><TaploLogo className="h-9" /></Link><div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div>
@@ -482,38 +490,50 @@ function PublishStep({ onStudio }: { onStudio: () => void }) {
   const shown = vm ? vm.widgets.filter((w) => w.status.state === "ready").map((w) => label(w.type)) : []
   const [signedIn, setSignedIn] = React.useState(false)
   const [phase, setPhase] = React.useState<"idle" | "connecting" | "done">("idle")
+  const [email, setEmail] = React.useState("")
+  const [password, setPassword] = React.useState("")
+  const [errors, setErrors] = React.useState<{ email?: string; password?: string }>({})
   const [failure, setFailure] = React.useState("")
   const configured = accountsConfigured()
   React.useEffect(() => { void session().then((r) => setSignedIn(r.signedIn)) }, [])
   const toStudio = () => { update((x) => ({ ...x, onboarded: true })); onStudio() }
-  const create = async () => {
-    setPhase("connecting"); setFailure("")
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const next: { email?: string; password?: string } = {}
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) next.email = "Enter an email address like name@example.com."
+    if (password.length < 8) next.password = "Use at least 8 characters."
+    setErrors(next); setFailure("")
+    if (next.email || next.password) return
+    setPhase("connecting")
     const r = await connect()
     if (r.ok) { setPhase("done"); window.setTimeout(toStudio, 900); return }
     setPhase("idle")
-    setFailure(r.reason === "cancelled" ? "Sign-up was cancelled. Your draft is still here." : r.reason === "not-configured" ? WHEN_UNAVAILABLE.accounts : "That didn’t work. Your draft is unchanged, so you can try again.")
+    setFailure(r.reason === "cancelled" ? "Sign-up was cancelled. Your draft is still here." : r.reason === "not-configured" ? "Account creation isn’t available in this environment yet, so nothing was created or saved. Your draft is unchanged and still in this browser." : "That didn’t work. Your draft is unchanged, so you can try again.")
   }
   return (
     <div className="grid gap-5" data-testid="finish-step">
-      <p className="text-sm text-muted-foreground">This is your draft. It is not public, and nothing here is published until you choose to.</p>
+      <p className="text-sm text-muted-foreground">This is your draft. It stays private until you choose to publish it from Studio.</p>
       <span className="sr-only" data-testid="page-summary">{shown.length ? `On your page: ${shown.join(", ")}.` : ""}</span>
       {phase === "done" ? (
-        <p role="status" className="setup-finish-done"><Check aria-hidden="true" /> Account connected. Opening Studio…</p>
+        <p role="status" className="setup-finish-done"><Check aria-hidden="true" /> Account connected and draft saved. Opening Studio…</p>
       ) : signedIn ? (
         <Button size="lg" data-testid="save-draft" onClick={toStudio}>Open Studio</Button>
-      ) : configured ? (
-        <div className="grid gap-3" data-testid="account-step">
-          <p className="text-sm">Create an account to keep this page and open Studio.</p>
-          <Button size="lg" disabled={phase === "connecting"} onClick={() => void create()}>{phase === "connecting" ? "Connecting…" : "Create account"}</Button>
-          {failure ? <p role="alert" className="text-sm text-destructive">{failure}</p> : null}
-        </div>
       ) : (
-        <div className="grid gap-3" data-testid="account-step">
-          <p className="text-sm" data-testid="draft-note">Accounts aren’t connected yet, so this draft is kept in this browser only and can’t be saved to an account.</p>
-          <Button size="lg" data-testid="save-draft" onClick={toStudio}>Open Studio</Button>
-          <p className="text-xs text-muted-foreground" data-testid="dev-route-note">Testing route: this opens Studio without an account and is only available in this testing environment.</p>
-        </div>
+        <form className="setup-account" data-testid="account-step" onSubmit={(e) => void submit(e)} noValidate>
+          {!configured ? <p className="setup-account-notice" data-testid="draft-note">Accounts aren’t connected in this environment yet. You can see the sign-up step, but it can’t create an account, and your draft is kept in this browser only.</p> : null}
+          <TaploInput label="Email" type="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email} aria-invalid={Boolean(errors.email)} />
+          <TaploInput label="Password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} error={errors.password} aria-invalid={Boolean(errors.password)} hint="At least 8 characters." />
+          <Button size="lg" type="submit" disabled={phase === "connecting"}>{phase === "connecting" ? "Creating account…" : "Create account"}</Button>
+          {failure ? <p role="alert" className="text-sm text-destructive" data-testid="account-failure">{failure}</p> : null}
+        </form>
       )}
+      {phase !== "done" && !signedIn ? (
+        <div className="setup-devroute" data-testid="dev-route">
+          <p className="setup-devroute-label">Development route</p>
+          <p className="text-xs text-muted-foreground" data-testid="dev-route-note">Opens Studio without an account. It exists only in this testing environment and is not part of the customer experience.</p>
+          <Button variant="outline" size="lg" data-testid="save-draft" onClick={toStudio}>Open Studio (development)</Button>
+        </div>
+      ) : null}
     </div>
   )
 }

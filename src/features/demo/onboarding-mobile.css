@@ -343,3 +343,22 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 @media (max-width:1023px){
   .setup-backdrop::after{content:"";position:absolute;inset:0 0 auto 0;height:112px;background:linear-gradient(rgb(8 8 8 / .66),rgb(8 8 8 / .3) 55%,transparent);pointer-events:none}
 }
+
+/* Ending: the form clears away and the draft is shown whole and still; then the account step arrives. No fake progress, just a transition between two real states. */
+.setup-flow[data-finish=reveal] .setup-workspace>section,.setup-flow[data-finish=reveal] .setup-workspace>.setup-panel{opacity:0;pointer-events:none}
+.setup-flow[data-finish] .setup-workspace>section,.setup-flow[data-finish] .setup-workspace>.setup-panel{transition:opacity .5s ease}
+@media (min-width:1024px){
+  .setup-flow[data-finish] .setup-workspace>aside{transition:transform .9s cubic-bezier(.22,.75,.2,1)}
+  .setup-flow[data-finish=reveal] .setup-workspace>aside{transform:translateX(-26%)}
+}
+@media (max-width:1023px){
+  .setup-flow[data-finish=reveal] .setup-workspace>aside{padding-bottom:6%!important}
+  .setup-flow[data-finish] .setup-workspace>aside{transition:padding-bottom .6s cubic-bezier(.22,.75,.2,1)}
+}
+@media (prefers-reduced-motion:reduce){.setup-flow[data-finish] .setup-workspace>*{transition:none!important}}
+.setup-account{display:grid;gap:14px}
+.setup-account-notice{margin:0;padding:12px 14px;border-radius:14px;background:#f6f6f8;color:#3d3d44;font-size:13px;line-height:1.45}
+.setup-finish-done{display:flex;gap:10px;align-items:center;margin:0;padding:14px 16px;border-radius:14px;background:#effaf2;color:#14532d;font-size:14px;font-weight:600}
+.setup-finish-done svg{width:18px;height:18px;flex:none}
+.setup-devroute{display:grid;gap:8px;margin-top:6px;padding:14px;border-radius:16px;border:1px dashed #c9c9d1}
+.setup-devroute-label{margin:0;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#6b6b73}
