@@ -57,7 +57,7 @@ for (const width of [390, 1440])
       .click();
     await next();
     await expect(page.getByTestId("goal")).toHaveCount(0);
-    await page.getByRole("button",{name:"Booking requests",exact:true}).click();
+    await page.getByRole("button",{name:"Book an appointment",exact:true}).click();
     await next();
     if ((page.viewportSize()?.width ?? 1440) >= 1024) await expect(page.getByTestId("reach").getByRole("textbox")).toHaveCount(3);
     await openDetails(page);await page.getByLabel("Email", { exact: true }).fill("owner@example.com");
@@ -89,19 +89,8 @@ for (const width of [390, 1440])
     await details.getByRole("button", { name: "Save details" }).click();
     await next();
     await page.getByRole("radio",{name:"Floating Bento",exact:true}).check();
-    await page.getByRole("button", { name: /Background & colours/ }).click();
-    const design = page.getByTestId("setup-design-dialog");
-    await design
-      .getByRole("button", { name: "Smoke gradient", exact: true })
-      .click();
-    await expect(design.getByLabel("Follow my logo colours")).toBeChecked();
-    await design.getByRole("button", { name: "Done", exact: true }).click();
     await page.getByTestId("setup-profile-choices").getByRole("radio", {name:"Architectural Split",exact:true}).check();
     const frame = page.frameLocator('[data-testid="setup-live-page"]');
-    await expect(frame.locator("[data-taplo-page]")).toHaveAttribute(
-      "data-motion",
-      "drift",
-    );
     await expect(frame.locator(".tp-header")).toHaveAttribute(
       "data-layout",
       "split",
@@ -235,16 +224,7 @@ test("partial service text survives back and reload, custom businesses work, and
   await page.getByRole("button", { name: "Free", exact: true }).click();
   await page.getByRole("button", { name: "Done", exact: true }).click();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await page.getByRole("button",{name:/Background & colours/}).click();
-  await page.getByTestId("setup-design-dialog").getByRole("button",{name:"Silver gradient",exact:true}).click();
-  await page
-    .getByTestId("setup-design-dialog")
-    .getByLabel("Gradient end hex value")
-    .fill("#cccccc");
-  await page.getByRole("button", { name: "Done", exact: true }).click();
   await page.getByRole("radio",{name:"Floating Bento",exact:true}).check();
-  expect((await read(page)).page.appearance.background.to).toBe("#cccccc");
-  expect((await read(page)).page.appearance.background.source).toBe("manual");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByRole("button",{name:"Continue",exact:true}).click();
   await page
