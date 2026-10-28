@@ -403,3 +403,25 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 @media (min-width:1800px) and (min-height:1000px){.setup-flow{--z:1.2;width:min(calc((100vw - 56px) / 1.2),1440px);height:min(calc((100dvh - 56px) / 1.2),880px)}}
 @media (min-width:2400px) and (min-height:1300px){.setup-flow{--z:1.5;width:min(calc((100vw - 56px) / 1.5),1440px);height:min(calc((100dvh - 56px) / 1.5),880px)}}
 @media (min-width:3200px) and (min-height:1700px){.setup-flow{--z:2;width:min(calc((100vw - 56px) / 2),1440px);height:min(calc((100dvh - 56px) / 2),880px)}}
+
+/* Look picture, final proportions: generous padding, a roomy card with a rounded-square mark, long and short lines, a quiet full-width bar, a thin action pill. */
+.setup-look-art{box-shadow:0 14px 26px -16px #0008}
+.look-art{padding:11% 8.5% 8%;gap:6.5%}
+.look-art-card{padding:6% 6.5%;gap:7%;border-radius:15px}
+.look-art-mark{width:11%;min-width:16px;border-radius:7px}
+.look-art-lines{gap:8px}
+.look-art-lines i{height:5px;border-radius:4px}
+.look-art-lines i+i{width:52%;height:4px}
+.look-art-block{height:17%;border-radius:11px;box-shadow:none}
+.look-art-action{height:7px;min-height:7px;width:84%}
+
+/* Sized from the tile's own width so the drawing keeps its proportions from a narrow phone to a wide monitor. */
+.setup-look-art{container-type:inline-size}
+.look-art{padding:10cqw 8cqw 7cqw;gap:4.6cqw;align-content:center}
+.look-art-card{padding:4.2cqw 5cqw;gap:4.4cqw;border-radius:6cqw}
+.look-art-mark{width:10.5cqw;min-width:0;border-radius:3cqw}
+.look-art-lines{gap:2.6cqw}
+.look-art-lines i{height:2.2cqw;border-radius:2cqw}
+.look-art-lines i+i{height:1.8cqw;width:50%}
+.look-art-block{height:10.5cqw;border-radius:4.6cqw}
+.look-art-action{height:3.4cqw;min-height:0;width:86%;border-radius:99px}

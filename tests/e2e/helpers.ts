@@ -184,7 +184,7 @@ export async function cont(page: import("@playwright/test").Page, opts: { keepLo
   const before = await heading()
   await btn.click()
   // The look now follows the name; flows that are not about the look pass straight through it.
-  if (before === "Make it yours." && !opts.keepLook) {
+  if (before !== "Choose a look." && !opts.keepLook) {
     await page.getByRole("heading", { level: 1, name: "Choose a look." }).waitFor({ timeout: 5000 }).catch(() => undefined)
     if ((await heading()) === "Choose a look.") await btn.click()
   }
