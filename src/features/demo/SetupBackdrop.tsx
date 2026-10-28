@@ -11,7 +11,7 @@ const Field = React.lazy(async () => {
   const { MeshGradient } = await import("@paper-design/shaders-react");
   return {
     default: ({ moving, light }: { moving: boolean; light: boolean }) => (
-      <MeshGradient width="100%" height="100%" colors={light ? ["#ffffff", "#d4d4d4", "#9a9a9a", "#f0f0f0"] : ["#050505", "#f5f5f5", "#777777", "#161616"]} distortion={light ? 0.75 : 0.65} swirl={light ? 0.3 : 0.18} grainMixer={0.08} grainOverlay={0.05} speed={moving ? 0.12 : 0} minPixelRatio={1} maxPixelCount={light ? 220000 : 380000} />
+      <MeshGradient width="100%" height="100%" colors={light ? ["#ffffff", "#d4d4d4", "#9a9a9a", "#f0f0f0"] : ["#050505", "#f5f5f5", "#777777", "#161616"]} distortion={light ? 0.9 : 0.85} swirl={light ? 0.45 : 0.4} grainMixer={0.06} grainOverlay={0.04} speed={moving ? 0.38 : 0} minPixelRatio={1} maxPixelCount={light ? 220000 : 380000} />
     ),
   };
 });
@@ -33,6 +33,8 @@ export function SetupBackdrop({ phase = 0 }: { phase?: number }) {
   }, []);
   return (
     <div className="setup-backdrop" aria-hidden="true" data-testid="setup-backdrop" data-reduced-motion={reduced} data-phase={phase} data-tone={light ? "light" : "dark"}>
+      {/* Where WebGL is missing (or before it starts) the same mood is made of slow drifting light, so the backdrop is never a flat card of grey. */}
+      <span className="setup-aurora" data-moving={!reduced && visible} aria-hidden="true"><i /><i /><i /><i /></span>
       {webgl && !reduced ? <React.Suspense fallback={null}><Field moving={visible} light={light} /></React.Suspense> : null}
     </div>
   );

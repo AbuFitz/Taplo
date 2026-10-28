@@ -43,7 +43,9 @@ for (const g of SHOWCASE) for (const item of g.items) {
   const design = getDesign(item.design)
   if (!design || item.scenario === "fixnow" || item.scenario === "brightlearn") continue
   EXAMPLE_LOOK[item.scenario] = design.id
-  EXAMPLE_OVERRIDES[item.scenario] = { header: { ...(item.arrangement ? { layout: item.arrangement, align: item.arrangement === "bento" || item.arrangement === "identity" ? "center" : "left" } : {}), ...(item.logo === false ? { avatarShape: "none" } : {}) } } as StyleOverrides
+  // The designed example is the design itself (its own colours, cards and type) plus this page's arrangement: exactly what "Use this design" gives an owner.
+  const pose = { ...(item.arrangement ? { layout: item.arrangement, align: item.arrangement === "bento" || item.arrangement === "identity" ? "center" : "left" } : {}), ...(item.logo === false ? { avatarShape: "none" } : {}) }
+  EXAMPLE_OVERRIDES[item.scenario] = { ...structuredClone(design.overrides), header: { ...design.overrides.header, ...pose } } as StyleOverrides
 }
 
 /** A scenario on its own look opens as the designed example; an explicit look (the looks sheet, the lab) shows that look plain. */

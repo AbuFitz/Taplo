@@ -7,6 +7,7 @@ import { PageRenderer, buildPageViewModel } from "@/features/page/renderer"
 import { styleOverridesSchema } from "@/features/page/contracts/style"
 import { previewSectionTreatment } from "@/features/page/preview-appearance"
 import { getWidget } from "@/features/page/widgets/registry"
+import { getDesign } from "@/features/page/themes/designs"
 import { SCENARIOS, type Scenario } from "./content"
 import { initialConfig, toContent, toPage, type LabConfig, type LabMessage } from "./lab-state"
 
@@ -23,6 +24,9 @@ export function Frame() {
     // `o` carries a URL-encoded JSON StyleOverrides, so marketing captures and shared links can pose any configuration of the engine.
     try { const raw = q.get("o"); if (raw) return { ...base, overrides: styleOverridesSchema.parse(JSON.parse(raw)) } } catch { /* an invalid pose falls back to the plain look */ }
     const arr = q.get("arr")
+    // A named design is shown as the design itself (what "Use this design" applies), not as the bare look.
+    const design = q.get("design") === "1" ? getDesign(q.get("look") ?? "") : undefined
+    if (design) base.overrides = structuredClone(design.overrides)
     const header = { ...base.overrides.header, ...(arr && (HEADER_LAYOUTS as readonly string[]).includes(arr) ? { layout: arr as (typeof HEADER_LAYOUTS)[number], align: (arr === "bento" || arr === "identity") ? ("center" as const) : ("left" as const) } : {}), ...(q.get("logo") === "0" ? { avatarShape: "none" as const } : {}) }
     return Object.keys(header).length ? { ...base, overrides: { ...base.overrides, header: { ...base.overrides.header, ...header } } } : base
   })

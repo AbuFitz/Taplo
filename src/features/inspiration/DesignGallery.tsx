@@ -48,7 +48,7 @@ function stylesOf(p: Pick): StyleTag[] {
   return out
 }
 const arrangementName = (a?: Arrangement) => PROFILE_CHOICES.find((c) => c.id === a)?.name
-const frameSrc = (p: Pick) => `/appearance/frame?scenario=${p.scenario}&look=${p.design.id}${p.logo === false ? "&logo=0" : ""}${p.arrangement ? `&arr=${p.arrangement}` : ""}`
+const frameSrc = (p: Pick) => `/appearance/frame?scenario=${p.scenario}&look=${p.design.id}&design=1${p.logo === false ? "&logo=0" : ""}${p.arrangement ? `&arr=${p.arrangement}` : ""}`
 
 /** One handset: the page as a still, or (when active) the page itself, scrollable and tappable inside the frame. */
 function Phone({ pick, active }: { pick: Pick; active: boolean }) {
@@ -81,8 +81,6 @@ export function DesignGallery() {
   const [style, setStyle] = React.useState<StyleTag | null>(null)
   const [arr, setArr] = React.useState<Arrangement | null>(null)
   const [open, setOpen] = React.useState<Pick | null>(null)
-  const [active, setActive] = React.useState<string | null>(null)
-  const timer = React.useRef<number | undefined>(undefined)
   const all = React.useMemo<Pick[]>(() => interleave(ALL_SHOWCASE.flatMap((i) => { const design = getDesign(i.design); return design ? [{ scenario: i.scenario, design, note: i.note, logo: i.logo, arrangement: i.arrangement, group: i.group }] : [] })), [])
   const q = query.trim().toLowerCase()
   const shown = all.filter((p) => {
@@ -92,13 +90,11 @@ export function DesignGallery() {
     if (arr && p.arrangement !== arr) return false
     return !q || [name, p.note, p.design.name, SCENARIOS[p.scenario].label, arrangementName(p.arrangement) ?? ""].join(" ").toLowerCase().includes(q)
   })
-  const hover = (key: string) => { window.clearTimeout(timer.current); timer.current = window.setTimeout(() => setActive(key), 380) }
-  const leave = () => { window.clearTimeout(timer.current); setActive(null) }
   return (
     <div className="dg">
       <header className="dg-head">
         <h1>Pages for every kind of business.</h1>
-        <p>Every page here is a real Taplo page: a profile arrangement, a material and a design chosen to fit the business. Hover to scroll a page, or open one to look closer, then make it yours.</p>
+        <p>Every page here is a real Taplo page: a profile arrangement, a material and a design chosen to fit the business. Open one to scroll it, try it on a phone or a computer, then make it yours.</p>
       </header>
       <div className="dg-bar" role="region" aria-label="Filter designs">
         <div className="dg-search"><Search aria-hidden="true" /><input type="search" aria-label="Search pages" placeholder="Search: florist, plumber, tutor…" value={query} onChange={(e) => setQuery(e.target.value)} />{query ? <button type="button" aria-label="Clear search" onClick={() => setQuery("")}><X /></button> : null}</div>
@@ -110,12 +106,11 @@ export function DesignGallery() {
         {shown.map((p) => {
           const key = p.scenario
           const name = SCENARIOS[p.scenario].content.identity.name
-          const live = active === key
           return (
-            <li key={key} className="dg-item" data-testid="design-card" onPointerEnter={(e) => { if (e.pointerType === "mouse") hover(key) }} onPointerLeave={leave} onFocus={() => hover(key)} onBlur={leave}>
+            <li key={key} className="dg-item" data-testid="design-card">
               <div className="dg-open">
-                <Phone pick={p} active={live} />
-                {!live ? <button type="button" className="dg-hit" onClick={() => setOpen(p)} aria-label={`${name}, open this page`} /> : null}
+                <Phone pick={p} active={false} />
+                <button type="button" className="dg-hit" onClick={() => setOpen(p)} aria-label={`${name}, open this page`} />
               </div>
               <div className="dg-meta">
                 <h2>{name}</h2>
