@@ -217,10 +217,5 @@ test("partial service text survives back and reload, custom businesses work, and
   await page.getByRole("button", { name: "Done", exact: true }).click();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await page
-    .getByRole("button", { name: /Business name and image Add/ })
-    .click();
-  await expect(
-    page.getByLabel("Add a logo or photo · Optional: upload a picture"),
-  ).toBeAttached();
+  await expect(page.getByRole("heading", { name: "Review your page", exact: true })).toBeVisible();
 });
