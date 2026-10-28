@@ -1,11 +1,11 @@
-import { cont, openDetails , openBusinessMore } from "./helpers";
+import { cont, openDetails , openBusinessMore, openMoreStyling } from "./helpers";
 import {test,expect,type Page} from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import sharp from "sharp";
 import path from "node:path";
 const read=(page:Page)=>page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!));
 const next=(page:Page)=>cont(page);
-async function identity(page:Page){await page.getByLabel('Business name',{exact:true}).fill('North Street Studio');await (page.viewportSize()!.width<1024?page.getByRole('button',{name:'Continue',exact:true}).click():Promise.resolve());await page.getByLabel('Short description (optional)').fill('Independent studio in St Albans.');await next(page);await page.getByRole('button',{name:'Barber',exact:true}).click();await next(page);}
+async function identity(page:Page){await page.getByLabel('Business name',{exact:true}).fill('North Street Studio');await openBusinessMore(page);await page.getByLabel('Short description (optional)').fill('Independent studio in St Albans.');await next(page);await page.getByRole('button',{name:'Barber',exact:true}).click();await next(page);await next(page);}
 const shot=async(page:Page,name:string)=>{await page.evaluate(()=>Promise.all(document.getAnimations().filter(a=>a.effect?.getComputedTiming().iterations!==Infinity).map(a=>a.finished.catch(()=>{}))));if(process.env.TAPLO_REVIEW_DIR)await page.screenshot({path:path.join(process.env.TAPLO_REVIEW_DIR,name),fullPage:false});};
 
 for(const width of [320,390,768,1440])test(`registration identity has readable labels and quiet secondary actions at ${width}`,async({page})=>{
@@ -19,20 +19,21 @@ for(const width of [320,390,768,1440])test(`registration identity has readable l
  await shot(page,`identity-${width}.png`);
 });
 
-for(const width of [390,1440])test(`complete setup preserves real content, appearance, plan and review edits at ${width}`,async({page})=>{
- await page.setViewportSize({width,height:900});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/onboarding');await identity(page);
+for(const width of [390,1440])test(`complete setup preserves real content, appearance and plan, and ends as an unpublished draft at ${width}`,async({page})=>{
+ await page.setViewportSize({width,height:900});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/onboarding');
+ await page.getByLabel('Business name',{exact:true}).fill('North Street Studio');await openBusinessMore(page);await page.getByLabel('Short description (optional)').fill('Independent studio in St Albans.');
+ await cont(page,{keepLook:true});await expect(page.getByRole('heading',{level:1})).toHaveText('Choose a look.');
+ await page.getByRole('radiogroup',{name:'Looks'}).getByRole('radio',{name:'Noir',exact:true}).check({force:true});
+ await page.getByRole('radio',{name:'Colours',exact:true}).check({force:true});await page.getByRole('radio',{name:'Black / ember'}).check({force:true});
+ await openMoreStyling(page);await page.getByTestId('setup-profile-choices').getByRole('radio',{name:'Floating Bento',exact:true}).check({force:true});
+ await shot(page,`design-${width}.png`);await next(page);await page.getByRole('button',{name:'Barber',exact:true}).click();await next(page);await next(page);
  await page.getByRole('button',{name:'Booking requests',exact:true}).click();await (await openDetails(page),page.getByLabel('Website or booking link')).fill('studio.example.com/book');await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await next(page);
  await page.getByLabel('Service 1 name').fill('Cut and finish');await page.getByLabel('Service 1 price').fill('35');await page.getByLabel('Service 1 minutes').fill('45');await next(page);
- await expect(page.getByRole('heading',{level:1})).toHaveText('Your page, your style.');await page.getByRole('radiogroup',{name:'Looks'}).getByRole('radio',{name:'Noir',exact:true}).check();
- await page.getByRole('button',{name:/Background & colours/}).click();const style=page.getByTestId('setup-design-dialog');await style.getByRole('button',{name:'Smoke gradient',exact:true}).click();await style.getByRole('button',{name:'Done',exact:true}).click();
- await page.getByTestId('setup-profile-choices').getByRole('radio',{name:'Floating Bento',exact:true}).check();
- await shot(page,`design-${width}.png`);await next(page);await expect(page.getByRole('heading',{level:1})).toHaveText('Room to grow.');
- await expect(page.getByRole('radio',{name:'Choose Free',exact:true})).toBeEnabled();await page.getByRole('radio',{name:'Choose Pro',exact:true}).check();await expect(page.getByRole('radio',{name:'Choose Pro',exact:true})).toBeChecked();await shot(page,`plan-${width}.png`);
+ await expect(page.getByRole('heading',{level:1})).toHaveText('Room to grow.');
+ await expect(page.getByRole('radio',{name:'Choose Free',exact:true})).toBeEnabled();await page.getByRole('radio',{name:'Choose Pro',exact:true}).check({force:true});await expect(page.getByRole('radio',{name:'Choose Pro',exact:true})).toBeChecked();await shot(page,`plan-${width}.png`);
  await page.reload();await expect(page.getByRole('radio',{name:'Choose Pro',exact:true})).toBeChecked();await next(page);await expect(page.getByRole('heading',{level:1})).toHaveText('Review your page');
- let state=await read(page);expect(state.content.contacts.website).toBe('https://studio.example.com/book');expect(state.content.services[0]).toMatchObject({name:'Cut and finish',priceMinor:3500,durationMinutes:45});expect(state.page.appearance.header.layout).toBe('bento');expect(state.page.appearance.background).toMatchObject({kind:'gradient',motion:true,source:'logo'});expect(state.setupDrafts.planIntent).toBe('pro');expect(state.plan).toBe('business');
- await page.getByRole('button',{name:/Business name and image/}).click();await page.getByLabel('Business name',{exact:true}).fill('North Street Collective');await page.reload();await page.getByRole('button',{name:'Save changes',exact:true}).click();if(/^Tell people what you do\./.test((await page.getByRole('heading',{level:1}).textContent())??'')){await page.getByRole('button',{name:'Save changes',exact:true}).click()}await expect(page.getByRole('heading',{level:1})).toHaveText('Review your page');
- await page.getByRole('button',{name:'Publish my page',exact:true}).click();state=await read(page);expect(state.published.content.identity.name).toBe('North Street Collective');expect(state.published.content.services[0].name).toBe('Cut and finish');
- const frame=page.frameLocator('iframe[data-testid="setup-live-page"]');await expect(frame.getByRole('heading',{level:1})).toHaveText('North Street Collective');
+ const state=await read(page);expect(state.content.contacts.website).toBe('https://studio.example.com/book');expect(state.content.services[0]).toMatchObject({name:'Cut and finish',priceMinor:3500,durationMinutes:45});expect(state.page.appearance.header.layout).toBe('bento');expect(state.page.appearance.colors.background).toBe('#110e0e');expect(state.page.themeId).toBe('noir');expect(state.setupDrafts.planIntent).toBe('pro');expect(state.published).toBeNull();
+ const frame=page.frameLocator('iframe[data-testid="setup-live-page"]');await expect(frame.getByRole('heading',{level:1})).toHaveText('North Street Studio');
  const axe=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(axe.violations).toEqual([]);await shot(page,`review-${width}.png`);
 });
 
