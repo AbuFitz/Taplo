@@ -476,3 +476,11 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 /* Colours: a white frame with a fine inner frame, the two colours centred inside. */
 .setup-colour-art{border-radius:16px;box-shadow:0 0 0 1px #e3e3df,0 8px 16px -12px #0004}
 .colour-art::after{content:"";position:absolute;inset:6px;border-radius:11px;box-shadow:inset 0 0 0 1px #ebebe7;pointer-events:none}
+
+/* Frames: gently rounded, not pill-like. */
+.setup-look-art,.look-art{border-radius:14px}
+.look-art-card{border-radius:3.6cqw}
+.look-art-mark{border-radius:1.8cqw}
+.look-art-block{border-radius:2.8cqw}
+.setup-colour-art{border-radius:12px}
+.colour-art::after{border-radius:7px}
