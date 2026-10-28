@@ -182,3 +182,7 @@
     font-size: 26px;
   }
 }
+
+/* The white booking section melts into this one instead of meeting it at a hard edge. */
+.home-presence{position:relative;isolation:isolate}
+.home-presence::before{content:"";position:absolute;z-index:-1;inset:0 0 auto;height:clamp(120px,16vw,220px);pointer-events:none;background:linear-gradient(#fff,rgb(255 255 255 / .72) 22%,rgb(255 255 255 / .34) 52%,rgb(255 255 255 / .1) 80%,transparent)}
