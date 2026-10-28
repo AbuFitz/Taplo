@@ -9,7 +9,11 @@ import type { StyleOverrides } from "@/features/page/contracts/style";
 import { shaderFallbackCss } from "@/features/page/themes/resolve";
 import { FONT_STACKS } from "@/features/page/themes/font-metadata";
 import { useDemo, initialState, type DemoState } from "./store";
+import { resolveStyle } from "@/features/page/themes/resolve";
 import { SetupMobileLayouts } from "./SetupStyles";
+import { recommendArrangement } from "@/features/page/themes/arrangement";
+import { PROFILE_CHOICES } from "@/features/page/contracts/style";
+import { paletteFromAccent, readsWell } from "@/features/page/themes/image-palette";
 
 type Tab = "looks" | "colours";
 type Art = { colors: NonNullable<StyleOverrides["colors"]>; background: NonNullable<StyleOverrides["background"]>; font?: keyof typeof FONT_STACKS };
@@ -111,6 +115,27 @@ export function SetupLook() {
     setNote("");
   };
 
+  // A palette taken from the logo is only ever offered, never applied by itself, and only when it reads well as a page.
+  const accent = s.content.identity.logo?.accent;
+  const logoPalette = React.useMemo(() => {
+    if (!accent) return null;
+    const dark = resolveStyle(s.page.themeId, s.page.appearance).attrs["data-tone"] === "dark";
+    const p = paletteFromAccent(accent, dark);
+    return readsWell(p) ? p : null;
+  }, [accent, s.page.themeId, s.page.appearance]);
+  const useLogoColours = () => {
+    if (!logoPalette) return;
+    update((st) => {
+      const old = st.page.appearance as StyleOverrides;
+      return { ...st, page: { ...st.page, appearance: { ...old, colors: { ...(old.colors ?? {}), ...logoPalette } as NonNullable<StyleOverrides["colors"]>, background: { kind: "solid", color: logoPalette.background } } as StyleOverrides }, setupDrafts: { ...st.setupDrafts, colourway: undefined, colourMotion: false, colourUndo: remember(st) } };
+    });
+    setNote("Your logo’s colours are on your page. Undo puts the previous colours back.");
+  };
+
+  const suggestion = recommendArrangement(s.content.identity);
+  const currentLayout = resolveStyle(s.page.themeId, s.page.appearance).spec.header.layout;
+  const useSuggestion = () => update((st) => ({ ...st, page: { ...st.page, appearance: { ...st.page.appearance, header: { ...st.page.appearance.header, layout: suggestion.id, align: suggestion.id === "bento" || suggestion.id === "identity" ? "center" : "left" } } as StyleOverrides } }));
+
   const base = (getDesign(s.page.themeId)?.overrides ?? (s.page.appearance as StyleOverrides));
   const colourTiles: { id: string; name: string; kind: string; cw?: Colourway }[] = [
     { id: "own", name: "This look’s own", kind: "Original palette" },
@@ -152,6 +177,19 @@ export function SetupLook() {
               </label>
             ))}
           </div>
+          {accent ? (
+            <div className="setup-look-logo" data-testid="logo-colours">
+              {logoPalette ? (
+                <>
+                  <span className="setup-look-art setup-look-logo-art"><LookArt art={{ colors: logoPalette, background: { kind: "solid", color: logoPalette.background } }} name={s.content.identity.name} /></span>
+                  <span className="setup-look-logo-copy"><b>From your logo</b><small>Suggested colours. Nothing changes until you choose them.</small>
+                    <button type="button" className="setup-look-use" onClick={useLogoColours}>Use these colours</button></span>
+                </>
+              ) : (
+                <p className="setup-look-note">Your logo’s colours don’t suit a page background, so none are suggested.</p>
+              )}
+            </div>
+          ) : null}
           {pinned?.moving ? (
             <label className="setup-look-motion">
               <input type="checkbox" checked={motion} onChange={(e) => setMotion(e.target.checked)} />
@@ -168,7 +206,13 @@ export function SetupLook() {
 
       <details className="setup-more setup-look-more" data-testid="more-styling">
         <summary className="setup-secondary cursor-pointer list-none">Profile arrangement · Optional</summary>
-        <div className="mt-4 grid gap-5"><SetupMobileLayouts /></div>
+        <div className="mt-4 grid gap-5">
+          <div className="setup-look-suggest" data-testid="arrangement-suggestion">
+            <p><b>Suggested: {PROFILE_CHOICES.find((c) => c.id === suggestion.id)?.name}</b><small>{suggestion.why}</small></p>
+            {currentLayout !== suggestion.id ? <button type="button" className="setup-look-use" onClick={useSuggestion}>Use this</button> : <small>Already in use</small>}
+          </div>
+          <SetupMobileLayouts />
+        </div>
       </details>
     </div>
   );
