@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { SiteFooter, SiteHeader } from "@/features/marketing/Site";
+import { InspirationFrame } from "@/features/inspiration/InspirationFrame";
 import { ArrowLink } from "@/features/marketing/Scenes";
 import { MarketingPreview } from "@/features/marketing/MarketingPreview";
 import { DesignPreview } from "@/features/inspiration/DesignPreview";
@@ -39,9 +39,8 @@ export default async function ExamplePage({
   const industry = INDUSTRY_FILTERS.find((i) => i.id === e.industry)!;
   const others = relatedExamples(e);
   return (
-    <div className="design-library bg-[#101010] text-white [--foreground:#ffffff] [--background:#101010] [--muted:#242424] [--muted-foreground:#aaaaaa]">
-      <SiteHeader />
-      <main>
+    <InspirationFrame>
+      <div className="ig-detail-page text-foreground [--foreground:#111111] [--background:#ffffff] [--muted:#f3f3f5] [--muted-foreground:#6b6b72]">
         <section className="mx-auto w-full max-w-7xl px-5 pb-8 pt-8 sm:pt-12">
           <nav aria-label="Breadcrumb" className="text-sm text-foreground/60">
             <Link href="/inspiration" className="underline underline-offset-4">
@@ -121,8 +120,7 @@ export default async function ExamplePage({
             })}
           </ul>
         </section>
-      </main>
-      <SiteFooter />
-    </div>
+      </div>
+    </InspirationFrame>
   );
 }
