@@ -16,11 +16,11 @@ const Field = React.lazy(async () => {
   };
 });
 
-const subscribe = (cb: () => void) => { const q = matchMedia("(max-width:1023px)"); q.addEventListener("change", cb); return () => q.removeEventListener("change", cb); };
 
 export function SetupBackdrop({ phase = 0 }: { phase?: number }) {
   const reduced = useReducedMotion();
-  const light = React.useSyncExternalStore(subscribe, () => matchMedia("(max-width:1023px)").matches, () => false);
+  // One backdrop on every screen size: the phone layout shows the same moving field as the desktop one.
+  const light = false;
   const [webgl, setWebgl] = React.useState(false);
   const [visible, setVisible] = React.useState(true);
   React.useEffect(() => {

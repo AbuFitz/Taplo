@@ -301,7 +301,7 @@ export function Onboarding() {
           {step === "business" ? (
             <div className="grid gap-5">
               <div className="grid gap-5" hidden={parts > 1 && part > 0}>
-              <p className="setup-lede -mt-4 text-[0.95rem] text-muted-foreground">Start with your business name. You can add the rest whenever you’re ready.</p>
+              <p className="setup-lede text-[0.95rem] text-muted-foreground">Start with your business name. You can add the rest whenever you’re ready.</p>
               <TaploInput label="Business name" autoFocus={!mobileSetup} placeholder="e.g. North Street Studio" value={c.identity.name} maxLength={100} autoComplete="organization" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
               <ImageField presentation="identity" framing={s.page.appearance.header?.avatarShape === "circle"?"circle":s.page.appearance.header?.avatarShape === "square"?"square":"logo"} purpose="identity" samples={false} onFramingChange={shape=>update(x=>({...x,page:{...x.page,appearance:{...x.page.appearance,header:{...x.page.appearance.header,avatarShape:shape}}}}))} label="Add a logo or photo · Optional" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
               <div className="setup-address" data-testid="setup-address">
@@ -357,7 +357,7 @@ export function Onboarding() {
 
 /** Mobile page composition, starting theme and fine adjustment are separate choices. */
 function WidgetsStep() {
- return <div className="grid gap-7"><p className="setup-lede -mt-4 text-[0.95rem] text-muted-foreground">A look is already on your page. Try another, or change the colours. You can change all of it later without losing anything.</p><SetupThemes/><SetupDesign/></div>;
+ return <div className="grid gap-7"><p className="setup-lede text-[0.95rem] text-muted-foreground">A look is already on your page. Try another, or change the colours. You can change all of it later without losing anything.</p><SetupThemes/><SetupDesign/></div>;
 }
 
 const toPounds = (minor?: number) => (minor === undefined ? "" : (minor / 100).toFixed(minor % 100 === 0 ? 0 : 2))

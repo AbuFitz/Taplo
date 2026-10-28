@@ -222,3 +222,10 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 .setup-theme-snap{display:block;border-radius:14px;overflow:hidden;box-shadow:0 8px 20px -12px #0007;pointer-events:none;background:#eee}
 .setup-theme-snap .sf-thumb{border-radius:14px}
 .setup-theme-choice input:checked~.setup-theme-snap{outline:2px solid #111;outline-offset:3px}
+
+/* On a phone the header sits on the same dark moving backdrop as the desktop card surround, so it is drawn light. */
+@media (max-width:1023px){
+  .setup-flow[data-mobile-layout=preview] .setup-home img{filter:invert(1) brightness(1.6)}
+  .setup-flow[data-mobile-layout=preview] .setup-progress [role=progressbar]{background:#ffffff33}
+  .setup-flow[data-mobile-layout=preview] .setup-progress [role=progressbar]>span{background:#fff}
+}

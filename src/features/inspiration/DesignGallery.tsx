@@ -57,7 +57,7 @@ function Phone({ pick, active }: { pick: Pick; active: boolean }) {
   const own = React.useMemo(() => (pick.logo === false ? { ...sc.content, identity: { ...sc.content.identity, logo: undefined } } : sc.content), [sc, pick.logo])
   const overrides = React.useMemo(() => poseOf(pick), [pick])
   return (
-    <ScaledPhone glow={pick.design.swatch[1]}>
+    <ScaledPhone>
       {active
         ? <iframe title={`${sc.content.identity.name}, live`} src={frameSrc(pick)} style={{ width: PHONE.width, height: PHONE.height, border: 0, display: "block", background: "#fff" }} />
         : <DesignThumb design={pick.design} industryKey="" own={own} real={real} overrides={overrides} height={PHONE.height} />}

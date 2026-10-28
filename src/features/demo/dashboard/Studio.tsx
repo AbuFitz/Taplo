@@ -68,7 +68,6 @@ export function Studio() {
       </nav>
 
       <section className="studio-stage" aria-label="Your page">
-        <div className="studio-glow" aria-hidden="true" />
         <div className="studio-phone"><PagePreview src="/demo/preview" title="Your page" mode="device" chrome url={businessAddress(s.content.identity.slug)} /></div>
         <Button asChild size="lg" variant="outline" className="studio-edit bg-white text-black hover:bg-white/90"><Link href="/dashboard/page">Edit my page</Link></Button>
       </section>
