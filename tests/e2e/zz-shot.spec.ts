@@ -9,7 +9,7 @@ test('shot',async({browser})=>{
   await page.getByRole('radio',{name:'Black / ember'}).check({force:true});await page.waitForTimeout(1500)
   await page.getByRole('radio',{name:'Colours',exact:true}).check({force:true});await snap('colours-top')
   await page.getByRole('radio',{name:'Wine'}).check({force:true});await snap('colours-wine')
-  await cont(page);await cont(page);await cont(page);await page.getByRole('button',{name:'Skip for now'}).click();await page.getByRole('button',{name:'Skip for now'}).click();await snap('plan')
+  await cont(page);await page.getByRole('button',{name:'Barber',exact:true}).click();await cont(page);await cont(page);await page.getByRole('button',{name:'Skip for now'}).click();await page.getByRole('button',{name:'Skip for now'}).click();await snap('plan')
   await page.getByRole('radio',{name:'Choose Pro'}).check({force:true});await snap('plan-pro')
   await cont(page);await snap('review')
 })
