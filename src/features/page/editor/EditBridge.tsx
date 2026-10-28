@@ -40,11 +40,27 @@ export function EditBridge() {
       if (el?.closest(".tp-header")) return { kind: "header" }
       return null
     }
+    let lastSelectAt = 0
+    const choose = (e: Event) => {
+      lastSelectAt = performance.now()
+      send({ type: "taplo:select", selection: pick(e) ?? { kind: "content" } })
+    }
     const onClick = (e: MouseEvent) => {
       // The editor owns every click in the page while editing.
       e.preventDefault()
       e.stopPropagation()
-      send({ type: "taplo:select", selection: pick(e) ?? { kind: "content" } })
+      if (performance.now() - lastSelectAt < 400) return // already handled by the touch path below
+      choose(e)
+    }
+    // iOS Safari does not always synthesise a click for a tap on content that is not itself interactive, so a still touch
+    // is treated as a selection too; the click that may follow is ignored above.
+    let down: { x: number; y: number; t: number } | null = null
+    const onPointerDown = (e: PointerEvent) => { down = e.pointerType === "touch" ? { x: e.clientX, y: e.clientY, t: performance.now() } : null }
+    const onPointerUp = (e: PointerEvent) => {
+      const d = down; down = null
+      if (!d || e.pointerType !== "touch") return
+      if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 10 || performance.now() - d.t > 600) return
+      choose(e)
     }
     const onMessage = (e: MessageEvent<ToPreview>) => {
       if (e.origin !== window.location.origin || e.data?.type !== "taplo:selected") return
@@ -53,11 +69,15 @@ export function EditBridge() {
 
     doc.documentElement.setAttribute("data-tp-editing", "")
     doc.addEventListener("click", onClick, true)
+    doc.addEventListener("pointerdown", onPointerDown, true)
+    doc.addEventListener("pointerup", onPointerUp, true)
     window.addEventListener("message", onMessage)
     send({ type: "taplo:ready" })
     return () => {
       doc.documentElement.removeAttribute("data-tp-editing")
       doc.removeEventListener("click", onClick, true)
+      doc.removeEventListener("pointerdown", onPointerDown, true)
+      doc.removeEventListener("pointerup", onPointerUp, true)
       window.removeEventListener("message", onMessage)
     }
   }, [])
