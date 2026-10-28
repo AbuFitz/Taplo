@@ -57,8 +57,9 @@ for (const width of [390, 1440])
       .click();
     await next();
     await expect(page.getByTestId("goal")).toHaveCount(0);
-    if ((page.viewportSize()?.width ?? 1440) >= 1024) await expect(page.getByTestId("reach").getByRole("textbox")).toHaveCount(3);
     await page.getByRole("button",{name:"Booking requests",exact:true}).click();
+    await next();
+    if ((page.viewportSize()?.width ?? 1440) >= 1024) await expect(page.getByTestId("reach").getByRole("textbox")).toHaveCount(3);
     await openDetails(page);await page.getByLabel("Email", { exact: true }).fill("owner@example.com");
     await next();
     await page.getByLabel("Service 1 name").fill("Diagnostic inspection");
@@ -209,6 +210,7 @@ test("partial service text survives back and reload, custom businesses work, and
     .getByRole("button", { name: "Use a different business type", exact: true })
     .click();
   await page.getByLabel("Describe your business").fill("Repair workshop");
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await openDetails(page);await page.getByLabel("Email", { exact: true }).fill("owner@example.com");
   await page.getByRole("button", { name: "Continue", exact: true }).click();

@@ -60,7 +60,7 @@ for (const width of [320, 390, 768])
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "What do you do?",
     );
-    await expect(grip).toBeHidden();
+    await expect(grip).toBeVisible();
     await page.getByRole("button", { name: "Back", exact: true }).click();
     await expect(page.getByLabel("Business name", { exact: true })).toHaveValue(
       "North Studio",
@@ -93,7 +93,7 @@ test("sheet state never hides or disables desktop fields after resize", async ({
   await expect(page.locator("#setup-controls")).not.toHaveAttribute("inert");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "What do you do?",
+    "Choose a look.",
   );
 });
 test("reduced motion removes sheet travel without dropping edits", async ({

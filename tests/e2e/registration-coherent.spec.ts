@@ -24,7 +24,7 @@ for(const width of [390,1440])test(`complete setup preserves real content, appea
  await page.getByLabel('Business name',{exact:true}).fill('North Street Studio');await openBusinessMore(page);await page.getByLabel('Short description (optional)').fill('Independent studio in St Albans.');
  await cont(page,{keepLook:true});await expect(page.getByRole('heading',{level:1})).toHaveText('Choose a look.');
  const pickedLook=await page.getByRole('radiogroup',{name:'Looks'}).getByRole('radio').nth(1).getAttribute('aria-label');await page.getByRole('radiogroup',{name:'Looks'}).getByRole('radio').nth(1).check({force:true});
- await page.getByRole('radio',{name:'Colours',exact:true}).check({force:true});await page.getByRole('radio',{name:'Black / ember'}).check({force:true});
+ await page.getByRole('radio',{name:'Black / ember'}).check({force:true});
  await openMoreStyling(page);await page.getByTestId('setup-profile-choices').getByRole('radio',{name:'Floating Bento',exact:true}).check({force:true});
  await shot(page,`design-${width}.png`);await next(page);await page.getByRole('button',{name:'Barber',exact:true}).click();await next(page);await next(page);
  await page.getByRole('button',{name:'Booking requests',exact:true}).click();await (await openDetails(page),page.getByLabel('Website or booking link')).fill('studio.example.com/book');await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await next(page);
