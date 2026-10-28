@@ -1,4 +1,4 @@
-import { cont, openDetails } from './helpers';
+import { cont, openDetails, openMoreStyling } from './helpers';
 import { expect, test } from "@playwright/test"
 import AxeBuilder from "@axe-core/playwright"
 import path from "node:path"
@@ -12,7 +12,7 @@ for (const width of [390, 1440]) test(`visual setup keeps each decision separate
   const next = () => cont(page)
   await cont(page,{keepLook:true})
   await expect(page.getByRole('heading',{level:1})).toHaveText('Choose a look.')
-  { const more=page.getByText('More ways to style'); if (await more.count()) await more.click() }
+  await openMoreStyling(page)
   await page.getByRole('radio',{name:'Floating Bento',exact:true}).check()
   await page.getByRole('button',{name:/Background & colours/}).click()
   await page.getByTestId('setup-design-dialog').getByRole('button',{name:'Ink',exact:true}).click()
@@ -30,7 +30,7 @@ for (const width of [390, 1440]) test(`visual setup keeps each decision separate
   const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze()
   expect(axe.violations.map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) }))).toEqual([])
   await page.reload()
-  { const more=page.getByText('More ways to style'); if (await more.count()) await more.click() }
+  await openMoreStyling(page)
   await expect(page.getByRole('radio',{name:'Floating Bento',exact:true})).toBeChecked()
   await next()
   await expect(page.getByRole('list', { name: 'Kinds of business' }).locator('img')).toHaveCount(0)

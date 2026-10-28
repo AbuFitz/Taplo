@@ -1,4 +1,4 @@
-import { cont, openDetails , openBusinessMore } from "./helpers";
+import { cont, openDetails , openBusinessMore, openMoreStyling } from './helpers';
 import { expect, test } from "@playwright/test"
 import path from "node:path"
 
@@ -8,7 +8,6 @@ for (const width of [320, 390, 768, 1440]) test(`focused profile and shared prev
   const phone = page.locator(".setup-canvas .phone-shell")
   const frame = page.frameLocator('iframe[data-testid="setup-live-page"]')
   await page.getByLabel("Business name", { exact: true }).fill("North Street Studio")
-  if (width < 1024) await page.getByRole("button", { name: "Continue", exact: true }).click()
   await openBusinessMore(page)
   await page.getByLabel("Short description (optional)", { exact: true }).fill("Independent hair studio in St Albans.")
   await expect(frame.getByRole("heading", { level: 1, includeHidden:true })).toHaveText("North Street Studio")
@@ -48,7 +47,7 @@ for (const width of [390, 1440]) test(`theme choices show actual style samples a
   await page.goto("/onboarding")
   const next = () => cont(page)
   await page.getByLabel("Business name", { exact: true }).fill("North Street Studio"); await cont(page,{keepLook:true})
-  { const more=page.getByText("More ways to style"); if (await more.count()) await more.click() }
+  await openMoreStyling(page)
   await page.getByRole("radio",{name:"Floating Bento",exact:true}).check()
   await page.getByRole("button",{name:/Background & colours/}).click()
   await page.getByTestId("setup-design-dialog").getByRole("button",{name:"Ink",exact:true}).click()

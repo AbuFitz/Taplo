@@ -24,7 +24,7 @@
 .setup-question-heading{padding-inline:2px}
 .setup-origin{font-size:12px;color:#666;margin-bottom:12px}
 .setup-workspace #step-title{font-family:var(--font-display);font-size:clamp(2rem,3vw,3rem);line-height:1.08;letter-spacing:-.05em;margin:0 0 28px;outline:none;font-weight:500;text-wrap:balance}
-.setup-step-body{min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding:2px 3px 26px;scrollbar-width:none;animation:none}
+.setup-step-body{min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding:10px 8px 26px;margin-inline:-5px;scrollbar-width:none;animation:none}
 .setup-step-body::-webkit-scrollbar,.setup-scene [data-overlay-body]::-webkit-scrollbar{display:none}
 .setup-step-body [data-slot=label],.setup-step-body label>span:first-child,.setup-step-body legend{font-size:16px;font-weight:600;line-height:1.4;color:#222}
 .setup-step-body [data-slot=input],.setup-step-body input:not([type=radio]):not([type=checkbox]):not([type=file]){min-height:50px;font-size:16px;line-height:1.4;border-radius:10px;background:#f1f1f3;border:0;box-shadow:none}
@@ -239,3 +239,7 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 @media (max-width:1023px){
   .setup-flow[data-mobile-layout=preview] .setup-workspace>.setup-panel{background:#f4f4f6;-webkit-backdrop-filter:none;backdrop-filter:none}
 }
+
+/* Keep the selection ring and the label under each tile in view when a choice is scrolled to or focused. */
+.setup-step-body{scroll-padding:16px 12px 28px}
+.setup-theme-choice{scroll-margin:12px 8px 28px}

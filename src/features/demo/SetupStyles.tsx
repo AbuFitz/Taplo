@@ -20,8 +20,13 @@ export function SetupThemes({ compact = false }: { compact?: boolean }) {
   const key = s.content.identity.industryKey;
   const fitted = designsFor(key, 8);
   const current = getDesign(s.page.themeId) ?? looks.find((l) => l.id === s.page.themeId);
-  const visible: Pick<Design, "id" | "name" | "overrides" | "recipe">[] = [...new Map([...(current ? [current] : []), ...fitted, ...(fitted.length < 4 ? looks.slice(0, 4) : [])].map((l) => [l.id, l] as const)).values()]
-    .slice(0, 6).map((l) => ({ id: l.id, name: l.name, overrides: l.overrides, recipe: (l as Design).recipe ?? {} }));
+  // The order is fixed when the choices first appear (and when the category changes), so picking one never moves the others.
+  const pool = [...new Map([...(current ? [current] : []), ...fitted, ...(fitted.length < 4 ? looks.slice(0, 4) : [])].map((l) => [l.id, l] as const)).values()]
+  const [frozen, setFrozen] = React.useState<{ key: string; ids: string[] }>({ key, ids: pool.slice(0, 6).map((l) => l.id) })
+  React.useEffect(() => { if (frozen.key !== key) setFrozen({ key, ids: pool.slice(0, 6).map((l) => l.id) }) }, [key]) // eslint-disable-line react-hooks/exhaustive-deps
+  const ids = frozen.key === key ? frozen.ids : pool.slice(0, 6).map((l) => l.id)
+  const everything = new Map([...looks, ...fitted, ...(current ? [current] : [])].map((l) => [l.id, l] as const))
+  const visible: Pick<Design, "id" | "name" | "overrides" | "recipe">[] = ids.flatMap((id) => { const l = everything.get(id); return l ? [{ id: l.id, name: l.name, overrides: l.overrides, recipe: (l as Design).recipe ?? {} }] : [] })
   const grid = (
     <>
       <div

@@ -202,3 +202,9 @@ export async function openBusinessMore(page: import("@playwright/test").Page) {
   const more = page.getByTestId("business-more")
   if (await more.count()) { if (!(await more.evaluate((el) => (el as HTMLDetailsElement).open))) await more.locator("summary").click() }
 }
+
+/** The look step keeps layout and material choices behind "More ways to style". */
+export async function openMoreStyling(page: import("@playwright/test").Page) {
+  const more = page.getByTestId("more-styling")
+  if (await more.count()) { if (!(await more.evaluate((el) => (el as HTMLDetailsElement).open))) await more.locator("summary").click({ force: true }) }
+}
