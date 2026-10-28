@@ -50,7 +50,7 @@ for (const width of [390, 1440])
     await expect(
       page.getByRole("list", { name: "Kinds of business" }).getByRole("button"),
     ).toHaveCount(4);
-    await page.getByLabel("Search businesses").fill("mechanic");
+    await page.getByLabel("Business type").fill("mechanic");
     await page
       .getByRole("list", { name: "Kinds of business" })
       .getByRole("button", { name: "Mechanic / garage", exact: true })

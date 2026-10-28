@@ -40,6 +40,8 @@ export const backgroundShaderSchema = z.object({
   colors: z.array(hex).min(2).max(4),
   /** Base colour behind the shader and in the static fallback. */
   base: hex,
+  /** Where each colour glows in the still version ("88% 5%"); defaults to four spread positions. */
+  anchors: z.array(z.string().regex(/^\d{1,3}% \d{1,3}%$/)).max(4).optional(),
 });
 
 export const backgroundSchema = z.discriminatedUnion("kind", [

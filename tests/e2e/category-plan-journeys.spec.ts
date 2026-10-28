@@ -11,7 +11,7 @@ for (const width of [390,1440]) test(`every category reaches its own first conte
  for(const category of INDUSTRY_PRESETS){
   await page.goto('/onboarding');await page.evaluate(()=>localStorage.clear());await page.reload({waitUntil:'domcontentloaded'});
   await page.getByLabel('Business name',{exact:true}).fill('North Studio');await cont(page);
-  const search=page.getByLabel('Search businesses',{exact:true});await search.fill(category.label);
+  const search=page.getByLabel('Business type',{exact:true});await search.fill(category.label);
   await page.getByRole('button',{name:category.label,exact:true}).click();
   if(category.id==='other')await page.getByLabel('Describe your business',{exact:true}).fill('Independent studio');
   await page.getByRole('button',{name:'Continue',exact:true}).click();await page.getByRole('button',{name:'Continue',exact:true}).click();

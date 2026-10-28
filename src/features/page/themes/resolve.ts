@@ -287,9 +287,9 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}, logoAc
 }
 
 /** Static stand-in for a shader wallpaper: layered radial colour fields on the base colour. Used until the shader mounts, for reduced motion and without WebGL. */
-export function shaderFallbackCss(b: { colors: string[]; base: string }): string {
-  const spots = [["18% 12%", 0], ["88% 22%", 1], ["70% 92%", 2], ["8% 78%", 3]] as const;
-  const layers = b.colors.map((c, i) => `radial-gradient(60% 55% at ${spots[i % spots.length]![0]}, ${c} 0%, transparent 70%)`);
+export function shaderFallbackCss(b: { colors: string[]; base: string; anchors?: string[] }): string {
+  const spots = ["18% 12%", "88% 22%", "70% 92%", "8% 78%"];
+  const layers = b.colors.map((c, i) => `radial-gradient(${b.anchors ? "90% 80%" : "60% 55%"} at ${b.anchors?.[i] ?? spots[i % spots.length]}, ${c} 0%, transparent 70%)`);
   return `${layers.join(", ")}, ${b.base}`;
 }
 

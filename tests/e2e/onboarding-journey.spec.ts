@@ -23,7 +23,7 @@ for (const width of [390, 1440]) {
       await cont(page, { keepLook: true })
       // 2 look: a strong look is already applied; pick another and recolour
       await expect(page.getByRole("heading", { level: 1 })).toHaveText("Choose a look.")
-      const themes = page.getByRole("radiogroup", { name: "Starting theme" })
+      const themes = page.getByRole("radiogroup", { name: "Looks" })
       await expect(themes.getByRole("radio").first()).toBeVisible()
       const before = (await state(page)).page.themeId
       const other = themes.getByRole("radio").nth(1)
@@ -38,7 +38,7 @@ for (const width of [390, 1440]) {
       expect((await state(page)).page.themeId).toBe(chosen)
       expect((await state(page)).content.identity.showCategory).toBe(false)
       await expect(preview(page).locator(".tp-meta")).not.toContainText("Barber")
-      await page.getByLabel(/Show “Barber” under my name/).check()
+      await page.getByLabel(/Show “Barber” under the business name/).check()
       await expect(preview(page).locator(".tp-meta")).toContainText("Barber")
       await snap(page, `${width}-3-category`)
       // examples are visible in the draft but not in the saved business

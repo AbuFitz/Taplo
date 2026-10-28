@@ -243,3 +243,29 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 /* Keep the selection ring and the label under each tile in view when a choice is scrolled to or focused. */
 .setup-step-body{scroll-padding:16px 12px 28px}
 .setup-theme-choice{scroll-margin:12px 8px 28px}
+
+/* Looks and Colours: two roomy columns on every width, so each option can be judged and none is stranded on a row of its own. */
+.setup-look{display:grid;gap:16px}
+.setup-look-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:999px;background:#ececef}
+.setup-look-tabs label{position:relative;display:grid;place-items:center;min-height:44px;border-radius:999px;font-size:15px;font-weight:600;color:#555;cursor:pointer;transition:background .2s,color .2s,box-shadow .2s}
+.setup-look-tabs label[data-selected=true]{background:#fff;color:#111;box-shadow:0 1px 2px #0002,0 6px 14px -8px #0004}
+.setup-look-tabs input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.setup-look-tabs label:has(:focus-visible){outline:2px solid #111;outline-offset:2px}
+.setup-look-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 14px;padding:4px}
+.setup-look-tile{position:relative;display:flex;flex-direction:column;gap:8px;min-width:0;cursor:pointer;scroll-margin:12px 8px 28px}
+.setup-look-tile input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2}
+.setup-look-art{display:block;border-radius:16px;overflow:hidden;box-shadow:0 8px 20px -12px #0007;background:#eee;aspect-ratio:390/520;position:relative}
+.setup-look-art .sf-thumb{border-radius:16px}
+.setup-look-tile input:checked~.setup-look-art{outline:2px solid #111;outline-offset:3px}
+.setup-look-tile:has(:focus-visible) .setup-look-art{outline:3px solid #537abc;outline-offset:3px}
+.setup-look-tile input:checked~.setup-look-name::after{content:"  ✓"}
+.setup-look-name{font-size:14px;font-weight:600;color:#1a1a1a;line-height:1.25}
+.setup-look-kind{font-size:12px;color:#666;margin-top:-6px}
+.setup-look-note{min-height:0;margin:0;font-size:13px;color:#555}
+.setup-look-note:empty{display:none}
+.setup-look-undo{justify-self:start;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 4px;font-size:14px;font-weight:600;color:#333;background:none;border:0;cursor:pointer}
+.setup-look-undo svg{width:16px;height:16px}
+.setup-look-motion{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:16px;background:#fff;border:1px solid #ededf0;cursor:pointer}
+.setup-look-motion input{width:22px;height:22px;margin-top:2px;accent-color:#111;flex:none}
+.setup-look-motion span{display:grid;gap:2px;font-size:14px;color:#222}
+.setup-look-motion small{font-size:12.5px;color:#666;line-height:1.4}

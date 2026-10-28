@@ -17,7 +17,7 @@ const PRICE_LABEL: Record<(typeof PRICE_MODES)[number], string> = {
   quote: "Quote on request",
   free: "Free",
 }
-const DELIVERY_LABEL = { premises: "At my premises", mobile: "I travel to the customer", online: "Online" } as const
+const DELIVERY_LABEL = { premises: "At a location", mobile: "At the customer’s location", online: "Online" } as const
 const BOOKING_LABEL: Record<(typeof SERVICE_BOOKING_MODES)[number], string> = {
   contact: "Enquiry only: no time is reserved",
   request: "Customer requests a time and I accept it",

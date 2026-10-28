@@ -40,7 +40,7 @@ export interface DemoState {
   /** Plain-language notes for the owner (e.g. after an automatic upgrade). Dismissible. */
   notes?: string[];
   /** Incomplete form text survives back/reload, but never enters the public renderer until valid. */
-  setupDrafts?: { reviewEdit?:boolean; goals?: ("book"|"contact"|"services"|"products"|"work"|"call"|"message"|"browse"|"buy")[]; connections?: {email:string;phone:string;whatsapp:string;website:string;instagram:string;socials?:Record<string,string>}; planIntent?:PlanId; backgroundEdited?:boolean; services?: { id:string; name:string; price:string; minutes:string; priceMode?: "fixed"|"from"|"quote"|"free" }[]; record?: { kind:"vehicle"|"photo"|"product"; value:unknown } };
+  setupDrafts?: { reviewEdit?:boolean; goals?: ("book"|"contact"|"services"|"products"|"work"|"call"|"message"|"browse"|"buy")[]; connections?: {email:string;phone:string;whatsapp:string;website:string;instagram:string;socials?:Record<string,string>}; planIntent?:PlanId; backgroundEdited?:boolean; colourway?:string; colourMotion?:boolean; colourUndo?:{ appearance:unknown; colourway?:string; colourMotion?:boolean }; services?: { id:string; name:string; price:string; minutes:string; priceMode?: "fixed"|"from"|"quote"|"free" }[]; record?: { kind:"vehicle"|"photo"|"product"; value:unknown } };
 }
 
 const stateSchema = z.object({
@@ -55,7 +55,7 @@ const stateSchema = z.object({
   checklistHidden: z.boolean().optional(),
   published: z.unknown().nullable(),
   notes: z.array(z.string()).optional(),
-  setupDrafts: z.object({reviewEdit:z.boolean().optional(),goals:z.array(z.enum(["book","contact","services","products","work","call","message","browse","buy"])).optional(),connections:z.object({email:z.string(),phone:z.string(),whatsapp:z.string(),website:z.string(),instagram:z.string(),socials:z.record(z.string(),z.string()).optional()}).optional(),planIntent:z.enum(PLAN_IDS).optional(),backgroundEdited:z.boolean().optional(),services:z.array(z.object({id:z.string(),name:z.string(),price:z.string(),minutes:z.string(),priceMode:z.enum(["fixed","from","quote","free"]).optional()})).optional(),record:z.object({kind:z.enum(["vehicle","photo","product"]),value:z.unknown()}).optional()}).optional(),
+  setupDrafts: z.object({reviewEdit:z.boolean().optional(),goals:z.array(z.enum(["book","contact","services","products","work","call","message","browse","buy"])).optional(),connections:z.object({email:z.string(),phone:z.string(),whatsapp:z.string(),website:z.string(),instagram:z.string(),socials:z.record(z.string(),z.string()).optional()}).optional(),planIntent:z.enum(PLAN_IDS).optional(),backgroundEdited:z.boolean().optional(),colourway:z.string().optional(),colourMotion:z.boolean().optional(),colourUndo:z.object({appearance:z.unknown(),colourway:z.string().optional(),colourMotion:z.boolean().optional()}).optional(),services:z.array(z.object({id:z.string(),name:z.string(),price:z.string(),minutes:z.string(),priceMode:z.enum(["fixed","from","quote","free"]).optional()})).optional(),record:z.object({kind:z.enum(["vehicle","photo","product"]),value:z.unknown()}).optional()}).optional(),
 });
 
 export function blankContent(): BusinessContentInput {

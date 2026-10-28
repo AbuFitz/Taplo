@@ -23,7 +23,7 @@ for(const width of [390,1440])test(`complete setup preserves real content, appea
  await page.setViewportSize({width,height:900});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/onboarding');await identity(page);
  await page.getByRole('button',{name:'Booking requests',exact:true}).click();await (await openDetails(page),page.getByLabel('Website or booking link')).fill('studio.example.com/book');await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('owner@example.com');await next(page);
  await page.getByLabel('Service 1 name').fill('Cut and finish');await page.getByLabel('Service 1 price').fill('35');await page.getByLabel('Service 1 minutes').fill('45');await next(page);
- await expect(page.getByRole('heading',{level:1})).toHaveText('Your page, your style.');await page.getByRole('radiogroup',{name:'Starting theme'}).getByRole('radio',{name:'Noir',exact:true}).check();
+ await expect(page.getByRole('heading',{level:1})).toHaveText('Your page, your style.');await page.getByRole('radiogroup',{name:'Looks'}).getByRole('radio',{name:'Noir',exact:true}).check();
  await page.getByRole('button',{name:/Background & colours/}).click();const style=page.getByTestId('setup-design-dialog');await style.getByRole('button',{name:'Smoke gradient',exact:true}).click();await style.getByRole('button',{name:'Done',exact:true}).click();
  await page.getByTestId('setup-profile-choices').getByRole('radio',{name:'Floating Bento',exact:true}).check();
  await shot(page,`design-${width}.png`);await next(page);await expect(page.getByRole('heading',{level:1})).toHaveText('Room to grow.');

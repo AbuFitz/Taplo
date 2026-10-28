@@ -6,7 +6,7 @@ import { Overlay } from "@/components/taplo/overlay"
 import "./onboarding-mobile.css"
 import { BusinessIcon } from "./BusinessIcon"
 import { SetupDesign } from "./SetupDesign"
-import { SetupThemes } from "./SetupStyles"
+import { SetupLook } from "./SetupLook"
 import { TaploLogo } from "@/components/taplo/brand"
 import { SetupDetails } from "./SetupDetails"
 import { setupJourney } from "./setup-journey"
@@ -250,7 +250,7 @@ export function Onboarding() {
           {step === "industry" ? (
             <div className="grid gap-7">
               <div className="grid gap-3">
-                <TaploInput label="Search businesses" placeholder="Search your business type" value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
+                <TaploInput label="Business type" placeholder="Search your business type" value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
                 <ul className="setup-industry-list grid gap-1" aria-label="Kinds of business">
                   {searchIndustries(query).filter((p) => query.trim() ? true : POPULAR.slice(0, 4).includes(p.id) || (state !== null && Boolean(c.identity.industryLabel.trim()) && c.identity.industryKey === p.id)).sort((a, b) => query.trim() ? 0 : POPULAR.indexOf(a.id) - POPULAR.indexOf(b.id)).slice(0, query.trim() ? 6 : 5).map((p) => {
                     const selected = state !== null && (p.id === OTHER_INDUSTRY_ID ? otherOpen || c.identity.industryLabel !== "" && c.identity.industryKey === OTHER_INDUSTRY_ID : c.identity.industryKey === p.id)
@@ -264,26 +264,13 @@ export function Onboarding() {
                     )
                   })}
                 </ul>
-                {state !== null && Boolean(c.identity.industryLabel.trim()) && c.identity.industryKey !== OTHER_INDUSTRY_ID ? (
-                  <fieldset className="grid gap-2" data-testid="also-categories">
-                    <legend className="text-sm font-medium">I also do (optional)</legend>
-                    <div className="flex flex-wrap gap-2">
-                      {POPULAR.filter((id) => id !== c.identity.industryKey && id !== OTHER_INDUSTRY_ID).slice(0, 8).map((id) => {
-                        const on = (c.identity.alsoKeys ?? []).includes(id)
-                        const full = !on && (c.identity.alsoKeys ?? []).length >= 2
-                        return <button key={id} type="button" aria-pressed={on} disabled={full} className={cn("min-h-10 rounded-full border px-3 text-sm disabled:opacity-40", on ? "bg-[#111111] text-white" : "bg-card")} onClick={() => update((x) => { const cur = x.content.identity.alsoKeys ?? []; return { ...x, content: { ...x.content, identity: { ...x.content.identity, alsoKeys: on ? cur.filter((k) => k !== id) : [...cur, id] } } } })}>{getIndustryPreset(id).label}</button>
-                      })}
-                    </div>
-                    <p className="text-xs text-muted-foreground">Adds suggestions only. Your page design stays your choice.</p>
-                  </fieldset>
-                ) : null}
                 {state !== null && Boolean(c.identity.industryLabel.trim()) ? (
                   <div className="grid gap-5" data-testid="category-details">
-                    <label className="flex min-h-11 items-center gap-3 text-sm font-medium"><input type="checkbox" className="size-5 accent-black" checked={c.identity.showCategory === true} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, showCategory: e.target.checked } } }))} /><span>Show “{c.identity.industryLabel}” under my name <span className="font-normal text-muted-foreground">· Optional</span></span></label>
+                    <label className="flex min-h-11 items-center gap-3 text-sm font-medium"><input type="checkbox" className="size-5 accent-black" checked={c.identity.showCategory === true} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, showCategory: e.target.checked } } }))} /><span>Show “{c.identity.industryLabel}” under the business name <span className="font-normal text-muted-foreground">· Optional</span></span></label>
                     <fieldset className="grid gap-2" data-testid="how-you-work">
-                      <legend className="text-sm font-medium">How do you work?</legend>
+                      <legend className="text-sm font-medium">Where is the work done?</legend>
                       <div className="flex flex-wrap gap-2">
-                        {([["premises", "From a shop or studio"], ["service_area", "I travel to customers"], ["online", "Online"]] as const).map(([mode, label]) => (
+                        {([["premises", "At a location"], ["service_area", "At customers’ locations"], ["online", "Online"]] as const).map(([mode, label]) => (
                           <button key={mode} type="button" aria-pressed={c.location.mode === mode} className={cn("min-h-11 rounded-full border px-4 text-sm", c.location.mode === mode ? "bg-[#111111] text-white" : "bg-card")} onClick={() => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, mode } } }))}>{label}</button>
                         ))}
                       </div>
@@ -369,7 +356,7 @@ export function Onboarding() {
 
 /** Mobile page composition, starting theme and fine adjustment are separate choices. */
 function WidgetsStep() {
- return <div className="grid gap-7"><p className="setup-lede text-[0.95rem] text-muted-foreground">A look is already on your page. Try another, or change the colours. You can change all of it later without losing anything.</p><SetupThemes/><SetupDesign/></div>;
+ return <div className="grid gap-7"><p className="setup-lede text-[0.95rem] text-muted-foreground">A look is already on your page. Try another, or change the colours. You can change all of it later without losing anything.</p><SetupLook/></div>;
 }
 
 const toPounds = (minor?: number) => (minor === undefined ? "" : (minor / 100).toFixed(minor % 100 === 0 ? 0 : 2))

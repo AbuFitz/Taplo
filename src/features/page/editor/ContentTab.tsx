@@ -15,7 +15,7 @@ import { prepareImage } from "./image"
 import type { Editor } from "./useEditor"
 import { SocialLinksEditor } from "./SocialLinksEditor"
 
-const LOCATION_LABEL = { premises: "A place customers visit", service_area: "I travel to customers", online: "Online only" } as const
+const LOCATION_LABEL = { premises: "At a location", service_area: "At customers’ locations", online: "Online only" } as const
 const DAYS = [["mon", "Monday"], ["tue", "Tuesday"], ["wed", "Wednesday"], ["thu", "Thursday"], ["fri", "Friday"], ["sat", "Saturday"], ["sun", "Sunday"]] as const
 
 function Section({ id, title, children, defaultOpen }: { id?: string; title: string; children: React.ReactNode; defaultOpen?: boolean }) {

@@ -46,13 +46,13 @@ export function Background({
             }
           />
         )}
-        {b.kind === "shader" && !still && !thumb ? (
+        {b.kind === "shader" && b.motion !== false && !still && !thumb ? (
           <ShaderWallpaper
             style={b.style}
             colors={b.colors}
             base={b.base}
             pace={b.pace}
-            animate={b.motion !== false}
+            animate
           />
         ) : null}
       </div>
