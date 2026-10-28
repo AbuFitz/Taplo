@@ -23,3 +23,17 @@ describe("also-do categories", () => {
     expect(applyIndustry(withAlso, "barber").page.themeId).toBe(withAlso.page.themeId)
   })
 })
+
+import { canPublish } from "./actions"
+describe("example content", () => {
+  it("is never published as the owner's real offer", () => {
+    const base = initialState()
+    const withName = { ...base, content: { ...base.content, identity: { ...base.content.identity, name: "North Studio", slug: "north-studio", industryKey: "barber", industryLabel: "Barber" }, contacts: { ...base.content.contacts, email: "a@b.co" } } }
+    const sample = { id: "svc-example", name: "Example haircut", priceMode: "fixed", price: 2000, durationMinutes: 30, archived: false, example: true }
+    const withExample = { ...withName, content: { ...withName.content, services: [sample as never] } }
+    expect(readiness(withExample).find((c) => c.id === "example")).toMatchObject({ required: true, done: false })
+    expect(canPublish(withExample)).toBe(false)
+    const cleared = { ...withExample, content: { ...withExample.content, services: [{ ...sample, example: false } as never] } }
+    expect(readiness(cleared).some((c) => c.id === "example")).toBe(false)
+  })
+})

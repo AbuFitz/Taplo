@@ -79,8 +79,10 @@ export function readiness(s: DemoState): Check[] {
     goals.includes("message") ? { id: "goal-message", label: "You want messages: add WhatsApp or email", done: Boolean(c.contacts.whatsapp || c.contacts.email), required: false, href: "/dashboard/page" } : null,
     goals.includes("buy") ? { id: "goal-buy", label: "You want sales: add your first product", done: (c.products ?? []).some((x) => !x.archived), required: false, href: "/dashboard/services" } : null,
   ].filter((x): x is Check => x !== null);
+  const exampleLeft = [...(c.services ?? []), ...(c.products ?? [])].some((x) => (x as { example?: boolean }).example && !x.archived);
   return [
     ...goalChecks,
+    ...(exampleLeft ? [{ id: "example", label: "Replace or remove the example items before publishing", done: false, required: true, href: "/dashboard/services" } as Check] : []),
     { id: "industry", label: "Say what kind of business it is", done: s.onboarded || Boolean(c.identity.industryLabel), required: true, href: "/dashboard/page" },
     { id: "name", label: "Name and web address", done: Boolean(c.identity.name) && slugProblems(c.identity.slug).length === 0, required: true, href: "/dashboard/page" },
     { id: "contact", label: "At least one way to contact you", done: hasContactChannel(c), required: true, href: "/dashboard/page" },

@@ -70,6 +70,8 @@ export const serviceSchema = z.object({
   sortOrder: z.number().int().default(0),
   /** Archived services are hidden publicly but kept for historical bookings. */
   archived: z.boolean().default(false),
+  /** Sample content added to show how something looks. It is never treated as the owner's real offer and blocks publishing until replaced or removed. */
+  example: z.boolean().optional(),
 });
 export type ServiceContent = z.infer<typeof serviceSchema>;
 
@@ -166,6 +168,8 @@ export const productSchema = z.object({
   /** Optional group heading, e.g. "Hatchbacks" or "Oils". */
   collection: optText(40),
   archived: z.boolean().default(false),
+  /** Sample content added to show how something looks. It is never treated as the owner's real offer and blocks publishing until replaced or removed. */
+  example: z.boolean().optional(),
 });
 export type ProductContent = z.infer<typeof productSchema>;
 
