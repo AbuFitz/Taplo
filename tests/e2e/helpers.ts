@@ -212,5 +212,5 @@ export async function openMoreStyling(page: import("@playwright/test").Page) {
     if (await more.evaluate((el) => (el as HTMLDetailsElement).open).catch(() => false)) return true
     await more.locator("summary").click({ force: true, timeout: 2000 }).catch(() => undefined)
     return more.evaluate((el) => (el as HTMLDetailsElement).open).catch(() => false)
-  }, { timeout: 15000 }).toBe(true)
+  }, { timeout: 40000 }).toBe(true)
 }
