@@ -206,5 +206,11 @@ export async function openBusinessMore(page: import("@playwright/test").Page) {
 /** The look step keeps layout and material choices behind "More ways to style". */
 export async function openMoreStyling(page: import("@playwright/test").Page) {
   const more = page.getByTestId("more-styling")
-  if (await more.count()) { if (!(await more.evaluate((el) => (el as HTMLDetailsElement).open))) await more.locator("summary").click({ force: true }) }
+  await more.waitFor({ state: "attached" })
+  await page.waitForLoadState("networkidle")
+  await expect.poll(async () => {
+    if (await more.evaluate((el) => (el as HTMLDetailsElement).open).catch(() => false)) return true
+    await more.locator("summary").click({ force: true, timeout: 2000 }).catch(() => undefined)
+    return more.evaluate((el) => (el as HTMLDetailsElement).open).catch(() => false)
+  }, { timeout: 15000 }).toBe(true)
 }
