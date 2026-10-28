@@ -41,7 +41,7 @@ const STOCK_DESCRIPTIONS: Record<string, string> = {
   "am-cx5": "Currently reserved. You can still ask about similar cars or tell us what you are looking for.",
   "am-mini": "This car has sold. Browse the available cars or ask what is coming in.",
 }
-const STOCK_IMAGES: Record<string, string> = { "am-golf": "golf", "am-cx5": "cx5", "am-mini": "mini" }
+const STOCK_IMAGES: Record<string, string> = { "am-golf": "brookfield-golf", "am-cx5": "brookfield-cx5", "am-mini": "brookfield-mini" }
 export const BROOKFIELD: BusinessContentInput = {
   ...brookfield,
   services: [{ id: "bf-viewing", name: "Arrange a viewing", description: "Tell us which car you would like to see. We will agree the appointment before you travel.", priceMode: "free", currency: "GBP", durationMinutes: 30, delivery: [], bookingMode: "request", sortOrder: 0 }],
@@ -49,7 +49,7 @@ export const BROOKFIELD: BusinessContentInput = {
     ...p, description: STOCK_DESCRIPTIONS[p.id],
     name: p.id === "am-golf" ? "Volkswagen Golf 1.5 TSI Style" : p.id === "am-cx5" ? "Mazda CX-5 2.2 SE-L Nav+" : "MINI Cooper 1.5",
     facts: (p.facts ?? []).map(f => f.label === "Year" ? { ...f, value: p.id === "am-golf" ? "2020" : p.id === "am-cx5" ? "2019" : "2017" } : p.id === "am-cx5" && f.label === "Fuel" ? { ...f, value: "Diesel" } : f),
-    image: { src: `/photography/${STOCK_IMAGES[p.id]}.webp`, alt: `${p.id === "am-golf" ? "Volkswagen Golf" : p.id === "am-cx5" ? "Mazda CX-5" : "MINI"}; representative model photograph by Vauxford, CC BY-SA 4.0`, width: 1600, height: p.id === "am-golf" ? 816 : p.id === "am-cx5" ? 825 : 776, focal: { x: 50, y: 50 } },
+    image: { src: `/taplo-demo/${STOCK_IMAGES[p.id]}.png`, alt: `Illustrative ${p.id === "am-golf" ? "hatchback" : p.id === "am-cx5" ? "crossover" : "small hatchback"}; generated artwork, not a vehicle on offer`, width: 1536, height: p.id === "am-golf" ? 1024 : p.id === "am-cx5" ? 1024 : 1024, focal: { x: 50, y: 50 } },
   })),
 }
 

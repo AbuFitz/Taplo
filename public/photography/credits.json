@@ -25,32 +25,5 @@
     "changes": "Resized, converted to WebP; responsive display crops vary.",
     "bytes": 152694,
     "sha256": "c4ba32d2c47c287096946dacf7ed38d54beeae8d23a7ae05589d43e425bba38a"
-  },
-  {
-    "file": "golf.webp",
-    "author": "Vauxford",
-    "source": "https://commons.wikimedia.org/wiki/File:2020_Volkswagen_Golf_Style_1.5_Front.jpg",
-    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
-    "changes": "Resized, converted to WebP; responsive display crops vary.",
-    "bytes": 168228,
-    "sha256": "a4ee6056210b914d70bdb79778db6f81908dbe55ed9f603edb78606af21512d5"
-  },
-  {
-    "file": "cx5.webp",
-    "author": "Vauxford",
-    "source": "https://commons.wikimedia.org/wiki/File:2019_Mazda_CX-5_SE-L_NAV%2B_Diesel_2.2_Front.jpg",
-    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
-    "changes": "Resized, converted to WebP; responsive display crops vary.",
-    "bytes": 205334,
-    "sha256": "d923ad6d4570b2a93c0ec5d5c853e5946c003c6c88c0d4da66359000b1ddd4ef"
-  },
-  {
-    "file": "mini.webp",
-    "author": "Vauxford",
-    "source": "https://commons.wikimedia.org/wiki/File:2017_Mini_Hatch_(F55)_1.5.jpg",
-    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
-    "changes": "Resized, converted to WebP; responsive display crops vary.",
-    "bytes": 190650,
-    "sha256": "63377f96c0200d38e2d4e819d2cd09fd53ff298b450f94d922c73c44e3ba3e1e"
   }
 ]

@@ -8,8 +8,8 @@ describe("public image delivery", () => {
     const html = renderToStaticMarkup(
       createElement(ProfileImage, {
         image: {
-          src: "/taplo-demo/station-sam.png",
-          alt: "Sam",
+          src: "/taplo-demo/station-paste.png",
+          alt: "Styling paste",
           focal: { x: 50, y: 33 },
         },
         sizes: "48px",
@@ -23,7 +23,7 @@ describe("public image delivery", () => {
   it("keeps an arbitrary external photo usable without an image-host allowlist", () => {
     const html = renderToStaticMarkup(
       createElement(ProfileImage, {
-        image: { src: "https://images.taplo.test/sam.png", alt: "Sam" },
+        image: { src: "https://images.taplo.test/sam.png", alt: "Styling paste" },
         sizes: "48px",
       }),
     );

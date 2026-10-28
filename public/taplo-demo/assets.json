@@ -30,7 +30,7 @@
       "file": "/taplo-demo/station-road-barber-work.png",
       "width": 1536,
       "height": 1024,
-      "alt": "An illustrative barber cutting a client’s hair in a naturally lit high-street shop.",
+      "alt": "An illustrative barber cutting a client\u2019s hair in a naturally lit high-street shop.",
       "sourceType": "generated",
       "generator": "built-in image generation tool",
       "created": "2026-10-24 Europe/London",
@@ -149,66 +149,6 @@
       "revision": "2026-10-24 coordinated monochrome-platform / customer-brand example identities; outlined Space Grotesk and Lexend wordmarks."
     },
     {
-      "id": "station-sam",
-      "file": "/taplo-demo/station-sam.png",
-      "width": 512,
-      "height": 768,
-      "alt": "Illustrative portrait of Sam, a fictional Jay’s Barbers barber",
-      "sourceType": "generated",
-      "generator": "built-in image generation tool",
-      "generationSource": "exec-c5669122-1e94-4d74-8d5d-f3e45a6d7618.png",
-      "created": "2026-10-24 Europe/London",
-      "status": "illustrative-fictional-demo",
-      "uses": [
-        "Station Road team and eligible booking providers",
-        "Current renderer feature captures"
-      ],
-      "restrictions": [
-        "Fictional person, not a customer or real staff endorsement",
-        "No qualifications or credentials implied"
-      ]
-    },
-    {
-      "id": "station-lee",
-      "file": "/taplo-demo/station-lee.png",
-      "width": 512,
-      "height": 768,
-      "alt": "Illustrative portrait of Lee, a fictional Jay’s Barbers barber",
-      "sourceType": "generated",
-      "generator": "built-in image generation tool",
-      "generationSource": "exec-5e9e4eae-3e8c-4782-96bb-ca530d01bebc.png",
-      "created": "2026-10-24 Europe/London",
-      "status": "illustrative-fictional-demo",
-      "uses": [
-        "Station Road team and eligible booking providers",
-        "Current renderer feature captures"
-      ],
-      "restrictions": [
-        "Fictional person, not a customer or real staff endorsement",
-        "No qualifications or credentials implied"
-      ]
-    },
-    {
-      "id": "station-iman",
-      "file": "/taplo-demo/station-iman.png",
-      "width": 512,
-      "height": 768,
-      "alt": "Illustrative portrait of Iman, a fictional Jay’s Barbers barber",
-      "sourceType": "generated",
-      "generator": "built-in image generation tool",
-      "generationSource": "exec-b04fec58-c537-4aab-b7f6-e5892e2aea77.png",
-      "created": "2026-10-24 Europe/London",
-      "status": "illustrative-fictional-demo",
-      "uses": [
-        "Station Road team and eligible booking providers",
-        "Current renderer feature captures"
-      ],
-      "restrictions": [
-        "Fictional person, not a customer or real staff endorsement",
-        "No qualifications or credentials implied"
-      ]
-    },
-    {
       "id": "station-paste",
       "file": "/taplo-demo/station-paste.png",
       "width": 1152,
@@ -233,7 +173,7 @@
       "file": "/taplo-demo/corner-table-cafe.png",
       "width": 1536,
       "height": 1024,
-      "alt": "Illustrative café interior with mushrooms on toast and a flat white.",
+      "alt": "Illustrative caf\u00e9 interior with mushrooms on toast and a flat white.",
       "sourceType": "generated",
       "generator": "built-in image generation tool",
       "generatedSource": "/Users/abu-bakr/.codex/generated_images/01a16af8-45fc-7782-b54a-b39524f31f91/exec-77bbf821-f383-417b-b669-92dd23ece2c3.png",

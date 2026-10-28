@@ -193,7 +193,7 @@ export function ProductExplorer() {
                 <div className="product-car-card">
                   <div>
                     <Image
-                      src="/photography/golf.webp"
+                      src="/taplo-demo/brookfield-golf.png"
                       alt=""
                       fill
                       sizes="(min-width:900px) 540px, 80vw"

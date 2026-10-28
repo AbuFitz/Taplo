@@ -19,7 +19,7 @@ for (const width of [390, 1440]) {
     for (const img of await cards.locator(".tp-media img").all()) {
       await img.scrollIntoViewIfNeeded()
       await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true)
-      await expect(img).toHaveAttribute("alt", /(Illustrative example|representative model photograph)/)
+      await expect(img).toHaveAttribute("alt", /(Illustrative|representative model photograph)/)
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await page.getByRole("heading", { level: 1 }).scrollIntoViewIfNeeded()
