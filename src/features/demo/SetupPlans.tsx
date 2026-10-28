@@ -76,7 +76,6 @@ export function SetupPlans({ inline = false }: { inline?: boolean }) {
                   {id === recommended ? <span className="setup-plan-why">You chose online booking, and this plan includes online bookings.</span> : null}
                 </span>
               ) : null}
-              <span className="setup-plan-state" aria-hidden="true">{on ? <><Check /> Selected</> : "Choose"}</span>
             </label>
           );
         })}

@@ -313,7 +313,7 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 /* Desktop framing: the handset keeps its size, and once a category is chosen it settles just far enough to sit inside the card. */
 @media (min-width:1024px){
   .setup-canvas{transition:height .45s ease}
-  .setup-canvas[data-reveal=true]{height:calc(100% - var(--reveal-trim,36px))}
+  .setup-canvas[data-reveal=true]{height:94%}
 }
 @media (prefers-reduced-motion:reduce){.setup-canvas{transition:none!important}}
 /* Phone: the finishing draft sits above the account sheet. */
@@ -366,3 +366,7 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 .setup-finish-next li::before{content:counter(n);position:absolute;left:0;top:0;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#161715;color:#fff;font-size:11.5px;font-weight:600}
 .setup-finish-next b{color:#161715;font-weight:600}
 .setup-account-title{margin:6px 0 0;font-size:18px;font-weight:600;letter-spacing:-.02em}
+
+@media (max-width:1023px){
+  .setup-flow[data-step=publish][data-mobile-layout=preview] .setup-workspace>.setup-panel[data-sheet=edit]{max-height:62%}
+}

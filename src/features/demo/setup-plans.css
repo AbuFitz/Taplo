@@ -33,3 +33,11 @@
 .setup-plan-card[data-plan=business]:not([data-selected=true]) .setup-plan-state{background:transparent;color:inherit;box-shadow:inset 0 0 0 1px #ffffff40}
 .setup-plan-notice{display:flex;gap:10px;align-items:flex-start;margin:0;padding:2px 4px;color:#55555c;font-size:12.5px;line-height:1.45}
 .setup-plan-notice svg{flex:none;width:15px;height:15px;margin-top:1px}
+
+/* The whole card is the control: a radio dot says so, no extra button row. */
+.setup-plan-name::before{content:"";flex:none;width:18px;height:18px;margin-right:2px;border-radius:50%;box-shadow:inset 0 0 0 1.5px #00000066;background:transparent;transition:box-shadow .2s,background .2s}
+.setup-plan-card[data-selected=true] .setup-plan-name::before{background:#161715;box-shadow:inset 0 0 0 4px #161715,inset 0 0 0 9px #fff}
+.setup-plan-card[data-plan=business] .setup-plan-name::before{box-shadow:inset 0 0 0 1.5px #ffffff80}
+.setup-plan-card[data-plan=business][data-selected=true] .setup-plan-name::before{background:#f5f1e8;box-shadow:inset 0 0 0 4px #f5f1e8,inset 0 0 0 9px #292a27}
+.setup-plan-name{align-items:center}
+.setup-plan-card{padding-bottom:16px}
