@@ -331,7 +331,7 @@ export function Onboarding() {
 
           {step === "widgets" ? <WidgetsStep /> : null}
           {step === "plan" ? <SetupPlans inline /> : null}
-          {step === "publish" ? <PublishStep onEditor={() => router.push("/dashboard/page")} onEdit={to=>{go(to);update(x=>({...x,setupDrafts:{...x.setupDrafts,reviewEdit:true}}))}} /> : null}
+          {step === "publish" ? <PublishStep onStudio={() => router.push("/dashboard")} onEdit={to=>{go(to);update(x=>({...x,setupDrafts:{...x.setupDrafts,reviewEdit:true}}))}} /> : null}
 
           </motion.div>
           {step !== "publish" ? (
@@ -471,7 +471,7 @@ function FirstContent({onValidity}:{onValidity:(valid:boolean)=>void}) {
   )
 }
 
-function PublishStep({ onEditor, onEdit }: { onEditor: () => void; onEdit: (step:OnboardingStep) => void }) {
+function PublishStep({ onStudio, onEdit }: { onStudio: () => void; onEdit: (step:OnboardingStep) => void }) {
   const { state, update } = useDemo()
   const s = state ?? initialState()
   const checks = readiness(s)
@@ -513,10 +513,10 @@ function PublishStep({ onEditor, onEdit }: { onEditor: () => void; onEdit: (step
         </div>
       ) : null}
       <div className="flex flex-wrap gap-3">
-        <Button size="lg" disabled={!ok} onClick={() => update((x) => ({ ...publish(x), onboarded: true }))}>{s.published ? "Publish changes" : "Publish my page"}</Button>
-        <Button size="lg" variant="outline" onClick={() => { update((x) => ({ ...x, onboarded: true })); onEditor() }}>Customise my page</Button>
+        <Button size="lg" data-testid="save-draft" onClick={() => { update((x) => ({ ...x, onboarded: true })); onStudio() }}>Save draft and open Studio</Button>
+        <Button size="lg" variant="outline" disabled={!ok} onClick={() => update((x) => ({ ...publish(x), onboarded: true }))}>{s.published ? "Publish changes" : "Publish now"}</Button>
       </div>
-      {!ok ? <p className="text-sm text-destructive" role="alert">Finish the steps marked missing to publish.</p> : <p className="text-xs text-muted-foreground">{WHEN_UNAVAILABLE.publicPublishing}</p>}
+      <p className="text-xs text-muted-foreground" data-testid="draft-note">{s.published ? "" : "Your page is saved as a draft. Nothing is public until you choose Publish, here or later in Studio. Examples are never published."} {capabilities().accounts ? "" : WHEN_UNAVAILABLE.accounts + " "}{ok ? WHEN_UNAVAILABLE.publicPublishing : "To publish you still need: " + checks.filter((c) => c.required && !c.done).map((c) => c.label.toLowerCase()).join(", ") + "."}</p>
     </div>
   )
 }
