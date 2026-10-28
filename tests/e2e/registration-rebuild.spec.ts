@@ -1,4 +1,4 @@
-import { cont, openDetails } from './helpers';
+import { cont, openDetails , openBusinessMore } from "./helpers";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import sharp from "sharp";

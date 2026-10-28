@@ -178,12 +178,15 @@ export const look = (page: Page, id: string) =>
     .locator(`label[data-choice="${LEGACY_LOOK[id] ?? id}"]`);
 
 /** Continue, hopping the phone-only second screen of the business step. */
-export async function cont(page: import("@playwright/test").Page) {
+export async function cont(page: import("@playwright/test").Page, opts: { keepLook?: boolean } = {}) {
   const btn = page.getByRole("button", { name: "Continue", exact: true })
+  const heading = () => page.getByRole("heading", { level: 1 }).textContent().then((t) => t ?? "").catch(() => "")
+  const before = await heading()
   await btn.click()
-  if ((page.viewportSize()?.width ?? 1440) < 1024) {
-    await page.waitForTimeout(350)
-    if (/^Tell people what you do\./.test((await page.getByRole("heading", { level: 1 }).textContent()) ?? "")) await btn.click()
+  // The look now follows the name; flows that are not about the look pass straight through it.
+  if (before === "Make it yours." && !opts.keepLook) {
+    await page.getByRole("heading", { level: 1, name: "Choose a look." }).waitFor({ timeout: 5000 }).catch(() => undefined)
+    if ((await heading()) === "Choose a look.") await btn.click()
   }
 }
 /** On a phone the contact step opens on the main-button choice; move on to the details screen. */
@@ -193,3 +196,9 @@ export async function openDetails(page: import("@playwright/test").Page) {
 
 /** Messages some engines print for features they do not implement (WebKit ignores the `interactive-widget` viewport key and logs RSC prefetch cancellations). They are not defects in the page. */
 export const isEngineNoise = (text: string) => /interactive-widget|due to access control checks/.test(text)
+
+/** The first step keeps description and cover photo behind "Add a description or cover photo". */
+export async function openBusinessMore(page: import("@playwright/test").Page) {
+  const more = page.getByTestId("business-more")
+  if (await more.count()) { if (!(await more.evaluate((el) => (el as HTMLDetailsElement).open))) await more.locator("summary").click() }
+}

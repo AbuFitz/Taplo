@@ -20,7 +20,7 @@ for (const width of [390, 1440]) {
       await name.fill("Marlowe & Finch")
       await expect(preview(page).getByRole("heading", { level: 1 })).toHaveText("Marlowe & Finch")
       await snap(page, `${width}-1-name`)
-      await cont(page)
+      await cont(page, { keepLook: true })
       // 2 look: a strong look is already applied; pick another and recolour
       await expect(page.getByRole("heading", { level: 1 })).toHaveText("Choose a look.")
       const themes = page.getByRole("radiogroup", { name: "Starting theme" })

@@ -1,4 +1,4 @@
-import { cont, openDetails } from './helpers';
+import { cont, openDetails , openBusinessMore } from "./helpers";
 import {test,expect,type Page} from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import sharp from "sharp";
@@ -11,7 +11,7 @@ const shot=async(page:Page,name:string)=>{await page.evaluate(()=>Promise.all(do
 for(const width of [320,390,768,1440])test(`registration identity has readable labels and quiet secondary actions at ${width}`,async({page})=>{
  await page.setViewportSize({width,height:900});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/onboarding');
  await expect(page.getByTestId('sandbox-badge')).toHaveCount(0);await expect(page.getByRole('button',{name:'View full size'})).toHaveCount(0);
- await expect(page.getByLabel('Short description (optional)')).toHaveAttribute('placeholder',/Independent hair studio/);
+ await openBusinessMore(page);await expect(page.getByLabel('Short description (optional)')).toHaveAttribute('placeholder',/Independent hair studio/);
  const label=page.locator('label').filter({hasText:/^Business name$/});expect(await label.evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(14);
  await expect(page.locator('.setup-avatar-picture')).toHaveCSS('background-color','rgb(255, 255, 255)');
  await expect(page.getByRole('button',{name:'Continue',exact:true})).toBeInViewport();
