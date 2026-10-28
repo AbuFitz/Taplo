@@ -213,16 +213,18 @@ let past: Snapshot[] = [];
 let future: Snapshot[] = [];
 let lastCoalesce: { key: string; at: number } | null = null;
 let historyVersion = 0;
-// Undo should survive a reload of this tab. It lives in sessionStorage (per tab, gone when the tab closes), is capped, and is
-// silently dropped when it would be large (uploaded pictures are stored as data) rather than risk filling the page's own storage.
+// Undo survives a reload and closing the tab. It is stored with the page it leads back from and is only restored when that page is still
+// the stored one (another tab or a reset invalidates it). It is capped, and silently dropped when it would be large (uploaded pictures
+// are stored as data) rather than risk filling the page's own storage.
 const HISTORY_KEY = "taplo.demo.history.v1";
 const HISTORY_KEEP = 20;
-const HISTORY_MAX_CHARS = 600_000;
+const HISTORY_MAX_CHARS = 250_000;
 function persistHistory() {
   try {
-    const body = JSON.stringify({ past: past.slice(-HISTORY_KEEP), future: future.slice(-HISTORY_KEEP) });
-    if (body.length > HISTORY_MAX_CHARS) window.sessionStorage.removeItem(HISTORY_KEY);
-    else window.sessionStorage.setItem(HISTORY_KEY, body);
+    const head = window.localStorage.getItem(KEY);
+    const body = JSON.stringify({ head, past: past.slice(-HISTORY_KEEP), future: future.slice(-HISTORY_KEEP) });
+    if (body.length > HISTORY_MAX_CHARS || head === null) window.localStorage.removeItem(HISTORY_KEY);
+    else window.localStorage.setItem(HISTORY_KEY, body);
   } catch { /* history is a convenience; never block an edit */ }
 }
 let historyLoaded = false;
@@ -230,10 +232,11 @@ function loadHistory() {
   if (historyLoaded || typeof window === "undefined") return;
   historyLoaded = true;
   try {
-    const raw = window.sessionStorage.getItem(HISTORY_KEY);
+    const raw = window.localStorage.getItem(HISTORY_KEY);
     if (!raw) return;
-    const parsed = JSON.parse(raw) as { past?: Snapshot[]; future?: Snapshot[] };
+    const parsed = JSON.parse(raw) as { head?: string | null; past?: Snapshot[]; future?: Snapshot[] };
     // Only trust history that still leads to the stored page: otherwise another tab or a reset has moved on.
+    if (parsed.head !== window.localStorage.getItem(KEY)) { window.localStorage.removeItem(HISTORY_KEY); return; }
     if (Array.isArray(parsed.past)) past = parsed.past;
     if (Array.isArray(parsed.future)) future = parsed.future;
     historyVersion += 1;

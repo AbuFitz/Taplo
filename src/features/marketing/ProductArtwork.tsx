@@ -105,7 +105,7 @@ export function ProductArtwork({
         <>
           <div className="absolute inset-0">
             <Photo
-              src="/taplo-demo/station-road-barber-work.png"
+              src="/photography/barber.webp"
               alt=""
               position="80% center"
               priority={priority}
@@ -226,7 +226,7 @@ export function ProductArtwork({
         <>
           <div className="absolute inset-0">
             <Photo
-              src="/taplo-demo/station-road-barber-work.png"
+              src="/photography/barber.webp"
               alt=""
               position="70% center"
               priority={priority}

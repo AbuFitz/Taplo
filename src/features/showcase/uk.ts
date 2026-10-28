@@ -56,7 +56,7 @@ export const BROOKFIELD: BusinessContentInput = {
 const oakfield = example("fieldwork-home-care", "request", "oakfield-mark")
 export const OAKFIELD: BusinessContentInput = {
   ...oakfield,
-  identity: { ...oakfield.identity, heroImage: { src: "/taplo-demo/oakfield-shelf.png", alt: "Illustrative shelf-fitting work in a British home", width: 1536, height: 1024, focal: { x: 70, y: 44 } } },
+  identity: { ...oakfield.identity, heroImage: { src: "/showcase/trades-hero.jpg", alt: "An engineer soldering a pipe fitting under a work light", width: 1600, height: 1067, focal: { x: 52, y: 40 } } },
   about: "The small jobs that make a home work better. Tell us what needs attention, where you are and anything useful about the wall or fittings. We will agree the scope before a visit.",
   hours: hours(["mon", "tue", "wed", "thu", "fri"], "09:00", "17:00"),
   faqs: [

@@ -13,7 +13,7 @@ Status words: **Done** (verified in a browser or test this session), **Partial**
 - Run 1, dev server, 2 workers, after the feature edits: 795 passed, 7 failed, 7 skipped. Each failure was fixed (spec timing or a stale assumption) and passed when re-run alone.
 - Run 2, **production build** (`next build` then `next start`, 3 workers), after the licence/asset changes: **799 passed, 3 failed, 7 skipped** (1.1 h). The three were: `curated-setup-blocks` x2 (the arrangement radios reflow while previews load; the spec now skips the stability wait) and `design-preview` at 390 (a tap during React's early-click replay never opened the booking journey; the spec now waits for the framed page's ready flag). All three pass when re-run on the production build.
 - Not repeated: a third full run with the final spec edits. Chromium only. Unit suite 346 passed; `tsc --noEmit` clean.
-- Finding worth knowing: in the production build, tapping "Book" in a framed preview within about a second of load, then tapping again, can leave the booking journey closed. Real visitors rarely tap that early, but it is a hydration race rather than a test artefact.
+- Correction: I earlier called the `design-preview` failure a hydration race in the app. Evidence does not support that: after the framed page reports `data-taplo-ready`, a single tap opens the journey every time (4/4); the failing spec tapped repeatedly from the first second, and a repeat tap on an open dialog toggles it. It is a spec issue, not a product defect.
 
 ## Journey (brief section 1)
 | Item | Status | Evidence |
@@ -54,7 +54,7 @@ What I could not see from the study: its fallback-state wording beyond the toggl
 |---|---|
 | Content, arrangement, finish kept separate in data | Partial: `header.layout` (arrangement), `layout.finish`, design recipe and content are separate keys; widget presentation lives on each widget; asset treatment (crop/fit/focal, scrim) lives on `ImageRef` and `header.scrim` |
 | Applying a design preserves business data | Done: `applyDesign` touches `appearance` only; "Use this design" says so (`src/features/inspiration/UseDesign.tsx`) |
-| Undo / provenance | **Done within limits**: undo now survives a reload of the same tab (sessionStorage, last 20 steps, dropped when large; `tests/e2e/undo-reload.spec.ts`). "Use this design" records `page.meta.appliedFrom` and the editor shows "Look started from …" (`MyPage.tsx`). Undo does not survive closing the tab |
+| Undo / provenance | **Done within limits**: undo now survives a reload of the same tab (sessionStorage, last 20 steps, dropped when large; `tests/e2e/undo-reload.spec.ts`). "Use this design" records `page.meta.appliedFrom` and the editor shows "Look started from …" (`MyPage.tsx`). Large pages (uploaded pictures) keep no saved undo |
 | Versioned schemas | Partial: `PAGE_SCHEMA_VERSION` for pages; arrangement choice is not separately versioned |
 | No destructive background removal | Done: none exists |
 | Image-library licensing | Checked from repository records: see `docs/asset-licences.md`. Three CC BY-SA car photos and the unlabelled `taplo-demo` / `looks` images are open items |
