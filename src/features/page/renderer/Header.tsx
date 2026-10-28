@@ -91,7 +91,7 @@ function Text({ vm }: { vm: PageViewModel }) {
       <h1 className="tp-name">{b.identity.name}</h1>
       {b.identity.tagline ? <p className="tp-bio">{b.identity.tagline}</p> : null}
       <p className="tp-meta">
-        <span>{b.identity.industryLabel}</span>
+        {b.identity.showCategory !== false && b.identity.industryLabel ? <span>{b.identity.industryLabel}</span> : null}
         {h.showLocation && vm.locationLine ? <span className="inline-flex items-center gap-1"><MapPin aria-hidden="true" className="size-3.5" />{vm.locationLine}</span> : null}
 
       </p>
@@ -145,7 +145,7 @@ function Arrangement({ vm }: { vm: PageViewModel }) {
   )
   if (h.layout === "masthead") return (
     <header aria-label={label} className="tp-header" data-layout="masthead" data-align="left" data-cover={cover ? "" : undefined}>
-      <p className="tp-ms-rule"><span>{id.industryLabel}</span>{h.showLocation && vm.locationLine ? <span>{vm.locationLine}</span> : null}</p>
+      <p className="tp-ms-rule">{id.showCategory !== false && id.industryLabel ? <span>{id.industryLabel}</span> : <span aria-hidden="true" />}{h.showLocation && vm.locationLine ? <span>{vm.locationLine}</span> : null}</p>
       <div className="tp-ms-body">{id.logo ? <Avatar vm={vm} shape="logo" /> : null}<Text vm={vm} /><Actions vm={vm} /></div>
       {cover ? <div className="tp-ms-media"><ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /></div> : null}
     </header>
@@ -187,7 +187,7 @@ function Arrangement({ vm }: { vm: PageViewModel }) {
   return (
     <header aria-label={label} className="tp-header" data-layout="type" data-align="left">
       <div className="tp-type-art" aria-hidden="true" />
-      <p className="tp-type-kicker">{id.industryLabel}{h.showLocation && vm.locationLine ? ` · ${vm.locationLine}` : ""}</p>
+      <p className="tp-type-kicker">{[id.showCategory !== false ? id.industryLabel : "", h.showLocation ? vm.locationLine : ""].filter(Boolean).join(" · ")}</p>
       <h1 className="tp-name tp-type-name">{id.name}</h1>
       {id.tagline ? <p className="tp-bio tp-type-bio">{id.tagline}</p> : null}
       <Actions vm={vm} />

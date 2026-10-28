@@ -197,6 +197,8 @@ export const businessContentSchema = z.object({
     industryLabel: text(80),
     /** Further kinds of work the business does. They add suggestions; they never change the design. */
     alsoKeys: z.array(text(64)).max(2).optional(),
+    /** Whether the kind of business ("Barber") is written on the public page. Pages made before this choice existed show it. */
+    showCategory: z.boolean().optional(),
   }),
   location: z.object({
     mode: z.enum(LOCATION_MODES),

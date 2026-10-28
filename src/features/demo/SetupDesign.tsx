@@ -398,10 +398,13 @@ export function SetupDesign({ compact = false }: { compact?: boolean }) {
           </div>
         }
       </Overlay>
-      <div className="col-span-full mt-4 grid gap-5">
-        <SetupMobileLayouts />
-        <SetupMaterial />
-      </div>
+      <details className="setup-more col-span-full mt-4" data-testid="more-styling">
+        <summary className="setup-secondary cursor-pointer list-none">More ways to style · Optional</summary>
+        <div className="mt-4 grid gap-5">
+          <SetupMobileLayouts />
+          <SetupMaterial />
+        </div>
+      </details>
     </div>
   );
 }

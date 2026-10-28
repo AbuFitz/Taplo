@@ -73,11 +73,14 @@ export function readiness(s: DemoState): Check[] {
   const c = s.content;
   const activeServices = (c.services ?? []).filter((x) => !x.archived);
   const goals = s.setupDrafts?.goals ?? [];
+  const has = (...ids: string[]) => ids.some((g) => (goals as string[]).includes(g));
   const goalChecks: Check[] = [
-    goals.includes("book") ? { id: "goal-book", label: "You want bookings: add a service with a duration", done: activeServices.some((x) => Boolean(x.durationMinutes)), required: false, href: "/dashboard/services" } : null,
-    goals.includes("call") ? { id: "goal-call", label: "You want calls: add a phone number", done: Boolean(c.contacts.phone), required: false, href: "/dashboard/page" } : null,
-    goals.includes("message") ? { id: "goal-message", label: "You want messages: add WhatsApp or email", done: Boolean(c.contacts.whatsapp || c.contacts.email), required: false, href: "/dashboard/page" } : null,
-    goals.includes("buy") ? { id: "goal-buy", label: "You want sales: add your first product", done: (c.products ?? []).some((x) => !x.archived), required: false, href: "/dashboard/services" } : null,
+    has("book") ? { id: "goal-book", label: "You want bookings: add a service with a duration", done: activeServices.some((x) => Boolean(x.durationMinutes)), required: false, href: "/dashboard/services" } : null,
+    has("contact", "call") ? { id: "goal-call", label: "You want to be contacted: add a phone number or email", done: Boolean(c.contacts.phone || c.contacts.email), required: false, href: "/dashboard/page" } : null,
+    has("message") ? { id: "goal-message", label: "You want messages: add WhatsApp or email", done: Boolean(c.contacts.whatsapp || c.contacts.email), required: false, href: "/dashboard/page" } : null,
+    has("services", "browse") ? { id: "goal-services", label: "You want people to explore your services: add your first service", done: activeServices.length > 0, required: false, href: "/dashboard/services" } : null,
+    has("products", "buy") ? { id: "goal-buy", label: "You want people to browse products: add your first product", done: (c.products ?? []).some((x) => !x.archived), required: false, href: "/dashboard/services" } : null,
+    has("work") ? { id: "goal-work", label: "You want to show your work: add photos", done: (c.gallery ?? []).length > 0, required: false, href: "/dashboard/page" } : null,
   ].filter((x): x is Check => x !== null);
   const exampleLeft = [...(c.services ?? []), ...(c.products ?? [])].some((x) => (x as { example?: boolean }).example && !x.archived);
   return [

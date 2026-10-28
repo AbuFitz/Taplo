@@ -265,7 +265,20 @@ export function Onboarding() {
                     <p className="text-xs text-muted-foreground">Adds suggestions only. Your page design stays your choice.</p>
                   </fieldset>
                 ) : null}
-                {state !== null && Boolean(c.identity.industryLabel.trim()) ? <SetupThemes compact/> : null}
+                {state !== null && Boolean(c.identity.industryLabel.trim()) ? (
+                  <div className="grid gap-5" data-testid="category-details">
+                    <label className="flex min-h-11 items-center gap-3 text-sm font-medium"><input type="checkbox" className="size-5 accent-black" checked={c.identity.showCategory === true} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, showCategory: e.target.checked } } }))} /><span>Show “{c.identity.industryLabel}” under my name <span className="font-normal text-muted-foreground">· Optional</span></span></label>
+                    <fieldset className="grid gap-2" data-testid="how-you-work">
+                      <legend className="text-sm font-medium">How do you work?</legend>
+                      <div className="flex flex-wrap gap-2">
+                        {([["premises", "From a shop or studio"], ["service_area", "I travel to customers"], ["online", "Online"]] as const).map(([mode, label]) => (
+                          <button key={mode} type="button" aria-pressed={c.location.mode === mode} className={cn("min-h-11 rounded-full border px-4 text-sm", c.location.mode === mode ? "bg-[#111111] text-white" : "bg-card")} onClick={() => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, mode } } }))}>{label}</button>
+                        ))}
+                      </div>
+                      <p className="text-xs text-muted-foreground">No address is needed now. You choose what to show later.</p>
+                    </fieldset>
+                  </div>
+                ) : null}
                 <button type="button" className="setup-secondary justify-self-start" onClick={()=>{setOtherOpen(true);update(x=>applyIndustry(x,OTHER_INDUSTRY_ID,""))}}>Use a different business type</button>
                 {state !== null && (otherOpen || c.identity.industryKey === OTHER_INDUSTRY_ID && c.identity.industryLabel !== "") ? (
                   <TaploInput label="Describe your business" hint="e.g. Dog groomer, Wedding florist, Piano restorer" value={c.identity.industryLabel} maxLength={80} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }), { coalesce: "ind-label" })} />
@@ -343,7 +356,7 @@ export function Onboarding() {
 
 /** Mobile page composition, starting theme and fine adjustment are separate choices. */
 function WidgetsStep() {
- return <div className="grid gap-7"><SetupThemes/><SetupDesign/></div>;
+ return <div className="grid gap-7"><p className="setup-lede -mt-4 text-[0.95rem] text-muted-foreground">A look is already on your page. Try another, or change the colours. You can change all of it later without losing anything.</p><SetupThemes/><SetupDesign/></div>;
 }
 
 const toPounds = (minor?: number) => (minor === undefined ? "" : (minor / 100).toFixed(minor % 100 === 0 ? 0 : 2))
