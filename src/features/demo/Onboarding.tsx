@@ -20,7 +20,7 @@ import { SetupLoading } from "./SetupLoading"
 import * as React from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Check, Plus, Trash2 } from "lucide-react"
+import { Check, Info, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TaploInput } from "@/components/taplo/taplo-input"
 import { SLUG_PROBLEM_MESSAGE } from "@/features/businesses/slug"
@@ -136,14 +136,6 @@ export function Onboarding() {
   const lastPart = part >= parts - 1
   // The phone preview stays in view while the main button is chosen, so the choice is seen on the page at once.
   // On a computer the handset zooms out to show the whole page, but only once a category has been chosen (never before), and it stays out.
-  // After setup the form clears away and the real draft is shown whole for a moment; the account step is available as soon as that settles.
-  const [revealDone, setRevealDone] = React.useState(false)
-  React.useEffect(() => {
-    if (step !== "publish" || reducedMotion) return
-    const t = window.setTimeout(() => setRevealDone(true), 1200)
-    return () => { window.clearTimeout(t); setRevealDone(false) }
-  }, [step, reducedMotion])
-  const finishPhase = step === "publish" && !reducedMotion && !revealDone ? "reveal" : "account"
   const categoryChosen = state !== null && Boolean(s.content.identity.industryLabel.trim())
   const revealed = !mobileSetup && (stepIndex > SETUP_STEPS.indexOf("industry") || (step === "industry" && categoryChosen))
   const previewStep = ["business", "industry", "goal", "reach", "contacts", "widgets", "publish"].includes(step)
@@ -244,7 +236,7 @@ export function Onboarding() {
   }
 
   return (
-    <div className="setup-scene"><SetupBackdrop phase={stepIndex} /><main ref={shell} data-preview-expanded="false" data-step={step} data-finish={step === "publish" ? finishPhase : undefined} data-mobile-layout={previewStep ? "preview" : "focus"} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
+    <div className="setup-scene"><SetupBackdrop phase={stepIndex} /><main ref={shell} data-preview-expanded="false" data-step={step} data-mobile-layout={previewStep ? "preview" : "focus"} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
       <nav aria-label="Progress" className="setup-progress mb-4">
         <div className="flex min-h-9 items-center gap-3">
           <Link href="/" aria-label="Taplo home" className="setup-home"><TaploLogo className="h-9" /></Link><div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div>
@@ -512,7 +504,11 @@ function PublishStep({ onStudio }: { onStudio: () => void }) {
   }
   return (
     <div className="grid gap-5" data-testid="finish-step">
-      <p className="text-sm text-muted-foreground">This is your draft. It stays private until you choose to publish it from Studio.</p>
+      <p className="setup-finish-lede">Your draft is ready to take into Studio. It stays private until you publish it.</p>
+      <ol className="setup-finish-next" aria-label="What happens next">
+        <li><b>Studio opens on this draft.</b> Add photos, services and details in any order.</li>
+        <li><b>Publish when you’re ready.</b> Nothing goes public until you choose.</li>
+      </ol>
       <span className="sr-only" data-testid="page-summary">{shown.length ? `On your page: ${shown.join(", ")}.` : ""}</span>
       {phase === "done" ? (
         <p role="status" className="setup-finish-done"><Check aria-hidden="true" /> Account connected and draft saved. Opening Studio…</p>
@@ -520,7 +516,8 @@ function PublishStep({ onStudio }: { onStudio: () => void }) {
         <Button size="lg" data-testid="save-draft" onClick={toStudio}>Open Studio</Button>
       ) : (
         <form className="setup-account" data-testid="account-step" onSubmit={(e) => void submit(e)} noValidate>
-          {!configured ? <p className="setup-account-notice" data-testid="draft-note">Accounts aren’t connected in this environment yet. You can see the sign-up step, but it can’t create an account, and your draft is kept in this browser only.</p> : null}
+          <h2 className="setup-account-title">Create your account</h2>
+          {!configured ? <p className="setup-account-notice" data-testid="draft-note"><Info aria-hidden="true" /><span>Accounts aren’t connected in this environment yet. You can see the sign-up step, but it can’t create an account, and your draft is kept in this browser only.</span></p> : null}
           <TaploInput label="Email" type="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email} aria-invalid={Boolean(errors.email)} />
           <TaploInput label="Password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} error={errors.password} aria-invalid={Boolean(errors.password)} hint="At least 8 characters." />
           <Button size="lg" type="submit" disabled={phase === "connecting"}>{phase === "connecting" ? "Creating account…" : "Create account"}</Button>
@@ -529,7 +526,7 @@ function PublishStep({ onStudio }: { onStudio: () => void }) {
       )}
       {phase !== "done" && !signedIn ? (
         <div className="setup-devroute" data-testid="dev-route">
-          <p className="setup-devroute-label">Development route</p>
+          <p className="setup-devroute-label"><span>DEV</span> Development route</p>
           <p className="text-xs text-muted-foreground" data-testid="dev-route-note">Opens Studio without an account. It exists only in this testing environment and is not part of the customer experience.</p>
           <Button variant="outline" size="lg" data-testid="save-draft" onClick={toStudio}>Open Studio (development)</Button>
         </div>

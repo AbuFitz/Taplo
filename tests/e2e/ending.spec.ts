@@ -16,19 +16,14 @@ async function toPlan(page: Page, width: number) {
 }
 
 for (const width of [390, 1440]) {
-  test(`plan then reveal then account entry, truthful about what is unavailable, at ${width}`, async ({ page }) => {
+  test(`plan then review and account entry, truthful about what is unavailable, at ${width}`, async ({ page }) => {
     await toPlan(page, width)
     // Free is chosen by default and stays easy to choose; selecting another plan opens its list.
     await expect(page.getByRole("radio", { name: "Choose Free", exact: true })).toBeChecked()
     await page.getByRole("radio", { name: "Choose Pro", exact: true }).check({ force: true })
     await expect(page.getByTestId("setup-plans").getByText("Online bookings")).toBeVisible()
     await cont(page)
-    const flow = page.locator("main.setup-flow")
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Review your page")
-    // The reveal: the draft is shown whole while the form is cleared, and the preview is not interactive.
-    await expect(flow).toHaveAttribute("data-finish", "reveal")
-    await expect(page.locator(".setup-canvas")).toHaveAttribute("inert", "")
-    await expect(flow).toHaveAttribute("data-finish", "account", { timeout: 5000 })
     // Account entry: a real form, validation, and honest unavailability.
     await expect(page.getByTestId("draft-note")).toContainText("Accounts aren’t connected")
     await page.getByLabel("Email").fill("bad")
@@ -54,10 +49,8 @@ for (const width of [390, 1440]) {
   })
 }
 
-test("with reduced motion the account step is there immediately", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" })
+test("the account step is there as soon as the page opens, with no loading sequence", async ({ page }) => {
   await toPlan(page, 390)
   await cont(page)
-  await expect(page.locator("main.setup-flow")).toHaveAttribute("data-finish", "account")
   await expect(page.getByTestId("account-step")).toBeVisible()
 })

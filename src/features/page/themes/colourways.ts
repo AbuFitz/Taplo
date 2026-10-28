@@ -40,7 +40,7 @@ export const COLOURWAYS: Colourway[] = [
   },
   {
     id: "ember", name: "Black / ember", kind: "Dark glow", tone: "dark",
-    colors: { background: "#110e0e", text: "#fff1e9", muted: "#cdb3a6", surface: "#251b1b", accent: "#f2b28b", accentText: "#101216", border: "#3d2d2b" },
+    colors: { background: "#110e0e", text: "#fff1e9", muted: "#d3baae", surface: "#251b1b", accent: "#f2b28b", accentText: "#101216", border: "#3d2d2b" },
     background: { kind: "shader", style: "smoke", colors: ["#7d3824", "#35201b"], base: "#100e10", anchors: ["88% 5%", "88% 5%"], motion: false },
     moving: { kind: "shader", style: "smoke", colors: ["#7d3824", "#35201b", "#100e10"], base: "#100e10", anchors: ["88% 5%", "88% 5%"], motion: true, pace: "slow" },
   },
@@ -52,13 +52,13 @@ export const COLOURWAYS: Colourway[] = [
   },
   {
     id: "violet", name: "Blue / violet", kind: "Dark gradient", tone: "dark",
-    colors: { background: "#12152e", text: "#eff2ff", muted: "#aeb7d8", surface: "#1c2340", accent: "#d0dcff", accentText: "#101216", border: "#303a66" },
+    colors: { background: "#12152e", text: "#eff2ff", muted: "#b8c0de", surface: "#1c2340", accent: "#d0dcff", accentText: "#101216", border: "#303a66" },
     background: { kind: "shader", style: "aurora", colors: ["#254c8c", "#603370"], base: "#12152e", anchors: ["0% 5%", "100% 100%"], motion: false },
     moving: { kind: "shader", style: "aurora", colors: ["#254c8c", "#603370", "#171326"], base: "#12152e", anchors: ["0% 5%", "100% 100%"], motion: true, pace: "slow" },
   },
   {
     id: "silver", name: "Silver / ink", kind: "Light gradient", tone: "light",
-    colors: { background: "#e4e6ea", text: "#343943", muted: "#5d6370", surface: "#ffffff", accent: "#252d3b", accentText: "#ffffff", border: "#c9cdd5" },
+    colors: { background: "#e4e6ea", text: "#343943", muted: "#585e6b", surface: "#ffffff", accent: "#252d3b", accentText: "#ffffff", border: "#c9cdd5" },
     background: { kind: "shader", style: "silk", colors: ["#ffffff", "#d6dae3"], base: "#e4e6ea", anchors: ["15% 0%", "100% 100%"], motion: false },
     moving: { kind: "shader", style: "silk", colors: ["#ffffff", "#d6dae3", "#c8ccd4"], base: "#e4e6ea", anchors: ["15% 0%", "100% 100%"], motion: true, pace: "slow" },
   },
@@ -69,7 +69,7 @@ export const COLOURWAYS: Colourway[] = [
   },
   {
     id: "rose", name: "Rose / warm white", kind: "Light gradient", tone: "light",
-    colors: { background: "#f4e9e7", text: "#583c40", muted: "#7d6064", surface: "#fffaf6", accent: "#79434e", accentText: "#ffffff", border: "#e6cfcb" },
+    colors: { background: "#f4e9e7", text: "#583c40", muted: "#62464a", surface: "#fffaf6", accent: "#79434e", accentText: "#ffffff", border: "#e6cfcb" },
     background: { kind: "shader", style: "swirl", colors: ["#dbb8b6", "#fcf9f5"], base: "#f0ddda", anchors: ["0% 100%", "100% 0%"], motion: false },
     moving: { kind: "shader", style: "swirl", colors: ["#dbb8b6", "#fcf9f5", "#f0ddda"], base: "#f0ddda", anchors: ["0% 100%", "100% 0%"], motion: true, pace: "slow" },
   },
