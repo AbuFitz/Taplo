@@ -14,10 +14,11 @@ for (const width of [390, 1440]) {
     const flow = frame.getByTestId("booking-flow")
     await preview.evaluate((el) => el.scrollIntoView({ block: "center" }))
     // The page inside the frame hydrates after it paints; a tap before that is lost, so tap until the journey is open.
-    await expect(async () => {
-      await frame.getByRole("button", { name: "Book a haircut", exact: true }).click({ timeout: 3000 })
-      await expect(flow).toBeVisible({ timeout: 2000 })
-    }).toPass({ timeout: 30000 })
+    // Wait for the framed page to say it is interactive: a tap landing while React replays an early click can open and then close the journey.
+    await expect(frame.locator("[data-taplo-page]")).toHaveAttribute("data-taplo-ready", "true")
+    await page.waitForTimeout(500)
+    await frame.getByRole("button", { name: "Book a haircut", exact: true }).click()
+    await expect(flow).toBeVisible({ timeout: 10000 })
     await flow.getByTestId("bk-service").filter({ hasText: "Skin fade" }).click()
     await flow.getByRole("button", { name: /Anyone available/ }).click()
     await flow.getByTestId("bk-slot").first().click()

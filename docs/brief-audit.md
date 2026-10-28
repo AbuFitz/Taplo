@@ -9,12 +9,11 @@ Status words: **Done** (verified in a browser or test this session), **Partial**
 - `playwright.config.ts` serves `next start` on :3100, a **production build**: edits are invisible to tests until `next build`. Use `BASE_URL=http://localhost:3000` against the dev server.
 - Nothing is deployed or merged. The private study site was not reachable; the uploaded standalone HTML of the study was used instead.
 
-## Verification (dev server, `BASE_URL=http://localhost:3000`, 2 workers)
-- Full Playwright run after the final feature edits: **795 passed, 7 failed, 7 skipped** (1.8 h).
-- The 7 failures were each re-run alone after a fix or a timing change, and all pass: `curated-setup-blocks` x2 (the Split preview is off-screen with nine choices, so the spec now scrolls to it); `category-plan-journeys` plan illustrations x3 (four reloads per spec exceeded 60 s under load; budget raised to 180 s); `marketing` hover menu (hover happened before hydration; now waits for network idle, 3/3 passes); `appearance` FAQ-in-preview (timing; passes alone).
-- These were verified individually, not by a second full run. The Playwright config also serves a production build on :3100, which is stale unless rebuilt; all runs above used the dev server.
-- Unit suite: 345 passed. `tsc --noEmit` clean. ESLint on the touched folders: warnings only.
-- Not done: a production build and a run against it; a second full pass; cross-browser (Chromium only).
+## Verification
+- Run 1, dev server, 2 workers, after the feature edits: 795 passed, 7 failed, 7 skipped. Each failure was fixed (spec timing or a stale assumption) and passed when re-run alone.
+- Run 2, **production build** (`next build` then `next start`, 3 workers), after the licence/asset changes: **799 passed, 3 failed, 7 skipped** (1.1 h). The three were: `curated-setup-blocks` x2 (the arrangement radios reflow while previews load; the spec now skips the stability wait) and `design-preview` at 390 (a tap during React's early-click replay never opened the booking journey; the spec now waits for the framed page's ready flag). All three pass when re-run on the production build.
+- Not repeated: a third full run with the final spec edits. Chromium only. Unit suite 346 passed; `tsc --noEmit` clean.
+- Finding worth knowing: in the production build, tapping "Book" in a framed preview within about a second of load, then tapping again, can leave the booking journey closed. Real visitors rarely tap that early, but it is a hydration race rather than a test artefact.
 
 ## Journey (brief section 1)
 | Item | Status | Evidence |
