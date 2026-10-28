@@ -24,7 +24,7 @@ for (const width of [390, 1440])
       .toBuffer();
     const file = { name: "garage-mark.png", mimeType: "image/png", buffer };
     const upload = page.getByLabel(
-      "Add your logo or profile photo: upload a picture",
+      "Add a logo or photo · Optional: upload a picture",
     );
     await upload.setInputFiles(file);
     const crop = page.getByTestId("crop-dialog");
@@ -152,7 +152,7 @@ for (const width of [320, 390])
       .png()
       .toBuffer();
     await page
-      .getByLabel("Add your logo or profile photo: upload a picture")
+      .getByLabel("Add a logo or photo · Optional: upload a picture")
       .setInputFiles({ name: "picture.png", mimeType: "image/png", buffer });
     const crop = page.getByTestId("crop-dialog");
     await crop.getByRole("button", { name: "Crop photo", exact: true }).click();
@@ -249,6 +249,6 @@ test("partial service text survives back and reload, custom businesses work, and
     .getByRole("button", { name: /Business name and image Add/ })
     .click();
   await expect(
-    page.getByLabel("Add your logo or profile photo: upload a picture"),
+    page.getByLabel("Add a logo or photo · Optional: upload a picture"),
   ).toBeAttached();
 });
