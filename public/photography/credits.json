@@ -79,5 +79,32 @@
     "changes": "Resized, converted to WebP.",
     "bytes": 125824,
     "sha256": "3a1db70ec5c5e467c4b604009a909ed7b9020bbb8615c45a856f986fc81c1027"
+  },
+  {
+    "file": "generated/trades.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: tools laid out on a worn van workbench: spanner, pipe wrench, pliers, screwdrivers, copper pipe, cable coil; window light; no people, no text",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 1000px wide (4:5 portrait), converted to WebP quality 82.",
+    "bytes": 120110,
+    "sha256": "f7984344e98e847e5861ab99b678bb5938f6bcfdeea4930a28a3a9e8c3cf5df4"
+  },
+  {
+    "file": "generated/cafe.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: small cafe counter with espresso machine, stacked cups, pastry case, morning light; no people, no text",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 1000px wide (4:5 portrait), converted to WebP quality 82.",
+    "bytes": 119758,
+    "sha256": "b94f6c793a15bcf18b9b22cf323ca036d4e71824bcad66e32fb5ce5fbec33958"
+  },
+  {
+    "file": "generated/dealer.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: small car dealer forecourt with two hatchbacks seen from the side, low warm sun; no plates, badges, people or text",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 1000px wide (4:5 portrait), converted to WebP quality 82.",
+    "bytes": 157348,
+    "sha256": "f6080db8fc176421a93202d07c5744cdf010beeef7bcc0d62de47de9969b6f64"
   }
 ]
