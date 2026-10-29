@@ -167,9 +167,11 @@ test.describe("plans and page settings", () => {
 
   test("one Studio menu names the same destinations in the editor and on every other page; overview links to the editor", async ({ page }) => {
     await openEditorWithSample(page, "Mechanic");
-    await page.getByRole("button", { name: "Open menu" }).click();   // the editor uses the full width, so the same list opens from one button
-    const links = await page.getByRole("dialog").getByRole("link").allTextContents();
-    expect(links.map((l) => l.trim()).slice(0, 3)).toEqual(["Home", "Page", expect.any(String)]);
+    const rail = page.getByTestId("studio-rail").getByRole("link");
+    const onEditor = await rail.allTextContents();
+    expect(onEditor.map((l) => l.trim()).slice(0, 2)).toEqual(["Home", "Page"]);
+    await page.goto("/dashboard/bookings");
+    expect(await rail.allTextContents()).toEqual(onEditor);   // the same list wherever you are
     await page.goto("/dashboard");
     await expect(page.getByRole("link", { name: "Edit my page" })).toHaveAttribute("href", "/dashboard/page");
     await page.goto("/dashboard/bookings");

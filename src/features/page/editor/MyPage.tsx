@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { canPublish, hasUnpublishedChanges, publish, readiness } from "@/features/demo/actions"
 import { PreviewFrame } from "@/features/demo/ui"
-import { DashboardMenu } from "@/features/demo/DashboardShell"
 import { getDesign } from "@/features/page/themes/designs"
 import { PROFILE_CHOICES } from "@/features/page/contracts/style"
 import { EditorPanel } from "./EditorPanel"
@@ -17,7 +16,7 @@ import { CONTENT, type Selection } from "./selection"
 import { useEditor } from "./useEditor"
 
 /** Panel + live preview from this width up (the panel is a fixed 26rem, so the preview keeps at least 30rem). Below it: the phone and tablet editor. */
-const WIDE = "(min-width: 960px)"
+const WIDE = "(min-width: 1180px)"
 function useWide() {
   return React.useSyncExternalStore(
     (cb) => { const m = window.matchMedia(WIDE); m.addEventListener("change", cb); return () => m.removeEventListener("change", cb) },
@@ -68,7 +67,6 @@ export function MyPage() {
   const saveText = ed.storageFailed ? "Not saved: browser storage is full or blocked" : s.published ? (changed ? "Draft saved · unpublished changes" : "Saved · live") : "Draft saved"
   const toolbar = (
     <div className="flex items-center gap-2" role="toolbar" aria-label="Page actions">
-      <DashboardMenu className="-ml-2" />
       <div className="min-w-0 pr-2">
         <p className="truncate text-sm font-semibold leading-tight">{s.content.identity.name || "Your page"}</p>
         <p className={cn("truncate text-xs leading-tight", ed.storageFailed ? "text-destructive" : "text-muted-foreground")} data-testid="save-state">{saveText}</p>

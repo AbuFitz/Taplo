@@ -1,6 +1,6 @@
 "use client";
 import { StudioSkeleton } from "./dashboard/Studio";
-import { RouteSkeleton, StudioMenu, StudioNav } from "./dashboard/StudioNav";
+import { RouteSkeleton, StudioNav } from "./dashboard/StudioNav";
 import "@/features/page/editor/portal-workspace.css";
 import "./dashboard/workspace-tools.css";
 
@@ -11,11 +11,6 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Welcome } from "./Welcome";
 import { useDemo } from "./store";
-
-/** The editor's menu: the same Studio destinations as the dock, opened from one button. */
-export function DashboardMenu({ className }: { className?: string }) {
-  return <StudioMenu className={className} />;
-}
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { ready, state } = useDemo();
@@ -29,8 +24,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       className="portal-workspace"
       data-workspace-section={focus ? "editor" : "manage"}
     >
-      <div className={cn("portal-main", !focus && "portal-frame")}>
-        {!focus ? <StudioNav /> : null}
+      <div className="portal-main portal-frame">
+        <StudioNav />
         <div className="portal-column">
           {!focus ? (
             <header className="portal-toolbar" aria-label="Workspace">
