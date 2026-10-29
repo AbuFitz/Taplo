@@ -27,4 +27,11 @@ Scope: images under `public/` that the gallery, setup and showcase pages render.
 
 ## Figma and LottieFiles (design tooling)
 - Figma file "Taplo design system" is the founder's own file; it holds code-derived tokens only, no third-party assets.
-- LottieFiles public animations are used only after the author, URL and licence terms are recorded here. None are shipped yet.
+- LottieFiles public animations are used only after the author, URL and licence terms are recorded here. Shipped so far (LottieFiles Public Animations, Lottie Simple License: free commercial use, no attribution required; confirm terms on each page before reuse):
+
+| File | Animation | Author | Source |
+| --- | --- | --- | --- |
+| `public/lottie/bookings.json` | Calendar Booking | Josh Wood | https://lottiefiles.com/animations/calendar-booking-nuLoHvrLOl |
+| `public/lottie/analytics.json` | Analytics Yellow | Brandon Barnes | https://lottiefiles.com/animations/analytics-yellow-1POVwLSnto |
+| `public/lottie/share.json` | qr scan | Aakash Deep | https://lottiefiles.com/animations/qr-scan-au96lmWCfX |
+| `public/lottie/growth.json` | Minimal Growth Bar Chart | Eamin | https://lottiefiles.com/animations/minimal-growth-bar-chart-animation-apFJ91Yqr2 |
