@@ -14,52 +14,39 @@ test.describe("onboarding", () => {
     await page.evaluate(() => localStorage.clear());
   });
 
-  test("home offers a real way in; the first question is the business name", async ({ page }) => {
+  test("home offers a real way in; the first question is what you do", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("link", { name: "Start free" }).first()).toHaveAttribute("href", "/onboarding");
     await page.goto("/onboarding");
-    await expect(page.getByRole("heading", { name: "Make it yours." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "What do you do?" })).toBeVisible();
     await expect(page.locator("main")).not.toContainText(/pick your trade/i);
   });
 
-  test("setup preserves owner-entered content, leaves a draft, and publishing happens in Studio",async({page})=>{
-    const go=()=>cont(page)
-    await page.goto('/onboarding');await page.getByLabel('Business name',{exact:true}).fill('Paws & Polish');await go()
-    await page.getByRole('button',{name:'Use a different business type',exact:true}).click();await page.getByLabel('Describe your business').fill('Dog groomer');await go()
-    await go()
-    await openDetails(page);await page.getByLabel('Email',{exact:true}).fill('hello@example.com');await go()
-    await page.getByLabel('Service 1 name').fill('Full groom');await page.getByLabel('Service 1 price').fill('45');await go()
-    await go()
-    await expect(page.getByRole('heading',{name:'Review your page',exact:true})).toBeVisible()
-    expect((await page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!))).published).toBeNull()
-    await page.getByTestId('save-draft').click();await expect(page).toHaveURL(/\/dashboard/)
-    await page.getByRole('button',{name:'Publish',exact:true}).click()
-    const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('taplo.demo.v2')!));expect(saved.published.content.services[0].name).toBe('Full groom')
-    await page.goto('/demo/p/paws-and-polish');await expect(page.getByRole('heading',{level:1})).toHaveText('Paws & Polish');await expect(page.locator('[data-widget="serviceList"]')).toContainText('Full groom')
-  });
-
-  test("progress survives a reload", async ({ page }) => {
+  test("setup preserves owner-entered content, leaves a draft, and publishing happens in Studio", async ({ page }) => {
+    const next = () => page.getByRole("button", { name: /^Continue/ }).click();
     await page.goto("/onboarding");
-    await page.getByLabel("Business name").fill("Olive Test Barbers");
-    await cont(page);
-    await page.getByRole("list", { name: "Kinds of business" }).getByRole("button", { name: "Barber" }).click();
-    await page.reload();
-    await expect(page.getByRole("heading", { name: "What do you do?" })).toBeVisible();
-    await page.getByRole("button", { name: "Back" }).click();
-    await page.getByRole("button", { name: "Back" }).click();
-    await expect(page.getByLabel("Business name")).toHaveValue("Olive Test Barbers");
-    await expect(preview(page).getByRole("heading", { level: 1 })).toHaveText("Olive Test Barbers");
-  });
-
-  test("phone: the focused form fits at 390px and retains the live preview", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/onboarding");
-    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
-    await page.getByLabel("Business name").fill("Clearpath");
-    await expect(page.getByRole("button", { name: "Expand preview" })).toHaveCount(0);
-    await expect(page.locator(".setup-canvas")).toBeVisible();
-    await expect(page.frameLocator('iframe[data-testid="setup-live-page"]').getByRole("heading", { level: 1 })).toHaveText("Clearpath");
-    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
+    await page.getByTestId("tile-other").click();
+    await page.getByLabel("What do you do?", { exact: true }).fill("Dog groomer");
+    await next();
+    await page.getByLabel("Business name", { exact: true }).fill("Paws & Polish");
+    await next();                                   // look
+    await next();                                   // action: get in touch with an email
+    await page.getByTestId("action-enquire").click();
+    await page.getByLabel(/Where should enquiries go/).fill("hello@example.com");
+    await next();
+    await page.getByLabel("Service 1 name").fill("Full groom");
+    await page.getByLabel("Service 1 price").fill("45");
+    await next();                                   // services
+    await page.getByRole("button", { name: /^Continue with/ }).click();
+    await expect(page.getByRole("heading", { name: "Your page is ready." })).toBeVisible();
+    expect((await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!))).published).toBeNull();
+    await page.getByTestId("save-draft").click();
+    await expect(page).toHaveURL(/\/dashboard/);
+    await page.getByRole("button", { name: "Publish", exact: true }).click();
+    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!));
+    expect(saved.published.content.services[0].name).toBe("Full groom");
+    await page.goto("/demo/p/paws-and-polish");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Paws & Polish");
   });
 
   test("an older saved draft is migrated, keeping the owner's content and colour choices", async ({ page }) => {

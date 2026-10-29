@@ -175,3 +175,74 @@ test("at 1440 the controls sit left and the whole page right, with no document s
   await expect(page.getByTestId("setup-grip")).toHaveCount(0)
   expect(await page.evaluate(() => document.documentElement.scrollHeight <= window.innerHeight + 1)).toBe(true)
 })
+
+test("the logo never navigates mid-setup, and Save and exit keeps the draft on the same step", async ({ page }) => {
+  await open(page)
+  await toName(page)
+  await page.getByLabel("Business name", { exact: true }).fill("North Street Barbers")
+  await page.getByTestId("setup-logo").click()
+  await expect(page).toHaveURL(/\/onboarding/)
+  await expect(page.getByTestId("setup-exit")).toHaveAttribute("href", "/")
+  await page.getByTestId("setup-exit").click()
+  await expect(page).toHaveURL(/localhost:\d+\/$/)
+  await page.goto("/onboarding")
+  await expect(title(page)).toHaveText("What’s it called?")
+  await expect(page.getByLabel("Business name", { exact: true })).toHaveValue("North Street Barbers")
+})
+
+for (const width of [390, 1440]) {
+  test(`a starting example and a plan from the address are kept, and never displace the current question at ${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 })
+    await page.goto("/onboarding?from=jays-barbers&plan=pro", { waitUntil: "domcontentloaded" })
+    await expect(page.getByTestId("from-example")).toBeVisible()
+    await expect(page.getByTestId("plan-intent")).toContainText("Pro")
+    await expect(title(page)).toBeInViewport({ ratio: 1 })
+    const saved = await state(page)
+    expect(saved.setupDrafts.planIntent).toBe("pro")
+    expect(saved.content.identity.industryKey).toBeTruthy()
+  })
+}
+
+test("a short viewport keeps the field and the action reachable without moving the page", async ({ page }) => {
+  await open(page, 390, 480)
+  await toName(page)
+  const input = page.getByLabel("Business name", { exact: true })
+  expect((await input.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+  await expect(cont(page)).toBeInViewport()
+  expect(await page.evaluate(() => scrollY)).toBe(0)
+})
+
+import AxeBuilder from "@axe-core/playwright"
+for (const [w, h] of [[390, 844], [1440, 900]] as const) {
+  test(`every step has no WCAG 2.1 A/AA violations and no horizontal scroll at ${w}`, async ({ page }) => {
+    test.setTimeout(120000)
+    await open(page, w, h)
+    const check = async (label: string) => {
+      const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()
+      expect(axe.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.target) })), label).toEqual([])
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${label} overflow`).toBe(true)
+    }
+    await check("type")
+    await toLook(page); await check("look")
+    await cont(page).click(); await check("action")
+    await cont(page).click(); await check("services")
+    await cont(page).click(); await check("plan")
+    await page.getByRole("button", { name: /^Continue with/ }).click(); await check("finish")
+  })
+}
+
+test("every look is reachable whatever the business type, and choosing one changes the live page", async ({ page }) => {
+  await open(page)
+  const counts: number[] = []
+  for (const kind of ["car-dealer", "cafe-placeholder"]) {
+    if (kind === "cafe-placeholder") { await page.goto("/onboarding"); await page.evaluate((k) => localStorage.removeItem(k), K); await page.reload(); await page.getByTestId("tile-hospitality").click(); await cont(page).click(); await page.getByLabel("Business name", { exact: true }).fill("The Corner Cafe"); await cont(page).click() }
+    else { await toLook(page); await page.getByRole("button", { name: "Back" }).click(); await page.getByRole("button", { name: "Back" }).click(); await page.getByTestId("tile-car-dealer").click(); await cont(page).click(); await cont(page).click() }
+    await expect(title(page)).toHaveText("Choose a look.")
+    counts.push(await page.getByRole("radiogroup", { name: "Looks" }).getByRole("radio").count())
+  }
+  expect(counts[0]).toBeGreaterThanOrEqual(8)
+  expect(counts[1]).toBe(counts[0])
+  await page.getByRole("radiogroup", { name: "Looks" }).getByText("Ink", { exact: true }).click()
+  const frame = page.frameLocator('[data-testid="setup-live-page"]')
+  await expect(frame.locator("[data-taplo-page]")).toHaveAttribute("data-tone", "dark")
+})
