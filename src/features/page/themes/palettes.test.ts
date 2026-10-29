@@ -39,7 +39,7 @@ describe("curated palettes", () => {
     }
   });
   it("only offers palettes of the look's tone, and recolours without touching content or type", () => {
-    const look = STARTING_LOOKS.find((l) => l.id === "ember")!;
+    const look = STARTING_LOOKS.find((l) => l.id === "carbon")!;
     expect(palettesFor(look).every((p) => p.tone === "dark")).toBe(true);
     const page = applyStartingLook(newPage("barber"), look);
     const next = applyPalette(page, look, PALETTES[1]);

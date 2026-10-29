@@ -36,7 +36,7 @@ for (const width of [390, 1440]) {
       await expect(frame(page).locator(".tp-bg-gradient")).toHaveAttribute("data-animate", look.animated ? "true" : "false", { timeout: 15000 })
     }
     await page.emulateMedia({ reducedMotion: "reduce" })
-    await page.getByRole("radio", { name: "Black / ember", exact: true }).check({ force: true })
+    await page.getByRole("radio", { name: "Carbon / white", exact: true }).check({ force: true })
     await expect(frame(page).locator(".tp-shader")).toHaveAttribute("data-active", "false", { timeout: 15000 })
   })
 
@@ -44,7 +44,7 @@ for (const width of [390, 1440]) {
     await toLook(page, width)
     // Looks and Colours are two different things: the toggle is there, and Colours is not the eight look cards again.
     await expect(page.getByRole("radiogroup", { name: "What to change" })).toBeVisible()
-    await page.getByRole("radio", { name: "Black / ember", exact: true }).check({ force: true })
+    await page.getByRole("radio", { name: "Carbon / white", exact: true }).check({ force: true })
     await page.getByRole("radio", { name: "Colours", exact: true }).check({ force: true })
     const palettes = page.getByRole("radiogroup", { name: "Colours" }).getByRole("radio")
     await expect(palettes).toHaveCount(6) // the look's own plus five dark palettes
@@ -55,25 +55,23 @@ for (const width of [390, 1440]) {
     let s = await state(page)
     expect(s.page.appearance.colors.background).toBe("#140a0f")
     expect(s.page.appearance.colors.accent).toBe("#f4a9c0")
-    // The look's character stays: still the ember look's smoke effect, still moving.
-    expect(s.page.appearance.background.kind).toBe("shader")
-    expect(s.page.appearance.background.style).toBe("smoke")
-    expect(s.page.appearance.background.motion).toBe(true)
-    expect(s.page.themeId).toBe("noir")
+    // The look's character stays: Carbon is a solid, still look and remains one.
+    expect(s.page.appearance.background.kind).toBe("solid")
+    expect(s.page.themeId).toBe("monochrome")
     // A palette chosen on purpose stays when the look changes (same tone).
     await page.getByRole("radio", { name: "Looks", exact: true }).check({ force: true })
-    await page.getByRole("radio", { name: "Plum / pearl", exact: true }).check({ force: true })
+    await page.getByRole("radio", { name: "Navy / ice", exact: true }).check({ force: true })
     s = await state(page)
     expect(s.page.appearance.colors.background).toBe("#140a0f")
-    expect(s.page.themeId).toBe("maison")
-    expect(s.page.appearance.background.style).toBe("orbs")
+    expect(s.page.themeId).toBe("quartz")
+    expect(s.page.appearance.background.style).toBe("warp")
     // Into a look of the other tone the palette is not forced on: the new look uses its own colours.
     await page.getByRole("radio", { name: "Silver / ink", exact: true }).check({ force: true })
     s = await state(page)
     expect(s.page.appearance.colors.background).toBe("#e4e6ea")
     await expect(page.getByRole("status")).toContainText("different tone")
     // Back on a dark look, choose a palette, then reset to the look's own and undo.
-    await page.getByRole("radio", { name: "Black / ember", exact: true }).check({ force: true })
+    await page.getByRole("radio", { name: "Carbon / white", exact: true }).check({ force: true })
     await page.getByRole("radio", { name: "Colours", exact: true }).check({ force: true })
     await page.getByRole("radio", { name: "Forest", exact: true }).check({ force: true })
     expect((await state(page)).page.appearance.colors.background).toBe("#0a130d")

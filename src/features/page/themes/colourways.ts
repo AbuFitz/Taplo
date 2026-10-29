@@ -28,33 +28,29 @@ const still = (b: Background): Background => b;
 
 export const COLOURWAYS: Colourway[] = [
   {
-    id: "carbon", name: "Carbon / white", kind: "Solid dark", tone: "dark",
-    colors: { background: "#0b0c0e", text: "#f4f5f7", muted: "#a3a7b0", surface: "#202226", accent: "#f4f5f7", accentText: "#101216", border: "#33363c" },
-    background: { kind: "solid", color: "#0b0c0e" },
+    id: "electric", name: "White / electric blue", kind: "Solid light", tone: "light",
+    colors: { background: "#f8f9fc", text: "#222b3b", muted: "#5b6578", surface: "#ffffff", accent: "#2856d8", accentText: "#ffffff", border: "#dde2ee" },
+    background: { kind: "solid", color: "#f8f9fc" },
   },
   {
-    id: "cobalt", name: "Cobalt / ice", kind: "Deep colour", tone: "dark",
-    colors: { background: "#101b3b", text: "#edf3ff", muted: "#a9b9d8", surface: "#1c3054", accent: "#a7caff", accentText: "#101216", border: "#2f4876" },
-    background: still({ kind: "gradient", from: "#122656", to: "#10172e", angle: 155, motion: false }),
-    moving: { kind: "shader", style: "warp", colors: ["#1d3f86", "#10172e"], base: "#10172e", anchors: ["12% 0%", "88% 100%"], motion: true, pace: "slow" },
+    id: "stone", name: "Stone / ink", kind: "Solid light", tone: "light",
+    colors: { background: "#f2efe9", text: "#262420", muted: "#5b564e", surface: "#fffdf9", accent: "#2b2a27", accentText: "#ffffff", border: "#ddd8cd" },
+    background: { kind: "solid", color: "#f2efe9" },
   },
   {
-    id: "ember", name: "Black / ember", kind: "Dark glow", tone: "dark",
-    colors: { background: "#110e0e", text: "#fff1e9", muted: "#d3baae", surface: "#251b1b", accent: "#f2b28b", accentText: "#101216", border: "#3d2d2b" },
-    background: { kind: "shader", style: "smoke", colors: ["#7d3824", "#35201b"], base: "#100e10", anchors: ["88% 5%", "88% 5%"], motion: false },
-    moving: { kind: "shader", style: "smoke", colors: ["#7d3824", "#35201b", "#100e10"], base: "#100e10", anchors: ["88% 5%", "88% 5%"], motion: true, pace: "slow" },
+    id: "sage", name: "Sage / pine", kind: "Solid light", tone: "light",
+    colors: { background: "#edf1ec", text: "#1f2d24", muted: "#4f5e54", surface: "#ffffff", accent: "#2f5d46", accentText: "#ffffff", border: "#d3dcd2" },
+    background: { kind: "solid", color: "#edf1ec" },
   },
   {
-    id: "plum", name: "Plum / pearl", kind: "Deep colour", tone: "dark",
-    colors: { background: "#261d2c", text: "#f8edf5", muted: "#cfb9cc", surface: "#48324b", accent: "#ecdfef", accentText: "#101216", border: "#5d4561" },
-    background: { kind: "gradient", from: "#3d2941", to: "#201b28", angle: 145, motion: false },
-    moving: { kind: "shader", style: "orbs", colors: ["#4d3452", "#201b28"], base: "#201b28", anchors: ["0% 0%", "100% 100%"], motion: true, pace: "slow" },
+    id: "cloud", name: "Cloud / navy", kind: "Solid light", tone: "light",
+    colors: { background: "#eef2f7", text: "#1b2a3d", muted: "#526074", surface: "#ffffff", accent: "#1f3a5f", accentText: "#ffffff", border: "#d6dde8" },
+    background: { kind: "solid", color: "#eef2f7" },
   },
   {
-    id: "violet", name: "Blue / violet", kind: "Dark gradient", tone: "dark",
-    colors: { background: "#12152e", text: "#eff2ff", muted: "#b8c0de", surface: "#1c2340", accent: "#d0dcff", accentText: "#101216", border: "#303a66" },
-    background: { kind: "shader", style: "aurora", colors: ["#254c8c", "#603370"], base: "#12152e", anchors: ["0% 5%", "100% 100%"], motion: false },
-    moving: { kind: "shader", style: "aurora", colors: ["#254c8c", "#603370", "#171326"], base: "#12152e", anchors: ["0% 5%", "100% 100%"], motion: true, pace: "slow" },
+    id: "clay", name: "Cream / clay", kind: "Solid light", tone: "light",
+    colors: { background: "#f6efe7", text: "#3a2a20", muted: "#6b5646", surface: "#fffaf4", accent: "#a44a24", accentText: "#ffffff", border: "#e6d8c9" },
+    background: { kind: "solid", color: "#f6efe7" },
   },
   {
     id: "silver", name: "Silver / ink", kind: "Light gradient", tone: "light",
@@ -63,15 +59,15 @@ export const COLOURWAYS: Colourway[] = [
     moving: { kind: "shader", style: "silk", colors: ["#ffffff", "#d6dae3", "#c8ccd4"], base: "#e4e6ea", anchors: ["15% 0%", "100% 100%"], motion: true, pace: "slow" },
   },
   {
-    id: "electric", name: "White / electric blue", kind: "Solid light", tone: "light",
-    colors: { background: "#f8f9fc", text: "#222b3b", muted: "#5b6578", surface: "#ffffff", accent: "#2856d8", accentText: "#ffffff", border: "#dde2ee" },
-    background: { kind: "solid", color: "#f8f9fc" },
+    id: "carbon", name: "Carbon / white", kind: "Solid dark", tone: "dark",
+    colors: { background: "#0b0c0e", text: "#f4f5f7", muted: "#a3a7b0", surface: "#202226", accent: "#f4f5f7", accentText: "#101216", border: "#33363c" },
+    background: { kind: "solid", color: "#0b0c0e" },
   },
   {
-    id: "rose", name: "Rose / warm white", kind: "Light gradient", tone: "light",
-    colors: { background: "#f4e9e7", text: "#583c40", muted: "#62464a", surface: "#fffaf6", accent: "#79434e", accentText: "#ffffff", border: "#e6cfcb" },
-    background: { kind: "shader", style: "swirl", colors: ["#dbb8b6", "#fcf9f5"], base: "#f0ddda", anchors: ["0% 100%", "100% 0%"], motion: false },
-    moving: { kind: "shader", style: "swirl", colors: ["#dbb8b6", "#fcf9f5", "#f0ddda"], base: "#f0ddda", anchors: ["0% 100%", "100% 0%"], motion: true, pace: "slow" },
+    id: "cobalt", name: "Navy / ice", kind: "Deep colour", tone: "dark",
+    colors: { background: "#101b3b", text: "#edf3ff", muted: "#a9b9d8", surface: "#1c3054", accent: "#a7caff", accentText: "#101216", border: "#2f4876" },
+    background: { kind: "gradient", from: "#122656", to: "#10172e", angle: 155, motion: false },
+    moving: { kind: "shader", style: "warp", colors: ["#1d3f86", "#10172e"], base: "#10172e", anchors: ["12% 0%", "88% 100%"], motion: true, pace: "slow" },
   },
 ];
 

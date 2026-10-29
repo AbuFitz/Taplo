@@ -38,7 +38,7 @@ function LookArt({ look, palette }: { look: StartingLook; palette: Palette }) {
 function ColourArt({ look, palette }: { look: StartingLook; palette: Palette }) {
   return (
     <span className="colour-art" aria-hidden="true">
-      <i className="colour-art-disc" style={{ background: palette.base, boxShadow: "0 0 0 1px #0000001f, 0 4px 10px -3px #0004" }} />
+      <i className="colour-art-disc" style={{ background: palette.surface, boxShadow: "0 0 0 1px #0000001f, 0 4px 10px -3px #0004" }} />
       <i className="colour-art-disc" style={{ background: palette.accent, boxShadow: "0 0 0 1px #0000001a, 0 4px 10px -3px #0004" }} />
     </span>
   );

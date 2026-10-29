@@ -6,7 +6,7 @@ import { newPage } from "../starter";
 
 describe("approved colourways", () => {
   it("are the eight approved directions", () => {
-    expect(COLOURWAYS.map((c) => c.name)).toEqual(["Carbon / white", "Cobalt / ice", "Black / ember", "Plum / pearl", "Blue / violet", "Silver / ink", "White / electric blue", "Rose / warm white"]);
+    expect(COLOURWAYS.map((c) => c.name)).toEqual(["White / electric blue", "Stone / ink", "Sage / pine", "Cloud / navy", "Cream / clay", "Silver / ink", "Carbon / white", "Navy / ice"]);
   });
   for (const cw of COLOURWAYS) {
     it(`${cw.name}: valid tokens, readable pairs, still by default`, () => {
@@ -26,13 +26,13 @@ describe("approved colourways", () => {
   }
   it("recolours without touching type, arrangement or widgets, and can be recognised", () => {
     const page = newPage("barber");
-    const next = applyColourway(page, COLOURWAYS[1]!);
+    const next = applyColourway(page, COLOURWAYS.find((c) => c.id === "cobalt")!);
     type A = { text?: unknown; header?: unknown; background?: { motion?: boolean } };
     const ap = (p: typeof page) => p.appearance as unknown as A;
     expect(next.widgets).toEqual(page.widgets);
     expect(ap(next).text).toEqual(ap(page).text);
     expect(ap(next).header).toEqual(ap(page).header);
     expect(colourwayOf(next)?.id).toBe("cobalt");
-    expect(ap(applyColourway(page, COLOURWAYS[1]!, { motion: true })).background?.motion).toBe(true);
+    expect(ap(applyColourway(page, COLOURWAYS.find((c) => c.id === "cobalt")!, { motion: true })).background?.motion).toBe(true);
   });
 });

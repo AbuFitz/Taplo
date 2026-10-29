@@ -14,19 +14,19 @@ export interface StartingLook {
   /** The existing design that supplies typeface, arrangement and composition. */
   design: string;
   colourway: Colourway;
-  /** Solid looks stay still; every gradient look moves once chosen. */
+  /** Solid looks stay still; only the two gentle gradient looks move once chosen. */
   animated: boolean;
 }
 
 const pair: Record<string, string> = {
+  electric: "paper",
+  stone: "maison",
+  sage: "bloom",
+  cloud: "bento",
+  clay: "terra",
+  silver: "glasshouse",
   carbon: "monochrome",
   cobalt: "quartz",
-  ember: "noir",
-  plum: "maison",
-  violet: "borealis",
-  silver: "glasshouse",
-  electric: "paper",
-  rose: "terra",
 };
 
 export const STARTING_LOOKS: StartingLook[] = COLOURWAYS.map((cw) => ({ id: cw.id, name: cw.name, kind: cw.kind, design: pair[cw.id]!, colourway: cw, animated: Boolean(cw.moving) }));
