@@ -14,7 +14,7 @@ const WIDGET_FOR: Partial<Record<PageAction["kind"], string>> = { call: "call", 
 function Avatar({ vm, shape }: { vm: PageViewModel; /** Arrangements that set the mark inline show it at its own proportions. */ shape?: "logo" }) {
   const { spec } = vm.style
   const { identity } = vm.business
-  return <ProfileMark image={identity.logo} name={identity.name} shape={shape && identity.logo ? shape : spec.header.avatarShape} size={shape ? "sm" : spec.header.avatarSize} priority />
+  return <ProfileMark image={identity.logo} name={identity.name} shape={shape && identity.logo ? shape : spec.header.avatarShape} size={spec.header.avatarSize} priority />
 }
 
 /** Channels the owner already placed as their own widget are not repeated in the header. */
@@ -88,7 +88,7 @@ function Text({ vm }: { vm: PageViewModel }) {
   const h = vm.style.spec.header
   return (
     <>
-      <h1 className="tp-name">{b.identity.name}</h1>
+      <h1 className="tp-name" data-len={b.identity.name.length > 34 ? "xl" : b.identity.name.length > 22 ? "lg" : undefined}>{b.identity.name}</h1>
       {b.identity.tagline ? <p className="tp-bio">{b.identity.tagline}</p> : null}
       <p className="tp-meta">
         {b.identity.showCategory !== false && b.identity.industryLabel ? <span>{b.identity.industryLabel}</span> : null}
@@ -187,8 +187,9 @@ function Arrangement({ vm }: { vm: PageViewModel }) {
   return (
     <header aria-label={label} className="tp-header" data-layout="type" data-align="left">
       <div className="tp-type-art" aria-hidden="true" />
+      {id.logo ? <Avatar vm={vm} shape="logo" /> : null}
       <p className="tp-type-kicker">{[id.showCategory !== false ? id.industryLabel : "", h.showLocation ? vm.locationLine : ""].filter(Boolean).join(" · ")}</p>
-      <h1 className="tp-name tp-type-name">{id.name}</h1>
+      <h1 className="tp-name tp-type-name" data-len={id.name.length > 34 ? "xl" : id.name.length > 22 ? "lg" : undefined}>{id.name}</h1>
       {id.tagline ? <p className="tp-bio tp-type-bio">{id.tagline}</p> : null}
       <Actions vm={vm} />
     </header>

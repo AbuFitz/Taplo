@@ -34,3 +34,22 @@ describe("arrangement availability", () => {
     }
   });
 });
+
+describe("arrangement ranking", () => {
+  const img = { src: "/x.webp", alt: "x", width: 10, height: 10 } as never;
+  const wideImg = { src: "/w.webp", alt: "w", width: 900, height: 220 } as never;
+  it("never offers a photo-led arrangement without a cover, and puts the right ones first", async () => {
+    const { rankArrangements } = await import("./arrangement");
+    expect(rankArrangements({ name: "Ann" }).map((r) => r.id)).not.toContain("split");
+    expect(rankArrangements({ name: "Ann" })[0]!.id).toBe("type");
+    expect(rankArrangements({ name: "Ann", logo: img })[0]!.id).toBe("bento");
+    expect(rankArrangements({ name: "Ann", heroImage: img })[0]!.id).toBe("melt");
+    expect(rankArrangements({ name: "Ann", logo: img, heroImage: img })[0]!.id).toBe("framed");
+    expect(rankArrangements({ name: "Harrington & Whitfield Chartered Surveyors", logo: wideImg, heroImage: img })[0]!.id).toBe("masthead");
+  });
+  it("keeps duo down the list for a wide mark or long name", async () => {
+    const { rankArrangements } = await import("./arrangement");
+    const r = rankArrangements({ name: "Harrington & Whitfield Chartered Surveyors", logo: wideImg, heroImage: img });
+    expect(r.findIndex((x) => x.id === "duo")).toBeGreaterThan(r.findIndex((x) => x.id === "framed"));
+  });
+});

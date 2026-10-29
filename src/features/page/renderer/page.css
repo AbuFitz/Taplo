@@ -589,7 +589,7 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 /* Open blend */
 .tp-header[data-layout="melt"] { --melt-h: min(112cqi, 520px); }
 .tp-melt-media { position: absolute; inset: 0 0 auto 0; height: var(--melt-h); z-index: 0; -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 36%, rgba(0, 0, 0, 0.6) 64%, transparent 100%); mask-image: linear-gradient(to bottom, #000 0, #000 36%, rgba(0, 0, 0, 0.6) 64%, transparent 100%); }
-.tp-melt-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, color-mix(in srgb, var(--melt-tint, var(--tp-accent)) 38%, transparent)); }
+.tp-melt-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 28%, color-mix(in srgb, var(--tp-background) 70%, transparent) 62%, color-mix(in srgb, var(--tp-background) 94%, transparent) 86%, var(--tp-background)), linear-gradient(to bottom, transparent 40%, color-mix(in srgb, var(--melt-tint, var(--tp-accent)) 22%, transparent)); }
 .tp-melt-body { position: relative; z-index: 1; display: grid; gap: 12px; margin-top: calc(var(--melt-h) - 176px); padding: 0 20px 36px; justify-items: start; }
 .tp-header[data-layout="melt"] .tp-name { font-size: clamp(34px, 12cqi, 56px); }
 [data-header="melt"] .tp-widgets { position: relative; z-index: 2; margin-top: -24px; }
@@ -648,8 +648,16 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 /* Panels that sit on their own surface read against themselves, as the bento card does. */
 :is(.tp-fr-card, .tp-duo-card, .tp-lf-panel) { --tp-foreground: var(--tp-ink); --tp-muted: var(--tp-ink-muted); --tp-btn-bg: var(--tp-page-btn-bg); --tp-btn-text: var(--tp-page-btn-text); --tp-btn-border: var(--tp-page-btn-border); color: var(--tp-ink); background: var(--tp-surface); border-radius: var(--tp-card-radius); box-shadow: var(--tp-shadow-2), var(--tp-edge); }
 :is(.tp-fr-card, .tp-duo-card, .tp-lf-panel) .tp-quick .tp-icon-action { background: var(--tp-surface-2); color: var(--tp-ink); }
-.tp-header:is([data-layout="framed"], [data-layout="duo"], [data-layout="lifted"]) .tp-logo { max-height: 3.25rem; max-width: min(11rem, 70%); }
-.tp-header:is([data-layout="framed"], [data-layout="duo"], [data-layout="lifted"]) .tp-logo-mono { height: 2.75rem; }
+/* A logo mark follows the size the owner picked in every arrangement: a height step per token, width capped by the column. */
+.tp-header:is([data-layout="framed"], [data-layout="duo"], [data-layout="lifted"], [data-layout="masthead"]) { --tp-mark-sm: 2.5rem; --tp-mark-md: 3.5rem; --tp-mark-lg: 5rem; }
+.tp-header:is([data-layout="framed"], [data-layout="duo"], [data-layout="lifted"], [data-layout="masthead"]) .tp-logo { max-width: min(14rem, 78%); }
+.tp-header:is([data-layout="framed"], [data-layout="duo"], [data-layout="lifted"], [data-layout="masthead"]) .tp-logo[data-size="sm"] { max-height: var(--tp-mark-sm); }
+.tp-header:is([data-layout="framed"], [data-layout="duo"], [data-layout="lifted"], [data-layout="masthead"]) .tp-logo[data-size="md"] { max-height: var(--tp-mark-md); }
+.tp-header:is([data-layout="framed"], [data-layout="duo"], [data-layout="lifted"], [data-layout="masthead"]) .tp-logo[data-size="lg"] { max-height: var(--tp-mark-lg); }
+.tp-header:is([data-layout="framed"], [data-layout="duo"], [data-layout="lifted"], [data-layout="masthead"]) .tp-logo-mono[data-size="sm"] { height: var(--tp-mark-sm); }
+.tp-header:is([data-layout="framed"], [data-layout="duo"], [data-layout="lifted"], [data-layout="masthead"]) .tp-logo-mono[data-size="md"] { height: var(--tp-mark-md); }
+.tp-header:is([data-layout="framed"], [data-layout="duo"], [data-layout="lifted"], [data-layout="masthead"]) .tp-logo-mono[data-size="lg"] { height: var(--tp-mark-lg); }
+@container (max-width: 19rem) { .tp-header[data-layout="duo"] { --tp-mark-lg: 3.75rem; --tp-mark-md: 3rem; } }
 
 /* Framed blend */
 .tp-fr-card { overflow: hidden; }
@@ -663,7 +671,8 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 .tp-id-media { aspect-ratio: 16 / 9; max-height: 15rem; width: 100%; border-radius: var(--tp-card-radius); box-shadow: var(--tp-shadow-2); }
 .tp-id-body { justify-items: center; text-align: center; padding: var(--tp-s-5) var(--tp-s-2) 0; }
 .tp-header[data-layout="identity"] .tp-meta, .tp-header[data-layout="identity"] .tp-actions { justify-content: center; }
-.tp-header[data-layout="identity"][data-cover] .tp-id-body { padding-top: 0; }
+.tp-header[data-layout="identity"][data-cover] .tp-id-body { padding-top: var(--tp-s-5); }
+.tp-header[data-layout="identity"][data-cover] .tp-id-body:has(.tp-avatar) { padding-top: 0; }
 .tp-header[data-layout="identity"][data-cover] .tp-id-body:has(.tp-logo) { padding-top: var(--tp-s-5); }
 .tp-header[data-layout="identity"][data-cover] .tp-avatar { margin-top: calc(var(--tp-s-7) * -1); position: relative; z-index: 1; }
 .tp-header[data-layout="identity"] .tp-avatar { box-shadow: 0 0 0 4px var(--tp-background); }
@@ -674,7 +683,6 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 .tp-ms-rule span { min-width: 0; overflow-wrap: anywhere; }
 .tp-header[data-layout="masthead"] .tp-name { font-size: calc(clamp(2.4rem, 13cqi, 4.6rem) * var(--tp-heading-scale, 1)); line-height: 0.95; letter-spacing: -0.04em; }
 .tp-ms-media { aspect-ratio: 16 / 10; margin-top: var(--tp-s-5); border-radius: min(var(--tp-card-radius), 0.5rem); }
-.tp-header[data-layout="masthead"] .tp-logo { max-height: 3.25rem; max-width: min(12rem, 70%); } .tp-header[data-layout="masthead"] .tp-logo-mono { height: 3rem; }
 
 /* Side by side */
 .tp-duo-card { display: grid; grid-template-columns: minmax(0, 1fr); overflow: hidden; }
@@ -733,3 +741,13 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 .tp-split-badge { padding: 4px; border-radius: 24px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--tp-foreground) 8%, transparent), 0 12px 24px -14px rgba(0, 0, 0, 0.5); }
 .tp-split-body { padding: 14px 14px 28px; gap: 10px; }
 .tp-split-body .tp-actions, .tp-split-body [data-actions] { width: 100%; }
+
+/* Long names step down so they hold to two or three lines in every arrangement instead of filling the first screen. */
+.tp-header:is([data-layout="melt"], [data-layout="split"], [data-layout="bento"], [data-layout="type"], [data-layout="framed"], [data-layout="identity"], [data-layout="masthead"], [data-layout="duo"], [data-layout="lifted"]) .tp-name[data-len="lg"] { line-height: 1.04; }
+.tp-header:is([data-layout="melt"], [data-layout="masthead"], [data-layout="type"]) .tp-name[data-len="lg"] { font-size: clamp(28px, 9.5cqi, 44px); }
+.tp-header:is([data-layout="melt"], [data-layout="masthead"], [data-layout="type"]) .tp-name[data-len="xl"] { font-size: clamp(24px, 7.5cqi, 36px); line-height: 1.04; }
+.tp-header:is([data-layout="framed"], [data-layout="identity"], [data-layout="lifted"], [data-layout="split"]) .tp-name[data-len="lg"] { font-size: clamp(24px, 7.5cqi, 36px); }
+.tp-header:is([data-layout="framed"], [data-layout="identity"], [data-layout="lifted"], [data-layout="split"]) .tp-name[data-len="xl"] { font-size: clamp(22px, 6.5cqi, 30px); line-height: 1.08; }
+.tp-header:is([data-layout="duo"], [data-layout="bento"]) .tp-name[data-len="lg"] { font-size: clamp(20px, 6.2cqi, 28px); }
+.tp-header:is([data-layout="duo"], [data-layout="bento"]) .tp-name[data-len="xl"] { font-size: clamp(18px, 5.6cqi, 24px); line-height: 1.1; }
+.tp-header[data-layout="type"] > .tp-logo { justify-self: start; }
