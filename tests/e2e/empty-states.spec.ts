@@ -44,14 +44,24 @@ test("dashboard shows feature loops, look labels and a resume entry", async ({ p
   await expect(page.getByLabel("Business name", { exact: true })).toHaveValue("North Street Studio")
 })
 
-test("the studio has three short explainer loops, still under reduced motion", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" })
+test("the studio home leads with one next action and hides what has no data", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
   await openEditorWithSample(page)
   await page.goto("/dashboard")
-  const loops = page.getByTestId("feature-loops")
-  await expect(loops).toBeVisible()
-  await expect(loops.getByRole("img")).toHaveCount(3)
-  expect(await loops.locator("svg g[style*='opacity: 0']").count()).toBe(0)
+  const next = page.getByTestId("studio-next")
+  await expect(next).toBeVisible()
+  await expect(page.getByTestId("studio-status")).toContainText("Draft")
+  await expect(page.getByTestId("studio-status")).toContainText("Only visible in this browser")
+  // one filled primary action, no zero counters, none of the retired cards
+  await expect(next.getByRole("button", { name: "Publish", exact: true })).toBeVisible()
+  const body = (await page.locator("main").innerText()).toLowerCase()
+  for (const gone of ["ready to share", "open sharing", "7 of 7", "get more from your page", "need a reply", "upcoming"]) expect(body).not.toContain(gone)
+  await expect(page.getByTestId("feature-loops")).toHaveCount(0)
+  // Share only exists after publishing, and the headline takes focus
+  await expect(page.getByTestId("studio-share")).toHaveCount(0)
+  await next.getByRole("button", { name: "Publish", exact: true }).click()
+  await expect(page.getByTestId("studio-status")).toContainText("Published")
+  await expect(page.getByTestId("studio-share")).toBeVisible()
 })
 
 test("analytics on the free plan explains the upgrade instead of showing an empty chart", async ({ page }) => {
