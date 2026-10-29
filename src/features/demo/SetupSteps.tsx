@@ -20,6 +20,7 @@ import { initialState, storageHasFailed, useDemo } from "./store"
 
 /* ------------------------------------------------------------------ Type */
 
+const PHOTO = new Set(["barber", "detailer", "plumber", "tutor", "hospitality", "car-dealer"])
 const TILES: { id: string; label: string }[] = [
   { id: "barber", label: "Barber or salon" },
   { id: "detailer", label: "Car detailing" },
@@ -56,11 +57,13 @@ export function TypeStep() {
               <button
                 type="button"
                 className="sf-tile"
+                data-photo={PHOTO.has(t.id) || undefined}
+                style={PHOTO.has(t.id) ? { backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.05) 25%, rgba(0,0,0,.72)), url(/photography/generated/tiles/${t.id}.webp)` } : undefined}
                 aria-pressed={selected}
                 data-testid={`tile-${t.id}`}
                 onClick={() => { if (t.id === "other") { setOtherOpen(true); pick("other", "") } else { setOtherOpen(false); pick(t.id) } }}
               >
-                <span className="sf-tile-icon"><BusinessIcon id={t.id === "other" ? "other" : t.id} /></span>
+                {PHOTO.has(t.id) ? null : <span className="sf-tile-icon"><BusinessIcon id={t.id === "other" ? "other" : t.id} /></span>}
                 <span className="sf-tile-label">{t.label}</span>
                 {selected ? <Check className="sf-tile-check" aria-hidden="true" /> : null}
               </button>

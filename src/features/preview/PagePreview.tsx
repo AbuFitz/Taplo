@@ -50,6 +50,8 @@ export interface PagePreviewProps {
   interactive?: boolean
   /** Pointer use stays live, but keyboard users skip the embedded page (reach it through the full preview control). */
   skipTab?: boolean
+  /** Told the page's own background colour once it has loaded, for surfaces that want to echo it. */
+  onSurface?: (color: string) => void
   /** Show a plain message with Retry if the page has not loaded after this many milliseconds. */
   retryAfterMs?: number
   /** Space occupied by fixed parent navigation when revealing a customer dialog. */
@@ -89,7 +91,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, safeTop: 0, safeBottom: 0, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, skipTab = false, retryAfterMs, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen, maxScale = 1, smooth = false, focus }: PagePreviewProps) {
+export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, skipTab = false, retryAfterMs, onSurface, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen, maxScale = 1, smooth = false, focus }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
@@ -126,14 +128,14 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
       doc.documentElement.dataset.taploEmbedded = "true"
       doc.documentElement.setAttribute("data-taplo-phone", String(isPhone))
       const color = doc.defaultView?.getComputedStyle(next).getPropertyValue("--tp-background").trim()
-      if (color) host.current?.style.setProperty("--phone-surface", color)
+      if (color) { host.current?.style.setProperty("--phone-surface", color); onSurface?.(color) }
       setLoaded(true)
     }
     const observer = new MutationObserver(sync)
     observer.observe(doc.body, { childList: true, subtree: true })
     sync()
     stopWatching.current = () => observer.disconnect()
-  }, [isPhone])
+  }, [isPhone, onSurface])
 
   React.useEffect(() => {
     const doc = frame.current?.contentDocument

@@ -42,6 +42,20 @@ const FOCUS: Partial<Record<OnboardingStep, string>> = { name: "header", action:
 const SKIPPABLE: OnboardingStep[] = ["look", "action", "services"]
 const STAGE = "#f4f4f2"
 
+/** Any CSS colour to [r, g, b], or null. */
+function toRgb(color: string): [number, number, number] | null {
+  const probe = document.createElement("i")
+  probe.style.color = ""
+  probe.style.color = color
+  if (!probe.style.color) return null
+  document.body.appendChild(probe)
+  const m = getComputedStyle(probe).color.match(/\d+(\.\d+)?/g)
+  probe.remove()
+  return m && m.length >= 3 ? [Number(m[0]), Number(m[1]), Number(m[2])] : null
+}
+const mixHex = (rgb: [number, number, number], base: [number, number, number], t: number) =>
+  "#" + rgb.map((v, i) => Math.round(v * t + base[i]! * (1 - t)).toString(16).padStart(2, "0")).join("")
+
 const subscribeMobile = (cb: () => void) => { const q = window.matchMedia("(max-width:1023px)"); q.addEventListener("change", cb); return () => q.removeEventListener("change", cb) }
 const mobileSnapshot = () => window.matchMedia("(max-width:1023px)").matches
 
@@ -93,6 +107,17 @@ export function Onboarding() {
     const content = meta.content
     meta.setAttribute("content", STAGE); html.style.backgroundColor = STAGE; document.body.style.backgroundColor = STAGE
     return () => { html.style.backgroundColor = before.bg; document.body.style.backgroundColor = before.body; if (created) meta.remove(); else meta.setAttribute("content", content) }
+  }, [])
+
+  // The stage echoes the chosen look: a soft wash of the page's own colour, so choosing a look is a visible moment. The sheet stays monochrome.
+  const onSurface = React.useCallback((color: string) => {
+    const rgb = toRgb(color)
+    if (!rgb) return
+    const wash = mixHex(rgb, [244, 244, 242], 0.34)
+    shell.current?.style.setProperty("--sf-stage", wash)
+    document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute("content", wash)
+    document.documentElement.style.backgroundColor = wash
+    document.body.style.backgroundColor = wash
   }, [])
 
   const go = React.useCallback((to: OnboardingStep, opts: { push?: boolean } = {}) => {
@@ -227,7 +252,7 @@ export function Onboarding() {
       footer={footer}
       preview={
         <div className="sf-canvas">
-          <SetupCanvas src="/demo/preview" expanded={false} fit={!mobile || snap === "peek"} focus={FOCUS[step]} onOverlayOpen={() => { if (mobile) setSnap("peek") }} />
+          <SetupCanvas src="/demo/preview" expanded={false} fit={!mobile || snap === "peek"} focus={FOCUS[step]} onSurface={onSurface} onOverlayOpen={() => { if (mobile) setSnap("peek") }} />
         </div>
       }
     >

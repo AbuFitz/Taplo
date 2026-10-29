@@ -7,6 +7,7 @@ export function SetupCanvas({
   fit = false,
   onOverlayOpen,
   focus,
+  onSurface,
 }: {
   src: string;
   expanded: boolean;
@@ -14,6 +15,7 @@ export function SetupCanvas({
   onOverlayOpen?: () => void;
   /** Part of the page to bring into view (header, actions, offer). */
   focus?: string;
+  onSurface?: (color: string) => void;
 }) {
   return (
     <PagePreview
@@ -25,6 +27,7 @@ export function SetupCanvas({
       resizeKey={`${expanded}-${fit}`}
       onOverlayOpen={onOverlayOpen}
       focus={focus}
+      onSurface={onSurface}
       testId="setup-live-page"
     />
   );

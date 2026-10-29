@@ -1,6 +1,6 @@
 /* The setup form: the live page sits on a light stage; one sheet of one of three heights carries the controls. */
 html:has(.sf-root),body:has(.sf-root){height:100%;overflow:hidden;overscroll-behavior:none;background:#f4f4f2}
-.sf-root{--sf-sheet-h:calc(var(--sf-vh,100dvh)*.52);position:fixed;left:0;right:0;top:var(--sf-top,0px);height:var(--sf-vh,100dvh);background:#f4f4f2;color:#111;overflow:hidden;font-family:var(--font-sans,inherit)}
+.sf-root{--sf-sheet-h:calc(var(--sf-vh,100dvh)*.52);position:fixed;left:0;right:0;top:var(--sf-top,0px);height:var(--sf-vh,100dvh);background:var(--sf-stage,#f4f4f2);color:#111;overflow:hidden;font-family:var(--font-sans,inherit);transition:background-color .4s ease}
 .sf-root[data-snap=peek]{--sf-sheet-h:max(112px,calc(var(--sf-vh,100dvh)*.16))}
 .sf-root[data-snap=full]{--sf-sheet-h:calc(var(--sf-vh,100dvh)*.88)}
 .sf-root[data-keyboard=true]{--sf-sheet-h:calc(var(--sf-vh,100dvh) - 56px)}
@@ -96,7 +96,7 @@ html:has(.sf-root),body:has(.sf-root){height:100%;overflow:hidden;overscroll-beh
 .sf-add{justify-self:start;min-height:48px;border-radius:999px}
 
 @media(max-height:700px){.sf-tile{min-height:72px;gap:4px}.sf-tile-icon{width:28px;height:28px}}
-@media(prefers-reduced-motion:reduce){.sf-sheet,.sf-progress-bar i,.sf-tile{transition:none}}
+@media(prefers-reduced-motion:reduce){.sf-root,.sf-sheet,.sf-progress-bar i,.sf-tile{transition:none}}
 
 /* A desk: controls on the left, the whole page on the right. No sheet, so no heights. */
 @media(min-width:1024px){
@@ -113,3 +113,9 @@ html:has(.sf-root),body:has(.sf-root){height:100%;overflow:hidden;overscroll-beh
   .sf-root[data-keyboard=true] .sf-stage{display:flex}
 }
 .sf-inline{margin:0}
+
+/* Photographic category cards: real imagery, readable label on a dark fade, selection never colour-only. */
+.sf-tile[data-photo]{align-content:end;justify-items:start;padding:8px 10px;border-color:transparent;background-size:cover;background-position:center;color:#fff;min-height:84px}
+.sf-tile[data-photo] .sf-tile-label{text-align:left;color:#fff;text-shadow:0 1px 6px #0009}
+.sf-tile[data-photo][aria-pressed=true]{box-shadow:0 0 0 3px #111,0 0 0 5px #fff inset}
+.sf-tile[data-photo][aria-pressed=true] .sf-tile-label{text-decoration:underline;text-underline-offset:3px}
