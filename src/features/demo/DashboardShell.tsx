@@ -1,5 +1,6 @@
 "use client";
 import { StudioSkeleton } from "./dashboard/Studio";
+import { RouteSkeleton, StudioNav } from "./dashboard/StudioNav";
 import "@/features/page/editor/portal-workspace.css";
 import "./dashboard/workspace-tools.css";
 
@@ -39,7 +40,7 @@ const NAV = [
     icon: Paintbrush,
     primary: true,
   },
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Home", icon: LayoutDashboard },
   { href: "/dashboard/services", label: "Services", icon: Wrench },
   { href: "/dashboard/bookings", label: "Bookings", icon: CalendarDays },
   { href: "/dashboard/reviews", label: "Reviews", icon: Star },
@@ -130,56 +131,56 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const focus = path === "/dashboard/page";
   const empty =
     ready && (!state || (!state.onboarded && !state.content.identity.name));
-  const label = NAV.find((n) => n.href === path)?.label ?? "Dashboard";
+  const isHome = path === "/dashboard";
   return (
     <div
       className="portal-workspace"
       data-workspace-section={focus ? "editor" : "manage"}
     >
-      <div className="portal-main">
-        {!focus ? (
-          <header className="portal-toolbar" aria-label="Workspace navigation">
-            <DashboardMenu />
-            <div className="portal-toolbar-identity">
-              <p>{state?.content.identity.name || "Taplo"}</p>
-              <span>{label}</span>
-            </div>
-            <div className="ml-auto flex items-center gap-2">
-              {state ? (
-                <Link href="/dashboard/settings" className="portal-plan-link">
-                  {state.plan} plan
+      <div className={cn("portal-main", !focus && "portal-frame")}>
+        {!focus ? <StudioNav /> : null}
+        <div className="portal-column">
+          {!focus ? (
+            <header className="portal-toolbar" aria-label="Workspace">
+              <div className="portal-toolbar-identity">
+                <Link href="/dashboard" title={state?.content.identity.name || "Taplo"}>
+                  {state?.content.identity.name || "Taplo"}
                 </Link>
-              ) : null}
-              {state?.content.identity.name ? (
-                <Link
-                  href="/demo/preview"
-                  target="_blank"
-                  className="portal-preview-link"
-                >
-                  View page
-                </Link>
-              ) : (
-                <Link href="/" aria-label="Taplo home">
-                  <TaploLogo className="h-5" />
-                </Link>
-              )}
-            </div>
-          </header>
-        ) : null}
-        <main
-          className={cn("portal-content", focus && "portal-content-editor")}
-        >
-          {!ready ? (
-            path === "/dashboard" ? <StudioSkeleton /> : (
-            <div className="portal-loading" role="status">
-              Loading your workspace…
-            </div>)
-          ) : empty ? (
-            <Welcome />
-          ) : (
-            children
-          )}
-        </main>
+                {state && !isHome ? (
+                  <span className={cn("studio-pill", state.published && "studio-pill-live")}>
+                    {state.published ? "Published" : "Draft"}
+                  </span>
+                ) : null}
+              </div>
+              <div className="ml-auto flex items-center gap-2">
+                {state?.content.identity.name ? (
+                  <Link
+                    href="/demo/preview"
+                    target="_blank"
+                    className="portal-preview-link"
+                  >
+                    View page
+                  </Link>
+                ) : (
+                  <Link href="/" aria-label="Taplo home">
+                    <TaploLogo className="h-5" />
+                  </Link>
+                )}
+              </div>
+            </header>
+          ) : null}
+          <main
+            className={cn("portal-content", focus && "portal-content-editor")}
+          >
+            {!ready ? (
+              isHome ? <StudioSkeleton /> : <RouteSkeleton />
+            ) : empty ? (
+              <Welcome />
+            ) : (
+              children
+            )}
+          </main>
+        </div>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Boxes, CalendarDays, Check, Copy, MessageSquare, Palette, Pencil, QrCode, Share2 } from "lucide-react"
+import { Check, Copy, Pencil, QrCode } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { businessAddress } from "@/lib/domains"
 import { WHEN_UNAVAILABLE } from "@/lib/capabilities"
@@ -43,18 +43,8 @@ export function Studio() {
   const [announce, setAnnounce] = React.useState("")
   const headlineRef = React.useRef<HTMLHeadingElement>(null)
   const opener = React.useRef<HTMLElement | null>(null)
-  const [keyboard, setKeyboard] = React.useState(false)
   const now = useClientNow() ?? 0
 
-  // The software keyboard shrinks the visual viewport: tuck the dock away so it never rides above the keys.
-  React.useEffect(() => {
-    const vv = window.visualViewport
-    if (!vv) return
-    const check = () => setKeyboard(window.innerHeight - vv.height > 140)
-    vv.addEventListener("resize", check)
-    check()
-    return () => vv.removeEventListener("resize", check)
-  }, [])
   const openShare = (el: HTMLElement) => { opener.current = el; setShareOpen(true) }
   const closeShare = (open: boolean) => { setShareOpen(open); if (!open) requestAnimationFrame(() => opener.current?.focus()) }
 
@@ -112,14 +102,8 @@ export function Studio() {
         ? { text: "Add a service with a time so customers can book.", href: "/dashboard/services", cta: "Add a service" }
         : null
 
-  const dock = [
-    { href: "/dashboard/page", label: "Page and design", Icon: Palette },
-    { href: "/dashboard/services", label: "Services and stock", Icon: Boxes },
-    { href: "/dashboard/bookings", label: "Bookings and messages", Icon: published || upcoming + enquiries > 0 ? CalendarDays : MessageSquare, badge: enquiries },
-  ]
-
   return (
-    <div className={cn("studio", keyboard && "studio-kb")} data-testid="studio">
+    <div className={"studio"} data-testid="studio">
       <h1 className="sr-only">{s.content.identity.name}</h1>
       <aside className="studio-rail" aria-label="Status and next step">
         <div className="studio-status" data-testid="studio-status">
@@ -190,20 +174,6 @@ export function Studio() {
         <Button asChild size="lg" variant="outline" className="studio-edit"><Link href="/dashboard/page"><Pencil aria-hidden="true" />Edit my page</Link></Button>
       </section>
 
-      <nav className="studio-dock" aria-label="Studio">
-        {dock.map(({ href, label, Icon, badge }) => (
-          <Link key={label} href={href} className="studio-dock-item" aria-label={label}>
-            <Icon aria-hidden="true" />
-            {badge ? <b aria-label={`${badge} enquiries`}>{badge}</b> : null}
-            <span className="studio-dock-label">{label}</span>
-          </Link>
-        ))}
-        {published ? (
-          <button type="button" className="studio-dock-item" aria-label="Share" onClick={(e) => openShare(e.currentTarget)}>
-            <Share2 aria-hidden="true" /><span className="studio-dock-label">Share</span>
-          </button>
-        ) : null}
-      </nav>
     </div>
   )
 }

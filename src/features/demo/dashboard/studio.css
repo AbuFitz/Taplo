@@ -1,13 +1,5 @@
 /* Studio home: the owner's page is the stage; one rail beside it answers status, next action, attention and sharing in that order. */
-.studio{display:grid;grid-template-columns:64px minmax(0,1fr) 360px;grid-template-areas:"dock stage rail";gap:24px;align-items:start;min-height:calc(100dvh - 120px)}
-.studio-dock{grid-area:dock;position:sticky;top:96px;display:grid;gap:6px;padding:8px;border-radius:24px;background:#fff;box-shadow:0 0 0 1px #0000000d,0 18px 40px -26px #00000059}
-.studio-dock-item{position:relative;display:grid;place-items:center;width:48px;height:48px;border-radius:16px;border:0;background:none;color:#111;cursor:pointer;transition:background .2s}
-.studio-dock-item:hover{background:#0000000d}
-.studio-dock-item:focus-visible{outline:2px solid #111;outline-offset:2px}
-.studio-dock-item svg{width:22px;height:22px}
-.studio-dock-item b{position:absolute;top:4px;right:4px;min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:#111;color:#fff;font-size:11px;line-height:18px;text-align:center}
-.studio-dock-label{position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%);white-space:nowrap;padding:7px 11px;border-radius:12px;background:#111;color:#fff;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .15s}
-.studio-dock-item:hover .studio-dock-label,.studio-dock-item:focus-visible .studio-dock-label{opacity:1}
+.studio{display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-areas:"stage rail";gap:24px;align-items:start;min-height:calc(100dvh - 120px)}
 
 /* Stage: the page itself, with Edit directly beneath it on the same axis. */
 .studio-stage{grid-area:stage;display:grid;justify-items:center;gap:16px;padding:24px 16px 28px;border-radius:32px;background:#efeeea}
@@ -61,13 +53,11 @@
 .studio-skel{display:block;border-radius:16px;background:#e6e6e3}
 
 @media(max-width:1180px){
-  .studio{grid-template-columns:64px minmax(0,1fr);grid-template-areas:"dock rail" "dock stage"}
+  .studio{grid-template-columns:minmax(0,1fr);grid-template-areas:"rail" "stage"}
   .studio-phone{height:min(680px,70dvh)}
 }
 @media(max-width:760px){
   .studio{grid-template-columns:minmax(0,1fr);grid-template-areas:"rail" "stage";gap:16px;padding-bottom:104px}
-  .studio-dock{position:fixed;z-index:30;left:50%;bottom:max(14px,env(safe-area-inset-bottom));top:auto;transform:translateX(-50%);display:flex;gap:2px;padding:6px 8px;border-radius:26px}
-  .studio-dock-label{display:none}
   .studio-stage{padding:16px 12px 20px;border-radius:28px}
   .studio-phone{height:clamp(420px,62dvh,640px);min-height:0}
   .studio-next{padding:20px}
@@ -79,4 +69,45 @@
 .studio a:focus-visible,.studio button:focus-visible,.studio summary:focus-visible,.studio-primary:focus-visible{outline:3px solid #111;outline-offset:3px;border-radius:999px}
 .studio-primary:focus-visible{box-shadow:0 0 0 3px #fff}
 .studio-next h2:focus-visible{outline:none}
-.studio-kb .studio-dock{display:none}
+
+/* Shared Studio navigation: labelled dock on a phone, rail on a desk. */
+.portal-frame{display:block}
+.portal-column{min-width:0}
+.studio-dock{position:fixed;z-index:30;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));display:flex;gap:2px;padding:6px;border-radius:28px;background:#fff;box-shadow:0 0 0 1px #0000000f,0 18px 40px -18px #00000066}
+.studio-dock-hidden{display:none}
+.studio-dock-item{position:relative;flex:1 1 0;min-width:0;min-height:56px;display:grid;place-items:center;align-content:center;gap:2px;border:0;border-radius:22px;background:none;color:#454545;font:inherit;font-size:14px;font-weight:550;cursor:pointer}
+.studio-dock-item svg{width:22px;height:22px}
+.studio-dock-item span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.studio-dock-item[data-active=true]{background:#111;color:#fff}
+.studio-dock-item b{position:absolute;top:4px;right:calc(50% - 22px);min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:#111;color:#fff;font-size:12px;line-height:18px;text-align:center;box-shadow:0 0 0 2px #fff}
+.studio-dock-item[data-active=true] b{background:#fff;color:#111;box-shadow:0 0 0 2px #111}
+.studio-rail-nav{display:none}
+.studio-more{border-radius:28px 28px 0 0;padding-bottom:max(16px,env(safe-area-inset-bottom));max-height:92dvh}
+.studio-more-list{display:grid;gap:4px;margin:8px 0 0;padding:0 8px;list-style:none}
+.studio-more-list a{display:flex;align-items:center;gap:14px;min-height:56px;padding:0 14px;border-radius:18px;font-size:16px;font-weight:550}
+.studio-more-list a:hover,.studio-more-list a[aria-current=page]{background:#0000000a}
+.studio-more-list span{flex:1;display:grid}
+.studio-more-list small{font-size:14px;font-weight:400;color:#454545}
+.studio-more-list svg:first-child{width:22px;height:22px}
+.studio-route-skel{display:grid;gap:14px}
+.portal-workspace[data-workspace-section=manage] .portal-content{padding-bottom:120px}
+.portal-toolbar-identity{display:flex;align-items:center;gap:10px;min-width:0}
+.portal-toolbar-identity a{font-size:16px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw;color:#111}
+@media(min-width:1024px){
+  .portal-frame{display:grid;grid-template-columns:232px minmax(0,1fr)}
+  .studio-dock{display:none}
+  .studio-rail-nav{display:grid;align-content:start;gap:4px;position:sticky;top:0;height:100dvh;padding:20px 12px;border-right:1px solid #0000000f}
+  .studio-rail-item{display:flex;align-items:center;gap:12px;min-height:48px;padding:0 14px;border-radius:16px;font-size:15px;font-weight:550;color:#2a2a2a}
+  .studio-rail-item svg{width:20px;height:20px;flex:none}
+  .studio-rail-item span{flex:1;display:grid}
+  .studio-rail-item small{font-size:14px;font-weight:400;color:#454545}
+  .studio-rail-item:hover{background:#0000000a}
+  .studio-rail-item[data-active=true]{background:#111;color:#fff}
+  .studio-rail-item b{min-width:22px;height:22px;padding:0 6px;border-radius:99px;background:#111;color:#fff;font-size:13px;line-height:22px;text-align:center}
+  .studio-rail-item[data-active=true] b{background:#fff;color:#111}
+  .studio-rail-last{margin-top:auto}
+  .portal-workspace[data-workspace-section=manage] .portal-content{padding-bottom:64px}
+  .portal-toolbar-identity a{max-width:40vw}
+}
+.studio a:focus-visible,.studio-dock a:focus-visible,.studio-dock button:focus-visible,.studio-rail-nav a:focus-visible,.studio-more a:focus-visible{outline:3px solid #111;outline-offset:2px}
+.studio-dock-item[data-active=true]:focus-visible{outline-color:#fff;outline-offset:-5px}
