@@ -11,7 +11,7 @@ Every non-trivial change runs this pipeline. Skip a stage only when it truly doe
 2. **Research** (`taplo-ux-research-lead`): how comparable platforms solve it, cognitive-load and identity risks, what we still do not know. Output: findings with sources and confidence.
 3. **Architecture** (`taplo-ux-architect`): journey, screen map, wireframe structure, states, edge cases, success metrics. Output: spec the build follows.
 4. **Specialist passes** as needed: onboarding (`taplo-saas-onboarding-expert`), copy (`taplo-microcopy-expert`), dashboard (`taplo-dashboard-designer`), illustration (`taplo-saas-illustration-director`), motion (`taplo-motion-designer`).
-5. **System check** (`taplo-visual-design-director`, `taplo-design-system-manager`): tokens, components, accessibility, mobile, before anything is built.
+5. **Phone check** (`taplo-mobile-experience-lead`), then **system check** (`taplo-visual-design-director`, `taplo-design-system-manager`): tokens, components, accessibility, mobile, before anything is built.
 6. **Build** (`taplo-frontend-architect`): smallest implementation that meets the spec, behind a runnable spine.
 7. **Growth review** (`taplo-growth-conversion-lead`): funnel, instrumentation, what we will measure.
 8. **Verify** (`taplo-design-review`): rendered desktop and mobile, populated states, tests, honest limits.
