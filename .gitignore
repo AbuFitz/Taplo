@@ -58,3 +58,4 @@ next-env.d.ts
 
 # Atomic intermediate film encodes
 /.cache/film/
+.claude/refs/
