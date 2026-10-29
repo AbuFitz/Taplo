@@ -22,7 +22,8 @@ test("illustrations are static when reduced motion is requested", async ({ page 
   await openEditorWithSample(page)
   await page.goto("/dashboard/analytics")
   const paths = page.getByTestId("empty-panel").locator("svg rect, svg path")
-  expect(await paths.count()).toBeGreaterThan(5)
+  // The scene is a Lottie file fetched after mount, so wait for it to draw its first frame.
+  await expect.poll(() => paths.count(), { timeout: 15000 }).toBeGreaterThan(5)
   expect(await paths.first().evaluate((p) => p.getAttribute("style") ?? "")).not.toContain("stroke-dasharray")
 })
 
