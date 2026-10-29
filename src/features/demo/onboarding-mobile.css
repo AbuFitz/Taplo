@@ -464,3 +464,6 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 .setup-colour-art{border-radius:12px}
 .colour-art::after{border-radius:7px}
 .setup-look-tile input:checked~.setup-look-name{color:#111;font-weight:600}
+
+/* The handset's big drop shadow was clipped by the preview box and drew a faint rectangle around it; here it is a hairline instead. */
+.setup-canvas .phone-shell,.setup-canvas .scaled-phone-shell{box-shadow:0 0 0 1px #00000026}

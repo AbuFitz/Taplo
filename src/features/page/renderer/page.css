@@ -718,3 +718,8 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 [data-taplo-page]:has(.tp-bg-gradient[data-animate="true"])::after { content: ""; position: fixed; left: 0; right: 0; pointer-events: none; z-index: 40; }
 [data-taplo-page]:has(.tp-bg-gradient[data-animate="true"])::before { top: 0; height: env(safe-area-inset-top, 0px); background: linear-gradient(to bottom, var(--tp-background), color-mix(in srgb, var(--tp-background) 0%, transparent)); }
 [data-taplo-page]:has(.tp-bg-gradient[data-animate="true"])::after { bottom: 0; height: env(safe-area-inset-bottom, 0px); background: linear-gradient(to top, var(--tp-background), color-mix(in srgb, var(--tp-background) 0%, transparent)); }
+
+/* Sheet compositions: the rounded sheet always runs to the bottom of the screen, so a short page never ends in a hard edge over the background. */
+[data-composition^="sheet"] .tp-frame { min-height: 100dvh; display: flex; flex-direction: column; padding-bottom: 0; }
+[data-composition^="sheet"] .tp-widgets { flex: 1 1 auto; }
+[data-composition^="sheet"] :is([data-footer], footer) { position: relative; z-index: 1; margin: 0; padding-bottom: 56px; background: var(--tp-background); }
