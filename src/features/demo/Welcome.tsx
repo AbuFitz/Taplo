@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link"
 import { ALL_SHOWCASE } from "@/features/inspiration/showcase-set"
 import { getStartingLook } from "@/features/page/themes/starting-looks"
-import { Illustration } from "@/components/taplo/illustrations";
+import { Scene } from "@/components/taplo/scenes";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -85,9 +85,8 @@ export function Welcome() {
   };
   return (
     <div className="mx-auto max-w-6xl pb-12 pt-8 sm:pt-14">
-      <div className="grid items-center gap-8 rounded-[2rem] bg-[#f4f4f4] p-7 text-[#111111] sm:p-10 lg:grid-cols-[1fr_auto]" data-testid="first-run">
+      <div className="grid items-center gap-6 overflow-hidden rounded-[2rem] bg-[#f4f4f4] p-7 text-[#111111] sm:p-10 lg:grid-cols-[1fr_1.05fr] lg:gap-10" data-testid="first-run">
         <div className="max-w-xl">
-          <Illustration name="profile" className="mb-5 h-20 w-24 text-[#111111]/75" />
           <h1 className="text-4xl font-semibold leading-[1.06] tracking-tight sm:text-5xl">
             Set up your business page.
           </h1>
@@ -102,16 +101,17 @@ export function Welcome() {
               </li>
             ))}
           </ol>
+          <Button
+            asChild
+            size="lg"
+            className="mt-8 min-h-12 rounded-full bg-[#111111] px-6 text-white hover:bg-[#333333]"
+          >
+            <Link href="/onboarding">
+              {resumeName ? "Continue setup" : "Start setup"} <ArrowRight aria-hidden="true" />
+            </Link>
+          </Button>
         </div>
-        <Button
-          asChild
-          size="lg"
-          className="min-h-12 rounded-full bg-[#111111] px-6 text-white hover:bg-[#333333]"
-        >
-          <Link href="/onboarding">
-            {resumeName ? "Continue setup" : "Start setup"} <ArrowRight aria-hidden="true" />
-          </Link>
-        </Button>
+        <Scene name="first-run" className="mx-auto max-h-[22rem] max-w-[34rem]" />
       </div>
       <section className="mt-10" aria-labelledby="sample-title">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">

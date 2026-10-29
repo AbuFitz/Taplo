@@ -93,7 +93,7 @@ export function Overlay({ open, onOpenChange, trigger, kind = "dialog", tone = "
     <DialogPrimitive.Root open={isOpen} onOpenChange={setOpen}>
       {trigger ? <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger> : null}
       <DialogPrimitive.Portal container={container}>
-        <DialogPrimitive.Overlay className={cn("fixed inset-0 z-50 bg-black/25 backdrop-blur-md data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none!", page && "backdrop-blur-[2px]")} />
+        <DialogPrimitive.Overlay className={cn("fixed inset-0 z-50 bg-black/45 backdrop-blur-sm data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none!", page && "bg-black/50 backdrop-blur-[3px]")} />
         <DialogPrimitive.Content
           ref={setShell}
           onCloseAutoFocus={event => {
@@ -107,13 +107,13 @@ export function Overlay({ open, onOpenChange, trigger, kind = "dialog", tone = "
           data-testid={testId}
           {...(description ? {} : { "aria-describedby": undefined })}
           className={cn(
-            "fixed z-50 flex flex-col overflow-hidden outline-none shadow-[0_32px_100px_-28px_rgb(0_0_0/0.32)] data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none!",
+            "fixed z-50 flex flex-col overflow-hidden outline-none shadow-[0_2px_6px_rgb(0_0_0/0.12),0_40px_120px_-24px_rgb(0_0_0/0.5)] data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none!",
             kind === "panel" ? "sm:data-open:slide-in-from-right sm:data-closed:slide-out-to-right max-sm:data-open:slide-in-from-bottom max-sm:data-closed:slide-out-to-bottom" : "max-sm:data-open:slide-in-from-bottom max-sm:data-closed:slide-out-to-bottom sm:data-open:zoom-in-95 sm:data-closed:zoom-out-95",
-            page ? "bg-tp-bg text-tp-fg" : "bg-background text-foreground",
+            page ? "bg-tp-surface text-tp-fg ring-1 ring-tp-border" : "bg-background text-foreground ring-1 ring-black/10",
             SHELL[kind], className,
           )}
         >
-          <header className={cn("flex shrink-0 items-start gap-1 px-4 pb-2 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] sm:pt-4", page ? "text-tp-fg" : "text-foreground")}>
+          <header className={cn("flex shrink-0 items-start gap-1 border-b px-4 pb-2 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] sm:pt-4", page ? "border-tp-border/70 text-tp-fg" : "border-black/[0.06] text-foreground")}>
             {onBack ? <Button type="button" variant="ghost" size="icon" className="-ml-2 size-11 shrink-0" onClick={onBack} aria-label="Back"><ArrowLeft /></Button> : null}
             <div className="min-w-0 flex-1 py-1.5">
               <DialogPrimitive.Title className={cn("font-semibold leading-tight tracking-[-0.015em]", hideTitle ? "sr-only" : "text-lg", page && "font-tp-heading")}>{title}</DialogPrimitive.Title>
@@ -128,7 +128,7 @@ export function Overlay({ open, onOpenChange, trigger, kind = "dialog", tone = "
               <div className="mt-2 flex gap-2"><Button size="sm" variant="outline" onClick={() => setConfirming(false)}>Keep editing</Button><Button size="sm" variant="destructive" onClick={forceClose}>Discard</Button></div>
             </div>
           ) : footer ? (
-            <footer className={cn("shrink-0 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pt-3", page ? "bg-tp-bg" : "bg-background")}>{footer}</footer>
+            <footer className={cn("shrink-0 border-t px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pt-3", page ? "border-tp-border/70 bg-tp-surface" : "border-black/[0.06] bg-background")}>{footer}</footer>
           ) : null}
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>

@@ -2,6 +2,7 @@
 import * as React from "react"
 import { motion, useReducedMotion } from "motion/react"
 import { cn } from "@/lib/utils"
+import { Scene, type SceneName } from "./scenes"
 
 /**
  * Small, consistent line illustrations for empty, locked and connect moments.
@@ -63,13 +64,16 @@ export function Illustration({ name, className, label }: { name: IllustrationNam
 }
 
 /** The shape every empty, locked or not-yet-connected screen follows: a picture, one message, one next action. */
-export function EmptyPanel({ illustration, title, children, action, className }: { illustration: IllustrationName; title: string; children?: React.ReactNode; action?: React.ReactNode; className?: string }) {
+export function EmptyPanel({ illustration, scene, title, children, action, className }: { illustration?: IllustrationName; scene?: SceneName; title: string; children?: React.ReactNode; action?: React.ReactNode; className?: string }) {
   return (
-    <section className={cn("grid max-w-xl justify-items-start gap-3 rounded-2xl border bg-card p-6 sm:p-8", className)} data-testid="empty-panel">
-      <Illustration name={illustration} />
+    <section className={cn("grid max-w-3xl items-center gap-6 overflow-hidden rounded-3xl border bg-card p-6 sm:p-8", scene && "md:grid-cols-[1fr_1.1fr]", className)} data-testid="empty-panel">
+      {scene ? <Scene name={scene} className="order-first max-w-sm md:order-last" /> : null}
+      <div className="grid justify-items-start gap-3">
+      {illustration && !scene ? <Illustration name={illustration} /> : null}
       <h2 className="text-lg font-semibold">{title}</h2>
       {children ? <div className="grid gap-2 text-sm leading-relaxed text-muted-foreground">{children}</div> : null}
       {action ? <div className="mt-1">{action}</div> : null}
+      </div>
     </section>
   )
 }

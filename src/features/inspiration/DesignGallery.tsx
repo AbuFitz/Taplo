@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Search, X } from "lucide-react"
+import { Search, SlidersHorizontal, X } from "lucide-react"
 import { getDesign, FINISHES, type Design } from "@/features/page/themes/designs"
 import { PROFILE_CHOICES } from "@/features/page/contracts/style"
 import { DesignThumb } from "@/features/setup/DesignThumb"
@@ -72,6 +72,8 @@ export function DesignGallery() {
   const [biz, setBiz] = React.useState<string | null>(null)
   const [dress, setDress] = React.useState<string | null>(null)
   const [arr, setArr] = React.useState<Arrangement | null>(null)
+  const [styleOpen, setStyleOpen] = React.useState(false)
+  const styleCount = (dress ? 1 : 0) + (arr ? 1 : 0)
   const [open, setOpen] = React.useState<Pick | null>(null)
   const base = React.useMemo<Pick[]>(() => interleave(ALL_SHOWCASE.flatMap((i) => { const design = getDesign(i.design); return design ? [{ scenario: i.scenario, design, look: i.look ? getStartingLook(i.look) : undefined, note: i.note, logo: i.logo, arrangement: i.arrangement, group: i.group }] : [] })), [])
   /** Putting every page in one look: the shelf becomes a way to see how your business could wear it. */
@@ -87,13 +89,27 @@ export function DesignGallery() {
     <div className="dg">
       <header className="dg-head">
         <h1>Pages for every kind of business.</h1>
-        <p>Every page here is a real Taplo page: a profile arrangement, a material and a design chosen to fit the business. Open one to scroll it, try it on a phone or a computer, then make it yours.</p>
+        <p>Open any page to scroll it, try it on a phone or a computer, then make it yours.</p>
       </header>
-      <div className="dg-bar" role="region" aria-label="Filter designs">
-        <div className="dg-search"><Search aria-hidden="true" /><input type="search" aria-label="Search pages" placeholder="Search: florist, plumber, tutor…" value={query} onChange={(e) => setQuery(e.target.value)} />{query ? <button type="button" aria-label="Clear search" onClick={() => setQuery("")}><X /></button> : null}</div>
-        <div className="dg-row" role="group" aria-label="Business type"><button type="button" aria-pressed={biz === null} onClick={() => setBiz(null)}>All</button>{BUSINESS.map((b) => <button key={b.id} type="button" aria-pressed={biz === b.id} onClick={() => setBiz(biz === b.id ? null : b.id)}>{b.label}</button>)}</div>
-        <div className="dg-row" role="group" aria-label="Try every page in a look"><span>Try on</span><button type="button" aria-pressed={dress === null} onClick={() => setDress(null)}>Their own</button>{STARTING_LOOKS.map((l) => <button key={l.id} type="button" aria-pressed={dress === l.id} onClick={() => setDress(dress === l.id ? null : l.id)}><Swatch look={l} />{l.name}</button>)}</div>
-        <div className="dg-row" role="group" aria-label="Profile arrangement"><span>Profile</span>{PROFILE_CHOICES.map((c) => <button key={c.id} type="button" aria-pressed={arr === c.id} onClick={() => setArr(arr === c.id ? null : c.id)}>{c.name}</button>)}</div>
+      <div className="dg-toolbar" role="region" aria-label="Find a design">
+        <div className="dg-toolbar-row">
+          <div className="dg-search"><Search aria-hidden="true" /><input type="search" aria-label="Search pages" placeholder="Search: florist, plumber, tutor…" value={query} onChange={(e) => setQuery(e.target.value)} />{query ? <button type="button" aria-label="Clear search" onClick={() => setQuery("")}><X /></button> : null}</div>
+          <button type="button" className="dg-style-btn" onClick={() => setStyleOpen(true)} aria-label="Style the examples" aria-haspopup="dialog" data-active={styleCount > 0}>
+            <SlidersHorizontal aria-hidden="true" /><span>Style</span>{styleCount > 0 ? <b aria-label={`${styleCount} chosen`}>{styleCount}</b> : null}
+          </button>
+        </div>
+        <div className="dg-rail" role="group" aria-label="Business type">
+          <button type="button" aria-pressed={biz === null} onClick={() => setBiz(null)}>All</button>
+          {BUSINESS.map((b) => <button key={b.id} type="button" aria-pressed={biz === b.id} onClick={() => setBiz(biz === b.id ? null : b.id)}>{b.label}</button>)}
+        </div>
+        {styleCount > 0 ? (
+          <p className="dg-active" aria-live="polite">
+            <span>{shown.length} {shown.length === 1 ? "page" : "pages"}, shown in</span>
+            {dress ? <button type="button" onClick={() => setDress(null)}>{getStartingLook(dress)?.name}<X aria-hidden="true" /></button> : null}
+            {arr ? <button type="button" onClick={() => setArr(null)}>{arrangementName(arr)}<X aria-hidden="true" /></button> : null}
+            <button type="button" className="dg-clear" onClick={() => { setDress(null); setArr(null) }}>Clear</button>
+          </p>
+        ) : null}
       </div>
       <ul className="dg-shelf" data-testid="gallery-list">
         {shown.map((p) => {
@@ -117,6 +133,7 @@ export function DesignGallery() {
       </ul>
       {shown.length === 0 ? <p className="dg-empty">Nothing matches. Try a different word or clear a filter.</p> : null}
       {open ? <Detail pick={open} onClose={() => setOpen(null)} /> : null}
+      <StyleSheet open={styleOpen} onOpenChange={setStyleOpen} dress={dress} setDress={setDress} arr={arr} setArr={setArr} count={shown.length} />
     </div>
   )
 }
@@ -124,6 +141,35 @@ export function DesignGallery() {
 function Swatch({ look }: { look: StartingLook }) {
   const c = originalPalette(look)
   return <i aria-hidden="true" className="dg-swatch" style={{ background: c.base, boxShadow: `inset 0 0 0 1px rgba(0,0,0,.14), 9px 0 0 -1px ${c.accent}` }} />
+}
+
+/** The two "try every page in…" choices live in one sheet instead of three stacked rows of chips. */
+function StyleSheet({ open, onOpenChange, dress, setDress, arr, setArr, count }: { open: boolean; onOpenChange: (o: boolean) => void; dress: string | null; setDress: (v: string | null) => void; arr: Arrangement | null; setArr: (v: Arrangement | null) => void; count: number }) {
+  return (
+    <Overlay open={open} onOpenChange={onOpenChange} kind="dialog" title="Style the examples" description="Show every page in one look or one profile arrangement." testId="style-sheet"
+      footer={<div className="dg-sheet-actions"><button type="button" className="dg-sheet-clear" onClick={() => { setDress(null); setArr(null) }}>Clear</button><button type="button" className="dg-sheet-done" onClick={() => onOpenChange(false)}>Show {count} {count === 1 ? "page" : "pages"}</button></div>}>
+      <div className="dg-sheet">
+        <section aria-labelledby="dg-look-h">
+          <h3 id="dg-look-h">Look</h3>
+          <div className="dg-look-grid" role="radiogroup" aria-label="Look">
+            <button type="button" role="radio" aria-checked={dress === null} onClick={() => setDress(null)} className="dg-look-tile"><i className="dg-look-art dg-look-own" aria-hidden="true" /><span>Their own</span></button>
+            {STARTING_LOOKS.map((l) => { const c = originalPalette(l); return (
+              <button key={l.id} type="button" role="radio" aria-checked={dress === l.id} onClick={() => setDress(dress === l.id ? null : l.id)} className="dg-look-tile">
+                <i className="dg-look-art" aria-hidden="true" style={{ background: c.base }}><b style={{ background: c.surface }} /><u style={{ background: c.accent }} /><em style={{ background: c.text }} /></i>
+                <span>{l.name}</span>
+              </button>) })}
+          </div>
+        </section>
+        <section aria-labelledby="dg-arr-h">
+          <h3 id="dg-arr-h">Profile</h3>
+          <div className="dg-arr-list" role="radiogroup" aria-label="Profile arrangement">
+            <button type="button" role="radio" aria-checked={arr === null} onClick={() => setArr(null)}><span>As designed</span></button>
+            {PROFILE_CHOICES.map((c) => <button key={c.id} type="button" role="radio" aria-checked={arr === c.id} onClick={() => setArr(arr === c.id ? null : c.id)}><span>{c.name}</span><small>{c.line}</small></button>)}
+          </div>
+        </section>
+      </div>
+    </Overlay>
+  )
 }
 
 function Detail({ pick: first, onClose }: { pick: Pick; onClose: () => void }) {

@@ -494,7 +494,7 @@ export function OwnerBookings({
           <ul className="grid max-w-3xl gap-2" data-testid="enquiries">
             {state.enquiries.length === 0 ? (
               <li>
-                <EmptyPanel illustration="bookings" title="No enquiries yet">
+                <EmptyPanel scene="bookings" title="No enquiries yet">
                   <p>
                     Messages from your contact form, and from services you arrange
                     with customers directly, appear here. An enquiry reserves no time.

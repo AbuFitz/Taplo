@@ -7,6 +7,7 @@
     0 56px 110px -28px color-mix(in srgb, #000 40%, transparent);
   box-shadow: var(--pop-shadow);
   border-radius: 28px;
+  background-color: var(--tp-surface, var(--tp-bg));
   transform-origin: 50% 100%;
 }
 [data-overlay][data-overlay-tone="page"] > header { padding-bottom: 4px; }

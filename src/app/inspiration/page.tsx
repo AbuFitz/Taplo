@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { DesignGallery } from "@/features/inspiration/DesignGallery";
-import { InspirationFrame } from "@/features/inspiration/InspirationFrame";
+import { SiteFooter, SiteHeader } from "@/features/marketing/Site";
 
 export const metadata: Metadata = {
   title: "Designs | Taplo",
@@ -9,8 +9,12 @@ export const metadata: Metadata = {
 
 export default function InspirationPage() {
   return (
-    <InspirationFrame>
-      <DesignGallery />
-    </InspirationFrame>
+    <div className="inspo-shell">
+      <SiteHeader />
+      <main className="mx-auto w-full max-w-[88rem] px-5 pb-20 pt-10 sm:px-8 sm:pt-16">
+        <DesignGallery />
+      </main>
+      <SiteFooter />
+    </div>
   );
 }
