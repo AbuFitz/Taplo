@@ -10,10 +10,13 @@ for (const width of [390, 1440]) {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Harris Cars")
     const cards = page.locator('.tp-product[data-kind="vehicle"]')
     await expect(cards).toHaveCount(3)
-    const a = (await cards.nth(0).boundingBox())!
-    const b = (await cards.nth(1).boundingBox())!
-    if (width === 390) { expect(a.width).toBeGreaterThan(320); expect(b.y).toBeGreaterThan(a.y + a.height - 1) }
-    else { expect(a.width).toBeGreaterThan(380); expect(Math.abs(a.y - b.y)).toBeLessThan(2); expect(b.x).toBeGreaterThan(a.x + a.width) }
+    // Measure once the layout has settled (fonts and images change card heights while the page loads).
+    await expect(async () => {
+      const a = (await cards.nth(0).boundingBox())!
+      const b = (await cards.nth(1).boundingBox())!
+      if (width === 390) { expect(a.width).toBeGreaterThan(320); expect(b.y).toBeGreaterThan(a.y + a.height - 1) }
+      else { expect(a.width).toBeGreaterThan(380); expect(Math.abs(a.y - b.y)).toBeLessThan(2); expect(b.x).toBeGreaterThan(a.x + a.width) }
+    }).toPass({ timeout: 15_000 })
     await expect(cards.filter({ hasText: "MINI Cooper" })).toContainText("Sold")
     await expect(cards.filter({ hasText: "Mazda CX-5" })).toContainText("Reserved")
     await expect(cards.filter({ hasText: "MINI Cooper" }).getByRole("button", { name: "Enquire about this car" })).toHaveCount(0)
