@@ -29,10 +29,9 @@ for (const width of [320, 390, 768, 1440])
     );
     await expect(chooser.locator(".plan-art")).toHaveCount(3);
     for (const id of PLAN_IDS) {
-      if (width < 768)
-        await chooser
-          .getByRole("button", { name: PLANS[id].name, exact: true })
-          .click();
+      await chooser
+        .getByRole("button", { name: PLANS[id].name, exact: true })
+        .click();
       const card = chooser.getByRole("listitem", {
         name: `${PLANS[id].name} plan`,
         exact: true,
@@ -50,8 +49,7 @@ for (const width of [320, 390, 768, 1440])
       if (width < 768)
         await card.screenshot({ path: `work/pricing-${id}-${width}.png` });
     }
-    if (width < 768)
-      await chooser.getByRole("button", { name: "Free", exact: true }).click();
+    await chooser.getByRole("button", { name: "Free", exact: true }).click();
     await page.evaluate(() => window.scrollTo(0, 0));
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
@@ -167,40 +165,3 @@ test("comparison selection aligns the corresponding card after changing screen s
   ).toBeChecked();
 });
 
-test("manual horizontal browsing updates the selected plan without snapping back", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/pricing", { waitUntil: "networkidle" });
-  const rail = page.getByRole("list", { name: "Plan options", exact: true });
-  await rail.scrollIntoViewIfNeeded();
-  await rail.hover();
-  await page.mouse.wheel(700, 0);
-  await expect
-    .poll(() =>
-      rail.locator('[data-selected="true"]').getAttribute("data-plan"),
-    )
-    .not.toBe("free");
-  const chosen = await rail
-    .locator('[data-selected="true"]')
-    .getAttribute("data-plan");
-  await expect(
-    page.getByRole("group", { name: "Choose a plan" }).getByRole("button", {
-      name: PLANS[chosen as keyof typeof PLANS].name,
-      exact: true,
-    }),
-  ).toHaveAttribute("aria-pressed", "true");
-  await expect(
-    page.getByRole("group", { name: "Compare a plan" }).getByRole("radio", {
-      name: PLANS[chosen as keyof typeof PLANS].name,
-      exact: true,
-    }),
-  ).toBeChecked();
-  await rail.hover();
-  await page.mouse.wheel(-2000, 0);
-  await expect(rail.locator('[data-plan="free"]')).toHaveAttribute(
-    "data-selected",
-    "true",
-  );
-});

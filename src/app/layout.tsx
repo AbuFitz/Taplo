@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/inter/wght.css";
 import "@fontsource-variable/space-grotesk/wght.css";
+import "@fontsource-variable/geist/wght.css";
 import "./globals.css";
 import { TAPLO_DOMAINS } from "@/lib/domains";
 import { ChromeColour } from "@/components/taplo/chrome-colour";

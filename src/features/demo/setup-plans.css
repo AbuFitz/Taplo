@@ -31,3 +31,4 @@
   .setup-plan-features{grid-template-columns:1fr}
   .setup-plan-tab-name{font-size:13px}
 }
+.setup-plan-price{font-family:var(--font-numeral);font-weight:300;letter-spacing:-.045em}

@@ -89,6 +89,7 @@
   --input: oklch(0.89 0 0);
   --ring: #111111;
   --font-display: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-numeral: "Geist Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --signal: #111111;
   --signal-soft: #eeeeee;
   --chart-1: oklch(0.87 0 0);

@@ -4,7 +4,7 @@
 }
 .pricing-shell main h1 {
   scroll-margin-top: 110px;
-  font-size: clamp(2.65rem, 6.4vw, 6rem);
+  font-size: clamp(2.65rem, 5.2vw, 4.75rem);
   line-height: 1.01;
   letter-spacing: -0.055em;
 }

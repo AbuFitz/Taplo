@@ -1,0 +1,33 @@
+/* Pricing, rebuilt as one switcher over one showcase card. The four plans are still in the page; only the chosen one is shown, at every width. */
+.pricing-shell .pricing-mobile-choices{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;width:min(100%,34rem);margin:8px 0 22px!important;padding:5px!important;border:0!important;border-radius:999px!important;background:#ffffff14!important}
+.pricing-shell .pricing-mobile-choices button{min-height:46px;margin:0!important;padding:0 6px;border:0!important;border-radius:999px!important;background:transparent!important;color:#c9c6bf!important;font-size:14px;font-weight:600;transition:background .2s,color .2s}
+.pricing-shell .pricing-mobile-choices button[aria-pressed="true"]{background:#f5f3eb!important;color:#16171a!important;box-shadow:0 8px 18px -10px #000a}
+.pricing-shell .pricing-plans{display:block!important;overflow:visible!important;padding:0!important;gap:0!important;scroll-snap-type:none!important}
+.pricing-shell .pricing-plans>li{display:none!important}
+.pricing-shell .pricing-plans>li[data-selected="true"]{--glow:#9fb0d6;display:grid!important;grid-template-columns:minmax(0,1fr);gap:0;scroll-snap-align:none;flex:none;width:auto;min-width:0;padding:clamp(24px,4vw,48px)!important;border-radius:clamp(24px,3vw,36px)!important;color:#f5f3eb!important;background:radial-gradient(90% 120% at 100% 0%,color-mix(in srgb,var(--glow) 34%,transparent),transparent 62%),linear-gradient(160deg,#26282d,#131417)!important;box-shadow:inset 0 0 0 1px #ffffff1a,0 36px 60px -36px #000!important}
+.pricing-shell .pricing-plans>li[data-plan="core"]{--glow:#d4c08f}
+.pricing-shell .pricing-plans>li[data-plan="pro"]{--glow:#b8a4f0}
+.pricing-shell .pricing-plans>li[data-plan="business"]{--glow:#8fc4ae}
+.pricing-shell .pricing-plans>li[data-selected="true"] :is(h2,.pricing-price){color:#fff}
+.pricing-shell .pricing-plans>li[data-selected="true"] .pricing-plan-heading>span{background:#ffffff1f!important;color:#f5f3eb;font-size:12px;padding:5px 10px;border-radius:999px}
+.pricing-shell .pricing-plans>li[data-selected="true"] h2{font-size:18px;font-weight:600;letter-spacing:.01em;color:#d9dbe0}
+.pricing-shell .pricing-plans>li[data-selected="true"] .pricing-price{margin-top:14px;font-size:clamp(52px,8vw,92px);font-weight:300;letter-spacing:-.065em;line-height:1}
+.pricing-shell .pricing-plans>li[data-selected="true"] .pricing-price span{font-size:17px;color:#b9bdc6!important;margin-left:8px;letter-spacing:0}
+.pricing-shell .pricing-plans>li[data-selected="true"] .pricing-summary{max-width:34ch;min-height:0;margin-top:14px;font-size:17px;line-height:1.5;color:#d0d3da!important}
+.pricing-shell .pricing-plans>li[data-selected="true"] .pricing-highlights{flex:none;margin:26px 0 0;padding:24px 0 0;border-top:1px solid #ffffff1f;gap:14px;font-size:15px;color:#eceef2}
+.pricing-shell .pricing-plans>li[data-selected="true"] .pricing-highlights li{align-items:center;gap:12px}
+.pricing-shell .pricing-plans>li[data-selected="true"] .pricing-highlights svg{width:20px;height:20px;padding:4px;margin:0;border-radius:50%;background:#ffffff1f;color:#fff!important;stroke-width:3}
+.pricing-shell .pricing-plans>li[data-selected="true"] .plan-art{margin-top:22px;max-width:22rem}
+.pricing-shell .pricing-plans>li[data-selected="true"] .pricing-start{margin-top:26px;justify-self:start;min-width:14rem;background:#f5f3eb!important;color:#16171a!important;font-size:15px;padding:14px 22px;min-height:54px}
+@media (min-width:860px){
+  .pricing-shell .pricing-plans>li[data-selected="true"]{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);column-gap:clamp(32px,6vw,88px);grid-template-areas:"head art" "price art" "sum art" "start art" "hl hl";grid-template-rows:auto auto auto auto auto;align-items:start}
+  .pricing-shell .pricing-plans>li[data-selected="true"] .pricing-plan-heading{grid-area:head}
+  .pricing-shell .pricing-plans>li[data-selected="true"] .pricing-price{grid-area:price}
+  .pricing-shell .pricing-plans>li[data-selected="true"] .pricing-summary{grid-area:sum}
+  .pricing-shell .pricing-plans>li[data-selected="true"] .plan-art{grid-area:art;margin:0;max-width:none;align-self:center}
+  .pricing-shell .pricing-plans>li[data-selected="true"] .pricing-highlights{grid-area:hl;margin-top:34px;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:16px 32px}
+  .pricing-shell .pricing-plans>li[data-selected="true"] .pricing-start{grid-area:start;margin-top:28px}
+}
+.pricing-shell .pricing-plans>li[data-selected="true"] .plan-art{color:#25222c}
+/* Prices use Geist's numerals: even, upright and calm at a light weight. */
+.pricing-shell .pricing-plans>li[data-selected="true"] .pricing-price{font-family:var(--font-numeral);font-weight:300;letter-spacing:-.045em;font-feature-settings:"tnum" 0}
