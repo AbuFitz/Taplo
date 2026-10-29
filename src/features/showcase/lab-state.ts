@@ -1,3 +1,4 @@
+import { getColourway } from "@/features/page/themes/colourways"
 import { REAL_BUSINESS_STYLES } from "./real-businesses"
 import { COLLECTION_BRIEFS, type CollectionScenario } from "./collection"
 import { businessContentSchema, type BusinessContent } from "@/features/businesses/content"
@@ -45,7 +46,8 @@ for (const g of SHOWCASE) for (const item of g.items) {
   EXAMPLE_LOOK[item.scenario] = design.id
   // The designed example is the design itself (its own colours, cards and type) plus this page's arrangement: exactly what "Use this design" gives an owner.
   const pose = { ...(item.arrangement ? { layout: item.arrangement, align: item.arrangement === "bento" || item.arrangement === "identity" ? "center" : "left" } : {}), ...(item.logo === false ? { avatarShape: "none" } : {}) }
-  EXAMPLE_OVERRIDES[item.scenario] = { ...structuredClone(design.overrides), header: { ...design.overrides.header, ...pose } } as StyleOverrides
+  const cw = item.look ? getColourway(item.look) : undefined
+  EXAMPLE_OVERRIDES[item.scenario] = { ...structuredClone(design.overrides), ...(cw ? { colors: { ...design.overrides.colors, ...cw.colors }, background: structuredClone(cw.background), buttons: { ...design.overrides.buttons, shape: "pill" } } : {}), header: { ...design.overrides.header, ...pose } } as StyleOverrides
 }
 
 /** A scenario on its own look opens as the designed example; an explicit look (the looks sheet, the lab) shows that look plain. */

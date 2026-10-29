@@ -14,10 +14,11 @@ import { Overlay } from "@/components/taplo/overlay"
 import { ApplyDesign } from "./ApplyDesign"
 import { exampleForScenario } from "./examples"
 import { ALL_SHOWCASE, type Arrangement } from "./showcase-set"
+import { STARTING_LOOKS, getStartingLook, type StartingLook } from "@/features/page/themes/starting-looks"
 import Link from "next/link"
 import "./design-gallery.css"
 
-type Pick = { scenario: Scenario; design: Design; note: string; logo?: false; arrangement?: Arrangement; group: string }
+type Pick = { scenario: Scenario; design: Design; look?: StartingLook; note: string; logo?: false; arrangement?: Arrangement; group: string }
 
 const BUSINESS = [
   { id: "salon", label: "Salons & barbers", of: "barber lune station tattoo groom" },
@@ -28,27 +29,16 @@ const BUSINESS = [
   { id: "studio", label: "Studios & creatives", of: "sora ellis field pace after slate twelve nami dune maya leon eden dj alba arlo" },
   { id: "coach", label: "Coaches & tutors", of: "gym north good brightlearn rowan tutor surf" },
 ] as const
-const STYLES = ["Seamless blend", "Frosted glass", "Dark noir", "Warm editorial", "Bento grid"] as const
-type StyleTag = (typeof STYLES)[number]
 
 const alignFor = (a?: Arrangement): "left" | "center" => (a === "bento" || a === "identity" ? "center" : "left")
 /** The design with this page's own arrangement and (when it has no logo) a name-only profile. */
 function poseOf(pick: Pick) {
   const header = { ...pick.design.overrides.header, ...(pick.arrangement ? { layout: pick.arrangement, align: alignFor(pick.arrangement) } : {}), ...(pick.logo === false ? { avatarShape: "none" as const } : {}) }
-  return { ...pick.design.overrides, header }
-}
-function stylesOf(p: Pick): StyleTag[] {
-  const out: StyleTag[] = []
-  const d = p.design
-  if (p.arrangement === "melt") out.push("Seamless blend")
-  if (d.overrides.cards?.surface === "glass") out.push("Frosted glass")
-  if (d.moods.includes("Dark")) out.push("Dark noir")
-  if (d.moods.includes("Editorial") && !d.moods.includes("Dark")) out.push("Warm editorial")
-  if (p.arrangement === "bento" || d.overrides.layout?.composition === "bento") out.push("Bento grid")
-  return out
+  const cw = pick.look?.colourway
+  return { ...pick.design.overrides, ...(cw ? { colors: { ...pick.design.overrides.colors, ...cw.colors }, background: structuredClone(cw.background), buttons: { ...pick.design.overrides.buttons, shape: "pill" as const } } : {}), header }
 }
 const arrangementName = (a?: Arrangement) => PROFILE_CHOICES.find((c) => c.id === a)?.name
-const frameSrc = (p: Pick) => `/appearance/frame?scenario=${p.scenario}&look=${p.design.id}&design=1${p.logo === false ? "&logo=0" : ""}${p.arrangement ? `&arr=${p.arrangement}` : ""}`
+const frameSrc = (p: Pick) => `/appearance/frame?scenario=${p.scenario}&look=${p.design.id}&design=1${p.look ? `&colourway=${p.look.id}` : ""}${p.logo === false ? "&logo=0" : ""}${p.arrangement ? `&arr=${p.arrangement}` : ""}`
 
 /** One handset: the page as a still, or (when active) the page itself, scrollable and tappable inside the frame. */
 function Phone({ pick, active }: { pick: Pick; active: boolean }) {
@@ -78,17 +68,17 @@ function interleave<T extends { group: string }>(items: T[]): T[] {
 export function DesignGallery() {
   const [query, setQuery] = React.useState("")
   const [biz, setBiz] = React.useState<string | null>(null)
-  const [style, setStyle] = React.useState<StyleTag | null>(null)
+  const [lookId, setLookId] = React.useState<string | null>(null)
   const [arr, setArr] = React.useState<Arrangement | null>(null)
   const [open, setOpen] = React.useState<Pick | null>(null)
-  const all = React.useMemo<Pick[]>(() => interleave(ALL_SHOWCASE.flatMap((i) => { const design = getDesign(i.design); return design ? [{ scenario: i.scenario, design, note: i.note, logo: i.logo, arrangement: i.arrangement, group: i.group }] : [] })), [])
+  const all = React.useMemo<Pick[]>(() => interleave(ALL_SHOWCASE.flatMap((i) => { const design = getDesign(i.design); return design ? [{ scenario: i.scenario, design, look: i.look ? getStartingLook(i.look) : undefined, note: i.note, logo: i.logo, arrangement: i.arrangement, group: i.group }] : [] })), [])
   const q = query.trim().toLowerCase()
   const shown = all.filter((p) => {
     const name = SCENARIOS[p.scenario].content.identity.name
     if (biz && !BUSINESS.find((b) => b.id === biz)!.of.split(" ").includes(p.scenario)) return false
-    if (style && !stylesOf(p).includes(style)) return false
+    if (lookId && p.look?.id !== lookId) return false
     if (arr && p.arrangement !== arr) return false
-    return !q || [name, p.note, p.design.name, SCENARIOS[p.scenario].label, arrangementName(p.arrangement) ?? ""].join(" ").toLowerCase().includes(q)
+    return !q || [name, p.note, p.look?.name ?? p.design.name, SCENARIOS[p.scenario].label, arrangementName(p.arrangement) ?? ""].join(" ").toLowerCase().includes(q)
   })
   return (
     <div className="dg">
@@ -99,8 +89,8 @@ export function DesignGallery() {
       <div className="dg-bar" role="region" aria-label="Filter designs">
         <div className="dg-search"><Search aria-hidden="true" /><input type="search" aria-label="Search pages" placeholder="Search: florist, plumber, tutor…" value={query} onChange={(e) => setQuery(e.target.value)} />{query ? <button type="button" aria-label="Clear search" onClick={() => setQuery("")}><X /></button> : null}</div>
         <div className="dg-row" role="group" aria-label="Business type"><button type="button" aria-pressed={biz === null} onClick={() => setBiz(null)}>All</button>{BUSINESS.map((b) => <button key={b.id} type="button" aria-pressed={biz === b.id} onClick={() => setBiz(biz === b.id ? null : b.id)}>{b.label}</button>)}</div>
-        <div className="dg-row" role="group" aria-label="Visual style"><span>Style</span>{STYLES.map((s) => <button key={s} type="button" aria-pressed={style === s} onClick={() => setStyle(style === s ? null : s)}>{s}</button>)}</div>
-        <div className="dg-row" role="group" aria-label="Profile arrangement"><span>Profile</span>{PROFILE_CHOICES.slice(0, 6).map((c) => <button key={c.id} type="button" aria-pressed={arr === c.id} onClick={() => setArr(arr === c.id ? null : c.id)}>{c.name}</button>)}</div>
+        <div className="dg-row" role="group" aria-label="Look"><span>Look</span>{STARTING_LOOKS.map((l) => <button key={l.id} type="button" aria-pressed={lookId === l.id} onClick={() => setLookId(lookId === l.id ? null : l.id)}>{l.name}</button>)}</div>
+        <div className="dg-row" role="group" aria-label="Profile arrangement"><span>Profile</span>{PROFILE_CHOICES.map((c) => <button key={c.id} type="button" aria-pressed={arr === c.id} onClick={() => setArr(arr === c.id ? null : c.id)}>{c.name}</button>)}</div>
       </div>
       <ul className="dg-shelf" data-testid="gallery-list">
         {shown.map((p) => {
@@ -115,7 +105,7 @@ export function DesignGallery() {
               <div className="dg-meta">
                 <h2>{name}</h2>
                 <p>{p.note}</p>
-                <div className="dg-tagrow"><span className="dg-tag">{arrangementName(p.arrangement) ?? p.design.name}</span><span className="dg-tag">{p.design.name}</span></div>
+                <div className="dg-tagrow"><span className="dg-tag">{p.look?.name ?? p.design.name}</span><span className="dg-tag">{arrangementName(p.arrangement) ?? p.design.name}</span></div>
                 <div className="dg-acts"><button type="button" onClick={() => setOpen(p)}>Look closer</button></div>
               </div>
             </li>
@@ -134,7 +124,7 @@ function Detail({ pick, onClose }: { pick: Pick; onClose: () => void }) {
   const demo = exampleForScenario(pick.scenario)
   return (
     <Overlay open onOpenChange={(o) => !o && onClose()} kind="detail" title={name} description={pick.note} testId="design-detail" className="dg-detail"
-      footer={<div className="dg-detail-actions sf-ui">{demo ? <Link className="dg-demo" href={`/inspiration/${demo.slug}`} onClick={onClose}>Open the demo</Link> : null}<ApplyDesign design={pick.design} arrangement={pick.arrangement} className="sf-btn dg-use">Use this design</ApplyDesign></div>}>
+      footer={<div className="dg-detail-actions sf-ui">{demo ? <Link className="dg-demo" href={`/inspiration/${demo.slug}`} onClick={onClose}>Open the demo</Link> : null}<ApplyDesign design={pick.design} look={pick.look?.id} arrangement={pick.arrangement} className="sf-btn dg-use">Use this design</ApplyDesign></div>}>
       <div className="dg-detail-body sf-ui">
         <div className="dg-detail-view" data-device={device}>
           <PagePreview key={`${device}-${pick.scenario}`} src={frameSrc(pick)} title={`${name} on the ${pick.design.name} design`} mode={device === "phone" ? "device" : "desktop"} chrome url="yourname.mytaplo.com" />

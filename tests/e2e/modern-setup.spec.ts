@@ -12,7 +12,7 @@ for (const width of [390, 1440]) test(`visual setup keeps each decision separate
   const next = () => cont(page)
   await cont(page,{keepLook:true})
   await expect(page.getByRole('heading',{level:1})).toHaveText('Choose a look.')
-  await page.getByRole('radio',{name:'Carbon / white'}).check({force:true})
+  await page.getByRole('radio',{name:'Ink'}).check({force:true})
   await openMoreStyling(page)
   await page.getByRole('radio',{name:'Floating Bento',exact:true}).check()
   if (width < 1024) {

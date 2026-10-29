@@ -28,46 +28,68 @@ const still = (b: Background): Background => b;
 
 export const COLOURWAYS: Colourway[] = [
   {
-    id: "electric", name: "White / electric blue", kind: "Solid light", tone: "light",
-    colors: { background: "#f8f9fc", text: "#222b3b", muted: "#5b6578", surface: "#ffffff", accent: "#2856d8", accentText: "#ffffff", border: "#dde2ee" },
-    background: { kind: "solid", color: "#f8f9fc" },
+    id: "sand", name: "Warm sand", kind: "Solid light", tone: "light",
+    colors: { background: "#e9dfd3", text: "#382a22", muted: "#635044", surface: "#fffcf7", accent: "#6c412e", accentText: "#ffffff", border: "#cbbbaa" },
+    background: { kind: "solid", color: "#e9dfd3" },
   },
   {
-    id: "stone", name: "Stone / ink", kind: "Solid light", tone: "light",
-    colors: { background: "#f2efe9", text: "#262420", muted: "#5b564e", surface: "#fffdf9", accent: "#2b2a27", accentText: "#ffffff", border: "#ddd8cd" },
-    background: { kind: "solid", color: "#f2efe9" },
+    id: "paper", name: "Paper", kind: "Light gradient", tone: "light",
+    colors: { background: "#f3f3f0", text: "#1a2421", muted: "#53615c", surface: "#ffffff", accent: "#183f32", accentText: "#ffffff", border: "#ccd4cf" },
+    background: { kind: "gradient", from: "#f3f3f0", to: "#d8ddd9", angle: 140, motion: false },
+    moving: { kind: "gradient", from: "#f3f3f0", to: "#d8ddd9", angle: 140, motion: true, pace: "slow" },
   },
   {
-    id: "sage", name: "Sage / pine", kind: "Solid light", tone: "light",
+    id: "sage", name: "Sage mist", kind: "Solid light", tone: "light",
     colors: { background: "#edf1ec", text: "#1f2d24", muted: "#4f5e54", surface: "#ffffff", accent: "#2f5d46", accentText: "#ffffff", border: "#d3dcd2" },
     background: { kind: "solid", color: "#edf1ec" },
   },
   {
-    id: "cloud", name: "Cloud / navy", kind: "Solid light", tone: "light",
+    id: "cloud", name: "Soft cloud", kind: "Solid light", tone: "light",
     colors: { background: "#eef2f7", text: "#1b2a3d", muted: "#526074", surface: "#ffffff", accent: "#1f3a5f", accentText: "#ffffff", border: "#d6dde8" },
     background: { kind: "solid", color: "#eef2f7" },
   },
   {
-    id: "clay", name: "Cream / clay", kind: "Solid light", tone: "light",
+    id: "clay", name: "Terracotta", kind: "Solid light", tone: "light",
     colors: { background: "#f6efe7", text: "#3a2a20", muted: "#6b5646", surface: "#fffaf4", accent: "#a44a24", accentText: "#ffffff", border: "#e6d8c9" },
     background: { kind: "solid", color: "#f6efe7" },
   },
   {
-    id: "silver", name: "Silver / ink", kind: "Light gradient", tone: "light",
-    colors: { background: "#e4e6ea", text: "#343943", muted: "#585e6b", surface: "#ffffff", accent: "#252d3b", accentText: "#ffffff", border: "#c9cdd5" },
-    background: { kind: "shader", style: "silk", colors: ["#ffffff", "#d6dae3"], base: "#e4e6ea", anchors: ["15% 0%", "100% 100%"], motion: false },
-    moving: { kind: "shader", style: "silk", colors: ["#ffffff", "#d6dae3", "#c8ccd4"], base: "#e4e6ea", anchors: ["15% 0%", "100% 100%"], motion: true, pace: "slow" },
+    id: "limestone", name: "Limestone", kind: "Solid light", tone: "light",
+    colors: { background: "#f2efe9", text: "#262420", muted: "#5b564e", surface: "#fffdf9", accent: "#2b2a27", accentText: "#ffffff", border: "#ddd8cd" },
+    background: { kind: "solid", color: "#f2efe9" },
   },
   {
-    id: "carbon", name: "Carbon / white", kind: "Solid dark", tone: "dark",
-    colors: { background: "#0b0c0e", text: "#f4f5f7", muted: "#a3a7b0", surface: "#202226", accent: "#f4f5f7", accentText: "#101216", border: "#33363c" },
-    background: { kind: "solid", color: "#0b0c0e" },
+    id: "ink", name: "Ink", kind: "Solid dark", tone: "dark",
+    colors: { background: "#090b0d", text: "#f3f5f6", muted: "#b7c0c6", surface: "#202328", accent: "#eef3f5", accentText: "#101316", border: "#3d444c" },
+    background: { kind: "solid", color: "#090b0d" },
   },
   {
-    id: "cobalt", name: "Navy / ice", kind: "Deep colour", tone: "dark",
+    id: "mono", name: "Mono flow", kind: "Dark gradient", tone: "dark",
+    colors: { background: "#090b0d", text: "#f3f5f6", muted: "#e8edf1", surface: "#24272c", accent: "#eef3f5", accentText: "#101316", border: "#41474f" },
+    background: { kind: "gradient", from: "#08090b", to: "#656970", angle: 135, motion: false },
+    moving: { kind: "gradient", from: "#08090b", to: "#656970", angle: 135, motion: true, pace: "steady" },
+  },
+  {
+    id: "midnight", name: "Midnight flow", kind: "Dark gradient", tone: "dark",
+    colors: { background: "#080b12", text: "#f1f5fa", muted: "#b8c8d5", surface: "#1b2530", accent: "#c0e4ef", accentText: "#10212b", border: "#3b4c5b" },
+    background: { kind: "shader", style: "aurora", base: "#080b12", colors: ["#080b12", "#244555", "#423754", "#101822"], motion: false },
+    moving: { kind: "shader", style: "aurora", base: "#080b12", colors: ["#080b12", "#244555", "#423754", "#101822"], motion: true, pace: "steady" },
+  },
+  {
+    id: "silk", name: "Graphite silk", kind: "Dark gradient", tone: "dark",
+    colors: { background: "#0b0e0e", text: "#f1f6f4", muted: "#b9c9c3", surface: "#222b29", accent: "#d7ebdf", accentText: "#14251b", border: "#405049" },
+    background: { kind: "shader", style: "silk", base: "#0b0e0e", colors: ["#0b0e0e", "#49534f", "#18241e"], motion: false },
+    moving: { kind: "shader", style: "silk", base: "#0b0e0e", colors: ["#0b0e0e", "#49534f", "#18241e"], motion: true, pace: "slow" },
+  },
+  {
+    id: "forest", name: "Forest", kind: "Solid dark", tone: "dark",
+    colors: { background: "#0f1a14", text: "#eaf3ee", muted: "#a9bdb2", surface: "#1b2b22", accent: "#bfe3cc", accentText: "#0f1a14", border: "#2f4a3b" },
+    background: { kind: "solid", color: "#0f1a14" },
+  },
+  {
+    id: "navy", name: "Harbour", kind: "Solid dark", tone: "dark",
     colors: { background: "#101b3b", text: "#edf3ff", muted: "#a9b9d8", surface: "#1c3054", accent: "#a7caff", accentText: "#101216", border: "#2f4876" },
-    background: { kind: "gradient", from: "#122656", to: "#10172e", angle: 155, motion: false },
-    moving: { kind: "shader", style: "warp", colors: ["#1d3f86", "#10172e"], base: "#10172e", anchors: ["12% 0%", "88% 100%"], motion: true, pace: "slow" },
+    background: { kind: "solid", color: "#101b3b" },
   },
 ];
 

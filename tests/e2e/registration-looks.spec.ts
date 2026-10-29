@@ -14,10 +14,10 @@ async function toLook(page: Page, width: number) {
 }
 
 for (const width of [390, 1440]) {
-  test(`one collection of eight looks; the first recommendation is solid and still at ${width}`, async ({ page }) => {
+  test(`one collection of twelve looks; the first recommendation is solid and still at ${width}`, async ({ page }) => {
     await toLook(page, width)
     const group = page.getByRole("radiogroup", { name: "Looks" })
-    await expect(group.getByRole("radio")).toHaveCount(8)
+    await expect(group.getByRole("radio")).toHaveCount(12)
     await expect(page.getByRole("radio", { name: "Paper", exact: true })).toHaveCount(0)
     await expect(page.getByTestId("setup-look")).not.toContainText("✓")
     const first = (await state(page)).page.appearance.background
@@ -36,7 +36,7 @@ for (const width of [390, 1440]) {
       await expect(frame(page).locator(".tp-bg-gradient")).toHaveAttribute("data-animate", look.animated ? "true" : "false", { timeout: 40000 })
     }
     await page.emulateMedia({ reducedMotion: "reduce" })
-    await page.getByRole("radio", { name: "Carbon / white", exact: true }).check({ force: true })
+    await page.getByRole("radio", { name: "Ink", exact: true }).check({ force: true })
     await expect(frame(page).locator(".tp-shader")).toHaveAttribute("data-active", "false", { timeout: 40000 })
   })
 
@@ -44,11 +44,11 @@ for (const width of [390, 1440]) {
     await toLook(page, width)
     // Looks and Colours are two different things: the toggle is there, and Colours is not the eight look cards again.
     await expect(page.getByRole("radiogroup", { name: "What to change" })).toBeVisible()
-    await page.getByRole("radio", { name: "Carbon / white", exact: true }).check({ force: true })
+    await page.getByRole("radio", { name: "Ink", exact: true }).check({ force: true })
     await page.getByRole("radio", { name: "Colours", exact: true }).check({ force: true })
     const palettes = page.getByRole("radiogroup", { name: "Colours" }).getByRole("radio")
     await expect(palettes).toHaveCount(6) // the look's own plus five dark palettes
-    await expect(page.getByRole("radio", { name: "Carbon / white", exact: true })).toHaveCount(0)
+    await expect(page.getByRole("radio", { name: "Ink", exact: true })).toHaveCount(0)
     await expect(page.getByRole("radio", { name: "Original colours" })).toBeChecked()
     const own = (await state(page)).page.appearance.colors.background
     await page.getByRole("radio", { name: "Wine", exact: true }).check({ force: true })
@@ -60,18 +60,18 @@ for (const width of [390, 1440]) {
     expect(s.page.themeId).toBe("monochrome")
     // A palette chosen on purpose stays when the look changes (same tone).
     await page.getByRole("radio", { name: "Looks", exact: true }).check({ force: true })
-    await page.getByRole("radio", { name: "Navy / ice", exact: true }).check({ force: true })
+    await page.getByRole("radio", { name: "Midnight flow", exact: true }).check({ force: true })
     s = await state(page)
     expect(s.page.appearance.colors.background).toBe("#140a0f")
-    expect(s.page.themeId).toBe("quartz")
-    expect(s.page.appearance.background.style).toBe("warp")
+    expect(s.page.themeId).toBe("borealis")
+    expect(s.page.appearance.background.style).toBe("aurora")
     // Into a look of the other tone the palette is not forced on: the new look uses its own colours.
-    await page.getByRole("radio", { name: "Silver / ink", exact: true }).check({ force: true })
+    await page.getByRole("radio", { name: "Paper", exact: true }).check({ force: true })
     s = await state(page)
-    expect(s.page.appearance.colors.background).toBe("#e4e6ea")
+    expect(s.page.appearance.colors.background).toBe("#f3f3f0")
     await expect(page.getByRole("status")).toContainText("different tone")
     // Back on a dark look, choose a palette, then reset to the look's own and undo.
-    await page.getByRole("radio", { name: "Carbon / white", exact: true }).check({ force: true })
+    await page.getByRole("radio", { name: "Ink", exact: true }).check({ force: true })
     await page.getByRole("radio", { name: "Colours", exact: true }).check({ force: true })
     await page.getByRole("radio", { name: "Forest", exact: true }).check({ force: true })
     expect((await state(page)).page.appearance.colors.background).toBe("#0a130d")
@@ -83,7 +83,7 @@ for (const width of [390, 1440]) {
     expect(s.content.identity.name).toBe("Marlowe & Finch")
   })
 
-  test(`all eight looks render on the real page with readable text at ${width}`, async ({ page }) => {
+  test(`all twelve looks render on the real page with readable text at ${width}`, async ({ page }) => {
     test.setTimeout(240_000)
     await toLook(page, width)
     let prev = ""

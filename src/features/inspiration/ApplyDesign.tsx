@@ -17,12 +17,12 @@ import "./design-gallery.css"
  * design chosen, and every later step builds on it. Someone with a page sees exactly what will change and what will not
  * before anything does, and can keep their own colours or typeface.
  */
-export function ApplyDesign({ design, industry, arrangement, className, children }: { design: Design; industry?: string; arrangement?: string; className?: string; children?: React.ReactNode }) {
+export function ApplyDesign({ design, industry, arrangement, look, className, children }: { design: Design; industry?: string; arrangement?: string; look?: string; className?: string; children?: React.ReactNode }) {
   const { state, ready } = useDemo()
   const owner = ready && state?.onboarded ? state : null
   const [open, setOpen] = React.useState(false)
   const label = children ?? "Use this design"
-  if (!owner) return <Link data-brand-action href={`/onboarding?design=${design.id}${arrangement ? `&arr=${arrangement}` : ""}`} className={cn("sf-use", className)} aria-label={`Start with the ${design.name} design`} data-testid="start-design">{label}</Link>
+  if (!owner) return <Link data-brand-action href={`/onboarding?design=${design.id}${look ? `&look=${look}` : ""}${arrangement ? `&arr=${arrangement}` : ""}`} className={cn("sf-use", className)} aria-label={`Start with the ${design.name} design`} data-testid="start-design">{label}</Link>
   const applied = owner.page.themeId === design.id
   return (
     <>

@@ -6,7 +6,7 @@ export type Arrangement = "melt" | "split" | "bento" | "type" | "framed" | "iden
  * The gallery's pages: real, different businesses, each wearing the design that suits it. A design is only ever shown on a
  * business it was made for, so the shelf reads as a spread of ideas rather than one page repeated.
  */
-export interface ShowcaseGroup { id: string; title: string; line: string; items: { scenario: Scenario; design: string; note: string; /** Not every business has a logo; false shows the page with its name alone. */ logo?: false; /** The profile arrangement this page wears; every page in the gallery is a distinct arrangement, finish and density. */ arrangement?: Arrangement }[] }
+export interface ShowcaseGroup { id: string; title: string; line: string; items: { scenario: Scenario; design: string; /** The starting look the example wears (set below for every example except real businesses). */ look?: string; note: string; /** Not every business has a logo; false shows the page with its name alone. */ logo?: false; /** The profile arrangement this page wears; every page in the gallery is a distinct arrangement, finish and density. */ arrangement?: Arrangement }[] }
 
 export const SHOWCASE: ShowcaseGroup[] = [
   { id: "book", title: "Book a chair, a table or a slot", line: "Appointments first. The booking button leads and the prices sit right behind it.", items: [
@@ -73,4 +73,21 @@ export const SHOWCASE: ShowcaseGroup[] = [
     { scenario: "arlo", design: "borealis", note: "Producer. Mix, score and sound design.", arrangement: "bento" },
   ] },
 ]
+/**
+ * Every example wears one of the eight starting looks, so the shelf shows what an owner can actually choose: down-to-earth business colours
+ * on a design that suits the work. Five looks are light and five are dark; the four flow looks move gently once chosen, and the examples show their still version.
+ */
+const LOOK_OF: Partial<Record<Scenario, string>> = {
+  barber: "mono", lune: "clay", physio: "cloud", liv: "sage", slow: "clay", station: "paper", groom: "cloud", calm: "sage", driving: "paper", surf: "cloud",
+  trades: "navy", oakfield: "cloud", current: "paper", detailer: "ink", bike: "paper", garden: "sage",
+  cafe: "clay", corner: "sand", hours: "clay", alba: "sand", petal: "sand", taco: "ink", bnb: "cloud",
+  form: "sand", edit: "paper", dealer: "navy", brookfield: "cloud", cakes: "clay", books: "sand",
+  sora: "ink", ellis: "paper", field: "clay", pace: "mono", after: "midnight", slate: "paper", twelve: "paper", nami: "sage", dune: "clay", maya: "paper", leon: "cloud", eden: "paper", tattoo: "ink", dj: "midnight",
+  gym: "mono", north: "sage", good: "navy", rowan: "paper", tutor: "cloud", arlo: "silk",
+}
+const DESIGN_OF_LOOK: Record<string, string> = { sand: "terra", paper: "paper", sage: "bloom", cloud: "bento", clay: "sheet", ink: "monochrome", mono: "noir", midnight: "borealis", silk: "glasshouse", navy: "quartz" }
+for (const g of SHOWCASE) for (const item of g.items) {
+  const look = LOOK_OF[item.scenario]
+  if (look) { item.design = DESIGN_OF_LOOK[look]!; item.look = look }
+}
 export const ALL_SHOWCASE = SHOWCASE.flatMap((g) => g.items.map((i) => ({ ...i, group: g.id })))

@@ -33,13 +33,13 @@ describe("curated palettes", () => {
     for (const look of STARTING_LOOKS) for (const p of palettesFor(look)) {
       const bg = lookBackground(look, p);
       expect(backgroundSchema.safeParse(bg).success).toBe(true);
-      expect(bg.kind).toBe(look.animated ? "shader" : "solid");
+      expect(bg.kind).toBe(look.animated ? look.colourway.moving!.kind : "solid");
       if (look.animated) expect((bg as { motion?: boolean }).motion).toBe(true);
       if (look.animated && bg.kind === "shader") expect(bg.style).toBe((look.colourway.moving as { style: string }).style);
     }
   });
   it("only offers palettes of the look's tone, and recolours without touching content or type", () => {
-    const look = STARTING_LOOKS.find((l) => l.id === "carbon")!;
+    const look = STARTING_LOOKS.find((l) => l.id === "ink")!;
     expect(palettesFor(look).every((p) => p.tone === "dark")).toBe(true);
     const page = applyStartingLook(newPage("barber"), look);
     const next = applyPalette(page, look, PALETTES[1]);

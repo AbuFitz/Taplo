@@ -71,7 +71,9 @@ export function paletteColours(p: Palette): Colours {
 export function lookBackground(look: StartingLook, p?: Palette): Background {
   const m = look.colourway.moving;
   if (!m) return { kind: "solid", color: p?.base ?? (look.colourway.colors.background as string) };
-  if (!p || m.kind !== "shader") return structuredClone(m);
+  if (!p) return structuredClone(m);
+  if (m.kind === "gradient") return { ...m, from: p.base, to: p.glow[0] ?? p.base };
+  if (m.kind !== "shader") return structuredClone(m);
   return { ...m, colors: m.colors.map((_, i) => p.glow[i] ?? p.base) as string[], base: p.base };
 }
 
