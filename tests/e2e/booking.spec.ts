@@ -102,7 +102,23 @@ test.describe("customer booking journey", () => {
 
   test("a booked time disappears from the choices for the next customer", async ({ page }) => {
     await open(page)
-    await reach(page, "review")
+    // With a named person (not "anyone"), booking one time removes that time for them. Slots are read before booking, so the check does not depend on the time of day.
+    const pickPerson = async () => {
+      await page.getByRole("button", { name: /Book your chair/ }).first().click()
+      await expect(flow(page)).toBeVisible()
+      await flow(page).getByTestId("bk-service").first().click()
+      await flow(page).getByRole("button", { name: /Reece/ }).click()
+      await expect(flow(page).getByTestId("bk-slots")).toBeVisible()
+    }
+    await pickPerson()
+    const before = await flow(page).getByTestId("bk-slot").allTextContents()
+    expect(before.length).toBeGreaterThan(1)
+    const booked = before[1]
+    await flow(page).getByTestId("bk-slot").nth(1).click()
+    await flow(page).getByRole("button", { name: /Book this time/ }).click()
+    await flow(page).getByRole("textbox", { name: "Your name" }).fill("Sam Taylor")
+    await flow(page).getByRole("textbox", { name: "Email" }).fill("sam@example.com")
+    await flow(page).getByRole("button", { name: "Review" }).click()
     await flow(page).getByRole("button", { name: "Confirm booking" }).click()
     await expect(flow(page).getByTestId("bk-done")).toBeVisible()
     // Done is deliberately inert for a moment so a double tap on Confirm cannot dismiss the confirmation.
@@ -110,11 +126,10 @@ test.describe("customer booking journey", () => {
       await flow(page).getByRole("button", { name: "Done" }).click({ timeout: 1000 })
       await expect(flow(page)).toBeHidden({ timeout: 6000 })
     }).toPass({ timeout: 20000 })
-    await page.getByRole("button", { name: /Book your chair/ }).first().click()
-    await flow(page).getByTestId("bk-service").first().click()
-    await flow(page).getByRole("button", { name: /Anyone available/ }).click()
+    await pickPerson()
     const times = await flow(page).getByTestId("bk-slot").allTextContents()
-    expect(times.length).toBeGreaterThan(3)
+    expect(times.length).toBeGreaterThan(0)
+    expect(times).not.toContain(booked)
   })
 
   test("Escape closes the journey and focus returns to the button that opened it", async ({ page }) => {

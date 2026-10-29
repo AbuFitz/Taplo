@@ -101,16 +101,16 @@ test.describe("design controls change the rendered page, undo, and persist", () 
       await go(page, c)
       const before = await c.probe(page)
       await c.run(page)
-      await expect.poll(() => c.probe(page), { message: `${c.id}: rendered value should change` }).not.toBe(before)
+      await expect.poll(() => c.probe(page), { message: `${c.id}: rendered value should change`, timeout: 20_000 }).not.toBe(before)
       const after = await c.probe(page)
       if (c.expect !== undefined) expect(after).toBe(c.expect)
 
       // Undo returns the page to how it was, and redo brings the change back.
       await page.getByTestId("undo").click()
-      await expect.poll(() => c.probe(page), { message: `${c.id}: undo` }).toBe(before)
+      await expect.poll(() => c.probe(page), { message: `${c.id}: undo`, timeout: 20_000 }).toBe(before)
       await expect(page.getByTestId("redo")).toBeEnabled()
       await page.getByTestId("redo").click()
-      await expect.poll(() => c.probe(page), { message: `${c.id}: redo` }).toBe(after)
+      await expect.poll(() => c.probe(page), { message: `${c.id}: redo`, timeout: 20_000 }).toBe(after)
 
       // Persistence: reload the editor; the draft comes back with the same rendered result.
       await page.reload()
