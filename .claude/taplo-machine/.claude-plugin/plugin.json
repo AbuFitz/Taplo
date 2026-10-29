@@ -1,0 +1,8 @@
+{
+  "name": "taplo-machine",
+  "version": "1.0.0",
+  "description": "A Taplo-specific design and engineering workflow with scoped agents, pinned craft references, source-bound browser evidence and review gates.",
+  "author": {"name": "Abukar Sharif"},
+  "license": "MIT",
+  "keywords": ["taplo", "design", "ux", "visual-review", "playwright"]
+}

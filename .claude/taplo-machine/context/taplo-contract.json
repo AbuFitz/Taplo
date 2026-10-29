@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "seed_status": "reconciled-2026-10-29-with-repository-and-latest-owner-messages",
+  "product": {
+    "name": "Taplo",
+    "job": "Give a business a professional public presence with services, contact, bookings, products, reviews and sharing, managed through Taplo Studio.",
+    "audiences": [
+      "business owners creating and managing a page",
+      "customers finding, evaluating and contacting a business"
+    ],
+    "surfaces": [
+      "marketing",
+      "public-page",
+      "onboarding",
+      "studio",
+      "inspiration",
+      "shared-engine"
+    ]
+  },
+  "authority": {
+    "order": [
+      "latest explicit owner instruction",
+      "current owner-approved brief",
+      "verified repository behaviour and product data",
+      "this seeded contract",
+      "reference products and skill defaults"
+    ],
+    "rule": "Resolve a conflict explicitly; a competitor pattern cannot silently reverse an owner decision. Read current files rather than trusting historical excerpts.",
+    "current_request": "Construct the Claude Code tools, agents and operating machine. Do not build or redesign the Taplo application during machine setup."
+  },
+  "decisions": [
+    {
+      "id": "account-last",
+      "status": "locked",
+      "rule": "Account creation comes at the end of guided onboarding; existing authenticated users skip duplicate signup."
+    },
+    {
+      "id": "mobile-shell",
+      "status": "locked",
+      "rule": "Preserve the live page preview behind the movable mobile sheet. Provide accessible full-preview and return controls; adapt to keyboard and small heights without hiding inputs."
+    },
+    {
+      "id": "appearance-choice",
+      "status": "locked",
+      "rule": "Preserve useful Looks/Colours controls and agreed titles including Choose a look. Improve clarity without deleting choice or silently merging distinct state."
+    },
+    {
+      "id": "renderer",
+      "status": "locked",
+      "rule": "Use the actual shared renderer and draft state in onboarding, Studio and customer output. No convincing fake preview that cannot be produced by the engine."
+    },
+    {
+      "id": "optional-content",
+      "status": "locked",
+      "rule": "First business content, logo and cover are optional. No-image pages must look intentionally complete through type, colour and composition."
+    },
+    {
+      "id": "categories",
+      "status": "locked",
+      "rule": "Categories suggest relevant content and functions; they do not restrict taste, layouts or design access."
+    },
+    {
+      "id": "preserve-data",
+      "status": "locked",
+      "rule": "Changing a design preserves business data, assets, deliberate colour choices and explicit user overrides. Offer reset/undo rather than silent replacement."
+    },
+    {
+      "id": "legacy",
+      "status": "locked",
+      "rule": "Existing saved customer designs remain compatible and visually stable by default; changes are opt-in where required."
+    },
+    {
+      "id": "draft",
+      "status": "locked",
+      "rule": "Completion saves an unpublished draft. Publication is a distinct explicit action. Never claim a save, account or publication before the relevant operation succeeds."
+    },
+    {
+      "id": "fonts",
+      "status": "locked-for-existing-design-work",
+      "rule": "Preserve current approved fonts unless the current task explicitly authorises typography replacement. Inspect actual font files/configuration rather than inventing font names."
+    },
+    {
+      "id": "examples",
+      "status": "locked",
+      "rule": "Examples are realistic, replaceable and labelled; sample reviews, availability and services never become unverified business facts."
+    },
+    {
+      "id": "recommendation",
+      "status": "locked",
+      "rule": "Recommend a coherent starting design; manual selection remains stable. Asset changes update a recommendation without silently replacing the chosen design."
+    },
+    {
+      "id": "motion",
+      "status": "locked",
+      "rule": "Initial recommendation is still. Animated treatments require deliberate choice, a good still fallback and reduced-motion support. Do not restore rejected decorative onboarding animation."
+    },
+    {
+      "id": "plans",
+      "status": "proposal-not-commercial-truth",
+      "rule": "Free/Core/Pro/Business and \u00a39.99/\u00a319.99/\u00a339.99 were discussed proposals, not approved entitlement or billing truth. Inspect current authoritative data. Include Free; plan preference is not a paid subscription."
+    },
+    {
+      "id": "publication",
+      "status": "locked",
+      "rule": "Do not merge or publicly deploy Taplo changes without explicit owner approval. Local/reviewable work proceeds within the authorised task."
+    }
+  ],
+  "scope_history": {
+    "colour_follow_up": "The approved colour/background follow-up preserved fonts, widget structures, illustrations, arrangements and agreed copy. It did not authorise a widget redesign.",
+    "classification": "For each new task declare refinement, redesign or tooling-only. Apply narrow historical restrictions to their original scope; the latest explicit owner instruction may authorise a broader task. Preserve legacy records regardless.",
+    "approved_colour_directions": [
+      "Carbon / white",
+      "Cobalt / ice",
+      "Black / ember",
+      "Plum / pearl",
+      "Blue / violet",
+      "Silver / ink",
+      "White / electric blue",
+      "Rose / warm white"
+    ],
+    "colour_reference": "Resolve and read the current approved colourway reference from the repository or supplied files before implementing exact values; this seed is not that reference."
+  },
+  "taste": {
+    "interface": "Confident, restrained monochrome Taplo chrome, precise typography and spacing; business pages may have their own coordinated colour and identity.",
+    "bar": "Convincing, useful and distinctive rendered screens, compared on matched content and viewports with specific current references. Apple, Booksy and Linktree are ambitions/research inputs, not a certification or permission to copy.",
+    "reject": [
+      "generic cards covering every surface",
+      "illustrations or glows used to conceal weak hierarchy",
+      "tiny unreadable theme thumbnails",
+      "gratuitous phone mockups inside an existing live preview",
+      "unearned drifting objects and zooming",
+      "invented research, adoption or conversion claims",
+      "large skill collections treated as proof of capability"
+    ]
+  },
+  "commercial_truth": "Do not invent plan entitlements, reviews, customer counts, business opening hours, integration availability or live auth/billing behaviour.",
+  "repository_paths": {
+    "renderer": "src/features/page/renderer",
+    "draft_state": "src/features/demo/store.ts",
+    "onboarding": "src/features/demo/Onboarding.tsx",
+    "studio": "src/features/demo/dashboard/Studio.tsx",
+    "preview": "src/features/preview/PagePreview.tsx",
+    "gallery": "src/features/inspiration/DesignGallery.tsx",
+    "marketing": "src/features/marketing",
+    "colourways": "src/features/page/themes/colourways.ts",
+    "starting_looks": "src/features/page/themes/starting-looks.ts",
+    "plans": "src/features/subscriptions/plans.ts",
+    "product_decisions": "docs/product-decisions.md",
+    "design_spec": "docs/design-spec.md",
+    "earlier_team_contract": "docs/team/contract.md",
+    "sample_photography": "public/photography/credits.json",
+    "e2e": "tests/e2e",
+    "approved_colourway_reference": "uploaded file c0610833-taplo-approved-colourway-reference.html (not in repository; read it before implementing exact values)"
+  },
+  "reconciliation": {
+    "required": true,
+    "note": "Discover actual paths and sources during doctor/setup. Do not overwrite newer owner decisions with this seed."
+  },
+  "reconciliation_log": [
+    {
+      "date": "2026-10-29",
+      "note": "Locked decisions unchanged. account-last, mobile shell, Looks/Colours, shared renderer, optional content, fonts and legacy designs preserved."
+    },
+    {
+      "date": "2026-10-29",
+      "note": "Plans and prices (Free 0, Core 9.99, Pro 19.99, Business 39.99 GBP) are in docs/product-decisions.md but the owner treats them as provisional; do not present them as verified commercial data."
+    },
+    {
+      "date": "2026-10-29",
+      "note": "Six generated no-people sample photographs exist under public/photography/generated with provenance in credits.json. Figma AI commercial terms are unconfirmed. No generated human portraits."
+    },
+    {
+      "date": "2026-10-29",
+      "note": "Impeccable was installed and then deactivated here so only this workflow directs design; its text references are vendored in the machine. Earlier role files were archived to docs/team/legacy-agents."
+    },
+    {
+      "date": "2026-10-29",
+      "note": "Uncommitted-to-review application work exists: a Studio home rebuild (commit 46ae988, unreviewed, unbuilt in the default server) and Lottie scenes. They are not approved designs."
+    },
+    {
+      "date": "2026-10-29",
+      "note": "Latest owner message: tooling setup only. No application screens are built or changed as part of it."
+    }
+  ]
+}

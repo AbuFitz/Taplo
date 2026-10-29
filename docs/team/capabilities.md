@@ -18,3 +18,24 @@
 | Impeccable detector (live URL) | `impeccable detect http://localhost:3100` | Fails: Chrome refuses to run as root without `--no-sandbox` | Playwright `--no-sandbox` captures plus manual review |
 | Real devices | Not available | Not available | Browser emulation only, labelled as such |
 | Embedded phone preview as mobile test | Not a viewport test | Treated as a design surface only | 390px real viewport captures |
+
+## Taplo Machine install (2026-10-29, tooling only)
+Installed project-local from the supplied package: 7 agents, 4 commands (`/taplo-doctor`, `/taplo-build`, `/taplo-review`, `/taplo-status`), 2 inert-unless-a-run-is-active hooks (settings merged, nothing else changed), pinned reference files, contract at `.claude/taplo-machine/context/taplo-contract.json` (reconciled).
+
+| Check | Result |
+| --- | --- |
+| `validate_package.py` | passed: 7 agents, 4 skills, 27 pinned files, no errors |
+| Package unit tests | 42 passed |
+| `node --check capture.mjs` | ok |
+| Hook with no active run | returns `{}` for Stop and PreToolUse (inert) |
+| Package agents loadable | Not in the session where they were installed. After the worker restart, `taplo-researcher` spawned, ran separately and read a repo file |
+| `/taplo-doctor` | Marked `disable-model-invocation`: only the owner can run it. Not run by Claude; equivalent probes below were run directly |
+| Local browser, viewport, screenshots | Playwright on :3200 at 390 and 1440: status 200, `innerWidth` matched |
+| Reviewer reading screenshots | A separate agent read both PNGs and returned the exact headline, tab names and sizes |
+| TinyFish | search and fetch worked earlier this session; deferred in subagents until ToolSearch |
+| Figma | `whoami` worked (starter plan); six images generated earlier; MCP dropped once on a worker restart and reconnected |
+| Framer | `list_workspaces` worked (free plan); no project operation tested |
+| LottieFiles | `searchPublicAnimations` worked |
+| Image generation | Figma `generate_image` works, paid credits |
+| Impeccable live-URL detector | Fails as root without `--no-sandbox`; deactivated by design |
+| Not verified | Native hook firing on a real Write/Edit under an active run; `claude plugin validate` (not run, project mode used); real devices; virtual keyboard |
