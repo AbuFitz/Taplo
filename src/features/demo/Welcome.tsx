@@ -74,7 +74,7 @@ export function Welcome() {
           plan: s.plan,
           onboarded: true,
           slugEdited: true,
-          step: "publish",
+          step: "finish",
           content: structuredClone(toContent(cfg)),
           page: structuredClone(toPage(cfg)),
         };

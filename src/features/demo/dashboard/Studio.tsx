@@ -144,7 +144,7 @@ export function Studio() {
             {copy === "failed" ? <p className="studio-note" role="alert">Could not copy. Select the address and copy it.</p> : null}
           </div>
         ) : null}
-        {url ? <SharePanel open={shareOpen} onOpenChange={closeShare} data={{ name: s.content.identity.name, slug: liveSlug!, url: url! }} /> : null}
+        {url ? <SharePanel tone="admin" open={shareOpen} onOpenChange={closeShare} data={{ name: s.content.identity.name, slug: liveSlug!, url: url! }} /> : null}
 
         {tip ? <p className="studio-tip" data-testid="studio-tip">{tip.text} <Link href={tip.href}>{tip.cta}</Link></p> : null}
 
@@ -170,8 +170,8 @@ export function Studio() {
       </aside>
 
       <section className="studio-stage" id="studio-preview" aria-label="Your page">
-        <div className="studio-phone"><PagePreview src="/demo/preview" title="Your page" mode="device" chrome url={businessAddress(s.content.identity.slug)} skipTab retryAfterMs={15000} /></div>
         <Button asChild size="lg" variant="outline" className="studio-edit"><Link href="/dashboard/page"><Pencil aria-hidden="true" />Edit my page</Link></Button>
+        <div className="studio-phone"><PagePreview src="/demo/preview" title="Your page" mode="device" chrome url={businessAddress(s.content.identity.slug)} retryAfterMs={15000} /></div>
       </section>
 
     </div>
@@ -185,6 +185,7 @@ export function StudioSkeleton() {
       <div className="studio-dock" aria-hidden="true" />
       <aside className="studio-rail">
         <div className="studio-status"><span className="studio-skel" style={{ width: "14rem", height: "2rem" }} /></div>
+        <span className="studio-skel" style={{ width: "10rem", height: "2rem", marginTop: "-6px" }} />
         <div className="studio-next"><span className="studio-skel" style={{ width: "80%", height: "4.5rem" }} /><span className="studio-skel" style={{ width: "100%", height: "3.5rem" }} /></div>
       </aside>
       <section className="studio-stage"><div className="studio-phone" /></section>

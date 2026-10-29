@@ -20,9 +20,19 @@ import { PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
 const KEY = "taplo.demo.v2";
 const LEGACY_KEY = "taplo.demo.v1";
 
-// Name first, then the look (so the business is seen coming to life), then what it does, what customers should do, first content, plan, review.
-export const ONBOARDING_STEPS = ["business", "widgets", "industry", "goal", "reach", "contacts", "plan", "publish"] as const;
+// What you do first (it fills the page with believable sample content), then the name, the look, the one thing customers do first, the services, the plan, and the finish.
+export const ONBOARDING_STEPS = ["type", "name", "look", "action", "services", "plan", "finish"] as const;
 export type OnboardingStep = (typeof ONBOARDING_STEPS)[number];
+
+/** Saved drafts from the earlier eight-step form keep their place: each old step maps to the closest new one. */
+const LEGACY_STEPS: Record<string, OnboardingStep> = { business: "name", widgets: "look", industry: "type", goal: "action", reach: "action", contacts: "services", publish: "finish" };
+export function migrateStep<T>(raw: T): T {
+  if (raw && typeof raw === "object" && "step" in raw) {
+    const step = (raw as { step?: unknown }).step;
+    if (typeof step === "string" && step in LEGACY_STEPS) return { ...raw, step: LEGACY_STEPS[step] };
+  }
+  return raw;
+}
 
 export interface DemoState {
   v: 2;
@@ -83,7 +93,7 @@ export function blankContent(): BusinessContentInput {
 export function initialState(): DemoState {
   return {
     v: 2,
-    step: "business",
+    step: "type",
     onboarded: false,
     plan: "business", // the review default shows every capability; switch in Settings to see gating
     content: blankContent(),
@@ -134,7 +144,7 @@ function migrateLegacy(): DemoState | null {
     const industry = old.content.identity?.industryKey ?? "other";
     const state: DemoState = {
       v: 2,
-      step: "publish",
+      step: "finish",
       onboarded: Boolean(old.onboarded),
       plan: old.plan ?? "business",
       content: old.content,
@@ -169,7 +179,7 @@ function read(): DemoState | null {
   cachedRaw = raw;
   if (!raw) return (cachedState = null);
   try {
-    cachedState = hydrate(stateSchema.parse(JSON.parse(raw)));
+    cachedState = hydrate(stateSchema.parse(migrateStep(JSON.parse(raw))));
   } catch {
     cachedState = null; // corrupted or unknown shape: start fresh rather than crash
   }
@@ -195,7 +205,7 @@ function bus() {
     channel?.addEventListener("message", (e: MessageEvent) => {
       if (!storageFailed && !e.data?.failed) return; // healthy storage: the storage event already covers this
       try {
-        const next = e.data?.state ? hydrate(stateSchema.parse(e.data.state)) : null;
+        const next = e.data?.state ? hydrate(stateSchema.parse(migrateStep(e.data.state))) : null;
         cachedRaw = undefined;
         cachedState = next;
         storageFailed = true;

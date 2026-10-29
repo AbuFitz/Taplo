@@ -131,7 +131,7 @@ export function loadSample(s: DemoState, key: string): DemoState {
   return {
     ...initialState(),
     plan: s.plan,
-    step: "publish",
+    step: "finish",
     onboarded: true,
     slugEdited: true,
     content: structuredClone(f.content) as BusinessContentInput,

@@ -1,530 +1,239 @@
 "use client"
 
-import { TAPLO_DOMAINS } from "@/lib/domains"
-
-import { Overlay } from "@/components/taplo/overlay"
-import "./onboarding-mobile.css"
-import { BusinessIcon } from "./BusinessIcon"
-import { accountsConfigured, connect, session } from "./account"
-import { SetupLook } from "./SetupLook"
-import { TaploLogo } from "@/components/taplo/brand"
-import { SetupDetails } from "./SetupDetails"
-import { setupJourney } from "./setup-journey"
-import { SetupPlans } from "./SetupPlans"
-import { SetupBackdrop } from "./SetupBackdrop"
-import { motion } from "motion/react"
-import { useReducedMotion } from "@/lib/use-reduced-motion"
-import { SetupCanvas } from "./SetupCanvas"
-import { SetupPanel, type SetupSheetSize } from "./SetupPanel"
-import { SetupLoading } from "./SetupLoading"
+import "./setup-form.css"
 import * as React from "react"
-import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Check, Info, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { TaploInput } from "@/components/taplo/taplo-input"
-import { SLUG_PROBLEM_MESSAGE } from "@/features/businesses/slug"
 import { newWidget } from "@/features/page/starter"
-import { ImageField } from "@/features/page/editor/controls"
-import { getWidget } from "@/features/page/widgets/registry"
-import { buildPageViewModel } from "@/features/page/renderer"
-import { applyDesign, getDesign, withArrangement } from "@/features/page/themes/designs"
+import { getDesign, applyDesign, withArrangement } from "@/features/page/themes/designs"
 import { applyStartingLook, getStartingLook } from "@/features/page/themes/starting-looks"
-import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures"
-import { OTHER_INDUSTRY_ID, getIndustryPreset, searchIndustries } from "@/features/themes/presets/industries"
-import { cn } from "@/lib/utils"
 import { exampleStart } from "@/features/inspiration/suggest"
-import { applyIndustry, blankService, canPublish, hasContactChannel, loadSample, newId, normService, publish, readiness, setName, setSlug, slugProblems } from "./actions"
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans"
-import { ONBOARDING_STEPS, initialState, parseContent, useDemo, type OnboardingStep } from "./store"
-import { RecordForm, blankFor, commitRecord, validate } from "@/features/page/editor/RecordForms"
-import { WHEN_UNAVAILABLE, capabilities } from "@/lib/capabilities"
-import { SetupConnections } from "./SetupConnections"
 import type { WidgetType } from "@/features/page/contracts/widgets"
+import { applyIndustry, slugProblems } from "./actions"
+import { ONBOARDING_STEPS, initialState, useDemo, type OnboardingStep } from "./store"
+import { SetupLook } from "./SetupLook"
+import { SetupPlans } from "./SetupPlans"
+import { SetupCanvas } from "./SetupCanvas"
+import { SetupLoading } from "./SetupLoading"
+import { SetupShell, type SheetSnap } from "./SetupShell"
+import { ActionStep, FinishStep, NameStep, ServicesStep, TypeStep } from "./SetupSteps"
 
 const STEP_LABEL: Record<OnboardingStep, string> = {
-  business: "Your name",
-  widgets: "Your look",
-  industry: "What you do",
-  goal: "What customers do",
-  reach: "Contact",
-  contacts: "First content",
+  type: "What you do",
+  name: "Name",
+  look: "Look",
+  action: "First action",
+  services: "Services",
   plan: "Plan",
-  publish: "Review",
+  finish: "Finish",
 }
-const PART_TITLE = { business: "Tell people what you do.", reach: "Add your details." } as const
 const STEP_TITLE: Record<OnboardingStep, string> = {
-  business: "Make it yours.",
-  industry: "What do you do?",
-  goal: "What would you like customers to do?",
-  reach: "How can customers reach you?",
-  widgets: "Choose a look.",
-  plan: "Room to grow.",
-  contacts: "Add your first content",
-  publish: "Review your page",
+  type: "What do you do?",
+  name: "What’s it called?",
+  look: "Choose a look.",
+  action: "What should customers do first?",
+  services: "Add your services",
+  plan: "Pick a plan.",
+  finish: "Your page is ready.",
 }
+/** Where the live page scrolls to while each step is being filled in. */
+const FOCUS: Partial<Record<OnboardingStep, string>> = { name: "header", action: "actions", services: "offer" }
+const SKIPPABLE: OnboardingStep[] = ["look", "action", "services"]
+const STAGE = "#f4f4f2"
 
-const SETUP_STEPS = ONBOARDING_STEPS
-
-const subscribeMobileSetup = (callback: () => void) => { const query = window.matchMedia("(max-width:1023px)"); query.addEventListener("change", callback); return () => query.removeEventListener("change", callback) }
-const mobileSetupSnapshot = () => window.matchMedia("(max-width:1023px)").matches
-const serverMobileSetupSnapshot = () => false
-
-const POPULAR = ["barber", "detailer", "car-dealer", "hospitality", "tutor", "plumber", "personal-trainer", "photographer", "other"]
-
-type Goal = "book" | "enquire" | "call" | "message"
-function goalOf(s: { content: { booking?: { mode: string } }; page: { meta: { primaryAction: string } } }): Goal {
-  const a = s.page.meta.primaryAction
-  if (a === "call") return "call"
-  if (a === "whatsapp" || a === "email") return "message"
-  const m = s.content.booking?.mode
-  return m === "instant" || m === "request" ? "book" : "enquire"
-}
-// Whether a booking is confirmed straight away or accepted by hand is a setting for when services and hours exist (Bookings), not a question for the first minute.
-function applyGoal<T extends ReturnType<typeof initialState>>(s: T, g: Goal): T {
-  const mode = g === "book" ? "request" : "contact"
-  const primaryAction = g === "book" ? "book" : g === "call" ? "call" : g === "message" ? (s.content.contacts.whatsapp ? "whatsapp" : "email") : "auto"
-  // Calling or messaging should not leave a second booking action on the page.
-  // Keep the widget so changing back restores its place and appearance.
-  const widgets = s.page.widgets.map(w => w.type === "booking" ? { ...w, hidden: g === "call" || g === "message" } : w)
-  return { ...s, content: { ...s.content, booking: { ...s.content.booking, mode } }, page: { ...s.page, widgets, meta: { ...s.page.meta, primaryAction } } }
-}
-
-/** What the first thing to add is, by kind of business. Nothing is added for them. */
-
-
+const subscribeMobile = (cb: () => void) => { const q = window.matchMedia("(max-width:1023px)"); q.addEventListener("change", cb); return () => q.removeEventListener("change", cb) }
+const mobileSnapshot = () => window.matchMedia("(max-width:1023px)").matches
 
 export function Onboarding() {
   const shell = React.useRef<HTMLElement>(null)
-  const reducedMotion = useReducedMotion()
-  const [direction, setDirection] = React.useState(1)
-  const [sheetSize, setSheetSize] = React.useState<SetupSheetSize>("edit")
-  const mobileSetup = React.useSyncExternalStore(subscribeMobileSetup, mobileSetupSnapshot, serverMobileSetupSnapshot)
-  const revealCustomerDialog = React.useCallback(() => { if (mobileSetup) setSheetSize("preview") }, [mobileSetup])
-  const navigated = React.useRef(false)
-  React.useEffect(() => {
-    const viewport = window.visualViewport
-    let initialHeight = window.innerHeight
-    let initialWidth = window.innerWidth
-    const sync = () => {
-      if (!shell.current) return
-      if(Math.abs(window.innerWidth-initialWidth)>80){initialHeight=window.innerHeight;initialWidth=window.innerWidth}
-      const height = viewport?.height ?? window.innerHeight
-      shell.current.style.setProperty("--setup-height", `${height}px`)
-      shell.current.style.setProperty("--setup-top", `${viewport?.offsetTop ?? 0}px`)
-      shell.current.dataset.keyboard = String(Math.max(window.innerHeight, initialHeight) - height > 180 && Boolean(document.activeElement?.matches("input,textarea")))
-    }
-    const focusSync = () => requestAnimationFrame(sync)
-    window.scrollTo(0,0); sync(); document.addEventListener("focusin",focusSync);document.addEventListener("focusout",focusSync); viewport?.addEventListener("resize", sync); viewport?.addEventListener("scroll", sync); window.addEventListener("resize", sync)
-    return () => { document.removeEventListener("focusin",focusSync);document.removeEventListener("focusout",focusSync);viewport?.removeEventListener("resize", sync); viewport?.removeEventListener("scroll", sync); window.removeEventListener("resize", sync) }
-  }, [])
   const router = useRouter()
+  const params = useSearchParams()
+  const mobile = React.useSyncExternalStore(subscribeMobile, mobileSnapshot, () => false)
   const { ready, state, update, storageFailed } = useDemo()
+  const [snap, setSnap] = React.useState<SheetSnap>("default")
+  const [keyboard, setKeyboard] = React.useState(false)
   const [showErrors, setShowErrors] = React.useState(false)
-  const [contentValid,setContentValid]=React.useState(true)
-  const [query, setQuery] = React.useState("")
-  const [profileOpen, setProfileOpen] = React.useState(false)
-  const [editSlug, setEditSlug] = React.useState(false)
-  const [otherOpen, setOtherOpen] = React.useState(false)
-  const [connectionsValid,setConnectionsValid]=React.useState(true)
-  const s = state ?? initialState()
-  const step: OnboardingStep = (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "widgets"
-  const stepIndex = SETUP_STEPS.indexOf(step as OnboardingStep)
+  const [actionValid, setActionValid] = React.useState(true)
+  const [servicesValid, setServicesValid] = React.useState(true)
+  const navigated = React.useRef(false)
 
-  const [part, setPart] = React.useState(0)
-  // On a phone, a long step is spread over two screens so each one asks for one kind of thing.
-  const parts = mobileSetup ? ({ reach: 2 } as Partial<Record<OnboardingStep, number>>)[step] ?? 1 : 1
-  const lastPart = part >= parts - 1
-  // The phone preview stays in view while the main button is chosen, so the choice is seen on the page at once.
-  // On a computer the handset zooms out to show the whole page, but only once a category has been chosen (never before), and it stays out.
-  const categoryChosen = state !== null && Boolean(s.content.identity.industryLabel.trim())
-  const revealed = !mobileSetup && (stepIndex > SETUP_STEPS.indexOf("industry") || (step === "industry" && categoryChosen))
-  const previewStep = ["business", "industry", "goal", "reach", "contacts", "widgets", "publish"].includes(step)
-  // The phone's own chrome (status bar, address bar, overscroll) must read as part of the screen behind it, never a white strip.
+  const s = state ?? initialState()
+  const step: OnboardingStep = (ONBOARDING_STEPS as readonly string[]).includes(s.step) ? s.step : "type"
+  const index = ONBOARDING_STEPS.indexOf(step)
+
+  // The visible screen is what the sheet is sized from: the visual viewport, so an open keyboard never hides the footer.
   React.useEffect(() => {
-    const color = mobileSetup && previewStep ? "#0b0b0c" : "#ffffff"
+    const vv = window.visualViewport
+    const sync = () => {
+      const el = shell.current
+      if (!el) return
+      const height = vv?.height ?? window.innerHeight
+      el.style.setProperty("--sf-vh", `${height}px`)
+      el.style.setProperty("--sf-top", `${vv?.offsetTop ?? 0}px`)
+      const open = window.innerHeight - height > 180 && Boolean(document.activeElement?.matches("input,textarea,select"))
+      setKeyboard(open)
+    }
+    const later = () => requestAnimationFrame(sync)
+    window.scrollTo(0, 0)
+    sync()
+    vv?.addEventListener("resize", sync); vv?.addEventListener("scroll", sync)
+    document.addEventListener("focusin", later); document.addEventListener("focusout", later)
+    window.addEventListener("resize", sync)
+    return () => { vv?.removeEventListener("resize", sync); vv?.removeEventListener("scroll", sync); document.removeEventListener("focusin", later); document.removeEventListener("focusout", later); window.removeEventListener("resize", sync) }
+  }, [])
+
+  // The browser chrome around the screen reads as part of the stage, never a white strip.
+  React.useEffect(() => {
     const html = document.documentElement
     const before = { bg: html.style.backgroundColor, body: document.body.style.backgroundColor }
     let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')
     const created = !meta
     if (!meta) { meta = document.createElement("meta"); meta.name = "theme-color"; document.head.append(meta) }
     const content = meta.content
-    meta.setAttribute("content", color); html.style.backgroundColor = color; document.body.style.backgroundColor = color
+    meta.setAttribute("content", STAGE); html.style.backgroundColor = STAGE; document.body.style.backgroundColor = STAGE
     return () => { html.style.backgroundColor = before.bg; document.body.style.backgroundColor = before.body; if (created) meta.remove(); else meta.setAttribute("content", content) }
-  }, [mobileSetup, previewStep])
-  const go = (to: OnboardingStep) => {
-    setPart(0)
-    setSheetSize("edit")
-    setShowErrors(false)
-    setDirection(SETUP_STEPS.indexOf(to as OnboardingStep) >= stepIndex ? 1 : -1)
-    navigated.current = true
+  }, [])
+
+  const go = React.useCallback((to: OnboardingStep, opts: { push?: boolean } = {}) => {
+    setSnap("default"); setShowErrors(false); navigated.current = true
     if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
+    if (opts.push !== false) window.history.pushState({ step: to }, "", `${window.location.pathname}?step=${to}`)
     update((x) => ({ ...x, step: to }))
-  }
+  }, [update])
+
+  // Each step is a history entry: the browser's Back goes to the step before, with everything entered still there.
+  React.useEffect(() => {
+    const onPop = () => {
+      const to = new URLSearchParams(window.location.search).get("step")
+      if (to && (ONBOARDING_STEPS as readonly string[]).includes(to)) go(to as OnboardingStep, { push: false })
+    }
+    window.addEventListener("popstate", onPop)
+    return () => window.removeEventListener("popstate", onPop)
+  }, [go])
+
   React.useEffect(() => {
     if (!navigated.current) return
     shell.current?.querySelector<HTMLElement>("#step-title")?.focus({ preventScroll: true })
   }, [step])
-  const next = () => {if(step === "reach")update(x=>({...x,setupDrafts:{...x.setupDrafts,connections:undefined}}));if(step === "plan" && !s.setupDrafts?.planIntent)update(x=>({...x,setupDrafts:{...x.setupDrafts,planIntent:"free"}}));if(s.setupDrafts?.reviewEdit){go("publish");update(x=>({...x,setupDrafts:{...x.setupDrafts,reviewEdit:false}}))}else go(SETUP_STEPS[Math.min(stepIndex + 1, SETUP_STEPS.length - 1)]!)}
-  const back = () => {if(part>0){setPart(part-1);return}if(s.setupDrafts?.reviewEdit){go("publish");update(x=>({...x,setupDrafts:{...x.setupDrafts,reviewEdit:false}}))}else go(SETUP_STEPS[Math.max(stepIndex - 1, 0)]!)}
 
-  // A plan chosen on the pricing page carries into setup (and stays through every step) without taking payment.
-  // Read from the router, not window.location: on a client-side navigation (pricing → setup) the address has not changed yet when this first renders.
-  const params = useSearchParams()
-  const [intent] = React.useState<PlanId | null>(() => {
-    const p = params.get("plan")
-    return p && (PLAN_IDS as readonly string[]).includes(p) ? (p as PlanId) : null
-  })
+  // A plan chosen on the pricing page carries through setup without taking payment.
+  const [intent] = React.useState<PlanId | null>(() => { const p = params.get("plan"); return p && (PLAN_IDS as readonly string[]).includes(p) ? (p as PlanId) : null })
   React.useEffect(() => {
-    if (ready && intent) update((x) => (x.setupDrafts?.planIntent === intent ? x : { ...x, setupDrafts:{...x.setupDrafts,planIntent:intent} }))
+    if (ready && intent) update((x) => (x.setupDrafts?.planIntent === intent ? x : { ...x, setupDrafts: { ...x.setupDrafts, planIntent: intent } }))
   }, [ready, intent]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // "Start from this" on an inspiration page: take its kind of business, look and content types. Never its sample content.
-  const [from] = React.useState(() => {
-    const slug = params.get("from")
-    return slug ? exampleStart(slug) : null
-  })
-  const fromName = from?.name ?? null
+  // "Start from this" on an inspiration page: its kind of business, look and content types, never its sample content.
+  const [from] = React.useState(() => { const slug = params.get("from"); return slug ? exampleStart(slug) : null })
   React.useEffect(() => {
-    const ex = from
-    if (!ready || !ex) return
-    // Applied once: drop it from the address so a refresh never overwrites what the owner has done since.
+    if (!ready || !from) return
     window.history.replaceState(null, "", window.location.pathname)
     update((x) => {
-      const withIndustry = applyIndustry(x, ex.industryKey, ex.industryLabel)
+      const withIndustry = applyIndustry(x, from.industryKey, from.industryLabel)
       return {
         ...withIndustry,
-        content: { ...withIndustry.content, booking: { ...withIndustry.content.booking, mode: ex.bookingMode } },
-        page: { ...withIndustry.page, themeId: ex.lookId, appearance: structuredClone(ex.overrides), widgets: ex.widgets.map((w) => ({ ...newWidget(w.type as WidgetType, w.settings), appearance: structuredClone(w.appearance) })) },
+        content: { ...withIndustry.content, booking: { ...withIndustry.content.booking, mode: from.bookingMode } },
+        page: { ...withIndustry.page, themeId: from.lookId, appearance: structuredClone(from.overrides), widgets: from.widgets.map((w) => ({ ...newWidget(w.type as WidgetType, w.settings), appearance: structuredClone(w.appearance) })) },
       }
     })
   }, [ready, from]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // A design chosen in the gallery: setup begins with it on the page, and the preview shows it from the first step.
+  // A design chosen in the gallery: setup begins with it on the page.
   const [chosenDesign] = React.useState(() => { const id = params.get("design"); return id ? getDesign(id) ?? null : null })
   const [arr] = React.useState(() => params.get("arr") ?? undefined)
   const [chosenLook] = React.useState(() => getStartingLook(params.get("look") ?? undefined) ?? null)
   React.useEffect(() => {
-    const d = chosenDesign
-    if (!ready || !d) return
+    if (!ready || !chosenDesign) return
     window.history.replaceState(null, "", window.location.pathname)
-    update((x) => ({ ...x, page: withArrangement(chosenLook ? applyStartingLook(x.page, chosenLook, { reorder: true }) : applyDesign(x.page, d, { reorder: true }), arr), ...(chosenLook ? { setupDrafts: { ...x.setupDrafts, colourway: chosenLook.id } } : {}) }))
+    update((x) => ({ ...x, page: withArrangement(chosenLook ? applyStartingLook(x.page, chosenLook, { reorder: true }) : applyDesign(x.page, chosenDesign, { reorder: true }), arr), ...(chosenLook ? { setupDrafts: { ...x.setupDrafts, colourway: chosenLook.id } } : {}) }))
   }, [ready, chosenDesign]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // A first visit has no saved draft yet; start one so the live page shows a populated sample from the first moment.
+  React.useEffect(() => { if (ready && state === null) update((x) => x, { resetHistory: true }) }, [ready, state]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!ready) return <SetupLoading />
 
   const c = s.content
-  const slugErrs = slugProblems(c.identity.slug)
   const valid: Record<OnboardingStep, boolean> = {
-    industry: state !== null && Boolean(c.identity.industryLabel.trim()),
-    goal: true,
-    reach: connectionsValid,
+    type: Boolean(c.identity.industryLabel.trim()),
+    name: Boolean(c.identity.name.trim()) && slugProblems(c.identity.slug).length === 0,
+    look: true,
+    action: actionValid,
+    services: servicesValid,
     plan: true,
-    business: Boolean(c.identity.name.trim()) && slugErrs.length === 0,
-    contacts: contentValid,
-    widgets: true,
-    publish: canPublish(s),
+    finish: true,
   }
-  const partValid = lastPart ? valid[step] : step === "business" ? valid.business : true
   const why: Record<OnboardingStep, string> = {
-    industry: "Choose what you do.",
-    goal: "",
+    type: "Choose what you do.",
+    name: "Add your business name and a valid web address.",
+    look: "",
+    action: "Add the detail for the choice you made, or choose Get in touch.",
+    services: "Finish the service name and price, or choose quote or free pricing.",
     plan: "",
-    reach: goalOf(s) === "call" ? "Add the phone number people should call." : goalOf(s) === "message" ? "Add an email or WhatsApp number so people can message you." : "Add one way to reach you: a phone number, email or website.",
-    business: "Add a name and a valid web address.",
-    contacts: "Finish the service name and price, or choose quote/free pricing. Save any vehicle or photos you started.",
-    widgets: "",
-    publish: "Complete the earlier steps to publish.",
+    finish: "",
   }
-
-  return (
-    <div className="setup-scene"><SetupBackdrop phase={stepIndex} /><main ref={shell} data-preview-expanded="false" data-step={step} data-mobile-layout={previewStep ? "preview" : "focus"} className="setup-flow mx-auto w-full max-w-[90rem] px-5 py-6 sm:px-8 lg:py-8">
-      <nav aria-label="Progress" className="setup-progress mb-4">
-        <div className="flex min-h-9 items-center gap-3">
-          <span className="setup-home" data-testid="setup-logo"><TaploLogo className="h-9" /></span><div role="progressbar" aria-label="Setup progress" aria-valuemin={0} aria-valuemax={SETUP_STEPS.length} aria-valuenow={stepIndex+1} aria-valuetext={STEP_LABEL[step]} className="h-1 flex-1 overflow-hidden rounded-full bg-black/10"><motion.span className="block h-full rounded-full bg-black" initial={false} animate={{width:`${((stepIndex+1)/SETUP_STEPS.length)*100}%`}} transition={reducedMotion ? {duration:0} : {type:"spring", stiffness:300, damping:36}} /></div><Link href="/" className="setup-exit" data-testid="setup-exit" title="Your progress is saved on this device">Save and exit</Link>
-        </div>
-      </nav>
-      {storageFailed ? <p role="alert" className="mb-4 rounded-md border border-amber-400 bg-amber-100 px-3 py-2 text-sm text-amber-950" data-testid="storage-failed">Your browser couldn’t save your latest changes (storage is full or blocked). They are showing here, but may be lost if you reload. Remove a large picture to continue safely.</p> : null}
-
-      <div className="setup-workspace grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
-        <SetupPanel preview={previewStep} size={sheetSize} onSizeChange={setSheetSize} compact={step === "widgets"}>
-          <div className="setup-question-heading">{fromName || intent || chosenDesign ? <p className="setup-origin">{chosenDesign ? <span data-testid="from-design">Starting with {chosenDesign.name}{intent ? " · " : ""}</span> : null}{fromName ? <span data-testid="from-example">Starting from {fromName}</span> : null}{fromName && intent ? " · " : ""}{intent ? <span data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}</p> : null}
-          <motion.h1 key={step} initial={reducedMotion ? false : { opacity:0, x:direction*10 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34 }} tabIndex={-1} id="step-title" className="font-display mb-8 max-w-xl text-[clamp(2.25rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{step === "contacts" ? setupJourney(c.identity.industryKey).heading : parts > 1 && part > 0 ? PART_TITLE[step as "business" | "reach"] : STEP_TITLE[step]}</motion.h1></div>
-
-          <motion.div id="setup-controls" inert={mobileSetup && sheetSize === "preview"} className="setup-step-body" key={step} initial={reducedMotion ? false : { opacity:0, x:direction*16 }} animate={{ opacity:1, x:0 }} transition={{ type:"spring", stiffness:380, damping:34, opacity:{duration:.16} }}>
-          {step === "industry" ? (
-            <div className="grid gap-7">
-              <div className="grid gap-3">
-                <TaploInput label="Business type" placeholder="Search your business type" value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
-                <ul className="setup-industry-list grid gap-1" aria-label="Kinds of business">
-                  {searchIndustries(query).filter((p) => query.trim() ? true : POPULAR.slice(0, 4).includes(p.id) || (state !== null && Boolean(c.identity.industryLabel.trim()) && c.identity.industryKey === p.id)).sort((a, b) => query.trim() ? 0 : POPULAR.indexOf(a.id) - POPULAR.indexOf(b.id)).slice(0, query.trim() ? 6 : 5).map((p) => {
-                    const selected = state !== null && (p.id === OTHER_INDUSTRY_ID ? otherOpen || c.identity.industryLabel !== "" && c.identity.industryKey === OTHER_INDUSTRY_ID : c.identity.industryKey === p.id)
-                    return (
-                      <li key={p.id}>
-                        <button type="button" aria-pressed={selected} onClick={() => { setOtherOpen(p.id === OTHER_INDUSTRY_ID); update((x) => applyIndustry(x, p.id, p.id === OTHER_INDUSTRY_ID ? "" : p.label)) }}
-                          className={cn("setup-industry relative flex min-h-14 w-full items-center gap-3 rounded-2xl px-3 py-2 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", selected ? "bg-[#111111] text-white" : "bg-[#f5f5f5] hover:bg-[#ededed]")}>
-                          <span className="setup-icon"><BusinessIcon id={p.id} /></span><span className="flex-1">{p.label}</span>
-                        </button>
-                      </li>
-                    )
-                  })}
-                </ul>
-                {state !== null && Boolean(c.identity.industryLabel.trim()) ? (
-                  <div className="grid gap-5" data-testid="category-details">
-                    <label className="flex min-h-11 items-center gap-3 text-sm font-medium"><input type="checkbox" className="size-5 accent-black" checked={c.identity.showCategory === true} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, showCategory: e.target.checked } } }))} /><span>Show “{c.identity.industryLabel}” under the business name <span className="font-normal text-muted-foreground">· Optional</span></span></label>
-                    <fieldset className="grid gap-2" data-testid="how-you-work">
-                      <legend className="text-sm font-medium">Where is the work done?</legend>
-                      <div className="flex flex-wrap gap-2">
-                        {([["premises", "At a location"], ["service_area", "At customers’ locations"], ["online", "Online"]] as const).map(([mode, label]) => (
-                          <button key={mode} type="button" aria-pressed={c.location.mode === mode} className={cn("min-h-11 rounded-full border px-4 text-sm", c.location.mode === mode ? "bg-[#111111] text-white" : "bg-card")} onClick={() => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, mode } } }))}>{label}</button>
-                        ))}
-                      </div>
-                      <p className="text-xs text-muted-foreground">No address is needed now. You choose what to show later.</p>
-                    </fieldset>
-                  </div>
-                ) : null}
-                <button type="button" className="setup-secondary justify-self-start" onClick={()=>{setOtherOpen(true);update(x=>applyIndustry(x,OTHER_INDUSTRY_ID,""))}}>Use a different business type</button>
-                {state !== null && (otherOpen || c.identity.industryKey === OTHER_INDUSTRY_ID && c.identity.industryLabel !== "") ? (
-                  <TaploInput label="Describe your business" hint="e.g. Dog groomer, Wedding florist, Piano restorer" value={c.identity.industryLabel} maxLength={80} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }), { coalesce: "ind-label" })} />
-                ) : null}
-              </div>
-              <details className="setup-sample-businesses text-sm">
-                <summary className="inline-flex min-h-10 cursor-pointer list-none items-center rounded-lg text-muted-foreground underline underline-offset-4 hover:text-foreground [&::-webkit-details-marker]:hidden">Just looking? Open a sample business</summary>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {INDUSTRY_FIXTURE_KEYS.map((k) => (
-                    <Button key={k} size="sm" variant="outline" onClick={() => { update((x) => loadSample(x, k), { resetHistory: true }); router.push("/dashboard/page") }}>{getFixture(k)!.label}</Button>
-                  ))}
-                </div>
-              </details>
-            </div>
-          ) : null}
-
-          {step === "goal" ? <SetupConnections section="goals" goal={goalOf(s)} onGoalChange={goal=>update(x=>applyGoal(x,goal))} onValidity={setConnectionsValid}/> : null}
-          {step === "reach" ? <SetupConnections section="contact" part={parts > 1 ? part : undefined} goal={goalOf(s)} onGoalChange={goal=>update(x=>applyGoal(x,goal))} onValidity={setConnectionsValid}/> : null}
-
-          {step === "business" ? (
-            <div className="grid gap-5">
-              <div className="grid gap-5" hidden={parts > 1 && part > 0}>
-              <TaploInput label="Business name" autoFocus={!mobileSetup} placeholder="e.g. North Street Studio" value={c.identity.name} maxLength={100} autoComplete="organization" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
-              <div className="setup-address" data-testid="setup-address">
-                <span className="setup-address-url" aria-live="polite"><span>{TAPLO_DOMAINS.host}/</span><strong>{c.identity.slug || "your-name"}</strong></span>
-                <button type="button" onClick={() => setEditSlug((v) => !v)} aria-expanded={editSlug || (showErrors && slugErrs.length > 0)} className="setup-address-edit">{editSlug ? "Done" : "Change"}</button>
-                {slugErrs.length && c.identity.slug ? <span className="setup-address-error text-destructive">{SLUG_PROBLEM_MESSAGE[slugErrs[0]!]}</span> : null}
-              </div>
-              {editSlug || (showErrors && slugErrs.length) ? (
-                <TaploInput label="Web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />
-              ) : null}
-              <TaploInput label="Short description (optional)" placeholder="e.g. Independent hair studio in St Albans." value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
-              <ImageField presentation="identity" framing={s.page.appearance.header?.avatarShape === "circle"?"circle":s.page.appearance.header?.avatarShape === "square"?"square":"logo"} purpose="identity" samples={false} onFramingChange={shape=>update(x=>({...x,page:{...x.page,appearance:{...x.page.appearance,header:{...x.page.appearance.header,avatarShape:shape}}}}))} label="Add a logo or photo · Optional" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
-              <Overlay trigger={<button type="button" className="setup-cover-add">{c.identity.heroImage ? "Change cover photo" : "Add a cover photo"}</button>} open={profileOpen} onOpenChange={setProfileOpen} title="Cover photo" footer={<Button className="min-h-11 w-full" onClick={()=>setProfileOpen(false)}>Done</Button>}><div className="grid gap-5">
-              <ImageField purpose="cover" samples={false} label="Cover photo (optional)" cropAspect={16 / 9} defaultAlt={`${c.identity.name || "Business"} cover photo`} maxEdge={1600} value={c.identity.heroImage ?? null} onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, heroImage: v ?? undefined } } }))} />
-              </div></Overlay>
-              </div>
-            </div>
-          ) : null}
-
-          {step === "contacts" ? <FirstContent onValidity={setContentValid} /> : null}
-
-          {step === "widgets" ? <WidgetsStep /> : null}
-          {step === "plan" ? <SetupPlans inline /> : null}
-          {step === "publish" ? <PublishStep onStudio={() => router.push("/dashboard")} /> : null}
-
-          </motion.div>
-          {step !== "publish" ? (
-            <div className="setup-next mt-8 flex flex-wrap items-center gap-3">
-              {(step === "contacts" || step === "reach") && !s.setupDrafts?.reviewEdit ? <button type="button" className="setup-skip setup-secondary" onClick={next}>Skip for now</button> : null}
-              {stepIndex > 0 ? <Button variant="outline" size="lg" onClick={back}>Back</Button> : null}
-              <Button className="flex-1 bg-signal text-white hover:bg-[#333333] sm:flex-none sm:min-w-40" size="lg" onClick={() => (partValid ? (lastPart ? next() : (setShowErrors(false), setPart(part + 1))) : setShowErrors(true))} aria-describedby={!partValid && showErrors ? "why-disabled" : undefined}>{s.setupDrafts?.reviewEdit?"Save changes":"Continue"}</Button>
-              {!partValid && showErrors ? <p id="why-disabled" role="alert" className="text-sm text-destructive">{why[step]}</p> : null}
-            </div>
-          ) : (
-            <div className="setup-next"><Button variant="outline" size="lg" onClick={back}>Back</Button></div>
-          )}
-        </SetupPanel>
-
-        <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="setup-canvas" data-reveal={revealed} inert={step === "publish"}><SetupCanvas src="/demo/preview" expanded={false} fit={(mobileSetup && (sheetSize === "preview" || step === "publish")) || revealed} onOverlayOpen={revealCustomerDialog} /></div>
-
-        </aside>
-      </div>
-    </main></div>
-  )
-}
-
-/** Mobile page composition, starting theme and fine adjustment are separate choices. */
-function WidgetsStep() {
- return <div className="grid gap-7"><SetupLook/></div>;
-}
-
-const toPounds = (minor?: number) => (minor === undefined ? "" : (minor / 100).toFixed(minor % 100 === 0 ? 0 : 2))
-interface Row { id: string; name: string; price: string; minutes: string; priceMode?: "fixed"|"from"|"quote"|"free" }
-const validRow = (r: Row) => r.name.trim().length > 0 && (r.priceMode === "quote" || r.priceMode === "free" || /^\d{1,6}(\.\d{1,2})?$/.test(r.price.trim()))
-
-/**
- * The first content. A service is a name and a price (and a time, which is what lets people book it); rows are saved as
- * soon as they are complete, so the page fills in while the owner types. Nothing is suggested as a price.
- */
-function FirstServices({onValidity}:{onValidity:(valid:boolean)=>void}) {
-  const { state, update } = useDemo()
-  const s = state ?? initialState()
-  const industry = getIndustryPreset(s.content.identity.industryKey)
-  const [rows, setRows] = React.useState<Row[]>(() => {
-    if(s.setupDrafts?.services)return s.setupDrafts.services
-    const have = (s.content.services ?? []).filter((x) => !x.archived).map((x) => ({ id: x.id, name: x.name, price: toPounds(x.priceMinor), priceMode:x.priceMode, minutes: x.durationMinutes ? String(x.durationMinutes) : "" }))
-    return have.length ? have : [{ id: newId("svc"), name: "", price: "", minutes: "" }]
-  })
-  React.useEffect(()=>{onValidity(rows.every(r=>(!r.name.trim()&&!r.price&&!r.minutes)||validRow(r)))},[rows,onValidity])
-  const [focus, setFocus] = React.useState<string | null>(null)
-  const [pricing,setPricing]=React.useState<string|null>(null)
-  const booking = goalOf(s) === "book"
-  const itemLabel = setupJourney(industry.id).noun
-
-  const sync = (next: Row[]) => {
-    setRows(next)
-    update((st) => {
-      const kept = (st.content.services ?? []).filter((x) => x.archived)
-      const done = next.filter(validRow).map((r, i) => {
-        const prev = (st.content.services ?? []).find((x) => x.id === r.id)
-        const minutes = r.minutes ? Math.min(parseInt(r.minutes, 10), 1440) : undefined
-        return normService({ ...(prev ?? blankService(i)), id: r.id, name: r.name.trim(), priceMode: r.priceMode ?? "fixed", priceMinor: r.priceMode === "quote" || r.priceMode === "free" ? undefined : Math.round(parseFloat(r.price) * 100), durationMinutes: minutes && minutes > 0 ? minutes : undefined, bookingMode: booking ? "request" : "contact", sortOrder: i + 1 })
-      })
-      return { ...st, content: { ...st.content, services: [...kept, ...done] }, setupDrafts:{...st.setupDrafts,services:next} }
-    }, { coalesce: "first-services" })
+  const next = () => {
+    if (step === "plan" && !s.setupDrafts?.planIntent) update((x) => ({ ...x, setupDrafts: { ...x.setupDrafts, planIntent: "free" } }))
+    go(ONBOARDING_STEPS[Math.min(index + 1, ONBOARDING_STEPS.length - 1)]!)
   }
-  const patch = (id: string, p: Partial<Row>) => sync(rows.map((r) => (r.id === id ? { ...r, ...p } : r)))
-  const used = new Set(rows.map((r) => r.name.trim().toLowerCase()))
-  const extra = (s.content.identity.alsoKeys ?? []).flatMap((k) => getIndustryPreset(k).suggestedServices)
-  const suggestions = [...industry.suggestedServices, ...extra].filter((x) => !used.has(x.name.toLowerCase())).slice(0, 3)
-  const add = (name = "") => {
-    const row = { id: newId("svc"), name, price: "", minutes: "" }
-    setFocus(name ? `${row.id}-price` : `${row.id}-name`)
-    sync([...rows,row])
-  }
-  const anyMinutes = rows.some((r) => validRow(r) && r.minutes)
-  const field = "h-12 w-full min-w-0 rounded-lg border-0 bg-white/80 px-3 text-base outline-none focus-visible:ring-2 focus-visible:ring-ring"
-  return (
-    <div className="grid gap-4" data-testid="first-services">
-      {suggestions.length ? (
-        <div>
-          <p className="mb-2 text-sm text-muted-foreground">Tap one to start, then add your own price.</p>
-          <ul className="flex flex-wrap gap-2" aria-label="Common services">{suggestions.map((sg) => <li key={sg.name}><button type="button" onClick={() => { const empty = rows.find((r) => !r.name.trim() && !r.price); if (empty) { setFocus(`${empty.id}-price`); patch(empty.id, { name: sg.name }) } else add(sg.name) }} className="min-h-10 rounded-lg border bg-card px-3 text-sm hover:border-foreground/40">{sg.name}</button></li>)}</ul>
-        </div>
-      ) : null}
-      <ul className="grid gap-3">
-        {rows.map((r, i) => (
-          <li key={r.id} className="grid grid-cols-[minmax(0,1fr)_5.5rem_5.5rem_auto] items-end gap-2 max-sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-            <label className="grid gap-1 max-sm:col-span-3"><span className="text-base font-semibold text-foreground">{i === 0 ? itemLabel : <span className="sr-only">Service</span>}</span><input className={field} aria-label={`Service ${i + 1} name`} placeholder={industry.suggestedServices[0]?.name ?? "e.g. Initial consultation"} maxLength={120} autoFocus={focus === `${r.id}-name`} value={r.name} onChange={(e) => patch(r.id, { name: e.target.value })} /></label>
-            <label className="grid gap-1"><span className="text-base font-semibold text-foreground">{i === 0 ? "Price (£)" : <span className="sr-only">Price</span>}</span><input className={field} aria-label={`Service ${i + 1} price`} inputMode="decimal" disabled={r.priceMode === "quote" || r.priceMode === "free"} placeholder={r.priceMode === "quote" ? "Quote" : r.priceMode === "free" ? "Free" : "0.00"} autoFocus={focus === `${r.id}-price`} value={r.priceMode === "quote" || r.priceMode === "free" ? "" : r.price} onChange={(e) => { if (/^\d{0,6}(\.\d{0,2})?$/.test(e.target.value)) patch(r.id, { price: e.target.value }) }} /></label>
-            <label className={cn("grid gap-1", industry.id === "hospitality" && "hidden")}><span className="text-base font-semibold text-foreground">{i === 0 ? "Minutes" : <span className="sr-only">Minutes</span>}</span><input className={field} aria-label={`Service ${i + 1} minutes`} inputMode="numeric" placeholder="30" value={r.minutes} onChange={(e) => patch(r.id, { minutes: e.target.value.replace(/\D/g, "").slice(0, 4) })} /></label>
-            <Button type="button" variant="ghost" size="icon" className="size-11" aria-label={`Remove service ${i + 1}`} disabled={rows.length === 1 && !r.name && !r.price} onClick={() => { const next = rows.filter((x) => x.id !== r.id); sync(next.length ? next : [{ id: newId("svc"), name: "", price: "", minutes: "" }]) }}><Trash2 /></Button>
-            <button type="button" className="col-span-full min-h-8 justify-self-start setup-secondary" onClick={()=>setPricing(r.id)}>Pricing options{r.priceMode && r.priceMode!=="fixed" ? ` · ${r.priceMode}` : ""}</button>
-          </li>
-        ))}
-      </ul>
-      <Overlay open={pricing!==null} onOpenChange={o=>!o&&setPricing(null)} title="How is this service priced?" footer={<Button className="min-h-11 w-full" onClick={()=>setPricing(null)}>Done</Button>}><div className="grid gap-2">{([{id:"fixed",label:"A fixed price"},{id:"from",label:"Prices start from"},{id:"quote",label:"Ask for a quote"},{id:"free",label:"Free"}] as const).map(mode=><button key={mode.id} type="button" aria-pressed={(rows.find(r=>r.id===pricing)?.priceMode??"fixed")===mode.id} className="min-h-14 rounded-2xl bg-neutral-50 p-3 text-left font-medium aria-pressed:bg-black aria-pressed:text-white" onClick={()=>pricing&&patch(pricing,{priceMode:mode.id})}>{mode.label}</button>)}</div></Overlay>
-      <Button type="button" variant="outline" className="min-h-11 justify-self-start" onClick={() => add()}><Plus /> Add another</Button>
-      {booking && !anyMinutes ? <p className="text-sm text-muted-foreground" data-testid="booking-hint">Add how long a service takes and people can ask to book it. Without a time, they send an enquiry instead.</p> : null}
-    </div>
-  )
-}
+  const back = () => { if (index > 0) go(ONBOARDING_STEPS[index - 1]!) }
+  const press = () => (valid[step] ? next() : setShowErrors(true))
+  const planName = PLANS[s.setupDrafts?.planIntent ?? "free"].name
 
-/** A vehicle or product, entered with the same form the editor uses, so nothing is learned twice. */
-function FirstRecord({ kind, onValidity }: { kind: "vehicle" | "photo" | "product"; onValidity:(valid:boolean)=>void }) {
-  const { state, update } = useDemo()
-  const s = state ?? initialState()
-  const [draft, setDraft] = React.useState<unknown>(() => s.setupDrafts?.record?.kind===kind?s.setupDrafts.record.value:blankFor(kind, s.content))
-  const [show, setShow] = React.useState(false)
-  const [blank] = React.useState(()=>JSON.stringify(blankFor(kind,s.content),(k,v)=>k==='id'?undefined:v))
-  React.useEffect(()=>onValidity(JSON.stringify(draft,(k,v)=>k==='id'?undefined:v)===blank),[draft,blank,onValidity])
-  const items = kind !== "photo" ? (s.content.products ?? []).filter((p) => !p.archived && p.kind === kind).map((p) => p.name) : (s.content.gallery ?? []).map((g, i) => g.caption || `Photo ${i + 1}`)
-  const save = () => {
-    if (Object.keys(validate(kind, draft)).length) { setShow(true); return }
-    update((st) => ({ ...st, content: commitRecord(kind, draft, st.content),setupDrafts:{...st.setupDrafts,record:undefined} }))
-    setDraft(blankFor(kind, s.content)); setShow(false)
-  }
-  return (
-    <div className="grid gap-4" data-testid="first-record">
-      {items.length ? <ul className="grid gap-1 text-sm" aria-label="Added"><li className="font-medium">Added so far</li>{items.map((n, i) => <li key={i} className="flex items-center gap-2"><Check aria-hidden="true" className="size-4 text-foreground" />{n}</li>)}</ul> : null}
-      <RecordForm setup key={items.length} kind={kind} value={draft} onChange={v=>{setDraft(v);update(st=>({...st,setupDrafts:{...st.setupDrafts,record:{kind,value:v}}}))}} showErrors={show} content={s.content} />
-      <Button type="button" className="min-h-11 justify-self-start" onClick={save} data-testid="first-record-save">{kind === "vehicle" ? "Add this vehicle" : kind === "product" ? "Add this product" : "Add these photos"}</Button>
-    </div>
-  )
-}
+  const notice = storageFailed ? (
+    <p role="alert" className="sf-notice sf-notice-warn" data-testid="storage-failed">Your browser couldn’t save your latest change (storage is full or blocked). It’s showing here but may be lost if you reload. Remove a large picture to continue safely.</p>
+  ) : showErrors && !valid[step] && why[step] ? (
+    <p role="alert" className="sf-notice" id="why-disabled">{why[step]}</p>
+  ) : null
 
-function FirstContent({onValidity}:{onValidity:(valid:boolean)=>void}) {
-  const { state } = useDemo()
-  const s = state ?? initialState()
-  const c = s.content
-  const kind = setupJourney(c.identity.industryKey).kind
-  return (
-    <div className="grid gap-8">
-      <div className="grid gap-3">
-        <p className="-mt-3 text-sm text-muted-foreground">Add what you want people to see first. You can do this later.</p>
-        {kind === "service" ? <FirstServices onValidity={onValidity} /> : <FirstRecord kind={kind} onValidity={onValidity} />}
-      </div>
-      <SetupDetails />
-    </div>
-  )
-}
-
-function PublishStep({ onStudio }: { onStudio: () => void }) {
-  const { state, update } = useDemo()
-  const s = state ?? initialState()
-  const parsed = parseContent(s.content)
-  const vm = React.useMemo(() => (parsed.success && parsed.data.identity.name ? buildPageViewModel(parsed.data, s.page, { plan: s.plan }) : null), [parsed, s.page, s.plan])
-  const label = (type: string) => getWidget(type as WidgetType)?.label ?? type
-  const shown = vm ? vm.widgets.filter((w) => w.status.state === "ready").map((w) => label(w.type)) : []
-  const [signedIn, setSignedIn] = React.useState(false)
-  const [phase, setPhase] = React.useState<"idle" | "connecting" | "done">("idle")
-  const [email, setEmail] = React.useState("")
-  const [password, setPassword] = React.useState("")
-  const [errors, setErrors] = React.useState<{ email?: string; password?: string }>({})
-  const [failure, setFailure] = React.useState("")
-  const configured = accountsConfigured()
-  React.useEffect(() => { void session().then((r) => setSignedIn(r.signedIn)) }, [])
-  const toStudio = () => { update((x) => ({ ...x, onboarded: true })); onStudio() }
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const next: { email?: string; password?: string } = {}
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) next.email = "Enter an email address like name@example.com."
-    if (password.length < 8) next.password = "Use at least 8 characters."
-    setErrors(next); setFailure("")
-    if (next.email || next.password) return
-    setPhase("connecting")
-    const r = await connect()
-    if (r.ok) { setPhase("done"); window.setTimeout(toStudio, 900); return }
-    setPhase("idle")
-    setFailure(r.reason === "cancelled" ? "Sign-up was cancelled. Your draft is still here." : r.reason === "not-configured" ? "Account creation isn’t available in this environment yet, so nothing was created or saved. Your draft is unchanged and still in this browser." : "That didn’t work. Your draft is unchanged, so you can try again.")
-  }
-  return (
-    <div className="grid gap-5" data-testid="finish-step">
-      <p className="setup-finish-lede">Your draft is ready to take into Studio. It stays private until you publish it.</p>
-      <ol className="setup-finish-next" aria-label="What happens next">
-        <li><b>Studio opens on this draft.</b> Add photos, services and details in any order.</li>
-        <li><b>Publish when you’re ready.</b> Nothing goes public until you choose.</li>
-      </ol>
-      <span className="sr-only" data-testid="page-summary">{shown.length ? `On your page: ${shown.join(", ")}.` : ""}</span>
-      {phase === "done" ? (
-        <p role="status" className="setup-finish-done"><Check aria-hidden="true" /> Account connected and draft saved. Opening Studio…</p>
-      ) : signedIn ? (
-        <Button size="lg" data-testid="save-draft" onClick={toStudio}>Open Studio</Button>
-      ) : (
-        <form className="setup-account" data-testid="account-step" onSubmit={(e) => void submit(e)} noValidate>
-          <h2 className="setup-account-title">Create your account</h2>
-          {!configured ? <p className="setup-account-notice" data-testid="draft-note"><Info aria-hidden="true" /><span>Accounts aren’t connected in this environment yet. You can see the sign-up step, but it can’t create an account, and your draft is kept in this browser only.</span></p> : null}
-          <TaploInput label="Email" type="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email} aria-invalid={Boolean(errors.email)} />
-          <TaploInput label="Password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} error={errors.password} aria-invalid={Boolean(errors.password)} hint="At least 8 characters." />
-          <Button size="lg" type="submit" disabled={phase === "connecting"}>{phase === "connecting" ? "Creating account…" : "Create account"}</Button>
-          {failure ? <p role="alert" className="text-sm text-destructive" data-testid="account-failure">{failure}</p> : null}
-        </form>
+  const footer = (
+    <>
+      {index > 0 ? <button type="button" className="sf-back" onClick={back}>Back</button> : <span />}
+      {step === "finish" ? null : (
+        <>
+          {SKIPPABLE.includes(step) ? <button type="button" className="sf-skip" onClick={next}>Skip for now</button> : null}
+          <Button className="sf-primary" size="lg" onClick={press} aria-describedby={!valid[step] && showErrors ? "why-disabled" : undefined}>{step === "plan" ? `Continue with ${planName}` : "Continue"}</Button>
+        </>
       )}
-      {phase !== "done" && !signedIn ? (
-        <div className="setup-devroute" data-testid="dev-route">
-          <p className="setup-devroute-label"><span>DEV</span> Development route</p>
-          <p className="text-xs text-muted-foreground" data-testid="dev-route-note">Opens Studio without an account. It exists only in this testing environment and is not part of the customer experience.</p>
-          <Button variant="outline" size="lg" data-testid="save-draft" onClick={toStudio}>Open Studio (development)</Button>
+    </>
+  )
+
+  const origin = (chosenDesign || from || intent) ? (
+    <p className="sf-origin">
+      {chosenDesign ? <span data-testid="from-design">Starting with {chosenDesign.name}</span> : null}
+      {from ? <span data-testid="from-example">Starting from {from.name}</span> : null}
+      {intent ? <span data-testid="plan-intent">{PLANS[intent].name} plan</span> : null}
+    </p>
+  ) : null
+
+  return (
+    <SetupShell
+      ref={shell}
+      step={index}
+      steps={ONBOARDING_STEPS.length}
+      stepLabel={STEP_LABEL[step]}
+      title={STEP_TITLE[step]}
+      snap={snap}
+      onSnap={setSnap}
+      mobile={mobile}
+      keyboard={keyboard}
+      bodyKey={step}
+      notice={notice}
+      footer={footer}
+      preview={
+        <div className="sf-canvas">
+          <SetupCanvas src="/demo/preview" expanded={false} fit={!mobile || snap === "peek"} focus={FOCUS[step]} onOverlayOpen={() => { if (mobile) setSnap("peek") }} />
         </div>
-      ) : null}
-    </div>
+      }
+    >
+      {origin}
+      {step === "type" ? <TypeStep /> : null}
+      {step === "name" ? <NameStep showErrors={showErrors} desktop={!mobile} /> : null}
+      {step === "look" ? <SetupLook /> : null}
+      {step === "action" ? <ActionStep showErrors={showErrors} onValidity={setActionValid} /> : null}
+      {step === "services" ? <ServicesStep onValidity={setServicesValid} /> : null}
+      {step === "plan" ? <SetupPlans inline /> : null}
+      {step === "finish" ? <FinishStep onStudio={() => router.push("/dashboard")} /> : null}
+    </SetupShell>
   )
 }

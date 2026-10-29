@@ -2,7 +2,7 @@
 .studio{display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-areas:"stage rail";gap:24px;align-items:start;min-height:calc(100dvh - 120px)}
 
 /* Stage: the page itself, with Edit directly beneath it on the same axis. */
-.studio-stage{grid-area:stage;display:grid;justify-items:center;gap:16px;padding:24px 16px 28px;border-radius:32px;background:#efeeea}
+.studio-stage{grid-area:stage;display:flex;flex-direction:column;align-items:center;gap:16px;padding:24px 16px 28px;border-radius:32px;background:#efeeea}
 .studio-phone{width:100%;height:min(720px,calc(100dvh - 220px));min-height:420px}
 .studio-edit{width:min(100%,320px);min-height:48px;border-radius:999px;background:#fff;color:#111;border-color:#0000001f;gap:8px}
 .studio-edit:hover{background:#fafafa}
@@ -111,3 +111,6 @@
 }
 .studio a:focus-visible,.studio-dock a:focus-visible,.studio-dock button:focus-visible,.studio-rail-nav a:focus-visible,.studio-more a:focus-visible{outline:3px solid #111;outline-offset:2px}
 .studio-dock-item[data-active=true]:focus-visible{outline-color:#fff;outline-offset:-5px}
+
+.studio-stage .studio-edit{order:2}.studio-stage .studio-phone{order:1}
+:root:has(.studio-dock){scroll-padding-bottom:120px}

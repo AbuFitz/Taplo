@@ -12,10 +12,10 @@ const noopSubscribe = () => () => {};
 export function ShareButton({ data, label = "Share this page", variant = "button" }: { data: ShareData; label?: string; variant?: "button" | "card" }) {
   return <SharePanel data={data} trigger={<button type="button" className={variant === "card" ? "tp-tile tp-link-tile" : "tp-btn"} data-variant={variant}><Share2 aria-hidden="true" className="size-5" /><span className="tp-btn-main"><span className="tp-btn-label">{label}</span></span>{variant === "card" ? <ArrowUpRight aria-hidden="true" /> : null}</button>} />;
 }
-export function SharePanel({ data, trigger, open, onOpenChange }: { data: ShareData; trigger?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void }) {
-  return <Overlay tone="page" kind="dialog" trigger={trigger} open={open} onOpenChange={onOpenChange} title={`Share ${data.name}`} testId="share-panel"><ShareBody data={data} /></Overlay>;
+export function SharePanel({ data, trigger, open, onOpenChange, tone = "page" }: { data: ShareData; trigger?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void; tone?: "page" | "admin" }) {
+  return <Overlay tone={tone} kind="dialog" trigger={trigger} open={open} onOpenChange={onOpenChange} title={`Share ${data.name}`} testId="share-panel"><ShareBody data={data} admin={tone === "admin"} /></Overlay>;
 }
-function ShareBody({ data }: { data: ShareData }) {
+function ShareBody({ data, admin = false }: { data: ShareData; admin?: boolean }) {
   const where = React.useSyncExternalStore(noopSubscribe, () => `${window.location.origin}|${window.location.pathname}|${new URLSearchParams(window.location.search).get("scenario") ?? ""}|${typeof navigator.share === "function"}`, () => "");
   const [origin = "", pathname = "", scenario = "", native = ""] = where.split("|");
   const example = pathname === "/appearance/frame" && Boolean(scenario);
@@ -44,13 +44,13 @@ function ShareBody({ data }: { data: ShareData }) {
   };
   return <div className="grid gap-4 py-1">
     <div className="mx-auto w-[min(100%,15rem)] rounded-[1.5rem] bg-white p-3 text-black [&_svg]:h-auto [&_svg]:w-full" data-testid="qr-preview" dangerouslySetInnerHTML={{ __html: svg }} />
-    <input ref={input} id="share-url" aria-label="Page link" value={url} readOnly onFocus={(e) => e.currentTarget.select()} className="min-h-11 w-full min-w-0 rounded-lg bg-transparent px-2 text-center text-sm text-tp-muted outline-none focus-visible:ring-2 focus-visible:ring-tp-accent" />
+    <input ref={input} id="share-url" aria-label="Page link" value={url} readOnly onFocus={(e) => e.currentTarget.select()} className={"min-h-11 w-full min-w-0 rounded-lg bg-transparent px-2 text-center text-sm  outline-none focus-visible:ring-2 focus-visible:ring-tp-accent " + (admin ? "text-neutral-700" : "text-tp-muted")} />
     <div className="grid gap-2">
-      <Button type="button" className="min-h-12 rounded-full shadow-none bg-tp-accent text-tp-accent-fg hover:bg-tp-accent/90" onClick={copy}><Copy aria-hidden="true" />Copy link</Button>
+      <Button type="button" className={"min-h-12 rounded-full shadow-none " + (admin ? "bg-black text-white hover:bg-neutral-800" : "bg-tp-accent text-tp-accent-fg hover:bg-tp-accent/90")} onClick={copy}><Copy aria-hidden="true" />Copy link</Button>
       {native === "true" ? <Button type="button" variant="outline" className="min-h-12 rounded-full" onClick={share}><Share2 aria-hidden="true" />Share from this device</Button> : null}
       <Button type="button" variant="ghost" className="min-h-11 rounded-full" onClick={save}><Download aria-hidden="true" />Save QR code</Button>
     </div>
-    {preview ? <p className="text-center text-xs text-tp-muted" data-testid="share-demo-note">Preview link. This page opens in this browser only.</p> : null}
+    {preview ? <p className={"text-center text-xs " + (admin ? "text-neutral-700" : "text-tp-muted")} data-testid="share-demo-note">Preview link. This page opens in this browser only.</p> : null}
     <p role="status" aria-live="polite" className="min-h-5 text-center text-sm">{note ? <span className="inline-flex items-center gap-2">{note === "Link copied" || note === "QR code saved" ? <Check aria-hidden="true" className="size-4" /> : null}{note}</span> : null}</p>
   </div>;
 }

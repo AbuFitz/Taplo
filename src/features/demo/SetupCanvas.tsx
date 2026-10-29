@@ -6,11 +6,14 @@ export function SetupCanvas({
   expanded,
   fit = false,
   onOverlayOpen,
+  focus,
 }: {
   src: string;
   expanded: boolean;
   fit?: boolean;
   onOverlayOpen?: () => void;
+  /** Part of the page to bring into view (header, actions, offer). */
+  focus?: string;
 }) {
   return (
     <PagePreview
@@ -21,6 +24,7 @@ export function SetupCanvas({
       cropDevice={!expanded && !fit}
       resizeKey={`${expanded}-${fit}`}
       onOverlayOpen={onOverlayOpen}
+      focus={focus}
       testId="setup-live-page"
     />
   );
