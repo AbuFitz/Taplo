@@ -18,11 +18,13 @@ for (const width of [390, 1440]) {
     const trades = await cards.count();
     expect(trades).toBeGreaterThan(3);
     expect(trades).toBeLessThan(total);
-    await page.getByRole("button", { name: "Floating Bento", exact: true }).click();
+    // Arrangement and look live in the Style sheet.
+    await page.getByRole("button", { name: "Style the examples" }).click();
+    await page.getByTestId("style-sheet").getByRole("radio", { name: /Floating Bento/ }).click();
+    await page.getByTestId("style-sheet").getByRole("button", { name: /Show \d+ page/ }).click();
     expect(await cards.count()).toBeLessThanOrEqual(trades);
     await page.getByRole("button", { name: "All", exact: true }).click();
-    await page.getByRole("button", { name: "Floating Bento", exact: true }).click();
-    await page.getByRole("button", { name: "Floating Bento", exact: true }).click();
+    await page.getByRole("button", { name: "Clear", exact: true }).click();
     await page.getByRole("searchbox", { name: "Search pages" }).fill("taco");
     await expect(cards).toHaveCount(1);
     await page.getByRole("searchbox", { name: "Search pages" }).fill("zzzz");
