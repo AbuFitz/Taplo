@@ -101,7 +101,7 @@ export function Studio() {
         ? { headline: "You have changes that are not published", primary: <Button size="lg" className="studio-primary" onClick={doPublish}>Publish changes</Button>, secondary: <button type="button" className="studio-link" onClick={() => patch(unpublish)}>Unpublish this page</button> }
         : needReply > 0
           ? { headline: `${needReply} ${needReply === 1 ? "needs" : "need"} a reply`, primary: <Button asChild size="lg" className="studio-primary"><Link href="/dashboard/bookings">Open bookings</Link></Button>, secondary: <button type="button" className="studio-link" onClick={copyLink}>Copy link</button> }
-          : { headline: "Your page is published in this browser", primary: <Button size="lg" className="studio-primary" onClick={copyLink}>{copy === "done" ? "Copied" : "Copy link"}</Button> }
+          : { headline: "Your page is published", primary: <Button size="lg" className="studio-primary" onClick={copyLink}>{copy === "done" ? "Copied" : "Copy link"}</Button> }
 
   // One quiet tip, never while a required step is open.
   const tip = !ready

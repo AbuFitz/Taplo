@@ -29,8 +29,8 @@
 .studio-next{display:grid;gap:12px;padding:22px;border-radius:28px;background:#fff;box-shadow:0 0 0 1px #0000000d,0 18px 40px -28px #0000004d}
 .studio-next h2{margin:0;font-size:clamp(1.5rem,1.2rem + 1.4vw,1.75rem);line-height:1.1;text-wrap:balance;outline:none}
 .studio-next p{margin:0;font-size:15px;line-height:1.5;color:#454545}
-.studio-primary{width:100%;min-height:56px;border-radius:999px;background:#111;color:#fff;font-size:17px;font-weight:650}
-.studio-primary:hover{background:#2a2a2a}
+.studio-next .studio-primary{width:100%;min-height:56px;border-radius:999px;background-color:#111;color:#fff;font-size:17px;font-weight:650}
+.studio-next .studio-primary:hover{background-color:#2a2a2a}
 .studio-secondary{display:flex;justify-content:center}
 .studio-link{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;border:0;background:none;color:#111;font-size:15px;font-weight:600;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
 .studio-plans{justify-self:start;color:#454545;font-weight:500}
@@ -39,7 +39,7 @@
 .studio-attention b{display:grid;place-items:center;min-width:28px;height:28px;padding:0 8px;border-radius:99px;background:#111;color:#fff;font-size:14px}
 .studio-share{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px 12px;padding:16px 18px;border-radius:24px;background:#fff;box-shadow:0 0 0 1px #0000000d}
 .studio-share-label{grid-column:1/-1;font-size:14px;font-weight:650}.studio-share-label small{display:block;margin-top:2px;font-size:14px;font-weight:400;color:#454545}
-.studio-share-url{min-width:0;overflow-wrap:anywhere;font-size:15px;color:#111}
+.studio-share-url{min-width:0;overflow-wrap:anywhere;word-break:break-all;font-size:15px;color:#111}
 .studio-share-actions{display:flex;gap:8px;grid-column:1/-1;flex-wrap:wrap}
 .studio-share-actions button{min-height:44px;border-radius:999px;gap:6px}
 .studio-share .studio-note{grid-column:1/-1}
