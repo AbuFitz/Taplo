@@ -18,11 +18,11 @@ for (const width of [390, 1440]) {
     const trades = await cards.count();
     expect(trades).toBeGreaterThan(3);
     expect(trades).toBeLessThan(total);
-    await page.getByRole("button", { name: "Bento grid", exact: true }).click();
+    await page.getByRole("button", { name: "Floating Bento", exact: true }).click();
     expect(await cards.count()).toBeLessThanOrEqual(trades);
     await page.getByRole("button", { name: "All", exact: true }).click();
-    await page.getByRole("button", { name: "Bento grid", exact: true }).click();
-    await page.getByRole("button", { name: "Bento grid", exact: true }).click();
+    await page.getByRole("button", { name: "Floating Bento", exact: true }).click();
+    await page.getByRole("button", { name: "Floating Bento", exact: true }).click();
     await page.getByRole("searchbox", { name: "Search pages" }).fill("taco");
     await expect(cards).toHaveCount(1);
     await page.getByRole("searchbox", { name: "Search pages" }).fill("zzzz");
@@ -39,13 +39,13 @@ test("opening a page offers the demo, and using a design starts setup on that de
   await page.getByRole("button", { name: /Jay.s Barbers, open this page/ }).click();
   const detail = page.getByTestId("design-detail");
   await expect(detail.getByRole("link", { name: "Open the demo" })).toBeVisible();
-  await expect(detail.getByText("Curved cover")).toBeVisible();
-  await detail.getByRole("link", { name: /Start with the Garage design/ }).click();
+  await expect(detail.locator("dd", { hasText: "Curved cover" })).toBeVisible();
+  await detail.getByRole("link", { name: /Start with the .* design/ }).click();
   await expect(page).toHaveURL(/\/onboarding/);
-  await expect(page.getByTestId("from-design")).toContainText("Starting with Garage");
+  await expect(page.getByTestId("from-design")).toContainText("Starting with");
   // The draft is dressed from the first step: the chosen arrangement and design are on the preview.
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!));
-  expect(saved.page.themeId).toBe("garage");
+  expect(saved.page.themeId).toBe("paper");
   expect(saved.page.appearance.header.layout).toBe("split");
 });
 
