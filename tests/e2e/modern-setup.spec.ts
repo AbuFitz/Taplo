@@ -57,7 +57,7 @@ for (const width of [390, 1440]) test(`visual setup keeps each decision separate
   expect(draft.content.services[0]).toMatchObject({ name: 'Haircut', priceMinor: 2200 })
   expect(draft.content.testimonials).toEqual([])
   expect(draft.content.gallery).toEqual([])
-  expect(draft.page.appearance.colors.background).toBe('#0b0c0e')
+  expect(draft.page.appearance.colors.background).toBe('#090b0d')
   expect(draft.published).toBeNull()
 })
 

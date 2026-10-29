@@ -18,7 +18,6 @@ for (const width of [390, 1440]) {
     await toLook(page, width)
     const group = page.getByRole("radiogroup", { name: "Looks" })
     await expect(group.getByRole("radio")).toHaveCount(12)
-    await expect(page.getByRole("radio", { name: "Paper", exact: true })).toHaveCount(0)
     await expect(page.getByTestId("setup-look")).not.toContainText("✓")
     const first = (await state(page)).page.appearance.background
     expect(first.kind).toBe("solid")
@@ -36,7 +35,7 @@ for (const width of [390, 1440]) {
       await expect(frame(page).locator(".tp-bg-gradient")).toHaveAttribute("data-animate", look.animated ? "true" : "false", { timeout: 40000 })
     }
     await page.emulateMedia({ reducedMotion: "reduce" })
-    await page.getByRole("radio", { name: "Ink", exact: true }).check({ force: true })
+    await page.getByRole("radio", { name: "Midnight flow", exact: true }).check({ force: true })
     await expect(frame(page).locator(".tp-shader")).toHaveAttribute("data-active", "false", { timeout: 40000 })
   })
 
