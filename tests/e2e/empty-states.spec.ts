@@ -52,3 +52,12 @@ test("the studio has three short explainer loops, still under reduced motion", a
   await expect(loops.getByRole("img")).toHaveCount(3)
   expect(await loops.locator("svg g[style*='opacity: 0']").count()).toBe(0)
 })
+
+test("analytics on the free plan explains the upgrade instead of showing an empty chart", async ({ page }) => {
+  await openEditorWithSample(page)
+  await page.evaluate(() => { const k = "taplo.demo.v2"; const s = JSON.parse(localStorage.getItem(k)!); s.plan = "free"; localStorage.setItem(k, JSON.stringify(s)) })
+  await page.goto("/dashboard/analytics")
+  const panel = page.getByTestId("empty-panel")
+  await expect(panel.getByRole("heading", { name: "Analytics comes with a paid plan" })).toBeVisible()
+  await expect(panel.getByRole("link", { name: "See plans" })).toHaveAttribute("href", "/pricing")
+})
