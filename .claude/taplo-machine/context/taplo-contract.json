@@ -130,7 +130,8 @@
       "gratuitous phone mockups inside an existing live preview",
       "unearned drifting objects and zooming",
       "invented research, adoption or conversion claims",
-      "large skill collections treated as proof of capability"
+      "large skill collections treated as proof of capability",
+      "copying a reference product's flow, structure, layouts, copy or visuals; references are immersion for quality, not templates"
     ]
   },
   "commercial_truth": "Do not invent plan entitlements, reviews, customer counts, business opening hours, integration availability or live auth/billing behaviour.",
@@ -180,6 +181,10 @@
     {
       "date": "2026-10-29",
       "note": "Latest owner message: tooling setup only. No application screens are built or changed as part of it."
+    },
+    {
+      "date": "2026-10-29",
+      "note": "Owner: the Linktree recording is for immersion in how good products feel, not to copy. There is more than one way to do things."
     }
   ]
 }

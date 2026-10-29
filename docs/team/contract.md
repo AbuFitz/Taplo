@@ -14,6 +14,9 @@ Reconciled 2026-10-29 from `docs/product-decisions.md`, `docs/design-spec.md`, t
 - No invented reviews, ratings, prices, awards or availability. Sample content is labelled.
 - No generated human portraits. Monochrome product UI; colour belongs to imagery and marketing.
 
+## Reference products
+References (Linktree, Apple, Notion and others) are study material for quality, pace and detail. They are never templates: do not copy a competitor's structure, order, layouts, copy or visuals, and prefer Taplo's own solution when more than one good way exists. The owner stated this on 2026-10-29.
+
 ## Current scope
 One complete path: create a draft, choose its appearance, enter Studio, edit it, inspect the customer page. Then three complete sample businesses (barber/beauty, mobile detailing, tutor/coach), the eight approved colour directions on real components, remaining widgets and overlays, then marketing, navigation and pricing.
 

@@ -1,5 +1,8 @@
 # Linktree flow, from the owner's screen recording (2026-10-29)
 
+**How to use this: immersion, not a template.** The owner recorded it so the team understands what a very good product feels like to use: pace, detail, the quality of each moment. Do not copy its structure, screen order, layouts, wording or visuals. There is more than one good way to do each of these things, and Taplo should find its own.
+
+
 Source: the owner's recording of a real Linktree account, 5m11s, desktop 1664x816. Key frames are in `.claude/refs/linktree-recording/` (ignored by git, other company's product). Observed by sampling a frame every 10 seconds; no audio or interaction timing was analysed.
 
 ## Onboarding, in order (t = seconds into the recording)
@@ -23,7 +26,7 @@ Source: the owner's recording of a real Linktree account, 5m11s, desktop 1664x81
 - "Tools to grow your audience" (t=290): cards with real photography or illustration, a title, a line and one button.
 - Bookings (t=300): a dialog with a calendar illustration, "Make more sales by making it easy", Continue; a warning row "Connect a calendar".
 
-## What it teaches, applied to Taplo
+## Principles worth understanding (not instructions to copy)
 - The delight is one **colour moment** with the live page, not a long form. Taplo's equivalent: the stage behind the phone takes the chosen look's colour while the sheet stays monochrome.
 - Each onboarding screen has one job, big hit targets and, where it helps, an illustrated card. Taplo uses photographic category cards (real generated photography) in place of illustration.
 - Account and plan come early in Linktree. Taplo keeps account last (locked owner decision); the comparison is noted, not copied.
