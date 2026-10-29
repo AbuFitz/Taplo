@@ -124,3 +124,14 @@
 body:has([data-editor=compact][data-short=true]) .studio-dock{display:none}
 .portal-workspace[data-workspace-section=editor] .portal-content{padding-bottom:104px}
 @media(min-width:1024px){.portal-workspace[data-workspace-section=editor] .portal-content{padding-bottom:12px}}
+
+/* One page template: title, one plain sentence, one primary action, then white cards. Empty states are the same card, never a poster. */
+.portal-page-description{font-size:15px;color:#454545;margin-top:8px}
+.portal-page-heading{margin:4px 0 24px}
+.portal-workspace [data-testid=empty-panel]{display:grid;grid-template-columns:1fr;max-width:none;border:0;border-radius:24px;background:#fff;padding:24px;box-shadow:0 0 0 1px #0000000f}
+.portal-workspace [data-testid=empty-panel]>:is(svg,div):first-child:not(:last-child){display:none}
+.portal-workspace [data-testid=empty-panel] svg{height:56px;width:auto}
+.portal-workspace [data-testid=empty-panel] h2{font-size:20px;font-weight:600;letter-spacing:-.02em}
+.portal-workspace [data-testid=empty-panel] :is(p,div){font-size:15px;color:#454545}
+.portal-workspace [data-testid=empty-panel] a{display:inline-flex;align-items:center;min-height:44px;padding:0 20px;border-radius:99px;background:#111;color:#fff;font-weight:600;text-decoration:none}
+.portal-workspace [data-testid=empty-panel] svg{display:none}

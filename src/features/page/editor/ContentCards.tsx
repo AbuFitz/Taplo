@@ -100,7 +100,7 @@ function Row({ w, i, count, ed, sum: s, selected, onSelect, onDetails, onAddReco
           <span className="min-w-0 flex-1">
             <span className="flex flex-wrap items-center gap-1.5"><span className="text-sm font-semibold">{s.name}</span>{main ? <span className="shrink-0 rounded bg-neutral-100 px-1.5 py-0.5 text-[0.6875rem] font-medium text-neutral-600">Main action</span> : null}</span>
             <span className="block truncate text-xs text-muted-foreground">{s.summary || (s.needs ? "Nothing to show yet" : def.description)}</span>
-            {status ? <span className={cn("mt-0.5 flex items-center gap-1 text-xs font-medium", status.tone === "warn" ? "text-amber-800" : "text-muted-foreground")}>{s.locked ? <Lock aria-hidden="true" className="size-3" /> : null}{status.text}</span> : null}
+            {status ? <span className={cn("mt-0.5 flex items-center gap-1 text-xs font-medium", status.tone === "warn" ? "text-foreground" : "text-muted-foreground")}>{s.locked ? <Lock aria-hidden="true" className="size-3" /> : null}{status.text}</span> : null}
           </span>
         </button>
         <Button type="button" variant="ghost" size="icon" className="size-11 shrink-0" aria-pressed={!w.hidden} aria-label={w.hidden ? `Show ${s.name} on your page` : `Hide ${s.name} from your page`} onClick={() => ed.updateWidget(w.id, { hidden: !w.hidden })}>

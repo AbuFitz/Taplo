@@ -37,7 +37,7 @@ export function Overview() {
               <span className={cn("rounded-full border px-3 py-1 text-sm font-medium", s.published && "border-green-600/50 bg-green-50 text-green-950")}>
                 {s.published ? `Published · v${s.published.version}` : "Draft · not published"}
               </span>
-              {draftDiffers ? <span className="text-sm text-amber-800">You have unpublished changes.</span> : null}
+              {draftDiffers ? <span className="text-sm text-foreground">You have unpublished changes.</span> : null}
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               <Button disabled={!canPublish(s)} onClick={() => patch(publish)}>{s.published ? "Publish changes" : "Publish"}</Button>

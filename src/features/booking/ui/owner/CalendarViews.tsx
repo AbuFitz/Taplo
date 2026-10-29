@@ -84,7 +84,7 @@ export function Agenda({
       {pending.length ? (
         <section
           aria-labelledby="needs-reply"
-          className="rounded-2xl border border-amber-300 bg-amber-50/70 p-4"
+          className="rounded-2xl border border-black/15 bg-white p-4"
         >
           <h3 id="needs-reply" className="text-sm font-semibold text-amber-950">
             Needs a reply ({pending.length})
