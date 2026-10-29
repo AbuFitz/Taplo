@@ -68,15 +68,16 @@ function interleave<T extends { group: string }>(items: T[]): T[] {
 export function DesignGallery() {
   const [query, setQuery] = React.useState("")
   const [biz, setBiz] = React.useState<string | null>(null)
-  const [lookId, setLookId] = React.useState<string | null>(null)
+  const [dress, setDress] = React.useState<string | null>(null)
   const [arr, setArr] = React.useState<Arrangement | null>(null)
   const [open, setOpen] = React.useState<Pick | null>(null)
-  const all = React.useMemo<Pick[]>(() => interleave(ALL_SHOWCASE.flatMap((i) => { const design = getDesign(i.design); return design ? [{ scenario: i.scenario, design, look: i.look ? getStartingLook(i.look) : undefined, note: i.note, logo: i.logo, arrangement: i.arrangement, group: i.group }] : [] })), [])
+  const base = React.useMemo<Pick[]>(() => interleave(ALL_SHOWCASE.flatMap((i) => { const design = getDesign(i.design); return design ? [{ scenario: i.scenario, design, look: i.look ? getStartingLook(i.look) : undefined, note: i.note, logo: i.logo, arrangement: i.arrangement, group: i.group }] : [] })), [])
+  /** Putting every page in one look: the shelf becomes a way to see how your business could wear it. */
+  const all = React.useMemo<Pick[]>(() => { const l = getStartingLook(dress ?? ""); const d = l ? getDesign(l.design) : undefined; return l && d ? base.map((p) => ({ ...p, look: l, design: d })) : base }, [base, dress])
   const q = query.trim().toLowerCase()
   const shown = all.filter((p) => {
     const name = SCENARIOS[p.scenario].content.identity.name
     if (biz && !BUSINESS.find((b) => b.id === biz)!.of.split(" ").includes(p.scenario)) return false
-    if (lookId && p.look?.id !== lookId) return false
     if (arr && p.arrangement !== arr) return false
     return !q || [name, p.note, p.look?.name ?? p.design.name, SCENARIOS[p.scenario].label, arrangementName(p.arrangement) ?? ""].join(" ").toLowerCase().includes(q)
   })
@@ -89,7 +90,7 @@ export function DesignGallery() {
       <div className="dg-bar" role="region" aria-label="Filter designs">
         <div className="dg-search"><Search aria-hidden="true" /><input type="search" aria-label="Search pages" placeholder="Search: florist, plumber, tutor…" value={query} onChange={(e) => setQuery(e.target.value)} />{query ? <button type="button" aria-label="Clear search" onClick={() => setQuery("")}><X /></button> : null}</div>
         <div className="dg-row" role="group" aria-label="Business type"><button type="button" aria-pressed={biz === null} onClick={() => setBiz(null)}>All</button>{BUSINESS.map((b) => <button key={b.id} type="button" aria-pressed={biz === b.id} onClick={() => setBiz(biz === b.id ? null : b.id)}>{b.label}</button>)}</div>
-        <div className="dg-row" role="group" aria-label="Look"><span>Look</span>{STARTING_LOOKS.map((l) => <button key={l.id} type="button" aria-pressed={lookId === l.id} onClick={() => setLookId(lookId === l.id ? null : l.id)}>{l.name}</button>)}</div>
+        <div className="dg-row" role="group" aria-label="Try every page in a look"><span>Try on</span><button type="button" aria-pressed={dress === null} onClick={() => setDress(null)}>Their own</button>{STARTING_LOOKS.map((l) => <button key={l.id} type="button" aria-pressed={dress === l.id} onClick={() => setDress(dress === l.id ? null : l.id)}>{l.name}</button>)}</div>
         <div className="dg-row" role="group" aria-label="Profile arrangement"><span>Profile</span>{PROFILE_CHOICES.map((c) => <button key={c.id} type="button" aria-pressed={arr === c.id} onClick={() => setArr(arr === c.id ? null : c.id)}>{c.name}</button>)}</div>
       </div>
       <ul className="dg-shelf" data-testid="gallery-list">
@@ -118,8 +119,10 @@ export function DesignGallery() {
   )
 }
 
-function Detail({ pick, onClose }: { pick: Pick; onClose: () => void }) {
+function Detail({ pick: first, onClose }: { pick: Pick; onClose: () => void }) {
   const [device, setDevice] = React.useState<"phone" | "computer">("phone")
+  const [lookId, setLookId] = React.useState<string | undefined>(first.look?.id)
+  const pick = React.useMemo<Pick>(() => { const l = getStartingLook(lookId ?? ""); const d = l ? getDesign(l.design) : undefined; return l && d ? { ...first, look: l, design: d } : first }, [first, lookId])
   const name = SCENARIOS[pick.scenario].content.identity.name
   const demo = exampleForScenario(pick.scenario)
   return (
@@ -133,8 +136,9 @@ function Detail({ pick, onClose }: { pick: Pick; onClose: () => void }) {
           <div className="sf-seg" role="radiogroup" aria-label="Preview size">
             {(["phone", "computer"] as const).map((d) => <label key={d} data-on={device === d}><input type="radio" name="dg-device" aria-label={d === "phone" ? "Phone" : "Computer"} checked={device === d} onChange={() => setDevice(d)} /><span>{d === "phone" ? "Phone" : "Computer"}</span></label>)}
           </div>
+          <div className="dg-detail-group"><h3>Try another look</h3><div className="dg-tags" role="group" aria-label="Look for this page">{STARTING_LOOKS.map((l) => <button key={l.id} type="button" className="dg-look" aria-pressed={pick.look?.id === l.id} onClick={() => setLookId(l.id)}>{l.name}</button>)}</div></div>
           <div className="dg-detail-group"><h3>How it is made</h3>
-            <dl className="dg-facts"><dt>Arrangement</dt><dd>{arrangementName(pick.arrangement) ?? "As designed"}</dd><dt>Design</dt><dd>{pick.design.name}. {pick.design.blurb}</dd><dt>Material</dt><dd>{FINISHES.find((f) => f.id === pick.design.overrides.layout?.finish)?.name ?? "Set by the design"}</dd></dl>
+            <dl className="dg-facts"><dt>Look</dt><dd>{pick.look?.name ?? "As designed"}</dd><dt>Arrangement</dt><dd>{arrangementName(pick.arrangement) ?? "As designed"}</dd><dt>Design</dt><dd>{pick.design.name}. {pick.design.blurb}</dd><dt>Material</dt><dd>{FINISHES.find((f) => f.id === pick.design.overrides.layout?.finish)?.name ?? "Set by the design"}</dd></dl>
           </div>
           <div className="dg-detail-group"><h3>The feel</h3><div className="dg-tags">{pick.design.moods.map((m) => <span key={m}>{m}</span>)}{pick.design.motion === "Moving background" ? <span>Moving background</span> : null}</div></div>
           <p className="dg-detail-note">Every colour, typeface and layout can be changed afterwards. Your own content always stays yours.</p>

@@ -88,3 +88,5 @@
 .dg-item .dg-open{margin-bottom:2px}
 
 @media(max-width:700px){.dg-head p{display:none}.dg-head{margin-bottom:10px}}
+.dg-look{font:inherit;font-size:13px;padding:6px 12px;border-radius:999px;border:0;background:#f1f1ef;color:#3d4350;cursor:pointer;box-shadow:inset 0 0 0 1px #e3e3df}
+.dg-look[aria-pressed="true"]{background:#111;color:#fff;box-shadow:none}
