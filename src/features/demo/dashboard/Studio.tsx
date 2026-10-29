@@ -1,9 +1,10 @@
 "use client"
 
 import { ExplainerLoop } from "@/components/taplo/explainer-loops"
+import { Scene } from "@/components/taplo/scenes"
 import * as React from "react"
 import Link from "next/link"
-import { Boxes, CalendarDays, Check, Copy, Lock, MessageSquare, Palette, Share2, Sparkles } from "lucide-react"
+import { ArrowRight, Boxes, CalendarDays, Check, Copy, Lock, MessageSquare, Palette, Share2, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { businessAddress } from "@/lib/domains"
 import { WHEN_UNAVAILABLE } from "@/lib/capabilities"
@@ -49,6 +50,9 @@ export function Studio() {
   const checks = readiness(s)
   const requiredLeft = checks.filter((c) => c.required && !c.done)
   const next = checks.filter((c) => !c.done).slice(0, 3)
+  const nextItem = checks.find((c) => !c.done && c.id !== "published") ?? null
+  const hour = new Date(now || 0).getHours()
+  const greeting = !now ? "Welcome back" : hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening"
   const liveSlug = s.published?.content.identity.slug
   const url = liveSlug ? `${window.location.origin}/demo/p/${liveSlug}` : null
   const upcoming = bk.bookings.filter((b) => b.endsAt > now && (b.status === "confirmed" || b.status === "pending")).length
@@ -89,6 +93,22 @@ export function Studio() {
           {!canPublish(s) ? <p className="studio-note">To publish: {requiredLeft.map((c) => c.label.toLowerCase()).join(", ")}.</p> : <p className="studio-note">{WHEN_UNAVAILABLE.publicPublishing}</p>}
         </div>
 
+        <section className="studio-next" aria-label="Next step" data-testid="studio-next">
+          <div>
+            <p className="studio-next-kicker">{greeting}</p>
+            {nextItem ? (<>
+              <h2>{nextItem.label}</h2>
+              <p>{nextItem.required ? "One step closer to publishing." : "Optional, and it helps customers choose you."}</p>
+              <Link href={nextItem.href} className="studio-next-cta">Do this now <ArrowRight aria-hidden="true" /></Link>
+            </>) : (<>
+              <h2>Your page is ready to share.</h2>
+              <p>Everything on the list is done. Send the link or show the QR code.</p>
+              <Link href="/dashboard/page" className="studio-next-cta">Open sharing <ArrowRight aria-hidden="true" /></Link>
+            </>)}
+          </div>
+          <Scene name={nextItem && /book|time|service/i.test(nextItem.label) ? "bookings" : "first-run"} className="studio-next-art" />
+        </section>
+
         <div className="studio-card">
           <h2>Waiting for you</h2>
           <dl className="studio-stats">
@@ -100,15 +120,15 @@ export function Studio() {
         </div>
 
         {!s.checklistHidden ? (
-          <div className="studio-card" data-testid="studio-checklist">
-            <div className="studio-row"><h2>Your checklist</h2><button type="button" className="studio-note underline" onClick={() => patch((x) => ({ ...x, checklistHidden: true }))}>Hide</button></div>
+          <details className="studio-card studio-check" data-testid="studio-checklist" open={checks.filter((c) => !c.done).length > 0 && checks.filter((c) => c.done).length < 3}>
+            <summary><h2>Your checklist</h2><span className="studio-note">{checks.filter((c) => c.id !== "published" && c.done).length} of {checks.filter((c) => c.id !== "published").length} done</span></summary>
             <ul className="studio-list">
               {checks.filter((c) => c.id !== "published").sort((a, b) => Number(a.done) - Number(b.done)).slice(0, 7).map((c) => (
                 <li key={c.id} data-done={c.done}><Link href={c.href}><span className={cn("studio-dot", c.done && "studio-dot-done")} aria-hidden="true" />{c.label}{c.done ? <i>done</i> : !c.required ? <i>optional</i> : null}</Link></li>
               ))}
             </ul>
-            <p className="studio-note">Do these in any order. Choosing a goal in setup does not set it up: each item is ticked only when it exists.</p>
-          </div>
+            <button type="button" className="studio-note underline" onClick={() => patch((x) => ({ ...x, checklistHidden: true }))}>Hide checklist</button>
+          </details>
         ) : null}
 
         {!(s.content.services ?? []).some((x) => !x.archived) ? (

@@ -21,8 +21,8 @@ test("illustrations are static when reduced motion is requested", async ({ page 
   await page.emulateMedia({ reducedMotion: "reduce" })
   await openEditorWithSample(page)
   await page.goto("/dashboard/analytics")
-  const paths = page.getByTestId("empty-panel").locator("svg path")
-  expect(await paths.count()).toBeGreaterThan(2)
+  const paths = page.getByTestId("empty-panel").locator("svg rect, svg path")
+  expect(await paths.count()).toBeGreaterThan(5)
   expect(await paths.first().evaluate((p) => p.getAttribute("style") ?? "")).not.toContain("stroke-dasharray")
 })
 

@@ -50,3 +50,22 @@
 .studio-loops span{display:grid;gap:2px;min-width:0}
 .studio-loops strong{font-size:13px}
 .studio-loops small{font-size:12px;color:#5b6270;line-height:1.4}
+
+/* Alive, minimal studio: a soft glow behind the page, one dark next-step card, quiet supporting cards. */
+.studio::before{content:"";position:absolute;inset:-40px -10% auto -10%;height:560px;z-index:-1;pointer-events:none;background:radial-gradient(60% 70% at 50% 0%,color-mix(in srgb,#d9d6ce 55%,transparent),transparent 70%),radial-gradient(40% 50% at 85% 10%,color-mix(in srgb,#cfd6dc 45%,transparent),transparent 70%)}
+.studio-next{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 112px;gap:8px;align-items:center;padding:20px 18px 20px 22px;border-radius:26px;background:#101010;color:#f5f3eb;overflow:hidden;box-shadow:0 22px 44px -22px rgba(0,0,0,.55),0 1px 0 rgba(255,255,255,.06) inset}
+.studio-next-kicker{margin:0 0 6px;font-size:12.5px;font-weight:600;letter-spacing:.01em;color:#a9a69e}
+.studio-next h2{margin:0;font-size:19px;line-height:1.2;font-weight:650;letter-spacing:-.02em;text-wrap:balance}
+.studio-next p:not(.studio-next-kicker){margin:6px 0 0;font-size:13px;line-height:1.45;color:#b8b5ae}
+.studio-next-cta{display:inline-flex;align-items:center;gap:8px;min-height:44px;margin-top:14px;padding:0 18px;border-radius:999px;background:#f5f3eb;color:#101010;font-size:14px;font-weight:650;text-decoration:none;transition:transform .2s}
+.studio-next-cta:hover{transform:translateY(-1px)}
+.studio-next-cta svg{width:15px;height:15px}
+.studio-next-art{width:124px;max-width:none;justify-self:end;margin-right:-6px}
+.studio-stats div{background:#fff;box-shadow:0 0 0 1px #0000000f}
+.studio-stats dd{font-family:var(--font-numeral,inherit);font-size:28px}
+.studio-check summary{display:flex;align-items:center;justify-content:space-between;gap:10px;list-style:none;cursor:pointer;min-height:44px}
+.studio-check summary::-webkit-details-marker{display:none}
+.studio-check summary h2{margin:0}
+.studio-check[open] summary{margin-bottom:6px}
+.studio-card{background:#fff;box-shadow:0 1px 2px #0000000a,0 12px 28px -18px #00000030,0 0 0 1px #0000000a}
+@media(max-width:760px){.studio-next{grid-template-columns:minmax(0,1fr) 84px}.studio-next-art{width:104px;margin-right:-26px}}
