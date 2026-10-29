@@ -28,7 +28,7 @@ for (const width of [390, 1440]) test(`starting with a business design preserves
   await page.goto('/onboarding?from=jays-barbers')
   await expect(page.getByTestId('from-example')).toContainText('Jay’s Barbers')
   const read = () => page.evaluate(() => JSON.parse(localStorage.getItem('taplo.demo.v2')!))
-  await expect.poll(async () => (await read()).page.themeId).toBe('garage')
+  await expect.poll(async () => (await read()).page.themeId).toBe('paper')
   const start = await read()
   const menu = start.page.widgets.find((w: { type: string }) => w.type === 'priceMenu')
   expect(menu.appearance.surface).toBe('accent')

@@ -26,7 +26,7 @@ for (const width of [390, 1440]) {
       const themes = page.getByRole("radiogroup", { name: "Looks" })
       await expect(themes.getByRole("radio").first()).toBeVisible()
       const before = (await state(page)).page.themeId
-      const other = themes.getByRole("radio").nth(1)
+      const other = themes.getByRole("radio").nth(2)
       await other.check({ force: true })
       const chosen = (await state(page)).page.themeId
       expect(chosen).not.toBe(before)

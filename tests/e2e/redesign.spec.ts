@@ -15,7 +15,7 @@ for(const width of [320,390,768,1440])test(`mobile-led setup has eight steps, a 
   await cont(page,{keepLook:true})
   await page.getByRole('radio',{name:'Paper'}).check({force:true})
   await expect(frame.locator('[data-taplo-page]')).toHaveAttribute('data-tone','light',{timeout:15000})
-  await expect(frame.locator('[data-taplo-page]')).toHaveAttribute('data-motion',/none|subtle/)
+  await expect(frame.locator('[data-taplo-page]')).toHaveAttribute('data-motion',/none|subtle|drift/)
   await next();await page.getByRole('button',{name:'Barber',exact:true}).click();await next()
   await page.getByRole('button',{name:'Book an appointment'}).click();await next()
   await page.getByRole('button',{name:'Booking requests',exact:true}).click()

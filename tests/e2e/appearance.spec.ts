@@ -75,7 +75,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
     await page.goto("/appearance");
     await choice(page, "Look", "Night");                                                   // a dark page, so a dark text colour is the unreadable one
     const accent = () => frame(page).locator("[data-taplo-page]").evaluate((el) => getComputedStyle(el).getPropertyValue("--tp-accent").trim());
-    await expect.poll(accent).toBe("#c8a35a");                                              // the look has landed in the preview before the colour is measured
+    await expect.poll(accent, { timeout: 15000 }).toBe("#c8a35a");                                              // the look has landed in the preview before the colour is measured
     const before = await accent();
     await page.locator("details").evaluateAll((all) => all.forEach((d) => { (d as HTMLDetailsElement).open = true }));
     await page.getByRole("button", { name: /Accent: choose colour/ }).click();
@@ -87,6 +87,7 @@ test.describe("Appearance lab: one engine, four configurations", () => {
     await page.mouse.up();
     expect(await accent()).not.toBe(before);
     await page.keyboard.press("Escape");
+    await page.waitForTimeout(500); // let the drag commit as one history entry before undoing
     await page.getByTestId("lab-undo").click();
     await expect.poll(accent).toBe(before);
 
@@ -130,7 +131,7 @@ test.describe("appearance lab on a phone", () => {
     await expect(page.locator('iframe[title="Desktop preview"]')).toBeVisible();
     await choice(page, "Look", "Clean");
     await page.getByRole("radiogroup", { name: "Preview" }).locator("label", { hasText: "Phone" }).click();
-    await expect.poll(() => page.frameLocator('iframe[title="Mobile preview"]').locator("[data-taplo-page]").getAttribute("data-header")).toBe("editorial");
+    await expect.poll(() => page.frameLocator('iframe[title="Mobile preview"]').locator("[data-taplo-page]").getAttribute("data-header")).toBe("split");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 });

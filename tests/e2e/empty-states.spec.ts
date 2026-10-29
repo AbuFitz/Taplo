@@ -1,9 +1,11 @@
 import { expect, test } from "@playwright/test"
 import AxeBuilder from "@axe-core/playwright"
+import { openEditorWithSample } from "./helpers"
 
 for (const width of [390, 1440]) {
   test(`analytics shows an honest empty state with one next action at ${width}`, async ({ page }) => {
     await page.setViewportSize({ width, height: 844 })
+    await openEditorWithSample(page)
     await page.goto("/dashboard/analytics")
     const panel = page.getByTestId("empty-panel")
     await expect(panel).toBeVisible()
@@ -17,6 +19,7 @@ for (const width of [390, 1440]) {
 
 test("illustrations are static when reduced motion is requested", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" })
+  await openEditorWithSample(page)
   await page.goto("/dashboard/analytics")
   const paths = page.getByTestId("empty-panel").locator("svg path")
   expect(await paths.count()).toBeGreaterThan(2)
