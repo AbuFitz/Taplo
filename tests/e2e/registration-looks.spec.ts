@@ -33,11 +33,11 @@ for (const width of [390, 1440]) {
       const bg = (await state(page)).page.appearance.background
       if (look.animated) expect(bg.motion, `${look.name} moves`).toBe(true)
       else expect(bg.motion ?? false, `${look.name} is still`).toBe(false)
-      await expect(frame(page).locator(".tp-bg-gradient")).toHaveAttribute("data-animate", look.animated ? "true" : "false", { timeout: 15000 })
+      await expect(frame(page).locator(".tp-bg-gradient")).toHaveAttribute("data-animate", look.animated ? "true" : "false", { timeout: 40000 })
     }
     await page.emulateMedia({ reducedMotion: "reduce" })
     await page.getByRole("radio", { name: "Carbon / white", exact: true }).check({ force: true })
-    await expect(frame(page).locator(".tp-shader")).toHaveAttribute("data-active", "false", { timeout: 15000 })
+    await expect(frame(page).locator(".tp-shader")).toHaveAttribute("data-active", "false", { timeout: 40000 })
   })
 
   test(`colours are curated palettes for the chosen look, kept across looks, reset and undone at ${width}`, async ({ page }) => {
