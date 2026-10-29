@@ -1,0 +1,71 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>C workspace</title><style>*{box-sizing:border-box}html,body{margin:0}
+:root{--bg:#f8f8f8;--card:#fff;--fg:#0a0a0a;--ink:#111;--muted:#5d5d5d;--line:#e8e8e8;--ring:#0000001a;--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:48px;--disp:"Space Grotesk Variable","Space Grotesk","Inter Variable",Inter,system-ui,sans-serif;--num:"Geist Variable","Inter Variable",Inter,sans-serif}
+body{font-family:"Inter Variable",Inter,system-ui,sans-serif;background:var(--bg);color:var(--fg);font-size:16px;line-height:1.4;-webkit-font-smoothing:antialiased}
+a{color:inherit}svg{flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;font-family:inherit;font-size:16px;font-weight:600;text-decoration:none;border:0;cursor:pointer;transition:transform .12s}
+.btn:active{transform:scale(.98)}.btn:focus-visible,a:focus-visible{outline:2px solid #111;outline-offset:2px}
+.btn-primary{background:var(--ink);color:#fff}.btn-ghost{background:#fff;color:var(--ink);box-shadow:0 0 0 1px var(--ring)}
+.hdr{display:flex;align-items:center;gap:var(--s2);min-height:64px;padding:var(--s2) var(--s4)}
+.hdr .menu{display:grid;place-items:center;width:44px;height:44px;border-radius:14px}
+.hdr .t{flex:1;min-width:0}.hdr b{display:block;font-size:16px;font-weight:600;line-height:1.2}.hdr small{font-size:14px;color:var(--muted)}
+.view{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;background:#fff;box-shadow:0 0 0 1px var(--ring),0 6px 16px -10px #0004;font-size:14px;font-weight:600;text-decoration:none}
+.status{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s3);margin:0;font-size:14px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:0 12px;border-radius:999px;border:1px solid #0000002e;background:#fff;color:var(--fg);font-size:14px;font-weight:600}
+.pill i{width:8px;height:8px;border-radius:50%;border:2px solid var(--ink)}
+.tip{margin:0;font-size:14px;line-height:20px;color:var(--muted)}.tip a{display:inline-block;padding:12px 0;margin:-12px 0;font-weight:600;color:var(--fg);text-underline-offset:4px}
+.note{margin:0;font-size:14px;line-height:20px;color:var(--muted)}
+.dock{display:flex;gap:2px;padding:6px 8px;border-radius:26px;background:rgba(255,255,255,.8);-webkit-backdrop-filter:blur(22px) saturate(1.4);backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 1px 0 #fff inset,0 0 0 1px #0000000d,0 18px 40px -22px #00000059}
+.dock a{display:grid;place-items:center;width:48px;height:48px;border-radius:16px;color:#222}
+.dock-m{position:fixed;z-index:30;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom))}
+/* faithful miniature of the customer page (Marlowe & Finch is a sample business; its brown/cream belong to the page, not the product) */
+.phone{position:relative;width:min(var(--pw,300px),100%);height:var(--h);padding:10px;border-radius:46px;background:#141414;box-shadow:inset 0 0 0 2px #4a4a4a,0 28px 50px -28px #000a;overflow:hidden;flex:none}
+.phone.peek{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.notch{position:absolute;z-index:3;top:18px;left:50%;width:84px;height:24px;border-radius:99px;background:#000;transform:translateX(-50%)}
+.screen{height:100%;overflow:hidden;border-radius:36px;background:#ebe5db;padding:10px;font-family:Inter,sans-serif;color:#3b2417}
+.peek .screen{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.idcard{border-radius:28px 28px 22px 22px;background:#fdfaf3;overflow:hidden;box-shadow:0 1px 0 #fff inset,0 0 0 1px #0000000a}
+.hero{height:118px;background-size:cover;background-position:center 40%;-webkit-mask-image:linear-gradient(#000 62%,transparent);mask-image:linear-gradient(#000 62%,transparent)}
+.idb{padding:0 16px 16px;margin-top:-20px;position:relative}
+.logo{display:grid;place-items:center;width:46px;height:46px;border-radius:6px;background:#17120d;color:#d9b76a;font:700 15px Georgia,"DejaVu Serif",serif}
+.idb h3{margin:10px 0 0;font:700 24px/1.1 Georgia,"DejaVu Serif",serif;letter-spacing:-.01em;color:#3a2316}
+.role{margin:8px 0 0;font-size:15px;line-height:1.4;color:#6a5a4e}.meta{margin:8px 0 0;font-size:14px;color:#7c6e63}
+.acts{display:flex;align-items:center;gap:8px;margin-top:12px}.acts i{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:50%;background:#efe8dc;color:#4b3526}.book{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;height:46px;border-radius:99px;background:#8c4a36;color:#fff;font-size:15px;font-weight:600}
+.svc{margin-top:10px;padding:16px;border-radius:22px;background:#fdfaf3}
+.svc h4{display:flex;align-items:center;gap:8px;margin:0;font:700 18px Georgia,"DejaVu Serif",serif;color:#3a2316}
+.svc h4 em{padding:2px 8px;border-radius:99px;background:#efe8dc;color:#5a4636;font:600 14px Inter,sans-serif}
+.svc small{display:block;margin:8px 0 4px;font-size:14px;color:#7c6e63}
+.r{display:flex;align-items:baseline;gap:8px;padding:8px 0;font-size:15px}.r u{flex:1;border-bottom:1px dotted #b9ab9c;transform:translateY(-3px)}.r b{font-weight:600}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+body{overflow-x:hidden}
+.ws{display:grid;gap:var(--s3);padding:0 0 260px}
+.ws>.status{padding:0 var(--s4)}
+.stage{--pw:340px;display:grid;justify-items:center;gap:var(--s3);padding:var(--s4);background:#eeeeec;border-radius:28px 28px 0 0}
+.edit{width:var(--pw)}
+.rail{display:none}
+.sheet{position:fixed;z-index:20;left:0;right:0;bottom:0;padding:var(--s2) var(--s4) max(var(--s3),env(safe-area-inset-bottom));border-radius:28px 28px 0 0;background:#fff;box-shadow:0 -1px 0 #0000000d,0 -18px 40px -20px #0000004d}
+.grab{width:40px;height:4px;border-radius:99px;background:#d4d4d4;margin:0 auto var(--s3)}
+.sheet h2{margin:0;font-family:var(--disp);font-size:20px;line-height:1.2;font-weight:600;letter-spacing:-.02em}
+.sheet .go{display:flex;align-items:center;gap:var(--s3);margin-top:var(--s3)}
+.sheet .go .btn{flex:none}.sheet .go .note{flex:1}
+.sheet .tip{margin-top:var(--s3)}
+.sheet .dock{margin:var(--s3) auto 0;width:max-content;box-shadow:0 0 0 1px #0000000f;background:#f6f6f6}
+.dock-d{display:none}
+@media(min-width:1024px){
+ .app{display:grid;grid-template-columns:96px minmax(0,1fr) 336px;column-gap:24px}
+ .hdr{grid-column:1/-1;padding:12px 40px}
+ .app>.dock-d{display:grid;position:sticky;top:96px;align-self:start;margin:0 0 0 32px;width:64px;padding:8px;border-radius:24px}
+ .ws{padding:0;align-content:start}.ws>.status{display:none}
+ .stage{height:calc(100dvh - 88px);align-content:center;border-radius:28px;padding:0 var(--s4)}
+ .stage{--pw:400px}.stage .phone{--h:640px!important}
+ .sheet{display:none}
+ .rail{display:block;position:sticky;top:76px;align-self:start;padding-top:var(--s2);margin-right:40px}
+ .rail section{padding:var(--s5) 0;border-top:1px solid var(--line)}.rail section:first-child{border-top:0;padding-top:var(--s2)}
+ .rail h2{margin:var(--s4) 0 0;font-family:var(--disp);font-size:24px;line-height:1.15;font-weight:600;letter-spacing:-.02em}
+ .rail p.lead{margin:var(--s2) 0 0;font-size:14px;line-height:20px;color:var(--muted)}
+ .rail .btn{width:100%;margin-top:var(--s4)}
+ .rail .note{margin-top:var(--s3)}
+ .rail dl{margin:0;display:grid;gap:var(--s3);font-size:14px}.rail dt{color:var(--muted)}.rail dd{margin:0;font-weight:600}
+}</style></head><body><div class="app"><header class="hdr"><a class="menu" href="#" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></a><div class="t"><b>Marlowe &amp; Finch</b><small>Dashboard</small></div><a class="view" href="#">View page</a></header><nav class="dock dock-d" aria-label="Studio"><a href="#" aria-label="Page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 8h6M9 12h6"/></svg></a><a href="#" aria-label="Services"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="7" r="2.5"/><circle cx="6" cy="17" r="2.5"/><path d="M8 8.5l11 8M8 15.5l11-8"/></svg></a><a href="#" aria-label="Bookings and messages"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></a><a href="#" aria-label="Share"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 10.8l7.6-3.6M8.2 13.2l7.6 3.6"/></svg></a></nav><main class="ws"><p class="status"><span class="pill"><i></i>Draft</span><span>Only visible in this browser</span></p><div class="stage"><div class="phone" style="--h:395px" aria-hidden="true"><div class="notch"></div><div class="screen"><div class="idcard"><div class="hero" style="background-image:url(../../../../public/photography/generated/barber-chair.webp)"></div><div class="idb"><div class="logo">M&amp;F</div><h3>Marlowe &amp; Finch</h3><p class="role">Classic cuts and hot-towel shaves, by appointment in the heart of Clerkenwell.</p><p class="meta">Barbers &middot; Clerkenwell, London</p><div class="acts"><div class="book"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg> Book your chair</div><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h3l1.5 4-2 1.5a10 10 0 0 0 5 5L15 12.500l4 1.500v3a2 2 0 0 1-2 2A13 13 0 0 1 4 6a2 2 0 0 1 2-2z"/></svg></i><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/></svg></i></div></div></div><div class="svc"><h4>Services <em>Sample</em></h4><small>Hair</small><div class="r"><span>Signature cut</span><u></u><b>&pound;34</b></div><div class="r"><span>Skin fade</span><u></u><b>&pound;32</b></div><div class="r"><span>Hot-towel shave</span><u></u><b>&pound;28</b></div></div></div></div><a class="btn btn-ghost edit" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1-4L16 5l3 3L8 19z"/></svg> Edit my page</a></div></main>
+<aside class="rail" aria-label="Next step"><section><p class="status"><span class="pill"><i></i>Draft</span><span>Only visible in this browser</span></p><h2>Your page is ready to publish</h2><p class="lead">Everything you need is filled in.</p><a class="btn btn-primary" href="#">Publish</a><p class="note">Your page opens in this browser only. A public address needs accounts and publishing, which are not connected yet.</p></section><section><dl><div><dt>Services</dt><dd>3 &middot; sample content</dd></div></dl></section><section><p class="tip">Add photos of your work so people can choose you. <a href="#">Add photos</a></p></section></aside>
+<section class="sheet" aria-label="Next step"><div class="grab"></div><h2>Your page is ready to publish</h2><div class="go"><a class="btn btn-primary" href="#">Publish</a><p class="note">Publishing is local to this browser.</p></div><p class="tip">Add photos of your work so people can choose you. <a href="#">Add photos</a></p><nav class="dock " aria-label="Studio"><a href="#" aria-label="Page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 8h6M9 12h6"/></svg></a><a href="#" aria-label="Services"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="7" r="2.5"/><circle cx="6" cy="17" r="2.5"/><path d="M8 8.5l11 8M8 15.5l11-8"/></svg></a><a href="#" aria-label="Bookings and messages"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></a><a href="#" aria-label="Share"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 10.8l7.6-3.6M8.2 13.2l7.6 3.6"/></svg></a></nav></section></div></body></html>
