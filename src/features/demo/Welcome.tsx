@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "next/link"
+import { Illustration } from "@/components/taplo/illustrations";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Check, Paintbrush } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures";
 import { loadSample } from "./actions";
@@ -75,30 +76,23 @@ export function Welcome() {
   };
   return (
     <div className="mx-auto max-w-6xl pb-12 pt-8 sm:pt-14">
-      <div className="grid gap-8 rounded-[2rem] bg-[#f4f4f4] p-7 text-[#111111] sm:p-10 lg:grid-cols-[1fr_auto] lg:items-end">
-        <div className="max-w-2xl">
-          <p className="mb-4 flex items-center gap-2 text-sm font-semibold">
-            <Paintbrush aria-hidden="true" className="size-4" /> Make it yours
-          </p>
-          <h1 className="max-w-xl text-4xl font-semibold leading-[1.06] tracking-tight sm:text-5xl">
+      <div className="grid items-center gap-8 rounded-[2rem] bg-[#f4f4f4] p-7 text-[#111111] sm:p-10 lg:grid-cols-[1fr_auto]" data-testid="first-run">
+        <div className="max-w-xl">
+          <Illustration name="profile" className="mb-5 h-20 w-24 text-[#111111]/75" />
+          <h1 className="text-4xl font-semibold leading-[1.06] tracking-tight sm:text-5xl">
             Set up your business page.
           </h1>
-          <p className="mt-5 max-w-lg text-base leading-relaxed">
-            Add your services or stock, choose a design and see how customers
-            will use your page.
+          <p className="mt-4 max-w-md text-base leading-relaxed text-[#444]">
+            Add what you offer, pick a look, share the link.
           </p>
-          <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs font-medium">
-            {[
-              "Phone and desktop previews",
-              "Change any look",
-              "Your content stays yours",
-            ].map((x) => (
-              <li className="flex items-center gap-1.5" key={x}>
-                <Check aria-hidden="true" className="size-3.5" />
+          <ol className="mt-6 grid gap-2 text-sm font-medium sm:grid-flow-col sm:auto-cols-max sm:gap-6">
+            {["Add your details", "Choose a look", "Share your page"].map((x, i) => (
+              <li className="flex items-center gap-2" key={x}>
+                <span aria-hidden="true" className="grid size-6 place-items-center rounded-full bg-[#111111] text-xs text-white">{i + 1}</span>
                 {x}
               </li>
             ))}
-          </ul>
+          </ol>
         </div>
         <Button
           asChild
@@ -120,8 +114,7 @@ export function Welcome() {
               Have a look around first
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Explore a design example, or try the editor. Test bookings and messages
-              stay in this browser.
+              Open an example page. Anything you try stays on this device.
             </p>
           </div>
           <Link

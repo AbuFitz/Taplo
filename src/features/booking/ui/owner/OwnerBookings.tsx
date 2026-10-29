@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { EmptyPanel } from "@/components/taplo/illustrations"
 
 import * as React from "react";
 import {
@@ -492,10 +493,13 @@ export function OwnerBookings({
         {tab === "enquiries" ? (
           <ul className="grid max-w-3xl gap-2" data-testid="enquiries">
             {state.enquiries.length === 0 ? (
-              <li className="rounded-2xl border border-dashed p-8 text-center text-sm text-muted-foreground">
-                No enquiries yet. Messages from your contact form and from
-                services that are arranged with you directly appear here. An
-                enquiry reserves no time.
+              <li>
+                <EmptyPanel illustration="bookings" title="No enquiries yet">
+                  <p>
+                    Messages from your contact form, and from services you arrange
+                    with customers directly, appear here. An enquiry reserves no time.
+                  </p>
+                </EmptyPanel>
               </li>
             ) : null}
             {state.enquiries.map((e) => (
