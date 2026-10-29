@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Lets a second build live beside the default one (NEXT_DIST_DIR=.next-review) so a review server never disturbs a test run.
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   // Cache Components is deliberately off for now: every public read is a runtime
   // tenant lookup, so the Suspense-everywhere model adds friction without payoff.
   // Revisit when public profiles move to tag-based caching (docs/product-decisions.md).
