@@ -14,4 +14,4 @@ Checks
 - Elevation, borders and hover/focus/active states are consistent across components.
 - Light and dark, long names, missing images and large text all still hold together.
 
-Output: findings with the offending selector or screen, the token it should use, and the fix; propose new tokens only when two or more places need them. Where a design tool is wanted, export tokens as JSON (Tokens Studio or similar) so Figma can consume them; note Figma itself is not available in this sandbox.
+Output: findings with the offending selector or screen, the token it should use, and the fix; propose new tokens only when two or more places need them. Keep the Figma file "Taplo design system" in step with the code tokens through the Figma connector (variables for platform colour, spacing, radius and the twelve looks; one mode per collection on the starter plan).

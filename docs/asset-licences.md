@@ -24,3 +24,7 @@ Scope: images under `public/` that the gallery, setup and showcase pages render.
 ## Open items (owner decisions)
 1. Resolved: the delivered marketing films and dealer captures now use the project's own generated vehicle illustrations. Keep them labelled as illustration, never as real stock.
 2. Real photographs of people (Unsplash barber and engineer) are used; model-release status is Unsplash's, not verified here.
+
+## Figma and LottieFiles (design tooling)
+- Figma file "Taplo design system" is the founder's own file; it holds code-derived tokens only, no third-party assets.
+- LottieFiles public animations are used only after the author, URL and licence terms are recorded here. None are shipped yet.

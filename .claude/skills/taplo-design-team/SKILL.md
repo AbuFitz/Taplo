@@ -19,7 +19,8 @@ Every non-trivial change runs this pipeline. Skip a stage only when it truly doe
 ## Rules
 - Write decisions down in `docs/team/<feature>/` (brief.md, research.md, spec.md, review.md). Each decision states the options considered and why one won, so the founder can audit it.
 - Evidence beats taste: cite a source, a measurement, a screenshot or a test. Mark each claim verified, inferred or unknown.
-- Name what cannot be done here: no real devices, accounts, payments or third-party editors (Figma, Rive, Jitter, After Effects, Spline) are available in the sandbox. Say what was produced instead and what still needs a person.
+- Tools: check which connectors are live before assuming a limit (`ListConnectors`). In this project the Figma, LottieFiles and Framer connectors are connected: use them. Still unavailable in the sandbox: real devices, live accounts and payments, and desktop-only editors (After Effects, Jitter, Spline, the Rive editor). Say what was produced instead and what still needs a person.
+- The Figma file "Taplo design system" (https://www.figma.com/design/IJjCbpKBGmqmxgcN7UIwGu) mirrors the code tokens. Code is the source of truth; update code first, then the file. The starter plan allows one variable mode per collection.
 - Prices, limits and metrics we invent are provisional placeholders and are labelled as such.
 - Preserve the existing system: reuse tokens, components and copy patterns before adding any.
 - User-facing copy never says "preview", "sandbox" or "demo" unless it is genuinely one.

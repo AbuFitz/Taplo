@@ -11,4 +11,4 @@ Style system: one stroke weight, one corner treatment, the platform neutral pale
 
 Inventory to cover: empty profile, no widgets yet, no analytics yet, no bookings yet, upgrade to unlock, verify your account, connect a service (NFC tag, QR, domain, calendar, payments), error and offline.
 
-Rules: keep each under a few KB, accessible (decorative `aria-hidden`, or labelled when it carries meaning), reuse components, and record any third-party asset and its licence in `docs/asset-licences.md`. External editors (Rive, Lottie authoring, Figma, Spline) are not available here: produce the brief and a code implementation, and flag where a person with those tools would improve it.
+Rules: keep each under a few KB, accessible (decorative `aria-hidden`, or labelled when it carries meaning), reuse components, and record any third-party asset and its licence in `docs/asset-licences.md`. Use the LottieFiles and Figma connectors where they help (search, recolour to Taplo tokens, design frames); Rive editor and Spline are not available, so produce the brief and a code implementation and flag where a person with those tools would improve it.
