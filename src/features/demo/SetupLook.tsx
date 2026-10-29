@@ -118,7 +118,7 @@ export function SetupLook() {
           {STARTING_LOOKS.map((l) => (
             <label className="setup-look-tile" key={l.id}>
               <input type="radio" name="look" aria-label={l.name} checked={look.id === l.id} onChange={() => chooseLook(l)} />
-              <span className="setup-look-art"><LookArt look={l} palette={paletteOf(drafts.palette, l) ?? originalPalette(l)} /></span>
+              <span className="setup-look-art"><LookArt look={l} palette={originalPalette(l)} /></span>
               <span className="setup-look-name">{l.name}</span>
             </label>
           ))}

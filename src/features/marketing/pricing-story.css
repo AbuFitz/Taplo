@@ -4,7 +4,7 @@
 }
 .pricing-shell main h1 {
   scroll-margin-top: 110px;
-  font-size: clamp(2.65rem, 5.2vw, 4.75rem);
+  font-size: clamp(2.65rem, 6.4vw, 6rem);
   line-height: 1.01;
   letter-spacing: -0.055em;
 }
@@ -73,9 +73,10 @@
   background: #ffffff12;
 }
 .pricing-shell .pricing-price {
+  font-family: var(--font-numeral);
   font-size: clamp(36px, 3.4vw, 49px);
-  font-weight: 500;
-  letter-spacing: -0.065em;
+  font-weight: 400;
+  letter-spacing: -0.05em;
   margin-top: 22px;
   white-space: nowrap;
   line-height: 1.15;
