@@ -177,7 +177,12 @@ export function Onboarding() {
     go(ONBOARDING_STEPS[Math.min(index + 1, ONBOARDING_STEPS.length - 1)]!)
   }
   const back = () => { if (index > 0) go(ONBOARDING_STEPS[index - 1]!) }
-  const press = () => (valid[step] ? next() : setShowErrors(true))
+  const press = () => {
+    if (valid[step]) return next()
+    setShowErrors(true)
+    // Errors are read out once and focus moves to the first field that needs attention.
+    requestAnimationFrame(() => shell.current?.querySelector<HTMLElement>("#setup-controls input:not([type=hidden]), #setup-controls [role=radio][aria-checked=true]")?.focus())
+  }
   const planName = PLANS[s.setupDrafts?.planIntent ?? "free"].name
 
   const notice = storageFailed ? (
