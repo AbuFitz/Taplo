@@ -473,3 +473,8 @@ html:has(.setup-scene),body:has(.setup-scene){height:100%;overflow:hidden;oversc
 .setup-exit{flex-shrink:0;display:inline-flex;align-items:center;min-height:44px;padding:0 4px;font-size:13px;font-weight:500;color:#4b5260;text-decoration:none;white-space:nowrap}
 .setup-exit:hover{color:#111;text-decoration:underline}
 .setup-flow[data-mobile-layout=preview] .setup-exit{color:rgba(255,255,255,.85)}
+
+/* Tap targets: every control keeps at least a 44px hit area; visible size is unchanged where it was already smaller. */
+.setup-cover-add{min-height:44px;padding-block:10px}
+.setup-address button,.setup-address a{min-height:44px;display:inline-flex;align-items:center;padding-inline:6px}
+@media(max-width:760px){[data-testid="setup-preview-toggle"],.setup-flow [aria-label="Show more of your page"],.setup-flow [aria-label="Return to editing"]{min-height:44px}}

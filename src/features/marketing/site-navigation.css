@@ -525,3 +525,4 @@
   }
 }
 html:has(.home-dark){background:#080808}
+.site-navigation-brand{display:inline-flex;align-items:center;min-height:44px}

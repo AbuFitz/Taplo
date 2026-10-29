@@ -98,3 +98,4 @@
 .dg-row .dg-swatch{margin-right:14px}
 .dg-look .dg-swatch{margin-right:14px}
 .dg-row button[aria-pressed=true] .dg-swatch,.dg-look[aria-pressed=true] .dg-swatch{outline:1.5px solid rgba(255,255,255,.6);outline-offset:0}
+@media(max-width:760px){.dg-row button,.dg-bar button{min-height:44px}}

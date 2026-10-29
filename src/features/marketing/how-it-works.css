@@ -486,6 +486,7 @@
   padding: 22px 0;
 }
 .how-questions summary {
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: space-between;

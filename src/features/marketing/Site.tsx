@@ -51,7 +51,7 @@ export function SiteFooter() {
           <div className="max-w-xs">
             <HomeLink
               aria-label="Taplo home"
-              className="inline-flex rounded outline-none focus-visible:ring-3 focus-visible:ring-white"
+              className="inline-flex min-h-11 items-center rounded outline-none focus-visible:ring-3 focus-visible:ring-white"
             >
               <TaploLogo tone="light" className="h-12" />
             </HomeLink>
