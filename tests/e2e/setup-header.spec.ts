@@ -3,8 +3,8 @@ import {expect,test} from '@playwright/test'
 import path from 'node:path'
 for(const width of [320,390,768,1440])test(`setup gives the phone canvas back to the business at ${width}`,async({page})=>{
   await page.setViewportSize({width,height:844});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/onboarding')
-  const brand=page.getByRole('link',{name:'Taplo home',exact:true})
-  await expect(brand).toHaveAttribute("href","/")
+  await expect(page.getByRole('link',{name:'Taplo home',exact:true})).toHaveCount(0)
+  await expect(page.getByTestId('setup-exit')).toHaveAttribute("href","/")
   await expect(page.getByRole('progressbar',{name:'Setup progress'})).toHaveAttribute('aria-valuenow','1');await expect(page.getByRole('navigation',{name:'Progress'})).not.toContainText('Step 1 of 6')
   const canvas=page.locator('.setup-workspace > aside')
   if(width<1024) { void canvas;await expect(page.getByRole("button",{name:"View full size"})).toHaveCount(0) }
@@ -41,3 +41,10 @@ test('the form scrolls without shrinking fields or moving Continue, and the top 
   await expect(page.getByRole('button',{name:'View full size',exact:true})).toHaveCount(0);
   await expect(input).toHaveValue('The Corner Studio');
 });
+
+test('the logo does not navigate during setup, and Save and exit keeps the draft',async({page})=>{
+  await page.goto('/onboarding');await page.getByLabel('Business name',{exact:true}).fill('North Street Barbers')
+  await page.getByTestId('setup-logo').click();await expect(page).toHaveURL(/\/onboarding/)
+  await page.getByTestId('setup-exit').click();await expect(page).toHaveURL(/localhost:\d+\/$/)
+  await page.goto('/onboarding');await expect(page.getByLabel('Business name',{exact:true})).toHaveValue('North Street Barbers')
+})
