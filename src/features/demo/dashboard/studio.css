@@ -19,7 +19,7 @@
 .studio-rail{grid-area:rail;display:grid;gap:14px;align-content:start}
 .studio-status{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;min-height:44px}
 .studio-pill{padding:6px 12px;border-radius:99px;border:1px solid #00000026;background:#fff;font-size:14px;font-weight:650}
-.studio-pill-live{border-color:#15803d66;background:#f0fdf4;color:#14532d}
+.studio-pill-live{border-color:#111;background:#111;color:#fff}
 .studio-scope{font-size:14px;color:#454545}
 .studio-scope-flag{font-weight:650;color:#111}
 .studio-why{margin:-6px 0 0}
@@ -38,7 +38,7 @@
 .studio-attention a{display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;border-radius:20px;background:#fff;box-shadow:0 0 0 1px #0000000d;font-size:15px;font-weight:600}
 .studio-attention b{display:grid;place-items:center;min-width:28px;height:28px;padding:0 8px;border-radius:99px;background:#111;color:#fff;font-size:14px}
 .studio-share{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px 12px;padding:16px 18px;border-radius:24px;background:#fff;box-shadow:0 0 0 1px #0000000d}
-.studio-share-label{grid-column:1/-1;font-size:14px;font-weight:650}
+.studio-share-label{grid-column:1/-1;font-size:14px;font-weight:650}.studio-share-label small{display:block;margin-top:2px;font-size:14px;font-weight:400;color:#454545}
 .studio-share-url{min-width:0;overflow-wrap:anywhere;font-size:15px;color:#111}
 .studio-share-actions{display:flex;gap:8px;grid-column:1/-1;flex-wrap:wrap}
 .studio-share-actions button{min-height:44px;border-radius:999px;gap:6px}

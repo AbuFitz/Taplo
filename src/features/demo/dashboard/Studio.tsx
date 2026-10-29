@@ -24,6 +24,13 @@ const REQUIRED_HEADLINE: Record<string, string> = {
   contact: "Add a way to contact you",
 }
 
+const REQUIRED_CTA: Record<string, string> = {
+  example: "Review the examples",
+  industry: "Choose your business type",
+  name: "Check name and address",
+  contact: "Add contact details",
+}
+
 /**
  * The studio home. One question at a time, in order: what state is the page in, what is the one thing to do next, does anything
  * need me, and where do I edit, preview and share. Zero counters, finished checklists and plan pitches stay out of the way.
@@ -50,6 +57,7 @@ export function Studio() {
   const needReply = awaiting + enquiries
   const liveSlug = s.published?.content.identity.slug
   const url = liveSlug ? `${window.location.origin}/demo/p/${liveSlug}` : null
+  const cardCopies = published && !changed && needReply === 0
   const unfinished = checks.filter((c) => c.id !== "published" && !c.done)
 
   const copyLink = async () => {
@@ -68,7 +76,7 @@ export function Studio() {
     ? {
         headline: first ? REQUIRED_HEADLINE[first.id] ?? first.label : "Fix the highlighted details",
         body: requiredLeft.length > 1 ? `${requiredLeft.length} things to finish before you can publish.` : "One thing to finish before you can publish.",
-        primary: <Button asChild size="lg" className="studio-primary"><Link href={first?.href ?? "/dashboard/page"}>{first ? "Do this now" : "Open my page"}</Link></Button>,
+        primary: <Button asChild size="lg" className="studio-primary"><Link href={first?.href ?? "/dashboard/page"}>{first ? REQUIRED_CTA[first.id] ?? "Open this step" : "Open my page"}</Link></Button>,
         secondary: !s.onboarded
           ? <Link className="studio-link" href="/onboarding" data-testid="continue-setup">Continue setup</Link>
           : <a className="studio-link" href="#studio-preview">Preview your page</a>,
@@ -79,7 +87,7 @@ export function Studio() {
         ? { headline: "You have changes that are not published", primary: <Button size="lg" className="studio-primary" onClick={doPublish}>Publish changes</Button>, secondary: <button type="button" className="studio-link" onClick={() => patch(unpublish)}>Unpublish this page</button> }
         : needReply > 0
           ? { headline: `${needReply} ${needReply === 1 ? "needs" : "need"} a reply`, primary: <Button asChild size="lg" className="studio-primary"><Link href="/dashboard/bookings">Open bookings</Link></Button>, secondary: <button type="button" className="studio-link" onClick={copyLink}>Copy link</button> }
-          : { headline: "Your page is published in this browser", primary: <Button size="lg" className="studio-primary" onClick={copyLink}>{copy === "done" ? "Copied" : "Copy link"}</Button>, secondary: <a className="studio-link" href={url ?? "#"} target="_blank" rel="noreferrer">View page</a> }
+          : { headline: "Your page is published in this browser", primary: <Button size="lg" className="studio-primary" onClick={copyLink}>{copy === "done" ? "Copied" : "Copy link"}</Button> }
 
   // One quiet tip, never while a required step is open.
   const tip = !ready
@@ -144,10 +152,10 @@ export function Studio() {
 
         {url ? (
           <div className="studio-share" data-testid="studio-share">
-            <span className="studio-share-label">Share</span>
-            <span className="studio-share-url">{businessAddress(liveSlug!)}</span>
+            <span className="studio-share-label">Share <small>This address works in this browser only</small></span>
+            <span className="studio-share-url" data-testid="studio-share-url">{url}</span>
             <div className="studio-share-actions">
-              <Button variant="outline" aria-label="Copy link" onClick={copyLink}>{copy === "done" ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}Copy</Button>
+              {cardCopies ? null : <Button variant="outline" aria-label="Copy link" onClick={copyLink}>{copy === "done" ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}Copy</Button>}
               <Button variant="outline" onClick={() => setShareOpen(true)}><QrCode aria-hidden="true" />Show QR</Button>
             </div>
             {copy === "failed" ? <p className="studio-note" role="alert">Could not copy. Select the address and copy it.</p> : null}
