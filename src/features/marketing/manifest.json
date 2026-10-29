@@ -5,9 +5,9 @@
     "height": 1200,
     "cssWidth": 1280,
     "cssHeight": 800,
-    "bytes": 115216,
+    "bytes": 145114,
     "source": "/appearance/frame?scenario=brookfield",
-    "sha256": "fef19214c06f"
+    "sha256": "0247241033d0"
   },
   "hero-barber": {
     "file": "/marketing/hero-barber.webp",
@@ -25,9 +25,9 @@
     "height": 1400,
     "cssWidth": 390,
     "cssHeight": 700,
-    "bytes": 96658,
+    "bytes": 99710,
     "source": "/appearance/frame?scenario=brookfield",
-    "sha256": "e8722ddad7c8"
+    "sha256": "48a4a8b458d9"
   },
   "hero-trades": {
     "file": "/marketing/hero-trades.webp",
@@ -102,12 +102,12 @@
   "cap-vehicles": {
     "file": "/marketing/cap-vehicles.webp",
     "width": 716,
-    "height": 3054,
+    "height": 3060,
     "cssWidth": 358,
-    "cssHeight": 1527,
-    "bytes": 230108,
+    "cssHeight": 1530,
+    "bytes": 309242,
     "source": "/appearance/frame?scenario=brookfield",
-    "sha256": "2194c181f977"
+    "sha256": "688dc5980171"
   },
   "cap-fixed-prices": {
     "file": "/marketing/cap-fixed-prices.webp",
@@ -271,10 +271,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 102618,
+    "bytes": 101200,
     "source": "/appearance/frame?scenario=dealer",
-    "sha256": "0623cee7fc7f",
-    "surface": "#d7dfe3"
+    "sha256": "b0180a9eaa13",
+    "surface": "#0d1a2d"
   },
   "ex-aldous-motor-co-desk": {
     "file": "/marketing/ex-aldous-motor-co-desk.webp",
@@ -282,9 +282,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 183450,
+    "bytes": 145122,
     "source": "/appearance/frame?scenario=dealer",
-    "sha256": "0d2155b4fac3"
+    "sha256": "0806156db2be"
   },
   "bk-1-service": {
     "file": "/marketing/bk-1-service.webp",
@@ -475,14 +475,14 @@
   },
   "veh-detail": {
     "file": "/marketing/veh-detail.webp",
-    "width": 1408,
-    "height": 1584,
-    "cssWidth": 704,
-    "cssHeight": 792,
-    "bytes": 173742,
+    "width": 1152,
+    "height": 1424,
+    "cssWidth": 576,
+    "cssHeight": 712,
+    "bytes": 202126,
     "source": "/appearance/frame?scenario=brookfield",
-    "sha256": "cbb44cdf3588",
-    "capturedAt": "2026-10-24T23:30:25.007Z"
+    "sha256": "d942475e9275",
+    "capturedAt": "2026-10-29T09:56:15.542Z"
   },
   "gal-lightbox": {
     "file": "/marketing/gal-lightbox.webp",
@@ -793,10 +793,10 @@
     "height": 1688,
     "cssWidth": 390,
     "cssHeight": 844,
-    "bytes": 106036,
+    "bytes": 113958,
     "source": "/appearance/frame?scenario=brookfield",
-    "sha256": "f8593a378fa9",
-    "surface": "#d7dfe3"
+    "sha256": "8b215ba242a8",
+    "surface": "#f4f6fa"
   },
   "ex-brookfield-motors-desk": {
     "file": "/marketing/ex-brookfield-motors-desk.webp",
@@ -804,9 +804,9 @@
     "height": 1520,
     "cssWidth": 1100,
     "cssHeight": 760,
-    "bytes": 141980,
+    "bytes": 192770,
     "source": "/appearance/frame?scenario=brookfield",
-    "sha256": "17cb79a643d2"
+    "sha256": "de5d27bf5326"
   },
   "svc-cards-parkside": {
     "file": "/marketing/svc-cards-parkside.webp",
@@ -821,14 +821,14 @@
   },
   "vehicle-catalogue-brookfield": {
     "file": "/marketing/vehicle-catalogue-brookfield.webp",
-    "width": 1010,
-    "height": 3526,
-    "cssWidth": 505,
-    "cssHeight": 1763,
-    "bytes": 273064,
+    "width": 1600,
+    "height": 2116,
+    "cssWidth": 800,
+    "cssHeight": 1058,
+    "bytes": 309234,
     "source": "/appearance/frame?scenario=brookfield",
-    "sha256": "901e2ae41a1d",
-    "capturedAt": "2026-10-24T23:30:10.005Z"
+    "sha256": "6af794b05e3e",
+    "capturedAt": "2026-10-29T09:56:11.998Z"
   },
   "product-detail-station": {
     "file": "/marketing/product-detail-station.webp",
