@@ -158,8 +158,8 @@ test("finish is truthful without accounts: no sign-up form, a labelled testing r
   await toLook(page); await cont(page).click(); await cont(page).click(); await cont(page).click()
   await page.getByRole("button", { name: /^Continue with/ }).click()
   await expect(page.getByTestId("account-step")).toHaveCount(0)
-  await expect(page.getByTestId("dev-route")).toContainText("testing")
-  await expect(page.getByTestId("dev-route-note")).toContainText("Testing environment only")
+  await expect(page.getByTestId("dev-route")).toContainText(/testing route/i)
+  await expect(page.getByTestId("dev-route-note")).toContainText(/testing route/i)
   await page.getByTestId("save-draft").click()
   await expect(page).toHaveURL(/\/dashboard/)
   const saved = await state(page)
@@ -176,14 +176,13 @@ test("at 1440 the controls sit left and the whole page right, with no document s
   expect(await page.evaluate(() => document.documentElement.scrollHeight <= window.innerHeight + 1)).toBe(true)
 })
 
-test("the logo never navigates mid-setup, and Save and exit keeps the draft on the same step", async ({ page }) => {
+test("the logo goes home and the draft stays on the same step", async ({ page }) => {
   await open(page)
   await toName(page)
   await page.getByLabel("Business name", { exact: true }).fill("North Street Barbers")
+  await expect(page.getByTestId("setup-logo")).toHaveAttribute("href", "/")
+  await expect(page.getByTestId("setup-exit")).toHaveCount(0)
   await page.getByTestId("setup-logo").click()
-  await expect(page).toHaveURL(/\/onboarding/)
-  await expect(page.getByTestId("setup-exit")).toHaveAttribute("href", "/")
-  await page.getByTestId("setup-exit").click()
   await expect(page).toHaveURL(/localhost:\d+\/$/)
   await page.goto("/onboarding")
   await expect(title(page)).toHaveText("What’s it called?")
@@ -242,7 +241,7 @@ test("every look is reachable whatever the business type, and choosing one chang
   }
   expect(counts[0]).toBeGreaterThanOrEqual(8)
   expect(counts[1]).toBe(counts[0])
-  await page.getByRole("radiogroup", { name: "Looks" }).getByText("Ink", { exact: true }).click()
+  await page.getByRole("radiogroup", { name: "Looks" }).getByRole("radio", { name: "Ink" }).click()
   const frame = page.frameLocator('[data-testid="setup-live-page"]')
   await expect(frame.locator("[data-taplo-page]")).toHaveAttribute("data-tone", "dark")
 })

@@ -27,7 +27,7 @@ export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetI
     if (!source) return null
     // A draft in progress may not have every required field yet; the preview fills gaps with neutral placeholders (publishing still requires the real values).
     const id = source.content.identity
-    const content = mode === "draft" ? { ...source.content, identity: { ...id, name: id.name || "Your business name", industryKey: id.industryKey || "other", industryLabel: id.industryLabel || "Your business", slug: id.slug || "your-page" } } : source.content
+    const content = mode === "draft" ? { ...source.content, identity: { ...id, name: id.name || "Your business name", industryKey: id.industryLabel ? id.industryKey || "other" : "barber", industryLabel: id.industryLabel || "Your business", slug: id.slug || "your-page" } } : source.content
     const parsed = parseContent(mode === "draft" && state?.showExamples !== false ? withExamples(content) : content)
     if (!parsed.success || !parsed.data.identity.name) return null
     let page = mode === "draft" ? previewAppearance(source.page, { lookId, savedLookId }) : source.page

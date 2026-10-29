@@ -55,36 +55,32 @@ export function SetupPlans({ inline = false }: { inline?: boolean }) {
   // Features come from the same entitlement resolver the pricing page and the editor use, so this list cannot drift from what a plan does.
   const goals = s.setupDrafts?.goals ?? [];
   const recommended = goals.includes("book") ? PLAN_IDS.find((id) => resolveEntitlements(id, "active").onlineBooking) : undefined;
-  const list = planFeatures(selected);
-  const price = (id: PlanId) => (id === "free" ? "£0" : `£${(PLANS[id].priceMinorGbp / 100).toFixed(2)}`);
+    const price = (id: PlanId) => (id === "free" ? "£0" : `£${(PLANS[id].priceMinorGbp / 100).toFixed(2)}`);
   const content = (
-    <div className="setup-plans-content" data-testid="setup-plans">
-      <fieldset className="setup-plan-switch">
-        <legend className="sr-only">Choose a plan preference</legend>
-        {PLAN_IDS.map((id) => (
-          <label key={id} className="setup-plan-tab" data-plan={id} data-selected={selected === id}>
-            <input type="radio" name="setup-plan" aria-label={`Choose ${PLANS[id].name}`} checked={selected === id} onChange={() => update((st) => ({ ...st, setupDrafts: { ...st.setupDrafts, planIntent: id } }))} />
-            <span className="setup-plan-tab-name">{PLANS[id].name}</span>
-            <span className="setup-plan-tab-price">{price(id)}</span>
-          </label>
-        ))}
-      </fieldset>
-      <section className="setup-plan-card" data-plan={selected} aria-live="polite" data-testid="plan-card">
-        <header className="setup-plan-top">
-          <h2 className="setup-plan-title">{PLANS[selected].name}</h2>
-          {selected === recommended ? <em>Matches your goals</em> : null}
-        </header>
-        <p className="setup-plan-price">{price(selected)}<small>/month</small></p>
-        <p className="setup-plan-line">{DESCRIPTIONS[selected]}</p>
-        <ul className="setup-plan-features">{list.map((f) => <li key={f}><span><Check aria-hidden="true" /></span>{f}</li>)}</ul>
-        {selected === recommended ? <p className="setup-plan-why">You chose online booking, and this plan includes online bookings.</p> : null}
-      </section>
-      <p className="setup-plan-notice" data-testid="plan-disclosure">
-        <Info aria-hidden="true" />
-        <span>Prices and limits are provisional. Choosing a plan saves a preference only; nothing is charged.</span>
-      </p>
+    <div className="sp" data-testid="setup-plans">
+      <p className="sp-note" data-testid="plan-disclosure"><Info aria-hidden="true" /><span>Prices and limits are provisional. Choosing a plan saves a preference only; nothing is charged.</span></p>
+      <div role="radiogroup" aria-label="Choose a plan preference" className="sp-rows" data-testid="plan-card">
+        {PLAN_IDS.map((id) => {
+          const on = selected === id
+          return (
+            <div key={id} className="sp-row" data-on={on} data-plan={id}>
+              <button type="button" role="radio" aria-checked={on} aria-label={`Choose ${PLANS[id].name}`} className="sp-head" onClick={() => update((st) => ({ ...st, setupDrafts: { ...st.setupDrafts, planIntent: id } }))}>
+                <span className="sp-dot" aria-hidden="true" />
+                <span className="sp-name"><strong>{PLANS[id].name}</strong><small>{DESCRIPTIONS[id]}</small></span>
+                <span className="sp-price">{price(id)}{id === "free" ? "" : <small>/month</small>}</span>
+              </button>
+              {on ? (
+                <ul className="sp-features">
+                  {planFeatures(id).map((f) => <li key={f}><Check aria-hidden="true" />{f}</li>)}
+                  {id === recommended ? <li className="sp-why">You chose online booking, and this plan includes it.</li> : null}
+                </ul>
+              ) : null}
+            </div>
+          )
+        })}
+      </div>
     </div>
-  );
+  )
   return inline ? (
     content
   ) : (

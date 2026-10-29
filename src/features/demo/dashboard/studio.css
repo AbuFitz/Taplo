@@ -114,3 +114,7 @@
 
 .studio-stage .studio-edit{order:2}.studio-stage .studio-phone{order:1}
 :root:has(.studio-dock){scroll-padding-bottom:120px}
+
+.studio-menu-button{display:inline-grid;place-items:center;width:44px;height:44px;border:0;border-radius:99px;background:#111;color:#fff;cursor:pointer}
+.studio-menu-button svg{width:18px;height:18px}
+.studio-menu-button:focus-visible{outline:3px solid #111;outline-offset:3px}

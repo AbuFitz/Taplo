@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { BarChart3, CalendarDays, ChevronRight, Home, MoreHorizontal, Package, Palette, Settings, Star, Users, Wrench } from "lucide-react"
+import { Menu, BarChart3, CalendarDays, ChevronRight, Home, MoreHorizontal, Package, Palette, Settings, Star, Users, Wrench } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { getIndustryPreset } from "@/features/themes/presets/industries"
 import { useOwner } from "@/features/booking/ui/owner/useOwner"
@@ -13,32 +13,16 @@ import { useDemo } from "../store"
 
 type Item = { href: string; label: string; Icon: typeof Home; badge?: number; note?: string }
 
-/** One navigation for every Studio page: a labelled dock on a phone, a rail on a desk, and a More sheet for the rest. */
-export function StudioNav() {
+/** The one list of Studio destinations, so every screen (dock, rail, More sheet, editor menu) names and orders them the same. */
+export function useStudioItems() {
   const path = usePathname()
   const { state } = useDemo()
   const { state: bk } = useOwner()
-  const [more, setMore] = React.useState(false)
-  const [keyboard, setKeyboard] = React.useState(false)
-  const moreButton = React.useRef<HTMLButtonElement>(null)
-
-  React.useEffect(() => {
-    const vv = window.visualViewport
-    if (!vv) return
-    const check = () => setKeyboard(window.innerHeight - vv.height > 140)
-    vv.addEventListener("resize", check)
-    check()
-    return () => vv.removeEventListener("resize", check)
-  }, [])
-
-  if (!state) return null
-  const terms = getIndustryPreset(state.content.identity.industryKey ?? "other").terminology
-  const dealer = state.content.identity.industryKey === "car-dealer"
-  const ent = resolveEntitlements(state.plan, "active")
-  const now = Date.now()
-  const attention =
-    bk.bookings.filter((b) => b.status === "pending" && b.endsAt > now).length + bk.enquiries.filter((e) => e.status === "new").length
-
+  const terms = getIndustryPreset(state?.content.identity.industryKey ?? "other").terminology
+  const dealer = state?.content.identity.industryKey === "car-dealer"
+  const ent = resolveEntitlements(state?.plan ?? "free", "active")
+  const [now] = React.useState(() => Date.now())
+  const attention = bk.bookings.filter((b) => b.status === "pending" && b.endsAt > now).length + bk.enquiries.filter((e) => e.status === "new").length
   const primary: Item[] = [
     { href: "/dashboard", label: "Home", Icon: Home },
     { href: "/dashboard/page", label: "Page", Icon: Palette },
@@ -53,6 +37,54 @@ export function StudioNav() {
     { href: "/dashboard/settings", label: "Settings", Icon: Settings },
   ]
   const isActive = (href: string) => (href === "/dashboard" ? path === href : path === href || path.startsWith(href + "/"))
+  return { primary, secondary, isActive }
+}
+
+/** The editor is full screen, so it opens the same destinations from one button instead of showing the dock. */
+export function StudioMenu({ className }: { className?: string }) {
+  const { primary, secondary, isActive } = useStudioItems()
+  const [open, setOpen] = React.useState(false)
+  return (
+    <>
+      <button type="button" className={cn("studio-menu-button", className)} aria-label="Open menu" aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}>
+        <Menu aria-hidden="true" />
+      </button>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent side="bottom" className="studio-more">
+          <SheetHeader><SheetTitle>Studio</SheetTitle></SheetHeader>
+          <ul className="studio-more-list">
+            {[...primary, ...secondary].map(({ href, label, Icon, note, badge }) => (
+              <li key={href}>
+                <Link href={href} onClick={() => setOpen(false)} aria-current={isActive(href) ? "page" : undefined}>
+                  <Icon aria-hidden="true" />
+                  <span>{label}{note ? <small>{note}</small> : badge ? <small>{badge} waiting</small> : null}</span>
+                  <ChevronRight aria-hidden="true" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </SheetContent>
+      </Sheet>
+    </>
+  )
+}
+
+/** One navigation for every Studio page: a labelled dock on a phone, a rail on a desk, and a More sheet for the rest. */
+export function StudioNav() {
+  const { primary, secondary, isActive } = useStudioItems()
+  const [more, setMore] = React.useState(false)
+  const [keyboard, setKeyboard] = React.useState(false)
+  const moreButton = React.useRef<HTMLButtonElement>(null)
+
+  React.useEffect(() => {
+    const vv = window.visualViewport
+    if (!vv) return
+    const check = () => setKeyboard(window.innerHeight - vv.height > 140)
+    vv.addEventListener("resize", check)
+    check()
+    return () => vv.removeEventListener("resize", check)
+  }, [])
+
   const secondaryActive = secondary.some((i) => isActive(i.href))
 
   return (

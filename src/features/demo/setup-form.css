@@ -11,7 +11,6 @@ html:has(.sf-root),body:has(.sf-root){height:100%;overflow:hidden;overscroll-beh
 .sf-progress-text{font-size:14px;font-weight:550;color:#454545;white-space:nowrap}
 .sf-progress-bar{display:block;width:100%;max-width:200px;height:3px;border-radius:3px;background:#0000001a;overflow:hidden}
 .sf-progress-bar i{display:block;height:100%;border-radius:3px;background:#111;transition:width .24s ease}
-.sf-exit{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;font-size:14px;font-weight:550;color:#2a2a2a;text-decoration:underline;text-underline-offset:4px;white-space:nowrap}
 
 .sf-stage{position:absolute;z-index:1;top:56px;left:0;right:0;bottom:var(--sf-sheet-h);display:flex;justify-content:center;overflow:hidden;padding:0 12px}
 .sf-root[data-keyboard=true] .sf-stage{display:none}
@@ -119,3 +118,66 @@ html:has(.sf-root),body:has(.sf-root){height:100%;overflow:hidden;overscroll-beh
 .sf-tile[data-photo] .sf-tile-label{text-align:left;color:#fff;text-shadow:0 1px 6px #0009}
 .sf-tile[data-photo][aria-pressed=true]{box-shadow:0 0 0 3px #111,0 0 0 5px #fff inset}
 .sf-tile[data-photo][aria-pressed=true] .sf-tile-label{text-decoration:underline;text-underline-offset:3px}
+
+/* One tile treatment: photo or toned, label bottom-left, the same weight either way. */
+.sf-tile[data-photo]{align-content:end;justify-items:start;padding:8px 10px;border-color:transparent;background-size:cover;background-position:center;color:#fff;min-height:84px}
+.sf-tile[data-photo=tone]{background:linear-gradient(160deg,#3a3a37,#1b1b1a);align-content:space-between}
+.sf-tile[data-photo=tone] .sf-tile-icon{background:#ffffff1f;color:#fff;justify-self:start}
+.sf-tile[data-photo] .sf-tile-label{text-align:left;color:#fff;text-shadow:0 1px 6px #0009}
+.sf-tile[data-photo=image]{background-blend-mode:normal}
+.sf-tile[aria-pressed=true] .sf-tile-label{text-decoration:none}
+.sf-tile[data-photo][aria-pressed=true]{box-shadow:0 0 0 3px #111,0 0 0 5px #fff inset}
+.sf-tile[data-photo=tone][aria-pressed=true] .sf-tile-icon{background:#fff;color:#111}
+
+/* Fields keep clear of the footer; a labelled header row names the service columns. */
+.sf-body{padding-bottom:32px;scroll-padding-block:28px}
+.sf-service-head{margin:0;font-size:14px;font-weight:600;color:#454545}
+.sf-chip{min-height:44px}
+.sf-saved{display:flex;align-items:center;gap:8px;margin:0;font-size:15px;font-weight:600}
+.sf-saved svg{width:18px;height:18px;padding:3px;border-radius:50%;background:#111;color:#fff}
+.sf-small{font-size:14px}
+
+/* Footer: Back, Skip and Continue always sit in the same three slots. */
+.sf-foot{display:grid;grid-template-columns:auto 1fr min(200px,52%);align-items:center;gap:8px}
+.sf-foot .sf-primary{flex:none;width:100%}
+.sf-foot .sf-skip{margin-left:0;justify-self:end}
+.sf-primary:hover{background:#111;box-shadow:0 6px 16px -8px #0007}
+.sf-root[data-snap=peek] .sf-foot{grid-template-columns:1fr}
+
+/* Look picker: three across on a phone so more of the twelve are visible at once. */
+.sf-root .setup-look-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+
+/* Radio rows: the dot sits with the title. */
+.sf-radio-head{align-items:flex-start;padding-block:16px;min-height:0}
+.sf-radio-dot{margin-top:2px}
+
+/* Plans: four rows, the chosen one open. */
+.sp{display:grid;gap:12px}
+.sp-note{display:flex;gap:10px;align-items:flex-start;margin:0;font-size:14px;line-height:1.45;color:#2a2a2a}
+.sp-note svg{flex:none;width:18px;height:18px;margin-top:2px}
+.sp-rows{display:grid;gap:8px}
+.sp-row{border:1.5px solid #e2e2dd;border-radius:20px;background:#fff;overflow:hidden}
+.sp-row[data-on=true]{border-color:#111;box-shadow:0 0 0 1px #111}
+.sp-head{display:flex;align-items:center;gap:14px;width:100%;min-height:68px;padding:0 16px;border:0;background:none;font:inherit;text-align:left;cursor:pointer}
+.sp-dot{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid #b9b9b3}
+.sp-row[data-on=true] .sp-dot{border-color:#111;background:#111;box-shadow:inset 0 0 0 4px #fff}
+.sp-name{display:grid;gap:2px;flex:1;min-width:0}
+.sp-name strong{font-size:16px;font-weight:650}
+.sp-name small{font-size:14px;color:#454545}
+.sp-price{font-size:17px;font-weight:650;white-space:nowrap}
+.sp-price small{font-size:14px;font-weight:400;color:#454545}
+.sp-features{display:grid;gap:8px;margin:0;padding:0 16px 16px 52px;list-style:none;font-size:15px}
+.sp-features li{display:flex;gap:8px;align-items:flex-start}
+.sp-features svg{flex:none;width:16px;height:16px;margin-top:3px}
+.sp-why{font-size:14px;color:#454545}
+
+@media(min-width:1024px){
+  .sf-root{justify-content:center;grid-template-columns:minmax(0,540px) minmax(0,420px);column-gap:clamp(48px,6vw,96px)}
+  .sf-sheet{align-self:center;height:auto;min-height:min(560px,100%);max-height:100%}
+  .sf-body{flex:0 1 auto}
+  .sf-tile{min-height:112px}
+  .sf-tile[data-photo]{min-height:112px}
+  .sf-tiles{gap:12px}
+  .sf-root .setup-look-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .sf-stage{align-self:center}
+}

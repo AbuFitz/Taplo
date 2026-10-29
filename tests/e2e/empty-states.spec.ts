@@ -36,7 +36,7 @@ test("dashboard shows feature loops, look labels and a resume entry", async ({ p
   // Start a setup, leave, and come back: the dashboard offers to continue it.
   await page.goto("/onboarding")
   await page.getByLabel("Business name", { exact: true }).fill("North Street Studio")
-  await page.getByTestId("setup-exit").click()
+  await page.getByTestId("setup-logo").click()
   await page.goto("/dashboard")
   await expect(page.getByTestId("continue-setup")).toBeVisible()
   await page.getByTestId("continue-setup").click()

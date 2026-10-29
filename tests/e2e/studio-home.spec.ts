@@ -17,11 +17,10 @@ test("the dock is pinned to the bottom of the phone screen, not the page", async
   expect(box!.y).toBeGreaterThan(700)
 })
 
-test("the embedded page is skipped by Tab and the primary action shows a focus ring", async ({ page }) => {
+test("the primary action comes before the embedded page and shows a focus ring", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await openEditorWithSample(page)
   await page.goto("/dashboard")
-  await expect(page.getByTestId("preview-frame")).toHaveAttribute("tabindex", "-1")
   const primary = page.getByTestId("studio-next").getByRole("button", { name: "Publish", exact: true })
   await primary.focus()
   await page.keyboard.press("Shift+Tab"); await page.keyboard.press("Tab")

@@ -26,7 +26,7 @@ test.describe("onboarding", () => {
     const next = () => page.getByRole("button", { name: /^Continue/ }).click();
     await page.goto("/onboarding");
     await page.getByTestId("tile-other").click();
-    await page.getByLabel("What do you do?", { exact: true }).fill("Dog groomer");
+    await page.getByRole("textbox", { name: "What do you do?" }).fill("Dog groomer");
     await next();
     await page.getByLabel("Business name", { exact: true }).fill("Paws & Polish");
     await next();                                   // look
@@ -113,7 +113,6 @@ test.describe("records flow into blocks (nothing is copied)", () => {
     await pickOption(page, "Price", "Fixed price");
     await page.getByLabel("Amount (£)").fill("9");
     await page.getByRole("button", { name: "Save service" }).click();
-    await page.getByRole("button", { name: "Open menu", exact: true }).click();
     await page.goto("/dashboard/page");
     await expect(preview(page).locator('[data-widget="serviceList"]')).toContainText("Nail trim");
     await openRow(page, "serviceList");
@@ -166,11 +165,11 @@ test.describe("plans and page settings", () => {
     await expect(page.getByRole("button", { name: "Copy link" })).toBeDisabled(); // nothing to share until published
   });
 
-  test("navigation puts My page first; overview links to it", async ({ page }) => {
+  test("one Studio menu names the same destinations in the editor and on every other page; overview links to the editor", async ({ page }) => {
     await openEditorWithSample(page, "Mechanic");
-    await page.getByRole("button", { name: "Open menu" }).click();   // the editor uses the full width, so the menu lives in the top bar
-    const links = await page.getByRole("navigation", { name: "Dashboard" }).getByRole("link").allTextContents();
-    expect(links[0]!.trim()).toBe("My page");
+    await page.getByRole("button", { name: "Open menu" }).click();   // the editor uses the full width, so the same list opens from one button
+    const links = await page.getByRole("dialog").getByRole("link").allTextContents();
+    expect(links.map((l) => l.trim()).slice(0, 3)).toEqual(["Home", "Page", expect.any(String)]);
     await page.goto("/dashboard");
     await expect(page.getByRole("link", { name: "Edit my page" })).toHaveAttribute("href", "/dashboard/page");
     await page.goto("/dashboard/bookings");

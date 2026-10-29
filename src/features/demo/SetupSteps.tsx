@@ -57,7 +57,7 @@ export function TypeStep() {
               <button
                 type="button"
                 className="sf-tile"
-                data-photo={PHOTO.has(t.id) || undefined}
+                data-photo={PHOTO.has(t.id) ? "image" : "tone"}
                 style={PHOTO.has(t.id) ? { backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.05) 25%, rgba(0,0,0,.72)), url(/photography/generated/tiles/${t.id}.webp)` } : undefined}
                 aria-pressed={selected}
                 data-testid={`tile-${t.id}`}
@@ -280,14 +280,15 @@ export function ServicesStep({ onValidity }: { onValidity: (valid: boolean) => v
           ))}
         </ul>
       ) : null}
+      <div className="sf-service sf-service-head" aria-hidden="true"><span>Service</span><span>Price £</span><span>Minutes</span><span /></div>
       <ul className="sf-stack">
         {rows.map((r, i) => (
           <li key={r.id} className="sf-service">
-            <label><span className="sr-only">{`Service ${i + 1} name`}</span><input className={field} aria-label={`Service ${i + 1} name`} placeholder={industry.suggestedServices[0]?.name ?? "e.g. Initial consultation"} maxLength={120} autoFocus={focus === `${r.id}-name`} value={r.name} onChange={(e) => patch(r.id, { name: e.target.value })} /></label>
-            <label><span className="sr-only">Price</span><input className={field} aria-label={`Service ${i + 1} price`} inputMode="decimal" disabled={r.priceMode === "quote" || r.priceMode === "free"} placeholder={r.priceMode === "quote" ? "Quote" : r.priceMode === "free" ? "Free" : "£"} autoFocus={focus === `${r.id}-price`} value={r.priceMode === "quote" || r.priceMode === "free" ? "" : r.price} onChange={(e) => { if (/^\d{0,6}(\.\d{0,2})?$/.test(e.target.value)) patch(r.id, { price: e.target.value }) }} /></label>
-            <label className={cn(industry.id === "hospitality" && "hidden")}><span className="sr-only">Minutes</span><input className={field} aria-label={`Service ${i + 1} minutes`} inputMode="numeric" placeholder="Mins" value={r.minutes} onChange={(e) => patch(r.id, { minutes: e.target.value.replace(/\D/g, "").slice(0, 4) })} /></label>
+            <label><span className="sr-only">{`Service ${i + 1} name`}</span><input className={field} aria-label={`Service ${i + 1} name`} placeholder={`e.g. ${industry.suggestedServices[0]?.name ?? "Initial consultation"}`} maxLength={120} autoFocus={focus === `${r.id}-name`} value={r.name} onChange={(e) => patch(r.id, { name: e.target.value })} /></label>
+            <label><span className="sr-only">Price</span><input className={field} aria-label={`Service ${i + 1} price`} inputMode="decimal" disabled={r.priceMode === "quote" || r.priceMode === "free"} placeholder={r.priceMode === "quote" ? "Quote" : r.priceMode === "free" ? "Free" : "0"} autoFocus={focus === `${r.id}-price`} value={r.priceMode === "quote" || r.priceMode === "free" ? "" : r.price} onChange={(e) => { if (/^\d{0,6}(\.\d{0,2})?$/.test(e.target.value)) patch(r.id, { price: e.target.value }) }} /></label>
+            <label className={cn(industry.id === "hospitality" && "hidden")}><span className="sr-only">Minutes</span><input className={field} aria-label={`Service ${i + 1} minutes`} inputMode="numeric" placeholder="30" value={r.minutes} onChange={(e) => patch(r.id, { minutes: e.target.value.replace(/\D/g, "").slice(0, 4) })} /></label>
             <Button type="button" variant="ghost" size="icon" className="size-11" aria-label={`Remove service ${i + 1}`} disabled={rows.length === 1 && !r.name && !r.price} onClick={() => { const next = rows.filter((x) => x.id !== r.id); sync(next.length ? next : [{ id: newId("svc"), name: "", price: "", minutes: "" }]) }}><Trash2 /></Button>
-            <button type="button" className="sf-link sf-service-more" onClick={() => setPricing(r.id)}>Pricing options{r.priceMode && r.priceMode !== "fixed" ? ` · ${r.priceMode}` : ""}</button>
+            <button type="button" className="sf-link sf-service-more" onClick={() => setPricing(r.id)}>How is it priced?{r.priceMode && r.priceMode !== "fixed" ? ` · ${r.priceMode}` : ""}</button>
           </li>
         ))}
       </ul>
@@ -335,7 +336,8 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
   }
   return (
     <div className="sf-stack" data-testid="finish-step">
-      <p className="sf-lede">{s.content.identity.name ? `${s.content.identity.name} is set up as a draft.` : "Your draft is set up."} It stays private until you publish it from Studio.</p>
+      <p className="sf-lede">{s.content.identity.name ? `${s.content.identity.name} is ready.` : "Your page is ready."} It is saved as a draft and stays private until you publish it from Studio, where you edit and share your page.</p>
+      {!storageHasFailed() ? <p className="sf-saved" data-testid="saved-status"><Check aria-hidden="true" /> Saved as a draft. Not published.</p> : null}
       {phase === "done" ? (
         <p role="status" className="sf-ok"><Check aria-hidden="true" /> Account connected and draft saved. Opening Studio…</p>
       ) : signedIn ? (
@@ -349,9 +351,9 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
         </form>
       ) : (
         <div className="sf-testing" data-testid="dev-route">
-          <Button size="lg" className="sf-primary" data-testid="save-draft" onClick={toStudio}>Open Studio (testing route)</Button>
-          <p className="sf-notice sf-inline" data-testid="draft-note"><Info aria-hidden="true" /><span>{WHEN_UNAVAILABLE.accounts} There is no account to create here.</span></p>
-          <p className="sf-help" data-testid="dev-route-note">Testing environment only. This route opens Studio without an account and is not part of the customer experience.</p>
+          <Button size="lg" className="sf-primary" data-testid="save-draft" onClick={toStudio}>Open Studio</Button>
+          <p className="sf-help" data-testid="draft-note">{WHEN_UNAVAILABLE.accounts}</p>
+          <p className="sf-help sf-small" data-testid="dev-route-note">Testing route: this opens Studio without an account, in this environment only.</p>
         </div>
       )}
       {saveFailed ? <p role="alert" className="sf-error" data-testid="save-failed">Your browser couldn’t save this draft (storage is full or blocked), so it isn’t saved yet. Remove a large picture and try again.</p> : null}

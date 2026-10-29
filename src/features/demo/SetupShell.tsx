@@ -41,12 +41,11 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(function SetupShe
   return (
     <main ref={ref} className="sf-root" data-snap={snap} data-keyboard={keyboard} data-mobile={mobile} data-testid="setup-root">
       <header className="sf-top">
-        <span className="sf-logo" data-testid="setup-logo"><TaploLogo className="h-7" /></span>
+        <Link href="/" className="sf-logo" data-testid="setup-logo" aria-label="Taplo home"><TaploLogo className="h-7" /></Link>
         <div className="sf-progress" role="progressbar" aria-label="Setup progress" aria-valuemin={1} aria-valuemax={steps} aria-valuenow={step + 1} aria-valuetext={`Step ${step + 1} of ${steps}: ${stepLabel}`}>
           <span className="sf-progress-text" data-testid="setup-progress-text">Step {step + 1} of {steps}</span>
           <span className="sf-progress-bar" aria-hidden="true"><i style={{ width: `${((step + 1) / steps) * 100}%` }} /></span>
         </div>
-        <Link href="/" className="sf-exit" data-testid="setup-exit" title="Your progress is saved on this device">Save and exit</Link>
       </header>
 
       <section className="sf-sheet" aria-labelledby="step-title" data-testid="setup-sheet">
@@ -78,7 +77,7 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(function SetupShe
           ><span aria-hidden="true" /></button>
         ) : null}
         <h1 id="step-title" tabIndex={-1} className="sf-title font-display" key={`t-${bodyKey}`}>{title}</h1>
-        <div id="setup-controls" className="sf-body" inert={peek} key={bodyKey} data-testid="setup-body">{children}</div>
+        <div id="setup-controls" className="sf-body" inert={peek} key={bodyKey} data-testid="setup-body" onFocusCapture={(e) => { const t = e.target as HTMLElement; if (t.matches("input,textarea,select,[role=radio]")) requestAnimationFrame(() => t.scrollIntoView({ block: "center", behavior: "auto" })) }}>{children}</div>
         {notice}
         <footer className="sf-foot">{footer}</footer>
       </section>

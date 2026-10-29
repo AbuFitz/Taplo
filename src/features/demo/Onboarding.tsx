@@ -219,11 +219,9 @@ export function Onboarding() {
   const footer = (
     <>
       {index > 0 ? <button type="button" className="sf-back" onClick={back}>Back</button> : <span />}
-      {step === "finish" ? null : (
-        <>
-          {SKIPPABLE.includes(step) ? <button type="button" className="sf-skip" onClick={next}>Skip for now</button> : null}
-          <Button className="sf-primary" size="lg" onClick={press} aria-describedby={!valid[step] && showErrors ? "why-disabled" : undefined}>{step === "plan" ? `Continue with ${planName}` : "Continue"}</Button>
-        </>
+      {step !== "finish" && SKIPPABLE.includes(step) ? <button type="button" className="sf-skip" onClick={next}>Skip for now</button> : <span />}
+      {step === "finish" ? <span /> : (
+        <Button className="sf-primary" size="lg" onClick={press} aria-describedby={!valid[step] && showErrors ? "why-disabled" : undefined}>{step === "plan" ? `Continue with ${planName}` : "Continue"}</Button>
       )}
     </>
   )
@@ -252,7 +250,7 @@ export function Onboarding() {
       footer={footer}
       preview={
         <div className="sf-canvas">
-          <SetupCanvas src="/demo/preview" expanded={false} fit={!mobile || snap === "peek"} focus={FOCUS[step]} onSurface={onSurface} onOverlayOpen={() => { if (mobile) setSnap("peek") }} />
+          <SetupCanvas src="/demo/preview" expanded={false} fit={!mobile || snap === "peek" || step === "finish"} focus={FOCUS[step]} onSurface={onSurface} onOverlayOpen={() => { if (mobile) setSnap("peek") }} />
         </div>
       }
     >
