@@ -15,6 +15,8 @@ import { ApplyDesign } from "./ApplyDesign"
 import { exampleForScenario } from "./examples"
 import { ALL_SHOWCASE, type Arrangement } from "./showcase-set"
 import { STARTING_LOOKS, getStartingLook, type StartingLook } from "@/features/page/themes/starting-looks"
+import { originalPalette } from "@/features/page/themes/palettes"
+import { rankArrangements } from "@/features/page/themes/arrangement"
 import Link from "next/link"
 import "./design-gallery.css"
 
@@ -90,7 +92,7 @@ export function DesignGallery() {
       <div className="dg-bar" role="region" aria-label="Filter designs">
         <div className="dg-search"><Search aria-hidden="true" /><input type="search" aria-label="Search pages" placeholder="Search: florist, plumber, tutor…" value={query} onChange={(e) => setQuery(e.target.value)} />{query ? <button type="button" aria-label="Clear search" onClick={() => setQuery("")}><X /></button> : null}</div>
         <div className="dg-row" role="group" aria-label="Business type"><button type="button" aria-pressed={biz === null} onClick={() => setBiz(null)}>All</button>{BUSINESS.map((b) => <button key={b.id} type="button" aria-pressed={biz === b.id} onClick={() => setBiz(biz === b.id ? null : b.id)}>{b.label}</button>)}</div>
-        <div className="dg-row" role="group" aria-label="Try every page in a look"><span>Try on</span><button type="button" aria-pressed={dress === null} onClick={() => setDress(null)}>Their own</button>{STARTING_LOOKS.map((l) => <button key={l.id} type="button" aria-pressed={dress === l.id} onClick={() => setDress(dress === l.id ? null : l.id)}>{l.name}</button>)}</div>
+        <div className="dg-row" role="group" aria-label="Try every page in a look"><span>Try on</span><button type="button" aria-pressed={dress === null} onClick={() => setDress(null)}>Their own</button>{STARTING_LOOKS.map((l) => <button key={l.id} type="button" aria-pressed={dress === l.id} onClick={() => setDress(dress === l.id ? null : l.id)}><Swatch look={l} />{l.name}</button>)}</div>
         <div className="dg-row" role="group" aria-label="Profile arrangement"><span>Profile</span>{PROFILE_CHOICES.map((c) => <button key={c.id} type="button" aria-pressed={arr === c.id} onClick={() => setArr(arr === c.id ? null : c.id)}>{c.name}</button>)}</div>
       </div>
       <ul className="dg-shelf" data-testid="gallery-list">
@@ -119,10 +121,17 @@ export function DesignGallery() {
   )
 }
 
+function Swatch({ look }: { look: StartingLook }) {
+  const c = originalPalette(look)
+  return <i aria-hidden="true" className="dg-swatch" style={{ background: c.base, boxShadow: `inset 0 0 0 1px rgba(0,0,0,.14), 9px 0 0 -1px ${c.accent}` }} />
+}
+
 function Detail({ pick: first, onClose }: { pick: Pick; onClose: () => void }) {
   const [device, setDevice] = React.useState<"phone" | "computer">("phone")
   const [lookId, setLookId] = React.useState<string | undefined>(first.look?.id)
-  const pick = React.useMemo<Pick>(() => { const l = getStartingLook(lookId ?? ""); const d = l ? getDesign(l.design) : undefined; return l && d ? { ...first, look: l, design: d } : first }, [first, lookId])
+  const [arrId, setArrId] = React.useState<Arrangement | undefined>(first.arrangement)
+  const pick = React.useMemo<Pick>(() => { const l = getStartingLook(lookId ?? ""); const d = l ? getDesign(l.design) : undefined; const base = l && d ? { ...first, look: l, design: d } : first; return { ...base, arrangement: arrId } }, [first, lookId, arrId])
+  const ranked = React.useMemo(() => rankArrangements(SCENARIOS[first.scenario].content.identity), [first.scenario])
   const name = SCENARIOS[pick.scenario].content.identity.name
   const demo = exampleForScenario(pick.scenario)
   return (
@@ -136,7 +145,8 @@ function Detail({ pick: first, onClose }: { pick: Pick; onClose: () => void }) {
           <div className="sf-seg" role="radiogroup" aria-label="Preview size">
             {(["phone", "computer"] as const).map((d) => <label key={d} data-on={device === d}><input type="radio" name="dg-device" aria-label={d === "phone" ? "Phone" : "Computer"} checked={device === d} onChange={() => setDevice(d)} /><span>{d === "phone" ? "Phone" : "Computer"}</span></label>)}
           </div>
-          <div className="dg-detail-group"><h3>Try another look</h3><div className="dg-tags" role="group" aria-label="Look for this page">{STARTING_LOOKS.map((l) => <button key={l.id} type="button" className="dg-look" aria-pressed={pick.look?.id === l.id} onClick={() => setLookId(l.id)}>{l.name}</button>)}</div></div>
+          <div className="dg-detail-group"><h3>Try another look</h3><div className="dg-tags" role="group" aria-label="Look for this page">{STARTING_LOOKS.map((l) => <button key={l.id} type="button" className="dg-look" aria-pressed={pick.look?.id === l.id} onClick={() => setLookId(l.id)}><Swatch look={l} />{l.name}</button>)}</div></div>
+          <div className="dg-detail-group"><h3>Arrange the top</h3><div className="dg-tags" role="group" aria-label="Profile arrangement for this page">{ranked.map((r, i) => <button key={r.id} type="button" className="dg-look" aria-pressed={pick.arrangement === r.id} title={r.why} onClick={() => setArrId(r.id)}>{arrangementName(r.id)}{i === 0 ? <small> · suggested</small> : null}</button>)}</div></div>
           <div className="dg-detail-group"><h3>How it is made</h3>
             <dl className="dg-facts"><dt>Look</dt><dd>{pick.look?.name ?? "As designed"}</dd><dt>Arrangement</dt><dd>{arrangementName(pick.arrangement) ?? "As designed"}</dd><dt>Design</dt><dd>{pick.design.name}. {pick.design.blurb}</dd><dt>Material</dt><dd>{FINISHES.find((f) => f.id === pick.design.overrides.layout?.finish)?.name ?? "Set by the design"}</dd></dl>
           </div>

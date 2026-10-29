@@ -90,3 +90,11 @@
 @media(max-width:700px){.dg-head p{display:none}.dg-head{margin-bottom:10px}}
 .dg-look{font:inherit;font-size:13px;padding:6px 12px;border-radius:999px;border:0;background:#f1f1ef;color:#3d4350;cursor:pointer;box-shadow:inset 0 0 0 1px #e3e3df}
 .dg-look[aria-pressed="true"]{background:#111;color:#fff;box-shadow:none}
+.dg-look{display:inline-flex;align-items:center;gap:8px}
+.dg-look small{font-size:11px;opacity:.7}
+.dg-swatch{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px;flex:none}
+@media(max-width:760px){.dg-detail-view{min-height:46dvh}}
+.dg-row button{display:inline-flex;align-items:center}
+.dg-row .dg-swatch{margin-right:14px}
+.dg-look .dg-swatch{margin-right:14px}
+.dg-row button[aria-pressed=true] .dg-swatch,.dg-look[aria-pressed=true] .dg-swatch{outline:1.5px solid rgba(255,255,255,.6);outline-offset:0}
