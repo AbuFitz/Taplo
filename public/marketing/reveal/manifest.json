@@ -9,5 +9,16 @@
     "poster": "/marketing/reveal/portrait-poster.png",
     "bytes": 5492893,
     "sha256": "8f75ee57272a504628b2a8058459aebb18f85d67c06ffa66ad8f02fee13e494a"
+  },
+  "landscape": {
+    "width": 1280,
+    "height": 800,
+    "fps": 30,
+    "duration": 26,
+    "file": "/marketing/reveal/landscape-packed.mp4",
+    "download": "/marketing/reveal/landscape.mp4",
+    "poster": "/marketing/reveal/landscape-poster.png",
+    "bytes": 4089878,
+    "sha256": "986244aafd5a13f81fac2630c22e5d68aa2d6f4eb28d00afc7832b5f872c2aef"
   }
 }

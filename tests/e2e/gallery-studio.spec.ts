@@ -39,7 +39,7 @@ test("opening a page offers the demo, and using a design starts setup on that de
   await page.getByRole("button", { name: /Jay.s Barbers, open this page/ }).click();
   const detail = page.getByTestId("design-detail");
   await expect(detail.getByRole("link", { name: "Open the demo" })).toBeVisible();
-  await expect(detail.getByText("Architectural Split")).toBeVisible();
+  await expect(detail.getByText("Curved cover")).toBeVisible();
   await detail.getByRole("link", { name: /Start with the Garage design/ }).click();
   await expect(page).toHaveURL(/\/onboarding/);
   await expect(page.getByTestId("from-design")).toContainText("Starting with Garage");

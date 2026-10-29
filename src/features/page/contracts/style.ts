@@ -77,7 +77,7 @@ export const PROFILE_CHOICES = [
   { id: "masthead", name: "Editorial cover", line: "Type leads; the photo follows as a supporting chapter", needs: "none" },
   { id: "duo", name: "Side by side", line: "Identity and photo share one compact introduction", needs: "none" },
   { id: "lifted", name: "Floating profile", line: "An identity panel rests on the photo, then hands off to content", needs: "none" },
-  { id: "split", name: "Architectural Split", line: "A cover and a badge bridging the seam", needs: "photo" },
+  { id: "split", name: "Curved cover", line: "A rounded photo with your mark resting on its edge", needs: "photo" },
   { id: "bento", name: "Floating Bento", line: "One lifted card with everything in reach", needs: "none" },
   { id: "type", name: "Editorial Poster", line: "Bold type, no photo needed", needs: "none" },
 ] as const;

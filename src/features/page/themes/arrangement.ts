@@ -15,3 +15,6 @@ export function recommendArrangement(identity: { name: string; logo?: ImageRef |
   if (logo) return { id: "bento", why: "One card keeps your logo and name together, with no empty photo area." };
   return { id: "type", why: "With no pictures yet, confident type leads and nothing is left empty." };
 }
+
+/** Arrangements built around a photograph cannot be chosen until there is one; the rest work with or without pictures. */
+export const arrangementAvailable = (id: ArrangementId, identity: { heroImage?: ImageRef | null }): boolean => PROFILE_CHOICES.find((c) => c.id === id)?.needs !== "photo" || Boolean(identity.heroImage);
