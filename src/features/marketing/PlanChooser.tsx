@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import "./pricing-story.css";
+import "./pricing-switch.css";
 import { ArrowRight, Check } from "lucide-react";
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
 import { formatMoney } from "@/features/services/format";
