@@ -48,6 +48,10 @@ export interface PagePreviewProps {
   /** Synchronously remeasure when a parent sheet expands, before the next paint. */
   resizeKey?: boolean | number | string
   interactive?: boolean
+  /** Pointer use stays live, but keyboard users skip the embedded page (reach it through the full preview control). */
+  skipTab?: boolean
+  /** Show a plain message with Retry if the page has not loaded after this many milliseconds. */
+  retryAfterMs?: number
   /** Space occupied by fixed parent navigation when revealing a customer dialog. */
   topInset?: number
   /** Allow the authoring surface to reveal a customer dialog without reloading its document. */
@@ -85,11 +89,18 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, safeTop: 0, safeBottom: 0, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen, maxScale = 1, smooth = false, focus }: PagePreviewProps) {
+export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, skipTab = false, retryAfterMs, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen, maxScale = 1, smooth = false, focus }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
   const [loaded, setLoaded] = React.useState(false)
+  const [attempt, setAttempt] = React.useState(0)
+  const [stalled, setStalled] = React.useState(false)
+  React.useEffect(() => {
+    if (!retryAfterMs || loaded) { setStalled(false); return }
+    const t = window.setTimeout(() => setStalled(true), retryAfterMs)
+    return () => window.clearTimeout(t)
+  }, [retryAfterMs, loaded, attempt])
   const isPhone = chrome && mode === "device"
   const stopWatching = React.useRef<(() => void) | null>(null)
   React.useEffect(() => () => stopWatching.current?.(), [])
@@ -176,9 +187,10 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
 
   const iframe = L ? (
     <iframe
+      key={attempt}
       ref={setFrame}
       title={title}
-      tabIndex={interactive ? undefined : -1}
+      tabIndex={interactive && !skipTab ? undefined : -1}
       aria-hidden={interactive ? undefined : true}
       inert={!interactive || !loaded}
       src={src}
@@ -204,7 +216,8 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
               {L.bar ? <BrowserChrome url={url} height={L.bar} /> : null}
               <div className={cn("relative overflow-hidden bg-white", decorated && mode === "device" && "phone-screen")} style={{ width: L.vw, height: L.vh + L.safeTop + L.safeBottom, paddingTop: L.safeTop, paddingBottom: L.safeBottom }}>
                 {iframe}
-                {!loaded ? <div className="preview-screen-loading" aria-hidden="true"><span /><span /><span /></div> : null}
+                {!loaded && !stalled ? <div className="preview-screen-loading" aria-hidden="true"><span /><span /><span /></div> : null}
+                {stalled && !loaded ? <div role="alert" className="absolute inset-0 z-10 grid place-content-center gap-3 bg-white p-6 text-center text-sm text-neutral-800"><p>Preview unavailable. Your page and actions still work.</p><button type="button" className="mx-auto min-h-11 rounded-full border border-neutral-300 px-5 font-semibold" onClick={() => { setStalled(false); setAttempt((n) => n + 1) }}>Try again</button></div> : null}
               </div>
               {decorated && mode === "device" ? <PhoneChrome /> : null}
             </div>

@@ -42,7 +42,21 @@ export function Studio() {
   const [shareOpen, setShareOpen] = React.useState(false)
   const [announce, setAnnounce] = React.useState("")
   const headlineRef = React.useRef<HTMLHeadingElement>(null)
+  const opener = React.useRef<HTMLElement | null>(null)
+  const [keyboard, setKeyboard] = React.useState(false)
   const now = useClientNow() ?? 0
+
+  // The software keyboard shrinks the visual viewport: tuck the dock away so it never rides above the keys.
+  React.useEffect(() => {
+    const vv = window.visualViewport
+    if (!vv) return
+    const check = () => setKeyboard(window.innerHeight - vv.height > 140)
+    vv.addEventListener("resize", check)
+    check()
+    return () => vv.removeEventListener("resize", check)
+  }, [])
+  const openShare = (el: HTMLElement) => { opener.current = el; setShareOpen(true) }
+  const closeShare = (open: boolean) => { setShareOpen(open); if (!open) requestAnimationFrame(() => opener.current?.focus()) }
 
   if (!s || !ent) return <StudioSkeleton />
 
@@ -105,23 +119,8 @@ export function Studio() {
   ]
 
   return (
-    <div className="studio" data-testid="studio">
+    <div className={cn("studio", keyboard && "studio-kb")} data-testid="studio">
       <h1 className="sr-only">{s.content.identity.name}</h1>
-      <nav className="studio-dock" aria-label="Studio">
-        {dock.map(({ href, label, Icon, badge }) => (
-          <Link key={label} href={href} className="studio-dock-item" aria-label={label}>
-            <Icon aria-hidden="true" />
-            {badge ? <b aria-label={`${badge} enquiries`}>{badge}</b> : null}
-            <span className="studio-dock-label">{label}</span>
-          </Link>
-        ))}
-        {published ? (
-          <button type="button" className="studio-dock-item" aria-label="Share" onClick={() => setShareOpen(true)}>
-            <Share2 aria-hidden="true" /><span className="studio-dock-label">Share</span>
-          </button>
-        ) : null}
-      </nav>
-
       <aside className="studio-rail" aria-label="Status and next step">
         <div className="studio-status" data-testid="studio-status">
           <span className={cn("studio-pill", published && "studio-pill-live")}>{published ? `Published · v${s.published!.version}` : "Draft"}</span>
@@ -156,12 +155,12 @@ export function Studio() {
             <span className="studio-share-url" data-testid="studio-share-url">{url}</span>
             <div className="studio-share-actions">
               {cardCopies ? null : <Button variant="outline" aria-label="Copy link" onClick={copyLink}>{copy === "done" ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}Copy</Button>}
-              <Button variant="outline" onClick={() => setShareOpen(true)}><QrCode aria-hidden="true" />Show QR</Button>
+              <Button variant="outline" onClick={(e) => openShare(e.currentTarget)}><QrCode aria-hidden="true" />Show QR</Button>
             </div>
             {copy === "failed" ? <p className="studio-note" role="alert">Could not copy. Select the address and copy it.</p> : null}
           </div>
         ) : null}
-        {url ? <SharePanel open={shareOpen} onOpenChange={setShareOpen} data={{ name: s.content.identity.name, slug: liveSlug! }} /> : null}
+        {url ? <SharePanel open={shareOpen} onOpenChange={closeShare} data={{ name: s.content.identity.name, slug: liveSlug!, url: url! }} /> : null}
 
         {tip ? <p className="studio-tip" data-testid="studio-tip">{tip.text} <Link href={tip.href}>{tip.cta}</Link></p> : null}
 
@@ -187,15 +186,30 @@ export function Studio() {
       </aside>
 
       <section className="studio-stage" id="studio-preview" aria-label="Your page">
-        <div className="studio-phone"><PagePreview src="/demo/preview" title="Your page" mode="device" chrome url={businessAddress(s.content.identity.slug)} /></div>
+        <div className="studio-phone"><PagePreview src="/demo/preview" title="Your page" mode="device" chrome url={businessAddress(s.content.identity.slug)} skipTab retryAfterMs={15000} /></div>
         <Button asChild size="lg" variant="outline" className="studio-edit"><Link href="/dashboard/page"><Pencil aria-hidden="true" />Edit my page</Link></Button>
       </section>
+
+      <nav className="studio-dock" aria-label="Studio">
+        {dock.map(({ href, label, Icon, badge }) => (
+          <Link key={label} href={href} className="studio-dock-item" aria-label={label}>
+            <Icon aria-hidden="true" />
+            {badge ? <b aria-label={`${badge} enquiries`}>{badge}</b> : null}
+            <span className="studio-dock-label">{label}</span>
+          </Link>
+        ))}
+        {published ? (
+          <button type="button" className="studio-dock-item" aria-label="Share" onClick={(e) => openShare(e.currentTarget)}>
+            <Share2 aria-hidden="true" /><span className="studio-dock-label">Share</span>
+          </button>
+        ) : null}
+      </nav>
     </div>
   )
 }
 
 /** Reserves the final heights so nothing moves when the draft arrives. */
-function StudioSkeleton() {
+export function StudioSkeleton() {
   return (
     <div className="studio" data-testid="studio-loading" aria-busy="true">
       <div className="studio-dock" aria-hidden="true" />

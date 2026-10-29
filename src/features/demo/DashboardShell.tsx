@@ -1,4 +1,5 @@
 "use client";
+import { StudioSkeleton } from "./dashboard/Studio";
 import "@/features/page/editor/portal-workspace.css";
 import "./dashboard/workspace-tools.css";
 
@@ -169,9 +170,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           className={cn("portal-content", focus && "portal-content-editor")}
         >
           {!ready ? (
+            path === "/dashboard" ? <StudioSkeleton /> : (
             <div className="portal-loading" role="status">
               Loading your workspace…
-            </div>
+            </div>)
           ) : empty ? (
             <Welcome />
           ) : (

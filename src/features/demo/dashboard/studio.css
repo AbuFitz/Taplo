@@ -74,3 +74,9 @@
 }
 @media(max-height:640px) and (max-width:760px){.studio-phone{height:340px}}
 @media(prefers-reduced-motion:reduce){.studio-dock-item,.studio-steps summary::after{transition:none}}
+
+/* Focus: every control shows a ring, including the dark primary button. */
+.studio a:focus-visible,.studio button:focus-visible,.studio summary:focus-visible,.studio-primary:focus-visible{outline:3px solid #111;outline-offset:3px;border-radius:999px}
+.studio-primary:focus-visible{box-shadow:0 0 0 3px #fff}
+.studio-next h2:focus-visible{outline:none}
+.studio-kb .studio-dock{display:none}

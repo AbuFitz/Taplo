@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { loadQrLogo, svgToPng } from "@/features/qr/browser";
 import { qrSvg, qrFilename, type QrLogo } from "@/features/qr/render";
 export { renderShareImage, SHARE_FORMATS, type ShareImageInput, type ShareFormat } from "./share-image";
-export interface ShareData { name: string; tagline?: string; slug: string; logo?: string; action?: string }
+export interface ShareData { name: string; tagline?: string; slug: string; logo?: string; action?: string; /** The exact address to share and encode, when the caller knows it (the studio shares the published copy). */ url?: string }
 const noopSubscribe = () => () => {};
 
 export function ShareButton({ data, label = "Share this page", variant = "button" }: { data: ShareData; label?: string; variant?: "button" | "card" }) {
@@ -20,7 +20,7 @@ function ShareBody({ data }: { data: ShareData }) {
   const [origin = "", pathname = "", scenario = "", native = ""] = where.split("|");
   const example = pathname === "/appearance/frame" && Boolean(scenario);
   const preview = !example && (pathname.startsWith("/demo") || pathname.startsWith("/dashboard") || pathname.startsWith("/appearance"));
-  const url = !origin ? "" : example ? `${origin}/appearance/frame?scenario=${encodeURIComponent(scenario)}` : preview ? `${origin}${pathname.startsWith("/demo/p/") ? pathname : "/demo/preview"}` : `${origin}/${data.slug}`;
+  const url = !origin ? "" : data.url ? data.url : example ? `${origin}/appearance/frame?scenario=${encodeURIComponent(scenario)}` : preview ? `${origin}${pathname.startsWith("/demo/p/") ? pathname : "/demo/preview"}` : `${origin}/${data.slug}`;
   const [mark, setMark] = React.useState<QrLogo | null>(null);
   const [note, setNote] = React.useState("");
   const input = React.useRef<HTMLInputElement>(null);
@@ -43,7 +43,7 @@ function ShareBody({ data }: { data: ShareData }) {
     setNote("QR code saved");
   };
   return <div className="grid gap-4 py-1">
-    <div className="mx-auto w-[min(100%,13rem)] rounded-[1.5rem] bg-white p-4 text-black [&_svg]:h-auto [&_svg]:w-full" data-testid="qr-preview" dangerouslySetInnerHTML={{ __html: svg }} />
+    <div className="mx-auto w-[min(100%,15rem)] rounded-[1.5rem] bg-white p-3 text-black [&_svg]:h-auto [&_svg]:w-full" data-testid="qr-preview" dangerouslySetInnerHTML={{ __html: svg }} />
     <input ref={input} id="share-url" aria-label="Page link" value={url} readOnly onFocus={(e) => e.currentTarget.select()} className="min-h-11 w-full min-w-0 rounded-lg bg-transparent px-2 text-center text-sm text-tp-muted outline-none focus-visible:ring-2 focus-visible:ring-tp-accent" />
     <div className="grid gap-2">
       <Button type="button" className="min-h-12 rounded-full shadow-none bg-tp-accent text-tp-accent-fg hover:bg-tp-accent/90" onClick={copy}><Copy aria-hidden="true" />Copy link</Button>
