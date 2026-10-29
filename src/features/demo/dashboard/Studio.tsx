@@ -1,5 +1,6 @@
 "use client"
 
+import { ExplainerLoop } from "@/components/taplo/explainer-loops"
 import * as React from "react"
 import Link from "next/link"
 import { Boxes, CalendarDays, Check, Copy, Lock, MessageSquare, Palette, Share2, Sparkles } from "lucide-react"
@@ -84,6 +85,7 @@ export function Studio() {
             {url ? <Button variant="outline" asChild><a href={url} target="_blank" rel="noreferrer">View</a></Button> : null}
             {url ? <Button variant="outline" aria-label="Copy link" onClick={async () => { try { await navigator.clipboard.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 1800) } catch {} }}>{copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}</Button> : null}
           </div>
+          {!s.onboarded ? <Link className="studio-note underline" href="/onboarding" data-testid="continue-setup">Continue setup</Link> : null}
           {!canPublish(s) ? <p className="studio-note">To publish: {requiredLeft.map((c) => c.label.toLowerCase()).join(", ")}.</p> : <p className="studio-note">{WHEN_UNAVAILABLE.publicPublishing}</p>}
         </div>
 
@@ -116,6 +118,22 @@ export function Studio() {
             <Button variant="outline" onClick={() => patch((x) => ({ ...x, showExamples: x.showExamples === false }))}>{s.showExamples === false ? "Show examples" : "Hide examples"}</Button>
           </div>
         ) : null}
+
+        <div className="studio-card" data-testid="feature-loops">
+          <h2>Get more from your page</h2>
+          <ul className="studio-loops">
+            {([
+              ["share", "Share it", "Send the link or show the QR code."],
+              ["booking", "Take bookings", "Customers pick a time. You confirm."],
+              ["photos", "Show your work", "Photos help people choose you."],
+            ] as const).map(([name, title, line]) => (
+              <li key={name}>
+                <ExplainerLoop name={name} label={title} className="h-14 max-w-28" />
+                <span><strong>{title}</strong><small>{line}</small></span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         {discover.length ? (
           <div className="studio-card studio-discover">

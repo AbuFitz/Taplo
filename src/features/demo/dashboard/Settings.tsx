@@ -9,7 +9,8 @@ import { formatMoney } from "@/features/services/format"
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans"
 import { resolveEntitlements } from "@/features/subscriptions/entitlements"
 import { useDemo } from "../store"
-import { NotBuilt, PageHeader, Panel } from "./Panel"
+import { EmptyPanel } from "@/components/taplo/illustrations"
+import { PageHeader, Panel } from "./Panel"
 
 const ENT_LABEL: [keyof ReturnType<typeof resolveEntitlements>, string][] = [
   ["themeSwitching", "Layout and colour choices"],
@@ -51,9 +52,9 @@ export function Settings() {
           </ul>
           <p className="mt-3 text-xs text-muted-foreground">Downgrading never deletes your content; restricted items are hidden and can be restored by upgrading.</p>
         </Panel>
-        <NotBuilt title="Subscription billing, payments, notifications, domains" phase="Phases 7 to 8">
-          <p>Not connected: Stripe billing and Connect, email notifications (Resend), custom domains, privacy tools (export/delete). Each needs its own credentials and is reported separately when it exists.</p>
-        </NotBuilt>
+        <EmptyPanel illustration="connect" title="Payments, email and domains are not connected">
+          <p>Billing, deposits, email confirmations, custom domains and data export each need their own account and will be switched on one at a time. Nothing is charged today.</p>
+        </EmptyPanel>
         <Panel title="Demo data" description="Everything is stored only in this browser.">
           {confirm ? (
             <div className="flex flex-wrap items-center gap-2">

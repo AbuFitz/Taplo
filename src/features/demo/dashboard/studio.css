@@ -44,3 +44,9 @@
   .studio-dock-label{display:none}
   .studio-stage,.studio-phone{min-height:0;height:min(640px,76dvh)}
 }
+.studio-loops{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.studio-loops li{display:flex;align-items:center;gap:12px}
+.studio-loops svg{flex:none;width:7rem;height:3.5rem}
+.studio-loops span{display:grid;gap:2px;min-width:0}
+.studio-loops strong{font-size:13px}
+.studio-loops small{font-size:12px;color:#5b6270;line-height:1.4}

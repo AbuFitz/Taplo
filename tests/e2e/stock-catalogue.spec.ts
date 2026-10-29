@@ -4,6 +4,7 @@ import { openEditorWithSample, openRow, previewFrame } from "./helpers"
 
 for (const width of [390, 1440]) {
   test(`UK stock is readable, image-backed and enquiry-ready at ${width}px`, async ({ page }) => {
+    test.setTimeout(120_000) // fullPage screenshot plus image loads is slow when the suite runs in parallel
     await page.setViewportSize({ width, height: 1000 })
     await page.goto("/appearance/frame?scenario=brookfield")
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Harris Cars")

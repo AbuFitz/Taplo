@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link"
+import { ALL_SHOWCASE } from "@/features/inspiration/showcase-set"
+import { getStartingLook } from "@/features/page/themes/starting-looks"
 import { Illustration } from "@/components/taplo/illustrations";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
@@ -50,10 +52,17 @@ const SAMPLES: {
   { scenario: "rowan", slug: "maths-with-aisha", asset: "rowan-learning", name: "Maths with Aisha", category: "Maths tutor", detail: "A personal introduction and sessions at a pace you can follow." },
 ];
 
+/** The starting look an example page wears, so each card says what it shows. */
+const lookName = (scenario: Scenario): string | undefined => {
+  const id = ALL_SHOWCASE.find((i) => i.scenario === scenario)?.look
+  return id ? getStartingLook(id)?.name : undefined
+}
+
 /** Only shown for an empty account. Existing drafts never enter the sample-loading flow. */
 export function Welcome() {
-  const { update } = useDemo();
+  const { state, update } = useDemo();
   const router = useRouter();
+  const resumeName = state?.content.identity.name?.trim();
   const load = (scenario: Scenario) => {
     const cfg = initialConfig(scenario);
     update(
@@ -83,7 +92,7 @@ export function Welcome() {
             Set up your business page.
           </h1>
           <p className="mt-4 max-w-md text-base leading-relaxed text-[#444]">
-            Add what you offer, pick a look, share the link.
+            {resumeName ? `Your setup for ${resumeName} is saved on this device.` : "Add what you offer, pick a look, share the link."}
           </p>
           <ol className="mt-6 grid gap-2 text-sm font-medium sm:grid-flow-col sm:auto-cols-max sm:gap-6">
             {["Add your details", "Choose a look", "Share your page"].map((x, i) => (
@@ -100,7 +109,7 @@ export function Welcome() {
           className="min-h-12 rounded-full bg-[#111111] px-6 text-white hover:bg-[#333333]"
         >
           <Link href="/onboarding">
-            Start setup <ArrowRight aria-hidden="true" />
+            {resumeName ? "Continue setup" : "Start setup"} <ArrowRight aria-hidden="true" />
           </Link>
         </Button>
       </div>
@@ -119,7 +128,7 @@ export function Welcome() {
           </div>
           <Link
             href="/inspiration"
-            className="text-sm font-medium underline underline-offset-4"
+            className="inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4"
           >
             See all designs
           </Link>
@@ -145,6 +154,7 @@ export function Welcome() {
               <div className="p-5">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                   {s.category}
+                  {lookName(s.scenario) ? <span className="font-normal normal-case tracking-normal"> · {lookName(s.scenario)}</span> : null}
                 </p>
                 <h3 className="mt-1 text-lg font-semibold tracking-tight">
                   {s.name}
@@ -162,7 +172,7 @@ export function Welcome() {
         </div>
       </section>
       <details className="mt-8 rounded-xl border p-4">
-        <summary className="cursor-pointer text-sm font-medium">
+        <summary className="flex min-h-11 cursor-pointer items-center text-sm font-medium">
           More sample businesses
         </summary>
         <p className="mt-3 text-xs text-muted-foreground">
@@ -173,6 +183,7 @@ export function Welcome() {
             <Button
               key={k}
               size="sm"
+              className="min-h-11"
               variant="outline"
               onClick={() => {
                 update(

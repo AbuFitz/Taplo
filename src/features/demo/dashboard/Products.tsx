@@ -14,7 +14,8 @@ import {
   AVAILABILITY_LABEL,
 } from "../ProductForm";
 import { useDraft } from "../hooks";
-import { NotBuilt, PageHeader } from "./Panel";
+import { EmptyPanel } from "@/components/taplo/illustrations";
+import { PageHeader } from "./Panel";
 
 export const blankProduct = (
   kind: ProductContent["kind"] = "product",
@@ -182,13 +183,13 @@ export function Products() {
             </ul>
           </section>
         ) : null}
-        <NotBuilt title="Checkout, orders and NFC products" phase="Phase 9">
+        <EmptyPanel illustration="connect" title="Checkout and NFC products are not built yet">
           <p>
-            Not built yet: shopping cart, payments, order fulfilment, and
-            optional NFC cards/stickers/keyrings. Today a product opens an
-            enquiry (call, WhatsApp, email) or a link to your own shop.
+            Today a product opens an enquiry (call, WhatsApp or email) or a
+            link to your own shop. Cart, payments, orders and optional NFC
+            cards, stickers and keyrings come later.
           </p>
-        </NotBuilt>
+        </EmptyPanel>
       </div>
       <Overlay
         open={editing !== null}
