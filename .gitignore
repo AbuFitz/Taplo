@@ -59,3 +59,7 @@ next-env.d.ts
 # Atomic intermediate film encodes
 /.cache/film/
 .claude/refs/
+
+.claude/skills/impeccable/scripts/bin/
+.impeccable/*.png
+.impeccable/review/

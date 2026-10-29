@@ -35,3 +35,7 @@ Scope: images under `public/` that the gallery, setup and showcase pages render.
 | `public/lottie/analytics.json` | Analytics Yellow | Brandon Barnes | https://lottiefiles.com/animations/analytics-yellow-1POVwLSnto |
 | `public/lottie/share.json` | qr scan | Aakash Deep | https://lottiefiles.com/animations/qr-scan-au96lmWCfX |
 | `public/lottie/growth.json` | Minimal Growth Bar Chart | Eamin | https://lottiefiles.com/animations/minimal-growth-bar-chart-animation-apFJ91Yqr2 |
+
+
+## Generated sample photography (Figma AI)
+Six no-people images in `public/photography/generated/` (barber-counter, barber-chair, detail-door, detail-kit, tutor-desk, tutor-room), generated on 2026-10-29 with Figma's `gemini-3.1-flash-image` model for the three fictional sample businesses. They depict objects and rooms, never real people, and must be labelled as sample imagery wherever a sample business is shown. Figma's AI terms govern commercial use; the owner should confirm them before launch. Prompts are recorded in `public/photography/credits.json`.
