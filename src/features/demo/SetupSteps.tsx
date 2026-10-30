@@ -63,7 +63,7 @@ export function TypeStep() {
                 data-testid={`tile-${t.id}`}
                 onClick={() => { if (t.id === "other") { setOtherOpen(true); pick("other", "") } else { setOtherOpen(false); pick(t.id) } }}
               >
-                {PHOTO.has(t.id) ? null : <span className="sf-tile-icon"><BusinessIcon id={t.id === "other" ? "other" : t.id} /></span>}
+                {<span className="sf-tile-icon"><BusinessIcon id={t.id === "other" ? "other" : t.id} /></span>}
                 <span className="sf-tile-label">{t.label}</span>
                 {selected ? <Check className="sf-tile-check" aria-hidden="true" /> : null}
               </button>
@@ -336,7 +336,7 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
   }
   return (
     <div className="sf-stack" data-testid="finish-step">
-      <p className="sf-lede">{s.content.identity.name ? `${s.content.identity.name} is ready.` : "Your page is ready."} It is saved as a draft and stays private until you publish it from Studio, where you edit and share your page.</p>
+      <p className="sf-lede">{s.content.identity.name ? `${s.content.identity.name} is ready.` : "Your page is ready."} Publish it from Studio when you are happy.</p>
       {!storageHasFailed() ? <p className="sf-saved" data-testid="saved-status"><Check aria-hidden="true" /> Saved as a draft. Not published.</p> : null}
       {phase === "done" ? (
         <p role="status" className="sf-ok"><Check aria-hidden="true" /> Account connected and draft saved. Opening Studio…</p>
@@ -353,7 +353,7 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
         <div className="sf-testing" data-testid="dev-route">
           <Button size="lg" className="sf-primary" data-testid="save-draft" onClick={toStudio}>Open Studio</Button>
           <p className="sf-help" data-testid="draft-note">{WHEN_UNAVAILABLE.accounts}</p>
-          <p className="sf-help sf-small" data-testid="dev-route-note">Testing route: this opens Studio without an account, in this environment only.</p>
+          <p className="sf-help sf-small" data-testid="dev-route-note">Testing route: opens Studio without an account.</p>
         </div>
       )}
       {saveFailed ? <p role="alert" className="sf-error" data-testid="save-failed">Your browser couldn’t save this draft (storage is full or blocked), so it isn’t saved yet. Remove a large picture and try again.</p> : null}

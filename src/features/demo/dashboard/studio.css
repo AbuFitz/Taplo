@@ -135,3 +135,10 @@ body:has([data-editor=compact][data-short=true]) .studio-dock{display:none}
 .portal-workspace [data-testid=empty-panel] :is(p,div){font-size:15px;color:#454545}
 .portal-workspace [data-testid=empty-panel] a{display:inline-flex;align-items:center;min-height:44px;padding:0 20px;border-radius:99px;background:#111;color:#fff;font-weight:600;text-decoration:none}
 .portal-workspace [data-testid=empty-panel] svg{display:none}
+
+/* Manage pages: one width, one left edge, one type floor, 44px hit areas, pill buttons. */
+.portal-workspace[data-workspace-section=manage] .portal-content{max-width:880px;margin-inline:0}
+.portal-workspace[data-workspace-section=manage] :is(.text-xs,.text-\[0\.6875rem\],.text-\[11px\],.text-\[12px\]){font-size:14px;line-height:1.45}
+.portal-workspace[data-workspace-section=manage] .portal-content button[data-slot=button]{min-height:44px;border-radius:99px}
+.portal-workspace[data-workspace-section=manage] .portal-content button[data-slot=button][class*="size-"],.portal-workspace[data-workspace-section=manage] .portal-content button[data-slot=button][class*="w-8"]{min-width:44px}
+.portal-workspace[data-workspace-section=manage] .portal-content .text-muted-foreground{color:#454545}

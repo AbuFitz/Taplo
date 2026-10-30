@@ -77,7 +77,7 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(function SetupShe
           ><span aria-hidden="true" /></button>
         ) : null}
         <h1 id="step-title" tabIndex={-1} className="sf-title font-display" key={`t-${bodyKey}`}>{title}</h1>
-        <div id="setup-controls" className="sf-body" inert={peek} key={bodyKey} data-testid="setup-body" onFocusCapture={(e) => { const t = e.target as HTMLElement; if (t.matches("input,textarea,select,[role=radio]")) requestAnimationFrame(() => t.scrollIntoView({ block: "center", behavior: "auto" })) }}>{children}</div>
+        <div id="setup-controls" className="sf-body" inert={peek} key={bodyKey} data-testid="setup-body" onFocusCapture={(e) => { const t = e.target as HTMLElement; const box = e.currentTarget; if (t.matches("input,textarea,select,[role=radio]")) requestAnimationFrame(() => { const b = box.getBoundingClientRect(); const r = t.getBoundingClientRect(); if (r.bottom > b.bottom - 24) box.scrollTop += r.bottom - b.bottom + 24; else if (r.top < b.top + 8) box.scrollTop -= b.top - r.top + 8 }) }}>{children}</div>
         {notice}
         <footer className="sf-foot">{footer}</footer>
       </section>

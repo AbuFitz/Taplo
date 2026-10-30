@@ -270,7 +270,7 @@ export function OwnerBookings({
                 "Enquiries",
                 state.enquiries.filter((e) => e.status === "new").length,
               ],
-              ["availability", "Hours and rules", 0],
+              ["availability", "Hours", 0],
             ] as const
           ).map(([id, label, n]) => (
             <button

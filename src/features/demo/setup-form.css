@@ -117,7 +117,6 @@ html:has(.sf-root),body:has(.sf-root){height:100%;overflow:hidden;overscroll-beh
 .sf-tile[data-photo]{align-content:end;justify-items:start;padding:8px 10px;border-color:transparent;background-size:cover;background-position:center;color:#fff;min-height:84px}
 .sf-tile[data-photo] .sf-tile-label{text-align:left;color:#fff;text-shadow:0 1px 6px #0009}
 .sf-tile[data-photo][aria-pressed=true]{box-shadow:0 0 0 3px #111,0 0 0 5px #fff inset}
-.sf-tile[data-photo][aria-pressed=true] .sf-tile-label{text-decoration:underline;text-underline-offset:3px}
 
 /* One tile treatment: photo or toned, label bottom-left, the same weight either way. */
 .sf-tile[data-photo]{align-content:end;justify-items:start;padding:8px 10px;border-color:transparent;background-size:cover;background-position:center;color:#fff;min-height:84px}
@@ -172,12 +171,18 @@ html:has(.sf-root),body:has(.sf-root){height:100%;overflow:hidden;overscroll-beh
 .sp-why{font-size:14px;color:#454545}
 
 @media(min-width:1024px){
-  .sf-root{justify-content:center;grid-template-columns:minmax(0,540px) minmax(0,420px);column-gap:clamp(48px,6vw,96px)}
+  .sf-root{justify-content:center;grid-template-columns:minmax(0,540px) minmax(0,440px);column-gap:clamp(48px,6vw,96px)}
   .sf-sheet{align-self:center;height:auto;min-height:min(560px,100%);max-height:100%}
   .sf-body{flex:0 1 auto}
   .sf-tile{min-height:112px}
   .sf-tile[data-photo]{min-height:112px}
   .sf-tiles{gap:12px}
   .sf-root .setup-look-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .sf-stage{align-self:center}
 }
+
+.sf-tile[data-photo=image] .sf-tile-icon{background:#00000066;color:#fff;justify-self:start}
+.sf-tile[data-photo=image]{align-content:space-between}
+.sf-tile[data-photo=image]::before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,#0000 30%,#000000a6);pointer-events:none}
+.sf-tile{position:relative}
+.sf-tile>*{position:relative}
+.sf-skip{white-space:nowrap}
