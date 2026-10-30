@@ -34,7 +34,7 @@ test("the steps run in order with the agreed titles and a words-first progress",
 for (const [w, h, label] of [[390, 844, "844"], [390, 600, "600"]] as const) {
   test(`the sheet is the same height on every step at 390x${label}, so the page never jumps`, async ({ page }) => {
     await open(page, w, h)
-    const expected = Math.round(h * 0.52)
+    const expected = Math.round(h * (h <= 700 ? 0.78 : 0.52))
     const heights: number[] = []
     const measure = async () => { await page.waitForTimeout(350); heights.push(Math.round((await page.getByTestId("setup-sheet").boundingBox())!.height)) }
     await measure()

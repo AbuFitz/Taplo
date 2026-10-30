@@ -136,8 +136,7 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
   // ---- main action: chosen on the page, independent of widget order
   const primaryMode = effectiveStyle.spec.header.actions === "primary";
   const available: Record<ActionKind, boolean> = { book: Boolean(bookingWidget) || onlineBooking, call: Boolean(k.phone), whatsapp: Boolean(k.whatsapp), email: Boolean(k.email) };
-  // When customers cannot book online, the main button is how they reach you; a booking enquiry only leads when booking is on.
-  const order: ActionKind[] = onlineBooking ? ["book", "call", "whatsapp", "email"] : ["call", "whatsapp", "email", "book"];
+  const order: ActionKind[] = ["book", "call", "whatsapp", "email"];
   const pref = page.meta.primaryAction;
   const chosen: ActionKind | undefined = pref === "none" ? undefined : pref !== "auto" && available[pref] ? pref : order.find((o) => available[o]);
   let primary: PageViewModel["primary"] = null;

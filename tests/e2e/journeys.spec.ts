@@ -129,7 +129,7 @@ test.describe("plans and page settings", () => {
   test("Free keeps the suggested theme and shows why things are locked; content is never deleted", async ({ page }) => {
     await openEditorWithSample(page, "Barber");
     await page.goto("/dashboard/settings");
-    await pickOption(page, "Simulated plan", /^Free/);
+    await pickOption(page, "Plan", /^Free/);
     await page.goto("/dashboard/page");
     await selectPart(page, "page");
     await openSection(page, /^Look/);
@@ -141,7 +141,7 @@ test.describe("plans and page settings", () => {
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.gallery.length)).toBeGreaterThan(0);
     // upgrade restores everything
     await page.goto("/dashboard/settings");
-    await pickOption(page, "Simulated plan", /^Pro/);
+    await pickOption(page, "Plan", /^Pro/);
     await page.goto("/dashboard/page");
     await expect(row(page, "gallery")).toContainText("3 photos");
     await expect(row(page, "gallery")).not.toContainText("Not on your page");
