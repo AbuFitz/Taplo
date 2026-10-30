@@ -36,9 +36,12 @@ export function Settings() {
     <>
       <PageHeader title="Settings" />
       <div className="grid max-w-3xl gap-6">
-        <Panel title="Plan (demo simulator)" description="Billing isn’t connected. Switch the simulated plan to see exactly what each package unlocks across your page and dashboard. No payment is taken.">
+        <EmptyPanel illustration="connect" title="Payments, email and domains are not connected">
+          <p>Billing, deposits, email confirmations, custom domains and data export each need their own account and will be switched on one at a time. Nothing is charged today.</p>
+        </EmptyPanel>
+        <Panel title="Plan" description="Billing is not connected, so nothing is charged. Switch plans here to see what each one unlocks.">
           <div className="grid gap-1.5 sm:max-w-xs">
-            <Label htmlFor="plan">Simulated plan</Label>
+            <Label htmlFor="plan">Plan</Label>
             <Select value={plan} onValueChange={(v) => update((x) => ({ ...x, plan: v as PlanId }))}>
               <SelectTrigger id="plan" className="min-h-11 w-full"><SelectValue /></SelectTrigger>
               <SelectContent position="popper">
@@ -52,9 +55,6 @@ export function Settings() {
           </ul>
           <p className="mt-3 text-xs text-muted-foreground">Downgrading never deletes your content; restricted items are hidden and can be restored by upgrading.</p>
         </Panel>
-        <EmptyPanel illustration="connect" title="Payments, email and domains are not connected">
-          <p>Billing, deposits, email confirmations, custom domains and data export each need their own account and will be switched on one at a time. Nothing is charged today.</p>
-        </EmptyPanel>
         <Panel title="Demo data" description="Everything is stored only in this browser.">
           {confirm ? (
             <div className="flex flex-wrap items-center gap-2">

@@ -84,6 +84,7 @@ test.describe("records flow into blocks (nothing is copied)", () => {
     await expect(page.getByText("Oatmeal dog shampoo")).toBeVisible();
 
     await page.goto("/dashboard/services");
+    await page.getByRole("button", { name: "Add offer" }).click();
     await page.getByLabel("Offer title").fill("First groom 10% off");
     await page.getByLabel("Last day (optional)").fill("2020-01-01");
     await page.getByRole("button", { name: "Add offer" }).click();

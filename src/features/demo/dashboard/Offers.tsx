@@ -14,6 +14,7 @@ export function Offers() {
   const { c, setContent } = useDraft()
   const [f, setF] = React.useState({ title: "", description: "", code: "", endsAt: "" })
   const [err, setErr] = React.useState<string>()
+  const [open, setOpen] = React.useState(false)
   if (!c) return null
   const offers = (c.offers ?? []).filter((o) => !o.archived)
   const today = new Date().toISOString().slice(0, 10)
@@ -22,6 +23,7 @@ export function Offers() {
     setErr(undefined)
     setContent((x) => ({ ...x, offers: [...(x.offers ?? []), { id: newId("offer"), title: f.title.trim(), description: f.description.trim() || undefined, code: f.code.trim() || undefined, endsAt: f.endsAt || undefined, archived: false }] }))
     setF({ title: "", description: "", code: "", endsAt: "" })
+    setOpen(false)
   }
   return (
     <section className="mt-10 max-w-3xl" aria-labelledby="offers-h">
@@ -37,14 +39,14 @@ export function Offers() {
           ))}
         </ul>
       ) : <p className="mb-4 text-sm text-muted-foreground">No offers yet.</p>}
-      <div className="grid gap-3 rounded-xl border p-4">
+      {!open ? <Button variant="outline" className="justify-self-start" onClick={() => setOpen(true)}><Plus /> Add offer</Button> : <div className="grid gap-3 rounded-xl border p-4">
         <TaploInput label="Offer title" value={f.title} maxLength={120} onChange={(e) => setF({ ...f, title: e.target.value })} />
         <div className="grid gap-1.5"><Label htmlFor="odesc">Details (optional)</Label><Textarea id="odesc" rows={2} maxLength={600} value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} /></div>
         <div className="grid gap-3 sm:grid-cols-2"><TaploInput label="Code to mention (optional)" value={f.code} maxLength={40} onChange={(e) => setF({ ...f, code: e.target.value })} /><TaploInput label="Last day (optional)" type="date" value={f.endsAt} onChange={(e) => setF({ ...f, endsAt: e.target.value })} /></div>
         {err ? <p role="alert" className="text-sm text-destructive">{err}</p> : null}
         <Button className="justify-self-start" onClick={add}><Plus /> Add offer</Button>
         <p className="text-xs text-muted-foreground">Codes are shown as text only; Taplo doesn’t check or redeem them.</p>
-      </div>
+      </div>}
     </section>
   )
 }

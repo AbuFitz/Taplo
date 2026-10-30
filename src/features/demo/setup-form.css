@@ -172,8 +172,8 @@ html:has(.sf-root),body:has(.sf-root){height:100%;overflow:hidden;overscroll-beh
 
 @media(min-width:1024px){
   .sf-root{justify-content:center;grid-template-columns:minmax(0,540px) minmax(0,440px);column-gap:clamp(48px,6vw,96px)}
-  .sf-sheet{align-self:center;height:auto;min-height:min(560px,100%);max-height:100%}
-  .sf-body{flex:0 1 auto}
+  .sf-sheet{align-self:center;height:min(660px,100%)}
+  .sf-body{flex:1 1 auto}
   .sf-tile{min-height:112px}
   .sf-tile[data-photo]{min-height:112px}
   .sf-tiles{gap:12px}
