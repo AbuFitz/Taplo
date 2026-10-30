@@ -121,7 +121,7 @@ export function VideoEmbed({ url, title }: { url: string; title?: string }) {
   const v = videoEmbed(url)
   if (!v) return null
   return (
-    <div className={cn("tp-media aspect-video w-full")}>
+    <div className={cn("tp-media aspect-video w-full max-h-[26rem]")}>
       {on ? (
         <iframe title={title || "Video"} src={v.embedUrl} className="absolute inset-0 size-full" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />
       ) : (

@@ -754,3 +754,6 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 
 /* Titles of widgets that sit directly on the page (gallery) follow the same heading, size and alignment as card titles. */
 .tp-media-title { margin: 0 0 var(--tp-s-3); padding-inline: var(--tp-s-1); font-family: var(--tp-font-heading); font-weight: var(--tp-heading-weight); text-transform: var(--tp-heading-case); font-size: calc(var(--tp-t-lg) * var(--tp-heading-scale, 1)); line-height: 1.15; text-align: var(--tp-text-align); }
+
+/* Initials sit on the avatar's own surface, so they take the page text colour whatever the header band is. */
+.tp-header .tp-avatar > span[aria-hidden="true"] { color: var(--tp-foreground) !important; }
