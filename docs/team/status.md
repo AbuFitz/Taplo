@@ -1,0 +1,5 @@
+# Status (2026-10-30, branch claude/modest-cerf-4tont1)
+
+Verified on the production build with Chromium: full suite 776 passed, 5 skipped, 2 failed under load; both pass alone (engine overrides, twelve looks). Critic rounds 4 and 5 (form, Studio) and QA rounds 3 and 4 are in docs/team/slice/. Critic on sample businesses and the eight directions: docs/team/evidence/r4 (the look captures showed the setup step, not the full fixture; re-capture on fixtures is open).
+
+Open: card-level rebuild of Services, Bookings, Reviews, Team, Products, Analytics, Settings and the editor's own screens; fixture 1440 balance (hero half empty, dead column under the list); WhatsApp card and Full valet card gaps on the detailer fixture; gallery art reads as placeholder; structural distinctness within look pairs 1/2, 3/4, 7/8; marketing site and film recolour; Home heading and cropped phone on Studio home; very short (450-500px) finish step; real-device and WebKit checks; Figma AI commercial terms to be confirmed. Nothing merged, deployed or opened as a pull request.
