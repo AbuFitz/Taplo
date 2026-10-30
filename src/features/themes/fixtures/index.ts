@@ -149,7 +149,7 @@ const tutor: Omit<Fixture, "page"> = {
     location: { mode: "online", locality: "Online, and in Bushey", timezone: "Europe/London" },
     contacts: { phone: "01632 960321", whatsapp: "07700 900321", email: "lessons@example.com", social: [] },
     about: "Tuition built around understanding, not memorising. Every student starts with a short diagnostic so lessons target the gaps that matter. Sample text for layout testing.",
-    credentials: ["Sample: Maths degree (placeholder credential)", "Sample: Enhanced DBS (placeholder)"],
+    credentials: ["Example: Maths degree", "Example: Enhanced DBS"],
     hours: [],
     services: [
       svc("s1", "GCSE Maths", "fixed", 4000, 60, "Foundation and higher tier, exam technique included.", { delivery: ["online", "premises"] }),
@@ -185,7 +185,7 @@ const consultant: Omit<Fixture, "page"> = {
     location: { mode: "online", locality: "London and remote", timezone: "Europe/London" },
     contacts: { phone: "01632 960654", email: "enquiries@example.com", website: "https://example.com", social: [{ platform: "linkedin", url: "https://example.com/linkedin" }] },
     about: "We work with founders who have outgrown improvisation. Engagements are short, specific and finish with a plan your team can run without us. This is synthetic sample copy.",
-    credentials: ["Sample: Chartered status (placeholder)"],
+    credentials: ["Example: Chartered status"],
     hours: [],
     services: [
       svc("s1", "Strategy review", "from", 150000, undefined, "A focused two-week review of positioning, pricing and operations, ending in a prioritised plan.", { bookingMode: "request" }),
@@ -353,7 +353,7 @@ export const FIXTURES: Fixture[] = [
     const pay = newWidget("payment", { label: "Pay a diagnostics deposit", kind: "deposit", serviceId: "s3" });
     return [notice, newWidget("call", { subtitle: "Talk to a mechanic" }), ...w.slice(0, 1), featured, ...w.slice(1), pay];
   }),
-  withPage(detailer, "showroom", (w) => [...w.filter((x) => x.type !== "serviceArea"), newWidget("serviceArea"), newWidget("whatsapp", { label: "Send photos of your car on WhatsApp", variant: "card" })]),
+  withPage(detailer, "showroom", (w) => [...w.filter((x) => x.type !== "serviceArea"), newWidget("serviceArea"), newWidget("whatsapp", { label: "Send photos of your car on WhatsApp" })]),
   // Hard-edged yellow theme for a barber.
   withPage(barber, "showroom", (w) => {
     const hrs = w.find((x) => x.type === "hours");

@@ -245,3 +245,17 @@ test("every look is reachable whatever the business type, and choosing one chang
   const frame = page.frameLocator('[data-testid="setup-live-page"]')
   await expect(frame.locator("[data-taplo-page]")).toHaveAttribute("data-tone", "dark")
 })
+
+test("on a very short screen the finish action is never covered", async ({ page }) => {
+  for (const h of [420, 500]) {
+    await open(page, 390, h)
+    await toLook(page); await cont(page).click(); await cont(page).click(); await cont(page).click()
+    await page.getByRole("button", { name: /^Continue with/ }).click()
+    const btn = page.getByTestId("save-draft")
+    await btn.scrollIntoViewIfNeeded()
+    await expect(btn).toBeInViewport()
+    const covered = await btn.evaluate((el) => { const r = el.getBoundingClientRect(); const top = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2); return !(top === el || el.contains(top)) })
+    expect(covered, `Open Studio is reachable at 390x${h}`).toBe(false)
+    await page.evaluate(() => localStorage.clear())
+  }
+})
