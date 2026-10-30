@@ -762,3 +762,9 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 [data-composition="bento"] .tp-widget[data-widget="location"][data-span="half"] { grid-column: 1 / -1; }
 [data-composition="bento"] .tp-widget[data-widget="social"][data-span="half"] { grid-column: 1 / -1; }
 .tp-btn[data-btn-fill="outline"] { border-width: 2px; }
+
+/* A wide two-column page puts the identity and the actions side by side, so the hero card is not half empty. */
+@media (min-width: 1100px) {
+  [data-desktop="columns"] .tp-header[data-layout="side"] { grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem); align-items: center; column-gap: var(--tp-s-6); }
+  [data-desktop="columns"] .tp-header[data-layout="side"] .tp-actions { justify-self: stretch; }
+}
