@@ -757,3 +757,7 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 
 /* Initials sit on the avatar's own surface, so they take the page text colour whatever the header band is. */
 .tp-header .tp-avatar > span[aria-hidden="true"] { color: var(--tp-ink, var(--tp-foreground)) !important; }
+
+/* Text-heavy cards never share a row at phone width: an address needs the full measure. */
+[data-composition="bento"] .tp-widget[data-widget="location"][data-span="half"] { grid-column: 1 / -1; }
+[data-composition="bento"] .tp-widget[data-widget="social"][data-span="half"] { grid-column: 1 / -1; }

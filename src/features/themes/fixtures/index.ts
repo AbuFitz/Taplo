@@ -158,8 +158,8 @@ const tutor: Omit<Fixture, "page"> = {
       svc("s4", "Free introductory call", "free", undefined, 15, "Meet, discuss goals, no obligation.", { delivery: ["online"], bookingMode: "request" }),
     ].map((s, i) => ({ ...s, sortOrder: i })),
     staff: [
-      { id: "t1", slug: "priya", name: "Priya Example", role: "Maths tutor", bio: "Sample biography for layout testing.", photo: img(7, SAMPLE), subjects: ["GCSE Maths", "A-level Maths"] },
-      { id: "t2", slug: "daniel", name: "Daniel Example", role: "Science tutor", bio: "Sample biography for layout testing.", photo: img(4, SAMPLE), subjects: ["Physics", "Chemistry"] },
+      { id: "t1", slug: "priya", name: "Priya Example", role: "Maths tutor", bio: "Example biography: replace it with your own.", photo: img(7, SAMPLE), subjects: ["GCSE Maths", "A-level Maths"] },
+      { id: "t2", slug: "daniel", name: "Daniel Example", role: "Science tutor", bio: "Example biography: replace it with your own.", photo: img(4, SAMPLE), subjects: ["Physics", "Chemistry"] },
     ],
     gallery: [],
     testimonials: [
@@ -192,7 +192,7 @@ const consultant: Omit<Fixture, "page"> = {
       svc("s2", "Advisory retainer", "quote", undefined, undefined, "Monthly access for decisions that cannot wait for a project.", { bookingMode: "request" }),
       svc("s3", "Leadership workshop", "fixed", 90000, 240, "A half-day session for the leadership team.", { bookingMode: "request" }),
     ].map((s, i) => ({ ...s, sortOrder: i })),
-    staff: [{ id: "t1", slug: "alex", name: "Alex Example", role: "Principal", bio: "Sample biography.", subjects: [] }],
+    staff: [{ id: "t1", slug: "alex", name: "Alex Example", role: "Principal", bio: "Example biography: replace it with your own.", subjects: [] }],
     gallery: [],
     testimonials: [{ id: "r1", quote: "A synthetic client comment included purely so the pull-quote treatment can be reviewed.", author: "Sample Director", source: "owner_supplied", permissionConfirmed: true }],
     reviewLinks: [],
