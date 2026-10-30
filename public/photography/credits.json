@@ -124,5 +124,32 @@
     "changes": "Resized to 280x200 (cover crop), converted to WebP quality 82.",
     "bytes": 5512,
     "sha256": "b0de4de263942866c9f166a2b3445ff1c249334821775ed9b8ce33a6722189ca"
+  },
+  {
+    "file": "generated/tiles/salon.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: hair salon styling station detail with mirror, scissors, comb, brushes and unlabelled bottles, warm tungsten light, dark lower third; no people, no faces, no portraits, no text, no labels, no logos",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 280x200 (cover crop), converted to WebP quality 82.",
+    "bytes": 8128,
+    "sha256": "20bb7dfa5771210c71f103a76e9f4377765ce1f4a72cb5865509a29f4d5674ed"
+  },
+  {
+    "file": "generated/tiles/photographer.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: camera on a wooden table in soft window light, lens beside it and a blurred printed contact sheet, dark lower third; no people, no faces, no text, no logos",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 280x200 (cover crop), converted to WebP quality 82.",
+    "bytes": 8104,
+    "sha256": "eb64217c515dc7dba8edec778ceeaafac2efc47f197846e0b4f5e8e2eceb1784"
+  },
+  {
+    "file": "generated/tiles/general.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: tidy independent-business counter or workbench in warm natural window light with a small closed notebook and plain ceramic mug, dark lower third; no people, no faces, no text, no labels, no logos",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 280x200 (cover crop), converted to WebP quality 82.",
+    "bytes": 10756,
+    "sha256": "7035def36140ed17d64e4d1f0e5733577ade553d34868972378c03a66c258aa2"
   }
 ]
