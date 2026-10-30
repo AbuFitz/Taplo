@@ -69,7 +69,7 @@ export async function openStructure(page: Page) {
         .catch(() => false))
     ) {
       await closeSheet(page);
-      await page.getByTestId("tab-content").tap();
+      await page.getByTestId("tab-content").click();
       await expect(page.getByTestId("structure")).toBeVisible();
       await page.waitForTimeout(500); // sheet finishes sliding up
     }
