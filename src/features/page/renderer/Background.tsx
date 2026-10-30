@@ -55,6 +55,7 @@ export function Background({
             animate
           />
         ) : null}
+        {b.kind === "gradient" || b.kind === "shader" ? <div className="tp-background-edge" /> : null}
       </div>
       <div className="tp-deco" aria-hidden="true" />
     </>
