@@ -20,7 +20,7 @@ import { initialState, storageHasFailed, useDemo } from "./store"
 
 /* ------------------------------------------------------------------ Type */
 
-const PHOTO = new Set(["barber", "detailer", "plumber", "tutor", "hospitality", "car-dealer"])
+const PHOTO = new Set(["personal-trainer", "cleaner", "barber", "detailer", "plumber", "tutor", "hospitality", "car-dealer"])
 const TILES: { id: string; label: string }[] = [
   { id: "barber", label: "Barber or salon" },
   { id: "detailer", label: "Car detailing" },

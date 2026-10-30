@@ -106,5 +106,23 @@
     "changes": "Resized to 1000px wide (4:5 portrait), converted to WebP quality 82.",
     "bytes": 157348,
     "sha256": "f6080db8fc176421a93202d07c5744cdf010beeef7bcc0d62de47de9969b6f64"
+  },
+  {
+    "file": "generated/tiles/personal-trainer.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: kettlebell and dumbbells on a dark rubber gym floor, low window light; no people, no faces, no text, no logos",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 280x200 (cover crop), converted to WebP quality 82.",
+    "bytes": 8588,
+    "sha256": "0ac12c6dfdf66c19fb35477977dff14d2318f2fef86b340ec00c87dbf403b4ee"
+  },
+  {
+    "file": "generated/tiles/cleaner.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: sunlit bright clean kitchen counter with unlabelled spray bottle, folded microfibre cloths and wooden brush, soft window light; no people, no faces, no text, no labels",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 280x200 (cover crop), converted to WebP quality 82.",
+    "bytes": 5512,
+    "sha256": "b0de4de263942866c9f166a2b3445ff1c249334821775ed9b8ce33a6722189ca"
   }
 ]
