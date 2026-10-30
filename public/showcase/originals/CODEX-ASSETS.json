@@ -1,0 +1,15 @@
+{
+  "purpose": "Illustrative imagery for fictional Taplo example businesses",
+  "created": "2026-10-30",
+  "method": "OpenAI built-in image generation; converted to 1440px WebP",
+  "assets": [
+    {
+      "file": "bakery-studio-v2.webp",
+      "prompt": "Editorial photograph of fresh sourdough and croissants on an immaculate cool-grey stone counter in a contemporary bakery. Clean white tiles, pale oak shelves, soft daylight, no people, brands, text, distressed surfaces or stains. Central subjects suitable for portrait crops."
+    },
+    {
+      "file": "photographer-studio-v2.webp",
+      "prompt": "Refined editorial product photograph of a contemporary matte-black mirrorless camera and neat strap on a clean cool-white studio tabletop with pale blue-grey background. Natural soft shadows, plausible camera geometry, no visible brands, text, grunge, damage or vintage equipment."
+    }
+  ]
+}

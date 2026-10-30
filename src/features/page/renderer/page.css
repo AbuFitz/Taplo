@@ -52,6 +52,9 @@ html:has([data-taplo-page]) { scrollbar-width: thin; scrollbar-color: color-mix(
 /* ---------- background + decoration ---------- */
 .tp-bg { position: absolute; inset: 0; z-index: -2; overflow: hidden; background: var(--tp-background); }
 .tp-bg-gradient { position: absolute; inset: 0; }
+/* Ease colour fields into the solid colour used by mobile browser chrome.
+   This belongs to the background, so it never paints over profile text or photographs. */
+.tp-background-edge { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, var(--tp-background) 0, var(--tp-background) var(--tp-safe-top, env(safe-area-inset-top, 0px)), transparent calc(var(--tp-safe-top, env(safe-area-inset-top, 0px)) + 96px)); }
 .tp-shader { position: absolute; inset: 0; animation: tp-fade 1.2s var(--tp-ease) both; }
 @keyframes tp-fade { from { opacity: 0; } to { opacity: 1; } }
 [data-motion="drift"] .tp-bg-gradient { background-size: 220% 220%; animation: tp-drift 26s ease-in-out infinite alternate; }

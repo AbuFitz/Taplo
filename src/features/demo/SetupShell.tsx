@@ -3,7 +3,6 @@
 import * as React from "react"
 import Link from "next/link"
 import { TaploLogo } from "@/components/taplo/brand"
-import { cn } from "@/lib/utils"
 
 /** One sheet-height model for every step: Peek shows the page, Default is where every step opens, Full is for long lists. */
 export type SheetSnap = "peek" | "default" | "full"
@@ -13,6 +12,7 @@ interface Props {
   step: number
   steps: number
   title: React.ReactNode
+  description?: string
   stepLabel: string
   snap: SheetSnap
   onSnap: (snap: SheetSnap) => void
@@ -31,7 +31,7 @@ interface Props {
  * The setup frame. On a phone the live page sits behind a bottom sheet that is always one of three heights (16, 52 or 88 percent of the visible
  * screen), never sized by its content, so the page never jumps between steps. On a desk the controls sit left and the whole page right.
  */
-export const SetupShell = React.forwardRef<HTMLElement, Props>(function SetupShell({ step, steps, title, stepLabel, snap, onSnap, mobile, keyboard, preview, children, footer, notice, bodyKey }, ref) {
+export const SetupShell = React.forwardRef<HTMLElement, Props>(function SetupShell({ step, steps, title, description, stepLabel, snap, onSnap, mobile, keyboard, preview, children, footer, notice, bodyKey }, ref) {
   const grip = React.useRef<HTMLButtonElement>(null)
   const drag = React.useRef<{ id: number; y: number; moved: boolean } | null>(null)
   const suppress = React.useRef(false)
@@ -43,7 +43,7 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(function SetupShe
       <header className="sf-top">
         <Link href="/" className="sf-logo" data-testid="setup-logo" aria-label="Taplo home"><TaploLogo className="h-7" /></Link>
         <div className="sf-progress" role="progressbar" aria-label="Setup progress" aria-valuemin={1} aria-valuemax={steps} aria-valuenow={step + 1} aria-valuetext={`Step ${step + 1} of ${steps}: ${stepLabel}`}>
-          <span className="sf-progress-text" data-testid="setup-progress-text">Step {step + 1} of {steps}</span>
+          <span className="sf-progress-text" data-testid="setup-progress-text">{stepLabel}<span aria-hidden="true"> · </span>Step {step + 1} of {steps}</span>
           <span className="sf-progress-bar" aria-hidden="true"><i style={{ width: `${((step + 1) / steps) * 100}%` }} /></span>
         </div>
       </header>
@@ -77,6 +77,7 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(function SetupShe
           ><span aria-hidden="true" /></button>
         ) : null}
         <h1 id="step-title" tabIndex={-1} className="sf-title font-display" key={`t-${bodyKey}`}>{title}</h1>
+        {description ? <p className="sf-description">{description}</p> : null}
         <div id="setup-controls" className="sf-body" inert={peek} key={bodyKey} data-testid="setup-body" onFocusCapture={(e) => { const t = e.target as HTMLElement; const box = e.currentTarget; if (t.matches("input,textarea,select,[role=radio]")) requestAnimationFrame(() => { const b = box.getBoundingClientRect(); const r = t.getBoundingClientRect(); if (r.bottom > b.bottom - 24) box.scrollTop += r.bottom - b.bottom + 24; else if (r.top < b.top + 8) box.scrollTop -= b.top - r.top + 8 }) }}>{children}</div>
         {notice}
         <footer className="sf-foot">{footer}</footer>

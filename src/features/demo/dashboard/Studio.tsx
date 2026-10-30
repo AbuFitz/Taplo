@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Check, Copy, Pencil, QrCode } from "lucide-react"
+import { ArrowUpRight, CalendarDays, Check, Copy, Layers3, Pencil, QrCode, Sparkles, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { businessAddress } from "@/lib/domains"
 import { WHEN_UNAVAILABLE } from "@/lib/capabilities"
@@ -14,7 +14,9 @@ import { cn } from "@/lib/utils"
 import { canPublish, hasUnpublishedChanges, publish, readiness, unpublish } from "../actions"
 import { useDraft } from "../hooks"
 import { UpcomingBookings } from "./UpcomingBookings"
+import { StudioGuide } from "./StudioGuide"
 import "./studio.css"
+import "./studio-home.css"
 
 /** Plain wording for the required steps, in the order a first-time owner meets them. */
 const REQUIRED_HEADLINE: Record<string, string> = {
@@ -86,7 +88,7 @@ export function Studio() {
           : <a className="studio-link" href="#studio-preview">Preview your page</a>,
       }
     : !published
-      ? { headline: "Your page is ready to publish", body: "Publishing saves this version in this browser.", primary: <Button size="lg" className="studio-primary" onClick={doPublish}>Publish</Button> }
+      ? { headline: "Ready when you are", body: "Check your page, then publish the version you’re happy with. For now, publishing is local to this browser.", primary: <Button size="lg" className="studio-primary" onClick={doPublish}>Publish</Button> }
       : changed
         ? { headline: "You have changes that are not published", primary: <Button size="lg" className="studio-primary" onClick={doPublish}>Publish changes</Button>, secondary: <button type="button" className="studio-link" onClick={() => patch(unpublish)}>Unpublish this page</button> }
         : needReply > 0
@@ -104,7 +106,10 @@ export function Studio() {
 
   return (
     <div className={"studio"} data-testid="studio">
-      <h1 className="sr-only">{s.content.identity.name}</h1>
+      <header className="studio-welcome">
+        <div><p className="studio-welcome-label">Your workspace</p><h1>{s.content.identity.name}</h1><p>Your page, your services and what’s coming up.</p></div>
+        <Link href="/dashboard/page" className="studio-create-link"><Pencil aria-hidden="true" />Edit your page<ArrowUpRight aria-hidden="true" /></Link>
+      </header>
       <aside className="studio-rail" aria-label="Status and next step">
         <div className="studio-status" data-testid="studio-status">
           <span className={cn("studio-pill", published && "studio-pill-live")}>{published ? `Published · v${s.published!.version}` : "Draft"}</span>
@@ -117,6 +122,7 @@ export function Studio() {
         </details>
 
         <section className="studio-next" aria-label="Next step" data-testid="studio-next">
+          <span className="studio-next-label"><Sparkles aria-hidden="true" />Your next step</span>
           <h2 ref={headlineRef} tabIndex={-1} className="font-display font-display-tight">{next.headline}</h2>
           {next.body ? <p>{next.body}</p> : null}
           {next.primary}
@@ -167,12 +173,22 @@ export function Studio() {
         ) : null}
 
         {published && !ent.analytics ? <Link className="studio-link studio-plans" href="/pricing">Compare plans</Link> : null}
+        <StudioGuide />
       </aside>
 
       <section className="studio-stage" id="studio-preview" aria-label="Your page">
+        <div className="studio-stage-title"><span><i aria-hidden="true" />Your page</span><span>{published ? "Latest draft" : "Taking shape"}</span></div>
         <Button asChild size="lg" variant="outline" className="studio-edit"><Link href="/dashboard/page"><Pencil aria-hidden="true" />Edit my page</Link></Button>
         <div className="studio-phone"><PagePreview src="/demo/preview" title="Your page" mode="device" chrome url={businessAddress(s.content.identity.slug)} retryAfterMs={15000} /></div>
       </section>
+
+      <nav className="studio-shortcuts" aria-label="Manage your business">
+        {[
+          { href: "/dashboard/services", Icon: Layers3, title: "What you offer", line: "Services, prices and details", tone: "blue" },
+          { href: "/dashboard/bookings", Icon: CalendarDays, title: "Bookings", line: "Requests and upcoming visits", tone: "purple" },
+          { href: "/dashboard/team", Icon: Users, title: "Your people", line: "Introduce the team", tone: "green" },
+        ].map(({ href, Icon, title, line, tone }) => <Link key={href} href={href} data-tone={tone}><span className="studio-shortcut-icon"><Icon aria-hidden="true" /></span><span><strong>{title}</strong><small>{line}</small></span><ArrowUpRight aria-hidden="true" /></Link>)}
+      </nav>
 
     </div>
   )

@@ -35,12 +35,21 @@ const STEP_TITLE: Record<OnboardingStep, string> = {
   action: "What should customers do first?",
   services: "Add your services",
   plan: "Pick a plan.",
-  finish: "Your page is ready.",
+  finish: "Your draft is ready.",
+}
+const STEP_DESCRIPTION: Record<OnboardingStep, string> = {
+  type: "Start with the closest fit. We’ll suggest a page you can make your own.",
+  name: "Give it your name. Your page takes shape as you go.",
+  look: "Find your starting point, then make the colours yours.",
+  action: "Give visitors one clear next step. You can add more ways to connect later.",
+  services: "One is enough to begin. Add your own details, or come back to this in Studio.",
+  plan: "Start with what you need today. You can change your plan later.",
+  finish: "A starting point that’s yours to build on.",
 }
 /** Where the live page scrolls to while each step is being filled in. */
 const FOCUS: Partial<Record<OnboardingStep, string>> = { name: "header", action: "actions", services: "offer" }
 const SKIPPABLE: OnboardingStep[] = ["look", "action", "services"]
-const STAGE = "#f4f4f2"
+const STAGE = "#eef2fa"
 
 /** Any CSS colour to [r, g, b], or null. */
 function toRgb(color: string): [number, number, number] | null {
@@ -113,7 +122,7 @@ export function Onboarding() {
   const onSurface = React.useCallback((color: string) => {
     const rgb = toRgb(color)
     if (!rgb) return
-    const wash = mixHex(rgb, [244, 244, 242], 0.34)
+    const wash = mixHex(rgb, [238, 242, 250], 0.24)
     shell.current?.style.setProperty("--sf-stage", wash)
     document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute("content", wash)
     document.documentElement.style.backgroundColor = wash
@@ -249,6 +258,7 @@ export function Onboarding() {
       steps={ONBOARDING_STEPS.length}
       stepLabel={STEP_LABEL[step]}
       title={STEP_TITLE[step]}
+      description={STEP_DESCRIPTION[step]}
       snap={snap}
       onSnap={setSnap}
       mobile={mobile}

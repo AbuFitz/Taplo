@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronRight, Info, Plus, Search, Trash2 } from "lucide-react"
+import { Check, ChevronRight, Plus, Search, Trash2 } from "lucide-react"
 import { TAPLO_DOMAINS } from "@/lib/domains"
 import { Overlay } from "@/components/taplo/overlay"
 import { Button } from "@/components/ui/button"
@@ -58,12 +58,13 @@ export function TypeStep() {
                 type="button"
                 className="sf-tile"
                 data-photo={PHOTO.has(t.id) ? "image" : "tone"}
-                style={PHOTO.has(t.id) ? { backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.05) 25%, rgba(0,0,0,.72)), url(/photography/generated/tiles/${t.id === "other" ? "general" : t.id}.webp)` } : undefined}
                 aria-pressed={selected}
                 data-testid={`tile-${t.id}`}
                 onClick={() => { if (t.id === "other") { setOtherOpen(true); pick("other", "") } else { setOtherOpen(false); pick(t.id) } }}
               >
-                {<span className="sf-tile-icon"><BusinessIcon id={t.id === "other" ? "other" : t.id} /></span>}
+                <span className="sf-tile-picture" aria-hidden="true" style={PHOTO.has(t.id) ? { backgroundImage: `url(${t.id === "hospitality" ? "/showcase/originals/bakery-studio-v2.webp" : `/photography/generated/tiles/${t.id === "other" ? "general" : t.id}.webp`})` } : undefined}>
+                  <span className="sf-tile-icon"><BusinessIcon id={t.id === "other" ? "other" : t.id} /></span>
+                </span>
                 <span className="sf-tile-label">{t.label}</span>
                 {selected ? <Check className="sf-tile-check" aria-hidden="true" /> : null}
               </button>
@@ -336,7 +337,7 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
   }
   return (
     <div className="sf-stack" data-testid="finish-step">
-      <p className="sf-lede">{s.content.identity.name ? `${s.content.identity.name} is ready.` : "Everything so far"} Publish it from Studio when you are happy.</p>
+      <p className="sf-lede">{s.content.identity.name ? `Your first draft of ${s.content.identity.name} is here.` : "Your first draft is here."} Open Studio to add the finishing touches. You decide when to publish.</p>
       {!storageHasFailed() ? <p className="sf-saved" data-testid="saved-status"><Check aria-hidden="true" /> Saved as a draft. Not published.</p> : null}
       {phase === "done" ? (
         <p role="status" className="sf-ok"><Check aria-hidden="true" /> Account connected and draft saved. Opening Studio…</p>
@@ -353,7 +354,6 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
         <div className="sf-testing" data-testid="dev-route">
           <div className="sf-sticky"><Button size="lg" className="sf-primary" data-testid="save-draft" onClick={toStudio}>Open Studio</Button></div>
           <p className="sf-help" data-testid="draft-note">{WHEN_UNAVAILABLE.accounts}</p>
-          <p className="sf-help sf-small" data-testid="dev-route-note">Testing route: opens Studio without an account.</p>
         </div>
       )}
       {saveFailed ? <p role="alert" className="sf-error" data-testid="save-failed">Your browser couldn’t save this draft (storage is full or blocked), so it isn’t saved yet. Remove a large picture and try again.</p> : null}

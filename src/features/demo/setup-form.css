@@ -198,3 +198,27 @@ html:has(.sf-root),body:has(.sf-root){height:100%;overflow:hidden;overscroll-beh
 
 /* Very short screens: the finish step drops its footer so the one action is never covered. */
 @media(max-height:560px) and (max-width:1023px){.sf-root:has([data-testid=finish-step]) .sf-foot{display:none}}
+
+/* Clear choices, not labels fighting a dark photograph. */
+.sf-root{--sf-stage:#eef2fa}
+.sf-description{flex:none;margin:0;padding:0 20px 14px;max-width:42em;font-size:14px;line-height:1.5;color:#5b6578}
+.sf-root[data-snap=peek] .sf-description{display:none}
+.sf-progress-bar{background:#d8dfed}.sf-progress-bar i{background:#3158df}
+.sf-root .sf-tile[data-photo]{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;min-height:0;padding:0;border:1px solid #dfe4ed;border-radius:13px;background:#fff;color:#17213a;overflow:hidden;box-shadow:none}
+.sf-tile-picture{position:relative;display:block;flex:none;height:62px;width:100%;background:#eaf0fa center/cover no-repeat}
+.sf-tile-picture::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,#16213a20)}
+.sf-root .sf-tile[data-photo] .sf-tile-icon{position:absolute;top:6px;left:6px;z-index:1;width:25px;height:25px;border-radius:8px;background:#fffffff0;color:#28354e;box-shadow:0 1px 4px #0000000a}
+.sf-tile-icon svg{width:15px;height:15px}
+.sf-root .sf-tile[data-photo] .sf-tile-label{display:flex;align-items:center;min-height:35px;padding:7px 8px;text-align:left;color:#25314a;text-shadow:none;font-size:12px;font-weight:600;line-height:1.2}
+.sf-root .sf-tile[data-photo][aria-pressed=true]{border-color:#3158df;box-shadow:0 0 0 2px #3158df}
+.sf-root .sf-tile[data-photo][aria-pressed=true] .sf-tile-label{background:#edf2ff;color:#2348c5}
+.sf-root .sf-tile-check{z-index:2;top:7px;right:7px;background:#3158df;box-shadow:0 0 0 2px #fff}
+.sf-root .sf-tile[data-photo=tone] .sf-tile-picture{background:radial-gradient(circle at 75% 25%,#d4dbff,transparent 60%),#edf0fc}
+.sf-root .sf-tile[data-photo=tone] .sf-tile-icon{background:white;color:#3158df}
+.sf-root:has([data-testid=type-step])[data-snap=default]{--sf-sheet-h:calc(var(--sf-vh,100dvh)*.64)}
+.sf-root .sf-primary{border-radius:13px;background:#234cdf}.sf-root .sf-primary:hover{background:#183cbd;box-shadow:none}
+.sf-root :is(input,button,summary,a):focus-visible{outline-color:#3158df}
+.sf-root .sf-radio[data-on=true],.sf-root .sp-row[data-on=true]{border-color:#3158df;box-shadow:0 0 0 1px #3158df}
+.sf-root .sf-radio[data-on=true] .sf-radio-dot,.sf-root .sp-row[data-on=true] .sp-dot{background:#3158df;border-color:#3158df}
+@media(min-width:1024px){.sf-description{padding:0 32px 20px;font-size:15px}.sf-root .sf-tile-picture{height:92px}.sf-root .sf-tile[data-photo] .sf-tile-label{font-size:14px;min-height:40px;padding:9px 10px}.sf-root .sf-tile[data-photo] .sf-tile-icon{width:28px;height:28px}.sf-root .sf-tile-icon svg{width:17px;height:17px}.sf-sheet{border-radius:22px;box-shadow:0 0 0 1px #dae1ec,0 18px 50px -36px #18316766}}
+@media(max-width:380px){.sf-root .sf-tile-picture{height:48px}.sf-root .sf-tile[data-photo] .sf-tile-label{font-size:11px}.sf-description{padding-bottom:10px;font-size:13px}}
