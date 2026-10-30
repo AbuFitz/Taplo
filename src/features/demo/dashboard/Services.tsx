@@ -4,12 +4,14 @@ import * as React from "react";
 import {
   ArrowDown,
   ArrowUp,
+  MoreHorizontal,
   Archive,
   ArchiveRestore,
   Pencil,
   Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Overlay } from "@/components/taplo/overlay";
 import { getIndustryPreset } from "@/features/themes/presets/industries";
 import { formatDuration, formatPrice } from "@/features/services/format";
@@ -128,25 +130,7 @@ export function Services() {
                       .join(" · ")}
                   </p>
                 </div>
-                <div className="flex gap-1">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    aria-label={`Move ${s.name} up`}
-                    disabled={i === 0}
-                    onClick={() => move(s.id, -1)}
-                  >
-                    <ArrowUp />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    aria-label={`Move ${s.name} down`}
-                    disabled={i === active.length - 1}
-                    onClick={() => move(s.id, 1)}
-                  >
-                    <ArrowDown />
-                  </Button>
+                <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
                     size="sm"
@@ -156,13 +140,24 @@ export function Services() {
                   >
                     <Pencil /> Edit
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => toggleArchive(s.id)}
-                  >
-                    <Archive /> Archive
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="icon" aria-label={`More actions for ${s.name || "service"}`}>
+                        <MoreHorizontal />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="min-w-44">
+                      <DropdownMenuItem disabled={i === 0} onSelect={() => move(s.id, -1)}>
+                        <ArrowUp /> Move up
+                      </DropdownMenuItem>
+                      <DropdownMenuItem disabled={i === active.length - 1} onSelect={() => move(s.id, 1)}>
+                        <ArrowDown /> Move down
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => toggleArchive(s.id)}>
+                        <Archive /> Archive
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
             </li>

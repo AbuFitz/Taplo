@@ -146,7 +146,7 @@ body:has([data-editor=compact][data-short=true]) .studio-dock{display:none}
 .studio-dock-item span{text-overflow:clip;padding:0}
 .studio-dock-item{letter-spacing:-.015em}
 
-.portal-workspace[data-workspace-section=manage] .portal-content :is(button,a)[data-slot=button]{border-radius:99px}
+.portal-workspace[data-workspace-section=manage] .portal-content :is(button,a)[data-slot=button]{border-radius:99px!important}
 .portal-workspace[data-workspace-section=manage] :is([class*="text-[11"],[class*="text-[12"],[class*="text-[13"]){font-size:14px;line-height:1.45}
 .portal-workspace[data-workspace-section=manage] .portal-content :is(.text-muted-foreground){font-size:max(1em,14px)}
 .portal-workspace [data-testid=empty-panel] h2{color:#111}
