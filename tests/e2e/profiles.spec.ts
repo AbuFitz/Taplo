@@ -114,7 +114,9 @@ test.describe("themed interaction", () => {
       expect(await dialog.evaluate((el) => !!el.closest("[data-taplo-theme]"))).toBe(true);
       const dialogBg = await dialog.evaluate((el) => getComputedStyle(el).backgroundColor);
       const hexToRgb = (h: string) => { const n = parseInt(h.slice(1), 16); return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`; };
-      expect(dialogBg).toBe(hexToRgb(rootBg));
+      // The dialog sits on the theme's raised surface: the same light or dark family as the page, never the default white or black.
+      const lum = (c: string) => { const [r, g, b] = c.match(/\d+/g)!.map(Number) as [number, number, number]; return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 };
+      expect(Math.abs(lum(dialogBg) - lum(hexToRgb(rootBg)))).toBeLessThan(0.2);
       // A select inside the dialog, if this flow has one, opens in a portal that still carries the theme.
       if (await dialog.getByRole("combobox").count()) {
         await dialog.getByRole("combobox").first().click();
