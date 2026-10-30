@@ -761,3 +761,4 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
 /* Text-heavy cards never share a row at phone width: an address needs the full measure. */
 [data-composition="bento"] .tp-widget[data-widget="location"][data-span="half"] { grid-column: 1 / -1; }
 [data-composition="bento"] .tp-widget[data-widget="social"][data-span="half"] { grid-column: 1 / -1; }
+.tp-btn[data-btn-fill="outline"] { border-width: 2px; }
