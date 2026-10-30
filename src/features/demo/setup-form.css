@@ -195,3 +195,6 @@ html:has(.sf-root),body:has(.sf-root){height:100%;overflow:hidden;overscroll-beh
 }
 .sf-sticky{padding-bottom:4px}
 .sf-body{padding-bottom:40px}
+
+/* Very short screens: the finish step drops its footer so the one action is never covered. */
+@media(max-height:560px) and (max-width:1023px){.sf-root:has([data-testid=finish-step]) .sf-foot{display:none}}

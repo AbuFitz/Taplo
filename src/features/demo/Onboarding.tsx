@@ -198,7 +198,7 @@ export function Onboarding() {
   }
   const why: Record<OnboardingStep, string> = {
     type: "Choose what you do.",
-    name: "Add your business name and a valid web address.",
+    name: s.content.identity.name.trim() ? "Check your web address: use at least 3 letters or numbers." : "",
     look: "",
     action: "Add the detail for the choice you made, or choose Get in touch.",
     services: "Finish the service name and price, or choose quote or free pricing.",
