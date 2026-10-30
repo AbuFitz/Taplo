@@ -153,7 +153,7 @@ export function goalOf(s: { content: { booking?: { mode: string } }; page: { met
 export function applyGoal<T extends ReturnType<typeof initialState>>(s: T, g: Goal): T {
   const mode = g === "book" ? "request" : "contact"
   const primaryAction = g === "book" ? "book" : g === "call" ? "call" : g === "message" ? (s.content.contacts.whatsapp ? "whatsapp" : "email") : "auto"
-  const widgets = s.page.widgets.map((w) => (w.type === "booking" ? { ...w, hidden: g === "call" || g === "message" } : w))
+  const widgets = s.page.widgets.map((w) => (w.type === "booking" ? { ...w, hidden: g !== "book" } : w))
   return { ...s, content: { ...s.content, booking: { ...s.content.booking, mode }, }, page: { ...s.page, widgets, meta: { ...s.page.meta, primaryAction } } }
 }
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
@@ -336,7 +336,7 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
   }
   return (
     <div className="sf-stack" data-testid="finish-step">
-      <p className="sf-lede">{s.content.identity.name ? `${s.content.identity.name} is ready.` : "Your page is ready."} Publish it from Studio when you are happy.</p>
+      <p className="sf-lede">{s.content.identity.name ? `${s.content.identity.name} is ready.` : "Everything so far"} Publish it from Studio when you are happy.</p>
       {!storageHasFailed() ? <p className="sf-saved" data-testid="saved-status"><Check aria-hidden="true" /> Saved as a draft. Not published.</p> : null}
       {phase === "done" ? (
         <p role="status" className="sf-ok"><Check aria-hidden="true" /> Account connected and draft saved. Opening Studio…</p>

@@ -50,7 +50,7 @@ function ShareBody({ data, admin = false }: { data: ShareData; admin?: boolean }
       {native === "true" ? <Button type="button" variant="outline" className="min-h-12 rounded-full" onClick={share}><Share2 aria-hidden="true" />Share from this device</Button> : null}
       <Button type="button" variant="ghost" className="min-h-11 rounded-full" onClick={save}><Download aria-hidden="true" />Save QR code</Button>
     </div>
-    {preview ? <p className={"text-center text-xs " + (admin ? "text-neutral-700" : "text-tp-muted")} data-testid="share-demo-note">Preview link. This page opens in this browser only.</p> : null}
+    {preview ? <p className={"text-center text-xs " + (admin ? "text-neutral-700" : "text-tp-muted")} data-testid="share-demo-note">{data.url ? "This address opens in this browser only." : "Preview link. This page opens in this browser only."}</p> : null}
     <p role="status" aria-live="polite" className="min-h-5 text-center text-sm">{note ? <span className="inline-flex items-center gap-2">{note === "Link copied" || note === "QR code saved" ? <Check aria-hidden="true" className="size-4" /> : null}{note}</span> : null}</p>
   </div>;
 }

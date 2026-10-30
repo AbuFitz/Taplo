@@ -40,7 +40,7 @@ export function Offers() {
         </ul>
       ) : <p className="mb-4 text-sm text-muted-foreground">No offers yet.</p>}
       {!open ? <Button variant="outline" className="justify-self-start" onClick={() => setOpen(true)}><Plus /> Add offer</Button> : <div className="grid gap-3 rounded-xl border p-4">
-        <TaploInput label="Offer title" value={f.title} maxLength={120} onChange={(e) => setF({ ...f, title: e.target.value })} />
+        <TaploInput autoFocus label="Offer title" value={f.title} maxLength={120} onChange={(e) => setF({ ...f, title: e.target.value })} />
         <div className="grid gap-1.5"><Label htmlFor="odesc">Details (optional)</Label><Textarea id="odesc" rows={2} maxLength={600} value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} /></div>
         <div className="grid gap-3 sm:grid-cols-2"><TaploInput label="Code to mention (optional)" value={f.code} maxLength={40} onChange={(e) => setF({ ...f, code: e.target.value })} /><TaploInput label="Last day (optional)" type="date" value={f.endsAt} onChange={(e) => setF({ ...f, endsAt: e.target.value })} /></div>
         {err ? <p role="alert" className="text-sm text-destructive">{err}</p> : null}

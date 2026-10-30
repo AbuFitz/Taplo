@@ -97,7 +97,7 @@ export function StudioNav() {
             <span>{label}</span>
           </Link>
         ))}
-        <button ref={moreButton} type="button" className="studio-dock-item" data-active={secondaryActive} aria-haspopup="dialog" aria-expanded={more} onClick={() => setMore(true)}>
+        <button ref={moreButton} type="button" className="studio-dock-item" data-active={secondaryActive} aria-current={secondaryActive ? "page" : undefined} aria-haspopup="dialog" aria-expanded={more} onClick={() => setMore(true)}>
           <MoreHorizontal aria-hidden="true" />
           <span>More</span>
         </button>
