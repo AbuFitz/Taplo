@@ -1,0 +1,1 @@
+Build: commit f732e36, prod :3200. Looks: setup look step, fixture names typed, each of the 8 looks, full-preview of the live page at 390x844. Fixtures: /demo-barber, /demo-detailer, /demo-tutor at 390 and 1440 (fullPage).
