@@ -116,7 +116,7 @@ test("team profiles avoid invented portraits and booking offers that person's ac
 test("validated capture poses never change owner content and an unknown variant falls back", async ({
   page,
 }) => {
-  await page.goto("/onboarding");
+  await page.goto("/onboarding?step=name");
   await page.getByLabel("Business name").fill("Keep my content");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   const before = await page.evaluate(() =>

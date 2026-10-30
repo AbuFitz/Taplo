@@ -144,6 +144,12 @@ export function Onboarding() {
     shell.current?.querySelector<HTMLElement>("#step-title")?.focus({ preventScroll: true })
   }, [step])
 
+  // A link can open a given step (the address `?step=name`); the draft keeps everything entered so far.
+  const [startStep] = React.useState(() => { const t = params.get("step"); return t && (ONBOARDING_STEPS as readonly string[]).includes(t) ? (t as OnboardingStep) : null })
+  React.useEffect(() => {
+    if (ready && startStep) update((x) => (x.step === startStep ? x : { ...x, step: startStep }))
+  }, [ready, startStep]) // eslint-disable-line react-hooks/exhaustive-deps
+
   // A plan chosen on the pricing page carries through setup without taking payment.
   const [intent] = React.useState<PlanId | null>(() => { const p = params.get("plan"); return p && (PLAN_IDS as readonly string[]).includes(p) ? (p as PlanId) : null })
   React.useEffect(() => {

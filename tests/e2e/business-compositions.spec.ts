@@ -25,7 +25,7 @@ for (const width of [320, 390, 768, 1440]) test(`six business compositions remai
 
 for (const width of [390, 1440]) test(`starting with a business design preserves section styling through setup and reload at ${width}px`, async ({ page }) => {
   await page.setViewportSize({ width, height: 950 })
-  await page.goto('/onboarding?from=jays-barbers')
+  await page.goto('/onboarding?from=jays-barbers&step=name')
   await expect(page.getByTestId('from-example')).toContainText('Jay’s Barbers')
   const read = () => page.evaluate(() => JSON.parse(localStorage.getItem('taplo.demo.v2')!))
   await expect.poll(async () => (await read()).page.themeId).toBe('paper')

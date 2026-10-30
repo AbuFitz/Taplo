@@ -15,9 +15,10 @@ const ratio = (a: number[], b: number[]) => { const x = lum(a[0]!, a[1]!, a[2]!)
 
 async function seed(page: Page) {
   await page.goto("/onboarding", { waitUntil: "networkidle" })
+  await page.getByTestId("tile-barber").click()
+  await page.getByRole("button", { name: /^Continue/ }).click()
   await page.getByLabel("Business name", { exact: true }).fill("Marlowe & Finch")
-  await cont(page); await cont(page)
-  await page.getByRole("button", { name: "Barber", exact: true }).click()
+  await cont(page, { keepLook: true })
 }
 
 const COMBOS = STARTING_LOOKS.flatMap((look) => [undefined, ...palettesFor(look)].map((p) => ({ look, p })))

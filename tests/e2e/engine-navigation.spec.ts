@@ -17,9 +17,7 @@ for (const width of [320, 768, 1440])
     ]) {
       await page.goto(`/dashboard${route}`);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-      await expect(
-        page.getByRole("button", { name: "Open menu", exact: true }),
-      ).toBeVisible();
+      await expect(page.getByTestId(width >= 1024 ? "studio-rail" : "studio-dock")).toBeVisible();
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth),
       ).toBe(width);

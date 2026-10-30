@@ -7,7 +7,7 @@ const frame = (p: Page) => p.frameLocator('iframe[data-testid="setup-live-page"]
 
 async function toLook(page: Page, width: number) {
   await page.setViewportSize({ width, height: width < 600 ? 844 : 950 })
-  await page.goto("/onboarding", { waitUntil: "networkidle" })
+  await page.goto("/onboarding?step=name", { waitUntil: "networkidle" })
   await page.getByLabel("Business name", { exact: true }).fill("Marlowe & Finch")
   await cont(page, { keepLook: true })
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Choose a look.")

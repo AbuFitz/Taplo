@@ -34,7 +34,7 @@ test("dashboard shows feature loops, look labels and a resume entry", async ({ p
   await expect(page.getByRole("link", { name: /Start setup/ })).toBeVisible()
   await expect(page.locator("section[aria-labelledby=sample-title]").getByText(/ · /).first()).toBeVisible()
   // Start a setup, leave, and come back: the dashboard offers to continue it.
-  await page.goto("/onboarding")
+  await page.goto("/onboarding?step=name")
   await page.getByLabel("Business name", { exact: true }).fill("North Street Studio")
   await page.getByTestId("setup-logo").click()
   await page.goto("/dashboard")

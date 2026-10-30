@@ -15,7 +15,7 @@ for (const look of STARTING_LOOKS.filter((l) => l.animated)) test(`${look.name}:
   const page = await ctx.newPage()
   const cdp = await ctx.newCDPSession(page)
   await cdp.send("Emulation.setSafeAreaInsetsOverride", { insets: { top: 47, bottom: 34, left: 0, right: 0 } }).catch(() => undefined)
-  await page.goto("/onboarding", { waitUntil: "networkidle" })
+  await page.goto("/onboarding?step=name", { waitUntil: "networkidle" })
   await page.getByLabel("Business name", { exact: true }).fill("Marlowe & Finch")
   await page.getByRole("button", { name: "Continue", exact: true }).click()
   await page.getByRole("radio", { name: look.name, exact: true }).check({ force: true })

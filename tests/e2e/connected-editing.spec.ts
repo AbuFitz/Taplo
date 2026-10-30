@@ -53,7 +53,7 @@ test("booking configuration opens directly on hours and rules", async ({ page })
   await openEditorWithSample(page)
   await openRow(page, "booking")
   await page.getByRole("link", { name: "Hours and booking rules" }).click()
-  await expect(page.getByRole("tab", { name: "Hours and rules" })).toHaveAttribute("aria-selected", "true")
+  await expect(page.getByRole("tab", { name: "Hours" })).toHaveAttribute("aria-selected", "true")
   await expect(page.getByRole("switch", { name: "Accept online bookings" })).toBeVisible()
 })
 

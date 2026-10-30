@@ -17,7 +17,7 @@ test('Google review setup preserves old records but never publishes them as Goog
   await page.waitForURL('**/dashboard/page')
   const original = await page.evaluate(() => JSON.parse(localStorage.getItem('taplo.demo.v2')!).content.testimonials)
   await page.goto('/dashboard/reviews')
-  await expect(page.getByRole('heading', { name: 'Google reviews', exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Reviews', exact: true })).toBeVisible()
   await expect(page.getByLabel('Customer name')).toHaveCount(0)
   await expect(page.getByLabel('What they said')).toHaveCount(0)
   await page.getByLabel('Google Maps or review link', { exact: true }).fill('https://www.google.com/maps/place/Example')
