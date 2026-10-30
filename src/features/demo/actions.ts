@@ -88,7 +88,7 @@ export function readiness(s: DemoState): Check[] {
     ...(exampleLeft ? [{ id: "example", label: "Replace or remove the example items before publishing", done: false, required: true, href: "/dashboard/services" } as Check] : []),
     { id: "industry", label: "Say what kind of business it is", done: s.onboarded || Boolean(c.identity.industryLabel), required: true, href: "/dashboard/page" },
     { id: "name", label: "Name and web address", done: Boolean(c.identity.name) && slugProblems(c.identity.slug).length === 0, required: true, href: "/dashboard/page" },
-    { id: "contact", label: "At least one way to contact you", done: hasContactChannel(c), required: true, href: "/dashboard/page" },
+    { id: "contact", label: "At least one way to contact you", done: hasContactChannel(c), required: true, href: "/dashboard/page?open=details" },
     { id: "service", label: "Add your first service", done: activeServices.length > 0, required: false, href: "/dashboard/services" },
     { id: "logo", label: "Add a logo or profile picture", done: Boolean(c.identity.logo), required: false, href: "/dashboard/page" },
     { id: "bio", label: "Write a short description", done: Boolean(c.identity.tagline), required: false, href: "/dashboard/page" },

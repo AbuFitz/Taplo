@@ -120,10 +120,11 @@ export function Onboarding() {
     document.body.style.backgroundColor = wash
   }, [])
 
-  const go = React.useCallback((to: OnboardingStep, opts: { push?: boolean } = {}) => {
+  const go = React.useCallback((to: OnboardingStep, opts: { push?: boolean; replace?: boolean } = {}) => {
     setSnap("default"); setShowErrors(false); navigated.current = true
     if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
-    if (opts.push !== false) window.history.pushState({ step: to }, "", `${window.location.pathname}?step=${to}`)
+    if (opts.replace) window.history.replaceState({ step: to }, "", `${window.location.pathname}?step=${to}`)
+    else if (opts.push !== false) window.history.pushState({ step: to }, "", `${window.location.pathname}?step=${to}`)
     update((x) => ({ ...x, step: to }))
   }, [update])
 
@@ -132,6 +133,7 @@ export function Onboarding() {
     const onPop = () => {
       const to = new URLSearchParams(window.location.search).get("step")
       if (to && (ONBOARDING_STEPS as readonly string[]).includes(to)) go(to as OnboardingStep, { push: false })
+      else if (!to) go("type", { push: false })
     }
     window.addEventListener("popstate", onPop)
     return () => window.removeEventListener("popstate", onPop)
@@ -201,7 +203,7 @@ export function Onboarding() {
     if (step === "plan" && !s.setupDrafts?.planIntent) update((x) => ({ ...x, setupDrafts: { ...x.setupDrafts, planIntent: "free" } }))
     go(ONBOARDING_STEPS[Math.min(index + 1, ONBOARDING_STEPS.length - 1)]!)
   }
-  const back = () => { if (index > 0) go(ONBOARDING_STEPS[index - 1]!) }
+  const back = () => { if (index > 0) go(ONBOARDING_STEPS[index - 1]!, { replace: true }) }
   const press = () => {
     if (valid[step]) return next()
     setShowErrors(true)

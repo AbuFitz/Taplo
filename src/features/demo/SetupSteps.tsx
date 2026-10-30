@@ -341,7 +341,7 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
       {phase === "done" ? (
         <p role="status" className="sf-ok"><Check aria-hidden="true" /> Account connected and draft saved. Opening Studio…</p>
       ) : signedIn ? (
-        <Button size="lg" className="sf-primary" data-testid="save-draft" onClick={toStudio}>Open Studio</Button>
+        <div className="sf-sticky"><Button size="lg" className="sf-primary" data-testid="save-draft" onClick={toStudio}>Open Studio</Button></div>
       ) : configured ? (
         <form className="sf-stack" data-testid="account-step" onSubmit={(e) => void submit(e)} noValidate>
           <TaploInput label="Email" type="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email} aria-invalid={Boolean(errors.email)} />
@@ -351,7 +351,7 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
         </form>
       ) : (
         <div className="sf-testing" data-testid="dev-route">
-          <Button size="lg" className="sf-primary" data-testid="save-draft" onClick={toStudio}>Open Studio</Button>
+          <div className="sf-sticky"><Button size="lg" className="sf-primary" data-testid="save-draft" onClick={toStudio}>Open Studio</Button></div>
           <p className="sf-help" data-testid="draft-note">{WHEN_UNAVAILABLE.accounts}</p>
           <p className="sf-help sf-small" data-testid="dev-route-note">Testing route: opens Studio without an account.</p>
         </div>

@@ -104,7 +104,7 @@ export function StudioNav() {
       </nav>
 
       <nav className="studio-rail-nav" aria-label="Studio sections" data-testid="studio-rail">
-        {[...primary.slice(0, 3), secondary[2], secondary[1], primary[3], secondary[0], secondary[3]].map(({ href, label, Icon, badge, note }) => (
+        {[...primary, ...secondary.slice(0, 4)].map(({ href, label, Icon, badge, note }) => (
           <Link key={href} href={href} aria-current={isActive(href) ? "page" : undefined} className="studio-rail-item" data-active={isActive(href)}>
             <Icon aria-hidden="true" />
             <span>{label}{note ? <small>{note}</small> : null}</span>

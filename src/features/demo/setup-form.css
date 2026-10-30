@@ -186,3 +186,5 @@ html:has(.sf-root),body:has(.sf-root){height:100%;overflow:hidden;overscroll-beh
 .sf-tile{position:relative}
 .sf-tile>*{position:relative}
 .sf-skip{white-space:nowrap}
+.sf-sticky{position:sticky;bottom:0;padding:8px 0;background:linear-gradient(#fff0,#fff 30%)}
+.sf-sticky .sf-primary{width:100%}

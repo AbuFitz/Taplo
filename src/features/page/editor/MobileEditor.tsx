@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Briefcase, Eye, EyeOff, LayoutTemplate, Palette, Redo2, Rows3, Undo2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { canPublish, hasUnpublishedChanges, publish } from "@/features/demo/actions"
+import { canPublish, hasUnpublishedChanges, publish, readiness } from "@/features/demo/actions"
 import { PagePreview } from "@/features/preview/PagePreview"
 import { cn } from "@/lib/utils"
 import { StudioMenu } from "@/features/demo/dashboard/StudioNav"
@@ -58,6 +58,13 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
     return () => window.removeEventListener("resize", measure)
   }, [vp.w, vp.h])
   const short = vp.h < 520 && vp.w > vp.h
+  const opened = React.useRef(false)
+  React.useEffect(() => {
+    if (opened.current) return
+    opened.current = true
+    if (new URLSearchParams(window.location.search).get("open") === "details") queueMicrotask(() => { setSelection({ kind: "details" } as Selection); setStack(["selection"]); setSnap(0.62) })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const s = ed.state
   const changed = hasUnpublishedChanges(s)
   const open = stack.length > 0 && !customer
@@ -120,8 +127,9 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
         <Button variant={customer ? "default" : "outline"} size="sm" onClick={() => { setCustomer((c) => !c); close() }} aria-pressed={customer} data-testid="customer-preview">
           {customer ? <EyeOff /> : <Eye />}<span className="max-[420px]:sr-only">{customer ? "Edit" : "Preview"}</span>
         </Button>
-        <Button size="sm" disabled={!canPublish(s)} onClick={() => { ed.update((x) => publish(x)); notify(s.published ? "Changes published." : "Your page is published.") }} data-testid="publish">{s.published ? (changed ? "Publish" : "Live") : "Publish"}</Button>
+        <Button size="sm" disabled={!canPublish(s)} aria-describedby={!canPublish(s) ? "publish-why" : undefined} onClick={() => { ed.update((x) => publish(x)); notify(s.published ? "Changes published." : "Your page is published.") }} data-testid="publish">{s.published ? (changed ? "Publish" : "Live") : "Publish"}</Button>
       </header>
+      {!canPublish(s) ? <p id="publish-why" className="border-b border-black/[0.07] bg-background px-4 py-2 text-sm text-neutral-700">To publish: {readiness(s).filter((c) => c.required && !c.done).map((m) => m.label.toLowerCase()).join(", ") || "finish the required details"}.</p> : null}
       {!short && !customer ? (
         <nav aria-label="Editor" className="flex gap-1 border-b border-black/[0.07] bg-background/95 px-2 py-1.5">{tabs.map((t) => tabButton(t))}</nav>
       ) : null}

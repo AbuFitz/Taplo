@@ -99,7 +99,7 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
   const [attempt, setAttempt] = React.useState(0)
   const [stalled, setStalled] = React.useState(false)
   React.useEffect(() => {
-    if (!retryAfterMs || loaded) { setStalled(false); return }
+    if (!retryAfterMs || loaded) { const r = window.setTimeout(() => setStalled(false), 0); return () => window.clearTimeout(r) }
     const t = window.setTimeout(() => setStalled(true), retryAfterMs)
     return () => window.clearTimeout(t)
   }, [retryAfterMs, loaded, attempt])
