@@ -188,3 +188,10 @@ html:has(.sf-root),body:has(.sf-root){height:100%;overflow:hidden;overscroll-beh
 .sf-skip{white-space:nowrap}
 .sf-sticky{position:sticky;bottom:0;padding:8px 0;background:linear-gradient(#fff0,#fff 30%)}
 .sf-sticky .sf-primary{width:100%}
+
+/* Short screens (a soft keyboard, a landscape-like height): the sheet takes most of the screen and the page shrinks to a strip. */
+@media(max-height:700px) and (max-width:1023px){
+  .sf-root[data-snap=default]{--sf-sheet-h:calc(var(--sf-vh,100dvh)*.78)}
+}
+.sf-sticky{padding-bottom:4px}
+.sf-body{padding-bottom:40px}

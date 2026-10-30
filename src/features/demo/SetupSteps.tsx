@@ -317,7 +317,7 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
   const configured = accountsConfigured()
   React.useEffect(() => { void session().then((r) => setSignedIn(r.signedIn)) }, [])
   const toStudio = () => {
-    update((x) => ({ ...x, onboarded: true }))
+    update((x) => ({ ...x, onboarded: true, plan: x.setupDrafts?.planIntent ?? x.plan }))
     // The draft is only called saved once the browser has accepted the write.
     window.setTimeout(() => { if (storageHasFailed()) setSaveFailed(true); else onStudio() }, 0)
   }

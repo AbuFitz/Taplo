@@ -306,7 +306,7 @@ export function OwnerBookings({
           </p>
         ) : null}
         {!online && tab === "calendar" ? (
-          <p className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+          <p className="rounded-xl border border-black/15 bg-white px-4 py-3 text-sm text-foreground">
             Online booking is off, so customers cannot pick a time on your page.
             Turn it on under Hours and rules.
           </p>

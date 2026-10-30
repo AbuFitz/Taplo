@@ -46,6 +46,7 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
   void CONTENT
   const [snap, setSnap] = React.useState<DrawerSnap | null>(PEEK)
   const [customer, setCustomer] = React.useState(false)
+  const [lastTab, setLastTab] = React.useState<Panel>("content")
   const vp = useViewportSize()
   const headRef = React.useRef<HTMLDivElement>(null)
   const barRef = React.useRef<HTMLDivElement>(null)
@@ -76,7 +77,8 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
   }
   const close = () => setStack([])
   const back = () => setStack((st) => st.slice(0, -1))
-  const toggleTab = (p: Panel) => (top === p && stack.length === 1 ? close() : openPanel(p, "replace", 0.62))
+  const toggleTab = (p: Panel) => { setLastTab(p); toggleTabInner(p) }
+  const toggleTabInner = (p: Panel) => (top === p && stack.length === 1 ? close() : openPanel(p, "replace", 0.62))
 
   const fromPreview = (sel: Selection) => {
     setSelection(sel)
@@ -109,7 +111,7 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
     const active = open && stack[0] === t.id && (t.id !== "selection")
     return (
       <button key={t.id} type="button" onClick={() => toggleTab(t.id)} aria-pressed={active} data-testid={`tab-${t.id}`}
-        className={cn("flex min-h-12 flex-1 flex-col items-center justify-center gap-0.5 rounded-xl text-sm font-medium transition-colors", compact && "min-h-10 flex-none px-3", active ? "bg-neutral-900 text-white" : "text-neutral-600 active:bg-black/5")}>
+        className={cn("flex min-h-12 flex-1 flex-col items-center justify-center gap-0.5 rounded-xl text-sm font-medium transition-colors", compact && "min-h-10 flex-none px-3", active ? "bg-neutral-900 text-white" : "text-neutral-600 active:bg-black/5", !active && !open && t.id === lastTab && "shadow-[inset_0_-2px_0_#111] text-neutral-900")}>
         <t.icon className="size-5" aria-hidden="true" />{compact ? <span className="sr-only">{t.label}</span> : t.label}
       </button>
     )
