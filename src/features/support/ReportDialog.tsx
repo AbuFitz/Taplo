@@ -28,10 +28,22 @@ export function ReportDialog({
     [expected, setExpected] = React.useState(""),
     [contact, setContact] = React.useState(""),
     [diagnostics, setDiagnostics] = React.useState(false),
-    [error, setError] = React.useState(""),
+    [error, setErrorState] = React.useState(""),
     [message, setMessage] = React.useState(""),
     [busy, setBusy] = React.useState(false),
     [reference, setReference] = React.useState("");
+  const errorRef = React.useRef<HTMLParagraphElement>(null);
+  const setError = (message: string) => {
+    setErrorState(message);
+    if (message)
+      requestAnimationFrame(() => {
+        errorRef.current?.focus({ preventScroll: true });
+        errorRef.current?.scrollIntoView({
+          block: "nearest",
+          behavior: "instant",
+        });
+      });
+  };
   const Icon = kind === "bug" ? Bug : Flag;
   const build = () =>
     reportSchema.safeParse({
@@ -84,9 +96,12 @@ export function ReportDialog({
     const a = document.createElement("a");
     a.href = url;
     a.download = `taplo-${kind}-report-${new Date().toISOString().slice(0, 10)}.txt`;
+    a.hidden = true;
+    document.body.appendChild(a);
     a.click();
+    a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    setMessage("Report downloaded. It has not been sent.");
+    setMessage("Download started. It has not been sent.");
   };
   const send = async () => {
     const r = validReport();
@@ -164,6 +179,11 @@ export function ReportDialog({
           )
         }
       >
+        {error ? (
+          <p ref={errorRef} tabIndex={-1} className="report-error" role="alert">
+            {error}
+          </p>
+        ) : null}
         {reference ? (
           <div className="report-received">
             <Check />
@@ -272,11 +292,6 @@ export function ReportDialog({
             ) : null}
           </form>
         )}
-        {error ? (
-          <p className="report-error" role="alert">
-            {error}
-          </p>
-        ) : null}
         {message ? (
           <p className="report-message" role="status">
             {message}

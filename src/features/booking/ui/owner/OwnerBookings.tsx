@@ -255,14 +255,7 @@ export function OwnerBookings({
       <PageHeader
         scene="bookings"
         title="Bookings"
-        description="Your calendar, requests and the hours customers can book."
-        actions={
-          bookable.length ? (
-            <Button variant="outline" onClick={seed}>
-              <CalendarPlus /> Add sample bookings
-            </Button>
-          ) : undefined
-        }
+        description="Appointments and availability."
       />
       <div className="grid max-w-6xl gap-4">
         <div
@@ -633,6 +626,19 @@ export function OwnerBookings({
           />
         ) : null}
       </div>
+
+      {bookable.length ? (
+        <details className="ws-secondary-task">
+          <summary>Try the calendar with example appointments</summary>
+          <p className="text-xs text-muted-foreground">
+            Adds made-up customers in this browser only.
+          </p>
+          <Button variant="outline" onClick={seed}>
+            <CalendarPlus />
+            Add sample bookings
+          </Button>
+        </details>
+      ) : null}
 
       <BookingDetail
         booking={open}

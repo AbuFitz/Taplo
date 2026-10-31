@@ -73,7 +73,14 @@ const FRAMES: Record<JourneyId, readonly [string, string, string]> = {
   ],
 };
 /** An explicit, controllable product demonstration. It never edits customer data or pretends to be footage. */
-export function TaskDemo({ topic }: { topic: JourneyId }) {
+export function TaskDemo({
+  topic,
+  industry,
+}: {
+  topic: JourneyId;
+  industry?: string;
+}) {
+  const dealer = industry === "car-dealer";
   const [frame, setFrame] = React.useState(0),
     [playing, setPlaying] = React.useState(false);
   const reduced = React.useSyncExternalStore(
@@ -162,29 +169,52 @@ export function TaskDemo({ topic }: { topic: JourneyId }) {
             </div>
           </div>
         ) : topic === "products" ? (
-          <div className="demo-products">
-            <div className="demo-product-object">
-              <i />
-              <i />
-              <span>
-                Everyday
-                <br />
-                care.
-              </span>
-            </div>
+          <div className="demo-products" data-dealer={dealer}>
+            {dealer ? (
+              <div className="demo-car-object">
+                <svg viewBox="0 0 240 120">
+                  <path
+                    fill="#a1adb4"
+                    d="m25 70 14-29q3-6 12-7l56-5q13-1 23 6l33 24 43 9q9 2 11 10l2 14H19l-2-12q0-7 8-10Z"
+                  />
+                  <path fill="#e9f0f3" d="m51 42 52-4q10-1 17 5l19 15-98 1Z" />
+                  <path fill="#737f89" d="m20 79 199 1v12H20Z" />
+                  <circle cx="59" cy="92" r="19" fill="#30333b" />
+                  <circle cx="59" cy="92" r="10" fill="#cbd1d9" />
+                  <circle cx="181" cy="92" r="19" fill="#30333b" />
+                  <circle cx="181" cy="92" r="10" fill="#cbd1d9" />
+                </svg>
+              </div>
+            ) : (
+              <div className="demo-product-object">
+                <i />
+                <i />
+                <span>
+                  Everyday
+                  <br />
+                  care.
+                </span>
+              </div>
+            )}
             <div className="demo-product-info">
-              <small>From the shop</small>
-              <b>Styling cream</b>
-              <span>£16</span>
+              <small>{dealer ? "Available stock" : "From the shop"}</small>
+              <b>{dealer ? "City hatchback" : "Styling cream"}</b>
+              <span>{dealer ? "£9,950" : "£16"}</span>
               {frame > 0 ? (
                 <p>
-                  Soft hold. Natural finish.
+                  {dealer
+                    ? "2018 · 42,000 miles"
+                    : "Soft hold. Natural finish."}
                   <br />
-                  100 ml · Available
+                  {dealer ? "Petrol · Available" : "100 ml · Available"}
                 </p>
               ) : null}
               <span className="demo-black">
-                {frame === 2 ? "Ask about this item" : "View details"}
+                {frame === 2
+                  ? dealer
+                    ? "Enquire about this car"
+                    : "Ask about this item"
+                  : "View details"}
                 <ArrowUpRight />
               </span>
             </div>
@@ -194,7 +224,7 @@ export function TaskDemo({ topic }: { topic: JourneyId }) {
             <div className="demo-person">
               <span>AM</span>
               <b>Alex Morgan</b>
-              <small>Stylist</small>
+              <small>Specialist</small>
             </div>
             <div className="demo-specialities" data-reveal={frame > 0}>
               <span>Cut & finish</span>

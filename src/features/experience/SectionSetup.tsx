@@ -13,7 +13,7 @@ import { useDemo } from "@/features/demo/store";
 import { Overlay } from "@/components/taplo/overlay";
 import { journeyFor, type JourneyId } from "./journeys";
 import { useJourneyPreference } from "./preferences";
-import { TaskDemo } from "./TaskDemo";
+import { GuideFilm } from "./GuideFilm";
 import "./journeys.css";
 
 export function SectionSetup({
@@ -63,7 +63,8 @@ export function SectionSetup({
           onClick={() => setOpen(true)}
         >
           <CircleHelp />
-          {complete ? "Setup & walkthrough" : "Continue setup"}
+          <span>{journey.title}</span>
+          <small>{complete ? "Walkthrough" : "Continue setup"}</small>
           <ChevronDown />
         </button>
       ) : (
@@ -148,7 +149,7 @@ export function SectionSetup({
           </div>
         }
       >
-        <TaskDemo topic={topic} />
+        <GuideFilm topic={topic} industry={state.content.identity.industryKey} />
         <div className="journey-outcome">
           <Check />
           <p>{journey.outcome}</p>
@@ -162,7 +163,12 @@ export function SectionSetup({
               <div>
                 <h3>
                   {step.title}
-                  {step.done ? <small>Ready</small> : null}
+                  {step.done ? (
+                    <>
+                      {" "}
+                      <small>Ready</small>
+                    </>
+                  ) : null}
                 </h3>
                 <p>{step.detail}</p>
                 {step.blocked ? (
@@ -172,7 +178,12 @@ export function SectionSetup({
                   </div>
                 ) : null}
                 {!step.blocked ? (
-                  <Link onClick={() => setOpen(false)} href={step.href}>
+                  <Link
+                    onClick={() => setOpen(false)}
+                    href={
+                      step.done ? step.href.replace(/\?new=1$/, "") : step.href
+                    }
+                  >
                     {step.done ? "Review" : step.action}
                     <ArrowRight />
                   </Link>
