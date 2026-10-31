@@ -50,7 +50,7 @@ export function TypeStep() {
     <div className="sf-stack" data-testid="type-step">
       <ul className="sf-tiles" aria-label="Kinds of business">
         {TILES.map((t) => {
-          const selected = chosen && (t.id === "other" ? otherOpen || key === "other" || (!TILES.some(v => v.id === key) && !inTrades) : t.id === "plumber" ? inTrades : key === t.id && !otherOpen)
+          const selected = (t.id === "other" && otherOpen) || (chosen && (t.id === "other" ? otherOpen || key === "other" || (!TILES.some(v => v.id === key) && !inTrades) : t.id === "plumber" ? inTrades : key === t.id && !otherOpen))
           return (
             <li key={t.id}>
               <button

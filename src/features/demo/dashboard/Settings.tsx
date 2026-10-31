@@ -7,7 +7,6 @@ import { formatMoney } from "@/features/services/format"
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans"
 import { resolveEntitlements } from "@/features/subscriptions/entitlements"
 import { useDemo } from "../store"
-import { EmptyPanel } from "@/components/taplo/illustrations"
 import { PageHeader, Panel } from "./Panel"
 
 const ENT_LABEL: [keyof ReturnType<typeof resolveEntitlements>, string][] = [
@@ -35,9 +34,7 @@ export function Settings() {
     <>
       <PageHeader title="Settings" description="Your plan, connections and workspace data." />
       <div className="ws-settings"><nav className="ws-settings-nav" aria-label="Settings sections">{([['plan','Plan & features'],['connections','Connections'],['data','Workspace data']] as const).map(([id,label])=><button key={id} type="button" aria-pressed={section===id} onClick={()=>setSection(id)}>{label}</button>)}</nav><div className="ws-settings-body">
-        {section === "connections" ? <EmptyPanel illustration="connect" title="Payments, email and domains are not connected">
-          <p>Billing, deposits, email confirmations, custom domains and data export each need their own account and will be switched on one at a time. Nothing is charged today.</p>
-        </EmptyPanel> : null}
+        {section === "connections" ? <Panel title="Connections" description="Connect the services your business uses."><div className="ws-connection-list">{[{name:"Payments",line:"Take deposits and payments",detail:"A payment account must be connected before money can be collected. No payment provider is connected to this workspace yet."},{name:"Appointment emails",line:"Confirmations and booking updates",detail:"A verified sender and email service are needed before appointment messages can be delivered. No messages are sent from this workspace yet."},{name:"Custom domain",line:"Use your own web address",detail:"Domain connection will require a published page and DNS verification. Your domain settings are not changed here."}].map(item=><details key={item.name}><summary><span><b>{item.name}</b><small>{item.line}</small></span><em>Not connected</em></summary><p>{item.detail}</p></details>)}</div></Panel> : null}
         {section === "plan" ? <Panel title="Plan" description="Billing is not connected, so nothing is charged. Switch plans here to see what each one unlocks.">
           <div className="ws-plan-options" role="group" aria-label="Choose a plan">{PLAN_IDS.map(p=><button key={p} type="button" aria-pressed={plan===p} onClick={()=>update(x=>({...x,plan:p as PlanId}))}><b>{PLANS[p].name}</b><span>{PLANS[p].priceMinorGbp ? `${formatMoney(PLANS[p].priceMinorGbp)}/month` : "Free"}</span></button>)}</div>
           <ul className="mt-4 grid gap-1.5 text-sm sm:grid-cols-2">
