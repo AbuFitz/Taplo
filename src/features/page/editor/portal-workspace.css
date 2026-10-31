@@ -83,3 +83,11 @@
 
 /* Platform surfaces are white; neutral depth separates editable objects. */
 .portal-workspace{--portal-paper:#fff;background:#fff}.portal-toolbar,.editor-workspace-toolbar{background:#ffffffed}
+/* Override the retired two-column block-board rules, including portalled mobile sheets. */
+.content-block-card.content-block-row>div:first-child{display:flex;align-items:center;padding:0 4px 0 0}
+.content-block-card.content-block-row [data-testid=select-widget]{display:flex;width:auto;min-height:72px;align-items:center;align-content:normal;justify-items:normal;gap:10px;padding:8px 0;border-radius:10px;min-width:0;flex:1}
+.content-block-card.content-block-row [data-testid=drag-handle]{position:static;width:32px;height:48px;flex:none}
+.content-block-card.content-block-row>div:first-child>button:not([data-testid]),.content-block-card.content-block-row [data-testid=row-menu]{position:static;flex:none;width:34px;min-width:34px;height:44px}
+.content-block-card.content-block-row [data-testid=select-widget]>span:first-child{width:38px;height:42px;border-radius:10px;background:#f1f3f6;flex:none}
+.content-block-card.content-block-row [data-testid=select-widget]>span:last-child{min-width:0;flex:1}
+.content-block-card.content-block-row [data-testid=select-widget] .text-sm{font-size:13px}

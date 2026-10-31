@@ -90,7 +90,7 @@ function Row({ w, i, count, ed, sum: s, selected, onSelect, onDetails, onAddReco
   const status = w.hidden ? { text: "Hidden from your page", tone: "muted" } : s.locked ? { text: "Not on your page", tone: "warn" } : s.needs ? { text: "Not on your page yet", tone: "warn" } : null
   return (
     <li ref={setNodeRef} style={{ transform: CSS.Transform.toString(transform), transition }} data-widget-row={w.type} data-widget-row-id={w.id}
-      className={cn("content-block-card bg-card transition-colors", selected && "bg-[var(--signal-soft)]", w.hidden && "opacity-75", isDragging && "relative z-10 shadow-[0_12px_32px_-8px_rgb(10_16_32/0.35)] ring-2 ring-signal")}>
+      className={cn("content-block-card content-block-row bg-card transition-colors", selected && "bg-[var(--signal-soft)]", w.hidden && "opacity-75", isDragging && "relative z-10 shadow-[0_12px_32px_-8px_rgb(10_16_32/0.35)] ring-2 ring-signal")}>
       <div className="flex items-center pr-1">
         <button type="button" ref={setActivatorNodeRef} {...attributes} {...listeners} data-testid="drag-handle" data-base-ui-swipe-ignore="" style={{ touchAction: "none" }}
           aria-label={`Reorder ${s.name}. Position ${i + 1} of ${count}. Press space, then the arrow keys.`}
