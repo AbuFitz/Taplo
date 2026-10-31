@@ -1,74 +1,29 @@
-"use client";
-import { StudioSkeleton } from "./dashboard/Studio";
-import { RouteSkeleton, StudioNav } from "./dashboard/StudioNav";
-import "@/features/page/editor/portal-workspace.css";
-import "./dashboard/workspace-tools.css";
+"use client"
+import * as React from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { ArrowUpRight } from "lucide-react"
+import { StudioSkeleton } from "./dashboard/Studio"
+import { RouteSkeleton } from "./dashboard/StudioNav"
+import { WorkspaceNav } from "./dashboard/WorkspaceNav"
+import { Welcome } from "./Welcome"
+import { useDemo } from "./store"
+import "@/features/page/editor/portal-workspace.css"
+import "./dashboard/workspace-tools.css"
+import "./dashboard/workspace.css"
 
-import { TaploLogo } from "@/components/taplo/brand";
-import * as React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { Welcome } from "./Welcome";
-import { useDemo } from "./store";
-
+const TITLES: Record<string,string> = { services:"Services", bookings:"Bookings", team:"Team", products:"Products", reviews:"Reviews", analytics:"Analytics", settings:"Settings", page:"Page builder", profile:"Business details" }
 export function DashboardShell({ children }: { children: React.ReactNode }) {
-  const { ready, state } = useDemo();
-  const path = usePathname();
-  const focus = path === "/dashboard/page";
-  const empty =
-    ready && (!state || (!state.onboarded && !state.content.identity.name));
-  const isHome = path === "/dashboard";
-  return (
-    <div
-      className="portal-workspace"
-      data-workspace-section={focus ? "editor" : "manage"}
-    >
-      <div className="portal-main portal-frame">
-        <StudioNav />
-        <div className="portal-column">
-          {!focus ? (
-            <header className="portal-toolbar" aria-label="Workspace">
-              <div className="portal-toolbar-identity">
-                <Link href="/dashboard" title={state?.content.identity.name || "Taplo"}>
-                  {state?.content.identity.name || "Taplo"}
-                </Link>
-                {state && !isHome ? (
-                  <span className={cn("studio-pill", state.published && "studio-pill-live")}>
-                    {state.published ? "Published" : "Draft"}
-                  </span>
-                ) : null}
-              </div>
-              <div className="ml-auto flex items-center gap-2">
-                {state?.content.identity.name ? (
-                  <Link
-                    href="/demo/preview"
-                    target="_blank"
-                    className="portal-preview-link"
-                  >
-                    View page
-                  </Link>
-                ) : (
-                  <Link href="/" aria-label="Taplo home">
-                    <TaploLogo className="h-5" />
-                  </Link>
-                )}
-              </div>
-            </header>
-          ) : null}
-          <main
-            className={cn("portal-content", focus && "portal-content-editor")}
-          >
-            {!ready ? (
-              isHome ? <StudioSkeleton /> : <RouteSkeleton />
-            ) : empty ? (
-              <Welcome />
-            ) : (
-              children
-            )}
-          </main>
-        </div>
-      </div>
+  const { ready, state } = useDemo()
+  const path = usePathname()
+  const section = path.split("/")[2] || "overview"
+  const editor = section === "page"
+  const empty = ready && (!state || (!state.onboarded && !state.content.identity.name))
+  return <div className="workspace-v2 portal-workspace" data-workspace-section={editor ? "editor" : "manage"} data-route={section}>
+    <WorkspaceNav />
+    <div className="ws-main"><header className="ws-topbar"><div><span>Studio</span><i>/</i><strong>{TITLES[section] || "Overview"}</strong></div><div className="ws-topbar-actions"><span className="ws-save-dot">{state?.published ? "Published" : "Draft"}</span>{state?.content.identity.name ? <Link href="/demo/preview" target="_blank">View page<ArrowUpRight aria-hidden="true" /></Link> : null}</div></header>
+      <main className={`portal-content ws-content ${editor ? "ws-editor-content" : ""}`}>{!ready ? (section === "overview" ? <StudioSkeleton /> : <RouteSkeleton />) : empty ? <Welcome /> : children}</main>
+      {!editor ? <footer className="ws-footer">Taplo Studio<span>Your changes are saved on this device.</span></footer> : null}
     </div>
-  );
+  </div>
 }

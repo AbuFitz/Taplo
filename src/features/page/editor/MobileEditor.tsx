@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { canPublish, hasUnpublishedChanges, publish, readiness } from "@/features/demo/actions"
 import { PagePreview } from "@/features/preview/PagePreview"
 import { cn } from "@/lib/utils"
-import { StudioMenu } from "@/features/demo/dashboard/StudioNav"
+import { WorkspaceMenu } from "@/features/demo/dashboard/WorkspaceNav"
 import { getWidget } from "../widgets/registry"
 import { EditorDrawer, PEEK, type DrawerSnap } from "./EditorDrawer"
 import { ContextHelp } from "./ContextHelp"
@@ -122,7 +122,7 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
     <div className="studio-editor-fixed fixed inset-0 z-30 flex flex-col overflow-hidden bg-background" style={{ height: "100dvh" }} data-testid="my-page" data-editor="compact" data-short={short}>
       <div ref={headRef} className="shrink-0">
       <header className="flex items-center gap-1 border-b border-black/[0.07] bg-background/95 px-2 pb-1.5 pt-[calc(0.375rem+env(safe-area-inset-top,0px))] pl-[max(0.5rem,env(safe-area-inset-left))] pr-[max(0.5rem,env(safe-area-inset-right))]" role="toolbar" aria-label="Page actions">
-        <StudioMenu />
+        <WorkspaceMenu />
         <p className="min-w-0 flex-1 truncate px-2 text-sm font-semibold tracking-[-0.01em]">{s.content.identity.name || "Your page"}</p>
         {short && !customer ? <div className="mr-1 flex">{tabs.map((t) => tabButton(t, true))}</div> : null}
         <Button variant="ghost" size="icon" onClick={ed.undo} disabled={!ed.canUndo} aria-label="Undo" data-testid="undo"><Undo2 /></Button>

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Archive, ArchiveRestore, Pencil, Plus } from "lucide-react";
+import { Archive, ArchiveRestore, Pencil, Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Overlay } from "@/components/taplo/overlay";
 import { formatMoney } from "@/features/services/format";
@@ -42,6 +42,7 @@ export function Products() {
     p: ProductContent;
     isNew: boolean;
   } | null>(null);
+  const [query, setQuery] = React.useState("");
   const [before, setBefore] = React.useState("");
   const [showErr, setShowErr] = React.useState(false);
   if (!c) return null;
@@ -71,7 +72,7 @@ export function Products() {
         title={
           c.identity.industryKey === "car-dealer" ? "Vehicle stock" : "Products"
         }
-        description="Things you sell, recommend or have in stock. Show them on your page with a Products block."
+        description="Manage the items you sell, recommend or have in stock."
         actions={
           <Button
             onClick={() =>
@@ -89,6 +90,7 @@ export function Products() {
           </Button>
         }
       />
+      <div className="ws-record-toolbar"><label><Search aria-hidden="true" /><input aria-label="Search products" placeholder="Find an item…" value={query} onChange={e=>setQuery(e.target.value)} /></label><span>{active.length} active</span></div>
       <div className="grid max-w-3xl gap-6">
         {active.length === 0 ? (
           <div className="rounded-xl border border-dashed p-6">
@@ -99,8 +101,8 @@ export function Products() {
             </p>
           </div>
         ) : (
-          <ul className="grid gap-3">
-            {active.map((p) => (
+          <ul className="ws-record-list">
+            {active.filter(p=>p.name.toLowerCase().includes(query.toLowerCase())).map((p) => (
               <li
                 key={p.id}
                 className="flex flex-wrap items-center justify-between gap-3 rounded-xl border p-4"
@@ -153,6 +155,7 @@ export function Products() {
                 </div>
               </li>
             ))}
+            {active.length > 0 && !active.some(p=>p.name.toLowerCase().includes(query.toLowerCase())) ? <li className="text-sm text-muted-foreground">No items match your search.</li> : null}
           </ul>
         )}
         {archived.length ? (

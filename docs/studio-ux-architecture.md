@@ -33,3 +33,12 @@ Draft preview renders the currently selected design even when the saved plan is 
 ## Verification limits
 
 Unit checks cover default styling, category adaptation, serialized theme selections and Free draft/published separation. The managed preview runner currently supplies Vite flags to Next.js and exits (`unknown option --host`). Browser review of this pass needs the deployed branch. Physical-device safe areas, touch dragging, keyboard overlap and popover placement are not certified by a successful build.
+
+
+## Workspace rebuild (31 October)
+
+The owner shell is replaced by WorkspaceNav and a new route-aware shell, rather than modifying the previous Studio phone/rail composition. Desktop has grouped Workspace/Business navigation, a business identity, a breadcrumb/action header and one content canvas. Mobile has a four-item floating dock and a complete navigation sheet; focused editing uses the same destination list from its menu.
+
+Overview is rebuilt as a page hub with a draft/published state, next required action, direct business-record links, real booking/enquiry counts and upcoming bookings. The page snapshot is supporting material on desktop, hidden on compact screens where it was competing with work. Services and products have search and denser action rows; original record ordering, archive/recovery and validation remain. Settings has separate Plan, Connections and Workspace data sections. Analytics explicitly shows unconnected measurements, never fabricated data. Team, reviews, booking/calendar/availability and editor controls use the same owner typography, navigation, spacing, fields and surfaces. Customer themes are unchanged by this rebuild.
+
+The Something else category path now has one search-or-enter field. Typing supplies the custom business label; choosing a recognised match applies that category. There is no separate custom-type field followed by another search box.

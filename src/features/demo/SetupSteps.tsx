@@ -40,7 +40,7 @@ export function TypeStep() {
   const key = s.content.identity.industryKey
   const chosen = state !== null && Boolean(s.content.identity.industryLabel.trim())
   const [otherOpen, setOtherOpen] = React.useState(() => chosen && !TILES.some((t) => t.id === key && t.id !== "other") && !["electrician"].includes(key))
-  const [query, setQuery] = React.useState("")
+  const [query, setQuery] = React.useState(() => s.content.identity.industryKey === "other" ? s.content.identity.industryLabel : "")
   const pick = (id: string, label?: string) => update((x) => {
     const next = applyIndustry(x, id, label)
     return { ...next, content: { ...next.content, location: { ...next.content.location, mode: MOBILE_WORK.has(id) ? "service_area" : next.content.location.mode } } }
@@ -50,7 +50,7 @@ export function TypeStep() {
     <div className="sf-stack" data-testid="type-step">
       <ul className="sf-tiles" aria-label="Kinds of business">
         {TILES.map((t) => {
-          const selected = chosen && (t.id === "other" ? otherOpen || key === "other" : t.id === "plumber" ? inTrades : key === t.id && !otherOpen)
+          const selected = chosen && (t.id === "other" ? otherOpen || key === "other" || (!TILES.some(v => v.id === key) && !inTrades) : t.id === "plumber" ? inTrades : key === t.id && !otherOpen)
           return (
             <li key={t.id}>
               <button
@@ -58,7 +58,7 @@ export function TypeStep() {
                 className="sf-tile"
                 aria-pressed={selected}
                 data-testid={`tile-${t.id}`}
-                onClick={() => { if (t.id === "other") { setOtherOpen(true); pick("other", "") } else { setOtherOpen(false); pick(t.id) } }}
+                onClick={() => { if (t.id === "other") { setOtherOpen(true); setQuery(key === "other" ? s.content.identity.industryLabel : ""); pick("other", key === "other" ? s.content.identity.industryLabel : "") } else { setOtherOpen(false); pick(t.id) } }}
               >
                 <span className="sf-tile-icon" aria-hidden="true"><BusinessIcon id={t.id} /></span>
                 <span className="sf-tile-label">{t.label}</span>
@@ -75,14 +75,15 @@ export function TypeStep() {
           ))}
         </div>
       ) : null}
+      {chosen && !otherOpen && !TILES.some(t=>t.id===key) && !inTrades ? <p className="sf-help">Selected: <strong>{s.content.identity.industryLabel}</strong></p> : null}
       {otherOpen ? (
         <div className="sf-stack" data-testid="other-type">
-          <TaploInput label="What do you do?" hint="e.g. Dog groomer, Wedding florist, Piano restorer" value={s.content.identity.industryKey === "other" ? s.content.identity.industryLabel : ""} maxLength={80}
-            onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }), { coalesce: "ind-label" })} />
+          <label className="sf-business-search-label" htmlFor="business-type-search">Find your business type</label>
           <div className="sf-search">
             <Search aria-hidden="true" />
-            <input aria-label="Search all kinds of business" placeholder="Search all kinds of business" value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
+            <input id="business-type-search" aria-label="Search or enter your business type" placeholder="Search or enter your business type" value={query} maxLength={80} onChange={(e) => { setQuery(e.target.value); update(x=>({...x,content:{...x.content,identity:{...x.content.identity,industryKey:"other",industryLabel:e.target.value}}})) }} autoComplete="off" />
           </div>
+          <p className="sf-help">Choose a match below, or continue with your own wording.</p>
           {query.trim() ? (
             <ul className="sf-results" aria-label="Matching kinds of business">
               {searchIndustries(query).slice(0, 5).map((p) => (

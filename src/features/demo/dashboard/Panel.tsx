@@ -18,7 +18,7 @@ export function PageHeader({
           <p className="portal-page-description">{description}</p>
         ) : null}
       </div>
-      {actions}
+      {actions ? <div className="ws-heading-actions">{actions}</div> : null}
     </div>
   );
 }
