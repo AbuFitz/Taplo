@@ -31,9 +31,12 @@ export function SectionSetup({
     topic,
   );
   const [open, setOpen] = React.useState(false);
-  if (!state) return null;
-  const journey = journeyFor(topic, state),
-    done = journey.steps.filter((s) => s.done).length;
+  const journey = React.useMemo(
+    () => (state ? journeyFor(topic, state) : null),
+    [state, topic],
+  );
+  if (!state || !journey) return null;
+  const done = journey.steps.filter((s) => s.done).length;
   const next =
     journey.steps.find((s) => !s.done && !s.blocked) ??
     journey.steps.find((s) => !s.done) ??
@@ -149,7 +152,10 @@ export function SectionSetup({
           </div>
         }
       >
-        <GuideFilm topic={topic} industry={state.content.identity.industryKey} />
+        <GuideFilm
+          topic={topic}
+          industry={state.content.identity.industryKey}
+        />
         <div className="journey-outcome">
           <Check />
           <p>{journey.outcome}</p>

@@ -25,6 +25,12 @@ describe("owner setup readiness", () => {
   });
   it("requires both real products and a visible shelf; hidden blocks do not complete setup", () => {
     const s = initialState();
+    s.content.identity = {
+      ...s.content.identity,
+      name: "Test shop",
+      slug: "test-shop",
+      industryLabel: "Other",
+    };
     s.content.products = [
       {
         id: "p",
@@ -46,6 +52,13 @@ describe("owner setup readiness", () => {
   });
   it("recognises real contact widget types and never modifies the page while deriving guidance", () => {
     const s = initialState();
+    s.content.identity = {
+      ...s.content.identity,
+      name: "Test shop",
+      slug: "test-shop",
+      industryLabel: "Other",
+    };
+    s.content.contacts.whatsapp = "+447700900123";
     s.page.widgets = [newWidget("whatsapp")];
     const before = JSON.stringify(s);
     expect(journeyFor("page", s).steps[1]?.done).toBe(true);
@@ -79,4 +92,32 @@ it("does not mark an undurationed appointment service as ready for customer slot
   expect(journeyFor("bookings", s).steps[0]?.done).toBe(false);
   s.content.services[0]!.durationMinutes = 30;
   expect(journeyFor("bookings", s).steps[0]?.done).toBe(true);
+});
+
+it("does not mistake an empty or locked block for a working customer action", () => {
+  const s = initialState();
+  s.content.identity = {
+    ...s.content.identity,
+    name: "Test shop",
+    slug: "test-shop",
+    industryLabel: "Other",
+  };
+  s.page.widgets = [newWidget("whatsapp")];
+  expect(journeyFor("page", s).steps[1]?.done).toBe(false);
+  s.content.contacts.whatsapp = "+447700900123";
+  expect(journeyFor("page", s).steps[1]?.done).toBe(true);
+  s.plan = "free";
+  s.page.widgets = [newWidget("team")];
+  s.content.staff = [
+    {
+      id: "a",
+      slug: "alex",
+      name: "Alex",
+      serviceIds: null,
+      subjects: [],
+      credentials: [],
+      bookable: true,
+    },
+  ];
+  expect(journeyFor("team", s).steps[2]?.done).toBe(false);
 });

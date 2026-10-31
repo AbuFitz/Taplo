@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 import { SectionSetup } from "./SectionSetup";
 import { ReportDialog } from "@/features/support/ReportDialog";
 import { useDemo } from "@/features/demo/store";
-import { journeyFor, type JourneyId } from "./journeys";
+import { JOURNEY_META, type JourneyId } from "./journeys";
 const TOPICS: JourneyId[] = [
   "page",
   "profile",
@@ -44,7 +44,7 @@ export function HelpCenter() {
       </label>
       <div className="help-topics">
         {TOPICS.filter((t) =>
-          `${t} ${journeyFor(t, state).title}`
+          `${t} ${JOURNEY_META[t][0]}`
             .toLowerCase()
             .includes(query.toLowerCase()),
         ).map((topic) => (
