@@ -1,22 +1,28 @@
 import * as React from "react";
+import { StudioArt, type StudioScene } from "./art/StudioArt";
 import { cn } from "@/lib/utils";
 
 export function PageHeader({
   title,
   description,
   actions,
+  scene,
 }: {
   title: string;
   description?: string;
   actions?: React.ReactNode;
+  scene?: StudioScene;
 }) {
   return (
-    <div className="portal-page-heading">
-      <div>
-        <h1 className="portal-page-title">{title}</h1>
-        {description ? (
-          <p className="portal-page-description">{description}</p>
-        ) : null}
+    <div className="portal-page-heading ws-page-heading" data-scene={scene}>
+      <div className="ws-page-intro">
+        <div>
+          <h1 className="portal-page-title">{title}</h1>
+          {description ? (
+            <p className="portal-page-description">{description}</p>
+          ) : null}
+        </div>
+        {scene ? <StudioArt scene={scene} className="ws-heading-art" /> : null}
       </div>
       {actions ? <div className="ws-heading-actions">{actions}</div> : null}
     </div>

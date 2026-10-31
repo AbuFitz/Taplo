@@ -145,7 +145,11 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(
                 requestAnimationFrame(() =>
                   target.scrollIntoView({
                     block: "nearest",
-                    behavior: "smooth",
+                    behavior: window.matchMedia(
+                      "(prefers-reduced-motion: reduce)",
+                    ).matches
+                      ? "auto"
+                      : "smooth",
                   }),
                 );
               }}

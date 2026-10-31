@@ -11,6 +11,7 @@ import { useDemo } from "./store";
 import "@/features/page/editor/portal-workspace.css";
 import "./dashboard/workspace-tools.css";
 import "./dashboard/workspace.css";
+import "./dashboard/workspace-polish.css";
 
 const TITLES: Record<string, string> = {
   services: "Services",

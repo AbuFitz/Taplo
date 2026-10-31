@@ -21,6 +21,8 @@ import {
 } from "../actions";
 import { useDraft } from "../hooks";
 import { ContextHelp } from "@/features/page/editor/ContextHelp";
+import { StudioArt } from "./art/StudioArt";
+import { getIndustryPreset } from "@/features/themes/presets/industries";
 import { UpcomingBookings } from "./UpcomingBookings";
 
 export function Studio() {
@@ -56,9 +58,7 @@ export function Studio() {
         className="ws-page-hub ws-page-hub-colour"
         aria-label="Your page"
       >
-        <div className="ws-business-emblem" aria-hidden="true">
-          {s.content.identity.name.slice(0, 1).toUpperCase()}
-        </div>
+        <StudioArt scene="design" className="ws-hub-art" />
         <div className="ws-page-hub-info">
           <span className="ws-status">
             {s.published ? "Published" : "Draft"}
@@ -161,7 +161,8 @@ export function Studio() {
               {
                 href: "services",
                 Icon: Layers3,
-                label: "Services",
+                label: getIndustryPreset(s.content.identity.industryKey)
+                  .terminology.services,
                 line: "Prices, durations and what you offer",
                 n: counts.services,
               },

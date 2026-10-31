@@ -31,6 +31,11 @@ export interface Palette {
 
 const ON_LIGHT = "#101216";
 export const PALETTES: Palette[] = [
+  { id: "ice", name: "Ice", tone: "light", base: "#e8f3f5", glow: ["#cde7eb", "#f4fbfc"], surface: "#ffffff", text: "#20383e", muted: "#45616a", border: "#c8dde1", accent: "#285b68", accentText: "#ffffff" },
+  { id: "butter", name: "Butter", tone: "light", base: "#f7f2df", glow: ["#eee3b6", "#fcfaf1"], surface: "#fffef9", text: "#36301f", muted: "#62583c", border: "#ded4b5", accent: "#6d572d", accentText: "#ffffff" },
+  { id: "periwinkle", name: "Periwinkle", tone: "light", base: "#eef0fb", glow: ["#d9dff5", "#f9faff"], surface: "#ffffff", text: "#292e48", muted: "#525c7c", border: "#d5daed", accent: "#4a538f", accentText: "#ffffff" },
+  { id: "graphite", name: "Graphite", tone: "dark", base: "#111216", glow: ["#343640", "#191b21"], surface: "#202228", text: "#f3f4f7", muted: "#bfc3d0", border: "#41444e", accent: "#e5e7ee", accentText: "#17191e" },
+
   { id: "teal", name: "Teal", tone: "dark", base: "#0a1416", glow: ["#0f5a58", "#0b2d33"], surface: "#13262a", text: "#e9f7f5", muted: "#aecac7", border: "#2a4a52", accent: "#7fe3d4", accentText: ON_LIGHT },
   { id: "gold", name: "Bronze", tone: "dark", base: "#0f0d09", glow: ["#6b5320", "#2b2210"], surface: "#1c1810", text: "#f7f1e3", muted: "#d6ceb9", border: "#40382a", accent: "#e8c56d", accentText: ON_LIGHT },
   { id: "forest", name: "Forest", tone: "dark", base: "#0a130d", glow: ["#25683d", "#0f2c1b"], surface: "#14231a", text: "#ebf7ee", muted: "#c5ddcc", border: "#2b4a35", accent: "#9fe3b2", accentText: ON_LIGHT },

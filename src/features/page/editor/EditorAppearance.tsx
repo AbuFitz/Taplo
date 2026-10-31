@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ProfileAdvisor } from "./ProfileAdvisor";
 import { ContextHelp } from "./ContextHelp";
 import "./design-studio.css";
 import {
@@ -379,7 +380,10 @@ export function HeaderPanel({
             <ProfileSections ed={ed} only="identity" identityOpen />
           ) : null}
           {area === "layout" ? (
-            <HeaderControls m={m} identity={c.identity} livePreviews />
+            <>
+              <ProfileAdvisor ed={ed} notify={notify} />
+              <HeaderControls m={m} identity={c.identity} livePreviews guided />
+            </>
           ) : null}
           {area === "action" ? <MainActionControl ed={ed} /> : null}
           {area === "images" ? (
@@ -425,11 +429,14 @@ export function HeaderPanel({
                 }
                 focalHint="Choose the part that should stay in view on phones and computers."
               />
-              <ColourSuggestion
-                ed={ed}
-                image={c.identity.heroImage ?? c.identity.logo}
-                notify={notify}
-              />
+              <ProfileAdvisor ed={ed} notify={notify} />
+              {!(c.identity.logo?.accent || c.identity.heroImage?.accent) ? (
+                <ColourSuggestion
+                  ed={ed}
+                  image={c.identity.logo ?? c.identity.heroImage}
+                  notify={notify}
+                />
+              ) : null}
             </div>
           ) : null}
         </>

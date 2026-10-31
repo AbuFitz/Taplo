@@ -245,7 +245,7 @@ export function OwnerBookings({
 
   return (
     <>
-      <PageHeader
+      <PageHeader scene="bookings"
         title="Bookings"
         description="Your calendar, requests and the hours customers can book."
         actions={

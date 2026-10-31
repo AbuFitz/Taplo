@@ -125,6 +125,7 @@ export function WorkspaceNav() {
           type="button"
           onClick={() => setOpen(true)}
           aria-expanded={open}
+          aria-current={!['/dashboard','/dashboard/page','/dashboard/bookings'].includes(path) ? "page" : undefined}
         >
           <MoreHorizontal />
           More

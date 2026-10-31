@@ -1,5 +1,7 @@
 "use client";
 
+import { profileDirection } from "@/features/page/themes/profile-direction";
+import { arrangementAvailable } from "@/features/page/themes/arrangement";
 import { FinishPicker } from "./FinishPicker";
 import { matchingFinish, withFinish } from "./finishes";
 
@@ -450,19 +452,34 @@ export function TypeControls({ m }: M) {
 }
 
 /* ------------------------------------------------------------------ header */
-const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] =
+const HEADER_OPTIONS: [(typeof PROFILE_CHOICES)[number]["id"], string][] =
   PROFILE_CHOICES.map((c) => [c.id, c.name]);
 export function HeaderControls({
   m,
   identity,
   livePreviews = false,
   previewSrc,
+  guided = false,
 }: M & {
   identity?: BusinessContent["identity"];
   livePreviews?: boolean;
   previewSrc?: (layout: StyleSpec["header"]["layout"]) => string;
+  guided?: boolean;
 }) {
   const { spec } = m;
+  const [showAll, setShowAll] = React.useState(false);
+  const direction = identity ? profileDirection(identity) : null;
+  const recommended = direction
+    ? [
+        direction.arrangement.id,
+        ...direction.alternatives.map((a) => a.id),
+        spec.header.layout,
+      ]
+    : [];
+  const options =
+    guided && !showAll && direction
+      ? HEADER_OPTIONS.filter(([id]) => recommended.includes(id))
+      : HEADER_OPTIONS;
   return (
     <div className="grid gap-4">
       <ChoiceGrid
@@ -482,9 +499,10 @@ export function HeaderControls({
             },
           }))
         }
-        options={HEADER_OPTIONS.map(([v, l]) => ({
+        options={options.map(([v, l]) => ({
           value: v,
           label: l,
+          disabled: identity ? !arrangementAvailable(v, identity) : false,
           preview:
             livePreviews || previewSrc ? (
               <ChoicePreview
@@ -497,6 +515,15 @@ export function HeaderControls({
             ),
         }))}
       />
+      {guided ? (
+        <button
+          type="button"
+          className="justify-self-start min-h-11 text-xs font-medium underline underline-offset-4"
+          onClick={() => setShowAll((v) => !v)}
+        >
+          {showAll ? "Show suggested arrangements" : "Browse every arrangement"}
+        </button>
+      ) : null}
       {spec.header.layout === "poster" ||
       spec.header.layout === "melt" ||
       spec.header.layout === "framed" ||

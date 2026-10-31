@@ -1,14 +1,7 @@
 "use client";
 import * as React from "react";
 import Link from "next/link";
-import {
-  CalendarDays,
-  Pencil,
-  Plus,
-  Search,
-  Trash2,
-  Users,
-} from "lucide-react";
+import { CalendarDays, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Overlay } from "@/components/taplo/overlay";
 import {
@@ -22,6 +15,7 @@ import {
   type BusinessContentInput,
 } from "@/features/businesses/content";
 import { useDraft } from "../hooks";
+import { StudioArt } from "./art/StudioArt";
 import { PageHeader } from "./Panel";
 
 type Person = NonNullable<BusinessContentInput["staff"]>[number];
@@ -100,6 +94,7 @@ export function Team() {
   return (
     <>
       <PageHeader
+        scene="team"
         title="Team"
         description="Give people a face, a speciality and the right work."
         actions={
@@ -116,11 +111,20 @@ export function Team() {
       />
       {!ent.teamPages ? (
         <p role="status" className="workspace-notice">
-          Profiles are saved here. Show them on your page with Pro; offer
-          up to three bookable people with Pro or unlimited people with Business.
+          Profiles are saved here. Show them on your page with Pro; offer up to
+          three bookable people with Pro or unlimited people with Business.
         </p>
       ) : null}
-      {ent.maxStaffBookable !== null && ent.onlineBooking && staff.filter(person => person.bookable !== false).length > ent.maxStaffBookable ? <p className="workspace-notice" role="status">Your plan makes the first {ent.maxStaffBookable} bookable people available to customers. Every profile and its hours stay saved. Business includes unlimited staff calendars.</p> : null}
+      {ent.maxStaffBookable !== null &&
+      ent.onlineBooking &&
+      staff.filter((person) => person.bookable !== false).length >
+        ent.maxStaffBookable ? (
+        <p className="workspace-notice" role="status">
+          Your plan makes the first {ent.maxStaffBookable} bookable people
+          available to customers. Every profile and its hours stay saved.
+          Business includes unlimited staff calendars.
+        </p>
+      ) : null}
       {removed ? (
         <div role="status" className="workspace-toast">
           <span>{removed.name} removed from your team.</span>
@@ -147,7 +151,7 @@ export function Team() {
       ) : null}
       {staff.length === 0 ? (
         <section className="workspace-empty">
-          <Users size={30} strokeWidth={1.5} aria-hidden="true" />
+          <StudioArt scene="team" className="ws-empty-art" />
           <h2>Introduce your people.</h2>
           <p>
             Add a profile, choose the services they provide, then set their

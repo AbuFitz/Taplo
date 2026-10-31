@@ -77,7 +77,7 @@ export function Services() {
 
   return (
     <>
-      <PageHeader
+      <PageHeader scene="services"
         title={getIndustryPreset(c.identity.industryKey).terminology.services}
         description="Manage your prices, durations and bookable services."
         actions={
