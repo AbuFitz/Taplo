@@ -39,7 +39,7 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(function SetupShe
   const peek = mobile && snap === "peek"
 
   return (
-    <main ref={ref} className="sf-root" data-snap={snap} data-keyboard={keyboard} data-mobile={mobile} data-testid="setup-root">
+    <main ref={ref} className="sf-root" data-snap={snap} data-step={bodyKey} data-keyboard={keyboard} data-mobile={mobile} data-testid="setup-root">
       <header className="sf-top">
         <Link href="/" className="sf-logo" data-testid="setup-logo" aria-label="Taplo home"><TaploLogo className="h-7" /></Link>
         <div className="sf-progress" role="progressbar" aria-label="Setup progress" aria-valuemin={1} aria-valuemax={steps} aria-valuenow={step + 1} aria-valuetext={`Step ${step + 1} of ${steps}: ${stepLabel}`}>

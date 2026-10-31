@@ -38,9 +38,10 @@ function LookArt({ look, palette }: { look: StartingLook; palette: Palette }) {
 /** The colour picture: the palette's ground, with its card surface and its action colour as two overlapping discs. */
 function ColourArt({ palette }: { palette: Palette }) {
   return (
-    <span className="colour-art" aria-hidden="true">
-      <i className="colour-art-disc" style={{ background: palette.surface, boxShadow: "0 0 0 1px #0000001f, 0 4px 10px -3px #0004" }} />
-      <i className="colour-art-disc" style={{ background: palette.accent, boxShadow: "0 0 0 1px #0000001a, 0 4px 10px -3px #0004" }} />
+    <span className="setup-palette-swatch" aria-hidden="true" style={{ background: palette.base, borderColor: palette.border }}>
+      <i className="setup-palette-heading" style={{ background: palette.text }} />
+      <i className="setup-palette-card" style={{ background: palette.surface, borderColor: palette.border }}><i style={{ background: palette.muted }} /></i>
+      <i className="setup-palette-action" style={{ background: palette.accent }} />
     </span>
   );
 }
@@ -55,7 +56,7 @@ export function SetupLook() {
   const s = state ?? initialState();
   const drafts = s.setupDrafts ?? {};
   const look = getStartingLook(drafts.colourway) ?? startingLookOf(s.page) ?? SETUP_LOOKS[0]!;
-  const [tab, setTab] = React.useState<Tab>("looks");
+  const [tab, setTab] = React.useState<Tab>("colours");
   const [note, setNote] = React.useState("");
 
   const logoAccent = s.content.identity.logo?.accent;
@@ -108,7 +109,7 @@ export function SetupLook() {
   return (
     <div className="setup-look" data-testid="setup-look">
       <div className="setup-look-tabs" role="radiogroup" aria-label="What to change">
-        {([["looks", "Looks"], ["colours", "Colours"]] as const).map(([id, label]) => (
+        {([["colours", "Colours"], ["looks", "Looks"]] as const).map(([id, label]) => (
           <label key={id} data-selected={tab === id}>
             <input type="radio" name="look-tab" checked={tab === id} onChange={() => setTab(id)} aria-label={label} />
             <span>{label}</span>

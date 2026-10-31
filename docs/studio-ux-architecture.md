@@ -42,3 +42,12 @@ The owner shell is replaced by WorkspaceNav and a new route-aware shell, rather 
 Overview is rebuilt as a page hub with a draft/published state, next required action, direct business-record links, real booking/enquiry counts and upcoming bookings. The page snapshot is supporting material on desktop, hidden on compact screens where it was competing with work. Services and products have search and denser action rows; original record ordering, archive/recovery and validation remain. Settings has separate Plan, Connections and Workspace data sections. Analytics explicitly shows unconnected measurements, never fabricated data. Team, reviews, booking/calendar/availability and editor controls use the same owner typography, navigation, spacing, fields and surfaces. Customer themes are unchanged by this rebuild.
 
 The Something else category path now has one search-or-enter field. Typing supplies the custom business label; choosing a recognised match applies that category. There is no separate custom-type field followed by another search box.
+
+
+## Registration refinement from the supplied Linktree recording
+
+The opening desktop question uses a closer crop of the real preview, with a modest camera pull-back after category selection. The iframe stays mounted. Mobile keeps the existing preview-above-controls composition and does not inherit desktop zoom. Reduced motion remains respected by the shared camera class.
+
+Colours is the first tab in the style step. Signature remains the initial white-and-black design; each coordinated swatch shows background, surface, text and action roles. Looks remains beside Colours. The screen title is Style your page, so it covers both choices. These changes follow the recording's progressive disclosure and predictable layout without reproducing its branding.
+
+Browser review now works on Vercel previews. The rebuild was walked from custom category through registration into Studio; service search, service editing/saving and Settings navigation were exercised. All management routes were inspected at 360px and 390px in real application iframes, with no document-level horizontal overflow. Overview was captured at 390px and 1280px. This is responsive browser verification, not certification of physical-phone keyboards, touch dragging or Safari behaviour.

@@ -10,7 +10,8 @@ async function toLook(page: Page, width: number) {
   await page.goto("/onboarding?step=name", { waitUntil: "networkidle" })
   await page.getByLabel("Business name", { exact: true }).fill("Marlowe & Finch")
   await cont(page, { keepLook: true })
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Choose a look.")
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Style your page.")
+  await page.getByRole("radio", { name: "Looks", exact: true }).check()
 }
 
 for (const width of [390, 1440]) {

@@ -32,7 +32,7 @@ const STEP_LABEL: Record<OnboardingStep, string> = {
 const STEP_TITLE: Record<OnboardingStep, string> = {
   type: "What do you do?",
   name: "What’s it called?",
-  look: "Choose a look.",
+  look: "Style your page.",
   action: "What should customers do first?",
   services: "Add your services",
   plan: "Pick a plan.",
@@ -41,7 +41,7 @@ const STEP_TITLE: Record<OnboardingStep, string> = {
 const STEP_DESCRIPTION: Record<OnboardingStep, string> = {
   type: "Start with the closest fit. We’ll suggest a page you can make your own.",
   name: "Give it your name. Your page takes shape as you go.",
-  look: "Find your starting point, then make the colours yours.",
+  look: "Start with colours. Explore a different look whenever you like.",
   action: "Give visitors one clear next step. You can add more ways to connect later.",
   services: "One is enough to begin. Add your own details, or come back to this in Studio.",
   plan: "Start with what you need today. You can change your plan later.",
@@ -265,7 +265,7 @@ export function Onboarding() {
       footer={footer}
       preview={
         <div className="sf-canvas">
-          <SetupCanvas src="/demo/preview" expanded={false} fit={!mobile || snap === "peek" || step === "finish"} focus={FOCUS[step]} onSurface={onSurface} onOverlayOpen={() => { if (mobile) setSnap("peek") }} />
+          <SetupCanvas src="/demo/preview" expanded={false} closeUp={!mobile && step === "type"} fit={!mobile || snap === "peek" || step === "finish"} focus={FOCUS[step]} onSurface={onSurface} onOverlayOpen={() => { if (mobile) setSnap("peek") }} />
         </div>
       }
     >
