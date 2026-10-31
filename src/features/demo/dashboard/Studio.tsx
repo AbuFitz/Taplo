@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils"
 import { canPublish, hasUnpublishedChanges, publish, readiness, unpublish } from "../actions"
 import { useDraft } from "../hooks"
 import { UpcomingBookings } from "./UpcomingBookings"
-import { StudioGuide } from "./StudioGuide"
 import "./studio.css"
 import "./studio-home.css"
 
@@ -173,7 +172,6 @@ export function Studio() {
         ) : null}
 
         {published && !ent.analytics ? <Link className="studio-link studio-plans" href="/pricing">Compare plans</Link> : null}
-        <StudioGuide />
       </aside>
 
       <section className="studio-stage" id="studio-preview" aria-label="Your page">

@@ -40,7 +40,7 @@ export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetI
         return w.id === widgetId && field?.kind === "select" && field.options.some((o) => o.value === variant) ? { ...w, settings: { ...w.settings, variant } } : w
       }) }
     }
-    return buildPageViewModel(parsed.data, page, { plan: source.plan, draftAction: mode === "draft" && !state?.published })
+    return buildPageViewModel(parsed.data, page, { plan: source.plan, ...(mode === "draft" ? { themeOverride: page.themeId } : {}), draftAction: mode === "draft" && !state?.published })
   }, [source, mode, headerLayout, widgetId, variant, lookId, savedLookId, savedStyleId, treatmentId, state?.showExamples])
 
   if (!ready) return <Message title="Loading…" />

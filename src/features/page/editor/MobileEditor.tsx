@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { StudioMenu } from "@/features/demo/dashboard/StudioNav"
 import { getWidget } from "../widgets/registry"
 import { EditorDrawer, PEEK, type DrawerSnap } from "./EditorDrawer"
+import { ContextHelp } from "./ContextHelp"
 import { ContentList } from "./ContentList"
 import { SettingsBody } from "./EditorPanel"
 import { Inspector } from "./Inspector"
@@ -17,7 +18,7 @@ import type { Editor } from "./useEditor"
 
 type Panel = "content" | "header" | "design" | "settings" | "selection"
 
-const BAR = 92 // room the Studio dock takes at the bottom, in px (excluding the safe-area inset)
+const BAR = 0 // The focused editor owns navigation; Studio is available from its menu.
 
 function useViewportSize() {
   const [v, setV] = React.useState({ w: 390, h: 800 })
@@ -121,7 +122,7 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
     <div className="studio-editor-fixed fixed inset-0 z-30 flex flex-col overflow-hidden bg-background" style={{ height: "100dvh" }} data-testid="my-page" data-editor="compact" data-short={short}>
       <div ref={headRef} className="shrink-0">
       <header className="flex items-center gap-1 border-b border-black/[0.07] bg-background/95 px-2 pb-1.5 pt-[calc(0.375rem+env(safe-area-inset-top,0px))] pl-[max(0.5rem,env(safe-area-inset-left))] pr-[max(0.5rem,env(safe-area-inset-right))]" role="toolbar" aria-label="Page actions">
-        {short ? <StudioMenu /> : null}
+        <StudioMenu />
         <p className="min-w-0 flex-1 truncate px-2 text-sm font-semibold tracking-[-0.01em]">{s.content.identity.name || "Your page"}</p>
         {short && !customer ? <div className="mr-1 flex">{tabs.map((t) => tabButton(t, true))}</div> : null}
         <Button variant="ghost" size="icon" onClick={ed.undo} disabled={!ed.canUndo} aria-label="Undo" data-testid="undo"><Undo2 /></Button>
@@ -157,14 +158,14 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
         {customer ? <p className="pointer-events-none absolute inset-x-0 bottom-3 mx-auto w-fit rounded-full bg-neutral-900/85 px-3 py-1.5 text-xs text-white">Customer preview: buttons work like the real page</p> : null}
       </div>
 
-      {!short ? <div ref={barRef} aria-hidden="true" className="shrink-0" style={{ height: `calc(${BAR}px + env(safe-area-inset-bottom, 0px))` }} /> : null}
+      {!short ? <div ref={barRef} aria-hidden="true" className="shrink-0" style={{ height: `${BAR}px` }} /> : null}
 
       <EditorDrawer open={open} onOpenChange={(o) => { if (!o) close() }} snap={snap} onSnap={setSnap} side={short ? "right" : "bottom"} offsetTop={head} offsetBottom={short ? 0 : bar} title={title} canGoBack={stack.length > 1} onBack={back} screenKey={`${top ?? ""}:${selection.kind === "widget" ? selection.id : selection.kind}`}>
         {stack.map((p) => (
           <div key={p} hidden={p !== top} className={p === top ? undefined : "hidden"}>
             {p === "content" ? <ContentList ed={ed} selection={selection} onSelect={fromList} notify={notify} /> : null}
             {p === "header" ? <Inspector ed={ed} selection={{ kind: "header" }} onSelect={setSelection} notify={notify} compact /> : null}
-            {p === "design" ? <Inspector ed={ed} selection={PAGE} onSelect={fromList} notify={notify} compact /> : null}
+            {p === "design" ? <><div className="flex justify-end"><ContextHelp topic="design" /></div><Inspector ed={ed} selection={PAGE} onSelect={fromList} notify={notify} compact /></> : null}
             {p === "settings" ? <SettingsBody ed={ed} selection={selection} onSelect={setSelection} notify={notify} /> : null}
             {p === "selection" ? <Inspector ed={ed} selection={selection} onSelect={(sel) => { setSelection(sel); if (sel.kind === "content") back() }} notify={notify} compact /> : null}
           </div>

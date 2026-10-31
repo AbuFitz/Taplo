@@ -1,3 +1,4 @@
+import type { StyleOverrides } from "../contracts/style";
 import type { PageDoc } from "../contracts/page";
 import { applyDesign, getDesign } from "./designs";
 import { COLOURWAYS, applyColourway, colourwayOf, getColourway, type Colourway } from "./colourways";
@@ -18,7 +19,21 @@ export interface StartingLook {
   animated: boolean;
 }
 
+export const SIGNATURE_APPEARANCE: StyleOverrides = {
+    text: { headingFont: "geist", bodyFont: "geist", size: "md", headingCase: "normal", headingWeight: "bold", align: "left" },
+    header: { layout: "lifted", avatarShape: "rounded", avatarSize: "md", align: "left", actions: "primary", showLocation: true, scrim: "medium", surface: "open" },
+    buttons: { shape: "rounded", fill: "solid", shadow: "none", showIcons: true },
+    cards: { surface: "solid", opacity: 100, radius: "lg", border: "none", shadow: "soft", padding: "comfortable" },
+    layout: { width: "regular", density: "comfortable", rhythm: "even", desktop: "centered", composition: "stack" },
+    decoration: "none", motion: "subtle",
+};
+
+export function signatureWidgets(widgets: PageDoc["widgets"]): PageDoc["widgets"] {
+  return widgets.map(w => ({ ...w, settings: { ...w.settings, ...(w.type === "serviceList" ? { variant: "compact" } : w.type === "team" ? { variant: "swipe" } : {}) } }));
+}
+
 const pair: Record<string, string> = {
+  standard: "bento",
   sand: "terra",
   paper: "paper",
   sage: "bloom",
@@ -35,6 +50,8 @@ const pair: Record<string, string> = {
 
 export const STARTING_LOOKS: StartingLook[] = COLOURWAYS.map((cw) => ({ id: cw.id, name: cw.name, kind: cw.kind, design: pair[cw.id]!, colourway: cw, animated: Boolean(cw.moving) }));
 
+export const SETUP_LOOKS = STARTING_LOOKS.filter(l => ["standard", "cloud", "ink", "mono", "midnight", "silk"].includes(l.id));
+
 export const getStartingLook = (id: string | undefined) => STARTING_LOOKS.find((l) => l.id === id);
 
 /** The look a page is currently wearing, recognised by its colours. */
@@ -44,13 +61,17 @@ export const startingLookOf = (page: PageDoc): StartingLook | undefined => {
 };
 
 /** The first automatic recommendation: solid, still, and the same for everyone until they choose. */
-export const RECOMMENDED_LOOK = "sand";
+export const RECOMMENDED_LOOK = "standard";
 
 /** Put a starting look on a page. Content is never touched; arrangement, type and colours come from the look. */
 export function applyStartingLook(page: PageDoc, look: StartingLook, opts: { reorder?: boolean } = {}): PageDoc {
   const design = getDesign(look.design);
   const base = design ? applyDesign(page, design, { reorder: opts.reorder }) : page;
   const dressed = applyColourway(base, look.colourway, { motion: look.animated });
+  if (look.id === "standard") return { ...dressed, appearance: {
+    ...dressed.appearance,
+    ...SIGNATURE_APPEARANCE,
+  }, widgets: signatureWidgets(dressed.widgets) };
   // Every look carries the same soft pill buttons, whichever design supplies the type and arrangement.
   return { ...dressed, appearance: { ...dressed.appearance, buttons: { ...(dressed.appearance as { buttons?: object }).buttons, shape: "pill" } } as PageDoc["appearance"] };
 }

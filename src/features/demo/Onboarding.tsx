@@ -1,6 +1,7 @@
 "use client"
 
 import "./setup-form.css"
+import "./setup-flow.css"
 import * as React from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -49,7 +50,7 @@ const STEP_DESCRIPTION: Record<OnboardingStep, string> = {
 /** Where the live page scrolls to while each step is being filled in. */
 const FOCUS: Partial<Record<OnboardingStep, string>> = { name: "header", action: "actions", services: "offer" }
 const SKIPPABLE: OnboardingStep[] = ["look", "action", "services"]
-const STAGE = "#eef2fa"
+const STAGE = "#ffffff"
 
 /** Any CSS colour to [r, g, b], or null. */
 function toRgb(color: string): [number, number, number] | null {
@@ -122,11 +123,7 @@ export function Onboarding() {
   const onSurface = React.useCallback((color: string) => {
     const rgb = toRgb(color)
     if (!rgb) return
-    const wash = mixHex(rgb, [238, 242, 250], 0.24)
-    shell.current?.style.setProperty("--sf-stage", wash)
-    document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute("content", wash)
-    document.documentElement.style.backgroundColor = wash
-    document.body.style.backgroundColor = wash
+    shell.current?.style.setProperty("--sf-stage", mixHex(rgb, [255, 255, 255], 0.12))
   }, [])
 
   const go = React.useCallback((to: OnboardingStep, opts: { push?: boolean; replace?: boolean } = {}) => {
@@ -236,7 +233,7 @@ export function Onboarding() {
   const footer = (
     <>
       {index > 0 ? <button type="button" className="sf-back" onClick={back}>Back</button> : <span />}
-      {step !== "finish" && SKIPPABLE.includes(step) ? <button type="button" className="sf-skip" onClick={next}>Skip for now</button> : <span />}
+      {step !== "finish" && SKIPPABLE.includes(step) ? <button type="button" className="sf-skip" onClick={next}>Skip</button> : <span />}
       {step === "finish" ? <span /> : (
         <Button className="sf-primary" size="lg" onClick={press} aria-describedby={!valid[step] && showErrors ? "why-disabled" : undefined}>{step === "plan" ? `Continue with ${planName}` : "Continue"}</Button>
       )}

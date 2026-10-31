@@ -1,0 +1,33 @@
+# Taplo Studio experience architecture
+
+## Main journey
+
+Setup produces a draft, Studio helps finish it, and the page editor shapes it. Business records remain independent from presentation. Changing a look never replaces those records. Mobile is the primary composition; desktop offers more working room around the same page.
+
+## Setup
+
+A slim continuous progress bar has an accessible value and no visible step count. Continue occupies a full-width stable row. Back and Skip sit below, in opposite corners. Category selection uses icons and labels rather than ambiguous stock photography. White is the platform background and primary actions are black. A slow ambient gradient is contained around the desktop phone and within the mobile preview area; reduced motion disables it.
+
+New drafts start with Signature: white, black rounded actions, Geist, a floating profile and softly raised blocks. Only six starting looks are exposed in registration; older looks remain resolvable for saved documents. Looks and Colours stay distinct. Deeper profile controls stay optional.
+
+## Studio
+
+The hierarchy is business identity → next useful action → current page → management destinations. The owner can reach Page, Services, Bookings, Reviews, Team, Products, Analytics and Settings through one shared navigation. Empty states and real data remain; no manufactured metrics. Management surfaces share spacing, fields, typography and floating material rather than bordered nested panels.
+
+## Page editing
+
+Content, Profile, Design and Settings remain the four destinations. The focused mobile editor hides the separate Studio dock; its menu provides workspace navigation, freeing the bottom of the screen. Content is one vertical list matching page order, on touch and desktop. A dedicated handle owns dragging; the row owns selection. Movement also works through its menu and keyboard controls. The add library uses visual choices; suggestions are not repeated in the main groups. All record entry stays in the same flow.
+
+## Contextual help
+
+The previous dashboard animation is removed. Help is attached to Content (building blocks), reorder controls and Design. The owner opens a floating guide at the moment it is relevant. Each guide has three manually controlled illustrated steps, descriptive text, Back/Next, Close and Got it. No timers, automatic modal interruption, autoplay or forced tour. Completed-topic preferences use versioned optional local storage; help remains available afterward. Radix handles focus return, dismissal and collision positioning. The illustrations are interactive diagrams, not recorded videos. Production short recordings should be captured from verified interactions after the editor settles, with captions and no essential information available only in video.
+
+Future event-based suggestions must name a user benefit: first empty editor, first add, repeated reorder cancellation or attempting to publish incomplete details. A suggestion should be a non-blocking prompt beside the relevant action, not an automatically opened film. Never infer hesitation from a timer alone. Never cover the active input or drag target. Dismissal suppresses recurrence for that topic/version.
+
+## Design previews and plan rules
+
+Draft preview renders the currently selected design even when the saved plan is Free. Published Free output uses the neutral Signature composition; paid plan rules are unchanged. The design step states this difference explicitly. Preview must never silently pretend that the selected paid appearance was published.
+
+## Verification limits
+
+Unit checks cover default styling, category adaptation, serialized theme selections and Free draft/published separation. The managed preview runner currently supplies Vite flags to Next.js and exits (`unknown option --host`). Browser review of this pass needs the deployed branch. Physical-device safe areas, touch dragging, keyboard overlap and popover placement are not certified by a successful build.

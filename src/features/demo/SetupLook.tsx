@@ -1,12 +1,13 @@
 "use client";
 import * as React from "react";
 import { Undo2 } from "lucide-react";
-import { STARTING_LOOKS, applyStartingLook, getStartingLook, startingLookOf, type StartingLook } from "@/features/page/themes/starting-looks";
+import { SETUP_LOOKS, applyStartingLook, getStartingLook, startingLookOf, type StartingLook } from "@/features/page/themes/starting-looks";
 import { PALETTES, applyPalette, getPalette, logoPalette, lookStillBackground, originalPalette, palettesFor, type Palette } from "@/features/page/themes/palettes";
 import { readsWell } from "@/features/page/themes/image-palette";
 import { recommendArrangement } from "@/features/page/themes/arrangement";
 import { shaderFallbackCss, resolveStyle } from "@/features/page/themes/resolve";
 import { PROFILE_CHOICES, type StyleOverrides } from "@/features/page/contracts/style";
+import { pageDocSchema } from "@/features/page/contracts/page";
 import type { PageDoc } from "@/features/page/contracts/page";
 import { useDemo, initialState, type DemoState } from "./store";
 import { SetupMobileLayouts } from "./SetupStyles";
@@ -35,7 +36,7 @@ function LookArt({ look, palette }: { look: StartingLook; palette: Palette }) {
 }
 
 /** The colour picture: the palette's ground, with its card surface and its action colour as two overlapping discs. */
-function ColourArt({ look, palette }: { look: StartingLook; palette: Palette }) {
+function ColourArt({ palette }: { palette: Palette }) {
   return (
     <span className="colour-art" aria-hidden="true">
       <i className="colour-art-disc" style={{ background: palette.surface, boxShadow: "0 0 0 1px #0000001f, 0 4px 10px -3px #0004" }} />
@@ -53,7 +54,7 @@ export function SetupLook() {
   const { state, update } = useDemo();
   const s = state ?? initialState();
   const drafts = s.setupDrafts ?? {};
-  const look = getStartingLook(drafts.colourway) ?? startingLookOf(s.page) ?? STARTING_LOOKS[0]!;
+  const look = getStartingLook(drafts.colourway) ?? startingLookOf(s.page) ?? SETUP_LOOKS[0]!;
   const [tab, setTab] = React.useState<Tab>("looks");
   const [note, setNote] = React.useState("");
 
@@ -65,7 +66,7 @@ export function SetupLook() {
   }, [logoAccent, look]);
 
   const paletteOf = (id: string | undefined, forLook: StartingLook): Palette | undefined => (id === "logo" ? (logoAccent ? logoPalette(logoAccent, forLook) ?? undefined : undefined) : getPalette(id, forLook));
-  const remember = (st: DemoState) => ({ appearance: structuredClone(st.page.appearance), colourway: st.setupDrafts?.colourway, palette: st.setupDrafts?.palette });
+  const remember = (st: DemoState) => ({ page: structuredClone(st.page), appearance: structuredClone(st.page.appearance), colourway: st.setupDrafts?.colourway, palette: st.setupDrafts?.palette });
 
   const chooseLook = (next: StartingLook) => {
     let message = "";
@@ -89,7 +90,8 @@ export function SetupLook() {
     update((st) => {
       const u = st.setupDrafts?.colourUndo;
       if (!u) return st;
-      return { ...st, page: { ...st.page, appearance: structuredClone(u.appearance) as StyleOverrides }, setupDrafts: { ...st.setupDrafts, colourway: u.colourway, palette: u.palette, colourUndo: undefined } };
+      const previous = pageDocSchema.safeParse(u.page);
+      return { ...st, page: previous.success ? previous.data : { ...st.page, appearance: structuredClone(u.appearance) as StyleOverrides }, setupDrafts: { ...st.setupDrafts, colourway: u.colourway, palette: u.palette, colourUndo: undefined } };
     });
     setNote("");
   };
@@ -101,6 +103,7 @@ export function SetupLook() {
   const original = originalPalette(look);
   const palettes: Palette[] = [original, ...palettesFor(look), ...(logoOffer ? [logoOffer] : [])];
   const chosen = drafts.palette ?? "original";
+  const shownLooks = SETUP_LOOKS;
 
   return (
     <div className="setup-look" data-testid="setup-look">
@@ -115,7 +118,7 @@ export function SetupLook() {
 
       {tab === "looks" ? (
         <div className="setup-look-grid" role="radiogroup" aria-label="Looks">
-          {STARTING_LOOKS.map((l) => (
+          {shownLooks.map((l) => (
             <label className="setup-look-tile" key={l.id}>
               <input type="radio" name="look" aria-label={l.name} checked={look.id === l.id} onChange={() => chooseLook(l)} />
               <span className="setup-look-art"><LookArt look={l} palette={originalPalette(l)} /></span>
@@ -129,7 +132,7 @@ export function SetupLook() {
             {palettes.map((p) => (
               <label className="setup-look-tile" key={p.id}>
                 <input type="radio" name="palette" aria-label={p.id === "original" ? "Original colours" : p.name} checked={chosen === p.id} onChange={() => choosePalette(p.id === "original" ? undefined : p)} />
-                <span className="setup-colour-art"><ColourArt look={look} palette={p} /></span>
+                <span className="setup-colour-art"><ColourArt palette={p} /></span>
                 <span className="setup-look-name setup-colour-name">{p.id === "original" ? "Original" : p.name}</span>
               </label>
             ))}
@@ -138,6 +141,7 @@ export function SetupLook() {
       )}
 
       <p className="setup-look-note" role="status" aria-live="polite">{note}</p>
+      {s.plan === "free" ? <p className="sf-help">You can try every look here. Free publishes with Signature; other looks need Core or above.</p> : null}
       {drafts.colourUndo ? <button type="button" className="setup-look-undo" onClick={undo}><Undo2 aria-hidden="true" /> Undo last change</button> : null}
 
       <details className="setup-more setup-look-more" data-testid="more-styling">

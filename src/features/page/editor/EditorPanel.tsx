@@ -5,6 +5,7 @@ import { ArrowLeft, Briefcase, LayoutTemplate, Palette, Rows3 } from "lucide-rea
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { getWidget } from "../widgets/registry"
+import { ContextHelp } from "./ContextHelp"
 import { ContentList } from "./ContentList"
 import { Inspector } from "./Inspector"
 import { useScrollMemory } from "./scroll-memory"
@@ -45,6 +46,7 @@ export function EditorPanel({ ed, selection, onSelect, notify }: { ed: Editor; s
         })}
       </div>
       <div ref={scrollRef} onScroll={onScroll} id="editor-tabpanel" role="tabpanel" aria-labelledby={`tab-${tab}`} className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4" data-testid="inspector">
+        {tab === "design" ? <div className="mb-3 flex justify-end"><ContextHelp topic="design" /></div> : null}
         {selection.kind === "widget" ? (
           <div className="mb-3 flex items-center gap-1">
             <Button type="button" variant="ghost" size="sm" className="-ml-2 min-h-10 gap-1.5 px-2" onClick={() => onSelect(CONTENT)} data-testid="back-to-content"><ArrowLeft /> Your content</Button>

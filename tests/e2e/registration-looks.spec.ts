@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test"
 import { cont } from "./helpers"
-import { STARTING_LOOKS } from "../../src/features/page/themes/starting-looks"
+import { SETUP_LOOKS as STARTING_LOOKS } from "../../src/features/page/themes/starting-looks"
 
 const state = (p: Page) => p.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!))
 const frame = (p: Page) => p.frameLocator('iframe[data-testid="setup-live-page"]:visible').first()
@@ -14,10 +14,10 @@ async function toLook(page: Page, width: number) {
 }
 
 for (const width of [390, 1440]) {
-  test(`one collection of twelve looks; the first recommendation is solid and still at ${width}`, async ({ page }) => {
+  test(`six focused starting looks; the first recommendation is solid and still at ${width}`, async ({ page }) => {
     await toLook(page, width)
     const group = page.getByRole("radiogroup", { name: "Looks" })
-    await expect(group.getByRole("radio")).toHaveCount(12)
+    await expect(group.getByRole("radio")).toHaveCount(6)
     await expect(page.getByTestId("setup-look")).not.toContainText("✓")
     const first = (await state(page)).page.appearance.background
     expect(first.kind).toBe("solid")
@@ -65,9 +65,9 @@ for (const width of [390, 1440]) {
     expect(s.page.themeId).toBe("borealis")
     expect(s.page.appearance.background.style).toBe("aurora")
     // Into a look of the other tone the palette is not forced on: the new look uses its own colours.
-    await page.getByRole("radio", { name: "Paper", exact: true }).check({ force: true })
+    await page.getByRole("radio", { name: "Signature", exact: true }).check({ force: true })
     s = await state(page)
-    expect(s.page.appearance.colors.background).toBe("#f3f3f0")
+    expect(s.page.appearance.colors.background).toBe("#ffffff")
     await expect(page.getByRole("status")).toContainText("different tone")
     // Back on a dark look, choose a palette, then reset to the look's own and undo.
     await page.getByRole("radio", { name: "Ink", exact: true }).check({ force: true })
@@ -82,7 +82,7 @@ for (const width of [390, 1440]) {
     expect(s.content.identity.name).toBe("Marlowe & Finch")
   })
 
-  test(`all twelve looks render on the real page with readable text at ${width}`, async ({ page }) => {
+  test(`all setup looks render on the real page with readable text at ${width}`, async ({ page }) => {
     test.setTimeout(240_000)
     await toLook(page, width)
     let prev = ""

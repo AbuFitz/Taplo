@@ -43,7 +43,6 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(function SetupShe
       <header className="sf-top">
         <Link href="/" className="sf-logo" data-testid="setup-logo" aria-label="Taplo home"><TaploLogo className="h-7" /></Link>
         <div className="sf-progress" role="progressbar" aria-label="Setup progress" aria-valuemin={1} aria-valuemax={steps} aria-valuenow={step + 1} aria-valuetext={`Step ${step + 1} of ${steps}: ${stepLabel}`}>
-          <span className="sf-progress-text" data-testid="setup-progress-text">{stepLabel}<span aria-hidden="true"> · </span>Step {step + 1} of {steps}</span>
           <span className="sf-progress-bar" aria-hidden="true"><i style={{ width: `${((step + 1) / steps) * 100}%` }} /></span>
         </div>
       </header>

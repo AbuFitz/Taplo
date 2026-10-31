@@ -20,7 +20,6 @@ import { initialState, storageHasFailed, useDemo } from "./store"
 
 /* ------------------------------------------------------------------ Type */
 
-const PHOTO = new Set(["other", "personal-trainer", "cleaner", "barber", "detailer", "plumber", "tutor", "hospitality", "car-dealer"])
 const TILES: { id: string; label: string }[] = [
   { id: "barber", label: "Barber or salon" },
   { id: "detailer", label: "Car detailing" },
@@ -57,14 +56,11 @@ export function TypeStep() {
               <button
                 type="button"
                 className="sf-tile"
-                data-photo={PHOTO.has(t.id) ? "image" : "tone"}
                 aria-pressed={selected}
                 data-testid={`tile-${t.id}`}
                 onClick={() => { if (t.id === "other") { setOtherOpen(true); pick("other", "") } else { setOtherOpen(false); pick(t.id) } }}
               >
-                <span className="sf-tile-picture" aria-hidden="true" style={PHOTO.has(t.id) ? { backgroundImage: `url(${t.id === "hospitality" ? "/showcase/originals/bakery-studio-v2.webp" : `/photography/generated/tiles/${t.id === "other" ? "general" : t.id}.webp`})` } : undefined}>
-                  <span className="sf-tile-icon"><BusinessIcon id={t.id === "other" ? "other" : t.id} /></span>
-                </span>
+                <span className="sf-tile-icon" aria-hidden="true"><BusinessIcon id={t.id} /></span>
                 <span className="sf-tile-label">{t.label}</span>
                 {selected ? <Check className="sf-tile-check" aria-hidden="true" /> : null}
               </button>

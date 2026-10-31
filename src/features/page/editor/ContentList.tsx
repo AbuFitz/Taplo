@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ContextHelp } from "./ContextHelp"
 import { AddContent } from "./AddContent"
 import { ContentCards } from "./ContentCards"
 import type { RecordKind } from "./content-model"
@@ -22,11 +23,12 @@ export function ContentList({ ed, selection, onSelect, notify }: { ed: Editor; s
   return (
     <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3" data-testid="structure">
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-        <h2 id="widgets-h" className="text-base font-semibold">Page blocks</h2>
+        <div><h2 id="widgets-h" className="text-base font-semibold">Your blocks</h2><p className="mt-1 text-xs text-muted-foreground">Tap to edit. Drag the handle to reorder.</p></div>
         <div className="flex flex-wrap gap-2">
           <Button size="sm" className="min-h-10" onClick={add} data-testid="add-widget"><Plus /> Add content</Button>
         </div>
       </div>
+      <div className="block-help-row"><ContextHelp topic="blocks" /><ContextHelp topic="order" /></div>
       {widgets.length === 0 ? (
         <div className="rounded-2xl border border-dashed p-5 text-center">
           <h3 className="text-sm font-semibold">Nothing on your page yet</h3>
