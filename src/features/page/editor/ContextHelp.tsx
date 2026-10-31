@@ -1,38 +1,289 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { ArrowDown, ArrowRight, Check, GripVertical, HelpCircle, Image, Layers3, Palette, Plus, X } from "lucide-react"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import "./context-help.css"
+import * as React from "react";
+import {
+  ArrowDown,
+  ArrowRight,
+  CalendarDays,
+  Check,
+  GripVertical,
+  HelpCircle,
+  Image,
+  Layers3,
+  Palette,
+  Plus,
+  Share2,
+  X,
+} from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import "./context-help.css";
 
-export type HelpTopic = "blocks" | "order" | "design"
-const subscribeHelp = (cb: () => void) => { window.addEventListener("taplo:help", cb); window.addEventListener("storage", cb); return () => { window.removeEventListener("taplo:help", cb); window.removeEventListener("storage", cb) } }
+export type HelpTopic = "blocks" | "order" | "design" | "booking" | "sharing";
+const subscribeHelp = (cb: () => void) => {
+  window.addEventListener("taplo:help", cb);
+  window.addEventListener("storage", cb);
+  return () => {
+    window.removeEventListener("taplo:help", cb);
+    window.removeEventListener("storage", cb);
+  };
+};
 const GUIDES = {
-  blocks: { title: "Build with blocks", steps: ["Choose what customers need", "Add the first entry", "Adjust it on your page"], body: ["Add content opens the block library. Search for services, photos, products or anything else you want to show.", "Add your real details in the same panel. Existing business records can be reused.", "Tap a block to edit it. Use its menu to hide it or change its position."], Icons: [Layers3, Plus, Check] },
-  order: { title: "Put the important things first", steps: ["Pick up the handle", "Move the block", "Drop it into place"], body: ["Press and hold the dotted handle beside a block. The rest of the row still scrolls normally.", "Drag up or down to choose its new position. You can also use Move in the block menu.", "Release to save the order. Undo will put it back. Keyboard: Space, arrow keys, then Space."], Icons: [GripVertical, ArrowDown, Check] },
-  design: { title: "Make the look yours", steps: ["Choose a starting look", "Find your colours", "Keep your content"], body: ["Pick a look to change typography, profile layout and block styling together.", "Use coordinated colours, then adjust individual details if you want more control.", "Your business details stay in place. Undo takes you back if you prefer the previous look."], Icons: [Image, Palette, Check] },
-} as const
+  booking: {
+    title: "Set up booking requests",
+    steps: [
+      "Make a service bookable",
+      "Set your working hours",
+      "Review each request",
+    ],
+    body: [
+      "Add a service with a duration. Choose who can provide it, then include booking on your page.",
+      "Choose your regular hours and time off in Bookings. Customers can request the times your setup allows.",
+      "Open a request to accept or decline it. Messages and payments need their providers connected; saving a request does not send a message.",
+    ],
+    Icons: [Plus, CalendarDays, Check],
+  },
+  sharing: {
+    title: "Share your business",
+    steps: [
+      "Check your page",
+      "Choose how to share",
+      "Keep the destination right",
+    ],
+    body: [
+      "Review your details and publication status before sharing. An unpublished draft has no public destination.",
+      "Copy your link, use your device’s share menu, or export your business-branded QR code.",
+      "Scan the downloaded QR code before printing. A transparent code needs a light background to stay readable.",
+    ],
+    Icons: [Check, Share2, Check],
+  },
+  blocks: {
+    title: "Build with blocks",
+    steps: [
+      "Choose what customers need",
+      "Add the first entry",
+      "Adjust it on your page",
+    ],
+    body: [
+      "Add content opens the block library. Search for services, photos, products or anything else you want to show.",
+      "Add your real details in the same panel. Existing business records can be reused.",
+      "Tap a block to edit it. Use its menu to hide it or change its position.",
+    ],
+    Icons: [Layers3, Plus, Check],
+  },
+  order: {
+    title: "Put the important things first",
+    steps: ["Pick up the handle", "Move the block", "Drop it into place"],
+    body: [
+      "Press and hold the dotted handle beside a block. The rest of the row still scrolls normally.",
+      "Drag up or down to choose its new position. You can also use Move in the block menu.",
+      "Release to save the order. Undo will put it back. Keyboard: Space, arrow keys, then Space.",
+    ],
+    Icons: [GripVertical, ArrowDown, Check],
+  },
+  design: {
+    title: "Make the look yours",
+    steps: ["Choose a starting look", "Find your colours", "Keep your content"],
+    body: [
+      "Pick a look to change typography, profile layout and block styling together.",
+      "Use coordinated colours, then adjust individual details if you want more control.",
+      "Your business details stay in place. Undo takes you back if you prefer the previous look.",
+    ],
+    Icons: [Image, Palette, Check],
+  },
+} as const;
 
 /** Help is attached to the task. No timers, autoplay, blocking tours or repeated automatic modals. */
 export function ContextHelp({ topic }: { topic: HelpTopic }) {
-  const [open, setOpen] = React.useState(false)
-  const [step, setStep] = React.useState(0)
-  const seen = React.useSyncExternalStore(subscribeHelp, () => { try { return localStorage.getItem(`taplo.help.v1.${topic}`) === "done" } catch { return false } }, () => false)
-  const trigger = React.useRef<HTMLButtonElement>(null)
-  const guide = GUIDES[topic]
+  const [open, setOpen] = React.useState(false);
+  const [step, setStep] = React.useState(0);
+  const seen = React.useSyncExternalStore(
+    subscribeHelp,
+    () => {
+      try {
+        return localStorage.getItem(`taplo.help.v1.${topic}`) === "done";
+      } catch {
+        return false;
+      }
+    },
+    () => false,
+  );
+  const trigger = React.useRef<HTMLButtonElement>(null);
+  const guide = GUIDES[topic];
   const finish = () => {
-    try { localStorage.setItem(`taplo.help.v1.${topic}`, "done") } catch { /* optional preference */ }
-    window.dispatchEvent(new Event("taplo:help")); setOpen(false)
-  }
-  const Icon = guide.Icons[step]!
-  return <Popover open={open} onOpenChange={o => { setOpen(o); if (o) setStep(0) }}>
-    <PopoverTrigger asChild><button ref={trigger} type="button" className="context-help-trigger" aria-label={`Help: ${guide.title}`}><HelpCircle aria-hidden="true" /><span>{seen ? "Quick guide" : topic === "order" ? "How to reorder" : topic === "design" ? "How design works" : "How blocks work"}</span></button></PopoverTrigger>
-    <PopoverContent aria-label={guide.title} className="context-help" side="bottom" align="end" sideOffset={10} onCloseAutoFocus={e => { e.preventDefault(); trigger.current?.focus() }}>
-      <div className="context-help-top"><strong>{guide.title}</strong><button type="button" onClick={() => setOpen(false)} aria-label="Close guide"><X aria-hidden="true" /></button></div>
-      <div className="context-help-art" data-topic={topic} data-step={step} aria-hidden="true"><div className="context-help-page"><i /><b>Your business</b><span>Get in touch</span><div className={step === 1 && topic === "order" ? "help-row-moved" : ""}><GripVertical />Services</div><div><GripVertical />Our team</div></div><span className="context-help-symbol"><Icon /></span></div>
-      <div className="context-help-progress" aria-label={`Guide step ${step + 1} of 3`}>{guide.steps.map((s,i) => <button key={s} type="button" aria-label={s} aria-current={step === i ? "step" : undefined} onClick={() => setStep(i)} />)}</div>
-      <h3>{guide.steps[step]}</h3><p>{guide.body[step]}</p>
-      <div className="context-help-actions"><button type="button" onClick={finish}>Got it</button>{step > 0 ? <button type="button" onClick={() => setStep(step - 1)}>Back</button> : null}{step < 2 ? <button type="button" className="context-help-next" onClick={() => setStep(step + 1)}>Next<ArrowRight aria-hidden="true" /></button> : null}</div>
-    </PopoverContent>
-  </Popover>
+    try {
+      localStorage.setItem(`taplo.help.v1.${topic}`, "done");
+    } catch {
+      /* optional preference */
+    }
+    window.dispatchEvent(new Event("taplo:help"));
+    setOpen(false);
+  };
+  const Icon = guide.Icons[step]!;
+  return (
+    <Popover
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        if (o) setStep(0);
+      }}
+    >
+      <PopoverTrigger asChild>
+        <button
+          ref={trigger}
+          type="button"
+          className="context-help-trigger"
+          aria-label={`Help: ${guide.title}`}
+        >
+          <HelpCircle aria-hidden="true" />
+          <span>
+            {seen
+              ? "Quick guide"
+              : topic === "order"
+                ? "How to reorder"
+                : topic === "design"
+                  ? "Design guide"
+                  : topic === "booking"
+                    ? "Booking guide"
+                    : topic === "sharing"
+                      ? "Sharing guide"
+                      : "Block guide"}
+          </span>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        aria-label={guide.title}
+        className="context-help"
+        side="bottom"
+        align="end"
+        sideOffset={10}
+        onCloseAutoFocus={(e) => {
+          e.preventDefault();
+          trigger.current?.focus();
+        }}
+      >
+        <div className="context-help-top">
+          <strong>{guide.title}</strong>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            aria-label="Close guide"
+          >
+            <X aria-hidden="true" />
+          </button>
+        </div>
+        <div
+          className="context-help-art"
+          data-topic={topic}
+          data-step={step}
+          aria-hidden="true"
+        >
+          {topic === "booking" ? (
+            <div className="guide-booking-scene">
+              <div className="guide-service">
+                <CalendarDays />
+                <span>
+                  Consultation<small>30 minutes</small>
+                </span>
+              </div>
+              <div className="guide-calendar">
+                {["M", "T", "W", "T", "F", "S", "S"].map((v, i) => (
+                  <span key={i} data-active={step > 0 && i === 2}>
+                    {v}
+                    <i>{i + 9}</i>
+                  </span>
+                ))}
+              </div>
+              <div className="guide-request" data-done={step === 2}>
+                {step === 2 ? <Check /> : <CalendarDays />}
+                {step === 2 ? "Review request" : "Choose a time"}
+              </div>
+            </div>
+          ) : topic === "sharing" ? (
+            <div className="guide-share-scene">
+              <div className="guide-share-card">
+                <Share2 />
+                <b>Your business</b>
+                <span>Link · QR · Share card</span>
+              </div>
+              <div className="guide-share-options">
+                <i>Link</i>
+                <i>QR</i>
+                <i>Share</i>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="context-help-page">
+                <i />
+                <b>Your business</b>
+                <span>Get in touch</span>
+                <div
+                  className={
+                    step === 1 && topic === "order" ? "help-row-moved" : ""
+                  }
+                >
+                  <GripVertical />
+                  Services
+                </div>
+                <div>
+                  <GripVertical />
+                  Our team
+                </div>
+              </div>
+              <span className="context-help-symbol">
+                <Icon />
+              </span>
+              {topic === "design" ? (
+                <span className="guide-palette">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+              ) : null}
+            </>
+          )}
+        </div>
+        <div
+          className="context-help-progress"
+          aria-label={`Guide step ${step + 1} of 3`}
+        >
+          {guide.steps.map((s, i) => (
+            <button
+              key={s}
+              type="button"
+              aria-label={s}
+              aria-current={step === i ? "step" : undefined}
+              onClick={() => setStep(i)}
+            />
+          ))}
+        </div>
+        <h3>{guide.steps[step]}</h3>
+        <p>{guide.body[step]}</p>
+        <div className="context-help-actions">
+          <button type="button" onClick={finish}>
+            Got it
+          </button>
+          {step > 0 ? (
+            <button type="button" onClick={() => setStep(step - 1)}>
+              Back
+            </button>
+          ) : null}
+          {step < 2 ? (
+            <button
+              type="button"
+              className="context-help-next"
+              onClick={() => setStep(step + 1)}
+            >
+              Next
+              <ArrowRight aria-hidden="true" />
+            </button>
+          ) : null}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
 }

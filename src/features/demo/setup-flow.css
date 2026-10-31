@@ -1,30 +1,7 @@
 /* A quiet monochrome stage on desktop; mobile prioritises the current task. */
-.sf-root::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(
-    125deg,
-    #fff 0%,
-    #ededed 18%,
-    #a7a7a7 36%,
-    #242424 50%,
-    #a7a7a7 64%,
-    #ededed 82%,
-    #fff 100%
-  );
-  background-size: 300% 300%;
-  background-position: 0% 35%;
-  mask-image: linear-gradient(transparent, #000 120px);
-  animation: setup-monochrome-flow 24s ease-in-out infinite alternate;
-}
-@keyframes setup-monochrome-flow {
-  to {
-    background-position: 100% 65%;
-  }
-}
+ .sf-root::before{content:none}
+.setup-atmosphere{position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 80% 60%,#9c9da2,transparent 60%),radial-gradient(ellipse at 35% 100%,#d9dadd,transparent 65%),#f7f7f8;mask-image:linear-gradient(transparent,#000 35%)}
+.setup-atmosphere>div{width:100%;height:100%}
 .sf-root .sf-tiles {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
@@ -604,3 +581,11 @@
  .sf-root li.sf-service .sf-input{background:#fff;border:1px solid #e8e8e8}
  .sf-root li.sf-service .sf-service-more{grid-column:1/-1;min-height:40px;font-size:12px}
 }
+
+/* Colour lives in surfaces and illustrations; actions stay monochrome. */
+.sf-root{--primary:#111;--primary-foreground:#fff;--signal:#111;--ring:#111}
+.sf-root .sf-tile-icon{border-radius:10px;width:34px;height:34px;background:#e8f0e8;color:#254a33}
+.sf-root .sf-tiles>li:nth-child(3n+2) .sf-tile-icon{background:#eee7f4;color:#51415f}
+.sf-root .sf-tiles>li:nth-child(3n) .sf-tile-icon{background:#f2eddf;color:#67552c}
+.sf-root .sf-tile[aria-pressed=true] .sf-tile-icon{background:#111;color:#fff}
+@media(max-width:1023px){.setup-atmosphere{inset:0 0 auto;height:220px;opacity:.22;mask-image:linear-gradient(#000,transparent)}.sf-root .sf-top{background:transparent}.sf-root .sf-sheet{background:transparent}.sf-root .sf-scroll{background:linear-gradient(#ffffff8c,#fff 180px)}.sf-root[data-keyboard=true] .setup-atmosphere{display:none}}

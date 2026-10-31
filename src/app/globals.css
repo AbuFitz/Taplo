@@ -432,8 +432,8 @@ html:has(.marketing-shell) { scroll-padding-top:80px; }
 [data-overlay] [data-variant="outline"]:not([class*="bg-tp-accent"]) { border-color:transparent; box-shadow:none; background:color-mix(in srgb,currentColor 4%,transparent); }
 
 /* The shared Start free action language; renderer/customisation controls own their styling. */
-[data-brand-action]:not(:where([data-taplo-page] *,[data-editor] *,[data-testid="setup-design-dialog"] *)){border-radius:8px!important;box-shadow:none!important;font-size:14px!important;font-weight:600!important;letter-spacing:0;min-height:44px;transition:background-color .15s,transform .15s}
-[data-brand-action]:not(:where([data-taplo-page] *,[data-editor] *,[data-testid="setup-design-dialog"] *)):active:not(:disabled){transform:scale(.985)}
+[data-brand-action]:not(:where([data-taplo-page] *,[data-editor] *,.sf-root *,.workspace-v2 *,[data-testid="setup-design-dialog"] *)){border-radius:8px!important;box-shadow:none!important;font-size:14px!important;font-weight:600!important;letter-spacing:0;min-height:44px;transition:background-color .15s,transform .15s}
+[data-brand-action]:not(:where([data-taplo-page] *,[data-editor] *,.sf-root *,.workspace-v2 *,[data-testid="setup-design-dialog"] *)):active:not(:disabled){transform:scale(.985)}
 @media(prefers-reduced-motion:reduce){[data-brand-action]{transition:none!important}}
 
 /* Spatial sharing: the same scannable face above two material layers. */

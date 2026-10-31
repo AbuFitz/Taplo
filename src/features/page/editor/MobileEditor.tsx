@@ -13,6 +13,7 @@ import { PagePreview } from "@/features/preview/PagePreview";
 import { WorkspaceMenu } from "@/features/demo/dashboard/WorkspaceNav";
 import { getWidget } from "../widgets/registry";
 import { EditorDrawer, DEFAULT_SNAP, type DrawerSnap } from "./EditorDrawer";
+import { ContextHelp } from "./ContextHelp";
 import { ContentList } from "./ContentList";
 import { SettingsBody } from "./EditorPanel";
 import { Inspector } from "./Inspector";
@@ -304,6 +305,7 @@ export function MobileEditor({
         onBack={() => setInspecting(false)}
         screenKey={selection.kind === "widget" ? selection.id : selection.kind}
       >
+        {widget?.type === "booking" ? <ContextHelp topic="booking" /> : null}
         <Inspector
           ed={ed}
           selection={selection}

@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { ArrowLeft, Eye, X } from "lucide-react";
+import { SetupAtmosphere } from "./SetupAtmosphere";
 import { TaploLogo } from "@/components/taplo/brand";
 
 /** One sheet-height model for every step: Peek shows the page, Default is where every step opens, Full is for long lists. */
@@ -66,6 +67,7 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(
         data-previewing={previewing}
         data-testid="setup-root"
       >
+        <SetupAtmosphere />
         <header className="sf-top">
           {mobile && step > 0 ? (
             <button

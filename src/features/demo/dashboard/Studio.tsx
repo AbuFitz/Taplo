@@ -20,6 +20,7 @@ import {
   readiness,
 } from "../actions";
 import { useDraft } from "../hooks";
+import { ContextHelp } from "@/features/page/editor/ContextHelp";
 import { UpcomingBookings } from "./UpcomingBookings";
 
 export function Studio() {
@@ -51,7 +52,13 @@ export function Studio() {
           <p>Your page and your business, in one place.</p>
         </div>
       </div>
-      <section className="ws-page-hub" aria-label="Your page">
+      <section
+        className="ws-page-hub ws-page-hub-colour"
+        aria-label="Your page"
+      >
+        <div className="ws-business-emblem" aria-hidden="true">
+          {s.content.identity.name.slice(0, 1).toUpperCase()}
+        </div>
         <div className="ws-page-hub-info">
           <span className="ws-status">
             {s.published ? "Published" : "Draft"}
@@ -138,6 +145,12 @@ export function Studio() {
           </p>
         </div>
       </section>
+      <div className="ws-experience-guides" aria-label="Studio guides">
+        <span>Make more of your page</span>
+        <ContextHelp topic="blocks" />
+        <ContextHelp topic="design" />
+        <ContextHelp topic="booking" />
+      </div>
       <div className="ws-home-columns">
         <section className="ws-business-work">
           <div className="ws-section-title">
@@ -171,7 +184,7 @@ export function Studio() {
               },
             ].map(({ href, Icon, label, line, n }) => (
               <Link href={`/dashboard/${href}`} key={href}>
-                <span className="ws-line-icon">
+                <span className="ws-line-icon" data-area={href}>
                   <Icon />
                 </span>
                 <span>

@@ -1397,3 +1397,14 @@ html:has(.workspace-v2){scrollbar-width:none}
  .ws-mobile-nav [aria-current=page]{background:#f1f1f1;color:#111}
  .ws-footer{padding-bottom:110px}
 }
+/* Studio colour vocabulary: a quiet white workspace with purposeful artwork and landmarks. */
+.workspace-v2{--primary:#111;--primary-foreground:#fff;--signal:#111;--ring:#111;--ws-sage:#e4ecdc;--ws-lilac:#eee4f1;--ws-sand:#f1e9d2}
+.ws-page-hub-colour{position:relative;background:radial-gradient(ellipse at 100% 0%,#d3dfc3 0,transparent 65%),linear-gradient(115deg,#eef1e8,#e4ebdb);border:0;min-height:205px;padding:28px;isolation:isolate}
+.ws-page-hub-colour .ws-page-hub-info{position:relative;z-index:1}.ws-page-hub-colour .ws-status{background:#ffffffb3;border-color:#ffffff90;color:#526048}.ws-page-hub-colour .ws-handle{color:#626c5a!important}.ws-page-hub-colour .ws-next-step>summary{border-color:#53623e20;color:#526048}
+.ws-business-emblem{position:absolute;right:20px;top:-15px;font-size:240px;font-weight:600;line-height:1;letter-spacing:-.1em;color:#ffffff50;transform:rotate(-15deg);pointer-events:none;z-index:0}
+.ws-experience-guides{display:flex;align-items:center;flex-wrap:wrap;gap:5px 20px;padding:14px 0 0}.ws-experience-guides>span{font-size:11px;color:#888;margin-right:auto}.ws-experience-guides .context-help-trigger{font-size:11px}
+.ws-line-icon[data-area=services]{background:var(--ws-sage);color:#3f5b34}.ws-line-icon[data-area=products]{background:var(--ws-lilac);color:#75527e}.ws-line-icon[data-area=team]{background:var(--ws-sand);color:#7b693a}
+.ws-sidebar .ws-business>span{background:#e4ebdc;color:#4d6340}
+.ws-nav-group a[aria-current=page]{background:#eef1e8;color:#24321f}
+.ws-day .ws-inbox-summary{background:#f1edf5;border:0;border-radius:16px;padding:18px}.ws-day .ws-inbox-summary>svg{color:#796189}
+@media(max-width:800px){.ws-page-hub-colour{padding:24px;min-height:0}.ws-business-emblem{font-size:210px;right:6px;top:0}.ws-page-hub-colour .ws-page-actions{margin-top:24px}.ws-experience-guides{gap:0 16px;padding-top:8px}.ws-experience-guides>span{display:none}.ws-mobile-nav [aria-current=page]{background:#e8eddf;color:#34492b}}
