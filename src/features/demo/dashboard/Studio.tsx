@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
+  ChevronRight,
   CalendarDays,
   Check,
   Layers3,
@@ -11,7 +12,6 @@ import {
   Users,
 } from "lucide-react";
 import { SharePanel } from "@/features/page/widgets/ShareClient";
-import { PagePreview } from "@/features/preview/PagePreview";
 import { useOwner } from "@/features/booking/ui/owner/useOwner";
 import {
   canPublish,
@@ -47,8 +47,8 @@ export function Studio() {
     <div className="ws-overview" data-testid="studio">
       <div className="ws-welcome">
         <div>
-          <h1>Your workspace.</h1>
-          <p>Edit your page or pick up where you left off.</p>
+          <h1>Welcome back.</h1>
+          <p>Your page and your business, in one place.</p>
         </div>
       </div>
       <section className="ws-page-hub" aria-label="Your page">
@@ -58,10 +58,7 @@ export function Studio() {
           </span>
           <h2>{s.content.identity.name}</h2>
           <p className="ws-handle">mytaplo.com/{s.content.identity.slug}</p>
-          <p>
-            Shape what customers see. Keep your services, products and ways to
-            connect together.
-          </p>
+
           <div className="ws-page-actions">
             <Link className="ws-action" href="/dashboard/page">
               Edit your page
@@ -85,7 +82,17 @@ export function Studio() {
               />
             ) : null}
           </div>
-          <div className="ws-next-step" data-testid="studio-next">
+          <details className="ws-next-step" data-testid="studio-next">
+            <summary>
+              {missing.length
+                ? `${missing.length} steps before publishing`
+                : changed && s.published
+                  ? "Changes ready to publish"
+                  : s.published
+                    ? "Your page is up to date"
+                    : "Ready to publish"}
+              <ChevronRight />
+            </summary>
             <span>
               {missing.length
                 ? "Next up"
@@ -125,18 +132,10 @@ export function Studio() {
                 Saved
               </span>
             )}
-          </div>
+          </details>
           <p role="status" className="ws-inline-notice">
             {notice}
           </p>
-        </div>
-        <div className="ws-page-snapshot">
-          <PagePreview
-            src="/demo/preview"
-            title="Your business page"
-            mode="device"
-            chrome={false}
-          />
         </div>
       </section>
       <div className="ws-home-columns">

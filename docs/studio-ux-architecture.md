@@ -6,7 +6,7 @@ Setup produces a draft, Studio helps finish it, and the page editor shapes it. B
 
 ## Setup
 
-A slim continuous progress bar has an accessible value and no visible step count. Continue occupies a full-width stable row. Back and Skip sit below, in opposite corners. Category selection uses icons and labels rather than ambiguous stock photography. White is the platform background and primary actions are black. A slow black-and-white gradient flows across the full setup canvas behind the desktop phone. Only the background position changes; no rectangular layer translates or rotates. Mobile lowers its intensity, white controls stay opaque, and reduced motion keeps the field still.
+A slim continuous progress bar has an accessible value and no visible step count. Mobile has one scrolling form with a persistent action footer: Continue remains visible, Skip sits beside it, and Back is in the top header. The heading scrolls with the content, freeing space when long content or a keyboard needs room. Preview is an explicit mode, not a second surface competing with the form. Desktop retains a side-by-side full page and form without an arbitrary opening crop. Category selection uses icons and labels rather than ambiguous stock photography. White is the platform background and primary actions are black. A slow black-and-white gradient flows across the full setup canvas behind the desktop phone. Only the background position changes; no rectangular layer translates or rotates. Mobile uses a white task surface. Reduced motion keeps the desktop field still.
 
 The identity step includes a separate optional cover-photo section. Its large upload surface opens the existing crop flow, then shows the actual cover with an Adjust action. Replace, focal-point adjustment and removal reuse the shared image control; image selection updates the same business identity used by the live renderer. No extra required registration step.
 
@@ -18,7 +18,7 @@ The hierarchy is business identity → next useful action → current page → m
 
 ## Page editing
 
-Content, Profile, Design and Settings remain the four destinations. The focused mobile editor hides the separate Studio dock; its menu provides workspace navigation, freeing the bottom of the screen. Content is one vertical list matching page order, on touch and desktop. A dedicated handle owns dragging; the row owns selection. Movement also works through its menu and keyboard controls. The add library uses visual choices; suggestions are not repeated in the main groups. All record entry stays in the same flow.
+Content, Profile, Design and Settings remain the four destinations. On mobile they open as full working screens, starting with Content. Individual block controls use a contextual drawer; root screens no longer live inside drawers over a full-screen preview. Preview is a deliberate separate mode. Undo, redo and publishing remain grouped in the footer, with missing requirements available on demand. The focused mobile editor hides the separate Studio dock; its menu provides workspace navigation, freeing the bottom of the screen. Content is one vertical list matching page order, on touch and desktop. A dedicated handle owns dragging; the row owns selection. Movement also works through its menu and keyboard controls. The add library uses visual choices; suggestions are not repeated in the main groups. All record entry stays in the same flow.
 
 ## Contextual help
 
@@ -37,16 +37,16 @@ Unit checks cover default styling, category adaptation, serialized theme selecti
 
 ## Workspace rebuild (31 October)
 
-The owner shell is replaced by WorkspaceNav and a new route-aware shell, rather than modifying the previous Studio phone/rail composition. Desktop has grouped Workspace/Business navigation, a business identity, a breadcrumb/action header and one content canvas. Mobile has a four-item floating dock and a complete navigation sheet; focused editing uses the same destination list from its menu.
+The owner shell is replaced by WorkspaceNav and a new route-aware shell, rather than modifying the previous Studio phone/rail composition. Desktop has grouped Workspace/Business navigation, a business identity, a breadcrumb/action header and one content canvas. Mobile has a four-item bottom navigation and a complete navigation sheet; focused editing uses the same destination list from its menu.
 
-Overview is rebuilt as a page hub with a draft/published state, next required action, direct business-record links, real booking/enquiry counts and upcoming bookings. The page snapshot is supporting material on desktop, hidden on compact screens where it was competing with work. Services and products have search and denser action rows; original record ordering, archive/recovery and validation remain. Settings has separate Plan, Connections and Workspace data sections. Analytics explicitly shows unconnected measurements, never fabricated data. Team, reviews, booking/calendar/availability and editor controls use the same owner typography, navigation, spacing, fields and surfaces. Customer themes are unchanged by this rebuild.
+Overview is rebuilt as a page hub with a draft/published state, next required action, direct business-record links, real booking/enquiry counts and upcoming bookings. Overview no longer embeds a competing page preview. The page card leads to editing and its publishing checklist is expandable. Services and products have search and denser action rows; original record ordering, archive/recovery and validation remain. Settings has separate Plan, Connections and Workspace data sections. Analytics explicitly shows unconnected measurements, never fabricated data. Team, reviews, booking/calendar/availability and editor controls use the same owner typography, navigation, spacing, fields and surfaces. Customer themes are unchanged by this rebuild.
 
 The Something else category path now has one search-or-enter field. Typing supplies the custom business label; choosing a recognised match applies that category. There is no separate custom-type field followed by another search box.
 
 
 ## Registration refinement from the supplied Linktree recording
 
-The opening desktop question uses a closer crop of the real preview, with a modest camera pull-back after category selection. The iframe stays mounted. Mobile keeps the existing preview-above-controls composition and does not inherit desktop zoom. Reduced motion remains respected by the shared camera class.
+The initial closer desktop crop was superseded after feedback: the page now fits its available stage. Mobile preview-above-sheet was also superseded by the focused form and explicit preview mode.
 
 Colours is the first tab in the style step. Signature remains the initial white-and-black design; each coordinated swatch shows background, surface, text and action roles. Looks remains beside Colours. The screen title is Style your page, so it covers both choices. These changes follow the recording's progressive disclosure and predictable layout without reproducing its branding.
 
@@ -55,4 +55,13 @@ Browser review now works on Vercel previews. The rebuild was walked from custom 
 
 ## Issues found in rendered mobile review
 
-A workspace stacking context placed the full-screen preview above the portalled editor sheet. Its z-index is restored below the sheet; block move-menu and Undo were then verified in the preview. Legacy global block-grid rules also overrode the intended list and created 168px tiles; an explicit row class now resolves to 72px controls. Content opens at the tall registered snap point so organising blocks has room; other root panels use the registered 72% point, and contextual selection can stay at peek. Physical touch dragging and keyboard drag remain unconfirmed; the accessible move menu was exercised successfully.
+A workspace stacking context placed the full-screen preview above the portalled editor sheet. Its z-index is restored below the sheet; block move-menu and Undo were then verified in the preview. Legacy global block-grid rules also overrode the intended list and created 168px tiles; an explicit row class now resolves to 72px controls. Root panels have since moved out of the drawer entirely. Individual block controls use a registered 72% point. Visibility controls have moved into each row menu, freeing space for readable content and a dedicated drag target. The sortable strategy is vertical-list specific. Physical touch dragging and keyboard drag remain unconfirmed; the accessible move menu was exercised successfully.
+
+
+## Focused-form correction (31 October, pending browser review)
+
+The crowded mobile composition has been replaced structurally. Category selection shows a neutral selected surface, black outline and check. Something else replaces the category grid with its own search screen, with an explicit return action. The name step generates the Taplo link automatically; its optional edit control is labelled Your Taplo link. Bio, logo and cover are grouped under optional profile personalisation. Mobile service entry uses labelled fields over two rows instead of narrow desktop columns. Long headings and instructions scroll with the form; actions stay separate. The live iframe remains mounted when toggling preview so draft state does not reset.
+
+The focused mobile editor starts on the actual ordered content list. Root tabs retain one task per screen, preview opens only on request, and an individual block opens a contextual sheet. Help is available under How it works. Dragging and menu movement use existing dnd-kit history-aware actions; records and theme contracts are preserved. Overview has a compact page launchpad and expandable publishing requirements rather than an embedded phone and several simultaneous calls to action.
+
+Code checks passed: 397 unit tests, 39 skipped; TypeScript; changed-component ESLint; production build. This redesign has not been browser-verified or deployed. The managed runner fails because it injects Vite-only flags into Next.js. Manual Vercel deployment was blocked by automatic approval review because the team-access grant has not been approved. Existing deployed screenshots do not show these changes. Physical keyboard, touch dragging, focus return and actual safe areas require verification on the new preview before declaring the work complete.

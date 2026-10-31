@@ -1,176 +1,320 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Briefcase, Eye, EyeOff, LayoutTemplate, Palette, Redo2, Rows3, Undo2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { canPublish, hasUnpublishedChanges, publish, readiness } from "@/features/demo/actions"
-import { PagePreview } from "@/features/preview/PagePreview"
-import { cn } from "@/lib/utils"
-import { WorkspaceMenu } from "@/features/demo/dashboard/WorkspaceNav"
-import { getWidget } from "../widgets/registry"
-import { EditorDrawer, PEEK, DEFAULT_SNAP, TALL, type DrawerSnap } from "./EditorDrawer"
-import { ContextHelp } from "./ContextHelp"
-import { ContentList } from "./ContentList"
-import { SettingsBody } from "./EditorPanel"
-import { Inspector } from "./Inspector"
-import { CONTENT, PAGE, type Selection } from "./selection"
-import type { Editor } from "./useEditor"
+import * as React from "react";
+import { ArrowLeft, Eye, Redo2, Undo2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  canPublish,
+  hasUnpublishedChanges,
+  publish,
+  readiness,
+} from "@/features/demo/actions";
+import { PagePreview } from "@/features/preview/PagePreview";
+import { WorkspaceMenu } from "@/features/demo/dashboard/WorkspaceNav";
+import { getWidget } from "../widgets/registry";
+import { EditorDrawer, DEFAULT_SNAP, type DrawerSnap } from "./EditorDrawer";
+import { ContentList } from "./ContentList";
+import { SettingsBody } from "./EditorPanel";
+import { Inspector } from "./Inspector";
+import { PAGE, type Selection } from "./selection";
+import type { Editor } from "./useEditor";
+import "./mobile-workspace.css";
 
-type Panel = "content" | "header" | "design" | "settings" | "selection"
+type Section = "content" | "header" | "design" | "settings";
+const SECTIONS: { id: Section; label: string }[] = [
+  { id: "content", label: "Content" },
+  { id: "header", label: "Profile" },
+  { id: "design", label: "Design" },
+  { id: "settings", label: "Settings" },
+];
 
-const BAR = 0 // The focused editor owns navigation; Studio is available from its menu.
-
-function useViewportSize() {
-  const [v, setV] = React.useState({ w: 390, h: 800 })
-  React.useEffect(() => {
-    const read = () => setV({ w: window.innerWidth, h: window.visualViewport?.height ?? window.innerHeight })
-    read()
-    window.addEventListener("resize", read)
-    window.visualViewport?.addEventListener("resize", read)
-    return () => { window.removeEventListener("resize", read); window.visualViewport?.removeEventListener("resize", read) }
-  }, [])
-  return v
-}
-
-/**
- * Editing on a phone or tablet. The preview is the screen: it fills the space between a slim top
- * bar and a three-item toolbar (Content, Design, Organise) and shows the page at the device's real
- * viewport. Everything else is a contextual sheet. A tapped widget scrolls into the part of the
- * preview the sheet leaves visible. Landscape phones get a side panel instead of a bottom sheet.
- */
-export function MobileEditor({ ed, selection, setSelection, notify, note, clearNote }: {
-  ed: Editor; selection: Selection; setSelection: (s: Selection) => void
-  notify: (msg: string, undoable?: boolean) => void
-  note: { msg: string; undoable: boolean } | null; clearNote: () => void
+/** Content first. Root sections occupy the screen; only an individual item opens a sheet. */
+export function MobileEditor({
+  ed,
+  selection,
+  setSelection,
+  notify,
+  note,
+  clearNote,
+}: {
+  ed: Editor;
+  selection: Selection;
+  setSelection: (s: Selection) => void;
+  notify: (msg: string, undoable?: boolean) => void;
+  note: { msg: string; undoable: boolean } | null;
+  clearNote: () => void;
 }) {
-  const [stack, setStack] = React.useState<Panel[]>([])
-  void CONTENT
-  const [snap, setSnap] = React.useState<DrawerSnap | null>(PEEK)
-  const [customer, setCustomer] = React.useState(false)
-  const [lastTab, setLastTab] = React.useState<Panel>("content")
-  const vp = useViewportSize()
-  const headRef = React.useRef<HTMLDivElement>(null)
-  const barRef = React.useRef<HTMLDivElement>(null)
-  const [head, setHead] = React.useState(56)
-  const [bar, setBar] = React.useState(0)
+  const [section, setSection] = React.useState<Section>("content");
+  const [preview, setPreview] = React.useState(false);
+  const [inspecting, setInspecting] = React.useState(false);
+  const [showRequirements, setShowRequirements] = React.useState(false);
+  const [snap, setSnap] = React.useState<DrawerSnap | null>(DEFAULT_SNAP);
+  const scroll = React.useRef<HTMLDivElement>(null);
+  const root = React.useRef<HTMLDivElement>(null);
+  const opened = React.useRef(false);
   React.useEffect(() => {
-    const measure = () => { setHead(headRef.current?.offsetHeight ?? 56); setBar(barRef.current?.offsetHeight ?? 0) }
-    measure()
-    window.addEventListener("resize", measure)
-    return () => window.removeEventListener("resize", measure)
-  }, [vp.w, vp.h])
-  const short = vp.h < 520 && vp.w > vp.h
-  const opened = React.useRef(false)
+    if (opened.current) return;
+    opened.current = true;
+    if (new URLSearchParams(window.location.search).get("open") === "details") {
+      queueMicrotask(() => {
+        setSection("settings");
+        setSelection({ kind: "details" });
+      });
+    }
+  }, [setSelection]);
   React.useEffect(() => {
-    if (opened.current) return
-    opened.current = true
-    if (new URLSearchParams(window.location.search).get("open") === "details") queueMicrotask(() => { setSelection({ kind: "details" } as Selection); setStack(["selection"]); setSnap(DEFAULT_SNAP) })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  const s = ed.state
-  const changed = hasUnpublishedChanges(s)
-  const open = stack.length > 0 && !customer
-  const top = stack[stack.length - 1]
-
-  const openPanel = (p: Panel, how: "replace" | "push" = "replace", at: DrawerSnap = PEEK) => {
-    setStack((st) => (how === "push" ? [...st.filter((x) => x !== p), p] : [p]))
-    setSnap(at)
-  }
-  const close = () => setStack([])
-  const back = () => setStack((st) => st.slice(0, -1))
-  const toggleTab = (p: Panel) => { setLastTab(p); toggleTabInner(p) }
-  const toggleTabInner = (p: Panel) => (top === p && stack.length === 1 ? close() : openPanel(p, "replace", p === "content" ? TALL : DEFAULT_SNAP))
-
-  const fromPreview = (sel: Selection) => {
-    setSelection(sel)
-    if (sel.kind === "content") close()
-    else if (sel.kind === "header") openPanel("header", "replace", DEFAULT_SNAP)
-    else openPanel("selection", "replace", PEEK)
-  }
-  const fromList = (sel: Selection) => { setSelection(sel); openPanel("selection", "push", PEEK) }
-
-  const title = (() => {
-    if (top === "content") return "Your content"
-    if (top === "header") return "Header"
-    if (top === "design") return "Design"
-    if (top === "settings") return "Settings"
-    if (selection.kind === "widget") { const w = s.page.widgets.find((x) => x.id === selection.id); return (w && getWidget(w.type)?.label) ?? "Content" }
-    return { content: "Your content", page: "Design", header: "Profile", details: "Business details", settings: "Page settings" }[selection.kind]
-  })()
-
-  const room = Math.max(0, vp.h - bar - head)
-  const drawerPx = (typeof snap === "number" ? snap : PEEK) * room
-  const inset = open && !short ? Math.round(drawerPx) : 0
-
-  const tabs: { id: Panel; label: string; icon: typeof Rows3 }[] = [
-    { id: "content", label: "Content", icon: Rows3 },
-    { id: "header", label: "Profile", icon: LayoutTemplate },
-    { id: "design", label: "Design", icon: Palette },
-    { id: "settings", label: "Settings", icon: Briefcase },
-  ]
-  const tabButton = (t: (typeof tabs)[number], compact = false) => {
-    const active = open && stack[0] === t.id && (t.id !== "selection")
-    return (
-      <button key={t.id} type="button" onClick={() => toggleTab(t.id)} aria-pressed={active} data-testid={`tab-${t.id}`}
-        className={cn("flex min-h-12 flex-1 flex-col items-center justify-center gap-0.5 rounded-xl text-sm font-medium transition-colors", compact && "min-h-10 flex-none px-3", active ? "bg-neutral-900 text-white" : "text-neutral-600 active:bg-black/5", !active && !open && t.id === lastTab && "shadow-[inset_0_-2px_0_#111] text-neutral-900")}>
-        <t.icon className="size-5" aria-hidden="true" />{compact ? <span className="sr-only">{t.label}</span> : t.label}
-      </button>
-    )
-  }
-
+    const vv = window.visualViewport;
+    const sync = () => {
+      root.current?.style.setProperty(
+        "--editor-vh",
+        `${vv?.height ?? window.innerHeight}px`,
+      );
+      root.current?.style.setProperty(
+        "--editor-top",
+        `${vv?.offsetTop ?? 0}px`,
+      );
+    };
+    sync();
+    vv?.addEventListener("resize", sync);
+    vv?.addEventListener("scroll", sync);
+    return () => {
+      vv?.removeEventListener("resize", sync);
+      vv?.removeEventListener("scroll", sync);
+    };
+  }, []);
+  const s = ed.state;
+  const changed = hasUnpublishedChanges(s);
+  const select = (value: Selection) => {
+    setSelection(value);
+    setInspecting(true);
+    setSnap(DEFAULT_SNAP);
+  };
+  const widget =
+    selection.kind === "widget"
+      ? s.page.widgets.find((w) => w.id === selection.id)
+      : undefined;
+  const title = widget
+    ? (getWidget(widget.type)?.label ?? "Edit block")
+    : selection.kind === "details"
+      ? "Business details"
+      : "Edit your page";
+  const selectSection = (next: Section) => {
+    setSection(next);
+    setInspecting(false);
+    setPreview(false);
+    scroll.current?.scrollTo({ top: 0 });
+  };
   return (
-    <div className="studio-editor-fixed fixed inset-0 z-30 flex flex-col overflow-hidden bg-background" style={{ height: "100dvh" }} data-testid="my-page" data-editor="compact" data-short={short}>
-      <div ref={headRef} className="shrink-0">
-      <header className="flex items-center gap-1 border-b border-black/[0.07] bg-background/95 px-2 pb-1.5 pt-[calc(0.375rem+env(safe-area-inset-top,0px))] pl-[max(0.5rem,env(safe-area-inset-left))] pr-[max(0.5rem,env(safe-area-inset-right))]" role="toolbar" aria-label="Page actions">
-        <WorkspaceMenu />
-        <p className="min-w-0 flex-1 truncate px-2 text-sm font-semibold tracking-[-0.01em]">{s.content.identity.name || "Your page"}</p>
-        {short && !customer ? <div className="mr-1 flex">{tabs.map((t) => tabButton(t, true))}</div> : null}
-        <Button variant="ghost" size="icon" onClick={ed.undo} disabled={!ed.canUndo} aria-label="Undo" data-testid="undo"><Undo2 /></Button>
-        <Button variant="ghost" size="icon" onClick={ed.redo} disabled={!ed.canRedo} aria-label="Redo" data-testid="redo"><Redo2 /></Button>
-        <Button variant={customer ? "default" : "outline"} size="sm" onClick={() => { setCustomer((c) => !c); close() }} aria-pressed={customer} data-testid="customer-preview">
-          {customer ? <EyeOff /> : <Eye />}<span className="max-[420px]:sr-only">{customer ? "Edit" : "Preview"}</span>
-        </Button>
-        <Button size="sm" disabled={!canPublish(s)} aria-describedby={!canPublish(s) ? "publish-why" : undefined} onClick={() => { ed.update((x) => publish(x)); notify(s.published ? "Changes published." : "Your page is published.") }} data-testid="publish">{s.published ? (changed ? "Publish" : "Live") : "Publish"}</Button>
-      </header>
-      {!canPublish(s) ? <p id="publish-why" className="border-b border-black/[0.07] bg-background px-4 py-2 text-sm text-neutral-700">To publish: {readiness(s).filter((c) => c.required && !c.done).map((m) => m.label.toLowerCase()).join(", ") || "finish the required details"}.</p> : null}
-      {!short && !customer ? (
-        <nav aria-label="Editor" className="flex gap-1 border-b border-black/[0.07] bg-background/95 px-2 py-1.5">{tabs.map((t) => tabButton(t))}</nav>
-      ) : null}
-      </div>
-
-      <div className="relative min-h-0 flex-1">
-        <PagePreview
-          mode="fill"
-          src={customer ? "/demo/preview" : "/demo/preview?edit=1"}
-          title="Live preview of your page"
-          edit={customer ? undefined : { selection, onSelect: fromPreview, bottomInset: inset }}
-          testId="preview-frame"
-        />
-        {note ? (
-          <div role="status" data-testid="notice" className="absolute inset-x-3 top-3 z-10 flex items-center justify-between gap-3 rounded-2xl bg-neutral-900 px-4 py-3 text-sm text-white shadow-lg">
-            <span>{note.msg}</span>
-            <span className="flex shrink-0 gap-3">
-              {note.undoable ? <button type="button" className="min-h-8 font-semibold underline underline-offset-4" onClick={() => { ed.undo(); clearNote() }}>Undo</button> : null}
-              <button type="button" className="min-h-8 text-white/70" onClick={clearNote} aria-label="Dismiss">✕</button>
-            </span>
-          </div>
+    <div
+      ref={root}
+      className="mobile-studio"
+      data-testid="my-page"
+      data-editor="compact"
+    >
+      <header
+        className="mobile-studio-header"
+        role="toolbar"
+        aria-label="Page actions"
+      >
+        {preview ? (
+          <button
+            type="button"
+            className="mobile-studio-back"
+            aria-label="Back to editing"
+            onClick={() => setPreview(false)}
+          >
+            <ArrowLeft />
+          </button>
+        ) : (
+          <WorkspaceMenu />
+        )}
+        <div className="mobile-studio-identity">
+          <strong>{s.content.identity.name || "Your page"}</strong>
+          <span role={ed.storageFailed ? "alert" : undefined}>
+            {ed.storageFailed ? "Changes not saved" : "Draft saved"}
+          </span>
+        </div>
+        {!preview ? (
+          <button
+            type="button"
+            className="mobile-studio-preview"
+            onClick={() => {
+              setPreview(true);
+              setInspecting(false);
+            }}
+            data-testid="customer-preview"
+          >
+            <Eye /> Preview
+          </button>
         ) : null}
-        {customer ? <p className="pointer-events-none absolute inset-x-0 bottom-3 mx-auto w-fit rounded-full bg-neutral-900/85 px-3 py-1.5 text-xs text-white">Customer preview: buttons work like the real page</p> : null}
-      </div>
-
-      {!short ? <div ref={barRef} aria-hidden="true" className="shrink-0" style={{ height: `${BAR}px` }} /> : null}
-
-      <EditorDrawer open={open} onOpenChange={(o) => { if (!o) close() }} snap={snap} onSnap={setSnap} side={short ? "right" : "bottom"} offsetTop={head} offsetBottom={short ? 0 : bar} title={title} canGoBack={stack.length > 1} onBack={back} screenKey={`${top ?? ""}:${selection.kind === "widget" ? selection.id : selection.kind}`}>
-        {stack.map((p) => (
-          <div key={p} hidden={p !== top} className={p === top ? undefined : "hidden"}>
-            {p === "content" ? <ContentList ed={ed} selection={selection} onSelect={fromList} notify={notify} /> : null}
-            {p === "header" ? <Inspector ed={ed} selection={{ kind: "header" }} onSelect={setSelection} notify={notify} compact /> : null}
-            {p === "design" ? <><div className="flex justify-end"><ContextHelp topic="design" /></div><Inspector ed={ed} selection={PAGE} onSelect={fromList} notify={notify} compact /></> : null}
-            {p === "settings" ? <SettingsBody ed={ed} selection={selection} onSelect={setSelection} notify={notify} /> : null}
-            {p === "selection" ? <Inspector ed={ed} selection={selection} onSelect={(sel) => { setSelection(sel); if (sel.kind === "content") back() }} notify={notify} compact /> : null}
+      </header>
+      {!preview ? (
+        <>
+          <nav className="mobile-studio-tabs" aria-label="Editor sections">
+            {SECTIONS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                aria-pressed={section === t.id}
+                data-testid={`tab-${t.id}`}
+                onClick={() => selectSection(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          <div
+            ref={scroll}
+            className="mobile-studio-body"
+            data-testid="inspector"
+          >
+            {section === "content" ? (
+              <ContentList
+                ed={ed}
+                selection={selection}
+                onSelect={select}
+                notify={notify}
+              />
+            ) : null}
+            {section === "header" ? (
+              <Inspector
+                ed={ed}
+                selection={{ kind: "header" }}
+                onSelect={select}
+                notify={notify}
+                compact
+              />
+            ) : null}
+            {section === "design" ? (
+              <Inspector
+                ed={ed}
+                selection={PAGE}
+                onSelect={select}
+                notify={notify}
+                compact
+              />
+            ) : null}
+            {section === "settings" ? (
+              <SettingsBody
+                ed={ed}
+                selection={selection}
+                onSelect={setSelection}
+                notify={notify}
+              />
+            ) : null}
           </div>
-        ))}
+          <footer className="mobile-studio-footer">
+            <div className="mobile-studio-history">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={ed.undo}
+                disabled={!ed.canUndo}
+                aria-label="Undo"
+                data-testid="undo"
+              >
+                <Undo2 />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={ed.redo}
+                disabled={!ed.canRedo}
+                aria-label="Redo"
+                data-testid="redo"
+              >
+                <Redo2 />
+              </Button>
+            </div>
+            <Button
+              disabled={!canPublish(s)}
+              onClick={() => {
+                ed.update(publish);
+                notify(
+                  "This version is published on this device. Public publishing is not connected.",
+                );
+              }}
+              data-testid="publish"
+            >
+              {s.published
+                ? changed
+                  ? "Publish changes"
+                  : "Published"
+                : "Publish"}
+            </Button>
+            {!canPublish(s) ? (
+              <button
+                type="button"
+                className="mobile-studio-requirements"
+                aria-expanded={showRequirements}
+                onClick={() => setShowRequirements(!showRequirements)}
+              >
+                {showRequirements ? "Hide requirements" : "What’s left?"}
+              </button>
+            ) : null}
+            {showRequirements && !canPublish(s) ? (
+              <p>
+                {readiness(s)
+                  .filter((c) => c.required && !c.done)
+                  .map((c) => c.label)
+                  .join(" · ")}
+              </p>
+            ) : null}
+          </footer>
+        </>
+      ) : (
+        <div className="mobile-studio-page">
+          <PagePreview
+            mode="fill"
+            src="/demo/preview"
+            title="Your page"
+            testId="preview-frame"
+          />
+        </div>
+      )}
+      {note ? (
+        <div role="status" className="mobile-studio-toast" data-testid="notice">
+          <span>{note.msg}</span>
+          {note.undoable ? (
+            <button
+              type="button"
+              onClick={() => {
+                ed.undo();
+                clearNote();
+              }}
+            >
+              Undo
+            </button>
+          ) : null}
+          <button type="button" aria-label="Dismiss" onClick={clearNote}>
+            ×
+          </button>
+        </div>
+      ) : null}
+      <EditorDrawer
+        open={inspecting}
+        onOpenChange={setInspecting}
+        snap={snap}
+        onSnap={setSnap}
+        side="bottom"
+        offsetTop={56}
+        offsetBottom={0}
+        title={title}
+        canGoBack
+        onBack={() => setInspecting(false)}
+        screenKey={selection.kind === "widget" ? selection.id : selection.kind}
+      >
+        <Inspector
+          ed={ed}
+          selection={selection}
+          onSelect={(value) => {
+            setSelection(value);
+            if (value.kind === "content") setInspecting(false);
+          }}
+          notify={notify}
+          compact
+        />
       </EditorDrawer>
     </div>
-  )
+  );
 }
