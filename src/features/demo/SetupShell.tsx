@@ -141,7 +141,12 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(
               data-testid="setup-body"
               onFocusCapture={(e) => {
                 const target = e.target as HTMLElement;
-                if (!target.matches("input,textarea,select")) return;
+                if (
+                  !target.matches(
+                    'input:not([type="radio"]):not([type="checkbox"]):not([type="range"]),textarea,select',
+                  )
+                )
+                  return;
                 requestAnimationFrame(() =>
                   target.scrollIntoView({
                     block: "nearest",
