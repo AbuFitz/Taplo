@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useSetupIntent } from "@/features/experience/useSetupIntent";
 import {
   Archive,
   ArchiveRestore,
@@ -54,6 +55,7 @@ export function Products() {
   const [query, setQuery] = React.useState("");
   const [before, setBefore] = React.useState("");
   const [showErr, setShowErr] = React.useState(false);
+  useSetupIntent("new", () => { const p=blankProduct(c?.identity.industryKey === "car-dealer" ? "vehicle" : "product"); setBefore(JSON.stringify(p)); setShowErr(false); setEditing({p,isNew:true}); }, Boolean(c));
   if (!c) return null;
   const all = (c.products ?? []).map(normProduct);
   const active = all.filter((p) => !p.archived);

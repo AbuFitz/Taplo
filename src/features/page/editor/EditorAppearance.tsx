@@ -348,7 +348,7 @@ export function HeaderPanel({
     {
       id: "images",
       name: "Logo & cover",
-      line: "Frame your business beautifully",
+      line: "Add or adjust your images",
       art: "wallpaper",
     },
     {
@@ -443,7 +443,7 @@ export function HeaderPanel({
       ) : (
         <>
           <div className="design-studio-heading">
-            <h2>A proper introduction.</h2>
+            <h2>Introduce your business.</h2>
             <p>Show who you are, then give people a clear next step.</p>
           </div>
           <div className="design-task-list">

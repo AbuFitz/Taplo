@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { useSetupIntent } from "@/features/experience/useSetupIntent";
 import Link from "next/link";
 import { CalendarDays, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ export function Team() {
   const [removing, setRemoving] = React.useState<Person | null>(null);
   const [removed, setRemoved] = React.useState<Person | null>(null);
   const trigger = React.useRef<HTMLButtonElement | null>(null);
+  useSetupIntent("new", () => { if(!c)return;const draft=blankFor("staff", c) as Person;setShowErrors(false);setEditing({draft,before:JSON.stringify(draft),isNew:true}); }, Boolean(c));
   if (!c || !ent) return null;
   const staff = c.staff ?? [];
   const filtered = staff.filter((p) =>

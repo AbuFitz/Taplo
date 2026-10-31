@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { useSetupIntent } from "@/features/experience/useSetupIntent";
+import { SectionSetup } from "@/features/experience/SectionSetup";
 import { ArrowLeft, Maximize2, Redo2, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,6 +48,7 @@ export function MobileEditor({
   clearNote: () => void;
 }) {
   const [section, setSection] = React.useState<Section>("content");
+  useSetupIntent("task",()=>{const task=new URLSearchParams(window.location.search).get("task");setSection(task === "profile" ? "header" : task === "design" ? "design" : "content");});
   const [preview, setPreview] = React.useState(false);
   const [inspecting, setInspecting] = React.useState(false);
   const [showRequirements, setShowRequirements] = React.useState(false);
@@ -225,6 +228,7 @@ export function MobileEditor({
             className="mobile-studio-body"
             data-testid="inspector"
           >
+            {section === "content" ? <SectionSetup topic="page" compact /> : null}
             {section === "content" ? (
               <ContentList
                 ed={ed}

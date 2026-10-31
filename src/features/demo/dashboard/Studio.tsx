@@ -20,7 +20,7 @@ import {
   readiness,
 } from "../actions";
 import { useDraft } from "../hooks";
-import { ContextHelp } from "@/features/page/editor/ContextHelp";
+import { GettingStarted } from "@/features/experience/SectionSetup";
 import { StudioArt } from "./art/StudioArt";
 import { getIndustryPreset } from "@/features/themes/presets/industries";
 import { UpcomingBookings } from "./UpcomingBookings";
@@ -145,12 +145,7 @@ export function Studio() {
           </p>
         </div>
       </section>
-      <div className="ws-experience-guides" aria-label="Studio guides">
-        <span>Make more of your page</span>
-        <ContextHelp topic="blocks" />
-        <ContextHelp topic="design" />
-        <ContextHelp topic="booking" />
-      </div>
+      <GettingStarted />
       <div className="ws-home-columns">
         <section className="ws-business-work">
           <div className="ws-section-title">

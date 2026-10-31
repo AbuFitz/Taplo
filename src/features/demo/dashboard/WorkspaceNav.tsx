@@ -7,6 +7,7 @@ import {
   CalendarDays,
   ChevronRight,
   Home,
+  CircleHelp,
   LayoutTemplate,
   Menu,
   MoreHorizontal,
@@ -83,6 +84,10 @@ export function WorkspaceNav() {
             <Settings aria-hidden="true" />
             Settings
           </Link>
+          <Link href="/dashboard/help">
+            <CircleHelp aria-hidden="true" />
+            Help & feedback
+          </Link>
           <Link href="/" className="ws-back-site">
             Taplo website
             <ArrowUpRight aria-hidden="true" />
@@ -125,7 +130,13 @@ export function WorkspaceNav() {
           type="button"
           onClick={() => setOpen(true)}
           aria-expanded={open}
-          aria-current={!['/dashboard','/dashboard/page','/dashboard/bookings'].includes(path) ? "page" : undefined}
+          aria-current={
+            !["/dashboard", "/dashboard/page", "/dashboard/bookings"].includes(
+              path,
+            )
+              ? "page"
+              : undefined
+          }
         >
           <MoreHorizontal />
           More
@@ -139,6 +150,11 @@ export function WorkspaceNav() {
       >
         <nav className="ws-sheet-nav">
           {links}
+          <Link href="/dashboard/help" onClick={() => setOpen(false)}>
+            <CircleHelp />
+            Help & feedback
+            <ChevronRight />
+          </Link>
           <Link href="/dashboard/settings" onClick={() => setOpen(false)}>
             <Settings />
             Settings
@@ -167,6 +183,10 @@ export function WorkspaceMenu() {
       <Overlay open={open} onOpenChange={setOpen} title="Your workspace">
         <nav className="ws-sheet-nav">
           <div className="ws-nav-group">
+            <Link href="/dashboard/help" onClick={() => setOpen(false)}>
+              <CircleHelp />
+              <span>Help & feedback</span>
+            </Link>
             {[...primary, ...secondary].map(({ href, label, Icon }) => (
               <Link
                 key={href}

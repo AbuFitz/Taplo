@@ -12,6 +12,7 @@ import "@/features/page/editor/portal-workspace.css";
 import "./dashboard/workspace-tools.css";
 import "./dashboard/workspace.css";
 import "./dashboard/workspace-polish.css";
+import "./dashboard/workspace-foundation.css";
 
 const TITLES: Record<string, string> = {
   services: "Services",
@@ -23,6 +24,7 @@ const TITLES: Record<string, string> = {
   settings: "Settings",
   page: "Page builder",
   profile: "Business details",
+  help: "Help & feedback",
 };
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { ready, state, storageFailed } = useDemo();
@@ -41,8 +43,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <div className="ws-main">
         <header className="ws-topbar">
           <div>
-            <span>Studio</span>
-            <i>/</i>
             <strong>{TITLES[section] || "Overview"}</strong>
           </div>
           <div className="ws-topbar-actions">
@@ -74,7 +74,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </main>
         {!editor ? (
           <footer className="ws-footer">
-            Taplo Studio
             <span role={storageFailed ? "alert" : undefined}>
               {storageFailed
                 ? "Changes could not be saved. Browser storage is unavailable."

@@ -1,0 +1,276 @@
+/* Taplo owner-app roles. Customer-page colours are deliberately outside this scope. */
+.workspace-v2 {
+  --ws-canvas: #f7f7fb;
+  --ws-surface: #fff;
+  --ws-ink: #202027;
+  --ws-muted: #6e6879;
+  --ws-line: #e9e5ef;
+  --ws-accent: #78648f;
+  --ws-accent-soft: #eee8f6;
+  --ws-ready: #35634e;
+  --ws-ready-soft: #e8f3ec;
+  --ws-attention: #795518;
+  --ws-attention-soft: #faf0d9;
+  --ws-danger: #9b3c53;
+  --ws-danger-soft: #f9e7ec;
+  --primary: #17171a;
+  --primary-foreground: #fff;
+  --ring: #78648f;
+  background: var(--ws-canvas);
+  color: var(--ws-ink);
+}
+.workspace-v2 .ws-main {
+  background: var(--ws-surface);
+}
+.workspace-v2 .ws-topbar {
+  background: var(--ws-surface);
+  border-color: var(--ws-line);
+}
+.workspace-v2 .ws-topbar > div:first-child > strong {
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--ws-muted);
+}
+.workspace-v2 .ws-footer {
+  justify-content: flex-end;
+  color: var(--ws-muted);
+  border-color: var(--ws-line);
+}
+.workspace-v2 .ws-sidebar {
+  background: var(--ws-canvas);
+  border-right: 1px solid var(--ws-line);
+}
+.workspace-v2 .ws-nav-group a[aria-current="page"],
+.workspace-v2 .ws-nav-bottom > a[aria-current="page"],
+.workspace-v2 .ws-mobile-nav [aria-current="page"] {
+  background: var(--ws-accent-soft);
+  color: #514161;
+}
+.workspace-v2 .ws-nav-group a:not([aria-current="page"]) {
+  color: #635b6e;
+}
+.workspace-v2 .ws-nav-group p {
+  color: #857c90;
+}
+.workspace-v2 .ws-business {
+  background: transparent;
+  box-shadow: none;
+  border-bottom: 1px solid var(--ws-line);
+  border-radius: 0;
+  padding-bottom: 22px;
+}
+.workspace-v2 .ws-business > span {
+  background: #e4dcef;
+  color: #695677;
+}
+.workspace-v2 .ws-page-heading {
+  margin-bottom: 20px;
+  gap: 18px;
+}
+.workspace-v2 .ws-page-intro {
+  display: block;
+}
+.workspace-v2 .portal-page-title {
+  font-size: clamp(29px, 3vw, 38px);
+  letter-spacing: -1px;
+}
+.workspace-v2 .portal-page-description {
+  max-width: 52ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ws-muted);
+}
+.workspace-v2 .ws-record-toolbar {
+  margin: 0 0 22px;
+}
+.workspace-v2 .ws-record-toolbar > label {
+  border-color: var(--ws-line);
+  border-radius: 13px;
+  background: #fbfafd;
+}
+.workspace-v2 .ws-record-list > li {
+  border-color: var(--ws-line) !important;
+  box-shadow: none;
+}
+.workspace-v2 .team-person-card {
+  box-shadow: none !important;
+  border-color: var(--ws-line) !important;
+}
+.workspace-v2 .ws-settings-nav button[aria-pressed="true"] {
+  background: var(--ws-accent-soft);
+  color: #514161;
+}
+.workspace-v2 .ws-plan-options button[aria-pressed="true"] {
+  border-color: #a48bbd;
+  background: #f3eef9;
+}
+.workspace-v2 .ws-analytics-metrics section {
+  background: #f5f2fa !important;
+  box-shadow: none !important;
+}
+.workspace-v2 .ws-analytics-metrics section:nth-child(2) {
+  background: #edf4f2 !important;
+}
+.workspace-v2 .ws-analytics-metrics section:nth-child(3) {
+  background: #f5f1f7 !important;
+}
+.workspace-v2 [data-testid="cal-booking"][data-status="pending"] {
+  background: var(--ws-attention-soft);
+  color: var(--ws-attention);
+  border-left: 3px solid #ba9654;
+}
+.workspace-v2 [data-testid="cal-booking"][data-status="confirmed"] {
+  background: var(--ws-ready-soft);
+  color: var(--ws-ready);
+  border-left: 3px solid #70a38a;
+}
+.workspace-v2 [data-testid="cal-booking"][data-status="no_show"] {
+  background: var(--ws-danger-soft);
+  color: var(--ws-danger);
+  border-left: 3px solid #ba7a8c;
+}
+.workspace-v2
+  [data-testid="cal-booking"]:is(
+    [data-status="completed"],
+    [data-status="cancelled"],
+    [data-status="declined"],
+    [data-status="expired"]
+  ) {
+  background: #f0eef3;
+  color: #696171;
+}
+.workspace-v2 .cal-chip-status {
+  display: block;
+  font-size: 9px;
+  margin-top: 4px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.workspace-v2 .mobile-studio-tabs button[aria-pressed="true"] {
+  color: #514161;
+  border-color: #78648f;
+}
+.workspace-v2 .mobile-studio-tabs button[aria-pressed="true"]:after {
+  background: #78648f;
+}
+.workspace-v2 .mobile-studio-body {
+  background: #fff;
+}
+.workspace-v2 .mobile-studio .section-setup {
+  max-width: none;
+}
+.workspace-v2 .design-task-art {
+  box-shadow: none !important;
+}
+.workspace-v2 .design-task-list > button {
+  border-color: var(--ws-line) !important;
+}
+@media (min-width: 1024px) {
+  .workspace-v2 .ws-content {
+    padding-top: 30px;
+  }
+  .workspace-v2 .ws-topbar {
+    height: 65px;
+  }
+  .workspace-v2 .ws-page-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .workspace-v2 .ws-heading-actions {
+    flex: none;
+  }
+  .workspace-v2 .section-setup {
+    max-width: 900px;
+  }
+  .workspace-v2 .getting-started-list {
+    grid-template-columns: 1fr;
+  }
+  .workspace-v2 .ws-page-hub {
+    border: 0;
+    box-shadow: none;
+  }
+}
+/* Mobile browser: native page scroll, no floating desktop panel or nested document rails. */
+@media (max-width: 767px) {
+  .workspace-v2 {
+    background: white;
+  }
+  .workspace-v2 .ws-main {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .workspace-v2 .ws-topbar {
+    height: 62px;
+    padding-left: 64px;
+  }
+  .workspace-v2 .ws-content {
+    padding: 22px 20px 20px;
+  }
+  .workspace-v2 .ws-page-heading {
+    margin-bottom: 18px;
+  }
+  .workspace-v2 .portal-page-title {
+    font-size: 30px;
+  }
+  .workspace-v2 .portal-page-description {
+    font-size: 13px;
+  }
+  .workspace-v2 .ws-mobile-nav {
+    background: #ffffffed;
+    backdrop-filter: blur(18px);
+    border-top: 1px solid var(--ws-line);
+    box-shadow: none;
+    padding-bottom: calc(7px + env(safe-area-inset-bottom));
+    border-radius: 0;
+  }
+  .workspace-v2 .ws-mobile-nav > a,
+  .workspace-v2 .ws-mobile-nav > button {
+    border-radius: 14px;
+    min-height: 52px;
+  }
+  .workspace-v2 .ws-mobile-menu {
+    top: 11px;
+  }
+  .workspace-v2 .ws-footer {
+    padding: 18px 20px calc(92px + env(safe-area-inset-bottom));
+    font-size: 11px;
+  }
+  .workspace-v2 .ws-page-heading .ws-heading-actions {
+    margin-top: 16px;
+    width: 100%;
+  }
+  .workspace-v2 .ws-page-heading .ws-heading-actions > button {
+    width: 100%;
+    min-height: 48px;
+  }
+  .workspace-v2 .ws-record-toolbar > label {
+    min-height: 48px;
+  }
+  .workspace-v2 .ws-settings-nav {
+    scrollbar-width: none;
+  }
+  .workspace-v2 .ws-settings-nav button {
+    min-height: 44px;
+  }
+  .workspace-v2 [data-workspace-section="editor"] .ws-content {
+    padding: 0;
+  }
+}
+/* Installed app: extend into safe areas; do not add a second simulated browser header. */
+@media (display-mode: standalone) and (max-width: 767px) {
+  .workspace-v2 .ws-topbar {
+    height: calc(62px + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+  }
+  .workspace-v2 .ws-mobile-menu {
+    top: calc(11px + env(safe-area-inset-top));
+  }
+  .workspace-v2 .mobile-studio-header {
+    padding-top: calc(8px + env(safe-area-inset-top));
+    min-height: calc(62px + env(safe-area-inset-top));
+  }
+  .workspace-v2 .ws-mobile-nav {
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+}

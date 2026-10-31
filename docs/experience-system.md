@@ -80,3 +80,24 @@ Every management header uses the relevant scene at a deliberately smaller mobile
 Profile direction is a deterministic suggestion from explicit inputs, not an AI claim about taste. It considers logo/cover presence, image proportions, long names and category. Logo colour takes priority over photograph colour. A monochrome mark gets a neutral direction. Category colour is a fallback suggestion; business-name wording is never used to guess brand colours. Portrait cover crops get an explanatory note. Owners see a real-renderer arrangement preview and colour comparison before accepting; layout and colour choices are separate undoable actions. Existing picture/gradient wallpaper is retained. Accepting colours updates an explicit solid wallpaper as well as colour tokens, fixing a mismatch between saved colours and visible background.
 
 The profile layout selector leads with suitable arrangements and keeps all arrangements reachable through Browse every arrangement. Photo-required arrangements are disabled without a photograph. Saved content and existing selected layouts remain intact.
+
+## Contextual owner setup and help (31 October)
+
+The owner needs a next useful task, not a collection of decorative guide buttons. Each management heading now owns one compact setup invitation. It can be dismissed and reopened; preferences are per business handle/topic and live separately from content/history. Watching a demonstration does not complete a task. Completion is derived from real records, visible blocks and saved configuration. Examples and archived records do not count as a first offer.
+
+- Page: identity → useful action → coordinated design.
+- Services: real offer → page placement → customer action.
+- Bookings: bookable service → availability → customer journey.
+- Products/vehicles: real item → enquiry/shop action → collection.
+- Team: person → eligible work → public profile.
+- Reviews: genuine source → placement near a decision.
+- Analytics: destination readiness → meaning of measurements; never fake data.
+- Settings: entitlement awareness → verified connections.
+
+Each guide deep-links to the real form/editor. No second copy of business records is created. Free/Core/Pro/Business access comes from the existing entitlement resolver, not hardcoded upgrade logic. An entitled feature is not automatically a connected provider. Booking-hour readiness indicates saved business hours; owners still review individual scheduling rules and staff availability. It is not proof a real appointment can be accepted.
+
+The new playable walkthroughs are HTML/CSS/React illustrations with three deliberate scenes, Play/Pause/Replay, scene selection, a written equivalent and reduced-motion handling. They are labelled as illustrative examples and never autoplay. They are not video files or recordings of production UI. HyperFrames usage returned unknown/no subscription login, and workflow refresh failed because its GitHub manifest was unreachable. No video render is claimed.
+
+The Help & feedback route brings all walkthroughs together. Platform problems and public business-page reports have distinct reasons and forms. Reports attach no customer records, account/storage dumps, screenshots, URL query strings or fragments. Optional diagnostics require explicit selection and include only viewport, browser/standalone mode and plan. With no report endpoint configured, users can copy/download a report; there is no fabricated submission or ticket. A same-origin reporting adapter is ready for a future connected service and requires a returned reference before confirming delivery.
+
+Owner-app colours use named roles: canvas, surface, ink, muted, line, selection, ready, attention and danger. Iris selection and coordinated neutral surfaces identify the platform; booking status colours also have text labels. Desktop uses a workspace rail and broad task area. Mobile browser uses native document scrolling and a safe-area bottom dock. Standalone CSS reserves top/bottom safe areas without simulating browser chrome. Standalone CSS is preparation, not a claim that PWA installation, native app navigation or real-device keyboard handling has been certified.

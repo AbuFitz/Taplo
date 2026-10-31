@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useSetupIntent } from "@/features/experience/useSetupIntent";
 import {
   ArrowDown,
   ArrowUp,
@@ -37,6 +38,7 @@ export function Services() {
     setEditing({ svc, isNew });
   };
   const [showErrors, setShowErrors] = React.useState(false);
+  useSetupIntent("new", () => begin(blankService(c?.services?.length ?? 0), true), Boolean(c));
   if (!c || !ent) return null;
 
   const all = (c.services ?? [])
