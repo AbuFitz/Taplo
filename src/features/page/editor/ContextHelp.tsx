@@ -5,7 +5,17 @@ export type HelpTopic = "blocks" | "order" | "design" | "booking" | "sharing";
 export function ContextHelp({ topic }: { topic: HelpTopic }) {
   return (
     <SectionSetup
-      topic={topic === "booking" ? "bookings" : "page"}
+      topic={
+        topic === "booking"
+          ? "bookings"
+          : topic === "order"
+            ? "order"
+            : topic === "sharing"
+              ? "sharing"
+              : topic === "design"
+                ? "design"
+                : "page"
+      }
       launcher={
         topic === "order"
           ? "Reordering guide"

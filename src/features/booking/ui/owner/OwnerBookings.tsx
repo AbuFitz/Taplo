@@ -1,7 +1,7 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { EmptyPanel } from "@/components/taplo/illustrations"
+import { useSearchParams, useRouter } from "next/navigation";
+import { EmptyPanel } from "@/components/taplo/illustrations";
 
 import * as React from "react";
 import {
@@ -71,9 +71,16 @@ export function OwnerBookings({
 }) {
   const params = useSearchParams();
   const o = useOwner();
-  const [tab, setTab] = React.useState<Tab>(
-    params.get("section") === "availability" ? "availability" : initialSection,
-  );
+  const router = useRouter();
+  const [chosenTab, setChosenTab] = React.useState<Tab | null>(null);
+  const tab =
+    params.get("section") === "availability"
+      ? "availability"
+      : (chosenTab ?? initialSection);
+  const setTab = (next: Tab) => {
+    setChosenTab(next);
+    router.replace("/dashboard/bookings", { scroll: false });
+  };
   const compact = React.useSyncExternalStore(
     subscribeScreen,
     compactScreen,
@@ -245,7 +252,8 @@ export function OwnerBookings({
 
   return (
     <>
-      <PageHeader scene="bookings"
+      <PageHeader
+        scene="bookings"
         title="Bookings"
         description="Your calendar, requests and the hours customers can book."
         actions={
@@ -496,8 +504,9 @@ export function OwnerBookings({
               <li>
                 <EmptyPanel scene="bookings" title="No enquiries yet">
                   <p>
-                    Messages from your contact form, and from services you arrange
-                    with customers directly, appear here. An enquiry reserves no time.
+                    Messages from your contact form, and from services you
+                    arrange with customers directly, appear here. An enquiry
+                    reserves no time.
                   </p>
                 </EmptyPanel>
               </li>

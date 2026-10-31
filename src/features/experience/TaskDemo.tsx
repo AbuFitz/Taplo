@@ -46,6 +46,26 @@ const FRAMES: Record<JourneyId, readonly [string, string, string]> = {
     "They choose an action",
     "Review reach and intent separately",
   ],
+  profile: [
+    "Your name leads without a photo",
+    "A picture gets its own space",
+    "A cover frames the introduction",
+  ],
+  design: [
+    "Start with a coordinated palette",
+    "See the change across the page",
+    "Keep your content in place",
+  ],
+  order: [
+    "Press and hold the dotted handle",
+    "Move the section above its neighbour",
+    "Release to save; Undo restores it",
+  ],
+  sharing: [
+    "Check your public destination",
+    "Choose a business-branded asset",
+    "Scan the actual exported file",
+  ],
   settings: [
     "Choose the tools you need",
     "Review the connection status",
@@ -86,7 +106,34 @@ export function TaskDemo({ topic }: { topic: JourneyId }) {
     >
       <div className="task-demo-canvas" aria-hidden="true">
         <span className="task-demo-example">Illustrative example</span>
-        {topic === "bookings" ? (
+        {topic === "sharing" ? (
+          <div className="demo-share">
+            <span className="demo-share-mark">n.</span>
+            <b>North Studio</b>
+            <span>Business link · Share card · QR</span>
+            <div data-reveal={frame > 0}>
+              <span>Link</span>
+              <span>Card</span>
+              <span>QR</span>
+            </div>
+            <small>
+              {frame === 2
+                ? "Scan and check the destination."
+                : "A draft needs public publishing first."}
+            </small>
+          </div>
+        ) : topic === "profile" ? (
+          <div className="demo-profile-layout" data-layout-frame={frame}>
+            <div className="demo-profile-cover" />
+            <span className="demo-profile-avatar">n.</span>
+            <b>North Studio</b>
+            <small>A little time for yourself.</small>
+            <span className="demo-black">
+              Get in touch
+              <ArrowUpRight />
+            </span>
+          </div>
+        ) : topic === "bookings" ? (
           <div className="demo-booking">
             <div className="demo-service">
               <CalendarDays />
@@ -221,7 +268,10 @@ export function TaskDemo({ topic }: { topic: JourneyId }) {
             </p>
           </div>
         ) : (
-          <div className="demo-compose">
+          <div
+            className="demo-compose"
+            data-colour={topic === "design" && frame > 0}
+          >
             <div className="demo-profile">
               <span>n.</span>
               <b>North Studio</b>
@@ -231,7 +281,11 @@ export function TaskDemo({ topic }: { topic: JourneyId }) {
               {topic === "services" ? "Book a consultation" : "Get in touch"}
               <ArrowUpRight />
             </span>
-            <div className="demo-blocks" data-reordered={frame === 2}>
+            <div
+              className="demo-blocks"
+              data-reordered={frame === 2}
+              data-held={topic === "order" && frame === 1}
+            >
               <div>
                 <GripVertical />
                 <span>
@@ -262,18 +316,22 @@ export function TaskDemo({ topic }: { topic: JourneyId }) {
         <button
           type="button"
           aria-label={
-            playing
-              ? "Pause demonstration"
-              : frame === 2
-                ? "Replay demonstration"
-                : "Play demonstration"
+            reduced
+              ? "Show next demonstration scene"
+              : playing
+                ? "Pause demonstration"
+                : frame === 2
+                  ? "Replay demonstration"
+                  : "Play demonstration"
           }
           onClick={() => {
             if (playing) setPlaying(false);
             else {
-              if (frame === 2) setFrame(0);
               if (reduced) setFrame((n) => (n + 1) % 3);
-              else setPlaying(true);
+              else {
+                if (frame === 2) setFrame(0);
+                setPlaying(true);
+              }
             }
           }}
         >

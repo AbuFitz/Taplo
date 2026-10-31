@@ -102,7 +102,7 @@ export function Services() {
           to Core for unlimited services. Nothing is deleted.
         </p>
       ) : null}
-      <div className="ws-record-toolbar"><label><Search aria-hidden="true" /><input aria-label="Search services" placeholder="Find a service…" value={query} onChange={e=>setQuery(e.target.value)} /></label><span>{active.length} active</span></div>
+      <div className="ws-record-toolbar" data-empty={!all.length}><label><Search aria-hidden="true" /><input aria-label="Search services" placeholder="Find a service…" value={query} onChange={e=>setQuery(e.target.value)} /></label><span>{active.length} active</span></div>
       {active.length === 0 ? (
         <div className="max-w-xl rounded-xl border border-dashed p-6">
           <h2 className="font-semibold">No services yet</h2>
@@ -196,7 +196,7 @@ export function Services() {
         </section>
       ) : null}
 
-      <Offers />
+      <details className="ws-secondary-task"><summary>Offers and promotions</summary><Offers /></details>
 
       <Overlay
         open={editing !== null}

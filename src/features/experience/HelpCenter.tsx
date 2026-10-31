@@ -7,6 +7,10 @@ import { useDemo } from "@/features/demo/store";
 import { journeyFor, type JourneyId } from "./journeys";
 const TOPICS: JourneyId[] = [
   "page",
+  "profile",
+  "design",
+  "order",
+  "sharing",
   "services",
   "bookings",
   "products",

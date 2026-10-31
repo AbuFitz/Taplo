@@ -78,7 +78,11 @@ export function SectionSetup({
                 } as React.CSSProperties
               }
             >
-              {complete ? <Check /> : <span className="setup-progress-count">{done}</span>}
+              {complete ? (
+                <Check />
+              ) : (
+                <span className="setup-progress-count">{done}</span>
+              )}
             </span>
             <div>
               <h2>{journey.title}</h2>
@@ -94,7 +98,7 @@ export function SectionSetup({
               type="button"
               onClick={() => setOpen(true)}
             >
-              {done ? "Continue" : "Get started"}
+              Setup guide
               <ArrowRight />
             </button>
             <button
@@ -117,11 +121,9 @@ export function SectionSetup({
         className="journey-overlay"
         footer={
           <div className="journey-footer">
-            <span>
-              {done} of {journey.steps.length} ready
-            </span>
             <button
               type="button"
+              className="journey-later"
               onClick={() => {
                 setPreference("later");
                 setOpen(false);
@@ -129,6 +131,20 @@ export function SectionSetup({
             >
               Save for later
             </button>
+            <Link
+              className="journey-primary"
+              href={
+                next.blocked ? "/dashboard/settings?section=plan" : next.href
+              }
+              onClick={() => setOpen(false)}
+            >
+              {next.blocked
+                ? "Review access"
+                : complete
+                  ? "Review setup"
+                  : next.action}
+              <ArrowRight />
+            </Link>
           </div>
         }
       >

@@ -9,8 +9,11 @@ export function useSetupIntent(name: string, run: () => void, ready = true) {
   const intent = params.get(name),
     handled = React.useRef<string | null>(null);
   React.useEffect(() => {
-    if (!intent || !ready || handled.current === `${path}:${name}:${intent}`)
+    if (!intent) {
+      handled.current = null;
       return;
+    }
+    if (!ready || handled.current === `${path}:${name}:${intent}`) return;
     handled.current = `${path}:${name}:${intent}`;
     run();
     const next = new URLSearchParams(params.toString());

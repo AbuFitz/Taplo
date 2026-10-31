@@ -33,8 +33,9 @@ export function Settings() {
     "plan" | "connections" | "data" | null
   >(null);
   const section =
-    chosenSection ??
-    (requested === "connections" || requested === "data" ? requested : "plan");
+    requested === "connections" || requested === "data" || requested === "plan"
+      ? requested
+      : (chosenSection ?? "plan");
   const [confirm, setConfirm] = React.useState(false);
   const plan = state?.plan ?? "business";
   const ent = resolveEntitlements(plan, "active");
@@ -123,7 +124,16 @@ export function Settings() {
                     key={p}
                     type="button"
                     aria-pressed={plan === p}
-                    onClick={() => update((x) => ({ ...x, plan: p as PlanId }))}
+                    onClick={() =>
+                      update((x) => ({
+                        ...x,
+                        plan: p as PlanId,
+                        setupDrafts: {
+                          ...x.setupDrafts,
+                          planIntent: p as PlanId,
+                        },
+                      }))
+                    }
                   >
                     <b>{PLANS[p].name}</b>
                     <span>

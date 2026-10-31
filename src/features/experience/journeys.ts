@@ -9,7 +9,11 @@ export type JourneyId =
   | "team"
   | "reviews"
   | "analytics"
-  | "settings";
+  | "settings"
+  | "profile"
+  | "design"
+  | "order"
+  | "sharing";
 export interface JourneyStep {
   id: string;
   title: string;
@@ -38,6 +42,129 @@ export function journeyFor(id: JourneyId, s: DemoState): Journey {
   const products = (c.products ?? []).filter((v) => !v.archived && !v.example);
   const staff = c.staff ?? [];
   const steps: Record<JourneyId, JourneyStep[]> = {
+    profile: [
+      {
+        id: "name",
+        title: "Make your name easy to recognise",
+        detail:
+          "Short or long, your business name needs room. A wide wordmark should stay whole instead of being cropped into a circle.",
+        action: "Edit your identity",
+        href: `${page}?task=profile`,
+        done: Boolean(c.identity.name && c.identity.tagline),
+      },
+      {
+        id: "arrangement",
+        title: "Choose a layout for your assets",
+        detail:
+          "Logo and cover, a profile picture alone, or no images: each has a finished composition. Compare the suggestion with your own page.",
+        action: "Compare profile layouts",
+        href: `${page}?task=profile`,
+        done: Boolean(s.page.appearance.header?.layout),
+      },
+      {
+        id: "next",
+        title: "Keep the main action in reach",
+        detail:
+          "Check the introduction and button together at a normal phone size. Adjust a cover crop before adding stronger fades.",
+        action: "Review the page",
+        href: page,
+        done: widgetPresent(s, [
+          "booking",
+          "enquiry",
+          "call",
+          "whatsapp",
+          "email",
+        ]),
+      },
+    ],
+    design: [
+      {
+        id: "palette",
+        title: "Choose coordinated colours",
+        detail:
+          "Try a palette sampled from your logo or cover. Suggestions are optional and never overwrite your choices by themselves.",
+        action: "Choose colours",
+        href: `${page}?task=design`,
+        done: Boolean(s.page.appearance.colors),
+      },
+      {
+        id: "composition",
+        title: "Fit the look to your content",
+        detail:
+          "Change the look without losing your records. Check a long title, a real service and a button before fine-tuning.",
+        action: "Compare looks",
+        href: `${page}?task=design`,
+        done: Boolean(s.setupDrafts?.colourway),
+      },
+      {
+        id: "readability",
+        title: "Check the details people use",
+        detail:
+          "Keep text readable, actions clear and photos properly framed. Advanced controls are there when a specific detail needs adjusting.",
+        action: "Review your design",
+        href: `${page}?task=design`,
+        done: false,
+      },
+    ],
+    order: [
+      {
+        id: "pick",
+        title: "Pick up the dotted handle",
+        detail:
+          "On a phone, press and hold the handle. The rest of the row keeps its normal scrolling. With a keyboard, focus the handle and press Space.",
+        action: "Open your content",
+        href: `${page}?task=content`,
+        done: false,
+      },
+      {
+        id: "move",
+        title: "Move the section into position",
+        detail:
+          "Drag above or below another section. Keyboard users can use the arrow keys. The block menu also has Move up and Move down.",
+        action: "Arrange your content",
+        href: `${page}?task=content`,
+        done: false,
+      },
+      {
+        id: "drop",
+        title: "Drop, check, undo if needed",
+        detail:
+          "Release the handle or press Space. The page updates and the order is saved; Undo restores it. Escape cancels a keyboard move.",
+        action: "Try reordering",
+        href: `${page}?task=content`,
+        done: false,
+      },
+    ],
+    sharing: [
+      {
+        id: "destination",
+        title: "Check the destination first",
+        detail:
+          "An unpublished local draft is not a public link. Public sharing needs a connected publishing service; do not print a code to an inaccessible draft.",
+        action: "Review publication status",
+        href: page,
+        done: false,
+        blocked: "Public publishing is not connected in this environment.",
+      },
+      {
+        id: "brand",
+        title: "Make the share belong to your business",
+        detail:
+          "Use a business logo where it stays readable, a safe colour contrast and a quiet zone around the QR code. No logo is a valid fallback.",
+        action: "Review your identity",
+        href: `${page}?task=profile`,
+        done: Boolean(c.identity.name),
+      },
+      {
+        id: "scan",
+        title: "Check the exported file",
+        detail:
+          "Scan the actual download before printing. A transparent code still needs a clear, light surface behind it. Check the URL on the receiving phone.",
+        action: "Review your page",
+        href: page,
+        done: false,
+      },
+    ],
     page: [
       {
         id: "identity",
@@ -291,6 +418,26 @@ export function journeyFor(id: JourneyId, s: DemoState): Journey {
     ],
   };
   const meta: Record<JourneyId, [string, string, string]> = {
+    profile: [
+      "Arrange your introduction",
+      "Choose an intentional layout for the assets you actually have.",
+      "The name, imagery and main action work as one introduction.",
+    ],
+    design: [
+      "Find a look that belongs to you",
+      "Start coordinated, then make individual changes with a purpose.",
+      "A coherent page with readable text, clear actions and your own identity.",
+    ],
+    order: [
+      "Put the important things first",
+      "See how the drag handle and movement alternatives work.",
+      "You can change the order confidently and reverse the change.",
+    ],
+    sharing: [
+      "Share the right page",
+      "Prepare your identity, destination and exported QR code together.",
+      "A customer reaches the correct business page from the actual shared asset.",
+    ],
     page: [
       "Make this page yours",
       "A clear introduction, useful content and a look that works together.",

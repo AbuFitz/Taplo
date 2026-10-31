@@ -102,7 +102,7 @@ export function Products() {
           </Button>
         }
       />
-      <div className="ws-record-toolbar">
+      <div className="ws-record-toolbar" data-empty={!all.length}>
         <label>
           <Search aria-hidden="true" />
           <input

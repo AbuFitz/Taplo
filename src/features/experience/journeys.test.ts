@@ -70,3 +70,13 @@ describe("owner setup readiness", () => {
     expect(measurement.blocked).toMatch(/not connected/);
   });
 });
+
+it("does not mark an undurationed appointment service as ready for customer slots", () => {
+  const s = initialState();
+  s.content.services = [
+    { ...blankService(0), name: "Consultation", bookingMode: "request" },
+  ];
+  expect(journeyFor("bookings", s).steps[0]?.done).toBe(false);
+  s.content.services[0]!.durationMinutes = 30;
+  expect(journeyFor("bookings", s).steps[0]?.done).toBe(true);
+});

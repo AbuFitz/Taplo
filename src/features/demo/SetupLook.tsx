@@ -134,6 +134,7 @@ export function SetupLook() {
     SETUP_LOOKS[0]!;
   const [tab, setTab] = React.useState<Tab>("colours");
   const [note, setNote] = React.useState("");
+  const [allPalettes, setAllPalettes] = React.useState(false);
 
   const logoAccent =
     s.content.identity.logo?.accent ?? s.content.identity.heroImage?.accent;
@@ -265,6 +266,22 @@ export function SetupLook() {
   ];
   const chosen = drafts.palette ?? "original";
   const shownLooks = SETUP_LOOKS;
+  const curated = new Set([
+    "original",
+    "logo",
+    "ice",
+    "periwinkle",
+    "sage",
+    "butter",
+    "blush",
+  ]);
+  const recommendedPalettes = palettes.filter(
+    (p) => curated.has(p.id) || p.id === chosen,
+  );
+  const shownPalettes =
+    allPalettes || recommendedPalettes.length < 3
+      ? palettes
+      : recommendedPalettes;
 
   return (
     <div className="setup-look" data-testid="setup-look">
@@ -317,7 +334,7 @@ export function SetupLook() {
             role="radiogroup"
             aria-label="Colours"
           >
-            {palettes.map((p) => (
+            {shownPalettes.map((p) => (
               <label className="setup-look-tile" key={p.id}>
                 <input
                   type="radio"
@@ -337,6 +354,16 @@ export function SetupLook() {
               </label>
             ))}
           </div>
+          {shownPalettes.length < palettes.length || allPalettes ? (
+            <button
+              type="button"
+              className="setup-palette-more"
+              aria-expanded={allPalettes}
+              onClick={() => setAllPalettes(!allPalettes)}
+            >
+              {allPalettes ? "Show suggested colours" : "Explore all colours"}
+            </button>
+          ) : null}
         </div>
       )}
 

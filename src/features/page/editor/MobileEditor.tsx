@@ -48,7 +48,19 @@ export function MobileEditor({
   clearNote: () => void;
 }) {
   const [section, setSection] = React.useState<Section>("content");
-  useSetupIntent("task",()=>{const task=new URLSearchParams(window.location.search).get("task");setSection(task === "profile" ? "header" : task === "design" ? "design" : "content");});
+  useSetupIntent("task", () => {
+    const task = new URLSearchParams(window.location.search).get("task");
+    setSection(
+      task === "profile" ? "header" : task === "design" ? "design" : "content",
+    );
+    setSelection(
+      task === "profile"
+        ? { kind: "header" }
+        : task === "design"
+          ? { kind: "page" }
+          : { kind: "content" },
+    );
+  });
   const [preview, setPreview] = React.useState(false);
   const [inspecting, setInspecting] = React.useState(false);
   const [showRequirements, setShowRequirements] = React.useState(false);
@@ -203,7 +215,11 @@ export function MobileEditor({
           }
           edit={preview ? undefined : { selection, onSelect: select }}
           onOverlayOpen={() => setPreview(true)}
-          focusKey={section === "header" || section === "design" ? `${s.page.themeId}-${s.page.appearance.header?.layout}` : undefined}
+          focusKey={
+            section === "header" || section === "design"
+              ? `${s.page.themeId}-${s.page.appearance.header?.layout}`
+              : undefined
+          }
           resizeKey={`${preview}-${section}`}
         />
       </div>
@@ -228,7 +244,11 @@ export function MobileEditor({
             className="mobile-studio-body"
             data-testid="inspector"
           >
-            {section === "content" ? <SectionSetup topic="page" compact /> : null}
+            {section === "content" ? (
+              <SectionSetup topic="page" compact />
+            ) : section === "header" ? (
+              <SectionSetup topic="profile" compact />
+            ) : null}
             {section === "content" ? (
               <ContentList
                 ed={ed}
