@@ -1111,7 +1111,7 @@
     padding: 0;
   }
   .workspace-v2 [data-editor="compact"] {
-    z-index: 50;
+    z-index: 30;
   }
   .workspace-v2 .team-person-grid {
     gap: 12px;
