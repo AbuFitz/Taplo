@@ -33,6 +33,10 @@ export function SettingsTab({ ed, notify }: { ed: Editor; notify: (m: string, un
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-3">
+      <Card title="Draft examples">
+        <SwitchField label="Show labelled examples while editing" checked={s.showExamples !== false} onChange={showExamples => ed.update(x=>({...x,showExamples}))} />
+        <p className="text-xs text-muted-foreground">Examples fill empty sections while you build. They are never published as your content.</p>
+      </Card>
       <Card title="Publishing" id="publishing">
         <div className="flex flex-wrap items-center gap-2">
           <span className={`rounded-full border px-3 py-1 text-sm font-medium ${s.published ? "border-green-600/50 bg-green-50 text-green-950" : ""}`}>{s.published ? `Published · version ${s.published.version}` : "Draft · not published"}</span>

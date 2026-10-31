@@ -1,15 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link"
 import { ALL_SHOWCASE } from "@/features/inspiration/showcase-set"
 import { getStartingLook } from "@/features/page/themes/starting-looks"
-import { Scene } from "@/components/taplo/scenes";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures";
-import { loadSample } from "./actions";
 import {
   initialConfig,
   toContent,
@@ -83,124 +78,5 @@ export function Welcome() {
     );
     router.push("/dashboard/page");
   };
-  return (
-    <div className="mx-auto max-w-6xl pb-12 pt-8 sm:pt-14">
-      <div className="grid items-center gap-6 overflow-hidden rounded-[2rem] bg-[#f4f4f4] p-7 text-[#111111] sm:p-10 lg:grid-cols-[1fr_1.05fr] lg:gap-10" data-testid="first-run">
-        <div className="max-w-xl">
-          <h1 className="text-4xl font-semibold leading-[1.06] tracking-tight sm:text-5xl">
-            Set up your business page.
-          </h1>
-          <p className="mt-4 max-w-md text-base leading-relaxed text-[#444]">
-            {resumeName ? `Your setup for ${resumeName} is saved on this device.` : "Add what you offer, pick a look, share the link."}
-          </p>
-          <ol className="mt-6 grid gap-2 text-sm font-medium sm:grid-flow-col sm:auto-cols-max sm:gap-6">
-            {["Add your details", "Choose a look", "Share your page"].map((x, i) => (
-              <li className="flex items-center gap-2" key={x}>
-                <span aria-hidden="true" className="grid size-6 place-items-center rounded-full bg-[#111111] text-xs text-white">{i + 1}</span>
-                {x}
-              </li>
-            ))}
-          </ol>
-          <Button
-            asChild
-            size="lg"
-            className="mt-8 min-h-12 rounded-full bg-[#111111] px-6 text-white hover:bg-[#333333]"
-          >
-            <Link href="/onboarding">
-              {resumeName ? "Continue setup" : "Start setup"} <ArrowRight aria-hidden="true" />
-            </Link>
-          </Button>
-        </div>
-        <Scene name="first-run" className="mx-auto max-h-[22rem] max-w-[34rem]" />
-      </div>
-      <section className="mt-10" aria-labelledby="sample-title">
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h2
-              id="sample-title"
-              className="text-xl font-semibold tracking-tight"
-            >
-              Have a look around first
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Open an example page. Anything you try stays on this device.
-            </p>
-          </div>
-          <Link
-            href="/inspiration"
-            className="inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4"
-          >
-            See all designs
-          </Link>
-        </div>
-        <div className="grid gap-5 sm:grid-cols-3">
-          {SAMPLES.map((s) => (
-            <button
-              key={s.scenario}
-              type="button"
-              onClick={() => load(s.scenario)}
-              aria-label={`Try ${s.name}`}
-              className="group overflow-hidden rounded-2xl border bg-card text-left transition hover:border-foreground/40 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
-            >
-              <div className="relative aspect-[1.35] overflow-hidden bg-muted">
-                <Image
-                  src={`/marketing/ex-${s.asset}-desk.webp?v=20261024-brands`}
-                  alt=""
-                  fill
-                  sizes="(min-width: 1280px) 340px, (min-width: 640px) 30vw, 100vw"
-                  className="object-cover object-top transition duration-300 group-hover:scale-[1.025] motion-reduce:transition-none"
-                />
-              </div>
-              <div className="p-5">
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  {s.category}
-                  {lookName(s.scenario) ? <span className="font-normal normal-case tracking-normal"> · {lookName(s.scenario)}</span> : null}
-                </p>
-                <h3 className="mt-1 text-lg font-semibold tracking-tight">
-                  {s.name}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {s.detail}
-                </p>
-                <span className="mt-5 flex items-center justify-between text-sm font-semibold">
-                  Try this page{" "}
-                  <ArrowRight aria-hidden="true" className="size-4" />
-                </span>
-              </div>
-            </button>
-          ))}
-        </div>
-      </section>
-      <details className="mt-8 rounded-xl border p-4">
-        <summary className="flex min-h-11 cursor-pointer items-center text-sm font-medium">
-          More sample businesses
-        </summary>
-        <p className="mt-3 text-xs text-muted-foreground">
-          Earlier examples for exploring other types of business.
-        </p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {INDUSTRY_FIXTURE_KEYS.map((k) => (
-            <Button
-              key={k}
-              size="sm"
-              className="min-h-11"
-              variant="outline"
-              onClick={() => {
-                update(
-                  (s) =>
-                    s.onboarded || s.content.identity.name
-                      ? s
-                      : loadSample(s, k),
-                  { resetHistory: true },
-                );
-                router.push("/dashboard/page");
-              }}
-            >
-              {getFixture(k)!.label}
-            </Button>
-          ))}
-        </div>
-      </details>
-    </div>
-  );
+  return <div className="ws-first-run" data-testid="first-run"><span className="ws-status">Your business starts here</span><h1>Welcome to Studio.</h1><p>{resumeName ? `Continue setting up ${resumeName}. Your draft is saved on this device.` : "Give your business a home, then make it yours."}</p><Link className="ws-action" href="/onboarding">{resumeName ? "Continue setup" : "Start setup"}<ArrowRight /></Link><div className="ws-start-steps">{[{title:"Your business",line:"Start with a name and what you do."},{title:"Your page",line:"Choose your content and shape the look."},{title:"Your next step",line:"Review the details before sharing."}].map((item,i)=><section key={item.title}><span>{i+1}</span><h2>{item.title}</h2><p>{item.line}</p></section>)}</div><details className="ws-start-examples"><summary>Explore with a sample business<ArrowRight /></summary><p>Fictional business details let you try the tools. They won’t replace an existing draft.</p><div>{SAMPLES.map(sample=><button key={sample.scenario} type="button" onClick={()=>load(sample.scenario)}><strong>{sample.name}</strong><small>{sample.category}{lookName(sample.scenario) ? ` · ${lookName(sample.scenario)}` : ""}</small><ArrowRight /></button>)}</div></details></div>
 }

@@ -87,7 +87,7 @@ function Row({ w, i, count, ed, sum: s, selected, onSelect, onDetails, onAddReco
   const def = getWidget(w.type)!
   const main = w.type === "booking" && ed.vm?.promotedWidgetId === w.id
   // What is on the page is the normal state and says nothing; only the exceptions get a line.
-  const status = w.hidden ? { text: "Hidden from your page", tone: "muted" } : s.locked ? { text: "Not on your page", tone: "warn" } : s.needs ? { text: "Needs a first entry", tone: "warn" } : null
+  const status = w.hidden ? { text: "Hidden from your page", tone: "muted" } : s.locked ? { text: "Not on your page", tone: "warn" } : s.needs ? { text: "Not on your page yet", tone: "warn" } : null
   return (
     <li ref={setNodeRef} style={{ transform: CSS.Transform.toString(transform), transition }} data-widget-row={w.type} data-widget-row-id={w.id}
       className={cn("content-block-card bg-card transition-colors", selected && "bg-[var(--signal-soft)]", w.hidden && "opacity-75", isDragging && "relative z-10 shadow-[0_12px_32px_-8px_rgb(10_16_32/0.35)] ring-2 ring-signal")}>
@@ -95,11 +95,15 @@ function Row({ w, i, count, ed, sum: s, selected, onSelect, onDetails, onAddReco
         <button type="button" ref={setActivatorNodeRef} {...attributes} {...listeners} data-testid="drag-handle" data-base-ui-swipe-ignore="" style={{ touchAction: "none" }}
           aria-label={`Reorder ${s.name}. Position ${i + 1} of ${count}. Press space, then the arrow keys.`}
           className="grid h-14 w-11 shrink-0 cursor-grab place-items-center text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring active:cursor-grabbing"><GripVertical aria-hidden="true" className="size-4" /></button>
-        <button type="button" onClick={() => onSelect(w.id)} aria-pressed={selected} data-testid="select-widget" className="flex min-h-16 min-w-0 flex-1 items-center gap-3 rounded-md py-1 pr-1 text-left outline-none hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring">
+        <button type="button" onClick={() => {
+          if (s.needs?.kind === "details") onDetails()
+          else if (s.needs && s.needs.kind !== "self") onAddRecord(s.needs.kind as RecordKind, w.id)
+          else onSelect(w.id)
+        }} aria-pressed={selected} data-testid="select-widget" className="flex min-h-16 min-w-0 flex-1 items-center gap-3 rounded-md py-1 pr-1 text-left outline-none hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring">
           <Thumb s={s} icon={def.icon} />
           <span className="min-w-0 flex-1">
             <span className="flex flex-wrap items-center gap-1.5"><span className="text-sm font-semibold">{s.name}</span>{main ? <span className="shrink-0 rounded bg-neutral-100 px-1.5 py-0.5 text-[0.6875rem] font-medium text-neutral-600">Main action</span> : null}</span>
-            <span className="block truncate text-xs text-muted-foreground">{s.summary || (s.needs ? "Nothing to show yet" : def.description)}</span>
+            <span className="block truncate text-xs text-muted-foreground">{s.needs ? s.needs.cta : s.summary || def.description}</span>
             {status ? <span className={cn("mt-0.5 flex items-center gap-1 text-xs font-medium", status.tone === "warn" ? "text-foreground" : "text-muted-foreground")}>{s.locked ? <Lock aria-hidden="true" className="size-3" /> : null}{status.text}</span> : null}
           </span>
         </button>
@@ -117,11 +121,6 @@ function Row({ w, i, count, ed, sum: s, selected, onSelect, onDetails, onAddReco
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      {s.needs ? (
-        <div className="px-3 pb-3 pl-11">
-          {s.needs.kind === "details" ? <Button variant="outline" className="h-auto min-h-11 w-full justify-start whitespace-normal py-2 text-left" onClick={onDetails}>{s.needs.cta}</Button> : s.needs.kind === "self" ? <Button variant="outline" className="min-h-11 w-full justify-start" onClick={() => onSelect(w.id)} data-testid="needs-cta">{s.needs.cta}</Button> : <Button variant="outline" className="min-h-11 w-full justify-start" onClick={() => onAddRecord(s.needs!.kind as RecordKind, w.id)} data-testid="needs-cta">{s.needs.cta}</Button>}
-        </div>
-      ) : null}
       {s.locked ? <p className="mx-3 mb-3 ml-11 flex items-start gap-2 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground"><Lock aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />{s.locked} Your content is kept.</p> : null}
     </li>
   )

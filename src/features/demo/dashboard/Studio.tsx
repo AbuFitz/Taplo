@@ -10,6 +10,7 @@ import {
   Package,
   Users,
 } from "lucide-react";
+import { SharePanel } from "@/features/page/widgets/ShareClient";
 import { PagePreview } from "@/features/preview/PagePreview";
 import { useOwner } from "@/features/booking/ui/owner/useOwner";
 import {
@@ -66,6 +67,23 @@ export function Studio() {
               Edit your page
               <ArrowRight />
             </Link>
+            {s.published ? (
+              <SharePanel
+                tone="admin"
+                data={{
+                  name: s.published.content.identity.name,
+                  slug: s.published.content.identity.slug,
+                  logo: s.published.content.identity.logo?.src,
+                  url: `${window.location.origin}/demo/p/${s.published.content.identity.slug}`,
+                }}
+                trigger={
+                  <button type="button" className="ws-text-link">
+                    Share & QR
+                    <ArrowUpRight />
+                  </button>
+                }
+              />
+            ) : null}
           </div>
           <div className="ws-next-step" data-testid="studio-next">
             <span>
