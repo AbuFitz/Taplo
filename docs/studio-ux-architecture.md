@@ -6,7 +6,9 @@ Setup produces a draft, Studio helps finish it, and the page editor shapes it. B
 
 ## Setup
 
-A slim continuous progress bar has an accessible value and no visible step count. Continue occupies a full-width stable row. Back and Skip sit below, in opposite corners. Category selection uses icons and labels rather than ambiguous stock photography. White is the platform background and primary actions are black. A slow ambient gradient is contained around the desktop phone and within the mobile preview area; reduced motion disables it.
+A slim continuous progress bar has an accessible value and no visible step count. Continue occupies a full-width stable row. Back and Skip sit below, in opposite corners. Category selection uses icons and labels rather than ambiguous stock photography. White is the platform background and primary actions are black. A slow black-and-white gradient flows across the full setup canvas behind the desktop phone. Only the background position changes; no rectangular layer translates or rotates. Mobile lowers its intensity, white controls stay opaque, and reduced motion keeps the field still.
+
+The identity step includes a separate optional cover-photo section. Its large upload surface opens the existing crop flow, then shows the actual cover with an Adjust action. Replace, focal-point adjustment and removal reuse the shared image control; image selection updates the same business identity used by the live renderer. No extra required registration step.
 
 New drafts start with Signature: white, black rounded actions, Geist, a floating profile and softly raised blocks. Only six starting looks are exposed in registration; older looks remain resolvable for saved documents. Looks and Colours stay distinct. Deeper profile controls stay optional.
 

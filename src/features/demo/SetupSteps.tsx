@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronRight, Plus, Search, Trash2 } from "lucide-react"
+import { Check, ChevronRight, ImagePlus, Plus, Search, Trash2 } from "lucide-react"
 import { TAPLO_DOMAINS } from "@/lib/domains"
 import { Overlay } from "@/components/taplo/overlay"
 import { Button } from "@/components/ui/button"
@@ -132,6 +132,15 @@ export function NameStep({ showErrors, desktop }: { showErrors: boolean; desktop
         onFramingChange={(shape) => update((x) => ({ ...x, page: { ...x.page, appearance: { ...x.page.appearance, header: { ...x.page.appearance.header, avatarShape: shape } } } }))}
         label="Add a logo or photo · Optional" cropAspect={1} defaultAlt={`${c.identity.name || "Business"} logo`} maxEdge={640} value={c.identity.logo ?? null}
         onChange={(v) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, logo: v ?? undefined } } }))} />
+      <details className="sf-cover-setup">
+        <summary><ImagePlus aria-hidden="true" /><span>{c.identity.heroImage ? "Your cover photo" : "Add a cover photo"}<small>Optional</small></span><ChevronRight aria-hidden="true" /></summary>
+        <div className="sf-cover-body">
+          <ImageField presentation="cover" purpose="cover" label="Cover photo" samples={false} cropAspect={16 / 7} maxEdge={1400} value={c.identity.heroImage ?? null} defaultAlt={`${c.identity.name || "Business"} cover photo`}
+            focalHint="Keep the important part in view. Check the live page to see how your cover frames the profile."
+            onChange={v => update(x => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, heroImage: v ?? undefined } } }))} />
+          <p className="sf-help">Check how it frames your page. You can change it later.</p>
+        </div>
+      </details>
     </div>
   )
 }
