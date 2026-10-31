@@ -197,7 +197,7 @@ export function PageStylePanel({
           </div>
           <div key={task} className="design-task-controls">
             {task === "colours" ? (
-              <ColourControls m={m} />
+              <ColourControls m={m} guided />
             ) : task === "look" ? (
               <LookPicker m={m} />
             ) : task === "wallpaper" ? (

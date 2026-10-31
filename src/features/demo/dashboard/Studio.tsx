@@ -92,7 +92,7 @@ export function Studio() {
           <details className="ws-next-step" data-testid="studio-next">
             <summary>
               {missing.length
-                ? `${missing.length} steps before publishing`
+                ? `${missing.length} ${missing.length === 1 ? "step" : "steps"} before publishing`
                 : changed && s.published
                   ? "Changes ready to publish"
                   : s.published

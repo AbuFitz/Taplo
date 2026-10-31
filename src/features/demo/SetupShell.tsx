@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowLeft, Eye, X } from "lucide-react";
+import { ArrowLeft, Maximize2, X } from "lucide-react";
 import { SetupAtmosphere } from "./SetupAtmosphere";
 import { TaploLogo } from "@/components/taplo/brand";
 
@@ -29,7 +29,7 @@ interface Props {
   onBack?: () => void;
 }
 
-/** Mobile is a focused form; preview is an explicit mode, never a competing sheet. */
+/** Mobile is a focused form; the live page stays above the form and adapts to the current task. */
 export const SetupShell = React.forwardRef<HTMLElement, Props>(
   function SetupShell(
     {
@@ -106,10 +106,12 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(
               className="sf-preview-toggle"
               onClick={() => onSnap(previewing ? "default" : "peek")}
               aria-pressed={previewing}
-              aria-label={previewing ? "Back to setup" : "Preview your page"}
+              aria-label={previewing ? "Back to setup" : "Expand page preview"}
             >
-              {previewing ? <X /> : <Eye />}
-              <span>{previewing ? "Back to setup" : "Your page"}</span>
+              {previewing ? <X /> : <Maximize2 />}
+              <span className="sr-only">
+                {previewing ? "Back to setup" : "Expand preview"}
+              </span>
             </button>
           ) : null}
         </header>
@@ -155,12 +157,7 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(
           <footer className="sf-foot">{footer}</footer>
         </section>
 
-        <div
-          className="sf-stage"
-          inert={mobile && !previewing}
-          aria-hidden={mobile && !previewing}
-          data-testid="setup-stage"
-        >
+        <div className="sf-stage" data-testid="setup-stage">
           {preview}
         </div>
       </main>

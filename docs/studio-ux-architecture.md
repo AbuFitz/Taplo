@@ -1,5 +1,7 @@
 # Taplo Studio experience architecture
 
+Current interaction contract: [experience-system.md](experience-system.md). The persistent adaptive mobile preview supersedes earlier optional-preview decisions recorded below. The form and editor retain live feedback; expanded inspection is optional.
+
 ## Main journey
 
 Setup produces a draft, Studio helps finish it, and the page editor shapes it. Business records remain independent from presentation. Changing a look never replaces those records. Mobile is the primary composition; desktop offers more working room around the same page.

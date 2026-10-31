@@ -589,3 +589,20 @@
 .sf-root .sf-tiles>li:nth-child(3n) .sf-tile-icon{background:#f2eddf;color:#67552c}
 .sf-root .sf-tile[aria-pressed=true] .sf-tile-icon{background:#111;color:#fff}
 @media(max-width:1023px){.setup-atmosphere{inset:0 0 auto;height:220px;opacity:.22;mask-image:linear-gradient(#000,transparent)}.sf-root .sf-top{background:transparent}.sf-root .sf-sheet{background:transparent}.sf-root .sf-scroll{background:linear-gradient(#ffffff8c,#fff 180px)}.sf-root[data-keyboard=true] .setup-atmosphere{display:none}}
+/* Persistent live context: a readable slice of the page, not a tiny complete phone. */
+@media(max-width:1023px){
+ .sf-root .sf-top{order:0;height:56px;padding-block:6px}
+ .sf-root .sf-preview-toggle{width:44px;padding:0;flex:none}
+ .sf-root .sf-stage{order:1;display:flex;position:relative;flex:0 0 clamp(116px,22dvh,185px);height:clamp(116px,22dvh,185px);min-height:0;padding:10px 20px 12px;background:transparent;overflow:hidden;transition:flex-basis .25s ease,height .25s ease}
+ .sf-root[data-step=look] .sf-stage{flex-basis:clamp(170px,28dvh,240px);height:clamp(170px,28dvh,240px)}
+ .sf-root[data-step=plan] .sf-stage{flex-basis:clamp(100px,17dvh,145px);height:clamp(100px,17dvh,145px)}
+ .sf-root .sf-canvas{max-width:440px;height:100%;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 5px 20px #0000000c;border:1px solid #1111110a}
+ .sf-root .sf-sheet{order:2;flex:1;min-height:0;box-shadow:0 -1px 0 #00000008;background:#fff}
+ .sf-root .sf-scroll{padding-top:20px;background:#fff}.sf-root .sf-title{font-size:29px}.sf-root .sf-description{padding-bottom:20px;font-size:13px}
+ .sf-root .sf-tile{min-height:62px}.sf-root .sf-tile-label{font-size:12px}.sf-root .sf-tile-icon{width:28px;height:28px}
+ .sf-root[data-previewing=true] .sf-stage{display:flex;flex:1;height:auto;padding:16px 20px}
+ .sf-root[data-previewing=true] .sf-sheet{display:none}
+ .sf-root[data-keyboard=true]:not([data-previewing=true]) .sf-stage{flex-basis:0;height:0;padding-block:0;visibility:hidden}
+ .sf-root[data-keyboard=true] .sf-scroll{padding-top:12px}
+}
+@media(prefers-reduced-motion:reduce){.sf-root .sf-stage{transition:none}}

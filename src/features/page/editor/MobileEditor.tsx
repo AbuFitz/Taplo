@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ArrowLeft, Eye, Redo2, Undo2 } from "lucide-react";
+import { ArrowLeft, Maximize2, Redo2, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   canPublish,
@@ -70,6 +70,11 @@ export function MobileEditor({
         "--editor-vh",
         `${vv?.height ?? window.innerHeight}px`,
       );
+      if (root.current)
+        root.current.dataset.keyboard = String(
+          window.innerHeight - (vv?.height ?? window.innerHeight) > 150 &&
+            Boolean(document.activeElement?.matches("input,textarea,select")),
+        );
       root.current?.style.setProperty(
         "--editor-top",
         `${vv?.offsetTop ?? 0}px`,
@@ -87,6 +92,21 @@ export function MobileEditor({
   const changed = hasUnpublishedChanges(s);
   const select = (value: Selection) => {
     setSelection(value);
+    if (value.kind === "content") {
+      setSection("content");
+      setInspecting(false);
+      return;
+    }
+    if (value.kind === "header") {
+      setSection("header");
+      setInspecting(false);
+      return;
+    }
+    if (value.kind === "page") {
+      setSection("design");
+      setInspecting(false);
+      return;
+    }
     setInspecting(true);
     setSnap(DEFAULT_SNAP);
   };
@@ -135,6 +155,38 @@ export function MobileEditor({
             {ed.storageFailed ? "Changes not saved" : "Draft saved"}
           </span>
         </div>
+        <div
+          className="mobile-studio-live"
+          data-expanded={preview}
+          data-section={section}
+        >
+          <PagePreview
+            mode="fill"
+            src={preview ? "/demo/preview" : "/demo/preview?edit=1"}
+            title="Live preview of your page"
+            testId="preview-frame"
+            focus={
+              section === "design" || section === "header"
+                ? "identity"
+                : inspecting && widget
+                  ? ((
+                      {
+                        priceMenu: "offer",
+                        serviceList: "offer",
+                        featuredService: "offer",
+                        booking: "booking",
+                        team: "team",
+                        gallery: "gallery",
+                        hours: "hours",
+                      } as Record<string, string>
+                    )[widget.type] ?? "identity")
+                  : "identity"
+            }
+            edit={preview ? undefined : { selection, onSelect: select }}
+            onOverlayOpen={() => setPreview(true)}
+            resizeKey={`${preview}-${section}`}
+          />
+        </div>
         {!preview ? (
           <button
             type="button"
@@ -143,9 +195,11 @@ export function MobileEditor({
               setPreview(true);
               setInspecting(false);
             }}
+            aria-label="Expand page preview"
             data-testid="customer-preview"
           >
-            <Eye /> Preview
+            <Maximize2 />
+            <span className="sr-only">Expand preview</span>
           </button>
         ) : null}
       </header>
@@ -263,16 +317,7 @@ export function MobileEditor({
             ) : null}
           </footer>
         </>
-      ) : (
-        <div className="mobile-studio-page">
-          <PagePreview
-            mode="fill"
-            src="/demo/preview"
-            title="Your page"
-            testId="preview-frame"
-          />
-        </div>
-      )}
+      ) : null}
       {note ? (
         <div role="status" className="mobile-studio-toast" data-testid="notice">
           <span>{note.msg}</span>

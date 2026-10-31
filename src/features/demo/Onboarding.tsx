@@ -482,10 +482,18 @@ export function Onboarding() {
         <div className="sf-canvas">
           <SetupCanvas
             src="/demo/preview"
-            expanded={false}
+            expanded={mobile}
             closeUp={false}
             fit={true}
-            focus={FOCUS[step]}
+            focus={
+              mobile &&
+              (step === "name" ||
+                step === "look" ||
+                step === "plan" ||
+                step === "type")
+                ? "identity"
+                : FOCUS[step]
+            }
             onSurface={onSurface}
             onOverlayOpen={() => {
               if (mobile) setSnap("peek");

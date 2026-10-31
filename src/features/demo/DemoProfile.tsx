@@ -73,6 +73,7 @@ const FOCUS_TARGETS: Record<string, string> = {
   header: ".tp-header",
   actions: ".tp-primary-slot, .tp-actions",
   offer: '[data-widget="serviceList"], [data-widget="priceMenu"], [data-widget="products"], [data-widget="featuredService"], [data-widget="gallery"]',
+  identity: ".tp-name",
   social: '[data-widget="social"]',
   booking: '[data-widget="booking"], .tp-primary-slot',
   gallery: '[data-widget="gallery"]',

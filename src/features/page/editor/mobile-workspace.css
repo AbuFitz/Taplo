@@ -260,3 +260,15 @@
   min-height: 84px;
   gap: 10px;
 }
+/* Live feedback remains in the editing composition. Expanded inspection is optional. */
+.mobile-studio-live{flex:0 0 clamp(105px,18dvh,155px);height:clamp(105px,18dvh,155px);position:relative;margin:0 20px 10px;overflow:hidden;border:1px solid #1111110a;border-radius:17px;background:#f5f5f5;box-shadow:0 5px 18px #00000007;transition:height .25s ease,flex-basis .25s ease}
+.mobile-studio-live[data-section=design],.mobile-studio-live[data-section=header]{flex-basis:clamp(155px,25dvh,220px);height:clamp(155px,25dvh,220px)}
+.mobile-studio-live[data-expanded=true]{flex:1;height:auto;margin:0;border:0;border-radius:0;box-shadow:none}
+.mobile-studio-preview{width:44px;padding:0}
+.mobile-studio:focus-within .mobile-studio-body{scroll-padding-block:24px}
+@media(max-height:520px){.mobile-studio-live:not([data-expanded=true]){flex-basis:70px;height:70px;margin-bottom:6px}}
+@media(prefers-reduced-motion:reduce){.mobile-studio-live{transition:none}}
+.mobile-studio[data-keyboard=true] .mobile-studio-live:not([data-expanded=true]){height:0;flex-basis:0;margin-block:0;border:0;visibility:hidden}
+.mobile-studio[data-keyboard=true] .mobile-studio-header{min-height:50px;padding-block:5px}
+.mobile-studio[data-keyboard=true] .mobile-studio-body{padding-top:16px}
+.context-help{max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain}
