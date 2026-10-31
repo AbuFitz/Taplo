@@ -27,7 +27,7 @@ export function ContextHelp({ topic }: { topic: HelpTopic }) {
   const Icon = guide.Icons[step]!
   return <Popover open={open} onOpenChange={o => { setOpen(o); if (o) setStep(0) }}>
     <PopoverTrigger asChild><button ref={trigger} type="button" className="context-help-trigger" aria-label={`Help: ${guide.title}`}><HelpCircle aria-hidden="true" /><span>{seen ? "Quick guide" : topic === "order" ? "How to reorder" : topic === "design" ? "How design works" : "How blocks work"}</span></button></PopoverTrigger>
-    <PopoverContent className="context-help" side="bottom" align="end" sideOffset={10} onCloseAutoFocus={e => { e.preventDefault(); trigger.current?.focus() }}>
+    <PopoverContent aria-label={guide.title} className="context-help" side="bottom" align="end" sideOffset={10} onCloseAutoFocus={e => { e.preventDefault(); trigger.current?.focus() }}>
       <div className="context-help-top"><strong>{guide.title}</strong><button type="button" onClick={() => setOpen(false)} aria-label="Close guide"><X aria-hidden="true" /></button></div>
       <div className="context-help-art" data-topic={topic} data-step={step} aria-hidden="true"><div className="context-help-page"><i /><b>Your business</b><span>Get in touch</span><div className={step === 1 && topic === "order" ? "help-row-moved" : ""}><GripVertical />Services</div><div><GripVertical />Our team</div></div><span className="context-help-symbol"><Icon /></span></div>
       <div className="context-help-progress" aria-label={`Guide step ${step + 1} of 3`}>{guide.steps.map((s,i) => <button key={s} type="button" aria-label={s} aria-current={step === i ? "step" : undefined} onClick={() => setStep(i)} />)}</div>

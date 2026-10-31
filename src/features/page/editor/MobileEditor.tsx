@@ -8,7 +8,7 @@ import { PagePreview } from "@/features/preview/PagePreview"
 import { cn } from "@/lib/utils"
 import { WorkspaceMenu } from "@/features/demo/dashboard/WorkspaceNav"
 import { getWidget } from "../widgets/registry"
-import { EditorDrawer, PEEK, type DrawerSnap } from "./EditorDrawer"
+import { EditorDrawer, PEEK, DEFAULT_SNAP, TALL, type DrawerSnap } from "./EditorDrawer"
 import { ContextHelp } from "./ContextHelp"
 import { ContentList } from "./ContentList"
 import { SettingsBody } from "./EditorPanel"
@@ -64,7 +64,7 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
   React.useEffect(() => {
     if (opened.current) return
     opened.current = true
-    if (new URLSearchParams(window.location.search).get("open") === "details") queueMicrotask(() => { setSelection({ kind: "details" } as Selection); setStack(["selection"]); setSnap(0.62) })
+    if (new URLSearchParams(window.location.search).get("open") === "details") queueMicrotask(() => { setSelection({ kind: "details" } as Selection); setStack(["selection"]); setSnap(DEFAULT_SNAP) })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const s = ed.state
@@ -79,12 +79,12 @@ export function MobileEditor({ ed, selection, setSelection, notify, note, clearN
   const close = () => setStack([])
   const back = () => setStack((st) => st.slice(0, -1))
   const toggleTab = (p: Panel) => { setLastTab(p); toggleTabInner(p) }
-  const toggleTabInner = (p: Panel) => (top === p && stack.length === 1 ? close() : openPanel(p, "replace", 0.62))
+  const toggleTabInner = (p: Panel) => (top === p && stack.length === 1 ? close() : openPanel(p, "replace", p === "content" ? TALL : DEFAULT_SNAP))
 
   const fromPreview = (sel: Selection) => {
     setSelection(sel)
     if (sel.kind === "content") close()
-    else if (sel.kind === "header") openPanel("header", "replace", 0.62)
+    else if (sel.kind === "header") openPanel("header", "replace", DEFAULT_SNAP)
     else openPanel("selection", "replace", PEEK)
   }
   const fromList = (sel: Selection) => { setSelection(sel); openPanel("selection", "push", PEEK) }

@@ -51,3 +51,8 @@ The opening desktop question uses a closer crop of the real preview, with a mode
 Colours is the first tab in the style step. Signature remains the initial white-and-black design; each coordinated swatch shows background, surface, text and action roles. Looks remains beside Colours. The screen title is Style your page, so it covers both choices. These changes follow the recording's progressive disclosure and predictable layout without reproducing its branding.
 
 Browser review now works on Vercel previews. The rebuild was walked from custom category through registration into Studio; service search, service editing/saving and Settings navigation were exercised. All management routes were inspected at 360px and 390px in real application iframes, with no document-level horizontal overflow. Overview was captured at 390px and 1280px. This is responsive browser verification, not certification of physical-phone keyboards, touch dragging or Safari behaviour.
+
+
+## Issues found in rendered mobile review
+
+A workspace stacking context placed the full-screen preview above the portalled editor sheet. Its z-index is restored below the sheet; block move-menu and Undo were then verified in the preview. Legacy global block-grid rules also overrode the intended list and created 168px tiles; an explicit row class now resolves to 72px controls. Content opens at the tall registered snap point so organising blocks has room; other root panels use the registered 72% point, and contextual selection can stay at peek. Physical touch dragging and keyboard drag remain unconfirmed; the accessible move menu was exercised successfully.
