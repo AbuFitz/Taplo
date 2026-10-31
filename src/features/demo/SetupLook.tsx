@@ -12,7 +12,7 @@ import {
   PALETTES,
   applyPalette,
   getPalette,
-  logoPalette,
+  identityPalette,
   lookStillBackground,
   originalPalette,
   palettesFor,
@@ -135,10 +135,12 @@ export function SetupLook() {
   const [tab, setTab] = React.useState<Tab>("colours");
   const [note, setNote] = React.useState("");
 
-  const logoAccent = s.content.identity.logo?.accent;
+  const logoAccent =
+    s.content.identity.logo?.accent ?? s.content.identity.heroImage?.accent;
   const logoOffer = React.useMemo(() => {
     if (!logoAccent) return null;
-    const p = logoPalette(logoAccent, look);
+    const p = identityPalette(s.content.identity, look);
+    if (!p) return null;
     return p &&
       readsWell({
         background: p.base,
@@ -151,7 +153,7 @@ export function SetupLook() {
       })
       ? p
       : null;
-  }, [logoAccent, look]);
+  }, [logoAccent, look, s.content.identity]);
 
   const paletteOf = (
     id: string | undefined,
@@ -159,7 +161,7 @@ export function SetupLook() {
   ): Palette | undefined =>
     id === "logo"
       ? logoAccent
-        ? (logoPalette(logoAccent, forLook) ?? undefined)
+        ? (identityPalette(s.content.identity, forLook) ?? undefined)
         : undefined
       : getPalette(id, forLook);
   const remember = (st: DemoState) => ({

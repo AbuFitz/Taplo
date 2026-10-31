@@ -82,3 +82,8 @@
  .workspace-v2 .ws-plan-options{grid-template-columns:repeat(2,minmax(0,1fr))}
  .workspace-v2 .ws-analytics-metrics{gap:8px}.workspace-v2 .ws-analytics-metrics>section{padding:14px 10px;min-height:145px}.workspace-v2 .ws-analytics-metrics>section>span{font-size:11px}.workspace-v2 .ws-analytics-metrics>section>small{font-size:10px}
 }
+/* A search box is one field, not an input framed inside another input. */
+.workspace-v2 .ws-record-toolbar>label,.workspace-v2 .workspace-search{padding:0 14px;gap:9px;max-width:420px;flex:1;min-width:0}
+.workspace-v2 .ws-record-toolbar>label>input:not([type=checkbox]):not([type=radio]),.workspace-v2 .workspace-search>input:not([type=checkbox]):not([type=radio]){width:100%;min-width:0;min-height:46px;height:auto;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0;color:#32333a;font-size:14px}
+.workspace-v2 .ws-record-toolbar>label:has(input:focus-visible),.workspace-v2 .workspace-search:has(input:focus-visible){border-color:#222;outline:2px solid #222;outline-offset:2px}
+@media(max-width:800px){.workspace-v2 .ws-record-toolbar>label>input:not([type=checkbox]):not([type=radio]),.workspace-v2 .workspace-search>input:not([type=checkbox]):not([type=radio]){font-size:16px}}
