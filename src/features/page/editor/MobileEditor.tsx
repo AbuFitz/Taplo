@@ -155,38 +155,6 @@ export function MobileEditor({
             {ed.storageFailed ? "Changes not saved" : "Draft saved"}
           </span>
         </div>
-        <div
-          className="mobile-studio-live"
-          data-expanded={preview}
-          data-section={section}
-        >
-          <PagePreview
-            mode="fill"
-            src={preview ? "/demo/preview" : "/demo/preview?edit=1"}
-            title="Live preview of your page"
-            testId="preview-frame"
-            focus={
-              section === "design" || section === "header"
-                ? "identity"
-                : inspecting && widget
-                  ? ((
-                      {
-                        priceMenu: "offer",
-                        serviceList: "offer",
-                        featuredService: "offer",
-                        booking: "booking",
-                        team: "team",
-                        gallery: "gallery",
-                        hours: "hours",
-                      } as Record<string, string>
-                    )[widget.type] ?? "identity")
-                  : "identity"
-            }
-            edit={preview ? undefined : { selection, onSelect: select }}
-            onOverlayOpen={() => setPreview(true)}
-            resizeKey={`${preview}-${section}`}
-          />
-        </div>
         {!preview ? (
           <button
             type="button"
@@ -203,6 +171,39 @@ export function MobileEditor({
           </button>
         ) : null}
       </header>
+      <div
+        className="mobile-studio-live"
+        data-expanded={preview}
+        data-section={section}
+      >
+        <PagePreview
+          mode="fill"
+          src={preview ? "/demo/preview" : "/demo/preview?edit=1"}
+          title="Live preview of your page"
+          testId="preview-frame"
+          focus={
+            section === "design" || section === "header"
+              ? "identity"
+              : inspecting && widget
+                ? ((
+                    {
+                      priceMenu: "offer",
+                      serviceList: "offer",
+                      featuredService: "offer",
+                      booking: "booking",
+                      team: "team",
+                      gallery: "gallery",
+                      hours: "hours",
+                    } as Record<string, string>
+                  )[widget.type] ?? "identity")
+                : "identity"
+          }
+          edit={preview ? undefined : { selection, onSelect: select }}
+          onOverlayOpen={() => setPreview(true)}
+          resizeKey={`${preview}-${section}`}
+        />
+      </div>
+
       {!preview ? (
         <>
           <nav className="mobile-studio-tabs" aria-label="Editor sections">

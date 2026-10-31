@@ -606,3 +606,5 @@
  .sf-root[data-keyboard=true] .sf-scroll{padding-top:12px}
 }
 @media(prefers-reduced-motion:reduce){.sf-root .sf-stage{transition:none}}
+.sf-root .setup-look-grid.setup-colour-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 8px}
+.sf-root .sf-scroll{scrollbar-width:none}.sf-root .sf-scroll::-webkit-scrollbar{display:none}

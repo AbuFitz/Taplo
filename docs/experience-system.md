@@ -66,3 +66,7 @@ The opening type/name steps reserve roughly a fifth of the mobile screen for pre
 Use 360px and 390px narrow screens, a short-height screen, tablet and desktop. Check the complete state transition: select → visible change → Undo → save → reload. Inspect initial state, selection, deep editing, scrolling, overlay, keyboard, empty, invalid, pending, success and failure states where applicable. Do not call an experience finished because its component mounts or its build passes.
 
 Current browser evidence and remaining limits belong in the PR, with commit IDs. CSS viewport checks are not certification of physical iOS/Android keyboards or Safari gestures. New mobile preview dimensions and guidance need rendered review before acceptance. A design study is not a substitute for observing real business owners using the product.
+
+## Observed correction: colour step
+
+In preview af73a77 at 390px, the persistent name/action window stayed visible while selecting Sage. Rendered --tp-background changed from #ffffff to #edf1ec, and Undo restored #ffffff. Inspection also exposed legacy !important rules forcing the palette to two columns. Those layout locks are removed; setup explicitly uses a compact three-column palette. This is a rendered observation, not an assumption that three columns are always appropriate for arbitrary future palette counts.
