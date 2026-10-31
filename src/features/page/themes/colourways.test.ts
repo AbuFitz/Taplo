@@ -5,8 +5,8 @@ import { backgroundSchema, colorsSchema } from "../contracts/style";
 import { newPage } from "../starter";
 
 describe("approved colourways", () => {
-  it("are the eight approved directions", () => {
-    expect(COLOURWAYS.map((c) => c.name)).toEqual(["Warm sand", "Paper", "Sage mist", "Soft cloud", "Terracotta", "Limestone", "Ink", "Mono flow", "Midnight flow", "Graphite silk", "Forest", "Harbour"]);
+  it("include the neutral default and existing saved colourways", () => {
+    expect(COLOURWAYS.map((c) => c.name)).toEqual(["Signature", "Warm sand", "Paper", "Sage mist", "Soft cloud", "Terracotta", "Limestone", "Ink", "Mono flow", "Midnight flow", "Graphite silk", "Forest", "Harbour"]);
   });
   for (const cw of COLOURWAYS) {
     it(`${cw.name}: valid tokens, readable pairs, still by default`, () => {

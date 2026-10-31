@@ -771,3 +771,5 @@ html[data-taplo-embedded="true"] [data-overlay][data-state="open"] { animation:p
   [data-desktop="columns"] .tp-header[data-layout="side"] { grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem); align-items: center; column-gap: var(--tp-s-6); }
   [data-desktop="columns"] .tp-header[data-layout="side"] .tp-actions { justify-self: stretch; }
 }
+
+.tp-report{display:flex;justify-content:center;margin:0 auto 10px;opacity:.8}.tp-report .support-trigger{font-size:var(--tp-t-xs);min-height:44px;padding:0 14px;color:var(--tp-muted)}

@@ -6,6 +6,7 @@ import { Overlay } from "@/components/taplo/overlay"
 import { Button } from "@/components/ui/button"
 import type { ImageRef } from "@/features/businesses/content"
 import { dominantAccent, paletteFromAccent } from "../themes/image-palette"
+import { withSuggestedColours } from "../themes/profile-direction"
 import type { Editor } from "./useEditor"
 
 type Colours = ReturnType<typeof paletteFromAccent>
@@ -68,7 +69,7 @@ export function ColourSuggestion({ ed, image, notify }: { ed: Editor; image: Ima
   const accept = () => {
     if (state.kind !== "ready") return
     const p = state.palette
-    ed.setAppearance((a) => ({ ...a, colors: { ...a.colors, ...p } }))
+    ed.setAppearance((a) => withSuggestedColours(a,p))
     setOpen(false)
     notify("Colours updated from your picture.", true)
   }

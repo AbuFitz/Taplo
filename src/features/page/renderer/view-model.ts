@@ -1,3 +1,4 @@
+import { SIGNATURE_APPEARANCE } from "../themes/starting-looks";
 import { serviceActionLabel } from "@/features/booking/model";
 import { businessContentSchema, type BusinessContent, type BusinessContentInput } from "@/features/businesses/content";
 import { resolveEntitlements, type Entitlements, type SubscriptionStatus } from "@/features/subscriptions/entitlements";
@@ -103,7 +104,7 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
   }).filter((id): id is string => Boolean(id)))];
   const style = resolveStyle(page.themeId, page.appearance, business.identity.logo?.accent);
   // Theme choice is a Core+ capability: Free keeps the industry's suggested theme.
-  const effectiveStyle = ent.themeSwitching || opts.themeOverride ? style : resolveStyle(industry.suggestedThemeId, {});
+  const effectiveStyle = ent.themeSwitching || opts.themeOverride ? style : resolveStyle("clean", { ...SIGNATURE_APPEARANCE, colors: { background: "#ffffff", text: "#141414", muted: "#62666d", surface: "#ffffff", accent: "#141414", accentText: "#ffffff", border: "#e7e9ed" }, background: { kind: "solid", color: "#ffffff" } });
 
   const widgets: RenderWidget[] = [];
   const notes = [...mig.notes, ...effectiveStyle.notices.map((n) => n.message)];

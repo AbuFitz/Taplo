@@ -1,5 +1,7 @@
 "use client";
 
+import { profileDirection } from "@/features/page/themes/profile-direction";
+import { arrangementAvailable } from "@/features/page/themes/arrangement";
 import { FinishPicker } from "./FinishPicker";
 import { matchingFinish, withFinish } from "./finishes";
 
@@ -8,7 +10,11 @@ import { Check, Lock, RotateCcw, X } from "lucide-react";
 import { ColorField, ImageField } from "@/features/page/editor/controls";
 import { FinishControl } from "./FinishControl";
 import { applyFinish } from "@/features/page/themes/designs";
-import { DECORATIONS, PROFILE_CHOICES, type StyleSpec } from "@/features/page/contracts/style";
+import {
+  DECORATIONS,
+  PROFILE_CHOICES,
+  type StyleSpec,
+} from "@/features/page/contracts/style";
 import { FONT_LABELS } from "@/features/page/themes/fonts";
 import { LOOK_GROUPS } from "@/features/page/themes/discovery";
 import { PALETTES } from "@/features/page/themes/looks";
@@ -100,7 +106,15 @@ export function LookPicker({ m }: M) {
       </p>
       <div className="grid gap-2">
         <p className="text-sm font-semibold text-neutral-900">Material</p>
-        <FinishControl value={m.spec.layout.finish} dark={m.resolved.attrs["data-tone"] === "dark"} onChange={(f) => m.apply((o) => applyFinish(o, f, m.resolved.attrs["data-tone"] === "dark"))} />
+        <FinishControl
+          value={m.spec.layout.finish}
+          dark={m.resolved.attrs["data-tone"] === "dark"}
+          onChange={(f) =>
+            m.apply((o) =>
+              applyFinish(o, f, m.resolved.attrs["data-tone"] === "dark"),
+            )
+          }
+        />
       </div>
       {m.saved ? <SavedLooks m={m} /> : null}
     </div>
@@ -201,7 +215,10 @@ function SavedLooks({ m }: M) {
 }
 
 /* ------------------------------------------------------------------ colour */
-export function ColourControls({ m }: M) {
+export function ColourControls({
+  m,
+  guided = false,
+}: M & { guided?: boolean }) {
   const { spec } = m;
   const palette = PALETTES.find((p) =>
     (Object.keys(p.colors) as (keyof typeof p.colors)[]).every(
@@ -209,6 +226,39 @@ export function ColourControls({ m }: M) {
     ),
   );
   const page = m.resolved.cssVars["--tp-background"] ?? spec.colors.background;
+  const individual = (
+    <div className="grid gap-3">
+      <ColorField
+        label="Page"
+        value={page}
+        customised={m.has("colors", "background")}
+        onReset={() => m.reset("colors", "background")}
+        onChange={m.setPageColour}
+      />
+      <ColorField
+        label="Text"
+        value={spec.colors.text}
+        against={page}
+        customised={m.has("colors", "text")}
+        onReset={() => m.reset("colors", "text")}
+        onChange={(v) => m.patch("colors", "text", v)}
+      />
+      <ColorField
+        label="Accent"
+        value={spec.colors.accent}
+        customised={m.has("colors", "accent")}
+        onReset={() => m.reset("colors", "accent")}
+        onChange={(v) => m.patch("colors", "accent", v)}
+      />
+      <ColorField
+        label="Cards"
+        value={spec.colors.surface}
+        customised={m.has("colors", "surface")}
+        onReset={() => m.reset("colors", "surface")}
+        onChange={(v) => m.patch("colors", "surface", v)}
+      />
+    </div>
+  );
   return (
     <div className="grid gap-4">
       <ChoiceGrid
@@ -236,37 +286,13 @@ export function ColourControls({ m }: M) {
           preview: <PaletteTile colors={p.colors} />,
         }))}
       />
-      <div className="grid gap-3">
-        <ColorField
-          label="Page"
-          value={page}
-          customised={m.has("colors", "background")}
-          onReset={() => m.reset("colors", "background")}
-          onChange={m.setPageColour}
-        />
-        <ColorField
-          label="Text"
-          value={spec.colors.text}
-          against={page}
-          customised={m.has("colors", "text")}
-          onReset={() => m.reset("colors", "text")}
-          onChange={(v) => m.patch("colors", "text", v)}
-        />
-        <ColorField
-          label="Accent"
-          value={spec.colors.accent}
-          customised={m.has("colors", "accent")}
-          onReset={() => m.reset("colors", "accent")}
-          onChange={(v) => m.patch("colors", "accent", v)}
-        />
-        <ColorField
-          label="Cards"
-          value={spec.colors.surface}
-          customised={m.has("colors", "surface")}
-          onReset={() => m.reset("colors", "surface")}
-          onChange={(v) => m.patch("colors", "surface", v)}
-        />
-      </div>
+      {guided ? (
+        <Disclosure title="Fine-tune individual colours" id="custom-colours">
+          {individual}
+        </Disclosure>
+      ) : (
+        individual
+      )}
       <details className="group/more">
         <summary className="inline-flex min-h-9 cursor-pointer list-none items-center text-xs font-medium text-neutral-600 underline-offset-4 hover:text-neutral-900 hover:underline [&::-webkit-details-marker]:hidden">
           More colours
@@ -426,18 +452,34 @@ export function TypeControls({ m }: M) {
 }
 
 /* ------------------------------------------------------------------ header */
-const HEADER_OPTIONS: [StyleSpec["header"]["layout"], string][] = PROFILE_CHOICES.map((c) => [c.id, c.name]);
+const HEADER_OPTIONS: [(typeof PROFILE_CHOICES)[number]["id"], string][] =
+  PROFILE_CHOICES.map((c) => [c.id, c.name]);
 export function HeaderControls({
   m,
   identity,
   livePreviews = false,
   previewSrc,
+  guided = false,
 }: M & {
   identity?: BusinessContent["identity"];
   livePreviews?: boolean;
   previewSrc?: (layout: StyleSpec["header"]["layout"]) => string;
+  guided?: boolean;
 }) {
   const { spec } = m;
+  const [showAll, setShowAll] = React.useState(false);
+  const direction = identity ? profileDirection(identity) : null;
+  const recommended = direction
+    ? [
+        direction.arrangement.id,
+        ...direction.alternatives.map((a) => a.id),
+        spec.header.layout,
+      ]
+    : [];
+  const options =
+    guided && !showAll && direction
+      ? HEADER_OPTIONS.filter(([id]) => recommended.includes(id))
+      : HEADER_OPTIONS;
   return (
     <div className="grid gap-4">
       <ChoiceGrid
@@ -450,13 +492,17 @@ export function HeaderControls({
             header: {
               ...o.header,
               layout: v,
-              align: v === "centered" || v === "bento" || v === "identity" ? "center" : "left",
+              align:
+                v === "centered" || v === "bento" || v === "identity"
+                  ? "center"
+                  : "left",
             },
           }))
         }
-        options={HEADER_OPTIONS.map(([v, l]) => ({
+        options={options.map(([v, l]) => ({
           value: v,
           label: l,
+          disabled: identity ? !arrangementAvailable(v, identity) : false,
           preview:
             livePreviews || previewSrc ? (
               <ChoicePreview
@@ -469,6 +515,15 @@ export function HeaderControls({
             ),
         }))}
       />
+      {guided ? (
+        <button
+          type="button"
+          className="justify-self-start min-h-11 text-xs font-medium underline underline-offset-4"
+          onClick={() => setShowAll((v) => !v)}
+        >
+          {showAll ? "Show suggested arrangements" : "Browse every arrangement"}
+        </button>
+      ) : null}
       {spec.header.layout === "poster" ||
       spec.header.layout === "melt" ||
       spec.header.layout === "framed" ||
@@ -852,7 +907,18 @@ export function SurfaceControls({ m }: M) {
 }
 
 /* ------------------------------------------------------------------ wallpaper */
-type Wall = "solid" | "gradient" | "aurora" | "silk" | "grain" | "warp" | "orbs" | "rays" | "swirl" | "smoke" | "image";
+type Wall =
+  | "solid"
+  | "gradient"
+  | "aurora"
+  | "silk"
+  | "grain"
+  | "warp"
+  | "orbs"
+  | "rays"
+  | "swirl"
+  | "smoke"
+  | "image";
 export function WallpaperControls({ m }: M) {
   const { spec } = m;
   const [photoPicker, setPhotoPicker] = React.useState(false);

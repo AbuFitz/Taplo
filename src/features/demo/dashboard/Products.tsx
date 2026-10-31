@@ -1,7 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { Archive, ArchiveRestore, Pencil, Plus } from "lucide-react";
+import { useSetupIntent } from "@/features/experience/useSetupIntent";
+import {
+  Archive,
+  ArchiveRestore,
+  Pencil,
+  Plus,
+  Search,
+  Car,
+  Package,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Overlay } from "@/components/taplo/overlay";
 import { formatMoney } from "@/features/services/format";
@@ -15,6 +24,7 @@ import {
 } from "../ProductForm";
 import { useDraft } from "../hooks";
 import { EmptyPanel } from "@/components/taplo/illustrations";
+import { ProfileImage } from "@/features/page/renderer/ProfileImage";
 import { PageHeader } from "./Panel";
 
 export const blankProduct = (
@@ -42,8 +52,10 @@ export function Products() {
     p: ProductContent;
     isNew: boolean;
   } | null>(null);
+  const [query, setQuery] = React.useState("");
   const [before, setBefore] = React.useState("");
   const [showErr, setShowErr] = React.useState(false);
+  useSetupIntent("new", () => { const p=blankProduct(c?.identity.industryKey === "car-dealer" ? "vehicle" : "product"); setBefore(JSON.stringify(p)); setShowErr(false); setEditing({p,isNew:true}); }, Boolean(c));
   if (!c) return null;
   const all = (c.products ?? []).map(normProduct);
   const active = all.filter((p) => !p.archived);
@@ -68,10 +80,11 @@ export function Products() {
   return (
     <>
       <PageHeader
+        scene="products"
         title={
           c.identity.industryKey === "car-dealer" ? "Vehicle stock" : "Products"
         }
-        description="Things you sell, recommend or have in stock. Show them on your page with a Products block."
+        description="Manage the items you sell, recommend or have in stock."
         actions={
           <Button
             onClick={() =>
@@ -89,70 +102,104 @@ export function Products() {
           </Button>
         }
       />
+      <div className="ws-record-toolbar" data-empty={!all.length}>
+        <label>
+          <Search aria-hidden="true" />
+          <input
+            aria-label="Search products"
+            placeholder="Find an item…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </label>
+        <span>{active.length} active</span>
+      </div>
       <div className="grid max-w-3xl gap-6">
         {active.length === 0 ? (
           <div className="rounded-xl border border-dashed p-6">
             <h2 className="font-semibold">No products yet</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Add a product, then add a Products block in My page → Content.
-              Until you do, that block stays hidden.
+              Add an item here, then choose a Products block in Page builder →
+              Content. Until you do, that block stays hidden.
             </p>
           </div>
         ) : (
-          <ul className="grid gap-3">
-            {active.map((p) => (
-              <li
-                key={p.id}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-xl border p-4"
-              >
-                <div className="min-w-0">
-                  <p className="font-semibold">{p.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {p.priceMinor !== undefined
-                      ? formatMoney(p.priceMinor, p.currency)
-                      : "No price shown"}{" "}
-                    ·{" "}
-                    {p.mode === "link"
-                      ? p.affiliate
-                        ? "Opens an affiliate link"
-                        : "Opens your own link"
-                      : "Customers enquire"}{" "}
-                    · {p.kind === "vehicle" ? "Vehicle" : "Product"} ·{" "}
-                    <strong
-                      className={
-                        p.availability === "available"
-                          ? "font-medium"
-                          : "font-semibold text-foreground"
+          <ul className="ws-record-list">
+            {active
+              .filter((p) => p.name.toLowerCase().includes(query.toLowerCase()))
+              .map((p) => (
+                <li
+                  key={p.id}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-xl border p-4"
+                >
+                  <div className="ws-product-record">
+                    <div className="ws-product-picture">
+                      {p.image || p.images?.[0] ? (
+                        <ProfileImage
+                          image={p.image ?? p.images![0]!}
+                          sizes="100px"
+                        />
+                      ) : p.kind === "vehicle" ? (
+                        <Car aria-hidden="true" />
+                      ) : (
+                        <Package aria-hidden="true" />
+                      )}
+                    </div>
+                    <div className="ws-product-copy">
+                      <p>{p.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {p.priceMinor !== undefined
+                          ? formatMoney(p.priceMinor, p.currency)
+                          : "No price shown"}{" "}
+                        ·{" "}
+                        {p.mode === "link"
+                          ? p.affiliate
+                            ? "Opens an affiliate link"
+                            : "Opens your own link"
+                          : "Customers enquire"}{" "}
+                      </p>
+                      <div className="ws-product-badges">
+                        <span>
+                          {p.kind === "vehicle" ? "Vehicle" : "Product"}
+                        </span>
+                        <span data-available={p.availability === "available"}>
+                          {AVAILABILITY_LABEL[p.availability]}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => open(p, false)}
+                    >
+                      <Pencil /> Edit
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        commit(
+                          all.map((x) =>
+                            x.id === p.id ? { ...x, archived: true } : x,
+                          ),
+                        )
                       }
                     >
-                      {AVAILABILITY_LABEL[p.availability]}
-                    </strong>
-                  </p>
-                </div>
-                <div className="flex gap-1">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => open(p, false)}
-                  >
-                    <Pencil /> Edit
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      commit(
-                        all.map((x) =>
-                          x.id === p.id ? { ...x, archived: true } : x,
-                        ),
-                      )
-                    }
-                  >
-                    <Archive /> Archive
-                  </Button>
-                </div>
+                      <Archive /> Archive
+                    </Button>
+                  </div>
+                </li>
+              ))}
+            {active.length > 0 &&
+            !active.some((p) =>
+              p.name.toLowerCase().includes(query.toLowerCase()),
+            ) ? (
+              <li className="text-sm text-muted-foreground">
+                No items match your search.
               </li>
-            ))}
+            ) : null}
           </ul>
         )}
         {archived.length ? (
@@ -183,11 +230,14 @@ export function Products() {
             </ul>
           </section>
         ) : null}
-        <EmptyPanel illustration="connect" title="Checkout and NFC products are not built yet">
+        <EmptyPanel
+          illustration="connect"
+          title="Checkout and NFC products are not built yet"
+        >
           <p>
-            Today a product opens an enquiry (call, WhatsApp or email) or a
-            link to your own shop. Cart, payments, orders and optional NFC
-            cards, stickers and keyrings come later.
+            Today a product opens an enquiry (call, WhatsApp or email) or a link
+            to your own shop. Cart, payments, orders and optional NFC cards,
+            stickers and keyrings come later.
           </p>
         </EmptyPanel>
       </div>

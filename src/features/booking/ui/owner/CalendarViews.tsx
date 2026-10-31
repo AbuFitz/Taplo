@@ -37,6 +37,7 @@ function Chip({
     <button
       type="button"
       onClick={() => onOpen(b)}
+      aria-label={`${formatClock(b.startsAt, tz)}, ${b.customer.name}, ${b.serviceName}, ${STATUS_LABEL[b.status]}`}
       data-testid="cal-booking"
       data-status={b.status}
       className={cn(
@@ -47,6 +48,7 @@ function Chip({
       <span className="block truncate font-semibold">
         {formatClock(b.startsAt, tz)} {b.customer.name}
       </span>
+      <span className="cal-chip-status">{STATUS_LABEL[b.status]}</span>
       {!compact ? (
         <span className="block truncate opacity-80">{b.serviceName}</span>
       ) : null}

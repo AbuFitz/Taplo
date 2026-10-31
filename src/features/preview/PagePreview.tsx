@@ -66,6 +66,8 @@ export interface PagePreviewProps {
   smooth?: boolean
   /** Part of the page to bring into view inside the frame (header, actions, offer, social, top). */
   focus?: string
+  /** Reframe after a deliberate layout change without reloading the page. */
+  focusKey?: string
 }
 
 const MIN_DESKTOP = 1024
@@ -91,7 +93,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, safeTop: 0, safeBottom: 0, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, skipTab = false, retryAfterMs, onSurface, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen, maxScale = 1, smooth = false, focus }: PagePreviewProps) {
+export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, skipTab = false, retryAfterMs, onSurface, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen, maxScale = 1, smooth = false, focus, focusKey }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
@@ -184,8 +186,12 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
   React.useEffect(post, [post, L?.vw, L?.vh])
   React.useEffect(() => {
     if (!focus || !loaded) return
-    frame.current?.contentWindow?.postMessage({ type: "taplo:focus", target: focus }, window.location.origin)
-  }, [focus, loaded])
+    // The draft reaches the embedded renderer asynchronously. Reframe after its layout settles.
+    const timer = window.setTimeout(() => {
+      frame.current?.contentWindow?.postMessage({ type: "taplo:focus", target: focus }, window.location.origin)
+    }, 120)
+    return () => window.clearTimeout(timer)
+  }, [focus, focusKey, loaded])
 
   const iframe = L ? (
     <iframe

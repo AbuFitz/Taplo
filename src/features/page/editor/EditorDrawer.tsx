@@ -9,7 +9,9 @@ import { useScrollMemory } from "./scroll-memory"
 
 export type DrawerSnap = number | string
 export const PEEK = 0.46
+export const DEFAULT_SNAP = 0.72
 export const TALL = 1
+const SNAP_POINTS = [PEEK, DEFAULT_SNAP, TALL]
 
 /**
  * The editor's contextual sheet. It is NON-modal on purpose: the page preview behind it stays
@@ -41,7 +43,7 @@ export function EditorDrawer({ open, onOpenChange, snap, onSnap, side, title, on
       modal={false}
       disablePointerDismissal
       swipeDirection={bottom ? "down" : "right"}
-      snapPoints={bottom ? [PEEK, TALL] : undefined}
+      snapPoints={bottom ? SNAP_POINTS : undefined}
       snapPoint={bottom ? snap : undefined}
       onSnapPointChange={bottom ? (sp) => onSnap(sp) : undefined}
     >

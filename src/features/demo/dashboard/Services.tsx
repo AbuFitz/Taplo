@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useSetupIntent } from "@/features/experience/useSetupIntent";
 import {
   ArrowDown,
   ArrowUp,
@@ -9,6 +10,7 @@ import {
   ArchiveRestore,
   Pencil,
   Plus,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -28,6 +30,7 @@ export function Services() {
     svc: ServiceContent;
     isNew: boolean;
   } | null>(null);
+  const [query, setQuery] = React.useState("");
   const [before, setBefore] = React.useState("");
   const begin = (svc: ServiceContent, isNew: boolean) => {
     setBefore(JSON.stringify(svc));
@@ -35,6 +38,7 @@ export function Services() {
     setEditing({ svc, isNew });
   };
   const [showErrors, setShowErrors] = React.useState(false);
+  useSetupIntent("new", () => begin(blankService(c?.services?.length ?? 0), true), Boolean(c));
   if (!c || !ent) return null;
 
   const all = (c.services ?? [])
@@ -75,9 +79,9 @@ export function Services() {
 
   return (
     <>
-      <PageHeader
+      <PageHeader scene="services"
         title={getIndustryPreset(c.identity.industryKey).terminology.services}
-        description="What you offer and what it costs. You set every price; Taplo never fills one in."
+        description="Manage your prices, durations and bookable services."
         actions={
           <Button
             onClick={() => {
@@ -98,6 +102,7 @@ export function Services() {
           to Core for unlimited services. Nothing is deleted.
         </p>
       ) : null}
+      <div className="ws-record-toolbar" data-empty={!all.length}><label><Search aria-hidden="true" /><input aria-label="Search services" placeholder="Find a service…" value={query} onChange={e=>setQuery(e.target.value)} /></label><span>{active.length} active</span></div>
       {active.length === 0 ? (
         <div className="max-w-xl rounded-xl border border-dashed p-6">
           <h2 className="font-semibold">No services yet</h2>
@@ -107,8 +112,8 @@ export function Services() {
           </p>
         </div>
       ) : (
-        <ul className="grid max-w-3xl gap-3">
-          {active.map((s, i) => (
+        <ul className="ws-record-list">
+          {active.filter(s => `${s.name} ${s.group ?? ""}`.toLowerCase().includes(query.toLowerCase())).map((s) => { const i = active.findIndex(v=>v.id===s.id); return (
             <li key={s.id} className="rounded-xl border p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
@@ -161,7 +166,8 @@ export function Services() {
                 </div>
               </div>
             </li>
-          ))}
+          )})}
+          {active.length > 0 && !active.some(s => `${s.name} ${s.group ?? ""}`.toLowerCase().includes(query.toLowerCase())) ? <li className="text-sm text-muted-foreground">No services match your search.</li> : null}
         </ul>
       )}
       {archived.length ? (
@@ -190,7 +196,7 @@ export function Services() {
         </section>
       ) : null}
 
-      <Offers />
+      <details className="ws-secondary-task"><summary>Offers and promotions</summary><Offers /></details>
 
       <Overlay
         open={editing !== null}

@@ -3,6 +3,7 @@
 import { businessAddress } from "@/lib/domains"
 
 import * as React from "react"
+import { useSetupIntent } from "@/features/experience/useSetupIntent"
 import { Redo2, Undo2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -29,6 +30,7 @@ export function MyPage() {
   const ed = useEditor()
   const wide = useWide()
   const [selection, setSelection] = React.useState<Selection>(CONTENT)
+  useSetupIntent("task",()=>{const task=new URLSearchParams(window.location.search).get("task");setSelection(task === "profile" ? {kind:"header"} : task === "design" ? {kind:"page"} : CONTENT)},wide && Boolean(ed))
   const [note, setNote] = React.useState<{ msg: string; undoable: boolean } | null>(null)
   const noteTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 

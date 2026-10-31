@@ -6,9 +6,7 @@ import { businessContentSchema, type BusinessContentInput } from "@/features/bus
 import type { PageDoc } from "@/features/page/contracts/page";
 import { fromLegacyConfig, migratePage } from "@/features/page/migrate";
 import { newPage } from "@/features/page/starter";
-import { getStartingLook, RECOMMENDED_LOOK } from "@/features/page/themes/starting-looks";
-import { applyColourway } from "@/features/page/themes/colourways";
-import { applyDesign, getDesign } from "@/features/page/themes/designs";
+import { applyStartingLook, getStartingLook, RECOMMENDED_LOOK } from "@/features/page/themes/starting-looks";
 import { PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
 
 /**
@@ -52,7 +50,7 @@ export interface DemoState {
   /** Plain-language notes for the owner (e.g. after an automatic upgrade). Dismissible. */
   notes?: string[];
   /** Incomplete form text survives back/reload, but never enters the public renderer until valid. */
-  setupDrafts?: { reviewEdit?:boolean; goals?: ("book"|"contact"|"services"|"products"|"work"|"call"|"message"|"browse"|"buy")[]; connections?: {email:string;phone:string;whatsapp:string;website:string;instagram:string;socials?:Record<string,string>}; planIntent?:PlanId; backgroundEdited?:boolean; colourway?:string; colourMotion?:boolean; keptColours?:Record<string,string>; palette?:string; colourUndo?:{ appearance:unknown; colourway?:string; colourMotion?:boolean; keptColours?:Record<string,string>; palette?:string }; services?: { id:string; name:string; price:string; minutes:string; priceMode?: "fixed"|"from"|"quote"|"free" }[]; record?: { kind:"vehicle"|"photo"|"product"; value:unknown } };
+  setupDrafts?: { reviewEdit?:boolean; goals?: ("book"|"contact"|"services"|"products"|"work"|"call"|"message"|"browse"|"buy")[]; connections?: {email:string;phone:string;whatsapp:string;website:string;instagram:string;socials?:Record<string,string>}; planIntent?:PlanId; backgroundEdited?:boolean; colourway?:string; colourMotion?:boolean; keptColours?:Record<string,string>; palette?:string; colourUndo?:{ page?:unknown; appearance:unknown; colourway?:string; colourMotion?:boolean; keptColours?:Record<string,string>; palette?:string }; services?: { id:string; name:string; price:string; minutes:string; priceMode?: "fixed"|"from"|"quote"|"free" }[]; record?: { kind:"vehicle"|"photo"|"product"; value:unknown } };
 }
 
 const stateSchema = z.object({
@@ -67,7 +65,7 @@ const stateSchema = z.object({
   checklistHidden: z.boolean().optional(),
   published: z.unknown().nullable(),
   notes: z.array(z.string()).optional(),
-  setupDrafts: z.object({reviewEdit:z.boolean().optional(),goals:z.array(z.enum(["book","contact","services","products","work","call","message","browse","buy"])).optional(),connections:z.object({email:z.string(),phone:z.string(),whatsapp:z.string(),website:z.string(),instagram:z.string(),socials:z.record(z.string(),z.string()).optional()}).optional(),planIntent:z.enum(PLAN_IDS).optional(),backgroundEdited:z.boolean().optional(),colourway:z.string().optional(),colourMotion:z.boolean().optional(),keptColours:z.record(z.string(),z.string()).optional(),palette:z.string().optional(),colourUndo:z.object({appearance:z.unknown(),colourway:z.string().optional(),colourMotion:z.boolean().optional(),keptColours:z.record(z.string(),z.string()).optional(),palette:z.string().optional()}).optional(),services:z.array(z.object({id:z.string(),name:z.string(),price:z.string(),minutes:z.string(),priceMode:z.enum(["fixed","from","quote","free"]).optional()})).optional(),record:z.object({kind:z.enum(["vehicle","photo","product"]),value:z.unknown()}).optional()}).optional(),
+  setupDrafts: z.object({reviewEdit:z.boolean().optional(),goals:z.array(z.enum(["book","contact","services","products","work","call","message","browse","buy"])).optional(),connections:z.object({email:z.string(),phone:z.string(),whatsapp:z.string(),website:z.string(),instagram:z.string(),socials:z.record(z.string(),z.string()).optional()}).optional(),planIntent:z.enum(PLAN_IDS).optional(),backgroundEdited:z.boolean().optional(),colourway:z.string().optional(),colourMotion:z.boolean().optional(),keptColours:z.record(z.string(),z.string()).optional(),palette:z.string().optional(),colourUndo:z.object({page:z.unknown().optional(),appearance:z.unknown(),colourway:z.string().optional(),colourMotion:z.boolean().optional(),keptColours:z.record(z.string(),z.string()).optional(),palette:z.string().optional()}).optional(),services:z.array(z.object({id:z.string(),name:z.string(),price:z.string(),minutes:z.string(),priceMode:z.enum(["fixed","from","quote","free"]).optional()})).optional(),record:z.object({kind:z.enum(["vehicle","photo","product"]),value:z.unknown()}).optional()}).optional(),
 });
 
 export function blankContent(): BusinessContentInput {
@@ -101,12 +99,8 @@ export function initialState(): DemoState {
     page: (() => {
       // A curated look is on the page from the first keystroke: type-led, calm, and not tied to any kind of business.
       const p = newPage("other");
-      const design = getDesign("paper");
-      const styledDesign = design ? applyDesign(p, design, { reorder: false }) : p;
-      // The first automatic recommendation is a solid, still starting look.
       const recommended = getStartingLook(RECOMMENDED_LOOK);
-      const styled = recommended ? applyColourway(styledDesign, recommended.colourway, { motion: false }) : styledDesign;
-      return { ...styled, appearance: { ...styled.appearance, header: { ...styled.appearance.header, layout: "masthead" as const, align: "left" as const } } };
+      return recommended ? applyStartingLook(p, recommended, { reorder: true }) : p;
     })(),
     slugEdited: false,
     published: null,

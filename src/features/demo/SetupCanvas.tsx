@@ -8,6 +8,7 @@ export function SetupCanvas({
   onOverlayOpen,
   focus,
   onSurface,
+  closeUp = false,
 }: {
   src: string;
   expanded: boolean;
@@ -16,6 +17,7 @@ export function SetupCanvas({
   /** Part of the page to bring into view (header, actions, offer). */
   focus?: string;
   onSurface?: (color: string) => void;
+  closeUp?: boolean;
 }) {
   return (
     <PagePreview
@@ -23,7 +25,9 @@ export function SetupCanvas({
       title="Your page, live"
       mode={expanded ? "fill" : "device"}
       chrome={!expanded}
-      cropDevice={!expanded && !fit}
+      cropDevice={!expanded && (!fit || closeUp)}
+      maxScale={closeUp ? 1.2 : 1}
+      smooth
       resizeKey={`${expanded}-${fit}`}
       onOverlayOpen={onOverlayOpen}
       focus={focus}

@@ -26,7 +26,7 @@ test.describe("onboarding", () => {
     const next = () => page.getByRole("button", { name: /^Continue/ }).click();
     await page.goto("/onboarding");
     await page.getByTestId("tile-other").click();
-    await page.getByRole("textbox", { name: "What do you do?" }).fill("Dog groomer");
+    await page.getByRole("textbox", { name: "Search or enter your business type" }).fill("Dog groomer");
     await next();
     await page.getByLabel("Business name", { exact: true }).fill("Paws & Polish");
     await next();                                   // look
