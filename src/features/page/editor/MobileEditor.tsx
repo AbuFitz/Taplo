@@ -200,6 +200,7 @@ export function MobileEditor({
           }
           edit={preview ? undefined : { selection, onSelect: select }}
           onOverlayOpen={() => setPreview(true)}
+          focusKey={section === "header" || section === "design" ? `${s.page.themeId}-${s.page.appearance.header?.layout}` : undefined}
           resizeKey={`${preview}-${section}`}
         />
       </div>
