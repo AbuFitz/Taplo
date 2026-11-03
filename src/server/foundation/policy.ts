@@ -8,7 +8,7 @@ export interface Target { businessId: string; locationId?: string; resourceId?: 
 export function authorise(principal: Principal, membership: Membership | null, action: string, target: Target, now = Date.now()): void {
   if (!membership || membership.userId !== principal.id || membership.businessId !== target.businessId || membership.status !== "active") throw hidden();
   const consoleAction = action.startsWith("console.") || action === "verified_provider.reconcile";
-  if (consoleAction !== (principal.audience === "workforce")) throw new CommandError("FORBIDDEN", 403, "You don’t have access to this action.");
+  if ((consoleAction && principal.audience !== "workforce") || (!consoleAction && principal.audience !== "merchant")) throw new CommandError("FORBIDDEN", 403, "You don’t have access to this action.");
   if (consoleAction && (!target.workforceCaseId || !target.reason?.trim())) throw new CommandError("FORBIDDEN", 403, "Choose a case and record a reason.");
   const grants: readonly string[] = policy.role_presets[membership.role];
   if (!grants?.includes(action)) throw new CommandError("FORBIDDEN", 403, "You don’t have access to this action.");

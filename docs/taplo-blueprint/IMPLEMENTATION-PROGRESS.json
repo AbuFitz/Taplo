@@ -5,7 +5,19 @@
     {
       "id": "P01",
       "state": "source_implemented_acceptance_pending",
-      "evidence": "../foundation-implementation.md"
+      "evidence": "../foundation-implementation.md",
+      "actual_checks": [
+        {
+          "commit": "0ce2db5c151f9e7d40f1dd0c723d36ac9f6c2885",
+          "check": "Next route type generation and TypeScript",
+          "result": "passed in GitHub Actions run 41729459257"
+        },
+        {
+          "commit": "0ce2db5c151f9e7d40f1dd0c723d36ac9f6c2885",
+          "check": "lint",
+          "result": "failed on existing merged capture/vendor/test files; corrective commit 5210b8197cd940491725f7b7cce41d044b3a4c7a awaiting verification"
+        }
+      ]
     },
     {
       "id": "P02",
