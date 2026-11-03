@@ -1,29 +1,22 @@
 import { expect, type Page, type FrameLocator } from "@playwright/test";
+import { FIXTURES } from "../../src/features/themes/fixtures";
 
 export const previewFrame = (page: Page): FrameLocator =>
   page.frameLocator('iframe[title="Live preview of your page"]').first();
 
-/** Load a synthetic sample into the demo store through the real UI and land in the editor. */
+/** Editor regression tests use the registered synthetic fixtures. The real sample-entry journey is tested separately. */
 export async function openEditorWithSample(
   page: Page,
-  sample:
-    | "Barber"
-    | "Car dealer"
-    | "Tutor"
-    | "Mechanic"
-    | "Café"
-    | "Consultant"
-    | "Unlisted" = "Barber",
+  sample: "Barber" | "Car dealer" | "Tutor" | "Mechanic" | "Café" | "Consultant" | "Unlisted" = "Barber",
 ) {
-  await page.goto("/dashboard", {waitUntil:"domcontentloaded"});
-  await page.evaluate(() => localStorage.clear());
-  await page.reload({waitUntil:"domcontentloaded"});
-  await page.getByText("More sample businesses", { exact: true }).click();
-  await page
-    .getByRole("button", { name: new RegExp(`^${sample}`) })
-    .first()
-    .click();
-  await page.waitForURL("**/dashboard/page");
+  const fixture = FIXTURES.find((item) => item.label.startsWith(sample));
+  if (!fixture) throw new Error(`Missing registered fixture: ${sample}`);
+  await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
+  await page.evaluate((item) => {
+    localStorage.clear();
+    localStorage.setItem("taplo.demo.v2", JSON.stringify({ v: 2, step: "finish", onboarded: true, plan: item.plan, content: item.content, page: item.page, slugEdited: true, published: null }));
+  }, fixture);
+  await page.goto("/dashboard/page", { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("my-page")).toBeVisible();
   await page.waitForLoadState("networkidle");
 }

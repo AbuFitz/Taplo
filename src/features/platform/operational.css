@@ -15,7 +15,7 @@
 .workspace-v2.operational-root[data-colour-scheme="dark"] {color-scheme:dark;--destructive:#ff9bac;--ws-ready:#a1dfb5;--ws-ready-soft:#19382a;--ws-attention:#f4d58d;--ws-attention-soft:#3c301b;--ws-danger:#ffacbb;--ws-danger-soft:#40202b;}
 .workspace-v2.operational-root :is(h1,h2,h3):not(:where([data-taplo-theme] *)) {font-family:var(--font-heading);color:var(--op-text);text-wrap:balance;}
 .workspace-v2.operational-root :is(button,a,input,textarea,select,summary):focus-visible {outline:3px solid var(--op-accent);outline-offset:3px;scroll-margin-block:100px;}
-.workspace-v2.operational-root :is(button,[role="button"],input:not([type="checkbox"]):not([type="radio"]),select):not(:where([data-taplo-theme] *)) {min-height:44px;}
+.workspace-v2.operational-root :is(button:not([role="checkbox"]):not([role="switch"]),[role="button"],input:not([type="checkbox"]):not([type="radio"]),select):not(:where([data-taplo-theme] *)) {min-height:44px;}
 .workspace-v2.operational-root input:not(:where([data-taplo-theme] *)),.workspace-v2.operational-root textarea:not(:where([data-taplo-theme] *)) {font-size:16px;}
 .workspace-v2.operational-root .ws-main {width:100%;max-width:1288px;margin-inline:auto;background:transparent;min-width:0;}
 .workspace-v2.operational-root .ws-content {padding:32px 24px 40px;width:100%;max-width:1240px;min-width:0;margin-inline:auto;}
@@ -67,7 +67,7 @@
 @media(display-mode:standalone) {.studio-header {padding-top:max(12px,env(safe-area-inset-top));}}
 @media(prefers-reduced-motion:reduce) {.workspace-v2.operational-root :is(button,a,[data-overlay]) {scroll-behavior:auto;animation-duration:0s;transition-duration:0s;}}
 /* Preserve a full touch target for popup dismissal, including branded customer popups. */
-[data-overlay][data-overlay-tone="page"]>header [data-slot="button"] {width:44px;height:44px;min-height:44px;}
+[data-overlay][data-overlay-tone="page"]>header :is([data-slot="button"],button[data-variant]) {width:44px;height:44px;min-height:44px;}
 .workspace-v2.operational-root .ws-status {background:var(--op-surface);border-color:var(--op-line);color:var(--op-muted);}
 
 /* Legacy screen rules must not override operational contrast or shell geometry. */
@@ -84,9 +84,12 @@
 .workspace-v2.operational-root .ws-page-intro .portal-page-title {color:var(--op-text);font-weight:750;}
 .workspace-v2.operational-root[data-operational] :is(input:not([type="checkbox"]):not([type="radio"]),textarea):not(:where([data-taplo-theme] *)) {background:var(--op-surface);color:var(--op-text);border-color:var(--op-line);}
 .workspace-v2.operational-root[data-operational] :is(input,textarea):not(:where([data-taplo-theme] *))::placeholder {color:var(--op-muted);opacity:1;}
-.workspace-v2.operational-root[data-operational] [data-slot="button"]:not(:where([data-taplo-theme] *)) {color:var(--op-text);}
-.workspace-v2.operational-root[data-operational] [data-slot="button"][data-variant="default"]:not(:where([data-taplo-theme] *)) {background:var(--op-text);color:var(--op-surface);}
-.workspace-v2.operational-root[data-operational] [data-slot="button"][data-variant="outline"]:not(:where([data-taplo-theme] *)) {background:var(--op-surface);color:var(--op-text);border-color:var(--op-line);}
-.workspace-v2.operational-root[data-operational] [data-slot="button"][data-variant="ghost"]:not(:where([data-taplo-theme] *)) {background:transparent;color:var(--op-text);}
-.workspace-v2.operational-root[data-operational] [data-slot="button"][data-variant="destructive"]:not(:where([data-taplo-theme] *)) {color:var(--destructive);background:color-mix(in srgb,var(--destructive) 12%,var(--op-surface));}
+.workspace-v2.operational-root[data-operational] :is([data-slot="button"],button[data-variant]):not(:where([data-taplo-theme] *)) {color:var(--op-text);}
+.workspace-v2.operational-root[data-operational] :is([data-slot="button"],button[data-variant])[data-variant="default"]:not(:where([data-taplo-theme] *)) {background:var(--op-text);color:var(--op-surface);}
+.workspace-v2.operational-root[data-operational] :is([data-slot="button"],button[data-variant])[data-variant="outline"]:not(:where([data-taplo-theme] *)) {background:var(--op-surface);color:var(--op-text);border-color:var(--op-line);}
+.workspace-v2.operational-root[data-operational] :is([data-slot="button"],button[data-variant])[data-variant="ghost"]:not(:where([data-taplo-theme] *)) {background:transparent;color:var(--op-text);}
+.workspace-v2.operational-root[data-operational] :is([data-slot="button"],button[data-variant])[data-variant="destructive"]:not(:where([data-taplo-theme] *)) {color:var(--destructive);background:color-mix(in srgb,var(--destructive) 12%,var(--op-surface));}
 .workspace-v2.operational-root .ws-action {background:var(--op-text);color:var(--op-surface);}
+
+.workspace-v2.operational-root[data-operational] :is([data-slot="button"],button[data-variant])[data-size^="icon"]:not(:where([data-taplo-theme] *)) {min-width:44px;}
+.workspace-v2.operational-root[data-operational] label:has(:is(input[type="checkbox"],[role="checkbox"],[role="switch"])) {min-height:44px;}

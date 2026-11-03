@@ -16,6 +16,7 @@ test("operational appearance survives navigation and reload without changing the
   await page.getByRole("combobox", { name: "Colour mode" }).selectOption("dark");
   await expect(page.locator("[data-operational]")).toHaveAttribute("data-colour-scheme", "dark");
   await page.getByRole("navigation", { name: "Studio navigation", exact: true }).locator('a[href="/dashboard/services"]').click();
+  await page.waitForURL("**/dashboard/services");
   await page.reload();
   await expect(page.locator("[data-operational]")).toHaveAttribute("data-colour-scheme", "dark");
   expect(await page.evaluate(() => localStorage.getItem("taplo.demo.v2"))).toBe(before);
