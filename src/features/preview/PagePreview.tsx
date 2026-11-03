@@ -67,6 +67,8 @@ export interface PagePreviewProps {
   /** Part of the page to bring into view inside the frame (header, actions, offer, social, top). */
   focus?: string
   /** Reframe after a deliberate layout change without reloading the page. */
+  /** Size the document to the visible stage rather than hiding part of a tall document. */
+  fitHeight?: boolean
   focusKey?: string
 }
 
@@ -74,13 +76,18 @@ const MIN_DESKTOP = 1024
 const MAX_DESKTOP = 1440
 const READABLE = 0.72
 
-export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, device = { w: 390, h: 844 }, zoom: "fit" | "actual" = "fit", chrome = false, cropDevice = false, maxScale = 1) {
+export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, device = { w: 390, h: 844 }, zoom: "fit" | "actual" = "fit", chrome = false, cropDevice = false, maxScale = 1, fitHeight = false) {
   if (mode === "fill") return { vw: box.w, vh: box.h, scale: 1, pad: 0, bar: 0, safeTop: 0, safeBottom: 0, outerW: box.w, outerH: box.h }
   if (mode === "device") {
     const pad = chrome ? PHONE.bezel : 0
     const safeTop = 0
     const safeBottom = 0
     const outerW = device.w + pad * 2
+    if (fitHeight) {
+      const scale = Math.min(1, Math.max(1, box.w - 8) / outerW)
+      const vh = Math.max(120, Math.floor(box.h / scale) - pad * 2)
+      return { vw: device.w, vh, scale, pad, bar: 0, safeTop, safeBottom, outerW, outerH: vh + pad * 2 }
+    }
     const outerH = device.h + pad * 2
     const scale = zoom === "actual" ? 1 : Math.min(cropDevice ? maxScale : 1, Math.max(1,box.w - (chrome ? 8 : 0)) / outerW, cropDevice ? maxScale : box.h / outerH)
     return { vw: device.w, vh: device.h - safeTop - safeBottom, scale, pad, bar: 0, safeTop, safeBottom, outerW, outerH }
@@ -93,7 +100,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, safeTop: 0, safeBottom: 0, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, skipTab = false, retryAfterMs, onSurface, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen, maxScale = 1, smooth = false, focus, focusKey }: PagePreviewProps) {
+export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, skipTab = false, retryAfterMs, onSurface, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen, maxScale = 1, smooth = false, focus, focusKey, fitHeight = false }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
@@ -155,7 +162,7 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
   }, [mode, zoom, resizeKey])
 
   const decorated = chrome && mode !== "fill"
-  const L = box ? layoutPreview(mode, box, device, zoom, decorated, cropDevice, maxScale) : null
+  const L = box ? layoutPreview(mode, box, device, zoom, decorated, cropDevice, maxScale, fitHeight) : null
   React.useEffect(() => { if (L) onViewport?.({ w: L.vw, h: L.vh, scale: L.scale }) }, [L?.vw, L?.vh, L?.scale]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const setFrame = React.useCallback((el: HTMLIFrameElement | null) => { frame.current = el; frameRef?.(el) }, [frameRef])

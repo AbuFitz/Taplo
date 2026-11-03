@@ -630,3 +630,5 @@
  .sf-root[data-previewing=true] .sf-stage{margin:0 12px 12px;border-radius:24px;padding:18px 14px}
  .sf-root[data-previewing=true] .sf-canvas{max-width:390px}
 }
+
+@media(max-width:1023px){.sf-root .sf-canvas{max-width:none}.sf-root .sf-stage{padding:10px 8px 0}.sf-root>.preview-resize{order:1}.sf-root[data-previewing=true] .sf-canvas{max-width:none}.sf-root[data-previewing=true] .sf-stage{padding:8px}}

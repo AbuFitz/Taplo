@@ -32,15 +32,16 @@ for (const width of [390, 1440]) {
   });
 }
 
-test("opening a page offers the demo, and using a design starts setup on that design", async ({ page }) => {
+test("a gallery selection opens the final design experience directly", async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 800 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/inspiration");
   await page.evaluate(() => localStorage.clear());
   await page.getByRole("searchbox", { name: "Search pages" }).fill("Jay");
-  await page.getByRole("button", { name: /Jay.s Barbers, open this page/ }).click();
+  await page.getByRole("link", { name: /Jay.s Barbers, open this page/ }).click();
   const detail = page.getByTestId("design-detail");
-  await expect(detail.getByRole("link", { name: "Open the demo" })).toBeVisible();
+  await expect(page).toHaveURL(/\/inspiration\/[^?]+\?design=/);
+  await expect(detail.getByRole("link", { name: "Open the demo" })).toHaveCount(0);
   await expect(detail.locator("dd", { hasText: "Curved cover" })).toBeVisible();
   await detail.getByRole("link", { name: /Start with the .* design/ }).click();
   await expect(page).toHaveURL(/\/onboarding/);

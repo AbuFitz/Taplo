@@ -8,6 +8,8 @@ import { Overlay } from "@/components/taplo/overlay"
 import { useDemo } from "@/features/demo/store"
 import { applyDesignKeeping, describeChange, withArrangement, type Design } from "@/features/page/themes/designs"
 import { DesignThumb } from "@/features/setup/DesignThumb"
+import { getStartingLook } from "@/features/page/themes/starting-looks"
+import { applyColourway } from "@/features/page/themes/colourways"
 import { cn } from "@/lib/utils"
 import "@/features/setup/setup.css"
 import "./design-gallery.css"
@@ -27,19 +29,24 @@ export function ApplyDesign({ design, industry, arrangement, look, className, ch
   return (
     <>
       <button type="button" className={cn("sf-use", className)} onClick={() => setOpen(true)} aria-label={applied ? `${design.name} is on your page` : `Use the ${design.name} design`}>{applied ? <><Check aria-hidden="true" />On your page</> : label}</button>
-      {open ? <ApplyDialog design={design} industry={industry} arrangement={arrangement} onClose={() => setOpen(false)} /> : null}
+      {open ? <ApplyDialog design={design} industry={industry} arrangement={arrangement} look={look} onClose={() => setOpen(false)} /> : null}
     </>
   )
 }
 
-function ApplyDialog({ design, industry, arrangement, onClose }: { design: Design; industry?: string; arrangement?: string; onClose: () => void }) {
+function ApplyDialog({ design, industry, arrangement, look, onClose }: { design: Design; industry?: string; arrangement?: string; look?: string; onClose: () => void }) {
   const { state, update } = useDemo()
   const router = useRouter()
   const s = state!
   const [keepColours, setKeepColours] = React.useState(false)
   const [keepType, setKeepType] = React.useState(false)
   const key = industry ?? s.content.identity.industryKey
-  const withArr = React.useCallback((page: typeof s.page) => withArrangement(applyDesignKeeping(page, design, { colours: keepColours, type: keepType }), arrangement), [design, keepColours, keepType, arrangement]) // eslint-disable-line react-hooks/exhaustive-deps
+  const withArr = React.useCallback((page: typeof s.page) => {
+    const base = applyDesignKeeping(page, design, { colours: keepColours, type: keepType })
+    const chosen = getStartingLook(look ?? "")
+    const coloured = chosen && !keepColours ? applyColourway(base, chosen.colourway) : base
+    return withArrangement(coloured, arrangement)
+  }, [design, keepColours, keepType, arrangement, look]) // eslint-disable-line react-hooks/exhaustive-deps
   const after = React.useMemo(() => withArr(s.page), [s.page, withArr])
   const apply = () => { update((x) => { const page = withArr(x.page); return { ...x, page: { ...page, meta: { ...page.meta, appliedFrom: { designId: design.id, ...(arrangement ? { arrangement } : {}), at: new Date().toISOString() } } } } }); onClose(); router.push("/dashboard/page") }
   return (

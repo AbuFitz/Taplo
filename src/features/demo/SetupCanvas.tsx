@@ -25,6 +25,7 @@ export function SetupCanvas({
       title="Your page, live"
       mode={expanded ? "fill" : "device"}
       chrome={!expanded}
+      fitHeight={!expanded}
       cropDevice={!expanded && (!fit || closeUp)}
       maxScale={closeUp ? 1.2 : 1}
       smooth

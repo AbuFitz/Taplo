@@ -280,3 +280,5 @@
 .mobile-studio-live[data-expanded=true]{margin:0 12px 12px;padding:14px 10px;border-radius:24px;background:#eeeef1}
 .mobile-studio-live[data-expanded=true]>div{max-width:390px}
 @media(max-height:620px){.mobile-studio-live:not([data-expanded=true]){flex-basis:140px;height:140px;padding-top:10px}}
+
+.mobile-studio>.preview-resize{order:0;margin-top:-10px;margin-bottom:4px}.mobile-studio-live>div{max-width:none}.mobile-studio-live[data-expanded=true]>div{max-width:none}.mobile-studio-live{padding:10px 8px 0}.mobile-studio-live[data-expanded=true]{padding:8px}.mobile-studio[data-keyboard=true]>.preview-resize{display:none}

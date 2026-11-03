@@ -11,6 +11,7 @@ import {
   publish,
   readiness,
 } from "@/features/demo/actions";
+import { PreviewResizeHandle } from "@/features/preview/PreviewResizeHandle";
 import { PagePreview } from "@/features/preview/PagePreview";
 import { WorkspaceMenu } from "@/features/demo/dashboard/WorkspaceNav";
 import { getWidget } from "../widgets/registry";
@@ -61,6 +62,7 @@ export function MobileEditor({
           : { kind: "content" },
     );
   });
+  const [previewHeight, setPreviewHeight] = React.useState<number | null>(null);
   const [preview, setPreview] = React.useState(false);
   const [inspecting, setInspecting] = React.useState(false);
   const [showRequirements, setShowRequirements] = React.useState(false);
@@ -187,14 +189,16 @@ export function MobileEditor({
         ) : null}
       </header>
       <div
+        id="studio-preview-stage"
         className="mobile-studio-live"
+        style={!preview && previewHeight ? { flexBasis: previewHeight, height: previewHeight } : undefined}
         data-expanded={preview}
         data-section={section}
       >
         <PagePreview
           mode="device"
           chrome
-          cropDevice={!preview}
+          fitHeight
           smooth
           src={preview ? "/demo/preview" : "/demo/preview?edit=1"}
           title="Live preview of your page"
@@ -229,6 +233,7 @@ export function MobileEditor({
 
       {!preview ? (
         <>
+          <PreviewResizeHandle stageId="studio-preview-stage" onResize={setPreviewHeight} />
           <nav className="mobile-studio-tabs" aria-label="Editor sections">
             {SECTIONS.map((t) => (
               <button

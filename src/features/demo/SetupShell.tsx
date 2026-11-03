@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { ArrowLeft, Maximize2, X } from "lucide-react";
+import { PreviewResizeHandle } from "@/features/preview/PreviewResizeHandle";
 import { SetupAtmosphere } from "./SetupAtmosphere";
 import { TaploLogo } from "@/components/taplo/brand";
 
@@ -51,6 +52,7 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(
     },
     ref,
   ) {
+    const [previewHeight, setPreviewHeight] = React.useState<number | null>(null);
     const previewing = mobile && snap === "peek";
     const scroller = React.useRef<HTMLDivElement>(null);
     React.useEffect(() => {
@@ -166,9 +168,10 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(
           <footer className="sf-foot">{footer}</footer>
         </section>
 
-        <div className="sf-stage" data-testid="setup-stage">
+        <div id="setup-preview-stage" className="sf-stage" data-testid="setup-stage" style={mobile && !previewing && previewHeight ? { flexBasis: previewHeight, height: previewHeight } : undefined}>
           {preview}
         </div>
+        {mobile && !previewing && !keyboard ? <PreviewResizeHandle stageId="setup-preview-stage" onResize={setPreviewHeight} /> : null}
       </main>
     );
   },
