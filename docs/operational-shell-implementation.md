@@ -1,0 +1,9 @@
+# P02 operational shell implementation
+
+Working branch: claude/modest-cerf-4tont1. Source authority: release-3.0/design/tokens.json and the P02 responsive shell contract.
+
+Implemented: frameless full-width Studio shell, horizontal desktop navigation retaining all existing destinations, mobile bottom navigation, Inter/Manrope typography, shared light/dark/system appearance using canonical palette values, native keyboard-accessible appearance selector, per-device preference persistence and reactive system preference changes, scoped portal inheritance, branded asset tone selection, skip-to-content, explicit menu focus return, 44px popup close target. Merchant document/theme configuration is never mutated by operational appearance.
+
+Existing public-page palettes and legacy saved data are preserved. Existing editor-specific composition remains in place. This is not completion of all Studio screen designs or P03 canonical offer journeys. Existing Lucide mappings remain until the semantic Phosphor reconciliation; no second icon dependency installed.
+
+Actual verification: Next-generated route types + local TypeScript passed; targeted component lint passed; 13 foundation policy/transport tests passed. New Playwright checks cover theme persistence through navigation/reload, business document preservation, mobile dock overflow, dialog keyboard dismissal/focus return, system theme updates and skip navigation. Browser installation download was invalid; system Chromium exists but cannot start under the local runner socket restriction. No local browser assertion reached the page. CI provides browser verification and uploads P02 screenshots; deployed review remains required. P02 is not accepted until rendered and accessibility review succeeds.

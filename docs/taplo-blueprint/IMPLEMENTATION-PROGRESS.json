@@ -4,25 +4,24 @@
   "packets": [
     {
       "id": "P01",
-      "state": "source_implemented_acceptance_pending",
+      "state": "isolated_checks_passed_activation_pending",
       "evidence": "../foundation-implementation.md",
       "actual_checks": [
         {
-          "commit": "0ce2db5c151f9e7d40f1dd0c723d36ac9f6c2885",
-          "check": "Next route type generation and TypeScript",
-          "result": "passed in GitHub Actions run 41729459257"
+          "commit": "8bfe17da20725e7cedfdb583686e7e4068dca485",
+          "check": "Next type generation, TypeScript, lint, npm test with PostgreSQL 16, production build",
+          "result": "passed in GitHub Actions run 41731222130; browser suite still running when recorded"
         },
         {
-          "commit": "0ce2db5c151f9e7d40f1dd0c723d36ac9f6c2885",
-          "check": "lint",
-          "result": "failed on existing merged capture/vendor/test files; corrective commit 5210b8197cd940491725f7b7cce41d044b3a4c7a awaiting verification"
+          "check": "targeted foundation unit tests",
+          "result": "13 passed locally on canonical branch (policy and HTTP boundary)"
         }
       ]
     },
     {
       "id": "P02",
-      "state": "pending",
-      "evidence": null
+      "state": "implementation_in_progress_visual_acceptance_pending",
+      "evidence": "../operational-shell-implementation.md"
     },
     {
       "id": "P03",

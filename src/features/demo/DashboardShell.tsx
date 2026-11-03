@@ -3,6 +3,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
+import { OperationalRoot, AppearanceSelect, OperationalLogo } from "@/features/platform/OperationalTheme";
 import { StudioSkeleton } from "./dashboard/Studio";
 import { RouteSkeleton } from "./dashboard/workspace-navigation";
 import { WorkspaceNav } from "./dashboard/WorkspaceNav";
@@ -34,12 +35,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const empty =
     ready && (!state || (!state.onboarded && !state.content.identity.name));
   return (
-    <div
-      className="workspace-v2 portal-workspace"
-      data-workspace-section={editor ? "editor" : "manage"}
-      data-route={section}
-    >
-      <WorkspaceNav />
+    <OperationalRoot section={editor ? "editor" : "manage"} route={section}>
+      <a className="studio-skip" href="#studio-content">Skip to content</a>
+      <header className="studio-header">
+        <Link href="/dashboard" className="studio-brand" aria-label="Taplo home"><OperationalLogo /></Link>
+        <WorkspaceNav />
+        <AppearanceSelect />
+      </header>
       <div className="ws-main">
         <header className="ws-topbar">
           <div>
@@ -57,7 +59,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             ) : null}
           </div>
         </header>
-        <main
+        <main id="studio-content" tabIndex={-1}
           className={`portal-content ws-content ${editor ? "ws-editor-content" : ""}`}
         >
           {!ready ? (
@@ -76,12 +78,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           <footer className="ws-footer">
             <span role={storageFailed ? "alert" : undefined}>
               {storageFailed
-                ? "Changes could not be saved. Browser storage is unavailable."
+                ? "Changes could not be saved. Try again before leaving."
                 : "Your changes are saved."}
             </span>
           </footer>
         ) : null}
       </div>
-    </div>
+    </OperationalRoot>
   );
 }

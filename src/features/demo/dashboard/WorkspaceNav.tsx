@@ -3,7 +3,6 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  ArrowUpRight,
   CalendarDays,
   ChevronRight,
   Home,
@@ -13,16 +12,15 @@ import {
   MoreHorizontal,
   Settings,
 } from "lucide-react";
-import { TaploLogo } from "@/components/taplo/brand";
 import { Overlay } from "@/components/taplo/overlay";
 import { useStudioItems } from "./workspace-navigation";
-import { useDemo } from "../store";
 
 export function WorkspaceNav() {
   const { primary, secondary, isActive } = useStudioItems();
-  const { state } = useDemo();
   const path = usePathname();
   const [open, setOpen] = React.useState(false);
+  const opener = React.useRef<HTMLButtonElement | null>(null);
+  const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => { opener.current = event.currentTarget; setOpen(true); };
   const groups = [
     { name: "Workspace", items: primary },
     {
@@ -59,46 +57,15 @@ export function WorkspaceNav() {
   );
   return (
     <>
-      <aside className="ws-sidebar" aria-label="Workspace navigation">
-        <Link href="/dashboard" className="ws-brand" aria-label="Taplo Studio">
-          <TaploLogo className="h-6" />
-          <span>Studio</span>
-        </Link>
-        <div className="ws-business">
-          <span>
-            {(state?.content.identity.name || "T").slice(0, 1).toUpperCase()}
-          </span>
-          <div>
-            <b>{state?.content.identity.name || "Your business"}</b>
-            <small>
-              {state?.published ? "Published page" : "Your workspace"}
-            </small>
-          </div>
-        </div>
-        <nav>{links}</nav>
-        <div className="ws-nav-bottom">
-          <Link
-            href="/dashboard/settings"
-            aria-current={path === "/dashboard/settings" ? "page" : undefined}
-          >
-            <Settings aria-hidden="true" />
-            Settings
-          </Link>
-          <Link href="/dashboard/help">
-            <CircleHelp aria-hidden="true" />
-            Help & feedback
-          </Link>
-          <Link href="/" className="ws-back-site">
-            Taplo website
-            <ArrowUpRight aria-hidden="true" />
-          </Link>
-        </div>
-      </aside>
+      <nav className="studio-desktop-nav" aria-label="Studio navigation">
+        {primary.map(({href,label,Icon,badge}) => <Link key={href} href={href} aria-current={isActive(href) ? "page" : undefined}><Icon aria-hidden="true" /><span>{label === "Home" ? "Overview" : label === "Page" ? "Your page" : label}</span>{badge ? <b>{badge}</b> : null}</Link>)}
+        <button type="button" onClick={openMenu} aria-expanded={open} aria-haspopup="dialog"><MoreHorizontal aria-hidden="true" />More</button>
+      </nav>
       <button
         className="ws-mobile-menu"
         type="button"
         aria-label="Open workspace navigation"
-        onClick={() => setOpen(true)}
+        onClick={openMenu}
       >
         <Menu aria-hidden="true" />
       </button>
@@ -128,7 +95,7 @@ export function WorkspaceNav() {
         </Link>
         <button
           type="button"
-          onClick={() => setOpen(true)}
+          onClick={openMenu}
           aria-expanded={open}
           aria-current={
             !["/dashboard", "/dashboard/page", "/dashboard/bookings"].includes(
@@ -147,9 +114,14 @@ export function WorkspaceNav() {
         onOpenChange={setOpen}
         title="Your workspace"
         kind="dialog"
+        onCloseAutoFocus={(event) => {
+          const active = document.activeElement;
+          if (!active || active === document.body || active.closest('[role="dialog"]')) { event.preventDefault(); opener.current?.focus(); }
+        }}
       >
         <nav className="ws-sheet-nav">
           {links}
+          <Link href="/" onClick={() => setOpen(false)}>Taplo website</Link>
           <Link href="/dashboard/help" onClick={() => setOpen(false)}>
             <CircleHelp />
             Help & feedback
