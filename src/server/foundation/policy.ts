@@ -1,4 +1,4 @@
-import policy from "../../../../docs/taplo-blueprint/release-3.0/contracts/authorisation.json";
+import policy from "../../../docs/taplo-blueprint/release-3.0/contracts/authorisation.json";
 import { CommandError, hidden } from "./errors";
 export type Role = keyof typeof policy.role_presets;
 export interface Principal { id: string; audience: "merchant" | "customer" | "workforce"; assurance: "aal1" | "aal2"; stepUpAt?: number }

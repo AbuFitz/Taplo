@@ -5,7 +5,7 @@
     {
       "id": "P01",
       "state": "source_implemented_acceptance_pending",
-      "evidence": "../../../docs/foundation-implementation.md"
+      "evidence": "../foundation-implementation.md"
     },
     {
       "id": "P02",

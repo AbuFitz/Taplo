@@ -1,5 +1,5 @@
 export class CommandError extends Error {
-  constructor(public code: string, public status: number, public messageKey: string, public retryable = false, public fieldErrors: { field: string; code: string }[] = []) {
+  constructor(public code: string, public status: number, public messageKey: string, public retryable = false, public fieldErrors: { path: string; message_key: string }[] = []) {
     super(code);
   }
 }
