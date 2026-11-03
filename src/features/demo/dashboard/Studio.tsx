@@ -50,8 +50,8 @@ export function Studio() {
     <div className="ws-overview" data-testid="studio">
       <div className="ws-welcome">
         <div>
-          <h1>Welcome back.</h1>
-          <p>Your page and your business, in one place.</p>
+          <h1>Today</h1>
+          <p>Appointments, enquiries and your next steps.</p>
         </div>
       </div>
       <section
@@ -89,7 +89,7 @@ export function Studio() {
               />
             ) : null}
           </div>
-          <details className="ws-next-step" data-testid="studio-next">
+          <details className="ws-next-step" data-testid="studio-next" open={missing.length > 0}>
             <summary>
               {missing.length
                 ? `${missing.length} ${missing.length === 1 ? "step" : "steps"} before publishing`
@@ -145,7 +145,10 @@ export function Studio() {
           </p>
         </div>
       </section>
-      <GettingStarted />
+      <details className="ws-learning">
+        <summary>Quick guides<ChevronRight aria-hidden="true" /></summary>
+        <GettingStarted />
+      </details>
       <div className="ws-home-columns">
         <section className="ws-business-work">
           <div className="ws-section-title">

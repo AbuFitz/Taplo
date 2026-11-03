@@ -44,9 +44,9 @@ export function WorkspaceNav() {
               <Icon aria-hidden="true" />
               <span>
                 {label === "Home"
-                  ? "Overview"
+                  ? "Today"
                   : label === "Page"
-                    ? "Page builder"
+                    ? "Your page"
                     : label}
               </span>
               {badge ? <b>{badge}</b> : null}
@@ -59,7 +59,7 @@ export function WorkspaceNav() {
   return (
     <>
       <nav className="studio-desktop-nav" aria-label="Studio navigation">
-        {primary.map(({href,label,Icon,badge}) => <Link key={href} href={href} aria-current={isActive(href) ? "page" : undefined}><Icon aria-hidden="true" /><span>{label === "Home" ? "Overview" : label === "Page" ? "Your page" : label}</span>{badge ? <b>{badge}</b> : null}</Link>)}
+        {primary.map(({href,label,Icon,badge}) => <Link key={href} href={href} aria-current={isActive(href) ? "page" : undefined}><Icon aria-hidden="true" /><span>{label === "Home" ? "Today" : label === "Page" ? "Your page" : label}</span>{badge ? <b>{badge}</b> : null}</Link>)}
         <button type="button" onClick={openMenu} aria-expanded={open} aria-haspopup="dialog"><MoreHorizontal aria-hidden="true" />More</button>
       </nav>
       <button
@@ -76,7 +76,7 @@ export function WorkspaceNav() {
           aria-current={path === "/dashboard" ? "page" : undefined}
         >
           <Home />
-          Overview
+          Today
         </Link>
         <Link
           href="/dashboard/page"
@@ -171,9 +171,9 @@ export function WorkspaceMenu() {
                 <Icon aria-hidden="true" />
                 <span>
                   {label === "Home"
-                    ? "Overview"
+                    ? "Today"
                     : label === "Page"
-                      ? "Page builder"
+                      ? "Your page"
                       : label}
                 </span>
                 <ChevronRight aria-hidden="true" />

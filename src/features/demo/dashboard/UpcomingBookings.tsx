@@ -57,8 +57,7 @@ export function UpcomingBookings() {
         </>
       ) : (
         <p className="text-sm leading-relaxed text-muted-foreground">
-          Your next appointments will appear here. Try a booking on your page
-          preview, then manage it in your calendar.
+          Your next appointments will appear here. Set your availability to make time for customers.
         </p>
       )}
       <Link
@@ -67,9 +66,6 @@ export function UpcomingBookings() {
       >
         Open bookings <ArrowUpRight aria-hidden="true" className="size-4" />
       </Link>
-      <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-        Review your next appointments and manage changes from your calendar.
-      </p>
     </div>
   );
 }

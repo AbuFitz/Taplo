@@ -23,7 +23,7 @@ const TITLES: Record<string, string> = {
   reviews: "Reviews",
   analytics: "Analytics",
   settings: "Settings",
-  page: "Page builder",
+  page: "Your page",
   profile: "Business details",
   help: "Help & feedback",
 };
@@ -45,7 +45,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <div className="ws-main">
         <header className="ws-topbar">
           <div>
-            <strong>{TITLES[section] || "Overview"}</strong>
+            <strong>{TITLES[section] || "Today"}</strong>
           </div>
           <div className="ws-topbar-actions">
             <span className="ws-save-dot">

@@ -93,3 +93,9 @@
 
 .workspace-v2.operational-root[data-operational] :is([data-slot="button"],button[data-variant])[data-size^="icon"]:not(:where([data-taplo-theme] *)) {min-width:44px;}
 .workspace-v2.operational-root[data-operational] label:has(:is(input[type="checkbox"],[role="checkbox"],[role="switch"])) {min-height:44px;}
+.workspace-v2.operational-root .ws-learning {margin-block:20px 24px;border-bottom:1px solid var(--op-line);}
+.workspace-v2.operational-root .ws-learning>summary {display:flex;align-items:center;justify-content:space-between;min-height:52px;list-style:none;font-size:14px;font-weight:600;cursor:pointer;color:var(--op-text);}
+.workspace-v2.operational-root .ws-learning>summary svg {width:18px;height:18px;}
+.workspace-v2.operational-root .ws-learning[open]>summary svg {transform:rotate(90deg);}
+.workspace-v2.operational-root .ws-learning .getting-started {margin-top:16px;}
+@media(max-width:899px) {.workspace-v2.operational-root .ws-content {padding-bottom:32px;}.workspace-v2.operational-root .ws-footer {padding-bottom:calc(84px + env(safe-area-inset-bottom));}}
