@@ -15,13 +15,14 @@ export async function idempotent<T>(client: PoolClient, context: CommandContext,
   const scope = JSON.stringify([context.businessId ?? "", context.actorId, context.command, context.key]);
   const payloadHash = hash(JSON.stringify(stable(context.input)));
   await client.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))", [scope]);
-  const receipt = await client.query("SELECT payload_hash,response FROM taplo.command_receipt WHERE scope=$1", [scope]);
+  const receipt = await client.query("SELECT payload_hash,response,expires_at FROM taplo.command_receipt WHERE scope=$1", [scope]);
   if (receipt.rows[0]) {
+    if (new Date(receipt.rows[0].expires_at).getTime() <= Date.now()) throw new CommandError("IDEMPOTENCY_KEY_EXPIRED", 409, "Please start this action again.");
     if (receipt.rows[0].payload_hash !== payloadHash) throw new CommandError("IDEMPOTENCY_CONFLICT", 409, "This action has changed. Review the details and try again.");
     return { value: receipt.rows[0].response as T, replayed: true };
   }
   const value = await work();
-  await client.query("INSERT INTO taplo.command_receipt(scope,business_id,actor_id,command,key,payload_hash,response,request_id) VALUES($1,$2,$3,$4,$5,$6,$7,$8)", [scope, context.businessId ?? null, context.actorId, context.command, context.key, payloadHash, JSON.stringify(value), context.requestId]);
+  await client.query("INSERT INTO taplo.command_receipt(scope,business_id,actor_id,command,key,payload_hash,response,request_id,expires_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)", [scope, context.businessId ?? null, context.actorId, context.command, context.key, payloadHash, JSON.stringify(value), context.requestId, context.command === "UpsertOnboardingDraft" ? (value as { expires_at: string }).expires_at : new Date(Date.now() + 90 * 86400000)]);
   return { value, replayed: false };
 }
 export async function emit(client: PoolClient, input: { businessId?: string; actorId: string; action: string; subjectId: string; version: number; requestId: string; fields: string[] }) {

@@ -21,6 +21,13 @@ describe.skipIf(!TEST_DB_URL)("canonical foundation on isolated PostgreSQL", () 
   expect((await db.query("SELECT count(*) FROM taplo.audit_event")).rows[0].count).toBe("1");
   expect((await db.query("SELECT count(*) FROM taplo.event_outbox")).rows[0].count).toBe("1");
  });
+ it("bounds anonymous receipt expiry to the draft and never replays expired content", async () => {
+  const row=(await db.query("SELECT r.expires_at=d.expires_at AS same_expiry FROM taplo.command_receipt r JOIN taplo.onboarding_draft d ON r.response->>'id'=d.id WHERE r.key='same-key-123'")).rows[0];
+  expect(row.same_expiry).toBe(true);
+  await db.query("UPDATE taplo.command_receipt SET expires_at=now()-interval '1 second' WHERE key='same-key-123'");
+  await expect(upsertDraft(db,token,{expected_version:0,display_name:"Form Workshop",category_query:"ceramics"},"same-key-123","req_expiry123")).rejects.toMatchObject({code:"IDEMPOTENCY_KEY_EXPIRED"});
+  await db.query("UPDATE taplo.command_receipt SET expires_at=now()+interval '1 day' WHERE key='same-key-123'");
+ });
  it("rejects changed payload on the same scoped key", async () => { await expect(upsertDraft(db,token,{expected_version:0,display_name:"Changed"},"same-key-123","req_12345680")).rejects.toMatchObject({code:"IDEMPOTENCY_CONFLICT"}); });
  it("does not reveal a draft to another credential", async () => {
   const draft=(await readDraft(db,token))!; expect(await readDraft(db,other)).toBeNull();

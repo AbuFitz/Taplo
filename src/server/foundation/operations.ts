@@ -7,9 +7,9 @@ import { validateInput, validateRecord } from "./contracts";
 export async function getOperation(db: Pool, principal: Principal, businessId: string, raw: unknown) {
   const input = validateInput<{ operation_id: string }>("GetOperation", raw);
   return transaction(db, { actorId: principal.id, businessId }, async (c) => {
-    const member = (await c.query("SELECT m.* FROM taplo.membership m JOIN taplo.\"user\" u ON u.id=m.user_id WHERE m.business_id=$1 AND m.user_id=$2 AND u.status='active' FOR SHARE OF m,u", [businessId, principal.id])).rows[0];
+    const member = (await c.query("SELECT m.* FROM taplo.membership m JOIN taplo.\"user\" u ON u.id=m.user_id WHERE m.business_id=$1 AND m.user_id=$2 AND u.status='active'", [businessId, principal.id])).rows[0];
     const membership: Membership | null = member ? { userId: member.user_id, businessId: member.business_id, role: member.role as Role, status: member.status, locationIds: member.location_ids, resourceIds: member.resource_ids } : null;
-    const row = (await c.query("SELECT * FROM taplo.provider_operation WHERE id=$1", [input.operation_id])).rows[0];
+    const row = (await c.query("SELECT p.* FROM taplo.provider_operation p WHERE p.id=$1 AND EXISTS (SELECT 1 FROM taplo.membership m JOIN taplo.\"user\" u ON u.id=m.user_id WHERE m.business_id=p.business_id AND m.user_id=current_setting('app.actor_id',true) AND m.status='active' AND u.status='active')", [input.operation_id])).rows[0];
     if (!row) throw hidden();
     authorise(principal, membership, "own_work.read", { businessId, subjectUserId: row.actor_id });
     const date = (value: Date | string) => value instanceof Date ? value.toISOString() : value;
