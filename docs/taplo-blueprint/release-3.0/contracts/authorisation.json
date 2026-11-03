@@ -1,0 +1,765 @@
+{
+  "default": "deny",
+  "grant_algebra": "subject membership AND action AND location/resource/assignment AND field projection AND current state AND assurance; entitlement is separate AND",
+  "role_presets": {
+    "owner": [
+      "assigned_work.update",
+      "availability.request",
+      "billing.manage",
+      "billing.spend",
+      "business.close",
+      "business.profile.manage",
+      "calendar.manage",
+      "campaign.approve",
+      "campaign.draft",
+      "campaign.send",
+      "catalogue.write",
+      "customer.read",
+      "data.export",
+      "domain.manage",
+      "hardware.manage",
+      "money.policy.manage",
+      "money.read",
+      "own_message.send",
+      "own_profile.update",
+      "own_work.read",
+      "own_work.request_change",
+      "page.publish",
+      "profile.own.edit",
+      "refund.request",
+      "rewards.adjust",
+      "rewards.earn",
+      "rewards.manage",
+      "rewards.redeem",
+      "rewards.scan",
+      "schedule.manage",
+      "stock.adjust",
+      "support.case.create",
+      "team.grants.manage",
+      "team.invite",
+      "team.manage",
+      "templates.manage",
+      "wallet.issue",
+      "wallet.manage",
+      "work.manage"
+    ],
+    "manager": [
+      "assigned_work.update",
+      "business.profile.manage",
+      "calendar.manage",
+      "catalogue.write",
+      "customer.read",
+      "own_message.send",
+      "own_profile.update",
+      "own_work.read",
+      "own_work.request_change",
+      "page.publish",
+      "refund.request",
+      "rewards.earn",
+      "rewards.redeem",
+      "rewards.scan",
+      "schedule.manage",
+      "stock.adjust",
+      "support.case.create",
+      "team.invite",
+      "work.manage"
+    ],
+    "scheduler": [
+      "schedule.manage",
+      "work.manage",
+      "customer.read",
+      "support.case.create",
+      "own_work.read",
+      "own_profile.update"
+    ],
+    "practitioner": [
+      "assigned_customer.read",
+      "assigned_work.read",
+      "assigned_work.update",
+      "availability.request",
+      "own_message.send",
+      "own_profile.update",
+      "own_work.read",
+      "profile.own.edit",
+      "support.case.create"
+    ],
+    "fulfilment": [
+      "fulfilment.read",
+      "fulfilment.update",
+      "fulfilment_contact.read",
+      "own_work.read",
+      "support.case.create"
+    ],
+    "finance": [
+      "money.read",
+      "refund.request",
+      "support.case.create"
+    ],
+    "marketing_editor": [
+      "campaign.draft"
+    ],
+    "marketing_sender": [
+      "campaign.draft",
+      "campaign.approve",
+      "campaign.send"
+    ],
+    "customer": [
+      "own_decision.appeal",
+      "own_message.send",
+      "own_profile.update",
+      "own_reward.confirm",
+      "own_work.read",
+      "own_work.request_change",
+      "own_work.review",
+      "profile.own.edit",
+      "support.case.create",
+      "wallet.issue"
+    ],
+    "console_support": [
+      "console.case.read",
+      "console.case.update",
+      "console.integration.reconcile",
+      "verified_provider.reconcile"
+    ],
+    "console_finance": [
+      "console.case.read",
+      "console.finance.approve",
+      "console.finance.reconcile",
+      "console.integration.reconcile",
+      "verified_provider.reconcile"
+    ],
+    "console_moderator": [
+      "console.moderation.decide"
+    ],
+    "console_appeal_reviewer": [
+      "console.appeal.decide"
+    ],
+    "console_compliance": [
+      "console.evidence.review"
+    ],
+    "public_token": [
+      "public_token.withdraw"
+    ],
+    "public_reporter": [
+      "public_report.create"
+    ],
+    "public_auth": [
+      "public_auth.begin"
+    ],
+    "public_draft": [
+      "public_draft.write"
+    ],
+    "public_search": [
+      "public_search.read"
+    ]
+  },
+  "actions": [
+    {
+      "command": "CreateReservation",
+      "permission": "own_work.request_change",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "CommitBooking",
+      "permission": "own_work.request_change",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "RescheduleBooking",
+      "permission": "own_work.request_change",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "CancelBooking",
+      "permission": "own_work.request_change",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "CreateOrder",
+      "permission": "own_work.request_change",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "StartPayment",
+      "permission": "own_work.request_change",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "RequestRefund",
+      "permission": "refund.request",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "UpdateFulfilment",
+      "permission": "fulfilment.update",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "PublishPage",
+      "permission": "page.publish",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "SendMessage",
+      "permission": "own_message.send",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "AcceptQuote",
+      "permission": "own_work.request_change",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "JoinWaitlist",
+      "permission": "own_work.request_change",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ConnectDomain",
+      "permission": "domain.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ClaimHardware",
+      "permission": "hardware.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ExportBusiness",
+      "permission": "data.export",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "CloseBusiness",
+      "permission": "business.close",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ReconcileProvider",
+      "permission": "console.integration.reconcile",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "InviteMember",
+      "permission": "team.invite",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "RequestAvailabilityChange",
+      "permission": "availability.request",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "UpdateOwnTeamProfile",
+      "permission": "profile.own.edit",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "RevokeMember",
+      "permission": "team.grants.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "StartImport",
+      "permission": "catalogue.write",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ApplyImportDraft",
+      "permission": "catalogue.write",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "CreatePaymentPolicy",
+      "permission": "money.policy.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ActivatePaymentPolicy",
+      "permission": "money.policy.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "AssessCancellation",
+      "permission": "own_work.request_change",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ApplyCancellation",
+      "permission": "own_work.request_change",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "GetOperation",
+      "permission": "own_work.read",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "EvaluateReadiness",
+      "permission": "catalogue.write",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "DismissGuidance",
+      "permission": "own_profile.update",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "CreateCampaign",
+      "permission": "campaign.draft",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "PreviewCampaign",
+      "permission": "campaign.draft",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ApproveCampaign",
+      "permission": "campaign.approve",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ScheduleCampaign",
+      "permission": "campaign.send",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "PauseCampaign",
+      "permission": "campaign.send",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "WithdrawMarketing",
+      "permission": "public_token.withdraw",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "CreateTrustReport",
+      "permission": "public_report.create",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "RestrictSubject",
+      "permission": "console.moderation.decide",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "AppealDecision",
+      "permission": "own_decision.appeal",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ResolveAppeal",
+      "permission": "console.appeal.decide",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "CreateRewardProgramme",
+      "permission": "rewards.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ActivateRewards",
+      "permission": "rewards.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ResolveRewardCode",
+      "permission": "rewards.scan",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "EarnReward",
+      "permission": "rewards.earn",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "IssueHolderChallenge",
+      "permission": "own_reward.confirm",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "RedeemReward",
+      "permission": "rewards.redeem",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ReverseReward",
+      "permission": "rewards.adjust",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "IssueWalletPass",
+      "permission": "wallet.issue",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "RefreshWalletPass",
+      "permission": "wallet.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "RevokeWalletPass",
+      "permission": "wallet.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "UpdateTemplateBrand",
+      "permission": "templates.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "GetWidgetSnapshot",
+      "permission": "own_work.read",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "SetAppearancePreference",
+      "permission": "own_profile.update",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "PublishTeamProfile",
+      "permission": "team.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "StartCalendarConnection",
+      "permission": "calendar.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "RevokeCalendarConnection",
+      "permission": "calendar.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "SetLocationPublication",
+      "permission": "business.profile.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ChangePlan",
+      "permission": "billing.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "PurchaseSmsPack",
+      "permission": "billing.spend",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "OpenSupportCase",
+      "permission": "support.case.create",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "CompleteEvidenceControl",
+      "permission": "console.evidence.review",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "UpdateOfferDraft",
+      "permission": "catalogue.write",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "PreviewPublish",
+      "permission": "page.publish",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "PreviewWorkingHoursImpact",
+      "permission": "schedule.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ApplyWorkingHours",
+      "permission": "schedule.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "UpsertOnboardingDraft",
+      "permission": "public_draft.write",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "SetCategoryCapabilities",
+      "permission": "business.profile.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "SetPageAppearance",
+      "permission": "page.publish",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "BeginSignIn",
+      "permission": "public_auth.begin",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "CreateOfferDraft",
+      "permission": "catalogue.write",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "UpdateProductDraft",
+      "permission": "catalogue.write",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "AdjustInventory",
+      "permission": "stock.adjust",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "UpsertSessionDraft",
+      "permission": "catalogue.write",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "CreateQuoteDraft",
+      "permission": "work.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "QueryExplore",
+      "permission": "public_search.read",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "SaveBusiness",
+      "permission": "own_profile.update",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "SubmitReview",
+      "permission": "own_work.review",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "UpdateBusinessProfile",
+      "permission": "business.profile.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "AttachMediaAsset",
+      "permission": "catalogue.write",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ListWork",
+      "permission": "own_work.read",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "UpdateOfferConfig",
+      "permission": "catalogue.write",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "StartMerchantOnboarding",
+      "permission": "billing.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "GetPublicShare",
+      "permission": "public_search.read",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "ClaimOnboardingDraft",
+      "permission": "own_profile.update",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "UpdateWorkOutcome",
+      "permission": "assigned_work.update",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    },
+    {
+      "command": "UpdateRewardRule",
+      "permission": "rewards.manage",
+      "scope": "current principal + business/relationship/location/resource/assignment + field projection + state + assurance; public routes exact scope only",
+      "denial": "403 or nonenumerating 404; safe audit",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery"
+    }
+  ],
+  "worker_rule": "durable committed intent may complete necessary work after original staff departs; current system policy/tenant/source version checked; no worker grants new discretionary user authority",
+  "console_rule": "separate workforce audience and grants; business owner session never Console; recorded reason and case/action scope; no blanket impersonation",
+  "preset_rule": "Scope/field/state/assurance restrictions always apply; owner must deliberately opt staff into consequential optional grants. Manager defaults exclude refunds approval/bank/policy/customer export; refund.request is request only.",
+  "customer_scope": "relationship/verified guest manage credential and participant grant; never email/name matching alone; customer wallet.issue only own eligible loyalty holder",
+  "own_profile_scope": "self personal preferences; team profile changes limited published fields; public publication requires team.manage"
+}

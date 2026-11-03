@@ -1,0 +1,228 @@
+{
+  "version": "1.0-proposed",
+  "default": "deny",
+  "roles": {
+    "owner": [
+      "catalogue.write",
+      "page.publish",
+      "schedule.manage",
+      "work.manage",
+      "customer.read",
+      "refund.request",
+      "money.read",
+      "team.manage",
+      "domain.manage",
+      "hardware.manage",
+      "data.export",
+      "business.close"
+    ],
+    "manager": [
+      "catalogue.write",
+      "page.publish",
+      "schedule.manage",
+      "work.manage",
+      "customer.read",
+      "refund.request",
+      "hardware.manage"
+    ],
+    "scheduler": [
+      "schedule.manage",
+      "work.manage",
+      "customer.read"
+    ],
+    "practitioner": [
+      "assigned_work.read",
+      "assigned_work.update",
+      "assigned_customer.read"
+    ],
+    "fulfilment": [
+      "fulfilment.read",
+      "fulfilment.update",
+      "fulfilment_contact.read"
+    ],
+    "finance": [
+      "money.read",
+      "refund.request",
+      "financial.export"
+    ],
+    "support": [
+      "conversation.manage",
+      "case.manage",
+      "customer_limited.read"
+    ],
+    "customer": [
+      "own_work.read",
+      "own_work.request_change",
+      "own_message.send",
+      "own_rewards.read"
+    ],
+    "console_triage": [
+      "case.triage",
+      "case_limited.read"
+    ],
+    "console_specialist": [
+      "assigned_case.read",
+      "assigned_case.act"
+    ],
+    "provider_worker": [
+      "verified_provider.reconcile"
+    ]
+  },
+  "mandatory_checks": [
+    "active principal",
+    "same business scope except separately authorised cross-tenant Console",
+    "active membership or verified own relationship",
+    "resource/location assignment where relevant",
+    "field-level projection",
+    "capability and lifecycle guard",
+    "step-up/dual review where configured",
+    "record version",
+    "audited reason for privileged action"
+  ],
+  "no_role_bypasses": [
+    "raw payment credentials",
+    "unrestricted customer export",
+    "self-granted Console scope",
+    "provider financial truth",
+    "private learner notes by ordinary fulfilment staff"
+  ],
+  "coarse_roles_status": "Earlier coarse action groups retained as conceptual aliases; granular actions and scope templates below govern new implementation design.",
+  "granular_actions": [
+    "calendar.view",
+    "calendar.create",
+    "calendar.reschedule",
+    "calendar.cancel",
+    "calendar.reassign",
+    "calendar.attendance",
+    "availability.view",
+    "availability.request",
+    "availability.block",
+    "availability.manage",
+    "customer.name.read",
+    "customer.contact.read",
+    "customer.notes.restricted.read",
+    "customer.export",
+    "message.read",
+    "message.send",
+    "profile.own.edit",
+    "profile.publish",
+    "gallery.own.edit",
+    "work.assigned.update",
+    "fulfilment.update",
+    "money.read",
+    "refund.request",
+    "refund.approve",
+    "team.invite",
+    "team.grants.manage",
+    "business.ownership.manage",
+    "domain.manage",
+    "hardware.manage",
+    "reports.own.read",
+    "reports.team.read"
+  ],
+  "scope_templates": {
+    "practitioner": {
+      "scope": "assigned",
+      "allow": [
+        "calendar.view",
+        "calendar.attendance",
+        "availability.view",
+        "availability.request",
+        "customer.name.read",
+        "customer.contact.read",
+        "message.read",
+        "message.send",
+        "profile.own.edit",
+        "gallery.own.edit",
+        "work.assigned.update",
+        "reports.own.read"
+      ]
+    },
+    "front_desk": {
+      "scope": "assigned_locations",
+      "allow": [
+        "calendar.view",
+        "calendar.create",
+        "calendar.reschedule",
+        "calendar.cancel",
+        "calendar.reassign",
+        "availability.view",
+        "customer.name.read",
+        "customer.contact.read",
+        "message.read",
+        "message.send"
+      ]
+    },
+    "fulfilment": {
+      "scope": "assigned_locations",
+      "allow": [
+        "customer.name.read",
+        "customer.contact.read",
+        "fulfilment.update"
+      ]
+    },
+    "finance": {
+      "scope": "business",
+      "allow": [
+        "money.read",
+        "refund.request"
+      ]
+    },
+    "manager": {
+      "scope": "assigned_locations",
+      "allow": [
+        "calendar.view",
+        "calendar.create",
+        "calendar.reschedule",
+        "calendar.cancel",
+        "calendar.reassign",
+        "availability.view",
+        "availability.manage",
+        "customer.name.read",
+        "customer.contact.read",
+        "message.read",
+        "message.send",
+        "profile.publish",
+        "refund.request",
+        "reports.team.read"
+      ]
+    },
+    "owner": {
+      "scope": "business",
+      "allow": [
+        "calendar.view",
+        "calendar.create",
+        "calendar.reschedule",
+        "calendar.cancel",
+        "calendar.reassign",
+        "calendar.attendance",
+        "availability.view",
+        "availability.request",
+        "availability.block",
+        "availability.manage",
+        "customer.name.read",
+        "customer.contact.read",
+        "customer.notes.restricted.read",
+        "customer.export",
+        "message.read",
+        "message.send",
+        "profile.own.edit",
+        "profile.publish",
+        "gallery.own.edit",
+        "work.assigned.update",
+        "fulfilment.update",
+        "money.read",
+        "refund.request",
+        "refund.approve",
+        "team.invite",
+        "team.grants.manage",
+        "business.ownership.manage",
+        "domain.manage",
+        "hardware.manage",
+        "reports.own.read",
+        "reports.team.read"
+      ],
+      "qualification": "Still subject to field/purpose restrictions, step-up, reviewed authority, financial constraints and no unrestricted platform/Console access."
+    }
+  }
+}

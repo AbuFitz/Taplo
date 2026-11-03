@@ -1,0 +1,60 @@
+{
+  "edition": "2.6",
+  "status": "proposed_presets_not_runtime_rules_or_legal_approval",
+  "merchant_funds_reward": true,
+  "marketing_consent_inherited": false,
+  "ledger_required": true,
+  "presets": [
+    {
+      "id": "visits",
+      "recommended_for": [
+        "barber",
+        "beauty"
+      ],
+      "earn": "one_per_eligible_completed_appointment",
+      "threshold_example": 8,
+      "expiry_default": "off_pending_reviewed_rule"
+    },
+    {
+      "id": "spend",
+      "recommended_for": [
+        "retail",
+        "cafe"
+      ],
+      "earn": "whole_points_per_eligible_item_spend_under_versioned_rule",
+      "point_per_gbp_example": 1,
+      "exclude": [
+        "delivery",
+        "tips",
+        "gift_value_purchases"
+      ]
+    },
+    {
+      "id": "attendance",
+      "recommended_for": [
+        "workshop"
+      ],
+      "earn": "one_per_verified_eligible_participant_session",
+      "guard": "holder_relationship_and_capacity_required"
+    },
+    {
+      "id": "no_default",
+      "recommended_for": [
+        "clinical",
+        "vehicle_dealer"
+      ],
+      "earn": null,
+      "guard": "specialist_supported_use_case_required"
+    },
+    {
+      "id": "packages_first",
+      "recommended_for": [
+        "tutor",
+        "coach"
+      ],
+      "earn": null,
+      "guard": "purchased_entitlement_not_loyalty_balance"
+    }
+  ],
+  "spec": "REWARDS-STUDIO-AND-CATEGORY-RULES.md"
+}

@@ -1,0 +1,71 @@
+{
+  "status": "illustrative_cash_bills_no_opening_units_no_processing_domain_hardware",
+  "cases": [
+    {
+      "case": "solo_email",
+      "plan": "core",
+      "subscription": 12,
+      "required": 0,
+      "small_packs": 0,
+      "large_packs": 0,
+      "sms_purchase": 0,
+      "units_remaining": 0,
+      "initial_total": 12
+    },
+    {
+      "case": "solo_100",
+      "plan": "core",
+      "subscription": 12,
+      "required": 100,
+      "small_packs": 1,
+      "large_packs": 0,
+      "sms_purchase": 9,
+      "units_remaining": 0,
+      "initial_total": 21
+    },
+    {
+      "case": "busy_solo_600",
+      "plan": "core",
+      "subscription": 12,
+      "required": 600,
+      "small_packs": 1,
+      "large_packs": 1,
+      "sms_purchase": 48,
+      "units_remaining": 0,
+      "initial_total": 60
+    },
+    {
+      "case": "team_1000",
+      "plan": "core",
+      "subscription": 12,
+      "required": 1000,
+      "small_packs": 0,
+      "large_packs": 2,
+      "sms_purchase": 78,
+      "units_remaining": 0,
+      "initial_total": 90
+    },
+    {
+      "case": "retailer_email",
+      "plan": "pro",
+      "subscription": 24,
+      "required": 0,
+      "small_packs": 0,
+      "large_packs": 0,
+      "sms_purchase": 0,
+      "units_remaining": 0,
+      "initial_total": 24
+    },
+    {
+      "case": "workshop_email",
+      "plan": "core",
+      "subscription": 12,
+      "required": 0,
+      "small_packs": 0,
+      "large_packs": 0,
+      "sms_purchase": 0,
+      "units_remaining": 0,
+      "initial_total": 12
+    }
+  ]
+}

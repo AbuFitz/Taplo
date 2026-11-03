@@ -1,0 +1,280 @@
+{
+  "version": "1.0-proposed",
+  "envelope": {
+    "write_headers": [
+      "Idempotency-Key",
+      "If-Match for existing aggregates",
+      "request/correlation ID"
+    ],
+    "response": [
+      "data",
+      "record_version",
+      "request_id",
+      "next_actions"
+    ],
+    "error": [
+      "code",
+      "message_key",
+      "field_errors",
+      "request_id",
+      "retryable",
+      "current_version where permitted"
+    ],
+    "codes": {
+      "400": "INVALID_INPUT",
+      "401": "VERIFICATION_REQUIRED",
+      "403": "FORBIDDEN",
+      "404": "NOT_FOUND_OR_NOT_PERMITTED",
+      "409": "VERSION_OR_AVAILABILITY_CONFLICT",
+      "422": "RULE_NOT_SATISFIED",
+      "429": "RATE_LIMITED",
+      "503": "TEMPORARILY_UNAVAILABLE"
+    },
+    "uncertain_result": "Return a stable operation/status reference, never imply a second payment is required.",
+    "idempotency": "Scope by principal + business + command + key; compare payload hash; conflicting reuse returns conflict; retention exceeds supported retry window."
+  },
+  "commands": [
+    {
+      "name": "CreateReservation",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/reservations",
+      "permission": "own_work.request_change",
+      "returns": "Reservation",
+      "guard": "validate eligibility; lock all constraints; server quote; finite expiry",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/CreateReservation"
+    },
+    {
+      "name": "CommitBooking",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/bookings",
+      "permission": "own_work.request_change",
+      "returns": "Booking",
+      "guard": "verified principal; live reservation; current agreement; payment rule",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/CommitBooking"
+    },
+    {
+      "name": "RescheduleBooking",
+      "method": "POST",
+      "path": "/v1/bookings/{id}/reschedule",
+      "permission": "own_work.request_change",
+      "returns": "Booking",
+      "guard": "reserve new resources before releasing old; material change review",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/RescheduleBooking"
+    },
+    {
+      "name": "CancelBooking",
+      "method": "POST",
+      "path": "/v1/bookings/{id}/cancel",
+      "permission": "own_work.request_change",
+      "returns": "Booking",
+      "guard": "policy version; reason; compute impact; refund separate",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/CancelBooking"
+    },
+    {
+      "name": "CreateOrder",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/orders",
+      "permission": "own_work.request_change",
+      "returns": "Order",
+      "guard": "same-merchant cart; validated price, stock and fulfilment",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/CreateOrder"
+    },
+    {
+      "name": "StartPayment",
+      "method": "POST",
+      "path": "/v1/payments",
+      "permission": "own_work.request_change",
+      "returns": "Payment",
+      "guard": "server amount; merchant account; attempt id; provider idempotency",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/StartPayment"
+    },
+    {
+      "name": "RequestRefund",
+      "method": "POST",
+      "path": "/v1/payments/{id}/refunds",
+      "permission": "refund.request",
+      "returns": "Refund",
+      "guard": "authorised limit; reserve refundable value; no duplicate adjustment",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/RequestRefund"
+    },
+    {
+      "name": "UpdateFulfilment",
+      "method": "POST",
+      "path": "/v1/fulfilments/{id}/actions",
+      "permission": "fulfilment.update",
+      "returns": "Fulfilment",
+      "guard": "line quantities; evidence; permitted transition",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/UpdateFulfilment"
+    },
+    {
+      "name": "PublishPage",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/page/publish",
+      "permission": "page.publish",
+      "returns": "Business",
+      "guard": "valid source version; read-only public projection; coherent invalidation",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/PublishPage"
+    },
+    {
+      "name": "SendMessage",
+      "method": "POST",
+      "path": "/v1/conversations/{id}/messages",
+      "permission": "own_message.send",
+      "returns": "Message",
+      "guard": "participant ACL; attachment scan; stable client key",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/SendMessage"
+    },
+    {
+      "name": "AcceptQuote",
+      "method": "POST",
+      "path": "/v1/quotes/{id}/accept",
+      "permission": "own_work.request_change",
+      "returns": "Quote",
+      "guard": "latest sent quote; valid expiry; policy snapshot; no implied time booking",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/AcceptQuote"
+    },
+    {
+      "name": "JoinWaitlist",
+      "method": "POST",
+      "path": "/v1/sessions/{id}/waitlist",
+      "permission": "own_work.request_change",
+      "returns": "WaitlistEntry",
+      "guard": "eligible customer; unique session/relationship; quantity fits supported policy",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/JoinWaitlist"
+    },
+    {
+      "name": "IssuePass",
+      "method": "POST",
+      "path": "/v1/passes",
+      "permission": "own_work.request_change",
+      "returns": "WalletPass",
+      "guard": "eligible entitlement; issuer/provider requirements; official handover",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/IssuePass"
+    },
+    {
+      "name": "ConnectDomain",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/domains",
+      "permission": "domain.manage",
+      "returns": "Domain",
+      "guard": "hostname normalisation; ownership; exclusive host binding",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/ConnectDomain"
+    },
+    {
+      "name": "ClaimHardware",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/hardware/claim",
+      "permission": "hardware.manage",
+      "returns": "HardwareAsset",
+      "guard": "nonpublic one-use proof; atomic exclusive claim",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/ClaimHardware"
+    },
+    {
+      "name": "ExportBusiness",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/exports",
+      "permission": "data.export",
+      "returns": "ProviderOperation",
+      "guard": "step-up; authorised dataset; secure expiry download",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/ExportBusiness"
+    },
+    {
+      "name": "CloseBusiness",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/closure",
+      "permission": "business.close",
+      "returns": "Business",
+      "guard": "effective date; commitments and ownership exit plan",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/CloseBusiness"
+    },
+    {
+      "name": "ReconcileProvider",
+      "method": "POST",
+      "path": "/internal/provider-events",
+      "permission": "verified_provider.reconcile",
+      "returns": "ProviderOperation",
+      "guard": "signature; account/env scope; durable inbox; fetch canonical provider state",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/ReconcileProvider"
+    },
+    {
+      "name": "InviteMember",
+      "method": "POST",
+      "path": "/v1/team/InviteMember",
+      "permission": "team.invite",
+      "returns": "Membership",
+      "guard": "delegation boundary and nonpublic expiring invitation",
+      "input_schema": "command-inputs.json#/$defs/InviteMember",
+      "transaction_boundary": "authorise + compare version + persist audit and outbox"
+    },
+    {
+      "name": "RequestAvailabilityChange",
+      "method": "POST",
+      "path": "/v1/team/RequestAvailabilityChange",
+      "permission": "availability.request",
+      "returns": "AvailabilityChange",
+      "guard": "own/assigned resource and impact preview",
+      "input_schema": "command-inputs.json#/$defs/RequestAvailabilityChange",
+      "transaction_boundary": "authorise + compare version + persist audit and outbox"
+    },
+    {
+      "name": "UpdateOwnTeamProfile",
+      "method": "POST",
+      "path": "/v1/team/UpdateOwnTeamProfile",
+      "permission": "profile.own.edit",
+      "returns": "TeamProfile",
+      "guard": "whitelisted own fields; draft/approval policy",
+      "input_schema": "command-inputs.json#/$defs/UpdateOwnTeamProfile",
+      "transaction_boundary": "authorise + compare version + persist audit and outbox"
+    },
+    {
+      "name": "RevokeMember",
+      "method": "POST",
+      "path": "/v1/team/RevokeMember",
+      "permission": "team.grants.manage",
+      "returns": "Membership",
+      "guard": "reverify; future-work plan; immediate private access revocation",
+      "input_schema": "command-inputs.json#/$defs/RevokeMember",
+      "transaction_boundary": "authorise + compare version + persist audit and outbox"
+    },
+    {
+      "name": "StartImport",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/imports",
+      "permission": "catalogue.write",
+      "returns": "ImportJob",
+      "guard": "authorised member; permitted source use; SSRF/rate/size bounds; no external mutation; basic-brand-content allowlist only; deny offers/prices/availability/stock/policies/payment configuration",
+      "input_schema": "command-inputs.json#/$defs/StartImport",
+      "transaction_boundary": "persist tracked draft import job; controlled asynchronous fetch",
+      "release_status": "deferred; not part of required onboarding"
+    },
+    {
+      "name": "ApplyImportDraft",
+      "method": "POST",
+      "path": "/v1/imports/{id}/apply-draft",
+      "permission": "catalogue.write",
+      "returns": "ImportJob",
+      "guard": "current draft version; approved candidate/source policy; field validation; cannot publish/charge/grant access; basic-brand-content allowlist only; deny offers/prices/availability/stock/policies/payment configuration",
+      "input_schema": "command-inputs.json#/$defs/ApplyImportDraft",
+      "transaction_boundary": "atomic selected draft updates + provenance + audit; idempotent result",
+      "release_status": "deferred; not part of required onboarding"
+    }
+  ]
+}

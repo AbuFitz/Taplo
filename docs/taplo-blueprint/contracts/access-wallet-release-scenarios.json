@@ -1,0 +1,71 @@
+{
+  "edition": "2.6",
+  "status": "specified_expectations_not_passed_runtime_or_store_tests",
+  "cases": [
+    {
+      "id": "oauth_mfa_gate",
+      "given": "OAuth identity valid but required strong assurance absent",
+      "expected": "protected command denied; no bypass via passwordless route"
+    },
+    {
+      "id": "relay_invite_mismatch",
+      "given": "Apple relay differs from invited address",
+      "expected": "prove intended contact or authorised owner reissue; no name/email guess merge"
+    },
+    {
+      "id": "guest_claim",
+      "given": "same display name as guest booking",
+      "expected": "no record access without relationship proof"
+    },
+    {
+      "id": "console_audience",
+      "given": "valid customer or owner session",
+      "expected": "cannot access workforce Console"
+    },
+    {
+      "id": "provider_link_conflict",
+      "given": "provider email matches an existing account",
+      "expected": "no automatic merge; require controlled authenticated linking"
+    },
+    {
+      "id": "public_card_in_reward_scanner",
+      "given": "staff scans public professional QR",
+      "expected": "public code cannot credit/redeem rewards"
+    },
+    {
+      "id": "duplicate_reward_scan",
+      "given": "same eligible completion scanned twice",
+      "expected": "one ledger earn; retrieve existing operation"
+    },
+    {
+      "id": "offline_redemption",
+      "given": "valid cached Wallet QR but no connection",
+      "expected": "no success/decrement; safe reconnect"
+    },
+    {
+      "id": "removed_member_widget",
+      "given": "staff removed after snapshot created",
+      "expected": "minimal stale exposure; open denies role and snapshot invalidates"
+    },
+    {
+      "id": "native_digital_checkout",
+      "given": "online group/digital SKU in native app",
+      "expected": "requires supported platform/storefront purchase matrix; no universal Stripe path"
+    },
+    {
+      "id": "old_binary_new_backend",
+      "given": "installed old Studio version after backend update",
+      "expected": "compatibility contract honoured or deliberate safe version gate"
+    },
+    {
+      "id": "business_card_offboarding",
+      "given": "former member retains offline card image",
+      "expected": "public destination enforces current publication; no unrelated redirect"
+    },
+    {
+      "id": "reward_rule_change",
+      "given": "customers already earned under version one",
+      "expected": "preserve/review promises; no retrospective balance rewrite"
+    }
+  ]
+}

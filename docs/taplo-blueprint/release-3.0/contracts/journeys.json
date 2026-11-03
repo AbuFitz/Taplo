@@ -1,0 +1,190 @@
+{
+  "edition": "3.0",
+  "interpretation": "steps are ordered task/branch families; failure_recovery describes alternatives, not mandatory linear execution of every named command",
+  "journeys": [
+    {
+      "id": "first_offer",
+      "name": "Draft to first published offer",
+      "steps": [
+        "UpsertOnboardingDraft",
+        "BeginSignIn",
+        "ClaimOnboardingDraft",
+        "CreateOfferDraft",
+        "UpdateOfferDraft",
+        "UpdateOfferConfig",
+        "PreviewWorkingHoursImpact",
+        "ApplyWorkingHours",
+        "EvaluateReadiness",
+        "PreviewPublish",
+        "PublishPage"
+      ],
+      "failure_recovery": "Account/provider return preserves draft; version conflict compares; readiness missing stays draft; publication requires exact reviewed revision; no auto-publish.",
+      "notification_rule": "Only deliberate verified account/invite/security messages. No marketing from signup.",
+      "terminal_truth": "Same Business/Offer IDs across onboarding/Studio/public page, public version distinct from draft.",
+      "evidence": "specified; actual runtime execution pending"
+    },
+    {
+      "id": "booking_deposit",
+      "name": "Service booking with optional deposit",
+      "steps": [
+        "CreateReservation",
+        "CommitBooking",
+        "StartPayment",
+        "GetOperation"
+      ],
+      "failure_recovery": "No-upfront branches directly to confirmed only under configured instant/request rule; required payment remains pending; late success after hold expiry rechecks capacity then refund/recovery; retries same operation.",
+      "notification_rule": "Confirmation once after authoritative state; pending says pending; necessary reminders recheck current date/status/version.",
+      "terminal_truth": "Booking, Payment, DepositAllocation and AgreementSnapshot agree; redirect alone never confirmation.",
+      "evidence": "specified; actual runtime execution pending"
+    },
+    {
+      "id": "goods_order",
+      "name": "Native product order and fulfilment",
+      "steps": [
+        "CreateReservation",
+        "CreateOrder",
+        "StartPayment",
+        "GetOperation",
+        "UpdateFulfilment"
+      ],
+      "failure_recovery": "Last unit transaction; invalid variant/shipping total re-review; partial fulfilment explicit line quantity; unknown capture reconciles; abandoned holds expire once.",
+      "notification_rule": "Order/receipt/collection/dispatch separate template triggers; no campaign opt-in assumed.",
+      "terminal_truth": "Money captured and line-level stock/fulfilment tracked independently.",
+      "evidence": "specified; actual runtime execution pending"
+    },
+    {
+      "id": "class_package",
+      "name": "Class, participants and waitlist",
+      "steps": [
+        "CreateReservation",
+        "CommitBooking",
+        "JoinWaitlist",
+        "UpdateWorkOutcome"
+      ],
+      "failure_recovery": "Seats count participants; if full, explicit uncharged waitlist, not simultaneous booking+waitlist; promotion FIFO whole party with timed offer, no auto-charge.",
+      "notification_rule": "Attendee reminders use actual occurrence/timezone; waitlist notice is scoped operational contact.",
+      "terminal_truth": "Capacity/host/room allocations and participant rights persist; package credit separate record/ledger requirement.",
+      "evidence": "specified; actual runtime execution pending"
+    },
+    {
+      "id": "quote_job",
+      "name": "Quote-led mobile/creative work",
+      "steps": [
+        "SendMessage",
+        "CreateQuoteDraft",
+        "AcceptQuote",
+        "CreateReservation",
+        "CommitBooking",
+        "StartPayment",
+        "UpdateWorkOutcome"
+      ],
+      "failure_recovery": "Enquiry/quote acceptance not automatically schedule; material scope/price variation requires fresh acceptance; unsupported address blocks actual booking, not silent higher price.",
+      "notification_rule": "Quote/deliberate variation/review notices protect private files/address.",
+      "terminal_truth": "Accepted scope/version plus actual separate reserved date and payment authority.",
+      "evidence": "specified; actual runtime execution pending"
+    },
+    {
+      "id": "change_cancel",
+      "name": "Reschedule, cancellation and refund",
+      "steps": [
+        "RescheduleBooking",
+        "AssessCancellation",
+        "ApplyCancellation",
+        "RequestRefund",
+        "GetOperation"
+      ],
+      "failure_recovery": "Reschedule and cancellation are alternatives; stale assessment re-evaluates; statutory/disputed loss review; partial paid goods/services separate; unknown refund retrieves original operation.",
+      "notification_rule": "Explain impact before action; cancellation recorded independent refund processing; durable receipt.",
+      "terminal_truth": "No blanket keep-deposit; refund total bounded by captured minus prior active refunds.",
+      "evidence": "specified; actual runtime execution pending"
+    },
+    {
+      "id": "reward_wallet",
+      "name": "Completed work to Wallet return and redemption",
+      "steps": [
+        "UpdateWorkOutcome",
+        "EarnReward",
+        "IssueWalletPass",
+        "ResolveRewardCode",
+        "IssueHolderChallenge",
+        "RedeemReward",
+        "RefreshWalletPass"
+      ],
+      "failure_recovery": "Static QR resolves only; holder challenge protected current relationship; staff current grant; concurrent redeem at most once; source refund appends reversal/recovery.",
+      "notification_rule": "Wallet update queued is not immediate display; programme marketing permission separate.",
+      "terminal_truth": "Append-only reward ledger authoritative; provider cache/offline screenshot never account authority.",
+      "evidence": "specified; actual runtime execution pending"
+    },
+    {
+      "id": "campaign",
+      "name": "Draft to approved campaign and suppression",
+      "steps": [
+        "CreateCampaign",
+        "PreviewCampaign",
+        "ApproveCampaign",
+        "ScheduleCampaign",
+        "WithdrawMarketing",
+        "PauseCampaign"
+      ],
+      "failure_recovery": "Unsubscribe is independent anytime, not mandatory step after scheduling; approval invalid after edit; dispatch rechecks consent; definite rejection releases quota once; unknown provider acceptance reconciles.",
+      "notification_rule": "No optional promotion in operational templates; no provider failover bypassing suppression.",
+      "terminal_truth": "Recipient-send accounting vs actual provider segments, one logical send per purpose/source/recipient.",
+      "evidence": "specified; actual runtime execution pending"
+    },
+    {
+      "id": "team_departure",
+      "name": "Staff invite, work and departure",
+      "steps": [
+        "InviteMember",
+        "UpdateOwnTeamProfile",
+        "PublishTeamProfile",
+        "RevokeMember",
+        "RevokeWalletPass"
+      ],
+      "failure_recovery": "Removed membership/session/grants/cache access immediately; future accepted work reviewed/reassigned with customer rights; public link current fallback not unrelated employer.",
+      "notification_rule": "Invitation deliberate; departure/assignment notices minimise private data.",
+      "terminal_truth": "Historic attributed actions/agreements retained; login/resource/profile/seller remain distinct.",
+      "evidence": "specified; actual runtime execution pending"
+    },
+    {
+      "id": "trust_case",
+      "name": "Report, proportionate restriction and appeal",
+      "steps": [
+        "CreateTrustReport",
+        "RestrictSubject",
+        "AppealDecision",
+        "ResolveAppeal"
+      ],
+      "failure_recovery": "Report count alone not guilt; reviewer conflict logged; preserve accepted work/refunds/private receipts; restrict minimum scope and issue appropriate notice.",
+      "notification_rule": "Reporter privacy and target reasons/evidence projections separated; no retaliation.",
+      "terminal_truth": "Decision versions/case/audit and appeal outcome with actual workforce authority.",
+      "evidence": "specified; actual runtime execution pending"
+    },
+    {
+      "id": "merchant_exit",
+      "name": "Subscription change, domain/record exit",
+      "steps": [
+        "ChangePlan",
+        "ExportBusiness",
+        "CloseBusiness"
+      ],
+      "failure_recovery": "Downgrade next renewal; excess offer/location selection deliberate; obligations and required receipts/rewards retained; legal holds restrict deletion; domain ownership/renewal distinct SaaS cancel.",
+      "notification_rule": "Notice actual effect/date/export choices; no deletion from marketing unsubscribe.",
+      "terminal_truth": "Closure completion requires resolved accepted work/refunds/retention; not one global deleted boolean.",
+      "evidence": "specified; actual runtime execution pending"
+    },
+    {
+      "id": "recovery",
+      "name": "Unknown provider state to Console recovery",
+      "steps": [
+        "OpenSupportCase",
+        "GetOperation",
+        "ReconcileProvider"
+      ],
+      "failure_recovery": "Current authorised Console reconciles actual provider reference; no guessed payment/refund/manual data edit; restore pauses side-effect replay until provider truth matched.",
+      "notification_rule": "Persistent case next owner/action; genuine status update not false success toast.",
+      "terminal_truth": "Operation/audit/ledger/provider agreement with evidence trail.",
+      "evidence": "specified; actual runtime execution pending"
+    }
+  ]
+}

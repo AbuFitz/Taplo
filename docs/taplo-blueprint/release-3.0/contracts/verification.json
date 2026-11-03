@@ -1,0 +1,27 @@
+{
+  "edition": "3.0",
+  "state": "static_specification_checks_passed",
+  "schema_definitions": 92,
+  "commands": 86,
+  "screen_families_authored": 67,
+  "category_profiles": 13,
+  "journeys": 12,
+  "postgres_statements_parsed": 395,
+  "reference_arithmetic_cases": 16,
+  "shape_boundary_cases": 5,
+  "contrast_ratios": {
+    "light_text_on_background": 16.05,
+    "light_muted_on_background": 5.43,
+    "light_accent_text_on_accent": 6.05,
+    "dark_text_on_background": 16.92,
+    "dark_muted_on_background": 9.54,
+    "dark_accent_text_on_accent": 9.25
+  },
+  "browser_render_checks": {
+    "state": "blocked_environment",
+    "attempts": "local Chromium launch denied socket operation; browser tool disallowed local file protocol",
+    "passed": false
+  },
+  "native_provider_legal_customer_tests": "not_executed",
+  "known_external_inputs": "external-facts.json"
+}

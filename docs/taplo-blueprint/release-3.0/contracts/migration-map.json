@@ -1,0 +1,31 @@
+{
+  "canonical": "release-3.0/contracts",
+  "mappings": [
+    {
+      "record": "ConsentEvidence",
+      "old": "record-schemas + growth-trust conflicting definitions",
+      "new": "records.schema ConsentEvidence",
+      "transform": "legal_route consent -> basis explicit_consent; reviewed_soft_opt_in -> reviewed_products_services_soft_opt_in; contact/recipient mapping requires verified source; no guessed merge; suppressed -> separate Suppression; WhatsApp unsupported launch quarantine",
+      "unsafe": "missing sender/evidence/time -> not_marketable"
+    },
+    {
+      "record": "WalletPass",
+      "old": "relationship required and purpose booking/membership",
+      "new": "purpose loyalty/business_card with explicit holder kind",
+      "transform": "migrate only validated loyalty relationship; public business card uses public destination; prior booking/membership passes not launch entitlements; retain historical records read-only; no token reuse"
+    },
+    {
+      "record": "AvailabilityRule",
+      "old": "local_rule free-form",
+      "new": "weekly_intervals_v2 via 2.8 adapter",
+      "transform": "explicit supported conversion; advanced recurrence uses full editor; never parse-and-flatten silently"
+    },
+    {
+      "record": "NotificationIntent",
+      "old": "legacy Message delivery fields",
+      "new": "canonical NotificationIntent + provider attempts + Suppression",
+      "transform": "retain logical idempotency/source event/recipient purpose; do not resend merely because migrating"
+    }
+  ],
+  "deployment": "expand -> backfill dry-run/quarantine -> compare -> switch canonical reads/writes -> deprecate later; no destructive DB/repo migration in blueprint phase"
+}

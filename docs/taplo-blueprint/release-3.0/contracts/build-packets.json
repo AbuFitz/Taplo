@@ -1,0 +1,245 @@
+{
+  "edition": "3.0",
+  "packets": [
+    {
+      "id": "P01",
+      "title": "Foundation and authority",
+      "depends_on": [],
+      "sources": "records.schema.json, postgres-schema.sql, authorisation.json",
+      "outcome": "Identity/membership/tenant scope, migration inventory, schema validation, error/operation/outbox foundation",
+      "implementation_state": "not_started_in_this_blueprint_task",
+      "acceptance": "typed shape + business-rule + negative permission + failure/recovery + responsive/a11y evidence appropriate to changed slice",
+      "return_fields": [
+        "changed_requirement_ids",
+        "files",
+        "commands/screens",
+        "actual_checks",
+        "remaining_external_inputs",
+        "conflicts"
+      ]
+    },
+    {
+      "id": "P02",
+      "title": "Design system and responsive shell",
+      "depends_on": [
+        "P01"
+      ],
+      "sources": "design/tokens.json, design/STUDIO.html, SCREEN-DESIGNS.md",
+      "outcome": "Fonts/icons, contrast/light/dark, exact responsive components/focus/keyboard and source state recipes",
+      "implementation_state": "not_started_in_this_blueprint_task",
+      "acceptance": "typed shape + business-rule + negative permission + failure/recovery + responsive/a11y evidence appropriate to changed slice",
+      "return_fields": [
+        "changed_requirement_ids",
+        "files",
+        "commands/screens",
+        "actual_checks",
+        "remaining_external_inputs",
+        "conflicts"
+      ]
+    },
+    {
+      "id": "P03",
+      "title": "Onboarding to first offer",
+      "depends_on": [
+        "P01",
+        "P02"
+      ],
+      "sources": "journeys first_offer",
+      "outcome": "Anonymous draft/claim, guided Studio, category resolver, real price/config/availability readiness and publish",
+      "implementation_state": "not_started_in_this_blueprint_task",
+      "acceptance": "typed shape + business-rule + negative permission + failure/recovery + responsive/a11y evidence appropriate to changed slice",
+      "return_fields": [
+        "changed_requirement_ids",
+        "files",
+        "commands/screens",
+        "actual_checks",
+        "remaining_external_inputs",
+        "conflicts"
+      ]
+    },
+    {
+      "id": "P04",
+      "title": "Customer booking and deposits",
+      "depends_on": [
+        "P03"
+      ],
+      "sources": "journeys booking_deposit/change_cancel",
+      "outcome": "Finite hold, server quote/agreement, optional direct payment, truthful pending/confirmed, return/cancel/refund",
+      "implementation_state": "not_started_in_this_blueprint_task",
+      "acceptance": "typed shape + business-rule + negative permission + failure/recovery + responsive/a11y evidence appropriate to changed slice",
+      "return_fields": [
+        "changed_requirement_ids",
+        "files",
+        "commands/screens",
+        "actual_checks",
+        "remaining_external_inputs",
+        "conflicts"
+      ]
+    },
+    {
+      "id": "P05",
+      "title": "Native goods and fulfilment",
+      "depends_on": [
+        "P03",
+        "P04"
+      ],
+      "sources": "journeys goods_order",
+      "outcome": "Variant stock holds, single seller, collection/delivery, line fulfilment/returns/refunds",
+      "implementation_state": "not_started_in_this_blueprint_task",
+      "acceptance": "typed shape + business-rule + negative permission + failure/recovery + responsive/a11y evidence appropriate to changed slice",
+      "return_fields": [
+        "changed_requirement_ids",
+        "files",
+        "commands/screens",
+        "actual_checks",
+        "remaining_external_inputs",
+        "conflicts"
+      ]
+    },
+    {
+      "id": "P06",
+      "title": "Classes, series and quote variations",
+      "depends_on": [
+        "P04",
+        "P05"
+      ],
+      "sources": "CATEGORIES.md + journeys class_package/quote_job",
+      "outcome": "Participants/guardian/capacity/attendance/waitlist/credits and accepted quote/date separation",
+      "implementation_state": "not_started_in_this_blueprint_task",
+      "acceptance": "typed shape + business-rule + negative permission + failure/recovery + responsive/a11y evidence appropriate to changed slice",
+      "return_fields": [
+        "changed_requirement_ids",
+        "files",
+        "commands/screens",
+        "actual_checks",
+        "remaining_external_inputs",
+        "conflicts"
+      ]
+    },
+    {
+      "id": "P07",
+      "title": "Team, operational Studio and profiles",
+      "depends_on": [
+        "P04"
+      ],
+      "sources": "authorisation + team_departure",
+      "outcome": "Actual scoped individual logins, calendar/absence/assignment, public profile drafts/owner publish and offboarding",
+      "implementation_state": "not_started_in_this_blueprint_task",
+      "acceptance": "typed shape + business-rule + negative permission + failure/recovery + responsive/a11y evidence appropriate to changed slice",
+      "return_fields": [
+        "changed_requirement_ids",
+        "files",
+        "commands/screens",
+        "actual_checks",
+        "remaining_external_inputs",
+        "conflicts"
+      ]
+    },
+    {
+      "id": "P08",
+      "title": "Messages, rewards and sharing",
+      "depends_on": [
+        "P04",
+        "P07"
+      ],
+      "sources": "campaign + reward_wallet",
+      "outcome": "Purpose/consent/segments/quota; append-only rewards; public card/private loyalty and provider jobs",
+      "implementation_state": "not_started_in_this_blueprint_task",
+      "acceptance": "typed shape + business-rule + negative permission + failure/recovery + responsive/a11y evidence appropriate to changed slice",
+      "return_fields": [
+        "changed_requirement_ids",
+        "files",
+        "commands/screens",
+        "actual_checks",
+        "remaining_external_inputs",
+        "conflicts"
+      ]
+    },
+    {
+      "id": "P09",
+      "title": "Explore, domains and acquisition surfaces",
+      "depends_on": [
+        "P03",
+        "P05"
+      ],
+      "sources": "QueryExplore + map/SEO contracts",
+      "outcome": "Own search index and safe map locations, list/map/back, main-site solutions, public share previews/custom domains",
+      "implementation_state": "not_started_in_this_blueprint_task",
+      "acceptance": "typed shape + business-rule + negative permission + failure/recovery + responsive/a11y evidence appropriate to changed slice",
+      "return_fields": [
+        "changed_requirement_ids",
+        "files",
+        "commands/screens",
+        "actual_checks",
+        "remaining_external_inputs",
+        "conflicts"
+      ]
+    },
+    {
+      "id": "P10",
+      "title": "Console, legal controls and recovery",
+      "depends_on": [
+        "P01",
+        "P04"
+      ],
+      "sources": "trust_case/recovery/merchant_exit",
+      "outcome": "Actual case/action authority, report/appeal, financial reconcile, privacy/retention and exit controls",
+      "implementation_state": "not_started_in_this_blueprint_task",
+      "acceptance": "typed shape + business-rule + negative permission + failure/recovery + responsive/a11y evidence appropriate to changed slice",
+      "return_fields": [
+        "changed_requirement_ids",
+        "files",
+        "commands/screens",
+        "actual_checks",
+        "remaining_external_inputs",
+        "conflicts"
+      ]
+    },
+    {
+      "id": "P11",
+      "title": "Native apps and widgets",
+      "depends_on": [
+        "P02",
+        "P04",
+        "P07",
+        "P08"
+      ],
+      "sources": "INTEGRATION-ACCEPTANCE.md + native/device pack",
+      "outcome": "Two distinct apps, secure sessions/deep links, real issuers/camera/widget/state/store purchase rules",
+      "implementation_state": "not_started_in_this_blueprint_task",
+      "acceptance": "typed shape + business-rule + negative permission + failure/recovery + responsive/a11y evidence appropriate to changed slice",
+      "return_fields": [
+        "changed_requirement_ids",
+        "files",
+        "commands/screens",
+        "actual_checks",
+        "remaining_external_inputs",
+        "conflicts"
+      ]
+    },
+    {
+      "id": "P12",
+      "title": "Release rehearsals and commercial evidence",
+      "depends_on": [
+        "P05",
+        "P06",
+        "P08",
+        "P09",
+        "P10",
+        "P11"
+      ],
+      "sources": "external-facts + evidence register",
+      "outcome": "Actual provider/device/security/restore/operating/legal/user evidence, measured cost/plan/invoice and supported release gates",
+      "implementation_state": "not_started_in_this_blueprint_task",
+      "acceptance": "typed shape + business-rule + negative permission + failure/recovery + responsive/a11y evidence appropriate to changed slice",
+      "return_fields": [
+        "changed_requirement_ids",
+        "files",
+        "commands/screens",
+        "actual_checks",
+        "remaining_external_inputs",
+        "conflicts"
+      ]
+    }
+  ]
+}

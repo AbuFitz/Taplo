@@ -1,0 +1,303 @@
+{
+  "free_only_alternatives": [
+    {
+      "paid": 100,
+      "active_free": 400,
+      "free_payment_adoption": 0.1,
+      "processing_free": 40.0,
+      "eligible_gmv_per_processing_free": 500,
+      "bps": 100,
+      "gross_fee": 200.0,
+      "after_refund_vat": 158.33333333333334
+    },
+    {
+      "paid": 100,
+      "active_free": 400,
+      "free_payment_adoption": 0.5,
+      "processing_free": 200.0,
+      "eligible_gmv_per_processing_free": 500,
+      "bps": 100,
+      "gross_fee": 1000.0,
+      "after_refund_vat": 791.6666666666667
+    }
+  ],
+  "edition": "2.8",
+  "status": "original_scenarios_not_actual_invoices_or_profit",
+  "fx_assumption_gbp_usd": 0.8,
+  "map_cases": [
+    {
+      "web_loads": 10000,
+      "native_map_mau": 1000,
+      "standard_search_units": 2000,
+      "display_usd": 0.0,
+      "display_gbp": 0.0,
+      "search_usd": 0.0,
+      "search_gbp": 0.0,
+      "total_model_gbp": 0.0
+    },
+    {
+      "web_loads": 50000,
+      "native_map_mau": 25000,
+      "standard_search_units": 10000,
+      "display_usd": 0.0,
+      "display_gbp": 0.0,
+      "search_usd": 86.25,
+      "search_gbp": 69.0,
+      "total_model_gbp": 69.0
+    },
+    {
+      "web_loads": 100000,
+      "native_map_mau": 50000,
+      "standard_search_units": 10000,
+      "display_usd": 350.0,
+      "display_gbp": 280.0,
+      "search_usd": 86.25,
+      "search_gbp": 69.0,
+      "total_model_gbp": 349.0
+    },
+    {
+      "web_loads": 150000,
+      "native_map_mau": 150000,
+      "standard_search_units": 50000,
+      "display_usd": 930.0,
+      "display_gbp": 744.0,
+      "search_usd": 546.25,
+      "search_gbp": 437.0,
+      "total_model_gbp": 1181.0
+    }
+  ],
+  "search_tariff_warning": "confirm_exact_product_account_tariff_and_billing_unit_standard_not_introductory_session_price",
+  "map_exclusions": [
+    "permanent_coordinate_storage_rights_and_geocoding",
+    "other_map_products",
+    "merchant_search_server_cost",
+    "multiple_app_or_device_counting_differences",
+    "tax_fx_engineering_design"
+  ],
+  "commission_default_bps": 0,
+  "fee_scenarios": [
+    {
+      "merchants": 1,
+      "eligible_captured_gmv_per_merchant": 500,
+      "basis_points": 0,
+      "gross_fee": 0.0,
+      "after_assumed_5pct_refund": 0.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 0.0
+    },
+    {
+      "merchants": 1,
+      "eligible_captured_gmv_per_merchant": 500,
+      "basis_points": 50,
+      "gross_fee": 2.5,
+      "after_assumed_5pct_refund": 2.375,
+      "after_refund_and_assumed_inclusive_20pct_vat": 1.9791666666666667
+    },
+    {
+      "merchants": 1,
+      "eligible_captured_gmv_per_merchant": 500,
+      "basis_points": 100,
+      "gross_fee": 5.0,
+      "after_assumed_5pct_refund": 4.75,
+      "after_refund_and_assumed_inclusive_20pct_vat": 3.9583333333333335
+    },
+    {
+      "merchants": 1,
+      "eligible_captured_gmv_per_merchant": 2000,
+      "basis_points": 0,
+      "gross_fee": 0.0,
+      "after_assumed_5pct_refund": 0.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 0.0
+    },
+    {
+      "merchants": 1,
+      "eligible_captured_gmv_per_merchant": 2000,
+      "basis_points": 50,
+      "gross_fee": 10.0,
+      "after_assumed_5pct_refund": 9.5,
+      "after_refund_and_assumed_inclusive_20pct_vat": 7.916666666666667
+    },
+    {
+      "merchants": 1,
+      "eligible_captured_gmv_per_merchant": 2000,
+      "basis_points": 100,
+      "gross_fee": 20.0,
+      "after_assumed_5pct_refund": 19.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 15.833333333333334
+    },
+    {
+      "merchants": 1,
+      "eligible_captured_gmv_per_merchant": 10000,
+      "basis_points": 0,
+      "gross_fee": 0.0,
+      "after_assumed_5pct_refund": 0.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 0.0
+    },
+    {
+      "merchants": 1,
+      "eligible_captured_gmv_per_merchant": 10000,
+      "basis_points": 50,
+      "gross_fee": 50.0,
+      "after_assumed_5pct_refund": 47.5,
+      "after_refund_and_assumed_inclusive_20pct_vat": 39.583333333333336
+    },
+    {
+      "merchants": 1,
+      "eligible_captured_gmv_per_merchant": 10000,
+      "basis_points": 100,
+      "gross_fee": 100.0,
+      "after_assumed_5pct_refund": 95.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 79.16666666666667
+    },
+    {
+      "merchants": 100,
+      "eligible_captured_gmv_per_merchant": 500,
+      "basis_points": 0,
+      "gross_fee": 0.0,
+      "after_assumed_5pct_refund": 0.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 0.0
+    },
+    {
+      "merchants": 100,
+      "eligible_captured_gmv_per_merchant": 500,
+      "basis_points": 50,
+      "gross_fee": 250.0,
+      "after_assumed_5pct_refund": 237.5,
+      "after_refund_and_assumed_inclusive_20pct_vat": 197.91666666666669
+    },
+    {
+      "merchants": 100,
+      "eligible_captured_gmv_per_merchant": 500,
+      "basis_points": 100,
+      "gross_fee": 500.0,
+      "after_assumed_5pct_refund": 475.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 395.83333333333337
+    },
+    {
+      "merchants": 100,
+      "eligible_captured_gmv_per_merchant": 2000,
+      "basis_points": 0,
+      "gross_fee": 0.0,
+      "after_assumed_5pct_refund": 0.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 0.0
+    },
+    {
+      "merchants": 100,
+      "eligible_captured_gmv_per_merchant": 2000,
+      "basis_points": 50,
+      "gross_fee": 1000.0,
+      "after_assumed_5pct_refund": 950.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 791.6666666666667
+    },
+    {
+      "merchants": 100,
+      "eligible_captured_gmv_per_merchant": 2000,
+      "basis_points": 100,
+      "gross_fee": 2000.0,
+      "after_assumed_5pct_refund": 1900.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 1583.3333333333335
+    },
+    {
+      "merchants": 100,
+      "eligible_captured_gmv_per_merchant": 10000,
+      "basis_points": 0,
+      "gross_fee": 0.0,
+      "after_assumed_5pct_refund": 0.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 0.0
+    },
+    {
+      "merchants": 100,
+      "eligible_captured_gmv_per_merchant": 10000,
+      "basis_points": 50,
+      "gross_fee": 5000.0,
+      "after_assumed_5pct_refund": 4750.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 3958.3333333333335
+    },
+    {
+      "merchants": 100,
+      "eligible_captured_gmv_per_merchant": 10000,
+      "basis_points": 100,
+      "gross_fee": 10000.0,
+      "after_assumed_5pct_refund": 9500.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 7916.666666666667
+    },
+    {
+      "merchants": 1000,
+      "eligible_captured_gmv_per_merchant": 500,
+      "basis_points": 0,
+      "gross_fee": 0.0,
+      "after_assumed_5pct_refund": 0.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 0.0
+    },
+    {
+      "merchants": 1000,
+      "eligible_captured_gmv_per_merchant": 500,
+      "basis_points": 50,
+      "gross_fee": 2500.0,
+      "after_assumed_5pct_refund": 2375.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 1979.1666666666667
+    },
+    {
+      "merchants": 1000,
+      "eligible_captured_gmv_per_merchant": 500,
+      "basis_points": 100,
+      "gross_fee": 5000.0,
+      "after_assumed_5pct_refund": 4750.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 3958.3333333333335
+    },
+    {
+      "merchants": 1000,
+      "eligible_captured_gmv_per_merchant": 2000,
+      "basis_points": 0,
+      "gross_fee": 0.0,
+      "after_assumed_5pct_refund": 0.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 0.0
+    },
+    {
+      "merchants": 1000,
+      "eligible_captured_gmv_per_merchant": 2000,
+      "basis_points": 50,
+      "gross_fee": 10000.0,
+      "after_assumed_5pct_refund": 9500.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 7916.666666666667
+    },
+    {
+      "merchants": 1000,
+      "eligible_captured_gmv_per_merchant": 2000,
+      "basis_points": 100,
+      "gross_fee": 20000.0,
+      "after_assumed_5pct_refund": 19000.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 15833.333333333334
+    },
+    {
+      "merchants": 1000,
+      "eligible_captured_gmv_per_merchant": 10000,
+      "basis_points": 0,
+      "gross_fee": 0.0,
+      "after_assumed_5pct_refund": 0.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 0.0
+    },
+    {
+      "merchants": 1000,
+      "eligible_captured_gmv_per_merchant": 10000,
+      "basis_points": 50,
+      "gross_fee": 50000.0,
+      "after_assumed_5pct_refund": 47500.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 39583.333333333336
+    },
+    {
+      "merchants": 1000,
+      "eligible_captured_gmv_per_merchant": 10000,
+      "basis_points": 100,
+      "gross_fee": 100000.0,
+      "after_assumed_5pct_refund": 95000.0,
+      "after_refund_and_assumed_inclusive_20pct_vat": 79166.66666666667
+    }
+  ],
+  "fee_exclusions": [
+    "provider_and_connect_cost_changes",
+    "support_tax_accounting_refund_administration",
+    "conversion_churn_off_platform_displacement",
+    "chargeback_losses_and_legal_review"
+  ],
+  "hypotheses_not_evidence": true
+}

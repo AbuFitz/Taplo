@@ -1,0 +1,679 @@
+{
+  "edition": "2.7",
+  "status": "documentary_display_entitlement_map_not_runtime_permission_or_completed_feature_catalogue",
+  "canonical_commercial_decision": "PRICING-DECISION.md",
+  "plan_order": [
+    "free",
+    "core",
+    "pro",
+    "business"
+  ],
+  "prices_minor": [
+    0,
+    1200,
+    2400,
+    4900
+  ],
+  "features": [
+    {
+      "id": "page.blocks",
+      "group": "Page and identity",
+      "label": "Compact business mini-space: links, contact, gallery, typed blocks, horizontal shelves and task popups",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "BLOCK-FIRST-DIRECTIVE.md",
+      "release_gate": "supported_scope_and_current_role",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "page.look",
+      "group": "Page and identity",
+      "label": "Page appearance: coordinated looks, brand colours, typography and order",
+      "plan_display": {
+        "free": "Curated essentials",
+        "core": "Richer controls",
+        "pro": "Core + growth templates",
+        "business": "Pro + organisation controls"
+      },
+      "spec": "specs/103-block-composition-logo-and-theme-resolution.md",
+      "release_gate": "supported_scope_and_current_role",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "page.popup",
+      "group": "Page and identity",
+      "label": "Readable popup appearance families and contrast-safe brand inheritance",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "specs/45-popup-appearance-families-and-inheritance.md",
+      "release_gate": "supported_scope_and_current_role",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "page.offers",
+      "group": "Page and identity",
+      "label": "Live service/product/class offers",
+      "plan_display": {
+        "free": "5",
+        "core": "No routine count cap",
+        "pro": "No routine count cap",
+        "business": "No routine count cap"
+      },
+      "spec": "PACKAGE-COMPARISON.md",
+      "release_gate": "supported_scope_and_current_role",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "page.domain",
+      "group": "Page and identity",
+      "label": "Connect a domain the business already owns",
+      "plan_display": {
+        "free": "Taplo address",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "specs/40-domain-routing-security-and-seo.md",
+      "release_gate": "verified_hostname_ownership_and_safe_dns",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "page.seo",
+      "group": "Page and identity",
+      "label": "Eligible public search metadata, sitemap participation and link-preview cards",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "specs/106-link-preview-images-and-public-metadata.md",
+      "release_gate": "public_verified_content_not_index_or_ranking_guarantee",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "page.qr",
+      "group": "Page and identity",
+      "label": "Public share link, branded QR and NFC destination",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "specs/38-sharing-qr-and-installation.md",
+      "release_gate": "supported_scope_and_current_role",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "page.website",
+      "group": "Page and identity",
+      "label": "Existing website companion links",
+      "plan_display": {
+        "free": "Direct offer/task links",
+        "core": "Links + supported embed",
+        "pro": "Same",
+        "business": "Same"
+      },
+      "spec": "specs/81-website-companion-and-action-design.md",
+      "release_gate": "supported_scope_and_current_role",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "work.commitments",
+      "group": "Work and transactions",
+      "label": "New accepted bookings/reservations or placed orders",
+      "plan_display": {
+        "free": "30/month",
+        "core": "No routine count cap",
+        "pro": "No routine count cap",
+        "business": "No routine count cap"
+      },
+      "spec": "PACKAGE-COMPARISON.md",
+      "release_gate": "unique_commitment_metering",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "work.booking",
+      "group": "Work and transactions",
+      "label": "One-to-one booking, change/reschedule, cancellations and availability",
+      "plan_display": {
+        "free": "Basic supported flow",
+        "core": "Full daily scheduling",
+        "pro": "Core + repeat tools",
+        "business": "Same across locations"
+      },
+      "spec": "specs/13-booking-lifecycle.md",
+      "release_gate": "supported_scope_and_current_role",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "work.availability",
+      "group": "Work and transactions",
+      "label": "Working hours, breaks, time off and relevant staff/resources",
+      "plan_display": {
+        "free": "Basic supported setup",
+        "core": "Full supported operations",
+        "pro": "Same",
+        "business": "Same across locations"
+      },
+      "spec": "specs/14-calendar-and-availability.md",
+      "release_gate": "supported_scope_and_current_role",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "work.classes",
+      "group": "Work and transactions",
+      "label": "Dated classes, participant capacity and waitlist",
+      "plan_display": {
+        "free": "Basic within allowances",
+        "core": "Classes + supported waitlists",
+        "pro": "Core + series/packages",
+        "business": "Same across locations"
+      },
+      "spec": "specs/15-classes-resources-and-recurrence.md",
+      "release_gate": "supported_scope_and_current_role",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "work.quotes",
+      "group": "Work and transactions",
+      "label": "Enquiries, basic quotes and customer scope acceptance",
+      "plan_display": {
+        "free": "Basic",
+        "core": "Included",
+        "pro": "Advanced follow-up recipes",
+        "business": "Same"
+      },
+      "spec": "specs/17-quotes-packages-and-memberships.md",
+      "release_gate": "supported_scope_and_current_role",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "commerce.checkout",
+      "group": "Work and transactions",
+      "label": "Native product options, customer bag and checkout",
+      "plan_display": {
+        "free": "Basic within allowances",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "specs/11-native-commerce.md",
+      "release_gate": "supported_scope_and_current_role",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "commerce.stock",
+      "group": "Work and transactions",
+      "label": "Catalogue, tracked stock, supported collection/delivery and returns",
+      "plan_display": {
+        "free": "Basic order handling",
+        "core": "Full supported catalogue/stock/fulfilment",
+        "pro": "Same",
+        "business": "Same + supported location views"
+      },
+      "spec": "specs/12-fulfilment-and-returns.md",
+      "release_gate": "supported_scope_and_current_role",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "money.deposits",
+      "group": "Work and transactions",
+      "label": "Offer-level eligible deposit, full payment or no-upfront-payment",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "PAYMENTS-AND-REFUNDS.md",
+      "release_gate": "stripe_charge_readiness_and_reviewed_offer_policy",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "money.refunds",
+      "group": "Work and transactions",
+      "label": "Refund routes, receipts, payment history and financial recovery",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "PAYMENTS-AND-REFUNDS.md",
+      "release_gate": "current_financial_authority_and_provider_state",
+      "downgrade": "never_remove_required_recovery"
+    },
+    {
+      "id": "money.walletcheckout",
+      "group": "Work and transactions",
+      "label": "Apple Pay/Google Pay where supported at Stripe checkout",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "APP-STORES-BUILD-AND-RELEASE.md",
+      "release_gate": "eligible_device_method_merchant_and_native_sku",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "work.calendar",
+      "group": "Work and transactions",
+      "label": "Google/Outlook busy input and deliberate Taplo event export",
+      "plan_display": {
+        "free": "Calendar-file export",
+        "core": "Connected calendar",
+        "pro": "Same",
+        "business": "Same"
+      },
+      "spec": "INTEGRATIONS-AND-SUPPORT.md",
+      "release_gate": "explicit_calendar_scopes_and_freshness",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "team.logins",
+      "group": "People and access",
+      "label": "Individual team logins, standard safe roles and revocation",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "specs/72-team-workspace-calendar-and-permission-design.md",
+      "release_gate": "invited_membership_field_scope_and_server_authorisation",
+      "downgrade": "immediate_revocation_no_shared_login"
+    },
+    {
+      "id": "team.profiles",
+      "group": "People and access",
+      "label": "Owner-controlled professional profile/link and permitted bio/gallery editing",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "specs/71-team-logins-shareable-profiles-and-independent-operators.md",
+      "release_gate": "supported_scope_and_current_role",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "team.security",
+      "group": "People and access",
+      "label": "Apple/Google/email sign-in, strong business security and protected ownership recovery",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "SIGN-IN-IDENTITY-AND-RECOVERY.md",
+      "release_gate": "all_enabled_methods_assurance_tested",
+      "downgrade": "security_not_removed"
+    },
+    {
+      "id": "team.roles",
+      "group": "People and access",
+      "label": "Access configuration",
+      "plan_display": {
+        "free": "Standard safe roles",
+        "core": "Standard safe roles",
+        "pro": "Standard safe roles",
+        "business": "Delegated/custom roles with guardrails"
+      },
+      "spec": "specs/64-authorisation-roles-and-privacy-boundaries.md",
+      "release_gate": "no_bypass_of_core_duties_or_field_privacy",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "team.locations",
+      "group": "People and access",
+      "label": "Managed locations",
+      "plan_display": {
+        "free": "1",
+        "core": "1",
+        "pro": "1",
+        "business": "Up to 3"
+      },
+      "spec": "PRICING-DECISION.md",
+      "release_gate": "location_scope_inventory_and_accepted_commitments",
+      "downgrade": "deliberate_selection_no_data_deletion"
+    },
+    {
+      "id": "return.customer",
+      "group": "Customer return and growth",
+      "label": "Browser/app private return: appointments, orders, next actions and balances",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "specs/88-private-business-return-view.md",
+      "release_gate": "relationship_and_shared_device_privacy",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "return.saved",
+      "group": "Customer return and growth",
+      "label": "Saved businesses, customer activity and eligible Explore presence",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "CUSTOMER-WEB-AND-ACQUISITION.md",
+      "release_gate": "same_eligibility_no_paid_ranking_guarantee",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "trust.reviews",
+      "group": "Customer return and growth",
+      "label": "Native review collection/display, reporting and appropriate appeals",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "TRUST-REVIEWS-AND-REPORTING.md",
+      "release_gate": "uniform_authenticity_moderation_and_eligibility",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "growth.rewards",
+      "group": "Customer return and growth",
+      "label": "Merchant rewards configuration, customer join/progress and staff Studio scan",
+      "plan_display": {
+        "free": "Not included",
+        "core": "Not included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "REWARDS-STUDIO-AND-CATEGORY-RULES.md",
+      "release_gate": "ledger_permission_refund_and_redemption_verification",
+      "downgrade": "preserve_reviewed_earned_obligations"
+    },
+    {
+      "id": "wallet.publiccard",
+      "group": "Customer return and growth",
+      "label": "Owner/team public business card in Apple/Google Wallet",
+      "plan_display": {
+        "free": "QR/share link",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "STUDIO-SCANNING-BUSINESS-CARDS-AND-HARDWARE.md",
+      "release_gate": "actual_issuer_eligibility_payload_and_device_tests",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "wallet.loyalty",
+      "group": "Customer return and growth",
+      "label": "Customer loyalty passes in Apple/Google Wallet",
+      "plan_display": {
+        "free": "Not included",
+        "core": "Not included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "WALLETS-ISSUANCE-REDEMPTION-AND-DESIGN.md",
+      "release_gate": "rewards_ready_and_actual_pass_issue_update_device_tests",
+      "downgrade": "earned_obligations_and_stale_pass_route"
+    },
+    {
+      "id": "growth.repeat",
+      "group": "Customer return and growth",
+      "label": "Advanced repeat/package/series/quote automation",
+      "plan_display": {
+        "free": "Not included",
+        "core": "Not included",
+        "pro": "Supported recipes",
+        "business": "Same + cross-location controls"
+      },
+      "spec": "specs/17-quotes-packages-and-memberships.md",
+      "release_gate": "exact_entitlement_rules_and_native_sku_policy",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "comms.operational",
+      "group": "Communications and reporting",
+      "label": "Essential booking/order/account emails and protected operational templates",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "COMMUNICATIONS-AND-MARKETING.md",
+      "release_gate": "purpose_sender_provider_and_reconcile",
+      "downgrade": "accepted_work_messages_preserved"
+    },
+    {
+      "id": "comms.marketing",
+      "group": "Communications and reporting",
+      "label": "Marketing email sends per account month",
+      "plan_display": {
+        "free": "0",
+        "core": "250",
+        "pro": "1,000",
+        "business": "3,000 shared across locations"
+      },
+      "spec": "COMMUNICATIONS-AND-MARKETING.md",
+      "release_gate": "tenant_purpose_consent_dispatch_suppression_and_quota",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "comms.recipes",
+      "group": "Communications and reporting",
+      "label": "Advanced promotional/repeat-business automation",
+      "plan_display": {
+        "free": "Not included",
+        "core": "Basic eligible campaigns",
+        "pro": "Supported advanced recipes",
+        "business": "Same"
+      },
+      "spec": "COMMUNICATIONS-AND-MARKETING.md",
+      "release_gate": "eligible_audience_and_plan_quota",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "comms.sms",
+      "group": "Communications and reporting",
+      "label": "Optional UK SMS",
+      "plan_display": {
+        "free": "\u00a39/100 or \u00a339/500 segments",
+        "core": "\u00a39/100 or \u00a339/500 segments",
+        "pro": "\u00a39/100 or \u00a339/500 segments",
+        "business": "\u00a39/100 or \u00a339/500 segments"
+      },
+      "spec": "PRICING-DECISION.md",
+      "release_gate": "consent_segment_price_preview_and_explicit_purchase",
+      "downgrade": "reviewed_purchased_credit_exit"
+    },
+    {
+      "id": "analytics.reports",
+      "group": "Communications and reporting",
+      "label": "Reporting",
+      "plan_display": {
+        "free": "Basic visits/work totals",
+        "core": "Operational reports/exports",
+        "pro": "Deeper return/campaign analytics",
+        "business": "Cross-location + advanced operational exports"
+      },
+      "spec": "PRICING-DECISION.md",
+      "release_gate": "minimal_data_accurate_metric_definitions_and_permissions",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "data.rights",
+      "group": "Communications and reporting",
+      "label": "Required data access/export, privacy and safety assistance",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "COMPLIANCE-CONTROL-REGISTER.md",
+      "release_gate": "applicable_rights_verified_scope_and_secure_delivery",
+      "downgrade": "not_paywalled"
+    },
+    {
+      "id": "apps.studio",
+      "group": "Apps and support",
+      "label": "Taplo Studio app access for permitted plan tasks",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "APP-STORES-BUILD-AND-RELEASE.md",
+      "release_gate": "signed_supported_native_build_and_store_approval",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "apps.widgets",
+      "group": "Apps and support",
+      "label": "Phone widgets for supported underlying tasks",
+      "plan_display": {
+        "free": "Included",
+        "core": "Included",
+        "pro": "Included",
+        "business": "Included"
+      },
+      "spec": "PHONE-WIDGETS-AND-EMBED-BOUNDARIES.md",
+      "release_gate": "native_widget_evidence_and_underlying_entitlement_not_all_widgets_all_plans",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "support.case",
+      "group": "Apps and support",
+      "label": "Help and human case escalation",
+      "plan_display": {
+        "free": "Help + essential escalation",
+        "core": "Standard support",
+        "pro": "Standard support",
+        "business": "Priority during staffed hours"
+      },
+      "spec": "INTEGRATIONS-AND-SUPPORT.md",
+      "release_gate": "actual_staffing_no_24_7_or_automated_final_disputes",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "exclude.domain_purchase",
+      "group": "Separate products and exclusions",
+      "label": "Domain purchase/renewal/transfer or email hosting",
+      "plan_display": {
+        "free": "Not in subscription",
+        "core": "Not in subscription",
+        "pro": "Not in subscription",
+        "business": "Not in subscription"
+      },
+      "spec": "INTEGRATIONS-AND-SUPPORT.md",
+      "release_gate": "separately_reviewed_product_or_not_offered",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "exclude.nfc_hardware",
+      "group": "Separate products and exclusions",
+      "label": "Physical NFC cards, stands, readers and shipping",
+      "plan_display": {
+        "free": "Not in subscription",
+        "core": "Not in subscription",
+        "pro": "Not in subscription",
+        "business": "Not in subscription"
+      },
+      "spec": "INTEGRATIONS-AND-SUPPORT.md",
+      "release_gate": "separately_reviewed_product_or_not_offered",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "exclude.shop_sync",
+      "group": "Separate products and exclusions",
+      "label": "Shopify/external shop stock/order sync",
+      "plan_display": {
+        "free": "Not in subscription",
+        "core": "Not in subscription",
+        "pro": "Not in subscription",
+        "business": "Not in subscription"
+      },
+      "spec": "INTEGRATIONS-AND-SUPPORT.md",
+      "release_gate": "separately_reviewed_product_or_not_offered",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "exclude.headless",
+      "group": "Separate products and exclusions",
+      "label": "Public headless API/arbitrary custom code/bespoke development",
+      "plan_display": {
+        "free": "Not in subscription",
+        "core": "Not in subscription",
+        "pro": "Not in subscription",
+        "business": "Not in subscription"
+      },
+      "spec": "INTEGRATIONS-AND-SUPPORT.md",
+      "release_gate": "separately_reviewed_product_or_not_offered",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "exclude.whatsapp",
+      "group": "Separate products and exclusions",
+      "label": "WhatsApp/international messaging",
+      "plan_display": {
+        "free": "Not in subscription",
+        "core": "Not in subscription",
+        "pro": "Not in subscription",
+        "business": "Not in subscription"
+      },
+      "spec": "INTEGRATIONS-AND-SUPPORT.md",
+      "release_gate": "separately_reviewed_product_or_not_offered",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    },
+    {
+      "id": "exclude.regulated",
+      "group": "Separate products and exclusions",
+      "label": "Clinical records, payroll, tax filing or dealer finance",
+      "plan_display": {
+        "free": "Not in subscription",
+        "core": "Not in subscription",
+        "pro": "Not in subscription",
+        "business": "Not in subscription"
+      },
+      "spec": "INTEGRATIONS-AND-SUPPORT.md",
+      "release_gate": "separately_reviewed_product_or_not_offered",
+      "downgrade": "preserve_accepted_work_and_required_history"
+    }
+  ],
+  "guards": [
+    "a_plan_entitlement_never_grants_staff_permission",
+    "current_scope_provider_legal_readiness_required",
+    "no_per_staff_fee",
+    "no_ordinary_count_cap_does_not_mean_unbounded_storage_support_or_abuse",
+    "no_paid_rank_guarantee",
+    "consumer_app_has_no_subscription_required_to_browse_book_or_buy",
+    "accepted_work_history_and_earned_obligations_survive_under_exit_rules"
+  ],
+  "still_required": [
+    "exact_enforced_permission_and_command_binding_per_action",
+    "media_file_and_retention_allowance_capacity_measurement",
+    "native_purchase_matrix_per_actual_sku_region_store",
+    "actual_case_and_device_evidence",
+    "provider_approved_sender_and_issuer_arrangement"
+  ]
+}

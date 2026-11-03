@@ -1,0 +1,487 @@
+{
+  "edition": "3.0",
+  "profiles": [
+    {
+      "key": "barber_beauty",
+      "name": "Barber, hair & beauty",
+      "icon": "scissors",
+      "configuration_records": [
+        "ServiceConfig",
+        "FulfilmentConfig"
+      ],
+      "terminology": "services / professionals / appointments",
+      "availability": "professional + chair/equipment; total conservative occupancy; no processing-time overlap baseline",
+      "checkout": "named staff price/duration visible before slot; any-staff only eligible resources",
+      "team_access": "practitioner own assigned customer/work; reception location scheduling; owner publishes staff gallery",
+      "legal_gate": "consumer/source policy review; patch-test/health intake only reviewed necessary scope",
+      "exception_cases": [
+        "named-worker absence",
+        "add-on extends resource time",
+        "shared chair race",
+        "late arrival"
+      ],
+      "reference_journey": "booking_deposit",
+      "required_sections": [
+        "fields",
+        "availability",
+        "team_access",
+        "checkout",
+        "daily_work",
+        "cancel_refund",
+        "exceptions"
+      ],
+      "daily_work": "Today prioritises actual accepted commitments and relevant next actions; work state, money state and fulfilment/attendance separate; action scope from authoritative role/assignment.",
+      "cancel_refund": "AssessCancellation binds immutable accepted policy/current money; clear merchant/customer initiator; automatic unambiguous outcomes only, disputed/statutory branch review; no blanket forfeiture.",
+      "field_source": "common Business/Location/Offer plus the named typed configuration records; public/private projection and claim provenance required",
+      "capability_switch": "preserve drafts/accepted work/history; no implicit publish, price import or access expansion"
+    },
+    {
+      "key": "tutoring",
+      "name": "Tutoring & education",
+      "icon": "graduation-cap",
+      "configuration_records": [
+        "ServiceConfig",
+        "ClassConfig",
+        "CreditPackageConfig"
+      ],
+      "terminology": "lessons / tutors / learners / guardian",
+      "availability": "tutor + venue/remote; actual term dates and local recurrence; participant seats separate payer",
+      "checkout": "guardian/payer authorisation; one-to-one/group; joining links protected; package not timetable",
+      "team_access": "tutor assigned learners/attendance; coordinator schedules; unrelated staff no learner notes",
+      "legal_gate": "child/guardian access assessment; remote native-store SKU scope; no generic safeguarding record system",
+      "exception_cases": [
+        "two learners one payer",
+        "wrong guardian",
+        "DST holiday",
+        "substitute tutor",
+        "credit reversal"
+      ],
+      "reference_journey": "class_package",
+      "required_sections": [
+        "fields",
+        "availability",
+        "team_access",
+        "checkout",
+        "daily_work",
+        "cancel_refund",
+        "exceptions"
+      ],
+      "daily_work": "Today prioritises actual accepted commitments and relevant next actions; work state, money state and fulfilment/attendance separate; action scope from authoritative role/assignment.",
+      "cancel_refund": "AssessCancellation binds immutable accepted policy/current money; clear merchant/customer initiator; automatic unambiguous outcomes only, disputed/statutory branch review; no blanket forfeiture.",
+      "field_source": "common Business/Location/Offer plus the named typed configuration records; public/private projection and claim provenance required",
+      "capability_switch": "preserve drafts/accepted work/history; no implicit publish, price import or access expansion"
+    },
+    {
+      "key": "mobile_services",
+      "name": "Mobile repairs, trades & detailing",
+      "icon": "car",
+      "configuration_records": [
+        "ServiceConfig"
+      ],
+      "terminology": "jobs / technicians / service area / arrival window",
+      "availability": "coverage + explicit travel buffers + technician/vehicle/tools; never fake precise ETA or routing",
+      "checkout": "postcode eligibility before actual commitment; assessment fee vs later repair quote separate",
+      "team_access": "technician assigned access/location; dispatcher scope; price variation customer approval",
+      "legal_gate": "unsafe/unsupported jobs stopped; private customer address never public map point",
+      "exception_cases": [
+        "adjacent impossible travel",
+        "new address",
+        "wrong part",
+        "unsafe site",
+        "scope variation"
+      ],
+      "reference_journey": "quote_job",
+      "required_sections": [
+        "fields",
+        "availability",
+        "team_access",
+        "checkout",
+        "daily_work",
+        "cancel_refund",
+        "exceptions"
+      ],
+      "daily_work": "Today prioritises actual accepted commitments and relevant next actions; work state, money state and fulfilment/attendance separate; action scope from authoritative role/assignment.",
+      "cancel_refund": "AssessCancellation binds immutable accepted policy/current money; clear merchant/customer initiator; automatic unambiguous outcomes only, disputed/statutory branch review; no blanket forfeiture.",
+      "field_source": "common Business/Location/Offer plus the named typed configuration records; public/private projection and claim provenance required",
+      "capability_switch": "preserve drafts/accepted work/history; no implicit publish, price import or access expansion"
+    },
+    {
+      "key": "retail",
+      "name": "Retail & makers",
+      "icon": "bag",
+      "configuration_records": [
+        "FulfilmentConfig"
+      ],
+      "terminology": "products / variants / orders / stock",
+      "availability": "variant inventory; preparation/collection windows; held/committed/sellable separate",
+      "checkout": "collection/delivery total before payment; tracked/untracked/made-to-order stated",
+      "team_access": "fulfilment relevant lines/address; stock adjustment vs finance separate",
+      "legal_gate": "goods returns/product facts reviewed; made-to-order exception not universal no-refund",
+      "exception_cases": [
+        "last-unit race",
+        "partial dispatch/return",
+        "failed late payment",
+        "uninspected return"
+      ],
+      "reference_journey": "goods_order",
+      "required_sections": [
+        "fields",
+        "availability",
+        "team_access",
+        "checkout",
+        "daily_work",
+        "cancel_refund",
+        "exceptions"
+      ],
+      "daily_work": "Today prioritises actual accepted commitments and relevant next actions; work state, money state and fulfilment/attendance separate; action scope from authoritative role/assignment.",
+      "cancel_refund": "AssessCancellation binds immutable accepted policy/current money; clear merchant/customer initiator; automatic unambiguous outcomes only, disputed/statutory branch review; no blanket forfeiture.",
+      "field_source": "common Business/Location/Offer plus the named typed configuration records; public/private projection and claim provenance required",
+      "capability_switch": "preserve drafts/accepted work/history; no implicit publish, price import or access expansion"
+    },
+    {
+      "key": "workshops",
+      "name": "Workshops, classes & events",
+      "icon": "palette",
+      "configuration_records": [
+        "ClassConfig",
+        "FulfilmentConfig"
+      ],
+      "terminology": "sessions / hosts / participants / places",
+      "availability": "dated occurrence + host/room/equipment + participant quantity; FIFO whole-party waitlist offer",
+      "checkout": "single date vs whole course explicit; no auto-charge on waitlist promotion",
+      "team_access": "instructor assigned roster/check-in; organiser capacity; no refund authority from attendance",
+      "legal_gate": "dated activity/supply policy review; participant support info minimum",
+      "exception_cases": [
+        "capacity reduced below sold",
+        "party of two/one seat",
+        "venue change",
+        "minimum-run cancellation"
+      ],
+      "reference_journey": "class_package",
+      "required_sections": [
+        "fields",
+        "availability",
+        "team_access",
+        "checkout",
+        "daily_work",
+        "cancel_refund",
+        "exceptions"
+      ],
+      "daily_work": "Today prioritises actual accepted commitments and relevant next actions; work state, money state and fulfilment/attendance separate; action scope from authoritative role/assignment.",
+      "cancel_refund": "AssessCancellation binds immutable accepted policy/current money; clear merchant/customer initiator; automatic unambiguous outcomes only, disputed/statutory branch review; no blanket forfeiture.",
+      "field_source": "common Business/Location/Offer plus the named typed configuration records; public/private projection and claim provenance required",
+      "capability_switch": "preserve drafts/accepted work/history; no implicit publish, price import or access expansion"
+    },
+    {
+      "key": "creative",
+      "name": "Photography & creative projects",
+      "icon": "camera",
+      "configuration_records": [
+        "ProjectConfig",
+        "ServiceConfig"
+      ],
+      "terminology": "projects / shoots / quote / deliverables",
+      "availability": "assigned shoot resources/travel plus accepted milestone timeline; quote not automatic slot",
+      "checkout": "scope/licence/revision limits and deposit balance; client approver may differ payer",
+      "team_access": "photographer project scope; editor permitted deliverables; finance separate",
+      "legal_gate": "portfolio/client media rights; no automatic file-hosting licence or unlimited storage",
+      "exception_cases": [
+        "weather reschedule",
+        "scope change",
+        "rejected revision",
+        "delayed balance",
+        "rights complaint"
+      ],
+      "reference_journey": "quote_job",
+      "required_sections": [
+        "fields",
+        "availability",
+        "team_access",
+        "checkout",
+        "daily_work",
+        "cancel_refund",
+        "exceptions"
+      ],
+      "daily_work": "Today prioritises actual accepted commitments and relevant next actions; work state, money state and fulfilment/attendance separate; action scope from authoritative role/assignment.",
+      "cancel_refund": "AssessCancellation binds immutable accepted policy/current money; clear merchant/customer initiator; automatic unambiguous outcomes only, disputed/statutory branch review; no blanket forfeiture.",
+      "field_source": "common Business/Location/Offer plus the named typed configuration records; public/private projection and claim provenance required",
+      "capability_switch": "preserve drafts/accepted work/history; no implicit publish, price import or access expansion"
+    },
+    {
+      "key": "fitness",
+      "name": "Fitness & coaching",
+      "icon": "barbell",
+      "configuration_records": [
+        "ServiceConfig",
+        "ClassConfig",
+        "CreditPackageConfig"
+      ],
+      "terminology": "sessions / coaches / credits / attendance",
+      "availability": "coach/space/equipment; credit entitlement separately evaluated",
+      "checkout": "package credits vs subscription vs reserved sessions distinct; no baseline recurring charge",
+      "team_access": "assigned coach/participants; minimum health information; coordinator timetable",
+      "legal_gate": "no medical claims/storage by default; native remote/live/group/digital classification",
+      "exception_cases": [
+        "credit exhausted mid-series",
+        "coach substitute",
+        "venue full",
+        "participant restriction"
+      ],
+      "reference_journey": "class_package",
+      "required_sections": [
+        "fields",
+        "availability",
+        "team_access",
+        "checkout",
+        "daily_work",
+        "cancel_refund",
+        "exceptions"
+      ],
+      "daily_work": "Today prioritises actual accepted commitments and relevant next actions; work state, money state and fulfilment/attendance separate; action scope from authoritative role/assignment.",
+      "cancel_refund": "AssessCancellation binds immutable accepted policy/current money; clear merchant/customer initiator; automatic unambiguous outcomes only, disputed/statutory branch review; no blanket forfeiture.",
+      "field_source": "common Business/Location/Offer plus the named typed configuration records; public/private projection and claim provenance required",
+      "capability_switch": "preserve drafts/accepted work/history; no implicit publish, price import or access expansion"
+    },
+    {
+      "key": "consulting",
+      "name": "Consulting & professional services",
+      "icon": "users",
+      "configuration_records": [
+        "ServiceConfig",
+        "ProjectConfig"
+      ],
+      "terminology": "engagements / consultants / scope / milestones",
+      "availability": "assigned professional/venue or remote; confidential joining details",
+      "checkout": "scoped quote/version and deliverables; confidential client agreements private",
+      "team_access": "consultant assigned engagement; admin scheduling; notes/export least privilege",
+      "legal_gate": "specialist regulated services not enabled from generic consultant category",
+      "exception_cases": [
+        "confidential attachment",
+        "joint client access",
+        "variation",
+        "cancelled engagement"
+      ],
+      "reference_journey": "quote_job",
+      "required_sections": [
+        "fields",
+        "availability",
+        "team_access",
+        "checkout",
+        "daily_work",
+        "cancel_refund",
+        "exceptions"
+      ],
+      "daily_work": "Today prioritises actual accepted commitments and relevant next actions; work state, money state and fulfilment/attendance separate; action scope from authoritative role/assignment.",
+      "cancel_refund": "AssessCancellation binds immutable accepted policy/current money; clear merchant/customer initiator; automatic unambiguous outcomes only, disputed/statutory branch review; no blanket forfeiture.",
+      "field_source": "common Business/Location/Offer plus the named typed configuration records; public/private projection and claim provenance required",
+      "capability_switch": "preserve drafts/accepted work/history; no implicit publish, price import or access expansion"
+    },
+    {
+      "key": "vehicle_dealer",
+      "name": "Vehicle stock & viewings",
+      "icon": "car",
+      "configuration_records": [
+        "VehicleListing",
+        "ServiceConfig"
+      ],
+      "terminology": "vehicles / stock units / viewings / leads",
+      "availability": "unique listing and viewing resource; viewing not exclusive vehicle purchase reservation",
+      "checkout": "presence/enquiry/viewing only baseline; no sale deposit/finance checkout",
+      "team_access": "sales assigned leads; stock publisher facts; finance separate",
+      "legal_gate": "trader facts/claims and privacy; no credit broking or condition verification promise",
+      "exception_cases": [
+        "sold listing deep link",
+        "competing viewing",
+        "changed facts",
+        "impersonating seller"
+      ],
+      "reference_journey": "presence_viewing",
+      "required_sections": [
+        "fields",
+        "availability",
+        "team_access",
+        "checkout",
+        "daily_work",
+        "cancel_refund",
+        "exceptions"
+      ],
+      "daily_work": "Today prioritises actual accepted commitments and relevant next actions; work state, money state and fulfilment/attendance separate; action scope from authoritative role/assignment.",
+      "cancel_refund": "AssessCancellation binds immutable accepted policy/current money; clear merchant/customer initiator; automatic unambiguous outcomes only, disputed/statutory branch review; no blanket forfeiture.",
+      "field_source": "common Business/Location/Offer plus the named typed configuration records; public/private projection and claim provenance required",
+      "capability_switch": "preserve drafts/accepted work/history; no implicit publish, price import or access expansion"
+    },
+    {
+      "key": "food",
+      "name": "Food, caf\u00e9 & collection",
+      "icon": "fork-knife",
+      "configuration_records": [
+        "FoodPrepConfig",
+        "FulfilmentConfig"
+      ],
+      "terminology": "menu / preparation / pickup / product information",
+      "availability": "kitchen prep capacity/window/cutoff plus collection capacity; not staff appointment slot",
+      "checkout": "options and mandatory product/allergen info before full total; no silent substitutions",
+      "team_access": "prep relevant lines; counter pickup; authorised fact publisher; finance separate",
+      "legal_gate": "food product/safety/allergen/returns scope evidence mandatory before transactional enablement",
+      "exception_cases": [
+        "ingredient sold out",
+        "product info changed",
+        "kitchen full",
+        "late collection",
+        "merchant cancellation"
+      ],
+      "reference_journey": "goods_order",
+      "required_sections": [
+        "fields",
+        "availability",
+        "team_access",
+        "checkout",
+        "daily_work",
+        "cancel_refund",
+        "exceptions"
+      ],
+      "daily_work": "Today prioritises actual accepted commitments and relevant next actions; work state, money state and fulfilment/attendance separate; action scope from authoritative role/assignment.",
+      "cancel_refund": "AssessCancellation binds immutable accepted policy/current money; clear merchant/customer initiator; automatic unambiguous outcomes only, disputed/statutory branch review; no blanket forfeiture.",
+      "field_source": "common Business/Location/Offer plus the named typed configuration records; public/private projection and claim provenance required",
+      "capability_switch": "preserve drafts/accepted work/history; no implicit publish, price import or access expansion"
+    },
+    {
+      "key": "creator",
+      "name": "Creators & personal brands",
+      "icon": "palette",
+      "configuration_records": [
+        "ServiceConfig",
+        "FulfilmentConfig",
+        "ProjectConfig"
+      ],
+      "terminology": "offers / links / products / collaborations",
+      "availability": "actual capability determines time/stock; no universal creator checkout",
+      "checkout": "physical goods/eligible sessions/quote first; native digital supply checkout gated",
+      "team_access": "collaborator content/task scope; public persona vs legal seller distinct",
+      "legal_gate": "digital licence/recording/store billing not implied by public page",
+      "exception_cases": [
+        "private content link",
+        "copied portfolio",
+        "mixed offer types",
+        "account link collision"
+      ],
+      "reference_journey": "goods_order",
+      "required_sections": [
+        "fields",
+        "availability",
+        "team_access",
+        "checkout",
+        "daily_work",
+        "cancel_refund",
+        "exceptions"
+      ],
+      "daily_work": "Today prioritises actual accepted commitments and relevant next actions; work state, money state and fulfilment/attendance separate; action scope from authoritative role/assignment.",
+      "cancel_refund": "AssessCancellation binds immutable accepted policy/current money; clear merchant/customer initiator; automatic unambiguous outcomes only, disputed/statutory branch review; no blanket forfeiture.",
+      "field_source": "common Business/Location/Offer plus the named typed configuration records; public/private projection and claim provenance required",
+      "capability_switch": "preserve drafts/accepted work/history; no implicit publish, price import or access expansion"
+    },
+    {
+      "key": "clinic",
+      "name": "Clinic & health-related presence",
+      "icon": "first-aid-kit",
+      "configuration_records": [
+        "HealthSchedulingConfig",
+        "ServiceConfig"
+      ],
+      "terminology": "practitioner / appointment / necessary contact",
+      "availability": "reviewed restricted scheduling scope; no clinical record engine",
+      "checkout": "neutral public service labels; eligibility/necessary intake only reviewed branches",
+      "team_access": "assigned minimum scheduling details; receptionist no broad sensitive notes",
+      "legal_gate": "professional/sensitive-data scope must be assessed; no diagnosis/emergency/prescription feature",
+      "exception_cases": [
+        "wrong patient/guardian",
+        "shared device",
+        "private notification label",
+        "urgent enquiry"
+      ],
+      "reference_journey": "restricted_scheduling",
+      "required_sections": [
+        "fields",
+        "availability",
+        "team_access",
+        "checkout",
+        "daily_work",
+        "cancel_refund",
+        "exceptions"
+      ],
+      "daily_work": "Today prioritises actual accepted commitments and relevant next actions; work state, money state and fulfilment/attendance separate; action scope from authoritative role/assignment.",
+      "cancel_refund": "AssessCancellation binds immutable accepted policy/current money; clear merchant/customer initiator; automatic unambiguous outcomes only, disputed/statutory branch review; no blanket forfeiture.",
+      "field_source": "common Business/Location/Offer plus the named typed configuration records; public/private projection and claim provenance required",
+      "capability_switch": "preserve drafts/accepted work/history; no implicit publish, price import or access expansion"
+    },
+    {
+      "key": "mixed_other",
+      "name": "Mixed or unlisted business",
+      "icon": "squares-four",
+      "configuration_records": [
+        "ServiceConfig",
+        "FulfilmentConfig",
+        "ClassConfig",
+        "ProjectConfig",
+        "VehicleListing",
+        "FoodPrepConfig",
+        "HealthSchedulingConfig",
+        "CreditPackageConfig"
+      ],
+      "terminology": "offers / work / customer",
+      "availability": "explicit capability composition; no category switch changes records or availability rules",
+      "checkout": "show relevant editor by offer type; choose other without forcing a false label",
+      "team_access": "union only explicitly granted scope; category choice grants no permission",
+      "legal_gate": "new unsupported capability remains draft/request with explanation, not false ready",
+      "exception_cases": [
+        "alias mismatch",
+        "capability disabled with accepted work",
+        "category changed mid-draft"
+      ],
+      "reference_journey": "booking_deposit",
+      "required_sections": [
+        "fields",
+        "availability",
+        "team_access",
+        "checkout",
+        "daily_work",
+        "cancel_refund",
+        "exceptions"
+      ],
+      "daily_work": "Today prioritises actual accepted commitments and relevant next actions; work state, money state and fulfilment/attendance separate; action scope from authoritative role/assignment.",
+      "cancel_refund": "AssessCancellation binds immutable accepted policy/current money; clear merchant/customer initiator; automatic unambiguous outcomes only, disputed/statutory branch review; no blanket forfeiture.",
+      "field_source": "common Business/Location/Offer plus the named typed configuration records; public/private projection and claim provenance required",
+      "capability_switch": "preserve drafts/accepted work/history; no implicit publish, price import or access expansion"
+    }
+  ],
+  "aliases": {
+    "detailer": [
+      "mobile_services",
+      "retail"
+    ],
+    "barber": [
+      "barber_beauty"
+    ],
+    "maths tutor": [
+      "tutoring"
+    ],
+    "pottery": [
+      "workshops",
+      "retail"
+    ],
+    "garage": [
+      "mobile_services",
+      "retail"
+    ],
+    "photographer": [
+      "creative"
+    ],
+    "personal trainer": [
+      "fitness"
+    ],
+    "car sales": [
+      "vehicle_dealer"
+    ]
+  },
+  "unknown": "manual mixed/other capability choice; no invented category approval"
+}

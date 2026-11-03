@@ -1,0 +1,228 @@
+{
+  "implemented_in_sql": [
+    {
+      "source": "Membership",
+      "field": "business_id",
+      "target": "Business",
+      "tenant_composite": false
+    },
+    {
+      "source": "CustomerRelationship",
+      "field": "business_id",
+      "target": "Business",
+      "tenant_composite": false
+    },
+    {
+      "source": "Location",
+      "field": "business_id",
+      "target": "Business",
+      "tenant_composite": false
+    },
+    {
+      "source": "Offer",
+      "field": "business_id",
+      "target": "Business",
+      "tenant_composite": false
+    },
+    {
+      "source": "Variant",
+      "field": "offer_id",
+      "target": "Offer",
+      "tenant_composite": true
+    },
+    {
+      "source": "InventoryBalance",
+      "field": "variant_id",
+      "target": "Variant",
+      "tenant_composite": true
+    },
+    {
+      "source": "InventoryBalance",
+      "field": "location_id",
+      "target": "Location",
+      "tenant_composite": true
+    },
+    {
+      "source": "Booking",
+      "field": "relationship_id",
+      "target": "CustomerRelationship",
+      "tenant_composite": true
+    },
+    {
+      "source": "Booking",
+      "field": "offer_id",
+      "target": "Offer",
+      "tenant_composite": true
+    },
+    {
+      "source": "Order",
+      "field": "relationship_id",
+      "target": "CustomerRelationship",
+      "tenant_composite": true
+    },
+    {
+      "source": "DepositAllocation",
+      "field": "payment_id",
+      "target": "Payment",
+      "tenant_composite": true
+    },
+    {
+      "source": "DepositAllocation",
+      "field": "agreement_id",
+      "target": "AgreementSnapshot",
+      "tenant_composite": true
+    },
+    {
+      "source": "CancellationAssessment",
+      "field": "agreement_id",
+      "target": "AgreementSnapshot",
+      "tenant_composite": true
+    },
+    {
+      "source": "RewardEntry",
+      "field": "relationship_id",
+      "target": "CustomerRelationship",
+      "tenant_composite": true
+    },
+    {
+      "source": "RewardRedemption",
+      "field": "relationship_id",
+      "target": "CustomerRelationship",
+      "tenant_composite": true
+    },
+    {
+      "source": "RewardRedemption",
+      "field": "programme_id",
+      "target": "RewardProgramme",
+      "tenant_composite": true
+    },
+    {
+      "source": "RewardRedemption",
+      "field": "reward_entry_id",
+      "target": "RewardEntry",
+      "tenant_composite": true
+    },
+    {
+      "source": "HolderChallenge",
+      "field": "relationship_id",
+      "target": "CustomerRelationship",
+      "tenant_composite": true
+    },
+    {
+      "source": "HolderChallenge",
+      "field": "programme_id",
+      "target": "RewardProgramme",
+      "tenant_composite": true
+    },
+    {
+      "source": "WalletRegistration",
+      "field": "pass_id",
+      "target": "WalletPass",
+      "tenant_composite": true
+    },
+    {
+      "source": "GuidanceProgress",
+      "field": "definition_id",
+      "target": "GuidanceDefinition",
+      "tenant_composite": true
+    },
+    {
+      "source": "CampaignPreview",
+      "field": "campaign_id",
+      "target": "Campaign",
+      "tenant_composite": true
+    },
+    {
+      "source": "TrustAppeal",
+      "field": "decision_id",
+      "target": "ModerationDecision",
+      "tenant_composite": false
+    },
+    {
+      "source": "TeamProfile",
+      "field": "business_id",
+      "target": "Business",
+      "tenant_composite": false
+    },
+    {
+      "source": "TeamInvitation",
+      "field": "business_id",
+      "target": "Business",
+      "tenant_composite": false
+    },
+    {
+      "source": "RewardEntry",
+      "field": "programme_id",
+      "target": "RewardProgramme",
+      "tenant_composite": true
+    }
+  ],
+  "polymorphic_references": "holder/source/commitment refs require explicit same-tenant resolution plus kind guard; not silently unbound foreign keys",
+  "other_relationships": "Polymorphic source/holder refs checked by explicit kind+same tenant under authoritative command. Mapped ID arrays use canonical junctions, not dual JSON writes. Other evidence/attachment arrays are scoped references with provider/media access verification.",
+  "release_rule": "Validate generated SQL and all schema/migration constraints in real isolated Postgres before production; static parser is not RLS proof",
+  "junctions": [
+    {
+      "record": "Membership",
+      "api_field": "resource_ids",
+      "canonical_storage_table": "membership__resource_ids",
+      "target": "Resource",
+      "meaning": "API ordered array projection from canonical FK junction; no dual JSON write"
+    },
+    {
+      "record": "AvailabilityRule",
+      "api_field": "resource_ids",
+      "canonical_storage_table": "availability_rule__resource_ids",
+      "target": "Resource",
+      "meaning": "API ordered array projection from canonical FK junction; no dual JSON write"
+    },
+    {
+      "record": "Session",
+      "api_field": "resource_ids",
+      "canonical_storage_table": "session__resource_ids",
+      "target": "Resource",
+      "meaning": "API ordered array projection from canonical FK junction; no dual JSON write"
+    },
+    {
+      "record": "Booking",
+      "api_field": "resource_ids",
+      "canonical_storage_table": "booking__resource_ids",
+      "target": "Resource",
+      "meaning": "API ordered array projection from canonical FK junction; no dual JSON write"
+    },
+    {
+      "record": "PermissionGrant",
+      "api_field": "resource_ids",
+      "canonical_storage_table": "permission_grant__resource_ids",
+      "target": "Resource",
+      "meaning": "API ordered array projection from canonical FK junction; no dual JSON write"
+    },
+    {
+      "record": "ServiceConfig",
+      "api_field": "eligible_resource_ids",
+      "canonical_storage_table": "service_config__eligible_resource_ids",
+      "target": "Resource",
+      "meaning": "API ordered array projection from canonical FK junction; no dual JSON write"
+    },
+    {
+      "record": "ClassConfig",
+      "api_field": "host_resource_ids",
+      "canonical_storage_table": "class_config__host_resource_ids",
+      "target": "Resource",
+      "meaning": "API ordered array projection from canonical FK junction; no dual JSON write"
+    },
+    {
+      "record": "ClassConfig",
+      "api_field": "session_ids",
+      "canonical_storage_table": "class_config__session_ids",
+      "target": "Session",
+      "meaning": "API ordered array projection from canonical FK junction; no dual JSON write"
+    },
+    {
+      "record": "CreditPackageConfig",
+      "api_field": "eligible_offer_ids",
+      "canonical_storage_table": "credit_package_config__eligible_offer_ids",
+      "target": "Offer",
+      "meaning": "API ordered array projection from canonical FK junction; no dual JSON write"
+    }
+  ]
+}

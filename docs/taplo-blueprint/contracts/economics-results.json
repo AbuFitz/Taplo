@@ -1,0 +1,1360 @@
+{
+  "assumptions": {
+    "edition": "2.2",
+    "date": "2026-11-03",
+    "status": "rough_estimate_not_observed_cost_or_demand",
+    "currency": "GBP",
+    "vat_registered_standard_rate_scenario": 0.2,
+    "gbp_per_usd_assumption_not_live_fx": 0.8,
+    "subscription_card_fee_fraction": 0.015,
+    "subscription_card_fee_fixed": 0.2,
+    "subscription_billing_fraction": 0.007,
+    "sms_gbp_per_segment_buffered_assumption": 0.05,
+    "email_gbp_per_send_assumption": 0.00072,
+    "support_gbp_per_minute_assumption": 0.5,
+    "plan_usage": [
+      {
+        "id": "core",
+        "variable_infrastructure": 0.8,
+        "operational_emails": 150,
+        "marketing_emails": 250,
+        "support_minutes": 5,
+        "saas_loss_reserve": 0.1
+      },
+      {
+        "id": "pro",
+        "variable_infrastructure": 1.5,
+        "operational_emails": 500,
+        "marketing_emails": 1000,
+        "support_minutes": 10,
+        "saas_loss_reserve": 0.2
+      },
+      {
+        "id": "business",
+        "variable_infrastructure": 3.0,
+        "operational_emails": 1500,
+        "marketing_emails": 3000,
+        "support_minutes": 20,
+        "saas_loss_reserve": 0.4
+      }
+    ],
+    "price_ladders": {
+      "lower": [
+        9.99,
+        19.99,
+        39.99
+      ],
+      "balanced": [
+        12,
+        24,
+        49
+      ],
+      "higher": [
+        15,
+        29,
+        59
+      ]
+    },
+    "sms_bundles": {
+      "none": [
+        0,
+        0,
+        0
+      ],
+      "light": [
+        25,
+        75,
+        150
+      ],
+      "larger": [
+        50,
+        150,
+        300
+      ],
+      "very_large": [
+        100,
+        300,
+        600
+      ]
+    },
+    "recommended_ladder": "balanced",
+    "recommended_bundle": "none",
+    "paid_plan_mix_assumption": [
+      0.6,
+      0.3,
+      0.1
+    ],
+    "free_account_cost_assumption": {
+      "variable_infrastructure": 0.15,
+      "operational_email": 0.03,
+      "support_minutes": 0.5,
+      "other": 0.02
+    },
+    "free_per_paid_base_assumption": 4,
+    "cohort_shared_overhead_assumptions": [
+      {
+        "paid": 100,
+        "fixed": 150
+      },
+      {
+        "paid": 500,
+        "fixed": 300
+      },
+      {
+        "paid": 1000,
+        "fixed": 500
+      }
+    ],
+    "cac_assumption": 30,
+    "one_time_onboarding_minutes_assumption": 20,
+    "monthly_paid_churn_assumption": 0.05,
+    "sms_topups": [
+      {
+        "segments": 100,
+        "headline": 9
+      },
+      {
+        "segments": 500,
+        "headline": 39
+      }
+    ],
+    "excluded_from_contribution": [
+      "fixed shared overhead",
+      "free-tier subsidy",
+      "acquisition and onboarding",
+      "product engineering salaries",
+      "general company overhead not in stated shared budget",
+      "income or corporation tax",
+      "merchant card processing borne by merchant"
+    ],
+    "guardrails": [
+      "supplier inputs are not exact all-in quotations",
+      "support and infrastructure allocations need measurement",
+      "normal operational email continues for accepted commitments",
+      "all four packages planned at launch per founder",
+      "no per-team-member fee",
+      "no automatic topup or paid upgrade without consent"
+    ]
+  },
+  "selected": [
+    {
+      "plan": "core",
+      "gross": 12,
+      "net": 10.0,
+      "sms": 0,
+      "costs": {
+        "subscription_fees": 0.464,
+        "infrastructure": 0.8,
+        "email": 0.28800000000000003,
+        "support": 2.5,
+        "sms": 0.0,
+        "reserve": 0.1
+      },
+      "direct": 4.152,
+      "contribution": 5.848,
+      "margin": 0.5848
+    },
+    {
+      "plan": "pro",
+      "gross": 24,
+      "net": 20.0,
+      "sms": 0,
+      "costs": {
+        "subscription_fees": 0.728,
+        "infrastructure": 1.5,
+        "email": 1.08,
+        "support": 5.0,
+        "sms": 0.0,
+        "reserve": 0.2
+      },
+      "direct": 8.508000000000001,
+      "contribution": 11.491999999999999,
+      "margin": 0.5746
+    },
+    {
+      "plan": "business",
+      "gross": 49,
+      "net": 40.833333333333336,
+      "sms": 0,
+      "costs": {
+        "subscription_fees": 1.2779999999999998,
+        "infrastructure": 3.0,
+        "email": 3.24,
+        "support": 10.0,
+        "sms": 0.0,
+        "reserve": 0.4
+      },
+      "direct": 17.918,
+      "contribution": 22.915333333333336,
+      "margin": 0.561191836734694
+    }
+  ],
+  "comparisons": [
+    {
+      "ladder": "lower",
+      "bundle": "none",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 9.99,
+          "net": 8.325000000000001,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.41978000000000004,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 0.0,
+            "reserve": 0.1
+          },
+          "direct": 4.10778,
+          "contribution": 4.217220000000001,
+          "margin": 0.506572972972973
+        },
+        {
+          "plan": "pro",
+          "gross": 19.99,
+          "net": 16.65833333333333,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.63978,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 0.0,
+            "reserve": 0.2
+          },
+          "direct": 8.41978,
+          "contribution": 8.238553333333332,
+          "margin": 0.49456048024012006
+        },
+        {
+          "plan": "business",
+          "gross": 39.99,
+          "net": 33.325,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 1.07978,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 0.0,
+            "reserve": 0.4
+          },
+          "direct": 17.71978,
+          "contribution": 15.605220000000003,
+          "margin": 0.4682736684171043
+        }
+      ]
+    },
+    {
+      "ladder": "lower",
+      "bundle": "light",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 9.99,
+          "net": 8.325000000000001,
+          "sms": 25,
+          "costs": {
+            "subscription_fees": 0.41978000000000004,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 1.25,
+            "reserve": 0.1
+          },
+          "direct": 5.35778,
+          "contribution": 2.967220000000001,
+          "margin": 0.3564228228228229
+        },
+        {
+          "plan": "pro",
+          "gross": 19.99,
+          "net": 16.65833333333333,
+          "sms": 75,
+          "costs": {
+            "subscription_fees": 0.63978,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 3.75,
+            "reserve": 0.2
+          },
+          "direct": 12.16978,
+          "contribution": 4.488553333333332,
+          "margin": 0.2694479239619809
+        },
+        {
+          "plan": "business",
+          "gross": 39.99,
+          "net": 33.325,
+          "sms": 150,
+          "costs": {
+            "subscription_fees": 1.07978,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 7.5,
+            "reserve": 0.4
+          },
+          "direct": 25.21978,
+          "contribution": 8.105220000000003,
+          "margin": 0.24321740435108782
+        }
+      ]
+    },
+    {
+      "ladder": "lower",
+      "bundle": "larger",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 9.99,
+          "net": 8.325000000000001,
+          "sms": 50,
+          "costs": {
+            "subscription_fees": 0.41978000000000004,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 2.5,
+            "reserve": 0.1
+          },
+          "direct": 6.60778,
+          "contribution": 1.717220000000001,
+          "margin": 0.20627267267267277
+        },
+        {
+          "plan": "pro",
+          "gross": 19.99,
+          "net": 16.65833333333333,
+          "sms": 150,
+          "costs": {
+            "subscription_fees": 0.63978,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 7.5,
+            "reserve": 0.2
+          },
+          "direct": 15.91978,
+          "contribution": 0.7385533333333321,
+          "margin": 0.04433536768384185
+        },
+        {
+          "plan": "business",
+          "gross": 39.99,
+          "net": 33.325,
+          "sms": 300,
+          "costs": {
+            "subscription_fees": 1.07978,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 15.0,
+            "reserve": 0.4
+          },
+          "direct": 32.71978,
+          "contribution": 0.6052200000000028,
+          "margin": 0.018161140285071348
+        }
+      ]
+    },
+    {
+      "ladder": "lower",
+      "bundle": "very_large",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 9.99,
+          "net": 8.325000000000001,
+          "sms": 100,
+          "costs": {
+            "subscription_fees": 0.41978000000000004,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 5.0,
+            "reserve": 0.1
+          },
+          "direct": 9.10778,
+          "contribution": -0.7827799999999989,
+          "margin": -0.09402762762762748
+        },
+        {
+          "plan": "pro",
+          "gross": 19.99,
+          "net": 16.65833333333333,
+          "sms": 300,
+          "costs": {
+            "subscription_fees": 0.63978,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 15.0,
+            "reserve": 0.2
+          },
+          "direct": 23.41978,
+          "contribution": -6.761446666666668,
+          "margin": -0.40588974487243634
+        },
+        {
+          "plan": "business",
+          "gross": 39.99,
+          "net": 33.325,
+          "sms": 600,
+          "costs": {
+            "subscription_fees": 1.07978,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 30.0,
+            "reserve": 0.4
+          },
+          "direct": 47.71978,
+          "contribution": -14.394779999999997,
+          "margin": -0.43195138784696163
+        }
+      ]
+    },
+    {
+      "ladder": "balanced",
+      "bundle": "none",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 12,
+          "net": 10.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.464,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 0.0,
+            "reserve": 0.1
+          },
+          "direct": 4.152,
+          "contribution": 5.848,
+          "margin": 0.5848
+        },
+        {
+          "plan": "pro",
+          "gross": 24,
+          "net": 20.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.728,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 0.0,
+            "reserve": 0.2
+          },
+          "direct": 8.508000000000001,
+          "contribution": 11.491999999999999,
+          "margin": 0.5746
+        },
+        {
+          "plan": "business",
+          "gross": 49,
+          "net": 40.833333333333336,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 1.2779999999999998,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 0.0,
+            "reserve": 0.4
+          },
+          "direct": 17.918,
+          "contribution": 22.915333333333336,
+          "margin": 0.561191836734694
+        }
+      ]
+    },
+    {
+      "ladder": "balanced",
+      "bundle": "light",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 12,
+          "net": 10.0,
+          "sms": 25,
+          "costs": {
+            "subscription_fees": 0.464,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 1.25,
+            "reserve": 0.1
+          },
+          "direct": 5.402,
+          "contribution": 4.598,
+          "margin": 0.4598
+        },
+        {
+          "plan": "pro",
+          "gross": 24,
+          "net": 20.0,
+          "sms": 75,
+          "costs": {
+            "subscription_fees": 0.728,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 3.75,
+            "reserve": 0.2
+          },
+          "direct": 12.258000000000001,
+          "contribution": 7.741999999999999,
+          "margin": 0.38709999999999994
+        },
+        {
+          "plan": "business",
+          "gross": 49,
+          "net": 40.833333333333336,
+          "sms": 150,
+          "costs": {
+            "subscription_fees": 1.2779999999999998,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 7.5,
+            "reserve": 0.4
+          },
+          "direct": 25.418,
+          "contribution": 15.415333333333336,
+          "margin": 0.37751836734693883
+        }
+      ]
+    },
+    {
+      "ladder": "balanced",
+      "bundle": "larger",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 12,
+          "net": 10.0,
+          "sms": 50,
+          "costs": {
+            "subscription_fees": 0.464,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 2.5,
+            "reserve": 0.1
+          },
+          "direct": 6.652,
+          "contribution": 3.348,
+          "margin": 0.3348
+        },
+        {
+          "plan": "pro",
+          "gross": 24,
+          "net": 20.0,
+          "sms": 150,
+          "costs": {
+            "subscription_fees": 0.728,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 7.5,
+            "reserve": 0.2
+          },
+          "direct": 16.008,
+          "contribution": 3.992000000000001,
+          "margin": 0.19960000000000006
+        },
+        {
+          "plan": "business",
+          "gross": 49,
+          "net": 40.833333333333336,
+          "sms": 300,
+          "costs": {
+            "subscription_fees": 1.2779999999999998,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 15.0,
+            "reserve": 0.4
+          },
+          "direct": 32.918,
+          "contribution": 7.915333333333336,
+          "margin": 0.19384489795918375
+        }
+      ]
+    },
+    {
+      "ladder": "balanced",
+      "bundle": "very_large",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 12,
+          "net": 10.0,
+          "sms": 100,
+          "costs": {
+            "subscription_fees": 0.464,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 5.0,
+            "reserve": 0.1
+          },
+          "direct": 9.152,
+          "contribution": 0.8480000000000008,
+          "margin": 0.08480000000000007
+        },
+        {
+          "plan": "pro",
+          "gross": 24,
+          "net": 20.0,
+          "sms": 300,
+          "costs": {
+            "subscription_fees": 0.728,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 15.0,
+            "reserve": 0.2
+          },
+          "direct": 23.508,
+          "contribution": -3.507999999999999,
+          "margin": -0.17539999999999994
+        },
+        {
+          "plan": "business",
+          "gross": 49,
+          "net": 40.833333333333336,
+          "sms": 600,
+          "costs": {
+            "subscription_fees": 1.2779999999999998,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 30.0,
+            "reserve": 0.4
+          },
+          "direct": 47.918,
+          "contribution": -7.084666666666664,
+          "margin": -0.17350204081632645
+        }
+      ]
+    },
+    {
+      "ladder": "higher",
+      "bundle": "none",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 15,
+          "net": 12.5,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.53,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 0.0,
+            "reserve": 0.1
+          },
+          "direct": 4.218,
+          "contribution": 8.282,
+          "margin": 0.66256
+        },
+        {
+          "plan": "pro",
+          "gross": 29,
+          "net": 24.166666666666668,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.8380000000000001,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 0.0,
+            "reserve": 0.2
+          },
+          "direct": 8.618,
+          "contribution": 15.548666666666668,
+          "margin": 0.6433931034482758
+        },
+        {
+          "plan": "business",
+          "gross": 59,
+          "net": 49.16666666666667,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 1.4979999999999998,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 0.0,
+            "reserve": 0.4
+          },
+          "direct": 18.138,
+          "contribution": 31.02866666666667,
+          "margin": 0.6310915254237288
+        }
+      ]
+    },
+    {
+      "ladder": "higher",
+      "bundle": "light",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 15,
+          "net": 12.5,
+          "sms": 25,
+          "costs": {
+            "subscription_fees": 0.53,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 1.25,
+            "reserve": 0.1
+          },
+          "direct": 5.468,
+          "contribution": 7.032,
+          "margin": 0.56256
+        },
+        {
+          "plan": "pro",
+          "gross": 29,
+          "net": 24.166666666666668,
+          "sms": 75,
+          "costs": {
+            "subscription_fees": 0.8380000000000001,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 3.75,
+            "reserve": 0.2
+          },
+          "direct": 12.368,
+          "contribution": 11.798666666666668,
+          "margin": 0.4882206896551724
+        },
+        {
+          "plan": "business",
+          "gross": 59,
+          "net": 49.16666666666667,
+          "sms": 150,
+          "costs": {
+            "subscription_fees": 1.4979999999999998,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 7.5,
+            "reserve": 0.4
+          },
+          "direct": 25.638,
+          "contribution": 23.52866666666667,
+          "margin": 0.4785491525423729
+        }
+      ]
+    },
+    {
+      "ladder": "higher",
+      "bundle": "larger",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 15,
+          "net": 12.5,
+          "sms": 50,
+          "costs": {
+            "subscription_fees": 0.53,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 2.5,
+            "reserve": 0.1
+          },
+          "direct": 6.718,
+          "contribution": 5.782,
+          "margin": 0.46256
+        },
+        {
+          "plan": "pro",
+          "gross": 29,
+          "net": 24.166666666666668,
+          "sms": 150,
+          "costs": {
+            "subscription_fees": 0.8380000000000001,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 7.5,
+            "reserve": 0.2
+          },
+          "direct": 16.118,
+          "contribution": 8.04866666666667,
+          "margin": 0.33304827586206903
+        },
+        {
+          "plan": "business",
+          "gross": 59,
+          "net": 49.16666666666667,
+          "sms": 300,
+          "costs": {
+            "subscription_fees": 1.4979999999999998,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 15.0,
+            "reserve": 0.4
+          },
+          "direct": 33.138,
+          "contribution": 16.028666666666673,
+          "margin": 0.32600677966101704
+        }
+      ]
+    },
+    {
+      "ladder": "higher",
+      "bundle": "very_large",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 15,
+          "net": 12.5,
+          "sms": 100,
+          "costs": {
+            "subscription_fees": 0.53,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 5.0,
+            "reserve": 0.1
+          },
+          "direct": 9.218,
+          "contribution": 3.282,
+          "margin": 0.26256
+        },
+        {
+          "plan": "pro",
+          "gross": 29,
+          "net": 24.166666666666668,
+          "sms": 300,
+          "costs": {
+            "subscription_fees": 0.8380000000000001,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 15.0,
+            "reserve": 0.2
+          },
+          "direct": 23.618,
+          "contribution": 0.5486666666666693,
+          "margin": 0.022703448275862178
+        },
+        {
+          "plan": "business",
+          "gross": 59,
+          "net": 49.16666666666667,
+          "sms": 600,
+          "costs": {
+            "subscription_fees": 1.4979999999999998,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 30.0,
+            "reserve": 0.4
+          },
+          "direct": 48.138,
+          "contribution": 1.0286666666666733,
+          "margin": 0.020922033898305218
+        }
+      ]
+    }
+  ],
+  "free_cost": 0.45,
+  "cohorts": [
+    {
+      "paid": 100,
+      "free": 400,
+      "gross": 1929.9999999999998,
+      "net": 1608.3333333333335,
+      "paid_contribution": 924.7933333333332,
+      "free_cost": 180.0,
+      "shared_fixed": 150,
+      "before_acquisition_engineering": 594.7933333333332,
+      "replacement_acquisition_and_onboarding": 200.0,
+      "after_replacement_before_engineering": 394.7933333333332,
+      "after_replacement_and_3000_engineering": -2605.206666666667
+    },
+    {
+      "paid": 500,
+      "free": 2000,
+      "gross": 9649.999999999998,
+      "net": 8041.666666666668,
+      "paid_contribution": 4623.966666666666,
+      "free_cost": 900.0,
+      "shared_fixed": 300,
+      "before_acquisition_engineering": 3423.9666666666662,
+      "replacement_acquisition_and_onboarding": 1000.0,
+      "after_replacement_before_engineering": 2423.9666666666662,
+      "after_replacement_and_3000_engineering": -576.0333333333338
+    },
+    {
+      "paid": 1000,
+      "free": 4000,
+      "gross": 19299.999999999996,
+      "net": 16083.333333333336,
+      "paid_contribution": 9247.933333333332,
+      "free_cost": 1800.0,
+      "shared_fixed": 500,
+      "before_acquisition_engineering": 6947.9333333333325,
+      "replacement_acquisition_and_onboarding": 2000.0,
+      "after_replacement_before_engineering": 4947.9333333333325,
+      "after_replacement_and_3000_engineering": 1947.9333333333325
+    }
+  ],
+  "sensitivities": [
+    {
+      "case": "base",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 12,
+          "net": 10.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.464,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 0.0,
+            "reserve": 0.1
+          },
+          "direct": 4.152,
+          "contribution": 5.848,
+          "margin": 0.5848
+        },
+        {
+          "plan": "pro",
+          "gross": 24,
+          "net": 20.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.728,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 0.0,
+            "reserve": 0.2
+          },
+          "direct": 8.508000000000001,
+          "contribution": 11.491999999999999,
+          "margin": 0.5746
+        },
+        {
+          "plan": "business",
+          "gross": 49,
+          "net": 40.833333333333336,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 1.2779999999999998,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 0.0,
+            "reserve": 0.4
+          },
+          "direct": 17.918,
+          "contribution": 22.915333333333336,
+          "margin": 0.561191836734694
+        }
+      ]
+    },
+    {
+      "case": "support_double",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 12,
+          "net": 10.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.464,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 5.0,
+            "sms": 0.0,
+            "reserve": 0.1
+          },
+          "direct": 6.652,
+          "contribution": 3.348,
+          "margin": 0.3348
+        },
+        {
+          "plan": "pro",
+          "gross": 24,
+          "net": 20.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.728,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 10.0,
+            "sms": 0.0,
+            "reserve": 0.2
+          },
+          "direct": 13.508000000000001,
+          "contribution": 6.491999999999999,
+          "margin": 0.32459999999999994
+        },
+        {
+          "plan": "business",
+          "gross": 49,
+          "net": 40.833333333333336,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 1.2779999999999998,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 20.0,
+            "sms": 0.0,
+            "reserve": 0.4
+          },
+          "direct": 27.918,
+          "contribution": 12.915333333333336,
+          "margin": 0.31629387755102045
+        }
+      ]
+    },
+    {
+      "case": "support_four_times",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 12,
+          "net": 10.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.464,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 10.0,
+            "sms": 0.0,
+            "reserve": 0.1
+          },
+          "direct": 11.652,
+          "contribution": -1.6519999999999992,
+          "margin": -0.16519999999999993
+        },
+        {
+          "plan": "pro",
+          "gross": 24,
+          "net": 20.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.728,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 20.0,
+            "sms": 0.0,
+            "reserve": 0.2
+          },
+          "direct": 23.508,
+          "contribution": -3.507999999999999,
+          "margin": -0.17539999999999994
+        },
+        {
+          "plan": "business",
+          "gross": 49,
+          "net": 40.833333333333336,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 1.2779999999999998,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 40.0,
+            "sms": 0.0,
+            "reserve": 0.4
+          },
+          "direct": 47.918,
+          "contribution": -7.084666666666664,
+          "margin": -0.17350204081632645
+        }
+      ]
+    },
+    {
+      "case": "sms_8p",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 12,
+          "net": 10.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.464,
+            "infrastructure": 0.8,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 0.0,
+            "reserve": 0.1
+          },
+          "direct": 4.152,
+          "contribution": 5.848,
+          "margin": 0.5848
+        },
+        {
+          "plan": "pro",
+          "gross": 24,
+          "net": 20.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.728,
+            "infrastructure": 1.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 0.0,
+            "reserve": 0.2
+          },
+          "direct": 8.508000000000001,
+          "contribution": 11.491999999999999,
+          "margin": 0.5746
+        },
+        {
+          "plan": "business",
+          "gross": 49,
+          "net": 40.833333333333336,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 1.2779999999999998,
+            "infrastructure": 3.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 0.0,
+            "reserve": 0.4
+          },
+          "direct": 17.918,
+          "contribution": 22.915333333333336,
+          "margin": 0.561191836734694
+        }
+      ]
+    },
+    {
+      "case": "infra_three_times",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 12,
+          "net": 10.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.464,
+            "infrastructure": 2.4000000000000004,
+            "email": 0.28800000000000003,
+            "support": 2.5,
+            "sms": 0.0,
+            "reserve": 0.1
+          },
+          "direct": 5.752000000000001,
+          "contribution": 4.247999999999999,
+          "margin": 0.42479999999999996
+        },
+        {
+          "plan": "pro",
+          "gross": 24,
+          "net": 20.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.728,
+            "infrastructure": 4.5,
+            "email": 1.08,
+            "support": 5.0,
+            "sms": 0.0,
+            "reserve": 0.2
+          },
+          "direct": 11.508000000000001,
+          "contribution": 8.491999999999999,
+          "margin": 0.4246
+        },
+        {
+          "plan": "business",
+          "gross": 49,
+          "net": 40.833333333333336,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 1.2779999999999998,
+            "infrastructure": 9.0,
+            "email": 3.24,
+            "support": 10.0,
+            "sms": 0.0,
+            "reserve": 0.4
+          },
+          "direct": 23.918,
+          "contribution": 16.915333333333336,
+          "margin": 0.41425306122448985
+        }
+      ]
+    },
+    {
+      "case": "email_double",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 12,
+          "net": 10.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.464,
+            "infrastructure": 0.8,
+            "email": 0.5760000000000001,
+            "support": 2.5,
+            "sms": 0.0,
+            "reserve": 0.1
+          },
+          "direct": 4.44,
+          "contribution": 5.56,
+          "margin": 0.5559999999999999
+        },
+        {
+          "plan": "pro",
+          "gross": 24,
+          "net": 20.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.728,
+            "infrastructure": 1.5,
+            "email": 2.16,
+            "support": 5.0,
+            "sms": 0.0,
+            "reserve": 0.2
+          },
+          "direct": 9.588000000000001,
+          "contribution": 10.411999999999999,
+          "margin": 0.5206
+        },
+        {
+          "plan": "business",
+          "gross": 49,
+          "net": 40.833333333333336,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 1.2779999999999998,
+            "infrastructure": 3.0,
+            "email": 6.48,
+            "support": 10.0,
+            "sms": 0.0,
+            "reserve": 0.4
+          },
+          "direct": 21.158,
+          "contribution": 19.675333333333334,
+          "margin": 0.48184489795918367
+        }
+      ]
+    },
+    {
+      "case": "combined_stress",
+      "plans": [
+        {
+          "plan": "core",
+          "gross": 12,
+          "net": 10.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.464,
+            "infrastructure": 2.4000000000000004,
+            "email": 0.5760000000000001,
+            "support": 5.0,
+            "sms": 0.0,
+            "reserve": 0.1
+          },
+          "direct": 8.540000000000001,
+          "contribution": 1.459999999999999,
+          "margin": 0.1459999999999999
+        },
+        {
+          "plan": "pro",
+          "gross": 24,
+          "net": 20.0,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 0.728,
+            "infrastructure": 4.5,
+            "email": 2.16,
+            "support": 10.0,
+            "sms": 0.0,
+            "reserve": 0.2
+          },
+          "direct": 17.588,
+          "contribution": 2.411999999999999,
+          "margin": 0.12059999999999996
+        },
+        {
+          "plan": "business",
+          "gross": 49,
+          "net": 40.833333333333336,
+          "sms": 0,
+          "costs": {
+            "subscription_fees": 1.2779999999999998,
+            "infrastructure": 9.0,
+            "email": 6.48,
+            "support": 20.0,
+            "sms": 0.0,
+            "reserve": 0.4
+          },
+          "direct": 37.158,
+          "contribution": 3.6753333333333345,
+          "margin": 0.09000816326530614
+        }
+      ]
+    }
+  ],
+  "free_ratio_sensitivities": [
+    {
+      "free_per_paid": 1,
+      "contribution_after_free": 8.797933333333333
+    },
+    {
+      "free_per_paid": 4,
+      "contribution_after_free": 7.447933333333332
+    },
+    {
+      "free_per_paid": 10,
+      "contribution_after_free": 4.747933333333332
+    },
+    {
+      "free_per_paid": 20,
+      "contribution_after_free": 0.24793333333333223
+    }
+  ],
+  "topups": [
+    {
+      "segments": 100,
+      "headline": 9,
+      "net": 7.5,
+      "supplier_estimate": 5.0,
+      "card_fees": 0.335,
+      "contribution": 2.165,
+      "margin": 0.2886666666666667
+    },
+    {
+      "segments": 500,
+      "headline": 39,
+      "net": 32.5,
+      "supplier_estimate": 25.0,
+      "card_fees": 0.7849999999999999,
+      "contribution": 6.715,
+      "margin": 0.20661538461538462
+    }
+  ],
+  "price_floors_for_50pct_after_free_before_fixed": [
+    14.412162162162163,
+    24.780405405405407,
+    47.22972972972973
+  ],
+  "paid_contribution_average": 9.247933333333332,
+  "paid_contribution_after_free": 7.447933333333332,
+  "cac_plus_onboarding_payback_months": 5.3706173524646665
+}

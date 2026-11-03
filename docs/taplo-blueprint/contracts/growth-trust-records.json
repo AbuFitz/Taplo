@@ -1,0 +1,908 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Taplo growth/trust record extensions \u00b7 proposed 2.4",
+  "$comment": "Strict proposed shapes, not deployed DB/API. Privacy projections, permissions, lifecycle guards and legal applicability remain separately required. Existing older Consent/Notification/Review definitions must be migrated deliberately; these do not silently replace them.",
+  "$defs": {
+    "ID": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*_[a-z0-9]{8,64}$"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ConsentEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "sender_scope": {
+          "type": "string",
+          "enum": [
+            "merchant",
+            "taplo_platform"
+          ]
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "recipient_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "email",
+            "sms",
+            "push"
+          ]
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "marketing"
+          ]
+        },
+        "basis": {
+          "type": "string",
+          "enum": [
+            "explicit_consent",
+            "reviewed_products_services_soft_opt_in"
+          ]
+        },
+        "notice_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notice_snapshot_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "collection_context_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "collected_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "withdrawn",
+            "superseded"
+          ]
+        },
+        "withdrawn_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "soft_opt_in_evidence_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "sender_scope",
+        "recipient_ref",
+        "channel",
+        "purpose",
+        "basis",
+        "notice_version",
+        "notice_snapshot_ref",
+        "collection_context_ref",
+        "collected_at",
+        "status"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "sender_scope": {
+                "const": "merchant"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "business_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "basis": {
+                "const": "reviewed_products_services_soft_opt_in"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "soft_opt_in_evidence_ref"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "withdrawn"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "withdrawn_at"
+            ]
+          }
+        }
+      ]
+    },
+    "Campaign": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "sender_scope": {
+          "type": "string",
+          "enum": [
+            "merchant",
+            "taplo_platform"
+          ]
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "email",
+            "sms"
+          ]
+        },
+        "audience_definition_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "template_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "template_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "awaiting_approval",
+            "approved",
+            "scheduled",
+            "dispatching",
+            "paused",
+            "finished",
+            "cancelled"
+          ]
+        },
+        "created_by": {
+          "$ref": "#/$defs/ID"
+        },
+        "approved_by": {
+          "$ref": "#/$defs/ID"
+        },
+        "approved_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "scheduled_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "timezone": {
+          "type": "string",
+          "minLength": 1
+        },
+        "budget_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "budget_minor": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "currency": {
+          "const": "GBP"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "sender_scope",
+        "channel",
+        "audience_definition_ref",
+        "template_ref",
+        "template_version",
+        "state",
+        "created_by",
+        "timezone",
+        "budget_units",
+        "budget_minor",
+        "currency"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "sender_scope": {
+                "const": "merchant"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "business_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "approved",
+                  "scheduled",
+                  "dispatching",
+                  "paused",
+                  "finished"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "approved_by",
+              "approved_revision"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "scheduled"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "scheduled_at"
+            ]
+          }
+        }
+      ]
+    },
+    "NotificationIntent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "sender_scope": {
+          "type": "string",
+          "enum": [
+            "merchant",
+            "taplo_platform"
+          ]
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "recipient_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "security",
+            "operational",
+            "marketing"
+          ]
+        },
+        "classification_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_event_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "source_record_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "template_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "template_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "planned",
+            "queued",
+            "suppressed",
+            "dispatching",
+            "reconciling",
+            "provider_accepted",
+            "delivered",
+            "failed",
+            "expired",
+            "cancelled"
+          ]
+        },
+        "due_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "email",
+            "sms",
+            "push",
+            "in_app"
+          ]
+        },
+        "consent_evidence_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "suppression_reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provider_attempt_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "sender_scope",
+        "recipient_ref",
+        "purpose",
+        "classification_version",
+        "source_event_ref",
+        "source_record_version",
+        "template_ref",
+        "template_version",
+        "idempotency_key",
+        "state",
+        "due_at",
+        "expires_at",
+        "channel",
+        "provider_attempt_refs"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "sender_scope": {
+                "const": "merchant"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "business_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "purpose": {
+                "const": "marketing"
+              },
+              "state": {
+                "enum": [
+                  "dispatching",
+                  "provider_accepted",
+                  "delivered"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "consent_evidence_ref"
+            ]
+          }
+        }
+      ]
+    },
+    "Review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "author_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "interaction_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "verification": {
+          "type": "string",
+          "enum": [
+            "booked_through_taplo",
+            "ordered_through_taplo",
+            "experience_checked",
+            "not_yet_checked"
+          ]
+        },
+        "verification_evidence_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "rating": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 5000
+        },
+        "public_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "submitted",
+            "screening",
+            "held_for_review",
+            "published",
+            "removed",
+            "withdrawn"
+          ]
+        },
+        "policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "published_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "moderation_case_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "author_ref",
+        "verification",
+        "rating",
+        "text",
+        "public_name",
+        "state",
+        "policy_version"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "verification": {
+                "enum": [
+                  "booked_through_taplo",
+                  "ordered_through_taplo"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "interaction_ref",
+              "verification_evidence_ref"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "verification": {
+                "const": "experience_checked"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "verification_evidence_ref"
+            ]
+          }
+        }
+      ]
+    },
+    "TrustReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "target_type": {
+          "type": "string",
+          "enum": [
+            "business",
+            "offer",
+            "review",
+            "reply",
+            "message",
+            "media"
+          ]
+        },
+        "target_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "target_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "scam_impersonation",
+            "unsafe_prohibited",
+            "misleading",
+            "abuse_hate_threat",
+            "child_safety",
+            "privacy",
+            "intellectual_property",
+            "review_manipulation",
+            "other"
+          ]
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 5000
+        },
+        "reporter_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "followup_contact_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "received",
+            "triaged",
+            "investigating",
+            "awaiting_information",
+            "actioned",
+            "no_action",
+            "closed"
+          ]
+        },
+        "case_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "public_receipt_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "target_type",
+        "target_ref",
+        "target_revision",
+        "reason",
+        "explanation",
+        "evidence_refs",
+        "state",
+        "case_ref"
+      ]
+    },
+    "ModerationDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "case_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "target_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "target_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actor_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "no_action",
+            "hold_publication",
+            "remove_item",
+            "restrict_discovery",
+            "restrict_new_transactions",
+            "restrict_messages",
+            "suspend_account",
+            "restore"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "shareable_reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "restricted_evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "review_by": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "appeal_state": {
+          "type": "string",
+          "enum": [
+            "available",
+            "filed",
+            "reviewing",
+            "upheld",
+            "reversed",
+            "not_applicable"
+          ]
+        },
+        "notice_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "case_ref",
+        "target_ref",
+        "target_revision",
+        "policy_version",
+        "actor_ref",
+        "action",
+        "rationale",
+        "shareable_reason",
+        "restricted_evidence_refs",
+        "appeal_state",
+        "notice_refs"
+      ]
+    },
+    "LegalDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "document_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audience": {
+          "type": "string",
+          "enum": [
+            "public",
+            "customer",
+            "merchant",
+            "processor_schedule",
+            "internal"
+          ]
+        },
+        "locale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "document_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "under_review",
+            "approved",
+            "published",
+            "superseded",
+            "withdrawn"
+          ]
+        },
+        "effective_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "reviewer_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "review_scope_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "unresolved_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "supersedes_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "document_key",
+        "audience",
+        "locale",
+        "document_version",
+        "content_hash",
+        "state",
+        "unresolved_fields"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "published"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "reviewer_ref",
+              "review_scope_ref",
+              "effective_at"
+            ],
+            "properties": {
+              "unresolved_fields": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

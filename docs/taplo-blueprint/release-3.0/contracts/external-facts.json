@@ -1,0 +1,84 @@
+{
+  "not_fabricated": true,
+  "scope": "actual facts/evidence required before public release; not a blocker to scoped implementation with test fixtures",
+  "facts": [
+    {
+      "key": "contracting_entity_name",
+      "value": null,
+      "state": "required_before_relevant_release",
+      "accountable_role": "founder_or_authorised_specialist"
+    },
+    {
+      "key": "company_or_trader_registration_details",
+      "value": null,
+      "state": "required_before_relevant_release",
+      "accountable_role": "founder_or_authorised_specialist"
+    },
+    {
+      "key": "registered_service_address",
+      "value": null,
+      "state": "required_before_relevant_release",
+      "accountable_role": "founder_or_authorised_specialist"
+    },
+    {
+      "key": "business_support_email",
+      "value": null,
+      "state": "required_before_relevant_release",
+      "accountable_role": "founder_or_authorised_specialist"
+    },
+    {
+      "key": "privacy_contact",
+      "value": null,
+      "state": "required_before_relevant_release",
+      "accountable_role": "founder_or_authorised_specialist"
+    },
+    {
+      "key": "merchant_contract_authority",
+      "value": null,
+      "state": "required_before_relevant_release",
+      "accountable_role": "founder_or_authorised_specialist"
+    },
+    {
+      "key": "launch_territories",
+      "value": null,
+      "state": "required_before_relevant_release",
+      "accountable_role": "founder_or_authorised_specialist"
+    },
+    {
+      "key": "tax_registration_and_supply_treatment",
+      "value": null,
+      "state": "required_before_relevant_release",
+      "accountable_role": "founder_or_authorised_specialist"
+    },
+    {
+      "key": "actual_provider_accounts_and_regions",
+      "value": null,
+      "state": "required_before_relevant_release",
+      "accountable_role": "founder_or_authorised_specialist"
+    },
+    {
+      "key": "required_insurance_decision",
+      "value": null,
+      "state": "required_before_relevant_release",
+      "accountable_role": "founder_or_authorised_specialist"
+    },
+    {
+      "key": "professional_review_evidence",
+      "value": null,
+      "state": "required_before_relevant_release",
+      "accountable_role": "founder_or_authorised_specialist"
+    },
+    {
+      "key": "actual_staffed_support_hours",
+      "value": null,
+      "state": "required_before_relevant_release",
+      "accountable_role": "founder_or_authorised_specialist"
+    },
+    {
+      "key": "incident_owner_and_backup_contact",
+      "value": null,
+      "state": "required_before_relevant_release",
+      "accountable_role": "founder_or_authorised_specialist"
+    }
+  ]
+}

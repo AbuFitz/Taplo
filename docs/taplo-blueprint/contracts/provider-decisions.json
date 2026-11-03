@@ -1,0 +1,122 @@
+{
+  "edition": "2.6",
+  "kind": "proposed_provider_and_scope_decisions_not_runtime_configuration",
+  "providers": [
+    {
+      "capability": "email",
+      "choice": "Resend",
+      "selection": "working_default",
+      "billing": "Taplo_managed_paid_API",
+      "merchant_account_required": false,
+      "commercial_and_throughput_confirmation_required": true
+    },
+    {
+      "capability": "merchant_payments",
+      "choice": "Stripe_Connect",
+      "selection": "working_default",
+      "mode": "direct_charges",
+      "onboarding": "hosted",
+      "pricing_preference": "stripe_handles_merchant_pricing",
+      "loss_preference": "provider_responsibility_when_supported",
+      "actual_controller_risk_configuration_required": true
+    },
+    {
+      "capability": "software_billing",
+      "choice": "Stripe_Billing_and_Payments",
+      "selection": "working_default",
+      "account": "Taplo_own"
+    },
+    {
+      "capability": "uk_sms",
+      "choice": "Twilio",
+      "selection": "working_default_pending_sender_configuration",
+      "price_basis": "provider_segments",
+      "allowance": "same_optional_packs_all_plans"
+    },
+    {
+      "capability": "support_inbox",
+      "choice": "Crisp_Mini",
+      "selection": "working_default",
+      "human_escalation_at_launch": true,
+      "whatsapp_included": false,
+      "ai_money_authority": false
+    },
+    {
+      "capability": "hosting",
+      "choice": "Vercel_Pro",
+      "selection": "working_default_reuse_existing_compatible_repository"
+    },
+    {
+      "capability": "database",
+      "choice": "Neon_Postgres",
+      "selection": "working_default_subject_to_region_backup_operating_needs"
+    },
+    {
+      "capability": "media_storage",
+      "choice": "Vercel_Blob",
+      "selection": "working_default"
+    },
+    {
+      "capability": "calendar",
+      "choice": [
+        "Google_Calendar_API",
+        "Microsoft_Graph"
+      ],
+      "selection": "working_default",
+      "scope": "busy_input_plus_Taplo_event_export",
+      "stale_after_seconds_working_default": 300
+    },
+    {
+      "capability": "maps",
+      "choice": "Mapbox",
+      "selection": "working_default",
+      "geocoding_storage_and_mobile_licence_review_required": true
+    },
+    {
+      "capability": "error_monitoring",
+      "choice": "Sentry",
+      "selection": "candidate_not_verified_quote"
+    },
+    {
+      "capability": "auth",
+      "choice": "Better_Auth_server_with_Neon_Postgres",
+      "selection": "working_default_pin_and_verify_all_method_assurance"
+    }
+  ],
+  "launch_boundaries": {
+    "shopify_sync": false,
+    "ordinary_external_shop_links": true,
+    "public_headless_api": false,
+    "arbitrary_custom_code": false,
+    "bespoke_development_in_subscription": false,
+    "custom_authenticated_merchant_email_domain": false,
+    "whatsapp_sms_balance_shared": false
+  },
+  "important_separations": [
+    "payment_wallet_vs_loyalty_pass",
+    "merchant_payment_vs_Taplo_subscription",
+    "member_login_vs_legal_seller",
+    "website_domain_vs_verified_email_sender",
+    "provider_accepted_vs_delivered",
+    "booking_cancelled_vs_refund_completed"
+  ],
+  "sources": [
+    "PROVIDER-STACK.md",
+    "PROVIDER-COSTS.md",
+    "PACKAGE-COMPARISON.md",
+    "PAYMENTS-AND-REFUNDS.md",
+    "INTEGRATIONS-AND-SUPPORT.md"
+  ],
+  "open": [
+    "actual_provider_account_contracts_and_modes",
+    "pinned_API_payloads_scopes_and_versions",
+    "complete_cost_quotes_and_load_data",
+    "category_jurisdiction_policy_review",
+    "human_staffing_and_incident_coverage",
+    "full_visual_states_and_real_user_evidence"
+  ],
+  "database_comparison": "DATABASE-CHOICE-AND-COSTS.md",
+  "database_cost_results": "contracts/database-option-results.json",
+  "architecture_note": "Both current Neon and Supabase offer broader backend capabilities; selected services require actual feature/region/contract evidence. Preserve functioning existing stack absent measured migration benefit.",
+  "configuration_status": "neither_database_configured_per_founder_no_account_opened"
+}

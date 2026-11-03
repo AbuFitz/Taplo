@@ -1,0 +1,2327 @@
+{
+  "edition": "3.0",
+  "authority": "specification_only",
+  "headers": {
+    "writes": [
+      "Idempotency-Key",
+      "X-Request-ID"
+    ],
+    "updates": [
+      "If-Match expected aggregate version"
+    ]
+  },
+  "commands": [
+    {
+      "name": "CreateReservation",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/reservations",
+      "permission": "own_work.request_change",
+      "returns": "Reservation",
+      "guard": "validate eligibility; lock all constraints; server quote; finite expiry",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/CreateReservation",
+      "schema": "CreateReservation",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "reservation.held.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "CommitBooking",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/bookings",
+      "permission": "own_work.request_change",
+      "returns": "Booking",
+      "guard": "verified principal; live reservation; current agreement; payment rule",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/CommitBooking",
+      "schema": "CommitBooking",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "booking.confirmed.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "RescheduleBooking",
+      "method": "POST",
+      "path": "/v1/bookings/{id}/reschedule",
+      "permission": "own_work.request_change",
+      "returns": "Booking",
+      "guard": "reserve new resources before releasing old; material change review",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/RescheduleBooking",
+      "schema": "RescheduleBooking",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "booking.rescheduled.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "CancelBooking",
+      "method": "POST",
+      "path": "/v1/bookings/{id}/cancel",
+      "permission": "own_work.request_change",
+      "returns": "Booking",
+      "guard": "policy version; reason; compute impact; refund separate",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/CancelBooking",
+      "schema": "CancelBooking",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "booking.cancelled.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "CreateOrder",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/orders",
+      "permission": "own_work.request_change",
+      "returns": "Order",
+      "guard": "same-merchant cart; validated price, stock and fulfilment",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/CreateOrder",
+      "schema": "CreateOrder",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "order.placed.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "StartPayment",
+      "method": "POST",
+      "path": "/v1/payments",
+      "permission": "own_work.request_change",
+      "returns": "Payment",
+      "guard": "server amount; merchant account; attempt id; provider idempotency",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/StartPayment",
+      "schema": "StartPayment",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "payment.requested.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "RequestRefund",
+      "method": "POST",
+      "path": "/v1/payments/{id}/refunds",
+      "permission": "refund.request",
+      "returns": "Refund",
+      "guard": "authorised limit; reserve refundable value; no duplicate adjustment",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/RequestRefund",
+      "schema": "RequestRefund",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "refund.requested.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "UpdateFulfilment",
+      "method": "POST",
+      "path": "/v1/fulfilments/{id}/actions",
+      "permission": "fulfilment.update",
+      "returns": "Fulfilment",
+      "guard": "line quantities; evidence; permitted transition",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/UpdateFulfilment",
+      "schema": "UpdateFulfilment",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "command.update_fulfilment.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "PublishPage",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/page/publish",
+      "permission": "page.publish",
+      "returns": "Business",
+      "guard": "valid source version; read-only public projection; coherent invalidation",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/PublishPage",
+      "schema": "PublishPage",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "page.published.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "SendMessage",
+      "method": "POST",
+      "path": "/v1/conversations/{id}/messages",
+      "permission": "own_message.send",
+      "returns": "Message",
+      "guard": "participant ACL; attachment scan; stable client key",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/SendMessage",
+      "schema": "SendMessage",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "notification.requested.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "AcceptQuote",
+      "method": "POST",
+      "path": "/v1/quotes/{id}/accept",
+      "permission": "own_work.request_change",
+      "returns": "Quote",
+      "guard": "latest sent quote; valid expiry; policy snapshot; no implied time booking",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/AcceptQuote",
+      "schema": "AcceptQuote",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "command.accept_quote.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "JoinWaitlist",
+      "method": "POST",
+      "path": "/v1/sessions/{id}/waitlist",
+      "permission": "own_work.request_change",
+      "returns": "WaitlistEntry",
+      "guard": "eligible customer; unique session/relationship; quantity fits supported policy",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/JoinWaitlist",
+      "schema": "JoinWaitlist",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "command.join_waitlist.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ConnectDomain",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/domains",
+      "permission": "domain.manage",
+      "returns": "Domain",
+      "guard": "hostname normalisation; ownership; exclusive host binding",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/ConnectDomain",
+      "schema": "ConnectDomain",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "command.connect_domain.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ClaimHardware",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/hardware/claim",
+      "permission": "hardware.manage",
+      "returns": "HardwareAsset",
+      "guard": "nonpublic one-use proof; atomic exclusive claim",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/ClaimHardware",
+      "schema": "ClaimHardware",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "command.claim_hardware.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ExportBusiness",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/exports",
+      "permission": "data.export",
+      "returns": "ProviderOperation",
+      "guard": "step-up; authorised dataset; secure expiry download",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/ExportBusiness",
+      "schema": "ExportBusiness",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "command.export_business.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "CloseBusiness",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/closure",
+      "permission": "business.close",
+      "returns": "Business",
+      "guard": "effective date; commitments and ownership exit plan",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/CloseBusiness",
+      "schema": "CloseBusiness",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "command.close_business.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ReconcileProvider",
+      "method": "POST",
+      "path": "/internal/provider-events",
+      "permission": "console.integration.reconcile",
+      "returns": "ProviderOperation",
+      "guard": "signature; account/env scope; durable inbox; fetch canonical provider state",
+      "transaction_boundary": "authorise + compare version + validate + persist state/audit/outbox; external provider call tracked by durable operation",
+      "input_schema": "command-inputs.json#/$defs/ReconcileProvider",
+      "schema": "ReconcileProvider",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "command.reconcile_provider.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "InviteMember",
+      "method": "POST",
+      "path": "/v1/team/InviteMember",
+      "permission": "team.invite",
+      "returns": "Membership",
+      "guard": "delegation boundary and nonpublic expiring invitation",
+      "input_schema": "command-inputs.json#/$defs/InviteMember",
+      "transaction_boundary": "authorise + compare version + persist audit and outbox",
+      "schema": "InviteMember",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "team.invited.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "RequestAvailabilityChange",
+      "method": "POST",
+      "path": "/v1/team/RequestAvailabilityChange",
+      "permission": "availability.request",
+      "returns": "AvailabilityChange",
+      "guard": "own/assigned resource and impact preview",
+      "input_schema": "command-inputs.json#/$defs/RequestAvailabilityChange",
+      "transaction_boundary": "authorise + compare version + persist audit and outbox",
+      "schema": "RequestAvailabilityChange",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "command.request_availability_change.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "UpdateOwnTeamProfile",
+      "method": "POST",
+      "path": "/v1/team/UpdateOwnTeamProfile",
+      "permission": "profile.own.edit",
+      "returns": "TeamProfile",
+      "guard": "whitelisted own fields; draft/approval policy",
+      "input_schema": "command-inputs.json#/$defs/UpdateOwnTeamProfile",
+      "transaction_boundary": "authorise + compare version + persist audit and outbox",
+      "schema": "UpdateOwnTeamProfile",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "command.update_own_team_profile.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "RevokeMember",
+      "method": "POST",
+      "path": "/v1/team/RevokeMember",
+      "permission": "team.grants.manage",
+      "returns": "Membership",
+      "guard": "reverify; future-work plan; immediate private access revocation",
+      "input_schema": "command-inputs.json#/$defs/RevokeMember",
+      "transaction_boundary": "authorise + compare version + persist audit and outbox",
+      "schema": "RevokeMember",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "team.revoked.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "StartImport",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/imports",
+      "permission": "catalogue.write",
+      "returns": "ImportJob",
+      "guard": "authorised member; permitted source use; SSRF/rate/size bounds; no external mutation; basic-brand-content allowlist only; deny offers/prices/availability/stock/policies/payment configuration",
+      "input_schema": "command-inputs.json#/$defs/StartImport",
+      "transaction_boundary": "persist tracked draft import job; controlled asynchronous fetch",
+      "release_status": "deferred; not part of required onboarding",
+      "schema": "StartImport",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "command.start_import.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ApplyImportDraft",
+      "method": "POST",
+      "path": "/v1/imports/{id}/apply-draft",
+      "permission": "catalogue.write",
+      "returns": "ImportJob",
+      "guard": "current draft version; approved candidate/source policy; field validation; cannot publish/charge/grant access; basic-brand-content allowlist only; deny offers/prices/availability/stock/policies/payment configuration",
+      "input_schema": "command-inputs.json#/$defs/ApplyImportDraft",
+      "transaction_boundary": "atomic selected draft updates + provenance + audit; idempotent result",
+      "release_status": "deferred; not part of required onboarding",
+      "schema": "ApplyImportDraft",
+      "legacy_source": "2.8",
+      "route_status": "canonical_existing_shape",
+      "events": [
+        "command.apply_import_draft.v1"
+      ],
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "CreatePaymentPolicy",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/payment-policies",
+      "permission": "money.policy.manage",
+      "returns": "PaymentPolicy",
+      "schema": "CreatePaymentPolicy",
+      "guard": "amount/bps exactly match mode; reviewed currency and cancellation policy",
+      "events": [],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ActivatePaymentPolicy",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/payment-policies/activate",
+      "permission": "money.policy.manage",
+      "returns": "PaymentPolicy",
+      "schema": "ActivatePaymentPolicy",
+      "guard": "current legal policy evidence; active charge authority for payment mode",
+      "events": [
+        "policy.activated.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "AssessCancellation",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/cancellations/assess",
+      "permission": "own_work.request_change",
+      "returns": "CancellationAssessment",
+      "schema": "AssessCancellation",
+      "guard": "relationship/merchant authority; immutable agreement version; provider amounts",
+      "events": [],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ApplyCancellation",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/cancellations/apply",
+      "permission": "own_work.request_change",
+      "returns": "ProviderOperation",
+      "schema": "ApplyCancellation",
+      "guard": "fresh bound assessment; current authority; refund intent separate; protect statutory-review branch",
+      "events": [
+        "work.cancelled.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "GetOperation",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/operations/status",
+      "permission": "own_work.read",
+      "returns": "ProviderOperation",
+      "schema": "GetOperation",
+      "guard": "operation owner/business/scope; redact provider secrets",
+      "events": [],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "EvaluateReadiness",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/readiness/evaluate",
+      "permission": "catalogue.write",
+      "returns": "CapabilityReadiness",
+      "schema": "EvaluateReadiness",
+      "guard": "derive from records and actual evidence not client booleans",
+      "events": [],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "DismissGuidance",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/guidance/dismiss",
+      "permission": "own_profile.update",
+      "returns": "GuidanceProgress",
+      "schema": "DismissGuidance",
+      "guard": "same user/context; dismissal cannot satisfy readiness",
+      "events": [
+        "guidance.dismissed.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "CreateCampaign",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/campaigns",
+      "permission": "campaign.draft",
+      "returns": "Campaign",
+      "schema": "CreateCampaign",
+      "guard": "template/audience belong to sender; purpose marketing",
+      "events": [
+        "campaign.drafted.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "PreviewCampaign",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/campaigns/preview",
+      "permission": "campaign.draft",
+      "returns": "CampaignPreview",
+      "schema": "PreviewCampaign",
+      "guard": "resolve eligible current consent/segments/quota; short-lived hash-bound preview",
+      "events": [],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ApproveCampaign",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/campaigns/approve",
+      "permission": "campaign.approve",
+      "returns": "Campaign",
+      "schema": "ApproveCampaign",
+      "guard": "approve exact revision/audience/template and caps; no silent edit after approval",
+      "events": [
+        "campaign.approved.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ScheduleCampaign",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/campaigns/schedule",
+      "permission": "campaign.send",
+      "returns": "Campaign",
+      "schema": "ScheduleCampaign",
+      "guard": "future time; current approved revision; reserve quota once; recheck consent per dispatch",
+      "events": [
+        "campaign.scheduled.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "PauseCampaign",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/campaigns/pause",
+      "permission": "campaign.send",
+      "returns": "Campaign",
+      "schema": "PauseCampaign",
+      "guard": "stop undispatched intents; provider-accepted sends cannot be recalled",
+      "events": [
+        "campaign.paused.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "WithdrawMarketing",
+      "method": "POST",
+      "path": "/v1/public/marketing/withdraw",
+      "permission": "public_token.withdraw",
+      "returns": "Suppression",
+      "schema": "WithdrawMarketing",
+      "guard": "signed scoped token or authenticated owner; no login required to unsubscribe; no account discovery",
+      "events": [
+        "consent.withdrawn.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "CreateTrustReport",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/trust/reports",
+      "permission": "public_report.create",
+      "returns": "TrustReport",
+      "schema": "CreateTrustReport",
+      "guard": "anti-abuse; minimise reporter contact; do not auto-hide merely by report count",
+      "events": [
+        "trust.reported.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "RestrictSubject",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/trust/restrict",
+      "permission": "console.moderation.decide",
+      "returns": "ModerationDecision",
+      "schema": "RestrictSubject",
+      "guard": "workforce role; evidence/reason; minimal proportionate scope; preserve accepted work",
+      "events": [
+        "trust.restricted.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "AppealDecision",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/trust/appeals",
+      "permission": "own_decision.appeal",
+      "returns": "TrustAppeal",
+      "schema": "AppealDecision",
+      "guard": "affected actor/relationship and decision; no reviewer self-appeal resolution",
+      "events": [
+        "trust.appealed.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ResolveAppeal",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/trust/appeals/resolve",
+      "permission": "console.appeal.decide",
+      "returns": "ModerationDecision",
+      "schema": "ResolveAppeal",
+      "guard": "independent reviewer where possible; conflict logged; notify appropriate party",
+      "events": [
+        "trust.appeal_resolved.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "CreateRewardProgramme",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/rewards/programmes",
+      "permission": "rewards.manage",
+      "returns": "RewardProgramme",
+      "schema": "CreateRewardProgramme",
+      "guard": "Pro+; merchant-funded; exact rule shape; no expiry default",
+      "events": [
+        "rewards.drafted.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ActivateRewards",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/rewards/activate",
+      "permission": "rewards.manage",
+      "returns": "RewardProgramme",
+      "schema": "ActivateRewards",
+      "guard": "funding/policy/reversal/holder verification readiness",
+      "events": [
+        "rewards.activated.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ResolveRewardCode",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/rewards/resolve",
+      "permission": "rewards.scan",
+      "returns": "RewardProgramme",
+      "schema": "ResolveRewardCode",
+      "guard": "opaque code namespace; current merchant/location; never mutates ledger",
+      "events": [],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "EarnReward",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/rewards/earn",
+      "permission": "rewards.earn",
+      "returns": "RewardEntry",
+      "schema": "EarnReward",
+      "guard": "eligible completed paid/attended source; unique programme/relationship/source earn",
+      "events": [
+        "rewards.earned.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "IssueHolderChallenge",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/rewards/challenges",
+      "permission": "own_reward.confirm",
+      "returns": "HolderChallengeReceipt",
+      "schema": "IssueHolderChallenge",
+      "guard": "authenticated holder private return context; challenge bound to programme and source; expires 5 minutes",
+      "events": [],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "RedeemReward",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/rewards/redeem",
+      "permission": "rewards.redeem",
+      "returns": "RewardRedemption",
+      "schema": "RedeemReward",
+      "guard": "all redemptions require fresh single-use holder challenge at launch; atomic balance/source bound",
+      "events": [
+        "rewards.redeemed.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ReverseReward",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/rewards/reverse",
+      "permission": "rewards.adjust",
+      "returns": "RewardEntry",
+      "schema": "ReverseReward",
+      "guard": "actual refund/correction origin; append reversal once; no editable historic balance",
+      "events": [
+        "rewards.reversed.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "IssueWalletPass",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/wallet/passes",
+      "permission": "wallet.issue",
+      "returns": "PassIssueResult",
+      "schema": "IssueWalletPass",
+      "guard": "Core+ public card/Pro+ loyalty; correct holder role; issuer verified; secret server signing",
+      "events": [
+        "wallet.issue_requested.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "RefreshWalletPass",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/wallet/refresh",
+      "permission": "wallet.manage",
+      "returns": "ProviderOperation",
+      "schema": "RefreshWalletPass",
+      "guard": "current pass/source revision and owner scope; no installation claim from click",
+      "events": [
+        "wallet.refresh_requested.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "RevokeWalletPass",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/wallet/revoke",
+      "permission": "wallet.manage",
+      "returns": "WalletPass",
+      "schema": "RevokeWalletPass",
+      "guard": "current authority; old offline image may persist; server destination always current",
+      "events": [
+        "wallet.revoked.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "UpdateTemplateBrand",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/communications/template-brand",
+      "permission": "templates.manage",
+      "returns": "TemplateBrand",
+      "schema": "UpdateTemplateBrand",
+      "guard": "safe accent/logo/contact only; operational facts/required text protected",
+      "events": [
+        "template.brand_changed.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "GetWidgetSnapshot",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/widgets/snapshot",
+      "permission": "own_work.read",
+      "returns": "WidgetSnapshot",
+      "schema": "GetWidgetSnapshot",
+      "guard": "underlying capability and field scope; redacted default; 15-minute reference expiry",
+      "events": [],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "SetAppearancePreference",
+      "method": "POST",
+      "path": "/v1/me/preferences/appearance",
+      "permission": "own_profile.update",
+      "returns": "AppearancePreference",
+      "schema": "SetAppearancePreference",
+      "guard": "same principal; platform mode separate merchant theme",
+      "events": [
+        "preference.changed.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "PublishTeamProfile",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/team/profile-publication",
+      "permission": "team.manage",
+      "returns": "TeamProfile",
+      "schema": "PublishTeamProfile",
+      "guard": "owner role plus actual media/contact rights; no independent seller inference",
+      "events": [
+        "team.profile_published.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "StartCalendarConnection",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/integrations/calendar/start",
+      "permission": "calendar.manage",
+      "returns": "CalendarConnection",
+      "schema": "StartCalendarConnection",
+      "guard": "state/PKCE/user business resource-bound callback; least scopes; actual refresh token storage",
+      "events": [
+        "calendar.connect_started.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "RevokeCalendarConnection",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/integrations/calendar/revoke",
+      "permission": "calendar.manage",
+      "returns": "CalendarConnection",
+      "schema": "RevokeCalendarConnection",
+      "guard": "preserve commitments; invalidate busy projection; truthful stale mode",
+      "events": [
+        "calendar.disconnected.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "SetLocationPublication",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/locations/publication",
+      "permission": "business.profile.manage",
+      "returns": "Location",
+      "schema": "SetLocationPublication",
+      "guard": "no private point returned/clustered in area mode; actual source/publication rights",
+      "events": [
+        "location.publication_changed.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ChangePlan",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/billing/change-plan",
+      "permission": "billing.manage",
+      "returns": "BusinessSubscription",
+      "schema": "ChangePlan",
+      "guard": "exact signed quote; server price; downgrade next renewal; preserve accepted work",
+      "events": [
+        "subscription.change_requested.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "PurchaseSmsPack",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/billing/sms-packs",
+      "permission": "billing.spend",
+      "returns": "ProviderOperation",
+      "schema": "PurchaseSmsPack",
+      "guard": "server price pack; explicit buy; settle credits only on verified payment once",
+      "events": [
+        "sms.purchase_requested.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "OpenSupportCase",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/support/cases",
+      "permission": "support.case.create",
+      "returns": "SupportCase",
+      "schema": "OpenSupportCase",
+      "guard": "scoped diagnostic consent; no credentials/private excessive data",
+      "events": [
+        "support.case_opened.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "CompleteEvidenceControl",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/console/evidence",
+      "permission": "console.evidence.review",
+      "returns": "LaunchEvidence",
+      "schema": "CompleteEvidenceControl",
+      "guard": "actual artefacts/reviewer/authority; cannot mark verified merely from generated text",
+      "events": [
+        "evidence.reviewed.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "UpdateOfferDraft",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/offers/update-draft",
+      "permission": "catalogue.write",
+      "returns": "Offer",
+      "schema": "UpdateOfferDraft",
+      "guard": "owner price; type validation; current version; historical snapshots unchanged",
+      "events": [
+        "offer.draft_changed.v1"
+      ],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "PreviewPublish",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/pages/preview-publish",
+      "permission": "page.publish",
+      "returns": "PublishPreview",
+      "schema": "PreviewPublish",
+      "guard": "readiness/legal/plan/public metadata and selected exact revision; no side-effect publish",
+      "events": [],
+      "transaction_boundary": "resolve_current_identity_grant_scope; validate; compare_versions; atomic_aggregate_audit_outbox_or_durable_provider_intent",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "route_status": "canonical_3.0",
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "PreviewWorkingHoursImpact",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/availability/working-hours/impact",
+      "permission": "schedule.manage",
+      "schema": "HoursImpactRequest",
+      "returns": "HoursImpactResponse",
+      "guard": "full WORKING-HOURS-EXACT-CONTRACT applies; bound impact token/fresh accepted-work revision; no legacy recurrence flattening",
+      "events": [],
+      "transaction_boundary": "defined_2.8_exact_hours_impact_apply",
+      "error_codes": [
+        "INVALID_INPUT",
+        "FORBIDDEN",
+        "RULE_VERSION_CHANGED",
+        "IMPACT_CHANGED",
+        "IMPACT_EXPIRED",
+        "ADVANCED_PATTERN_REQUIRED",
+        "IDEMPOTENCY_CONFLICT"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ApplyWorkingHours",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/availability/working-hours/apply",
+      "permission": "schedule.manage",
+      "schema": "HoursApplyRequest",
+      "returns": "HoursApplyResponse",
+      "guard": "full WORKING-HOURS-EXACT-CONTRACT applies; bound impact token/fresh accepted-work revision; no legacy recurrence flattening",
+      "events": [
+        "availability.working_pattern_changed.v2"
+      ],
+      "transaction_boundary": "defined_2.8_exact_hours_impact_apply",
+      "error_codes": [
+        "INVALID_INPUT",
+        "FORBIDDEN",
+        "RULE_VERSION_CHANGED",
+        "IMPACT_CHANGED",
+        "IMPACT_EXPIRED",
+        "ADVANCED_PATTERN_REQUIRED",
+        "IDEMPOTENCY_CONFLICT"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "UpsertOnboardingDraft",
+      "method": "POST",
+      "path": "/v1/onboarding/drafts",
+      "permission": "public_draft.write",
+      "returns": "OnboardingDraft",
+      "schema": "UpsertOnboardingDraft",
+      "guard": "bound anonymous draft credential or same verified owner; no private work/payment data; 7-day draft expiry",
+      "events": [
+        "upsert_onboarding_draft.v1"
+      ],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "SetCategoryCapabilities",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/category-capabilities",
+      "permission": "business.profile.manage",
+      "returns": "Business",
+      "schema": "SetCategoryCapabilities",
+      "guard": "category suggests only; explicit reviewed capability readiness; no access expansion or accepted work rewrite",
+      "events": [
+        "set_category_capabilities.v1"
+      ],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "SetPageAppearance",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/pages/appearance",
+      "permission": "page.publish",
+      "returns": "PageRevision",
+      "schema": "SetPageAppearance",
+      "guard": "save draft only; contrast-safe resolved tokens; no authored content loss; publish separate",
+      "events": [
+        "set_page_appearance.v1"
+      ],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "BeginSignIn",
+      "method": "POST",
+      "path": "/v1/auth/entry",
+      "permission": "public_auth.begin",
+      "returns": "AuthContinuation",
+      "schema": "BeginSignIn",
+      "guard": "maintained auth adapter; verified state/PKCE/audience and neutral enumeration-safe email; no arbitrary external return URL",
+      "events": [],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "CreateOfferDraft",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/offers/drafts",
+      "permission": "catalogue.write",
+      "returns": "Offer",
+      "schema": "CreateOfferDraft",
+      "guard": "deliberate owner price; drafts may incomplete; no publish/payment from creation",
+      "events": [
+        "create_offer_draft.v1"
+      ],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "UpdateProductDraft",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/products/drafts",
+      "permission": "catalogue.write",
+      "returns": "Variant",
+      "schema": "UpdateProductDraft",
+      "guard": "opening quantity only at initial stock creation; existing stock changes use ledger; no overwrite holds",
+      "events": [
+        "update_product_draft.v1"
+      ],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "AdjustInventory",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/inventory/adjust",
+      "permission": "stock.adjust",
+      "returns": "InventoryAdjustment",
+      "schema": "AdjustInventory",
+      "guard": "scoped stock authority; cannot consume held/committed units or silently restock a refund",
+      "events": [
+        "adjust_inventory.v1"
+      ],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "UpsertSessionDraft",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/sessions/drafts",
+      "permission": "catalogue.write",
+      "returns": "Session",
+      "schema": "UpsertSessionDraft",
+      "guard": "host/venue/timezone current; capacity cannot fall below sold/held; publish/readiness separate",
+      "events": [
+        "upsert_session_draft.v1"
+      ],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "CreateQuoteDraft",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/quotes/drafts",
+      "permission": "work.manage",
+      "returns": "Quote",
+      "schema": "CreateQuoteDraft",
+      "guard": "draft not issued/accepted; quote accepting/payment/scheduling distinct",
+      "events": [
+        "create_quote_draft.v1"
+      ],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "QueryExplore",
+      "method": "POST",
+      "path": "/v1/explore/query",
+      "permission": "public_search.read",
+      "returns": "ExploreResults",
+      "schema": "QueryExplore",
+      "guard": "own eligible merchant index; private location excluded; stable cursor/ranking; anti-abuse not exact GPS retention",
+      "events": [],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "SaveBusiness",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/relationship/save",
+      "permission": "own_profile.update",
+      "returns": "CustomerRelationship",
+      "schema": "SaveBusiness",
+      "guard": "same customer relationship; no marketing opt-in or bulk guest claim",
+      "events": [
+        "save_business.v1"
+      ],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "SubmitReview",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/reviews",
+      "permission": "own_work.review",
+      "returns": "Review",
+      "schema": "SubmitReview",
+      "guard": "eligible completed relationship; one review per eligible source; no incentive/positive gating; reporting separate",
+      "events": [
+        "submit_review.v1"
+      ],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "UpdateBusinessProfile",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/profile",
+      "permission": "business.profile.manage",
+      "returns": "Business",
+      "schema": "UpdateBusinessProfile",
+      "guard": "public authorised facts only; website import never pricing/hours/stock authority",
+      "events": [
+        "update_business_profile.v1"
+      ],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "AttachMediaAsset",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/media",
+      "permission": "catalogue.write",
+      "returns": "ImportCandidate",
+      "schema": "AttachMediaAsset",
+      "guard": "actual scanned/uploaded asset, rights/provenance, safe SVG/rendering, private/public split",
+      "events": [
+        "attach_media_asset.v1"
+      ],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ListWork",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/work/query",
+      "permission": "own_work.read",
+      "returns": "WorkResults",
+      "schema": "ListWork",
+      "guard": "actual work projection below; same-tenant field/assignment scope, not public Explore IDs",
+      "events": [],
+      "transaction_boundary": "current authority; exact version and idempotency; canonical aggregate/audit/outbox if mutating",
+      "error_codes": [
+        "INVALID_INPUT",
+        "VERIFICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT",
+        "RATE_LIMITED",
+        "TEMPORARILY_UNAVAILABLE"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "route_status": "canonical_3.0",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "UpdateOfferConfig",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/offers/configuration",
+      "permission": "catalogue.write",
+      "returns": "OfferConfigResult",
+      "schema": "UpdateOfferConfig",
+      "guard": "schema kind must match offer capability; compare version; same-tenant resource/policy refs; no historical agreement change",
+      "events": [
+        "update_offer_config.v1"
+      ],
+      "transaction_boundary": "scoped authorisation/version/validation; canonical aggregate/audit/outbox; provider call durable outside transaction",
+      "error_codes": [
+        "INVALID_INPUT",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "StartMerchantOnboarding",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/payments/onboarding",
+      "permission": "billing.manage",
+      "returns": "PaymentAuthority",
+      "schema": "StartMerchantOnboarding",
+      "guard": "provider-owned hosted/embedded onboarding only; actual capability recheck on return; no bank data in Taplo forms",
+      "events": [
+        "start_merchant_onboarding.v1"
+      ],
+      "transaction_boundary": "scoped authorisation/version/validation; canonical aggregate/audit/outbox; provider call durable outside transaction",
+      "error_codes": [
+        "INVALID_INPUT",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "GetPublicShare",
+      "method": "POST",
+      "path": "/v1/public/business-share",
+      "permission": "public_search.read",
+      "returns": "PublicShare",
+      "schema": "GetPublicShare",
+      "guard": "public published destination only; no private booking/manage tokens or customer details",
+      "events": [],
+      "transaction_boundary": "scoped authorisation/version/validation; canonical aggregate/audit/outbox; provider call durable outside transaction",
+      "error_codes": [
+        "INVALID_INPUT",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "ClaimOnboardingDraft",
+      "method": "POST",
+      "path": "/v1/onboarding/claim",
+      "permission": "own_profile.update",
+      "returns": "Business",
+      "schema": "ClaimOnboardingDraft",
+      "guard": "authenticated principal plus bound anonymous draft credential; create business+owner membership atomically; one claim result per draft",
+      "events": [
+        "claim_onboarding_draft.v1"
+      ],
+      "transaction_boundary": "authorise+version+validate+atomic aggregate/audit/outbox",
+      "error_codes": [
+        "INVALID_INPUT",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "UpdateWorkOutcome",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/work/outcome",
+      "permission": "assigned_work.update",
+      "returns": "WorkOutcome",
+      "schema": "UpdateWorkOutcome",
+      "guard": "current assigned/scheduler authority; actual work state; attendance does not auto-refund/charge; source reward eligibility distinct",
+      "events": [
+        "update_work_outcome.v1"
+      ],
+      "transaction_boundary": "authorise+version+validate+atomic aggregate/audit/outbox",
+      "error_codes": [
+        "INVALID_INPUT",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    },
+    {
+      "name": "UpdateRewardRule",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/rewards/rule",
+      "permission": "rewards.manage",
+      "returns": "RewardProgramme",
+      "schema": "UpdateRewardRule",
+      "guard": "specific offer requires exact eligible offer; fixed requires positive minor; percent requires positive bps and cap; version immutable for earned promises; no expiry baseline",
+      "events": [
+        "update_reward_rule.v1"
+      ],
+      "transaction_boundary": "authorise+version+validate+atomic aggregate/audit/outbox",
+      "error_codes": [
+        "INVALID_INPUT",
+        "FORBIDDEN",
+        "NOT_FOUND_OR_NOT_PERMITTED",
+        "RULE_NOT_SATISFIED",
+        "VERSION_OR_AVAILABILITY_CONFLICT",
+        "IDEMPOTENCY_CONFLICT"
+      ],
+      "plan_gate": "underlying advertised feature from package-feature-map; no gate for required security/privacy/refund/accepted-work recovery",
+      "snapshot_rule": "money/time/stock/policy source records and accepted agreement versions authoritative; never client display values"
+    }
+  ]
+}

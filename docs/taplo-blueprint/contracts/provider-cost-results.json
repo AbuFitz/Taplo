@@ -1,0 +1,89 @@
+{
+  "edition": "2.3",
+  "status": "rough_envelope_not_actual_invoice_or_full_company_cost",
+  "gbp_per_usd_assumption": 0.8,
+  "email_cases": [
+    {
+      "paid_accounts": 100,
+      "active_free_accounts": 400,
+      "total_email_sends": 130000,
+      "critical_account_sends": 10000,
+      "merchant_account_sends": 120000,
+      "illustrative_invoice_usd": 103.0,
+      "illustrative_invoice_gbp": 82.4,
+      "existing_email_budget_gbp": 94.08,
+      "budget_minus_illustrative_invoice_gbp": 11.679999999999993
+    },
+    {
+      "paid_accounts": 500,
+      "active_free_accounts": 2000,
+      "total_email_sends": 650000,
+      "critical_account_sends": 10000,
+      "merchant_account_sends": 640000,
+      "illustrative_invoice_usd": 571.0,
+      "illustrative_invoice_gbp": 456.8,
+      "existing_email_budget_gbp": 470.40000000000003,
+      "budget_minus_illustrative_invoice_gbp": 13.600000000000023
+    },
+    {
+      "paid_accounts": 1000,
+      "active_free_accounts": 4000,
+      "total_email_sends": 1300000,
+      "critical_account_sends": 10000,
+      "merchant_account_sends": 1290000,
+      "illustrative_invoice_usd": 1156.0,
+      "illustrative_invoice_gbp": 924.8000000000001,
+      "existing_email_budget_gbp": 940.8000000000001,
+      "budget_minus_illustrative_invoice_gbp": 16.0
+    }
+  ],
+  "small_stack_subset": {
+    "vercel_platform_gbp": 16.0,
+    "neon_compute_example_gbp": 15.264,
+    "neon_storage_example_gbp": 2.8000000000000003,
+    "crisp_mini_gbp": 36.0,
+    "monitoring_planning_budget_gbp": 20,
+    "backup_security_planning_budget_gbp": 20,
+    "maps_planning_budget_gbp": 10,
+    "subtotal_gbp": 120.064
+  },
+  "web_maps_first_band_cases": [
+    {
+      "web_loads": 25000,
+      "web_map_load_cost_usd": 0.0
+    },
+    {
+      "web_loads": 50000,
+      "web_map_load_cost_usd": 0.0
+    },
+    {
+      "web_loads": 100000,
+      "web_map_load_cost_usd": 250.0
+    }
+  ],
+  "mobile_maps_first_band_cases": [
+    {
+      "native_mobile_mau": 10000,
+      "mobile_map_cost_usd": 0.0
+    },
+    {
+      "native_mobile_mau": 25000,
+      "mobile_map_cost_usd": 0.0
+    },
+    {
+      "native_mobile_mau": 50000,
+      "mobile_map_cost_usd": 100.0
+    }
+  ],
+  "excludes": [
+    "supplier_taxes_fx_card_costs",
+    "extra_domains_or_higher_feature_tiers",
+    "unapproved_account_structure_or_rate_limit_constraints",
+    "additional_compute_storage_transfer_operations",
+    "geocoding_search_navigation",
+    "merchant_card_processing",
+    "development_founder_pay_support_labour",
+    "legal_accounting_insurance_store_wallet_domains_hardware",
+    "all_other_unbudgeted_company_costs"
+  ]
+}

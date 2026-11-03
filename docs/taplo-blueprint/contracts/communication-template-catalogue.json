@@ -1,0 +1,516 @@
+{
+  "edition": "2.5",
+  "status": "proposed_template_definition_not_provider_configuration",
+  "templates": [
+    {
+      "template_id": "booking_confirmation",
+      "purpose": "operational",
+      "sender_scope": "merchant",
+      "default_subject": "Your appointment is confirmed",
+      "required_generated_facts": [
+        "booking_date",
+        "booking_time",
+        "timezone",
+        "business_name"
+      ],
+      "allowed_action": "manage_booking",
+      "editable_regions": [
+        "greeting",
+        "neutral_note",
+        "signoff"
+      ],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "booking_reminder",
+      "purpose": "operational",
+      "sender_scope": "merchant",
+      "default_subject": "Your upcoming appointment",
+      "required_generated_facts": [
+        "booking_date",
+        "booking_time",
+        "timezone",
+        "business_name"
+      ],
+      "allowed_action": "manage_booking",
+      "editable_regions": [
+        "neutral_note"
+      ],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "booking_changed",
+      "purpose": "operational",
+      "sender_scope": "merchant",
+      "default_subject": "Your appointment has changed",
+      "required_generated_facts": [
+        "changed_fields",
+        "booking_date",
+        "booking_time",
+        "timezone"
+      ],
+      "allowed_action": "manage_booking",
+      "editable_regions": [
+        "neutral_note"
+      ],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "booking_cancelled",
+      "purpose": "operational",
+      "sender_scope": "merchant",
+      "default_subject": "Your appointment is cancelled",
+      "required_generated_facts": [
+        "cancellation_status",
+        "financial_outcome"
+      ],
+      "allowed_action": "view_cancellation",
+      "editable_regions": [
+        "neutral_note"
+      ],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "refund_processing",
+      "purpose": "operational",
+      "sender_scope": "merchant",
+      "default_subject": "Your refund is processing",
+      "required_generated_facts": [
+        "amount",
+        "currency",
+        "refund_state",
+        "reference"
+      ],
+      "allowed_action": "view_refund",
+      "editable_regions": [],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "refund_issued",
+      "purpose": "operational",
+      "sender_scope": "merchant",
+      "default_subject": "Your refund has been issued",
+      "required_generated_facts": [
+        "amount",
+        "currency",
+        "verified_provider_state",
+        "reference"
+      ],
+      "allowed_action": "view_payment",
+      "editable_regions": [],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "order_collection_ready",
+      "purpose": "operational",
+      "sender_scope": "merchant",
+      "default_subject": "Your order is ready to collect",
+      "required_generated_facts": [
+        "order_reference",
+        "collection_place",
+        "collection_window"
+      ],
+      "allowed_action": "view_order",
+      "editable_regions": [
+        "collection_instructions"
+      ],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "order_dispatched",
+      "purpose": "operational",
+      "sender_scope": "merchant",
+      "default_subject": "Your order is on its way",
+      "required_generated_facts": [
+        "order_reference",
+        "actual_dispatch_state"
+      ],
+      "allowed_action": "view_order",
+      "editable_regions": [
+        "neutral_note"
+      ],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "quote_issued",
+      "purpose": "operational",
+      "sender_scope": "merchant",
+      "default_subject": "Your quote from {business_name}",
+      "required_generated_facts": [
+        "issued_quote_total",
+        "scope",
+        "expiry"
+      ],
+      "allowed_action": "review_quote",
+      "editable_regions": [
+        "neutral_note"
+      ],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "team_invitation",
+      "purpose": "security",
+      "sender_scope": "merchant_access",
+      "default_subject": "You are invited to Taplo Studio",
+      "required_generated_facts": [
+        "inviter",
+        "business_name",
+        "role_scope",
+        "expiry"
+      ],
+      "allowed_action": "accept_invite",
+      "editable_regions": [],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "account_security",
+      "purpose": "security",
+      "sender_scope": "taplo",
+      "default_subject": "Your Taplo account",
+      "required_generated_facts": [
+        "verified_security_event"
+      ],
+      "allowed_action": "secure_account",
+      "editable_regions": [],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "taplo_subscription_receipt",
+      "purpose": "operational",
+      "sender_scope": "taplo",
+      "default_subject": "Your Taplo receipt",
+      "required_generated_facts": [
+        "plan",
+        "period",
+        "tax",
+        "amount",
+        "receipt_reference"
+      ],
+      "allowed_action": "view_receipt",
+      "editable_regions": [],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "taplo_payment_issue",
+      "purpose": "operational",
+      "sender_scope": "taplo",
+      "default_subject": "Your Taplo subscription needs attention",
+      "required_generated_facts": [
+        "actual_invoice_state",
+        "accurate_service_impact"
+      ],
+      "allowed_action": "manage_billing",
+      "editable_regions": [
+        "neutral_note"
+      ],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "domain_renewal",
+      "purpose": "operational",
+      "sender_scope": "taplo",
+      "default_subject": "Your domain renewal",
+      "required_generated_facts": [
+        "domain",
+        "renewal_date",
+        "price",
+        "renewal_choice"
+      ],
+      "allowed_action": "manage_domain",
+      "editable_regions": [],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "opening_campaign",
+      "purpose": "marketing",
+      "sender_scope": "merchant",
+      "default_subject": "A few appointments are available",
+      "required_generated_facts": [
+        "actual_offer",
+        "sender_contact",
+        "opt_out"
+      ],
+      "allowed_action": "view_offer",
+      "editable_regions": [
+        "subject",
+        "preheader",
+        "heading",
+        "paragraph",
+        "approved_image",
+        "offer_block",
+        "signoff"
+      ],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "rebooking_campaign",
+      "purpose": "marketing",
+      "sender_scope": "merchant",
+      "default_subject": "Ready for your next visit?",
+      "required_generated_facts": [
+        "actual_offer",
+        "sender_contact",
+        "opt_out"
+      ],
+      "allowed_action": "view_times",
+      "editable_regions": [
+        "subject",
+        "paragraph",
+        "signoff"
+      ],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "winback_campaign",
+      "purpose": "marketing",
+      "sender_scope": "merchant",
+      "default_subject": "A good time for your next visit",
+      "required_generated_facts": [
+        "actual_offer",
+        "sender_contact",
+        "opt_out"
+      ],
+      "allowed_action": "view_offer",
+      "editable_regions": [
+        "subject",
+        "paragraph",
+        "signoff"
+      ],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    },
+    {
+      "template_id": "review_invitation",
+      "purpose": "marketing_pending_reviewed_classification",
+      "sender_scope": "merchant",
+      "default_subject": "How was your experience?",
+      "required_generated_facts": [
+        "genuine_interaction",
+        "neutral_invitation",
+        "applicable_preference_link"
+      ],
+      "allowed_action": "review_choice",
+      "editable_regions": [
+        "neutral_note"
+      ],
+      "arbitrary_html_allowed": false,
+      "draft_version_immutable_on_dispatch": true,
+      "operational_promotions_allowed": false,
+      "status": "proposed_not_deployed",
+      "readiness_guards": [
+        "source_record_current",
+        "sender_ready",
+        "permission_and_purpose",
+        "lawful_contact_route",
+        "protected_facts_valid",
+        "provider_attempt_idempotency",
+        "required_review_scope"
+      ]
+    }
+  ],
+  "editor_spec": "MESSAGING-EDITOR-AND-GUIDANCE.md",
+  "send_default": "disabled_until_required_authority_and_readiness_met"
+}

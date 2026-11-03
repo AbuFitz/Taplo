@@ -1,0 +1,949 @@
+{
+  "edition": "3.0",
+  "scope": "source inventory/integrity not rendered/production/provider proof",
+  "markdown_documents": 188,
+  "numbered_specs": 109,
+  "broken_markdown_links": [],
+  "documents": [
+    {
+      "path": "APP-STORES-BUILD-AND-RELEASE.md",
+      "sha256": "eb77f3cf37c5fd2988178651e0f39df052385e6350e20ce397b4a6ba3a3dd93b",
+      "words": 1357
+    },
+    {
+      "path": "ATOMIC-RULE-REGISTER.md",
+      "sha256": "fa0c187ff710b4483cc9dd0604818ea6e22db2bbfe64b38287bd7bfa0b57aaa7",
+      "words": 1202
+    },
+    {
+      "path": "BLOCK-FIRST-DIRECTIVE.md",
+      "sha256": "da2af2e42f1601bc3c62d093a3de19991a3752e6f6e0fbee576cc782fa12e380",
+      "words": 916
+    },
+    {
+      "path": "BLUEPRINT-REVIEW-AND-NEXT-DEPTH.md",
+      "sha256": "2d4cbba68a3c2590b5079795922be3021ad368041c4792b1a1d613e923a5f334",
+      "words": 872
+    },
+    {
+      "path": "CAPABILITY-ATLAS.md",
+      "sha256": "5d3882cd5df48284227e8daf0a6b6d870d26c6f1425910148ce8e78b5ae92aa2",
+      "words": 2156
+    },
+    {
+      "path": "CATEGORY-CLOSURE-PROFILES.md",
+      "sha256": "c18e8387a351c3786b56a72c0a916dfa04ecdf7de8ac4f40d03ed6102231f927",
+      "words": 1137
+    },
+    {
+      "path": "COMMERCIAL-SERVICE-LIFECYCLES.md",
+      "sha256": "f82efbb3885913a857c2938586b0a520444574ff12c4b581ccf04ea536b81c05",
+      "words": 490
+    },
+    {
+      "path": "COMMUNICATIONS-AND-MARKETING.md",
+      "sha256": "31c946d32438def51aa81eb6d3b08cd3b4033a2449fc6dbaa19881be99045463",
+      "words": 1883
+    },
+    {
+      "path": "COMPLIANCE-CONTROL-REGISTER.md",
+      "sha256": "68529893a4183a9dc435a7fa22196f780c5ad4100c111b6d7adefec0159427ac",
+      "words": 937
+    },
+    {
+      "path": "CONNECTED-OPERATING-WORKFLOWS.md",
+      "sha256": "1f6f5083822e3ddde828421827a65915b32e221ebae3db2688bab5caaaa7490f",
+      "words": 765
+    },
+    {
+      "path": "CURRENT-EXPERIENCE-REVIEW.md",
+      "sha256": "13626a93177623bf594f0c05582f6fe702aa6446313ec5008c5567de58946271",
+      "words": 1484
+    },
+    {
+      "path": "CUSTOMER-WEB-AND-ACQUISITION.md",
+      "sha256": "e4ceee4d44fab7cfdc9d99fbeedda1059cde37128e23ab8e3edcdf0d6e77b75f",
+      "words": 1532
+    },
+    {
+      "path": "CUSTOMISATION-TEARDOWN.md",
+      "sha256": "9e740f16c32ff62b809bf9fca6afc2471c530c64b654d7185bdfc32afac9a940",
+      "words": 1047
+    },
+    {
+      "path": "DATABASE-CHOICE-AND-COSTS.md",
+      "sha256": "e1420ba037b8c9be284aeed1841f1baf648f906a4c7fdb08422e341f5480bf1f",
+      "words": 1155
+    },
+    {
+      "path": "DECISION-REGISTER.md",
+      "sha256": "3ac379cd75ab72c0396d80411a5aed117de5255ef757fcf6d9257c3c70a23601",
+      "words": 3131
+    },
+    {
+      "path": "DESIGN-SYSTEM-AND-CATEGORY-MATRIX.md",
+      "sha256": "4235d47b4687618bc588d31e77680f22c122101c27adb023d6a35b587446ae36",
+      "words": 1122
+    },
+    {
+      "path": "ECONOMICS-RESULTS.md",
+      "sha256": "c119ed7307208a1fb44c2e4c634e794283c27e912f33694809cd8e58186d7b43",
+      "words": 866
+    },
+    {
+      "path": "EXPLORE-MAP-PROVIDER-DESIGN-AND-COST.md",
+      "sha256": "5b378bdfdf07d089e093e9468f93029776f9883b5acb45cc3fdc143bc7b27070",
+      "words": 961
+    },
+    {
+      "path": "FOUNDER-READOUT.md",
+      "sha256": "868ab886be7a6d6240bbe6f87a509b4656edb82213a7b141aed4ed84f60ef456",
+      "words": 2193
+    },
+    {
+      "path": "FULL-BLUEPRINT-REVIEW-2026-11-03.md",
+      "sha256": "4f05dd993a93f826015de8b49bb938ea7d67f9c56a8ff48f0c8879180d1b5bed",
+      "words": 1488
+    },
+    {
+      "path": "GRANULAR-REVIEW-REGISTER.md",
+      "sha256": "ffb14e3e63ead74088111e33fabcd1f61c979a434c6999036de93d1ff8474a4b",
+      "words": 839
+    },
+    {
+      "path": "INTEGRATION-AND-OPERATING-EVIDENCE-PACK.md",
+      "sha256": "1845d2ca9df68b882a0c78e519831b8c00b30637c58ba6803d815e26356af089",
+      "words": 1049
+    },
+    {
+      "path": "INTEGRATIONS-AND-SUPPORT.md",
+      "sha256": "8f79cecf5c759f4778c062394b7a1db256d1eea1e288220491eb139b7ad2b8b6",
+      "words": 1660
+    },
+    {
+      "path": "LAUNCH-BUDGET-AND-PACKAGE-READOUT.md",
+      "sha256": "980d60175b7fbec73b914673a93ea5281ed1f2a856e5c4a93d3e647658506e5d",
+      "words": 1161
+    },
+    {
+      "path": "LAUNCH-PLAN-AND-FULL-FEATURES.md",
+      "sha256": "9eb4479c1e7b08b6abf639c164c29b4ba2a75112ab00e874b2bc0e8a5e4477ee",
+      "words": 1649
+    },
+    {
+      "path": "LEAN-LAUNCH-SPENDING-AND-SECURITY.md",
+      "sha256": "9e3f6a666a66c39da01e9a77edfb77fa1b1c92878f4019d9977b8a2e47ffbd23",
+      "words": 830
+    },
+    {
+      "path": "LEGAL-PACK-INDEX.md",
+      "sha256": "8a1de71782b09e8d626bfa3e46019977e2af6468060153bc6e496c03a7563174",
+      "words": 920
+    },
+    {
+      "path": "LEGAL-REVIEW-BRIEF.md",
+      "sha256": "3b0d896adb5595afb811792c0e0d9bd7a3b804a29890912a3b0ac70fbc1d4e6a",
+      "words": 756
+    },
+    {
+      "path": "LIVE-REVIEW-2026-11-03.md",
+      "sha256": "59bf16324e3abe18523a201be2e507f7692230712cef8b002914d69b04224cd9",
+      "words": 543
+    },
+    {
+      "path": "LOW-FRICTION-SETUP-AND-SUPPORT-CONTRACT.md",
+      "sha256": "8d416d1285c473324bc80fb24d9f4fa2cc4cfe435f94ebeec57043cad0d404da",
+      "words": 1124
+    },
+    {
+      "path": "MAIN-SITE-SOLUTION-SHOWCASES.md",
+      "sha256": "ee7cf8071d577a4906f931198fd06025751416c23ffd9af5aeebafd05962364f",
+      "words": 723
+    },
+    {
+      "path": "MESSAGING-EDITOR-AND-GUIDANCE.md",
+      "sha256": "d7b013eea510a0838e878acaf08fb458c18095c4ee9dfb4afac6eafaf249fb38",
+      "words": 1869
+    },
+    {
+      "path": "OBSERVATION-TASKS.md",
+      "sha256": "aa12133295f2f0b7301a34907961f4a68d6ee772b1c5785113ea0901302c8285",
+      "words": 424
+    },
+    {
+      "path": "PACKAGE-COMPARISON.md",
+      "sha256": "a469a7ec65737cef120f76cf42bb933fab3f8553dcfa44f6b19f2727dd84188c",
+      "words": 1813
+    },
+    {
+      "path": "PAYMENTS-AND-REFUNDS.md",
+      "sha256": "fe9c97d0cd8345ff3add250cfa71a27b5591919b932a78af5edef4c54c412654",
+      "words": 1124
+    },
+    {
+      "path": "PHONE-WIDGETS-AND-EMBED-BOUNDARIES.md",
+      "sha256": "88c07917a875745a53c1a0e634d7882f0e676cda4680ba5f116bc64af3f93d6d",
+      "words": 1235
+    },
+    {
+      "path": "PRICING-DECISION.md",
+      "sha256": "bbc23ed63eae421ed7fca5b68adf672becd941c56db6a63bc50a105e69b0336b",
+      "words": 1893
+    },
+    {
+      "path": "PRIOR-RESEARCH-0.2.md",
+      "sha256": "545230cf426b943797df5db281dda3910a4d1248a95ee47f6696123e92001199",
+      "words": 5514
+    },
+    {
+      "path": "PROTOTYPE-VERIFICATION.md",
+      "sha256": "69ab60e79ca6122d4c87daf8651aa274f3a67d3109ffa3d07341b3c19de4fb13",
+      "words": 1516
+    },
+    {
+      "path": "PROVIDER-COSTS.md",
+      "sha256": "cb9fdd3cedee22d10b9b030433e46d031d43e765dfcc9c65daf1414742c7f836",
+      "words": 760
+    },
+    {
+      "path": "PROVIDER-STACK.md",
+      "sha256": "60c9b9991dd40346e70a24d28fd8074d956a5b6e6aca6407d4c346b29701e884",
+      "words": 1885
+    },
+    {
+      "path": "REPOSITORIES-DOMAINS-AND-DEPLOYMENT.md",
+      "sha256": "b13818c4d37e5b7a3a9faf5352f50d8ea54acf480e060169682801f5e9d2420d",
+      "words": 1278
+    },
+    {
+      "path": "RESEARCH-EXPANSION-2026-10-31.md",
+      "sha256": "9bcb51d36ee6624a0ee042ae437183f8036c7241b478c171459b409cbed1342d",
+      "words": 3858
+    },
+    {
+      "path": "RESEARCH-SOURCES.md",
+      "sha256": "65f40d6a9141983688e723f5707eafcb65be180a3b156afc928ea32ae3b38b5a",
+      "words": 926
+    },
+    {
+      "path": "REWARDS-STUDIO-AND-CATEGORY-RULES.md",
+      "sha256": "7ebc6b79b926692cbfc0641b86db66b02b32fa1f467233c3c5e9a500a2ced2a9",
+      "words": 1257
+    },
+    {
+      "path": "SIGN-IN-IDENTITY-AND-RECOVERY.md",
+      "sha256": "95ead7132fd6c822c44bcbe269f099038ffd40493eba1e4f011219b40e88376b",
+      "words": 1692
+    },
+    {
+      "path": "START-HERE.md",
+      "sha256": "c947ea1d020755be59bd5a0cc760f47b9a5d3943d0277e27b6d6c98af576060a",
+      "words": 3660
+    },
+    {
+      "path": "STEP-BY-STEP-REVIEW.md",
+      "sha256": "7269c3a112369892e5666d83c60c941656132ec2ebde589d38efee7859463f09",
+      "words": 681
+    },
+    {
+      "path": "STUDIO-SCANNING-BUSINESS-CARDS-AND-HARDWARE.md",
+      "sha256": "c049b65b667536a6eb2650f0085b93987f6d7d4e7da41a87e5b4721fcae44829",
+      "words": 1265
+    },
+    {
+      "path": "SYSTEM-COVERAGE-AUDIT.md",
+      "sha256": "f6e443605b313baa72cbef2b08a3cd2c92b784f3d9b6d813262c7922cbb70dd3",
+      "words": 2752
+    },
+    {
+      "path": "TRANSACTION-FEE-OPTIONS-AND-CHANGE-POLICY.md",
+      "sha256": "11de06ce2bd23e9007c1b2518e615035ad381538540c37bfe12e8dde9f812c29",
+      "words": 809
+    },
+    {
+      "path": "TRUST-REVIEWS-AND-REPORTING.md",
+      "sha256": "c856f9d7e620e8bad43297b8944690be9c298138b4aaef209a46a5332e96d69f",
+      "words": 1759
+    },
+    {
+      "path": "VISUAL-EXPERIENCE-GUIDE.md",
+      "sha256": "77c77dbe52e4e041ee30190236f603c84b1e8ba1bafcf3e3a1b35b34e1b40062",
+      "words": 1566
+    },
+    {
+      "path": "VISUAL-STATE-CLOSURE-2.8.md",
+      "sha256": "347103bb41687e8f1311815e8303c2714d771f6b8cb41e5e462a2b03a833c925",
+      "words": 515
+    },
+    {
+      "path": "WALLET-NATIVE-DEVICE-TEST-PACK.md",
+      "sha256": "744b5f363c2430555968d4f9d75f151d0e8ee80c17fa6eb298be7f97b964c1e7",
+      "words": 1550
+    },
+    {
+      "path": "WALLETS-ISSUANCE-REDEMPTION-AND-DESIGN.md",
+      "sha256": "a5f34dadfcffb52069dce0cb4586572a13e25911909cb9c35c9be935c0a61a7e",
+      "words": 1528
+    },
+    {
+      "path": "WORKING-HOURS-EXACT-CONTRACT.md",
+      "sha256": "ef5ab990590bbf1e1b9592a9baa3b4efcfd748bec41a5f067fbdd08b182c5068",
+      "words": 829
+    },
+    {
+      "path": "contracts/README.md",
+      "sha256": "6051ee70ea52b94fbc71dae7963f1c32d1183cfed05a55306400529a06f70d98",
+      "words": 769
+    },
+    {
+      "path": "legal/01-customer-platform-terms.md",
+      "sha256": "4f2966e4ecf38bd77d2e1c88aaa6da690520aec7b84de08ddf2744d0bb8eebef",
+      "words": 638
+    },
+    {
+      "path": "legal/02-merchant-software-terms.md",
+      "sha256": "29b8f3b6ecd60c5467f0c3ef483938e9f1e998a8a6b11d57db306da6a11723f3",
+      "words": 782
+    },
+    {
+      "path": "legal/03-platform-privacy-notice.md",
+      "sha256": "729a524cb6dc2762428d880054e5b073da6ef13c3a630f6712b2126d3c111252",
+      "words": 619
+    },
+    {
+      "path": "legal/04-cookie-and-device-technologies.md",
+      "sha256": "ef0d0dade6ce8fca7b00c5c3701be09d5057f7b8534a934aeae2f9545c9586d8",
+      "words": 352
+    },
+    {
+      "path": "legal/05-merchant-data-processing-addendum.md",
+      "sha256": "4eed0fe8787fa00dd84c9eb74e0309f9d111d0fa7bd82fd5edd5deab334d52bd",
+      "words": 509
+    },
+    {
+      "path": "legal/06-acceptable-use-and-supported-offers.md",
+      "sha256": "75163aed86c54e3d8449a06ce8950abe1b4b4fa729fbfbab2712d2058e5f6cd1",
+      "words": 397
+    },
+    {
+      "path": "legal/07-reviews-policy.md",
+      "sha256": "9bb45058d2b0e9a7ad242fb8c5bc7020f67728d11a49693a14c26326b2164f14",
+      "words": 431
+    },
+    {
+      "path": "legal/08-reporting-complaints-and-appeals.md",
+      "sha256": "d8a6a1f3466407fed26ae2f5d8e711049b805c1598ccd4e3c72a3b9fb30ae75f",
+      "words": 444
+    },
+    {
+      "path": "legal/09-merchant-customer-supply-template.md",
+      "sha256": "7b81552b66aee1565bcae922120a5eca39114f1a09187e602bb630f48b780b28",
+      "words": 423
+    },
+    {
+      "path": "legal/10-taplo-products-domains-and-exit-schedules.md",
+      "sha256": "9e6b7b02d69390d139744301ea3f8e518114f3451f6274ed6e5127bbf344417d",
+      "words": 361
+    },
+    {
+      "path": "release-3.0/BASELINE.md",
+      "sha256": "1c14ff0f1c6899d200c335b5b349798f9afe43ce8d2a9098bce9d534c76d2900",
+      "words": 385
+    },
+    {
+      "path": "release-3.0/CATEGORIES.md",
+      "sha256": "1609a4177f69d3b852b6a60ca37bb28b793f430f04369cc89bf01ba6d0a7eb40",
+      "words": 1748
+    },
+    {
+      "path": "release-3.0/CODEX-START-HERE.md",
+      "sha256": "a8dae4d561d2510533b49bab2b4ead6a4aaccebf4679b4b74ee1c5750e2a8992",
+      "words": 643
+    },
+    {
+      "path": "release-3.0/COMMERCIAL-AND-ACQUISITION.md",
+      "sha256": "56c46231a6b397087aee46305611b2c2c03a935b59b1d6b8876368cc93a2fca2",
+      "words": 1138
+    },
+    {
+      "path": "release-3.0/CONNECTED-JOURNEYS.md",
+      "sha256": "8e4fc123710e803c76af17736a4ef1ac7ed3e61653629f3937d88065d347b99e",
+      "words": 844
+    },
+    {
+      "path": "release-3.0/DATA-DICTIONARY.md",
+      "sha256": "d9c4f703c8b7ffa1c746c91f872ecc25e3117da3384beb349498dd4eb47bf848",
+      "words": 9606
+    },
+    {
+      "path": "release-3.0/ENGINEERING.md",
+      "sha256": "d979851b4317e9de58ab1e761ac8a409cdf7301fc184efed6786de7a7ebe1bdb",
+      "words": 1333
+    },
+    {
+      "path": "release-3.0/INTEGRATION-ACCEPTANCE.md",
+      "sha256": "31cb2254307ac6521c435e66220dacfde93b06cf92e775671393791428290e42",
+      "words": 558
+    },
+    {
+      "path": "release-3.0/OPERATIONS-AND-LEGAL.md",
+      "sha256": "6bfbf9e0b50f6ca35b83eeab570fdfa18777eb9b049abff464da2704dca2e0e3",
+      "words": 938
+    },
+    {
+      "path": "release-3.0/SCREEN-DESIGNS.md",
+      "sha256": "0806fdd9e995587f2f3954b3ba4c562efabb96257da93615f98a99c78629dcbe",
+      "words": 8332
+    },
+    {
+      "path": "release-3.0/VERIFICATION.md",
+      "sha256": "68841975e332d1a8f8990f3a6a6dfedb68aa6191ddd5be0a4ef5bafb19d62ff7",
+      "words": 276
+    },
+    {
+      "path": "specs/01-platform-and-identity.md",
+      "sha256": "20941c2e805a5a3ba50dd3f5cc6ca53bcd7078487d6044fbd9f8eb916a4a48e9",
+      "words": 301
+    },
+    {
+      "path": "specs/02-customer-navigation.md",
+      "sha256": "3879303066ffa2b991b3ada453d11edc9b3160efcffcec054efb615662018827",
+      "words": 309
+    },
+    {
+      "path": "specs/03-mini-site-and-routes.md",
+      "sha256": "f34b42cb8110664838d1fdb8effdc3393421359fa9c58755726de10510a24309",
+      "words": 311
+    },
+    {
+      "path": "specs/04-interaction-grammar.md",
+      "sha256": "d4864f062cb44305940e83cd90a6989516880e21493587c08d789bff82b57c27",
+      "words": 272
+    },
+    {
+      "path": "specs/05-explore.md",
+      "sha256": "de919e355917f6567602fa13686f21c75ffba838a9746b409ea8d3a1bac319f9",
+      "words": 259
+    },
+    {
+      "path": "specs/06-studio-navigation.md",
+      "sha256": "4ce48632aa757293bf88d113395622b49fff2082cc812cd372566efeeeb5dd6d",
+      "words": 259
+    },
+    {
+      "path": "specs/07-onboarding-and-capabilities.md",
+      "sha256": "23fd475e83f893086e8538c55e58195ee3ae28c885c2d5667d94bf9ebcb3ab2a",
+      "words": 304
+    },
+    {
+      "path": "specs/08-customisation.md",
+      "sha256": "20ff6ec9e27f42da0e8c96d141967e17bf6c89286ee86f44a6f76da2f66a1c6c",
+      "words": 302
+    },
+    {
+      "path": "specs/09-smart-before-ai.md",
+      "sha256": "d9de46811628a0ebe164eafb634001b094a7798fe7d137b6d5d82b9a5b7013f7",
+      "words": 241
+    },
+    {
+      "path": "specs/10-offers-and-shared-records.md",
+      "sha256": "0a87d86956109c864a5d3b48363427b370067a4ba0eb9dad3cd3b036805aab5a",
+      "words": 227
+    },
+    {
+      "path": "specs/100-mobile-onboarding-studio-and-visual-state-contract.md",
+      "sha256": "59bd0d4b376ff066f80f1a552ea470907a56d3fffd6da4e1006731deeba4d147",
+      "words": 1038
+    },
+    {
+      "path": "specs/101-stripe-connect-lifecycle-and-boundaries.md",
+      "sha256": "06540412283399710cf121d6e17ac4210a3eda84e84616a38237013971ec64d4",
+      "words": 1075
+    },
+    {
+      "path": "specs/102-category-search-and-capability-resolution.md",
+      "sha256": "01bc0ba960d1ae3642977e859dc882a081514942d8cd3d1c065e1951c46f07e0",
+      "words": 692
+    },
+    {
+      "path": "specs/103-block-composition-logo-and-theme-resolution.md",
+      "sha256": "2206b699f742feadba33ed61540b0cfc8983b5b4e386603628558909a6475ec5",
+      "words": 917
+    },
+    {
+      "path": "specs/104-pricing-recommendation-and-free-value.md",
+      "sha256": "edd11e4a87cd3f5235ef35f5a85cf827d158f4c092e8917258735868d846c394",
+      "words": 1525
+    },
+    {
+      "path": "specs/105-marketing-site-search-and-content-strategy.md",
+      "sha256": "ae1119eab57b25e8c9046ab4215574b028aa5f425efd4f8ddcb5c765455dde2f",
+      "words": 1228
+    },
+    {
+      "path": "specs/106-link-preview-images-and-public-metadata.md",
+      "sha256": "783d2810c8fa956c03801ad2536838fb26b966ca6d3b66a445707f7a21cc513d",
+      "words": 1002
+    },
+    {
+      "path": "specs/107-merchant-seo-search-console-and-ownership.md",
+      "sha256": "44868f01c061262bfdd3e39f18e4425bd76452b33abf7a41025f9fc229f446ca",
+      "words": 1192
+    },
+    {
+      "path": "specs/108-costed-packaging-and-launch-economics.md",
+      "sha256": "16fa9103e6239e809f62cc91d6fbc12620be4bdd78867864a138f0302e4810dd",
+      "words": 1621
+    },
+    {
+      "path": "specs/109-simple-billing-messaging-and-package-logistics.md",
+      "sha256": "633cc474d005ae6605565d4a8100a51c4bac7b0e7bb5d8bf6a5b373cfca9cdc1",
+      "words": 1125
+    },
+    {
+      "path": "specs/11-native-commerce.md",
+      "sha256": "76775e4196b9914a102fbf9565dd3140f96c258f907803715e23e78d688a4801",
+      "words": 237
+    },
+    {
+      "path": "specs/12-fulfilment-and-returns.md",
+      "sha256": "ceca282a12de37a95233f2ca448a2de62e05ab2de5e94c0b7c3bc885059bd43e",
+      "words": 254
+    },
+    {
+      "path": "specs/13-booking-lifecycle.md",
+      "sha256": "6d6bbec188b31c06481ad30e461e65ad16a6bfcf4136e4768fcbe08725a9e3a5",
+      "words": 226
+    },
+    {
+      "path": "specs/14-calendar-and-availability.md",
+      "sha256": "4b65854f35b36d096c2d4f42a8eb29cade344545ee9e838a3d69b7673b34cc14",
+      "words": 242
+    },
+    {
+      "path": "specs/15-classes-resources-and-recurrence.md",
+      "sha256": "c29ca0ba27cec462e551bc033e19ca9d184f56bf0b1daf61a608f1cabf2320bd",
+      "words": 238
+    },
+    {
+      "path": "specs/16-payments-and-reservations.md",
+      "sha256": "d2babefd5b1614718aacfa37ff933d556ea4d8fb707d92d2c103990125eff241",
+      "words": 263
+    },
+    {
+      "path": "specs/17-quotes-packages-and-memberships.md",
+      "sha256": "77ef059410b75fac76a83317a3cc804b4884021877c4085b8f674ad33b0b47d3",
+      "words": 233
+    },
+    {
+      "path": "specs/18-customer-activity-and-messaging.md",
+      "sha256": "255141ee5d83dbe24840db618b3161073a78275f21c34b3d8b97dc1eeeda7764",
+      "words": 227
+    },
+    {
+      "path": "specs/19-repeat-use-and-recommendations.md",
+      "sha256": "c93d611b753a0f28975d762ed7af42dc4ef78da0702b5f8d20a6463d3d3dad3e",
+      "words": 236
+    },
+    {
+      "path": "specs/20-rewards.md",
+      "sha256": "7a22b4467ba57490993af335bc74d6394898237c9609c6ae1c06cbd6e2cdd475",
+      "words": 278
+    },
+    {
+      "path": "specs/21-merchant-physical-products.md",
+      "sha256": "0fb2d83632ed851eefce989ebc644f5fac2509c64939120fe8c20965061cb545",
+      "words": 245
+    },
+    {
+      "path": "specs/22-taplo-nfc-products.md",
+      "sha256": "21c1daaa7d495e766f042dbd55de9ed14e9291576545ddbcb75f2f47cdb5328b",
+      "words": 252
+    },
+    {
+      "path": "specs/23-console-and-case-management.md",
+      "sha256": "d701430741d54e2ab29a83e655bfea7d744ac0fcf8a54772703bcd9231806c77",
+      "words": 233
+    },
+    {
+      "path": "specs/24-disputes-and-financial-exceptions.md",
+      "sha256": "a3563308aebb8caee90e28133d4649f917032aaef97c438d77ca0af1f8fb5893",
+      "words": 244
+    },
+    {
+      "path": "specs/25-trust-reviews-and-moderation.md",
+      "sha256": "c8d85b5447c08692b12612aa3eeeb8c492b52bf237882064f2f362b455056f42",
+      "words": 269
+    },
+    {
+      "path": "specs/26-privacy-permissions-and-data-lifecycle.md",
+      "sha256": "ef26a804cacb2e7c71942ebe75f60bd74473ff3f28b4b2ef36943967d249c5f0",
+      "words": 226
+    },
+    {
+      "path": "specs/27-reliability-and-change-management.md",
+      "sha256": "495c56937d99ab5f4ee33fd3148d8dbb2fab5dbd384c11458679fe03b6b5e276",
+      "words": 233
+    },
+    {
+      "path": "specs/28-legal-policy-and-operating-responsibility.md",
+      "sha256": "e8d462435845cce717c8d7931e47b0336f71e677d80ce0929102765248637c71",
+      "words": 256
+    },
+    {
+      "path": "specs/29-validation-commercials-and-sequencing.md",
+      "sha256": "6faf6219dbf8c55adc60850547751f8975ff8bc3ba7876724bc4fcf46145a7a9",
+      "words": 265
+    },
+    {
+      "path": "specs/30-connected-workflows.md",
+      "sha256": "08a1e79ae01d23e459c601bfdf46bd863ffd1161c55f48421614178a17b80bc2",
+      "words": 246
+    },
+    {
+      "path": "specs/31-widget-and-shelf-contract.md",
+      "sha256": "7f8c1682826158950d93b720d4de6a0cc590b198d2c823b96b47c4e81a855958",
+      "words": 605
+    },
+    {
+      "path": "specs/32-popup-and-cart-system.md",
+      "sha256": "3ef44e5196b84606b1b75606c9969e7ce93bcc063b4afc665051022b9a5d3349",
+      "words": 523
+    },
+    {
+      "path": "specs/33-studio-customisation-reconstruction.md",
+      "sha256": "d46b98d90bb4775a418a20e19952d27baa1f8c6bbe3c8ec54ff24ba67b220ea6",
+      "words": 627
+    },
+    {
+      "path": "specs/34-taplo-design-language.md",
+      "sha256": "fdbafa602fbc734a7b8d74bb8d93ce25c2406e25c7e8819732a88c56315762c0",
+      "words": 459
+    },
+    {
+      "path": "specs/35-popup-contrast-and-controls.md",
+      "sha256": "708762c15bee831bcb503f605fbc1ddc21647944e99b284956055ebec78ba5dd",
+      "words": 605
+    },
+    {
+      "path": "specs/36-automated-seo-and-public-routes.md",
+      "sha256": "7d2b85b666dae2982fbf53de5a8c2cc5efcc398742b71e5d5a057cd013257b61",
+      "words": 902
+    },
+    {
+      "path": "specs/37-wallet-passes-and-lifecycle.md",
+      "sha256": "60a5fc45e2c59858b6e1dfe261cb7bfacba66aeefc5b80ba551bbfdd8a7721f4",
+      "words": 516
+    },
+    {
+      "path": "specs/38-sharing-qr-and-installation.md",
+      "sha256": "34dcbcf5f97d0383d67264eb90f2f67c7b8879d356c6890c29d681d9ffa404ea",
+      "words": 408
+    },
+    {
+      "path": "specs/39-domain-purchase-and-management.md",
+      "sha256": "9603dcbc2c85fcebb6a87b47c94ae569f39fedc9b28c3b9c5f47ee0c524b9236",
+      "words": 525
+    },
+    {
+      "path": "specs/40-domain-routing-security-and-seo.md",
+      "sha256": "abe16f43309f9613f9b78f97b755bd6757170ad329f07ac68ec5fb42dc1ab6af",
+      "words": 408
+    },
+    {
+      "path": "specs/41-nfc-setup-and-phone-handover.md",
+      "sha256": "b8b30d5f50d912ddc5578e8b19e7cc1ad9cd2aa6c1f346ac102e8018fcd177ec",
+      "words": 495
+    },
+    {
+      "path": "specs/42-nfc-hardware-and-provisioning.md",
+      "sha256": "24ae13295b1a71d81594d6e6a3f58a3ac1ba5633709ef9f7586d78f9e9327ff1",
+      "words": 368
+    },
+    {
+      "path": "specs/43-app-release-and-operating-readiness.md",
+      "sha256": "82a6fcd04cb4e89564feade3e8f512154e9542746bafa92ac06546bda00be876",
+      "words": 566
+    },
+    {
+      "path": "specs/44-explore-business-windows-and-navigation.md",
+      "sha256": "6935bb4a0ddf677e541b04005170f902a1e735c8bd22092ec12931e755896c10",
+      "words": 597
+    },
+    {
+      "path": "specs/45-popup-appearance-families-and-inheritance.md",
+      "sha256": "0ffb8616db917478eead274b2a49f89e79a150568ba5d3a631982f85ca4818e1",
+      "words": 563
+    },
+    {
+      "path": "specs/46-language-content-and-status-contract.md",
+      "sha256": "88c380e8f43a11f7f0f167b9f6789af3b6560f1a916581a279f07f95acbc0303",
+      "words": 644
+    },
+    {
+      "path": "specs/47-ecosystem-integration-contracts.md",
+      "sha256": "065941402dd2b8bb5004ea245b87b7840d7a7b0fcad469340b14ef818ac4b173",
+      "words": 740
+    },
+    {
+      "path": "specs/48-identity-and-brand-placement.md",
+      "sha256": "87d4cdbe1d84491660264987a839a09ae888d74926718ab0879c055fddbf2c71",
+      "words": 679
+    },
+    {
+      "path": "specs/49-frameless-surfaces-and-colour-ownership.md",
+      "sha256": "c363a9e0b38d37b9ecc34274f2055e3e5b61365e541e9f927f34e5858c139984",
+      "words": 597
+    },
+    {
+      "path": "specs/50-complete-overlay-system.md",
+      "sha256": "cf8e3a7d0f0486bac228d5040a9bbfdc5d2e776f11b5fe9d3309dd66ada06539",
+      "words": 708
+    },
+    {
+      "path": "specs/51-explore-map-and-location-contract.md",
+      "sha256": "0aece860e95f974f72472972de6e52d7f6e678e83fd28e981a87e165215fba36",
+      "words": 824
+    },
+    {
+      "path": "specs/52-feedback-messages-and-recovery.md",
+      "sha256": "e3a61c8651849a9b0d47e424edec3457c88ec6f960632e0efa8fae266ee0fecc",
+      "words": 715
+    },
+    {
+      "path": "specs/53-appearance-preferences-and-theme-lifecycle.md",
+      "sha256": "d367d2d72bcb45449b42a73c9b5c87a5017c209e0ac4069769c026670b9e743f",
+      "words": 615
+    },
+    {
+      "path": "specs/54-responsive-composition-contracts.md",
+      "sha256": "bfeb70916317a5be9bb05481d526c72ef83da3c2cf67517dc22e1d9c9e8b19c6",
+      "words": 832
+    },
+    {
+      "path": "specs/55-map-visual-composition-and-selection.md",
+      "sha256": "04050b985689652d2e9e7ad31abfa702835e7b7745fde25e99787b4b8d263bf1",
+      "words": 716
+    },
+    {
+      "path": "specs/56-smart-customer-app-and-useful-continuity.md",
+      "sha256": "612b359e60a2fc21155201a8e487fc47e2dba112fb7ec7cc0efa4269cc1374a4",
+      "words": 764
+    },
+    {
+      "path": "specs/57-signup-account-and-preference-experience.md",
+      "sha256": "04f037061c29c6f1538b8d7811fe4d92bbfc7ff55fd8e65673ccc5ef99ce810a",
+      "words": 684
+    },
+    {
+      "path": "specs/58-visual-states-motion-accessibility-and-content.md",
+      "sha256": "f31f1bc067ebf6c13d63524c891cc363c0ffcc0ad896c62f874dfc2ed338dfdd",
+      "words": 683
+    },
+    {
+      "path": "specs/59-whole-ecosystem-visual-handover-review.md",
+      "sha256": "08aadc9ac41d3d2819ef16facf397f06939cac94fde9ec0198d36d31ae083406",
+      "words": 666
+    },
+    {
+      "path": "specs/60-visual-production-coverage-and-review-gates.md",
+      "sha256": "309a4190f08260c7e0ab5e5c1b6df00d591f3fb22fffb3df5cffa8b748d899eb",
+      "words": 515
+    },
+    {
+      "path": "specs/61-concrete-design-system-and-reference-screens.md",
+      "sha256": "7ba3cbd4cb9fc54740d8143c6d5c3103cf1036d05935591b15cc62e4d1796a07",
+      "words": 774
+    },
+    {
+      "path": "specs/62-business-specific-operating-profiles.md",
+      "sha256": "a58e18b762716776ad8199fc2da5e2cb19748d7383ac44f506cdff4041dbfa6e",
+      "words": 1360
+    },
+    {
+      "path": "specs/63-record-contracts-and-data-invariants.md",
+      "sha256": "066c91352ba2b3d1b95147fa8ec5abfe4cf1383ef450a5bc932926fa3d0690a8",
+      "words": 925
+    },
+    {
+      "path": "specs/64-authorisation-roles-and-privacy-boundaries.md",
+      "sha256": "ea3f7327cc5bde0e1d5f4f976926366bdc27c2cf45562d543535e9db24ff5eb6",
+      "words": 589
+    },
+    {
+      "path": "specs/65-command-lifecycles-and-integration-recovery.md",
+      "sha256": "b372de55721f7773b39810d194b6dd20ce630c90dc7e1ac4ffbffc00b0ed03e3",
+      "words": 789
+    },
+    {
+      "path": "specs/66-commercial-model-costs-and-payment-responsibility.md",
+      "sha256": "726a66c61b805aa702cfc463c8341929178ca030cedc61d866488fe7401ca0a2",
+      "words": 921
+    },
+    {
+      "path": "specs/67-support-ownership-migration-and-merchant-exit.md",
+      "sha256": "79a42994ded8a262e1543fe1982b362d3c568b5990c62fc3f6770e62dfa0f46f",
+      "words": 776
+    },
+    {
+      "path": "specs/68-research-construction-and-pre-user-validation.md",
+      "sha256": "4963f9f9e018a24f26e41f3891fa8061ff43764a976fba9e0ac0e10e2bd27bb6",
+      "words": 531
+    },
+    {
+      "path": "specs/69-additional-engineering-and-operating-gaps.md",
+      "sha256": "3e1172bae309d525b36abdbc8619ca5ccc87a0c9bbb1ce2a9e37562610d1de9a",
+      "words": 564
+    },
+    {
+      "path": "specs/70-decision-closure-and-build-readiness.md",
+      "sha256": "69f110219032b5e69b9f7c1f0c87d30594a41e15e78e477cd04cb137d113b80a",
+      "words": 516
+    },
+    {
+      "path": "specs/71-team-logins-shareable-profiles-and-independent-operators.md",
+      "sha256": "864c018ffef7087bbcb1cc27ce0bf3440160b5642bc845d298cac0f778e8e386",
+      "words": 1113
+    },
+    {
+      "path": "specs/72-team-workspace-calendar-and-permission-design.md",
+      "sha256": "9852b410edf3da08da07410ce82d4c9888246b4ced56688eec65b4d75ca2304d",
+      "words": 1364
+    },
+    {
+      "path": "specs/73-feature-function-and-category-matrix.md",
+      "sha256": "4ce4ceb8a77203adfbeb1a757e39f231a4069758d71f0ef75710688753f7e20b",
+      "words": 1275
+    },
+    {
+      "path": "specs/74-legal-responsibility-and-document-map.md",
+      "sha256": "6e302264e2e41121f6f5e42cdff4611ab64b68983619a81ad72daf51d911e6ef",
+      "words": 920
+    },
+    {
+      "path": "specs/75-privacy-marketing-safety-and-data-operations.md",
+      "sha256": "efdd3692a5ed8db07679592b7a7ea55a73fbcf39110eab6927fe48c955c71e8d",
+      "words": 657
+    },
+    {
+      "path": "specs/76-policy-engine-acceptance-and-legal-change.md",
+      "sha256": "f6b974cdcaeb01c7c06b707f882c0916f3676e0ce295630d088a9ae5b3d8343f",
+      "words": 494
+    },
+    {
+      "path": "specs/77-complementing-an-existing-business-website.md",
+      "sha256": "dd32000bc625bdb92a191fb369e0e434a483416d1692ed4ad2e99b472a54255b",
+      "words": 854
+    },
+    {
+      "path": "specs/78-assisted-website-and-google-profile-setup.md",
+      "sha256": "eb6d454ad0df5fef713af3f25cd454a08c238d34ca6bb183fc5f5256393949d8",
+      "words": 1108
+    },
+    {
+      "path": "specs/79-onboarding-purpose-and-deliberate-owner-setup.md",
+      "sha256": "beff0afc879caf98e8f56b67684481139b14db522eea3704ccc445ed0fd3e1bc",
+      "words": 868
+    },
+    {
+      "path": "specs/80-media-picker-stock-photography-and-truthful-galleries.md",
+      "sha256": "32cab94d1dbb330f3b61226d1473509bf719f0aa5c5e6a913581d305e2b5b6f1",
+      "words": 744
+    },
+    {
+      "path": "specs/81-website-companion-and-action-design.md",
+      "sha256": "8e1b750e88251f104faf0120093d975a15adb2fd026be3bda61953f26b5d4ff9",
+      "words": 963
+    },
+    {
+      "path": "specs/82-payments-deposits-and-cancellation-design.md",
+      "sha256": "5ca8c69fc7c3cf775e6b688568f686b74e36f8d7b7d8f1e6c4a5b02d961b7751",
+      "words": 1398
+    },
+    {
+      "path": "specs/83-communications-branding-and-consent.md",
+      "sha256": "63e78516e85e5b4cddfed01a24b03e9c4b3f171311f0af392b5c2cea3c6620fa",
+      "words": 1188
+    },
+    {
+      "path": "specs/84-integration-authority-and-recovery.md",
+      "sha256": "916b28513a7bc6ecddade268a27c993bdb01b7cd591117271a77302927f5444d",
+      "words": 864
+    },
+    {
+      "path": "specs/85-market-patterns-opportunities-and-analytics.md",
+      "sha256": "cbc9ef430376a2566cd4eb2679f82a98c8e45464ae7cf5cedab0cbe3921af763",
+      "words": 920
+    },
+    {
+      "path": "specs/86-cross-surface-feature-and-failure-contract.md",
+      "sha256": "17a5c93ff2611a2b7e49714b0a70b09fa58492c94938f8ca13c1cb7abc7ac6b8",
+      "words": 913
+    },
+    {
+      "path": "specs/87-cancellation-resolution-without-platform-arbitration.md",
+      "sha256": "e60e5fa6e332488325696e2ecf6e30c1c21f2d505c5daa7805e87a54dfa47785",
+      "words": 1063
+    },
+    {
+      "path": "specs/88-private-business-return-view.md",
+      "sha256": "a966cab5e5c8ac5aa0627272a410bef307f30d1ef6246f880f874a21db835d7e",
+      "words": 687
+    },
+    {
+      "path": "specs/89-guided-studio-composition-and-readiness.md",
+      "sha256": "f06ff311992d467bf2f81272df361ff38c9988c75c31a18252f44cbbf4b83c4b",
+      "words": 836
+    },
+    {
+      "path": "specs/90-icon-type-and-asset-system.md",
+      "sha256": "0d9130ef6a47aec048bfe2c2587b5ab2562c5c8e24307d1c3356c192b4900bf3",
+      "words": 799
+    },
+    {
+      "path": "specs/91-category-depth-data-and-compliance-closure.md",
+      "sha256": "093352dbd2a61e86bf921a479f8d4b7b97c54c8479e3e908452a1f1c39773f40",
+      "words": 981
+    },
+    {
+      "path": "specs/92-contextual-guidance-and-quick-setup.md",
+      "sha256": "120f8f673b8b6364c2ec50d7020280d6e0db1f2cf4867e36b4165cc78ba04a60",
+      "words": 1041
+    },
+    {
+      "path": "specs/93-working-hours-quick-setup-contract.md",
+      "sha256": "a515a6eba65f3938273f53d0e05cd61a4efbfd8f75f428c2f19b7f4d94489016",
+      "words": 926
+    },
+    {
+      "path": "specs/94-blueprint-as-an-agent-and-operating-contract.md",
+      "sha256": "bf9d44bfb2e71f2a16cf6bd5fc2870177ff0546081d60a9f52bbbcf7a9015940",
+      "words": 1153
+    },
+    {
+      "path": "specs/95-agent-toolchain-and-production-workflow.md",
+      "sha256": "d1788ba4ecd10208c015e55ffeecdb2281a5205134e220ea124965bd57b4a78c",
+      "words": 1118
+    },
+    {
+      "path": "specs/96-quick-setup-catalogue-and-surface-rules.md",
+      "sha256": "b25681a073310cd1c2c742bf08d04e4e88d0c9d1a05d844cb41f3733ce61cae2",
+      "words": 1054
+    },
+    {
+      "path": "specs/97-reference-journey-owner-to-customer-to-support.md",
+      "sha256": "b0afbd9763e065702bd4937a1b83f12dfee60dd2fc421342bcb45ea0d94d48cc",
+      "words": 1546
+    },
+    {
+      "path": "specs/98-business-proposition-distribution-and-learning-plan.md",
+      "sha256": "6df68dc4de07dbe20792a9b8b526b556cb104159c197be9b13cc5a2c42820cf8",
+      "words": 930
+    },
+    {
+      "path": "specs/99-category-configuration-team-and-included-access.md",
+      "sha256": "a1ed308d2dfffead5944877b5991da220c144250b64ffe2f264b825f9e186ed0",
+      "words": 1354
+    }
+  ]
+}

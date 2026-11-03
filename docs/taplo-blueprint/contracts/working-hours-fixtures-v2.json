@@ -1,0 +1,970 @@
+{
+  "edition": "2.8",
+  "scope": "local_schema_and_semantics_only",
+  "cases": [
+    {
+      "id": "ordinary_week",
+      "expected_valid": true,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 0,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "Europe/London",
+          "effective_local_date": "2026-11-04",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 2,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 3,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 4,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 5,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            },
+            {
+              "weekday": 7,
+              "intervals": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "all_closed",
+      "expected_valid": true,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 0,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "Europe/London",
+          "effective_local_date": "2026-11-04",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": []
+            },
+            {
+              "weekday": 2,
+              "intervals": []
+            },
+            {
+              "weekday": 3,
+              "intervals": []
+            },
+            {
+              "weekday": 4,
+              "intervals": []
+            },
+            {
+              "weekday": 5,
+              "intervals": []
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            },
+            {
+              "weekday": 7,
+              "intervals": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "split_shift",
+      "expected_valid": true,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 0,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "Europe/London",
+          "effective_local_date": "2026-11-04",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 720
+                },
+                {
+                  "start_minute": 780,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 2,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 3,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 4,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 5,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            },
+            {
+              "weekday": 7,
+              "intervals": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "adjacent_intervals",
+      "expected_valid": true,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 0,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "Europe/London",
+          "effective_local_date": "2026-11-04",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 720
+                },
+                {
+                  "start_minute": 720,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 2,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 3,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 4,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 5,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            },
+            {
+              "weekday": 7,
+              "intervals": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "overlap",
+      "expected_valid": false,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 0,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "Europe/London",
+          "effective_local_date": "2026-11-04",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 780
+                },
+                {
+                  "start_minute": 720,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 2,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 3,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 4,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 5,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            },
+            {
+              "weekday": 7,
+              "intervals": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "zero_length",
+      "expected_valid": false,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 0,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "Europe/London",
+          "effective_local_date": "2026-11-04",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 540
+                }
+              ]
+            },
+            {
+              "weekday": 2,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 3,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 4,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 5,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            },
+            {
+              "weekday": 7,
+              "intervals": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "overnight_quick",
+      "expected_valid": false,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 0,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "Europe/London",
+          "effective_local_date": "2026-11-04",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 1300,
+                  "end_minute": 180
+                }
+              ]
+            },
+            {
+              "weekday": 2,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 3,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 4,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 5,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            },
+            {
+              "weekday": 7,
+              "intervals": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "duplicate_weekday",
+      "expected_valid": false,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 0,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "Europe/London",
+          "effective_local_date": "2026-11-04",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 3,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 4,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 5,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            },
+            {
+              "weekday": 7,
+              "intervals": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid_timezone",
+      "expected_valid": false,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 0,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "MadeUp/Zone",
+          "effective_local_date": "2026-11-04",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 2,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 3,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 4,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 5,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            },
+            {
+              "weekday": 7,
+              "intervals": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid_date",
+      "expected_valid": false,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 0,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "Europe/London",
+          "effective_local_date": "2026-02-31",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 2,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 3,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 4,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 5,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            },
+            {
+              "weekday": 7,
+              "intervals": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "unapproved_price_mutation",
+      "expected_valid": false,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 0,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "Europe/London",
+          "effective_local_date": "2026-11-04",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 2,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 3,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 4,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 5,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            },
+            {
+              "weekday": 7,
+              "intervals": []
+            }
+          ]
+        },
+        "service_price_minor": 100
+      }
+    },
+    {
+      "id": "float_minutes",
+      "expected_valid": false,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 0,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "Europe/London",
+          "effective_local_date": "2026-11-04",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 540.5,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 2,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 3,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 4,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 5,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            },
+            {
+              "weekday": 7,
+              "intervals": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "missing_day",
+      "expected_valid": false,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 0,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "Europe/London",
+          "effective_local_date": "2026-11-04",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 2,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 3,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 4,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 5,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "new_rule_wrong_version",
+      "expected_valid": false,
+      "input": {
+        "resource_id": "res_12345678",
+        "location_id": "loc_12345678",
+        "rule_id": null,
+        "expected_rule_version": 3,
+        "pattern": {
+          "format": "weekly_intervals_v2",
+          "timezone": "Europe/London",
+          "effective_local_date": "2026-11-04",
+          "days": [
+            {
+              "weekday": 1,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 2,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 3,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 4,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 5,
+              "intervals": [
+                {
+                  "start_minute": 540,
+                  "end_minute": 1020
+                }
+              ]
+            },
+            {
+              "weekday": 6,
+              "intervals": []
+            },
+            {
+              "weekday": 7,
+              "intervals": []
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
