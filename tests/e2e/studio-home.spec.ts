@@ -76,6 +76,6 @@ test("with the software keyboard open the dock steps out of the way", async ({ p
   await page.goto("/dashboard")
   await expect(page.getByTestId("studio-next")).toBeVisible()
   // Emulate the visual viewport shrinking the way an on-screen keyboard does.
-  await page.evaluate(() => { const vv = window.visualViewport as any; Object.defineProperty(vv, "height", { value: 340, configurable: true }); vv.dispatchEvent(new Event("resize")) })
+  await page.evaluate(() => { const vv = window.visualViewport!; Object.defineProperty(vv, "height", { value: 340, configurable: true }); vv.dispatchEvent(new Event("resize")) })
   await expect(page.locator(".studio-dock")).toBeHidden()
 })
