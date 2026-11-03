@@ -197,8 +197,8 @@ const DETAILS: Record<
         "Download a scannable QR code for your own print or digital materials.",
       ],
       [
-        "Plaques and wallet cards",
-        "Counter plaques and digital wallet cards are in development.",
+        "Make it easy to find you",
+        "Add your page link to your social profiles, messages and printed materials.",
       ],
     ],
     demo: "no-6-coffee",

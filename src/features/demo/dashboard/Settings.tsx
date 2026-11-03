@@ -80,19 +80,19 @@ export function Settings() {
                     name: "Payments",
                     line: "Take deposits and payments",
                     detail:
-                      "A payment account must be connected before money can be collected. No payment provider is connected to this workspace yet.",
+                      "Set up your payment account to accept deposits and payments.",
                   },
                   {
                     name: "Appointment emails",
                     line: "Confirmations and booking updates",
                     detail:
-                      "A verified sender and email service are needed before appointment messages can be delivered. No messages are sent from this workspace yet.",
+                      "Choose the sender customers see on appointment confirmations and updates.",
                   },
                   {
                     name: "Custom domain",
                     line: "Use your own web address",
                     detail:
-                      "Domain connection will require a published page and DNS verification. Your domain settings are not changed here.",
+                      "Connect a domain you own and verify it to use it with your page.",
                   },
                 ].map((item) => (
                   <details key={item.name}>
@@ -112,7 +112,7 @@ export function Settings() {
           {section === "plan" ? (
             <Panel
               title="Plan"
-              description="Billing is not connected, so nothing is charged. Switch plans here to see what each one unlocks."
+              description="Compare your plan and the features included."
             >
               <div
                 className="ws-plan-options"
@@ -165,12 +165,12 @@ export function Settings() {
           {section === "data" ? (
             <Panel
               title="Workspace data"
-              description="Everything is stored only in this browser."
+              description="Manage your workspace content."
             >
               {confirm ? (
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm">
-                    Delete all demo data in this browser?
+                    Reset this workspace and remove its content?
                   </span>
                   <Button
                     variant="destructive"
@@ -187,7 +187,7 @@ export function Settings() {
                 </div>
               ) : (
                 <Button variant="outline" onClick={() => setConfirm(true)}>
-                  Reset demo data
+                  Reset workspace
                 </Button>
               )}
             </Panel>

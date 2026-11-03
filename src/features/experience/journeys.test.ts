@@ -80,7 +80,7 @@ describe("owner setup readiness", () => {
     s.plan = "business";
     const measurement = journeyFor("analytics", s).steps[1]!;
     expect(measurement.done).toBe(false);
-    expect(measurement.blocked).toMatch(/not connected/);
+    expect(measurement.blocked).toBe("No visitor activity to display yet.");
   });
 });
 

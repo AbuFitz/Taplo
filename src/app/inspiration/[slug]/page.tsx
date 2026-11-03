@@ -40,7 +40,7 @@ export default async function ExamplePage({
   const others = relatedExamples(e);
   return (
     <InspirationFrame>
-      <div className="ig-detail-page text-foreground [--foreground:#111111] [--background:#ffffff] [--muted:#f3f3f5] [--muted-foreground:#6b6b72]">
+      <div className="ig-detail-page">
         <section className="mx-auto w-full max-w-7xl px-5 pb-8 pt-8 sm:pt-12">
           <nav aria-label="Breadcrumb" className="text-sm text-foreground/60">
             <Link href="/inspiration" className="underline underline-offset-4">

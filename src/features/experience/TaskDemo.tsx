@@ -285,8 +285,8 @@ export function TaskDemo({
                 Appointment messages
                 <small>
                   {frame === 2
-                    ? "Requires a verified provider"
-                    : "Not connected"}
+                    ? "Set up the connection"
+                    : "Set up"}
                 </small>
               </span>
               <span className="demo-status">○</span>

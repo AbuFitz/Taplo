@@ -77,7 +77,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <span role={storageFailed ? "alert" : undefined}>
               {storageFailed
                 ? "Changes could not be saved. Browser storage is unavailable."
-                : "Your changes are saved on this device."}
+                : "Your changes are saved."}
             </span>
           </footer>
         ) : null}

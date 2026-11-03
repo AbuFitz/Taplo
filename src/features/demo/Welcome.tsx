@@ -110,7 +110,7 @@ export function Welcome() {
       <h1>Welcome to Studio.</h1>
       <p>
         {resumeName
-          ? `Continue setting up ${resumeName}. Your draft is saved on this device.`
+          ? `Continue setting up ${resumeName}. Your draft is saved.`
           : "Give your business a home, then make it yours."}
       </p>
       <Link className="ws-action" href="/onboarding">

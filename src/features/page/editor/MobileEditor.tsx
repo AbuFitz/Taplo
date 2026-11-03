@@ -192,7 +192,10 @@ export function MobileEditor({
         data-section={section}
       >
         <PagePreview
-          mode="fill"
+          mode="device"
+          chrome
+          cropDevice={!preview}
+          smooth
           src={preview ? "/demo/preview" : "/demo/preview?edit=1"}
           title="Live preview of your page"
           testId="preview-frame"
@@ -312,7 +315,7 @@ export function MobileEditor({
               onClick={() => {
                 ed.update(publish);
                 notify(
-                  "This version is published on this device. Public publishing is not connected.",
+                  "Page version saved.",
                 );
               }}
               data-testid="publish"

@@ -59,7 +59,7 @@ export function DemoProfile({ mode, slug, editing = false, headerLayout, widgetI
     <>
       {mode === "published" ? (
         <div role="note" className="relative z-10 bg-amber-300 px-4 py-2 text-center text-sm font-medium text-black">
-          Your published page. It opens in this browser only; a public address needs publishing, which is not connected yet.
+          Your page. Review the details, layout and customer experience.
         </div>
       ) : null}
       <PageRenderer vm={vm} fragment={mode !== "draft" ? undefined : headerLayout ? { kind: "header" } : widgetId ? { kind: "widget", id: widgetId } : undefined} />

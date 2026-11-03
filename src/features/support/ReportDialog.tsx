@@ -113,7 +113,7 @@ export function ReportDialog({
         setReference(result.reference);
         setMessage("Report received.");
       } else
-        setMessage("Delivery is not connected. Download or copy your report.");
+        setMessage("Couldn’t send your report. Copy or download it to keep the details.");
     } catch (e) {
       setError(
         e instanceof Error
@@ -285,8 +285,7 @@ export function ReportDialog({
               <div className="report-delivery">
                 <b>Save your report</b>
                 <p>
-                  Report delivery is not connected in this environment. Copy or
-                  download the details; nothing is sent or stored by Taplo.
+                  Copy or download your report to keep the details.
                 </p>
               </div>
             ) : null}

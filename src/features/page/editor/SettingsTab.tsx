@@ -287,7 +287,7 @@ export function SettingsTab({
           hint="When off, your page asks search engines not to list it. People with your link can still open it."
         />
         <p className="text-xs text-muted-foreground">
-          Pages saved in this browser are not listed in search.
+          Publish your page to make it available to search engines.
         </p>
       </Card>
 
@@ -298,8 +298,7 @@ export function SettingsTab({
         </p>
         <p className="text-sm text-muted-foreground">
           Included on the Business plan.{" "}
-          <strong>Not connected in this demo:</strong> it needs DNS verification
-          and a hosting integration, so nothing here can be set up yet.
+          Connect a domain you own, then follow the verification steps.
         </p>
       </Card>
     </div>

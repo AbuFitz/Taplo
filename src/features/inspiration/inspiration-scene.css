@@ -1,19 +1,9 @@
-.ig-scene{position:fixed;inset:0;isolation:isolate;display:flex;align-items:center;justify-content:center;padding:28px;background:#e7e7e7;color:#111}
-.ig-frame{width:100%;max-width:1440px;height:calc(100dvh - 56px);display:grid;grid-template-rows:auto minmax(0,1fr);background:#fff;border-radius:30px;overflow:hidden;box-shadow:0 22px 90px -35px #0006}
-.ig-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px clamp(16px,3vw,40px) 6px}
-.ig-logo{display:inline-flex;min-height:44px;align-items:center}
-.ig-nav{display:flex;align-items:center;gap:6px}
-.ig-nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:999px;color:#3a3a40;font-size:14.5px;font-weight:600;text-decoration:none}
-.ig-nav a:hover{background:#f3f3f5}
-.ig-nav .ig-cta{background:#111;color:#fff;padding:0 20px}
-.ig-nav .ig-cta:hover{background:#2a2a2e}
-.ig-scroll{overflow-y:auto;overscroll-behavior:contain;padding:0 clamp(16px,3vw,40px) 36px;scroll-padding-top:150px}
-.ig-foot{display:flex;gap:20px;justify-content:center;padding:36px 0 4px;font-size:13px}
-.ig-foot a{color:#6b6b72;text-underline-offset:4px}
-@media(max-width:700px){
-  .ig-scene{padding:8px}
-  .ig-frame{height:calc(100dvh - 16px);border-radius:22px}
-  .ig-top{flex-wrap:wrap;row-gap:0}
-  .ig-nav{flex:1 1 100%;justify-content:space-between;gap:0;margin:0 -8px}
-  .ig-nav a{padding:0 8px}
-}
+.inspiration-site{min-height:100dvh;background:#080808;color:#fafafa}
+.inspiration-site .ig-detail-page{--foreground:#fafafa;--background:#080808;--muted:#18181b;--muted-foreground:#a1a1aa;color:#fafafa}
+.inspiration-site .ig-detail-page>section:first-child{padding-top:clamp(32px,5vw,72px)}
+.inspiration-site [data-testid=design-preview]{border-radius:28px;background:#151518;padding:clamp(14px,3vw,32px);border:1px solid #ffffff14}
+.inspiration-site [data-testid=design-preview] fieldset{background:#ffffff12}
+.inspiration-site [data-testid=design-preview] label:has(input:checked){background:#fafafa;color:#111}
+.inspiration-site [data-testid=design-preview] label:not(:has(input:checked)){color:#bdbdc5}
+.inspiration-site [aria-label="Related designs"]{border-top:1px solid #ffffff1a}
+.inspiration-site [aria-label="Related designs"] li>a>div{border-radius:24px;background:#161619}

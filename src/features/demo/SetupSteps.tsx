@@ -988,7 +988,7 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
       r.reason === "cancelled"
         ? "Sign-up was cancelled. Your draft is still here."
         : r.reason === "not-configured"
-          ? "Account creation isn’t available in this environment yet, so nothing was created. Your draft is unchanged and still in this browser."
+          ? "We couldn’t create your account. Your draft is safe. Please try again."
           : "That didn’t work. Your draft is unchanged, so you can try again.",
     );
   };

@@ -151,10 +151,10 @@ export const CHOICES: ContentChoice[] = [
     type: "payment",
     name: "Pay or deposit",
     blurb:
-      "Take a deposit or payment. Needs a payment provider connected, which this environment does not have yet.",
+      "Take a deposit or payment from your page.",
     group: "offer",
     art: "button",
-    blocked: "Payments are not connected yet",
+    blocked: "Set up payments",
   },
 
   {

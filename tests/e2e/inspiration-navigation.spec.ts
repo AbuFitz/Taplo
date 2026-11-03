@@ -7,7 +7,7 @@ for (const width of [320, 390, 768, 1440]) {
     await page.goto("/inspiration", { waitUntil: "networkidle" });
     await expect(page.getByRole("link", { name: "Taplo home" }).first()).toBeVisible();
     await expect(page.getByRole("link", { name: "Start free" }).first()).toBeVisible();
-    await expect(page.getByRole("heading", { level: 1, name: "Pages for every kind of business." })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: "Your business.Your point of view." })).toBeVisible();
     const menu = page.getByRole("button", { name: "Open menu" });
     if (await menu.isVisible()) await menu.click();
     await page.getByRole("link", { name: "Pricing", exact: true }).first().click();

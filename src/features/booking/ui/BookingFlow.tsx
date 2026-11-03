@@ -131,7 +131,7 @@ function FlowBody({ ctx, preService, preStaff, preSlot, onClose }: { ctx: Bookin
     setSending(false)
     const r = result as ReturnType<typeof placeBooking> | null
     if (!r) return
-    if (!ok) { setBanner("Your browser could not save this booking (storage is full or blocked). Nothing was booked."); return }
+    if (!ok) { setBanner("We couldn’t save your booking. Your details are still here. Please try again."); return }
     if (r.ok) { setDone(r.value.booking); go("done"); return }
     if (r.error.code === "slot_unavailable") { setBanner(r.error.message); setPick(null); go("time"); return }
     if (r.error.code === "invalid") { setErrors(r.error.fields as typeof errors); go("details"); return }
@@ -246,7 +246,7 @@ function FlowBody({ ctx, preService, preStaff, preSlot, onClose }: { ctx: Bookin
           </dl>
           <p className="rounded-xl bg-tp-surface p-3 text-sm" data-testid="bk-outcome"><strong>{OUTCOME[mode].kind}.</strong> {OUTCOME[mode].detail} {mode === "request" ? `They have ${config.rules.pendingExpiryHours} hours to reply.` : ""}</p>
           {config.rules.cancellationNote || config.rules.cancelUntilHours ? <p className="text-xs text-tp-muted">{config.rules.cancellationNote ?? `You can cancel up to ${config.rules.cancelUntilHours} hours before.`}</p> : null}
-          <p className="text-xs text-tp-muted">Saved in this browser only. No email or text message is sent, and no payment is taken.</p>
+          <p className="text-xs text-tp-muted">Review your appointment details before continuing.</p>
         </section>
       ) : null}
 
@@ -381,7 +381,7 @@ function Done({ ctx, booking, tz, viewerTz, update, state, config, onClose }: { 
         {zonesDiffer(tz, viewerTz, live.startsAt) ? <div className="flex justify-between gap-3"><dt className="text-tp-muted">Your time</dt><dd className="font-medium">{formatSlot(live.startsAt, viewerTz, { withZone: true })}</dd></div> : null}
         <div className="flex justify-between gap-3"><dt className="text-tp-muted">Price</dt><dd className="font-medium">{live.priceLabel}</dd></div>
       </dl>
-      <p className="text-xs text-tp-muted">Saved in this browser only. {ctx.businessName} was not emailed or texted.</p>
+      <p className="text-xs text-tp-muted">Appointment details saved. Customer notification not sent.</p>
       {!cancelled ? (
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" className="min-h-11" onClick={download}><Download /> Add to calendar</Button>

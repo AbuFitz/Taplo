@@ -1,0 +1,75 @@
+src/features/booking/demo-adapter.ts:9: * booking made on a page preview shows up in that owner's calendar. It is clearly a demo: nothing is sent to a
+src/components/taplo/sandbox-badge.tsx:17:        <p className="mt-3 text-xs font-medium text-foreground">Not connected yet</p>
+src/app/legal/[doc]/page.tsx:26:        <p className="mt-6 max-w-xl text-lg leading-relaxed text-foreground/70">The full {DOCS[d].toLowerCase()} will be published here before Taplo opens to the public. Draft pages and example submissions are stored in this browser. Visiting Taplo also sends normal web requests to hosting and asset services.</p>
+src/features/booking/ui/owner/BookingDetail.tsx:42:        {live ? (mode === "move" ? <Move booking={live} ctx={ctx} config={config} state={state} update={update} done={() => { setMode("view"); notify("Booking moved. The customer has not been told: preview mode sends no messages.") }} /> : (
+src/features/booking/ui/owner/BookingDetail.tsx:55:              {live.status === "pending" ? <><Button className="min-h-11" onClick={() => act("confirmed", "Accepted. The customer has not been told: preview mode sends no messages.")}><Check /> Accept request</Button><Button variant="outline" className="min-h-11" onClick={() => act("declined", "Request declined.")}><X /> Decline</Button></> : null}
+src/features/booking/ui/owner/BookingDetail.tsx:60:            <p className="text-xs text-muted-foreground">Changes are saved in this browser only. Customers are not emailed or texted.</p>
+src/features/booking/ui/owner/BookingDetail.tsx:64:      <ConfirmDialog open={confirmCancel} onOpenChange={setConfirmCancel} title="Cancel this booking?" description={live ? `${live.customer.name}'s ${live.serviceName} on ${formatSlot(live.startsAt, tz)} will be cancelled and the time freed. The customer record is kept. Taplo does not message them in preview mode, so tell them yourself.` : ""} confirmLabel="Cancel booking" onConfirm={() => { setConfirmCancel(false); act("cancelled", "Booking cancelled. The time is free again.") }} />
+src/lib/validation.ts:41:/** Opens the customer's own text-messaging app with a message ready to send. Nothing is sent by Taplo. `?&body=` works on both iOS and Android. */
+src/lib/capabilities.ts:9:  /** Everything is stored in this browser and no one else can see it. */
+src/lib/capabilities.ts:30:  publicPublishing: "Your page opens in this browser only. A public address needs accounts and publishing, which are not connected yet.",
+src/lib/capabilities.ts:31:  messaging: "Nothing is emailed or texted.",
+src/lib/capabilities.ts:32:  payments: "Nothing is charged: payments are not connected.",
+src/lib/capabilities.ts:33:  accounts: "Accounts are not connected yet, so what you make stays in this browser.",
+src/lib/capabilities.ts:34:  sharedBookings: "Bookings are saved in this browser only.",
+src/lib/capabilities.ts:37:export const SANDBOX_SUMMARY = "You are using Taplo in a sandbox. What you make stays in this browser and nobody else can see it."
+src/lib/env.ts:1:/** True when Supabase public env vars are present. Nothing else should assume a backend exists. */
+src/features/booking/ui/owner/OwnerBookings.tsx:148:        ? `Accepted ${b.customer.name}. They have not been told: preview mode sends no messages.`
+src/features/booking/ui/owner/OwnerBookings.tsx:634:            Adds made-up customers in this browser only.
+src/features/booking/ui/BookingFlow.tsx:249:          <p className="text-xs text-tp-muted">Saved in this browser only. No email or text message is sent, and no payment is taken.</p>
+src/features/booking/ui/BookingFlow.tsx:384:      <p className="text-xs text-tp-muted">Saved in this browser only. {ctx.businessName} was not emailed or texted.</p>
+src/features/marketing/ProductScenes.tsx:266:            in this browser.
+src/features/marketing/ProductScenes.tsx:706:    body: "Keep the question with the person's details and what they were asking about. Preview enquiries stay in this browser.",
+src/features/booking/ui/EnquiryForm.tsx:19: * and in preview mode the confirmation says it was saved in this browser, not sent.
+src/features/booking/ui/EnquiryForm.tsx:55:        <p className="text-sm text-tp-muted">{topic ? `Your enquiry about ${topic} is saved in this browser.` : "Your enquiry is saved in this browser."} No time was reserved.</p>
+src/features/booking/ui/EnquiryForm.tsx:88:      <p className="text-xs text-tp-muted">This preview saves the enquiry in this browser. No time is reserved.</p>
+src/features/experience/journeys.ts:229:        blocked: "Public publishing is not connected in this environment.",
+src/features/experience/journeys.ts:475:          ? "Tracking is not connected in this environment. No visitor data is being collected here."
+src/lib/feature-status.ts:21:  publicLinks: { label: "A public address for every page", requires: "publicPublishing", otherwise: "Your page opens in this browser. A public address needs publishing, which is not connected yet." },
+src/lib/feature-status.ts:22:  payments: { label: "Deposits and payments", requires: "payments", otherwise: "Nothing is charged: payments are not connected." },
+src/lib/feature-status.ts:23:  accounts: { label: "Accounts and sign-in", requires: "accounts", otherwise: "Accounts are not connected yet, so what you make stays in this browser." },
+src/lib/feature-status.ts:24:  sharedBookings: { label: "Bookings shared across devices", requires: "sharedBookings", otherwise: "Bookings are saved in this browser only." },
+src/features/experience/TaskDemo.tsx:288:                    ? "Requires a verified provider"
+src/features/experience/TaskDemo.tsx:289:                    : "Not connected"}
+src/features/page/widgets/registry.ts:28:    type: "sms", version: 1, label: "Text us", description: "Opens the customer's own text-message app with a message ready. Nothing is sent by Taplo.", category: "contact", icon: "MessageSquare", multiple: false, appearance: ["button", "card", "thumbnail"],
+src/features/page/widgets/registry.ts:98:    status: (_s, c) => (!c.ent.payments ? { state: "locked", reason: "Taking payments is included from the Pro plan." } : c.paymentsConnected ? READY : { state: "locked", reason: "Payments are not connected yet, so this stays off your page. It needs a payment provider (Stripe) connected to this environment." }),
+src/features/marketing/home/BookingStory.tsx:41:      <p className="mt-2 text-center text-xs text-white/60">{step.id === "story-4-done" ? "Demo confirmation. Nothing is sent to a business." : "Jay’s Barbers · design example"}</p>
+src/features/showcase/lab/DeviceFrames.tsx:33:      <PagePreview mode="device" chrome src={src} title={title} frameRef={register} testId="lab-frame" />
+src/features/showcase/lab/DeviceFrames.tsx:41:      <PagePreview mode="desktop" chrome url={url} src={src} title={title} frameRef={register} testId="lab-frame" />
+src/features/page/widgets/client.tsx:95:/** Payments are not connected: this is a clearly labelled simulation so the journey can be reviewed. */
+src/features/page/widgets/client.tsx:110:        <p role="note" className="rounded-md border border-amber-400 bg-amber-100 px-3 py-2 text-amber-950"><strong>Simulated.</strong> Payments aren’t connected in this demo. On a live Taplo page this opens a secure Stripe checkout and nothing is charged here.</p>
+src/features/page/widgets/types.ts:56:  /** True when the widget triggers a simulated (not connected) action in demo. */
+src/features/support/ReportDialog.tsx:116:        setMessage("Delivery is not connected. Download or copy your report.");
+src/features/support/ReportDialog.tsx:288:                  Report delivery is not connected in this environment. Copy or
+src/features/support/ReportDialog.tsx:289:                  download the details; nothing is sent or stored by Taplo.
+src/features/marketing/BookingDemo.tsx:50:        <p className="booking-demo-note">Sample businesses. Nothing is sent or charged. Bookings stay in this browser.</p>
+src/app/pricing/page.tsx:77:    note: "Requires a payment provider.",
+src/app/pricing/page.tsx:82:    note: "Requires an email provider.",
+src/features/demo/DemoProfile.tsx:62:          Your published page. It opens in this browser only; a public address needs publishing, which is not connected yet.
+src/features/page/widgets/ShareClient.tsx:35:    catch (error) { if ((error as Error).name !== "AbortError") setNote("Use Copy link on this device"); }
+src/features/page/widgets/ShareClient.tsx:53:    {preview ? <p className={"text-center text-xs " + (admin ? "text-neutral-700" : "text-tp-muted")} data-testid="share-demo-note">{data.url ? "This address opens in this browser only." : "Preview link. This page opens in this browser only."}</p> : null}
+src/features/inspiration/DesignPreview.tsx:33:      <p className="mt-3 text-sm text-foreground/60">Demo bookings and enquiries stay in this browser.</p>
+src/features/marketing/product.ts:66:      { label: "Bookings kept in sync across devices", state: "needs", note: "Needs the live booking service. Preview bookings stay in this browser until it is connected." },
+src/features/marketing/product.ts:68:      { label: "Deposits and payment", state: "needs", note: "Needs a payment provider. Nothing is charged." },
+src/features/marketing/product.ts:92:      { label: "Checkout and payment on Taplo", state: "needs", note: "Needs a connected payment provider. Nothing is charged in the preview." },
+src/features/marketing/product.ts:104:      { label: "Live stock feeds and finance checks", state: "needs", note: "Not connected. Stock is entered by hand." },
+src/features/page/editor/SettingsTab.tsx:290:          Pages saved in this browser are not listed in search.
+src/features/page/editor/SettingsTab.tsx:301:          <strong>Not connected in this demo:</strong> it needs DNS verification
+src/features/demo/DashboardShell.tsx:80:                : "Your changes are saved on this device."}
+src/features/demo/dashboard/Placeholders.tsx:16:        <p>See how many people view your page, scan your code and tap your buttons. Prices and limits are provisional, and nothing is charged today.</p>
+src/features/demo/dashboard/Placeholders.tsx:22:    <div className="ws-analytics-metrics">{[{Icon:BarChart3,label:"Page views"},{Icon:MousePointer2,label:"Button taps"},{Icon:QrCode,label:"QR scans"}].map(({Icon,label})=><section key={label}><Icon aria-hidden="true" /><span>{label}</span><strong>—</strong><small>Tracking not connected</small></section>)}</div>
+src/features/page/editor/MyPage.tsx:80:        <Button className="min-h-11" disabled={!canPublish(s)} onClick={() => { ed.update((x) => publish(x)); notify("Saved on this device.") }} data-testid="publish">{s.published ? (changed ? "Publish changes" : "Published") : "Publish"}</Button>
+src/features/demo/SetupSteps.tsx:991:          ? "Account creation isn’t available in this environment yet, so nothing was created. Your draft is unchanged and still in this browser."
+src/features/demo/store.ts:13: * DEMO STORE. Everything lives in this browser's localStorage so the product can be
+src/features/demo/store.ts:14: * reviewed without auth or a backend. It is not a persistence layer for real data.
+src/features/demo/dashboard/Studio.tsx:129:                    "This version is published in this browser. Public publishing is not connected yet.",
+src/features/demo/dashboard/Team.tsx:177:                  // Owner-uploaded images stay in this browser.
+src/features/demo/dashboard/UpcomingBookings.tsx:71:        Preview bookings stay in this browser. No email or text message is sent.
+src/features/page/editor/MobileEditor.tsx:315:                  "This version is published on this device. Public publishing is not connected.",
+src/features/demo/dashboard/Settings.tsx:104:                      <em>Not connected</em>
+src/features/demo/dashboard/Settings.tsx:115:              description="Billing is not connected, so nothing is charged. Switch plans here to see what each one unlocks."
+src/features/demo/dashboard/Settings.tsx:168:              description="Everything is stored only in this browser."
+src/features/demo/dashboard/Settings.tsx:173:                    Delete all demo data in this browser?
+src/features/demo/Welcome.tsx:113:          ? `Continue setting up ${resumeName}. Your draft is saved on this device.`
+src/features/page/editor/content-model.ts:67:  /** Why it cannot be added yet (an integration that is not connected). Shown, not hidden. */
+src/features/page/editor/content-model.ts:157:    blocked: "Payments are not connected yet",

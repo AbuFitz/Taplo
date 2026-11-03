@@ -25,7 +25,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
     status: (_s, c) => (c.business.contacts.phone ? READY : channelEmpty("Add a phone number to show this button.")),
   },
   sms: {
-    type: "sms", version: 1, label: "Text us", description: "Opens the customer's own text-message app with a message ready. Nothing is sent by Taplo.", category: "contact", icon: "MessageSquare", multiple: false, appearance: ["button", "card", "thumbnail"],
+    type: "sms", version: 1, label: "Text us", description: "Open the customer’s text-message app with a message ready to send.", category: "contact", icon: "MessageSquare", multiple: false, appearance: ["button", "card", "thumbnail"],
     fields: [{ kind: "text", key: "label", label: "Button text", placeholder: "Text us", max: 60 }, { kind: "text", key: "subtitle", label: "Small text (optional)", max: 60 }, VARIANT_LINK],
     status: (_s, c) => (c.business.contacts.phone ? READY : channelEmpty("Add a mobile number to show this button.")),
   },
@@ -95,7 +95,7 @@ export const WIDGETS: Record<WidgetType, WidgetDefinition> = {
   payment: {
     type: "payment", version: 1, label: "Pay or deposit", description: "A payment button (simulated until payments are connected).", category: "sales", icon: "CreditCard", multiple: true, appearance: ["button", "card"], simulated: true,
     fields: [{ kind: "text", key: "label", label: "Button text", max: 60 }, { kind: "select", key: "kind", label: "What it takes", options: [{ value: "deposit", label: "A deposit" }, { value: "full", label: "Full payment" }, { value: "pay", label: "A payment" }] }, { kind: "record", key: "serviceId", label: "For which service (optional)", source: "services" }],
-    status: (_s, c) => (!c.ent.payments ? { state: "locked", reason: "Taking payments is included from the Pro plan." } : c.paymentsConnected ? READY : { state: "locked", reason: "Payments are not connected yet, so this stays off your page. It needs a payment provider (Stripe) connected to this environment." }),
+    status: (_s, c) => (!c.ent.payments ? { state: "locked", reason: "Taking payments is included from the Pro plan." } : c.paymentsConnected ? READY : { state: "locked", reason: "Set up payments before adding this button to your page." }),
   },
 
   reviews: {

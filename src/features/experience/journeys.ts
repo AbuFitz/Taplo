@@ -222,11 +222,11 @@ export function journeyFor(id: JourneyId, s: DemoState): Journey {
         id: "destination",
         title: "Check the destination first",
         detail:
-          "An unpublished local draft is not a public link. Public sharing needs a connected publishing service; do not print a code to an inaccessible draft.",
+          "Publish your page before downloading a QR code, then check that it opens the correct public address.",
         action: "Review publication status",
         href: page,
         done: false,
-        blocked: "Public publishing is not connected in this environment.",
+        blocked: "Publish your page before sharing its link.",
       },
       {
         id: "brand",
@@ -458,7 +458,7 @@ export function journeyFor(id: JourneyId, s: DemoState): Journey {
         id: "publish",
         title: "Make the destination ready",
         detail:
-          "Review and publish your page before expecting visitor activity. Watching a demonstration never creates analytics data.",
+          "Publish your page and share its link. Your visitor activity will appear here.",
         action: "Review your page",
         href: page,
         done: Boolean(s.published),
@@ -472,7 +472,7 @@ export function journeyFor(id: JourneyId, s: DemoState): Journey {
         href: "/dashboard/settings?section=connections",
         done: false,
         blocked: ent.analytics
-          ? "Tracking is not connected in this environment. No visitor data is being collected here."
+          ? "No visitor activity to display yet."
           : "Analytics is included with Core, Pro and Business.",
       },
     ],
@@ -481,7 +481,7 @@ export function journeyFor(id: JourneyId, s: DemoState): Journey {
         id: "plan",
         title: "Check what your plan includes",
         detail:
-          "Choose the tools your business needs. Changing the development plan does not start billing or remove your saved content.",
+          "Choose the tools your business needs and review the features included in your plan.",
         action: "Review plan & features",
         href: "/dashboard/settings?section=plan",
         done: Boolean(s.setupDrafts?.planIntent),
@@ -490,12 +490,12 @@ export function journeyFor(id: JourneyId, s: DemoState): Journey {
         id: "connect",
         title: "Prepare external connections",
         detail:
-          "Payments, messages and domains need verified providers. A saved preference is not a connected service.",
+          "Set up payments, appointment messages and your domain in Connections.",
         action: "Review connections",
         href: "/dashboard/settings?section=connections",
         done: false,
         blocked:
-          "Provider connections are not available in this environment yet.",
+          "Complete the connection setup to continue.",
       },
     ],
   };

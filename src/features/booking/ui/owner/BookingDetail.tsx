@@ -39,7 +39,7 @@ export function BookingDetail({ booking, ctx, config, state, update, onClose, no
     <>
       <Overlay kind="panel" open={live !== null} onOpenChange={(o) => { if (!o) { setMode("view"); onClose() } }} onBack={mode === "move" ? () => setMode("view") : undefined}
         title={mode === "move" ? "Choose a new time" : live ? live.customer.name : "Booking"} description={live ? `${live.serviceName} · ${formatSlot(live.startsAt, tz)}` : undefined} testId="booking-detail">
-        {live ? (mode === "move" ? <Move booking={live} ctx={ctx} config={config} state={state} update={update} done={() => { setMode("view"); notify("Booking moved. The customer has not been told: preview mode sends no messages.") }} /> : (
+        {live ? (mode === "move" ? <Move booking={live} ctx={ctx} config={config} state={state} update={update} done={() => { setMode("view"); notify("Booking moved. Customer notification not sent.") }} /> : (
           <div className="grid gap-5">
             <p className="flex flex-wrap items-center gap-2"><span className={cn("rounded-full px-2.5 py-1 text-xs font-semibold ring-1", STATUS_STYLE[live.status])}>{STATUS_LABEL[live.status]}</span><span className="text-sm text-muted-foreground">{live.mode === "request" ? "A request" : "An instant booking"}</span></p>
             <dl className="grid grid-cols-[6rem_1fr] gap-x-3 gap-y-2 text-sm">
@@ -52,16 +52,16 @@ export function BookingDetail({ booking, ctx, config, state, update, onClose, no
               {live.expiresAt && live.status === "pending" ? <><dt className="text-muted-foreground">Reply by</dt><dd>{formatSlot(live.expiresAt, tz)}</dd></> : null}
             </dl>
             <div className="flex flex-wrap gap-2" data-testid="booking-actions">
-              {live.status === "pending" ? <><Button className="min-h-11" onClick={() => act("confirmed", "Accepted. The customer has not been told: preview mode sends no messages.")}><Check /> Accept request</Button><Button variant="outline" className="min-h-11" onClick={() => act("declined", "Request declined.")}><X /> Decline</Button></> : null}
+              {live.status === "pending" ? <><Button className="min-h-11" onClick={() => act("confirmed", "Booking accepted. Customer notification not sent.")}><Check /> Accept request</Button><Button variant="outline" className="min-h-11" onClick={() => act("declined", "Request declined.")}><X /> Decline</Button></> : null}
               {live.status === "confirmed" ? <><Button variant="outline" className="min-h-11" onClick={() => act("completed", "Marked completed.")}><Check /> Mark completed</Button><Button variant="outline" className="min-h-11" onClick={() => act("no_show", "Marked as a no-show.")}>No-show</Button></> : null}
               {live.status === "pending" || live.status === "confirmed" ? <><Button variant="outline" className="min-h-11" onClick={() => setMode("move")}><CalendarClock /> Reschedule</Button><Button variant="outline" className="min-h-11 text-destructive" onClick={() => setConfirmCancel(true)}>Cancel booking</Button></> : null}
             </div>
             <section aria-label="History"><h3 className="mb-1.5 text-sm font-semibold text-muted-foreground">History</h3><ol className="grid gap-1 text-sm">{live.history.map((h, i) => <li key={i} className="flex justify-between gap-3"><span>{STATUS_LABEL[h.status]}{h.note ? ` · ${h.note}` : ""}</span><span className="text-muted-foreground tabular-nums">{formatSlot(h.at, tz)}</span></li>)}</ol></section>
-            <p className="text-xs text-muted-foreground">Changes are saved in this browser only. Customers are not emailed or texted.</p>
+            <p className="text-xs text-muted-foreground">Review the booking details before contacting your customer.</p>
           </div>
         )) : null}
       </Overlay>
-      <ConfirmDialog open={confirmCancel} onOpenChange={setConfirmCancel} title="Cancel this booking?" description={live ? `${live.customer.name}'s ${live.serviceName} on ${formatSlot(live.startsAt, tz)} will be cancelled and the time freed. The customer record is kept. Taplo does not message them in preview mode, so tell them yourself.` : ""} confirmLabel="Cancel booking" onConfirm={() => { setConfirmCancel(false); act("cancelled", "Booking cancelled. The time is free again.") }} />
+      <ConfirmDialog open={confirmCancel} onOpenChange={setConfirmCancel} title="Cancel this booking?" description={live ? `${live.customer.name}'s ${live.serviceName} on ${formatSlot(live.startsAt, tz)} will be cancelled and the time freed. The customer record is kept. Notify the customer of the cancellation.` : ""} confirmLabel="Cancel booking" onConfirm={() => { setConfirmCancel(false); act("cancelled", "Booking cancelled. The time is free again.") }} />
     </>
   )
 }

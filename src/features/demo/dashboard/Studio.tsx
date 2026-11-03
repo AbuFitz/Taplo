@@ -126,7 +126,7 @@ export function Studio() {
                 onClick={() => {
                   patch(publish);
                   setNotice(
-                    "This version is published in this browser. Public publishing is not connected yet.",
+                    "Page version saved.",
                   );
                 }}
               >

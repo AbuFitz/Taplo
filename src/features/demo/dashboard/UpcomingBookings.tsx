@@ -68,7 +68,7 @@ export function UpcomingBookings() {
         Open bookings <ArrowUpRight aria-hidden="true" className="size-4" />
       </Link>
       <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-        Preview bookings stay in this browser. No email or text message is sent.
+        Review your next appointments and manage changes from your calendar.
       </p>
     </div>
   );

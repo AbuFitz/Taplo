@@ -104,12 +104,12 @@ export function PaymentAction({ label, summary, thumbnail }: { label: string; su
         </button>
       }
       title={label}
-      description="Demo only. No payment is taken."
+      description="Review your payment details."
     >
       <div className="grid gap-3 text-sm">
-        <p role="note" className="rounded-md border border-amber-400 bg-amber-100 px-3 py-2 text-amber-950"><strong>Simulated.</strong> Payments aren’t connected in this demo. On a live Taplo page this opens a secure Stripe checkout and nothing is charged here.</p>
+        <p role="status" className="text-tp-muted">Checkout unavailable. Please contact the business to arrange payment.</p>
         <p className="text-tp-muted">{summary}</p>
-        <TaploButton size="lg" tone="secondary" disabled>Pay now (unavailable in demo)</TaploButton>
+        <TaploButton size="lg" tone="secondary" disabled>Continue to payment</TaploButton>
       </div>
     </TaploModal>
   )

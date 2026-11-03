@@ -54,7 +54,7 @@ const FEATURES: { label: (e: Entitlements) => string | null }[] = [
   },
   {
     label: (e) =>
-      e.payments ? "Deposits and payments (needs a payment provider)" : null,
+      e.payments ? "Deposits and payments" : null,
   },
   { label: (e) => (e.customDomains ? "Custom domain" : null) },
   { label: (e) => (e.multiLocation ? "More than one location" : null) },
@@ -208,8 +208,7 @@ export function SetupPlans({ inline = false }: { inline?: boolean }) {
       <p className="plan-choice-notice" data-testid="plan-disclosure">
         <Info aria-hidden="true" />
         <span>
-          Prices are provisional. This saves your preference; you won’t be
-          charged.
+          Choose the features that fit your business. Review your selected plan before continuing.
         </span>
       </p>
     </div>

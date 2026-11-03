@@ -167,7 +167,7 @@ export function ServiceForm({
             {service.bookingMode === "contact"
               ? "Customers send you an enquiry. Nothing is reserved."
               : service.durationMinutes
-                ? "Customers pick a time from your working hours (Bookings, then Hours and rules). Online booking is part of the Pro plan; no payment is taken."
+                ? "Customers pick a time from your working hours (Bookings, then Hours and rules). Online booking is part of the Pro plan."
                 : "Add a duration so customers have a length of time to book."}
           </p>
         </div>

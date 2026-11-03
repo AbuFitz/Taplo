@@ -145,7 +145,7 @@ export function OwnerBookings({
     });
     say(
       s === "confirmed"
-        ? `Accepted ${b.customer.name}. They have not been told: preview mode sends no messages.`
+        ? `Accepted ${b.customer.name}. Customer notification not sent.`
         : `Declined ${b.customer.name}.`,
     );
   };
@@ -631,7 +631,7 @@ export function OwnerBookings({
         <details className="ws-secondary-task">
           <summary>Try the calendar with example appointments</summary>
           <p className="text-xs text-muted-foreground">
-            Adds made-up customers in this browser only.
+            Adds fictional customers and appointments to explore your calendar.
           </p>
           <Button variant="outline" onClick={seed}>
             <CalendarPlus />

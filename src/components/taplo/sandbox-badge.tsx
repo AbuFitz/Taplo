@@ -1,11 +1,13 @@
 "use client"
 
+import { showPreviewNotices } from "@/lib/presentation"
 import { Info } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { SANDBOX_MISSING, SANDBOX_SUMMARY } from "@/lib/capabilities"
 
 /** The one place the sandbox is disclosed: a small badge in the application header, with the details one tap away. */
 export function SandboxBadge({ className, compact = false }: { className?: string; compact?: boolean }) {
+  if (!showPreviewNotices) return null
   return (
     <Popover>
       <PopoverTrigger className={`inline-flex min-h-8 items-center gap-1.5 rounded-md border bg-muted/60 px-2.5 text-xs font-medium text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring ${className ?? ""}`} data-testid="sandbox-badge" aria-label="Sandbox information">

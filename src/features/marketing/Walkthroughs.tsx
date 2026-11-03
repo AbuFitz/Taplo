@@ -24,7 +24,7 @@ export function Walkthroughs() {
         </div>
         <p className="mt-6 max-w-lg leading-relaxed">{selected.description}</p>
         <ol className="sr-only">{clip.chapters.map(c=><li key={c.title}>{c.title}. {c.line}</li>)}</ol>
-        <p id={`${uid}-note`} className="mt-5 max-w-lg text-sm leading-relaxed text-foreground/65">These recordings use Taplo’s preview. No appointment, payment or notification is sent.</p>
+        <p id={`${uid}-note`} className="mt-5 max-w-lg text-sm leading-relaxed text-foreground/65">Example businesses shown in guided product walkthroughs.</p>
       </div>
       <figure className="mx-auto w-full max-w-[390px] md:max-w-none">
         <div className="relative aspect-[390/964] overflow-hidden rounded-3xl bg-[#080808]">
