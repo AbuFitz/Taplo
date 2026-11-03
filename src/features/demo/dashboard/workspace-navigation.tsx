@@ -1,17 +1,7 @@
 "use client";
 import * as React from "react";
 import { usePathname } from "next/navigation";
-import {
-  BarChart3,
-  CalendarDays,
-  Home,
-  Package,
-  Palette,
-  Settings,
-  Star,
-  Users,
-  Wrench,
-} from "lucide-react";
+import { StudioIcons } from "@/features/platform/icons";
 import { getIndustryPreset } from "@/features/themes/presets/industries";
 import { useOwner } from "@/features/booking/ui/owner/useOwner";
 import { resolveEntitlements } from "@/features/subscriptions/entitlements";
@@ -20,7 +10,7 @@ import { useDemo } from "../store";
 type Item = {
   href: string;
   label: string;
-  Icon: typeof Home;
+  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   badge?: number;
   note?: string;
 };
@@ -40,31 +30,31 @@ export function useStudioItems() {
     bk.bookings.filter((b) => b.status === "pending" && b.endsAt > now).length +
     bk.enquiries.filter((e) => e.status === "new").length;
   const primary: Item[] = [
-    { href: "/dashboard", label: "Home", Icon: Home },
-    { href: "/dashboard/page", label: "Page", Icon: Palette },
-    { href: "/dashboard/services", label: terms.services, Icon: Wrench },
+    { href: "/dashboard", label: "Home", Icon: StudioIcons.home },
+    { href: "/dashboard/page", label: "Page", Icon: StudioIcons.page },
+    { href: "/dashboard/services", label: terms.services, Icon: StudioIcons.services },
     {
       href: "/dashboard/bookings",
       label: "Bookings",
-      Icon: CalendarDays,
+      Icon: StudioIcons.bookings,
       badge: attention,
     },
   ];
   const secondary: Item[] = [
-    { href: "/dashboard/reviews", label: "Reviews", Icon: Star },
-    { href: "/dashboard/team", label: "Team", Icon: Users },
+    { href: "/dashboard/reviews", label: "Reviews", Icon: StudioIcons.reviews },
+    { href: "/dashboard/team", label: "Team", Icon: StudioIcons.team },
     {
       href: "/dashboard/products",
       label: dealer ? "Vehicle stock" : "Products",
-      Icon: Package,
+      Icon: StudioIcons.products,
     },
     {
       href: "/dashboard/analytics",
       label: "Analytics",
-      Icon: BarChart3,
+      Icon: StudioIcons.analytics,
       note: ent.analytics ? undefined : "Not on your plan",
     },
-    { href: "/dashboard/settings", label: "Settings", Icon: Settings },
+    { href: "/dashboard/settings", label: "Settings", Icon: StudioIcons.settings },
   ];
   const isActive = (href: string) =>
     href === "/dashboard"

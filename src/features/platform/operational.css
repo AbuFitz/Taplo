@@ -99,3 +99,4 @@
 .workspace-v2.operational-root .ws-learning[open]>summary svg {transform:rotate(90deg);}
 .workspace-v2.operational-root .ws-learning .getting-started {margin-top:16px;}
 @media(max-width:899px) {.workspace-v2.operational-root .ws-content {padding-bottom:32px;}.workspace-v2.operational-root .ws-footer {padding-bottom:calc(84px + env(safe-area-inset-bottom));}}
+.workspace-v2.operational-root .service-details-disclosure>summary>span {color:var(--op-muted);font-size:12px;}

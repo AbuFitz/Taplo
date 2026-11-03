@@ -2,16 +2,8 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  CalendarDays,
-  ChevronRight,
-  Home,
-  CircleHelp,
-  LayoutTemplate,
-  Menu,
-  MoreHorizontal,
-  Settings,
-} from "lucide-react";
+import { StudioIcons } from "@/features/platform/icons";
+const { bookings: CalendarDays, next: ChevronRight, home: Home, help: CircleHelp, page: LayoutTemplate, menu: Menu, more: MoreHorizontal, settings: Settings } = StudioIcons;
 import { Overlay } from "@/components/taplo/overlay";
 import { useStudioItems } from "./workspace-navigation";
 

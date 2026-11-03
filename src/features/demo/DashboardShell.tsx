@@ -2,7 +2,8 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowUpRight } from "lucide-react";
+import { StudioIcons } from "@/features/platform/icons";
+const ArrowUpRight = StudioIcons.external;
 import { OperationalRoot, AppearanceSelect, OperationalLogo } from "@/features/platform/OperationalTheme";
 import { StudioSkeleton } from "./dashboard/Studio";
 import { RouteSkeleton } from "./dashboard/workspace-navigation";
