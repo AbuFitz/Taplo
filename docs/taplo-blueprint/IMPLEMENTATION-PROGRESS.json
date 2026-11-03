@@ -1,0 +1,66 @@
+{
+  "baseline": "3.0",
+  "branch": "main",
+  "packets": [
+    {
+      "id": "P01",
+      "state": "source_implemented_acceptance_pending",
+      "evidence": "../../../docs/foundation-implementation.md"
+    },
+    {
+      "id": "P02",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P03",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P04",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P05",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P06",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P07",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P08",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P09",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P10",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P11",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P12",
+      "state": "pending",
+      "evidence": null
+    }
+  ]
+}
