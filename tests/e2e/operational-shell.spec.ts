@@ -1,10 +1,16 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { openEditorWithSample } from "./helpers";
+async function openSample(page: Page) {
+  await page.goto("/dashboard");
+  await page.getByText("Explore with a sample business", { exact: true }).click();
+  await page.getByRole("button", { name: /^Jay’s Barbers/ }).click();
+  await page.waitForURL("**/dashboard/page");
+  await expect(page.getByTestId("my-page")).toBeVisible();
+}
 
 test("operational appearance survives navigation and reload without changing the business design", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await openEditorWithSample(page);
+  await openSample(page);
   await page.goto("/dashboard");
   const before = await page.evaluate(() => localStorage.getItem("taplo.demo.v2"));
   await page.getByRole("combobox", { name: "Colour mode" }).selectOption("dark");
@@ -22,7 +28,7 @@ test("operational appearance survives navigation and reload without changing the
 
 test("mobile navigation and dialogs remain reachable in both colour schemes", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await openEditorWithSample(page);
+  await openSample(page);
   await page.goto("/dashboard");
   for (const theme of ["light", "dark"] as const) {
     await page.getByRole("combobox", { name: "Colour mode" }).selectOption(theme);
