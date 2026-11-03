@@ -1,1 +1,2 @@
 .preview-resize{display:flex;align-items:center;justify-content:center;gap:10px;min-height:32px;flex:none;cursor:ns-resize;touch-action:none;user-select:none;color:#71717a;order:1;background:#fff}.preview-resize>span{width:36px;height:4px;border-radius:99px;background:#b7b7c0}.preview-resize small{font-size:11px}.preview-resize:focus-visible{outline:2px solid #111;outline-offset:-3px}.preview-resize:hover>span{background:#111}
+.phone-shell[data-preview-partial=true] .phone-home{display:none}

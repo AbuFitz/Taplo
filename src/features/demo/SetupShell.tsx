@@ -168,7 +168,7 @@ export const SetupShell = React.forwardRef<HTMLElement, Props>(
           <footer className="sf-foot">{footer}</footer>
         </section>
 
-        <div id="setup-preview-stage" className="sf-stage" data-testid="setup-stage" style={mobile && !previewing && previewHeight ? { flexBasis: previewHeight, height: previewHeight } : undefined}>
+        <div id="setup-preview-stage" className="sf-stage" data-testid="setup-stage" style={mobile && !previewing && !keyboard && previewHeight ? { flexBasis: previewHeight, height: previewHeight } : undefined}>
           {preview}
         </div>
         {mobile && !previewing && !keyboard ? <PreviewResizeHandle stageId="setup-preview-stage" onResize={setPreviewHeight} /> : null}

@@ -200,6 +200,8 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
     return () => window.clearTimeout(timer)
   }, [focus, focusKey, loaded])
 
+  const partialPhone = Boolean(L && fitHeight && mode === "device" && L.outerH < L.outerW * 1.6)
+
   const iframe = L ? (
     <iframe
       key={attempt}
@@ -226,10 +228,11 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
           <div style={{ width: L.outerW * L.scale, height: L.outerH * L.scale }} className={cn("shrink-0", smooth && "preview-camera")}>
             <div
               className={cn("relative origin-top-left", smooth && "preview-camera", decorated ? (mode === "device" ? "phone-shell" : "browser-shell") : "")}
-              style={{ width: L.outerW, height: L.outerH, padding: L.pad, transform: L.scale === 1 ? undefined : `scale(${L.scale})` }}
+              data-preview-partial={partialPhone || undefined}
+              style={{ width: L.outerW, height: partialPhone ? Math.max(L.outerH, PHONE.height) : L.outerH, padding: L.pad, transform: L.scale === 1 ? undefined : `scale(${L.scale})` }}
             >
               {L.bar ? <BrowserChrome url={url} height={L.bar} /> : null}
-              <div className={cn("relative overflow-hidden bg-white", decorated && mode === "device" && "phone-screen")} style={{ width: L.vw, height: L.vh + L.safeTop + L.safeBottom, paddingTop: L.safeTop, paddingBottom: L.safeBottom }}>
+              <div className={cn("relative overflow-hidden bg-white", decorated && mode === "device" && "phone-screen")} style={{ width: L.vw, height: L.vh + L.safeTop + L.safeBottom, paddingTop: L.safeTop, paddingBottom: L.safeBottom, borderBottomLeftRadius: partialPhone ? 0 : undefined, borderBottomRightRadius: partialPhone ? 0 : undefined }}>
                 {iframe}
                 {!loaded && !stalled ? <div className="preview-screen-loading" aria-hidden="true"><span /><span /><span /></div> : null}
                 {stalled && !loaded ? <div role="alert" className="absolute inset-0 z-10 grid place-content-center gap-3 bg-white p-6 text-center text-sm text-neutral-800"><p>Preview unavailable. Your page and actions still work.</p><button type="button" className="mx-auto min-h-11 rounded-full border border-neutral-300 px-5 font-semibold" onClick={() => { setStalled(false); setAttempt((n) => n + 1) }}>Try again</button></div> : null}
