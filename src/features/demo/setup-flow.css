@@ -622,3 +622,11 @@
 @media(max-width:1023px){.sf-root[data-step=type] .sf-stage{flex-basis:clamp(160px,22dvh,185px);height:clamp(160px,22dvh,185px)}.sf-root[data-previewing=true] .sf-stage{flex:1;height:auto}.sf-root[data-keyboard=true]:not([data-previewing=true]) .sf-stage{flex-basis:0;height:0}}
 @media(max-width:1023px) and (max-height:760px){.sf-root[data-step=type] .sf-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}.sf-root[data-step=type] .sf-tile{flex-direction:column;align-items:center;justify-content:center;padding:10px 5px;min-height:82px;gap:6px}.sf-root[data-step=type] .sf-tile-label{text-align:center;font-size:11px}.sf-root[data-step=type] .sf-tiles>li:last-child{grid-column:auto}}
 @media(max-width:1023px){.sf-root[data-step=look]:has(.setup-look-tabs input[aria-label="Colours"]:checked) .sf-stage{flex-basis:clamp(160px,22dvh,190px);height:clamp(160px,22dvh,190px)}.sf-root[data-step=look][data-previewing=true] .sf-stage{flex:1;height:auto}.sf-root[data-step=look][data-keyboard=true]:not([data-previewing=true]) .sf-stage{flex-basis:0;height:0}}
+
+/* Frame the live handset above the setup task, with breathing room around its top. */
+@media(max-width:1023px){
+ .sf-root .sf-stage{padding:14px 24px 0;background:radial-gradient(ellipse at top,#fff,#eeeef2);border-radius:24px 24px 0 0;margin:0 12px}
+ .sf-root .sf-canvas{max-width:290px;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible}
+ .sf-root[data-previewing=true] .sf-stage{margin:0 12px 12px;border-radius:24px;padding:18px 14px}
+ .sf-root[data-previewing=true] .sf-canvas{max-width:390px}
+}

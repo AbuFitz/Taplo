@@ -11,14 +11,15 @@ const ROUTES = [
   "analytics",
   "settings",
   "onboarding",
+  "inspiration",
 ] as const;
 /** Real application documents at real CSS viewport widths. No replica components or seeded business data. */
 export function WorkspaceWorkbench() {
   const [route, setRoute] = React.useState<(typeof ROUTES)[number]>("overview");
   const [width, setWidth] = React.useState(390);
   const src =
-    route === "onboarding"
-      ? "/onboarding"
+    route === "onboarding" || route === "inspiration"
+      ? `/${route}`
       : route === "overview"
         ? "/dashboard"
         : `/dashboard/${route}`;

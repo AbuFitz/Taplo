@@ -482,9 +482,9 @@ export function Onboarding() {
         <div className="sf-canvas">
           <SetupCanvas
             src="/demo/preview"
-            expanded={mobile}
+            expanded={false}
             closeUp={false}
-            fit={true}
+            fit={!mobile || snap === "peek"}
             focus={
               mobile &&
               (step === "name" ||
