@@ -6,6 +6,7 @@ import { businessContentSchema, type BusinessContentInput } from "@/features/bus
 import type { PageDoc } from "@/features/page/contracts/page";
 import { fromLegacyConfig, migratePage } from "@/features/page/migrate";
 import { newPage } from "@/features/page/starter";
+import { applyStartingLook, getStartingLook, RECOMMENDED_LOOK } from "@/features/page/themes/starting-looks";
 import { PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
 
 /**
@@ -17,8 +18,19 @@ import { PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
 const KEY = "taplo.demo.v2";
 const LEGACY_KEY = "taplo.demo.v1";
 
-export const ONBOARDING_STEPS = ["industry", "business", "contacts", "look", "widgets", "publish"] as const;
+// What you do first (it fills the page with believable sample content), then the name, the look, the one thing customers do first, the services, the plan, and the finish.
+export const ONBOARDING_STEPS = ["type", "name", "look", "action", "services", "plan", "finish"] as const;
 export type OnboardingStep = (typeof ONBOARDING_STEPS)[number];
+
+/** Saved drafts from the earlier eight-step form keep their place: each old step maps to the closest new one. */
+const LEGACY_STEPS: Record<string, OnboardingStep> = { business: "name", widgets: "look", industry: "type", goal: "action", reach: "action", contacts: "services", publish: "finish" };
+export function migrateStep<T>(raw: T): T {
+  if (raw && typeof raw === "object" && "step" in raw) {
+    const step = (raw as { step?: unknown }).step;
+    if (typeof step === "string" && step in LEGACY_STEPS) return { ...raw, step: LEGACY_STEPS[step] };
+  }
+  return raw;
+}
 
 export interface DemoState {
   v: 2;
@@ -30,9 +42,15 @@ export interface DemoState {
   /** How the page looks and is arranged. Separate from the records above. */
   page: PageDoc;
   slugEdited: boolean;
+  /** Show example items in the live draft while the page is being built. Off hides them; they are never saved or published. */
+  showExamples?: boolean;
+  /** The owner dismissed the Studio checklist. */
+  checklistHidden?: boolean;
   published: null | { at: string; version: number; content: BusinessContentInput; page: PageDoc; plan: PlanId };
   /** Plain-language notes for the owner (e.g. after an automatic upgrade). Dismissible. */
   notes?: string[];
+  /** Incomplete form text survives back/reload, but never enters the public renderer until valid. */
+  setupDrafts?: { reviewEdit?:boolean; goals?: ("book"|"contact"|"services"|"products"|"work"|"call"|"message"|"browse"|"buy")[]; connections?: {email:string;phone:string;whatsapp:string;website:string;instagram:string;socials?:Record<string,string>}; planIntent?:PlanId; backgroundEdited?:boolean; colourway?:string; colourMotion?:boolean; keptColours?:Record<string,string>; palette?:string; colourUndo?:{ page?:unknown; appearance:unknown; colourway?:string; colourMotion?:boolean; keptColours?:Record<string,string>; palette?:string }; services?: { id:string; name:string; price:string; minutes:string; priceMode?: "fixed"|"from"|"quote"|"free" }[]; record?: { kind:"vehicle"|"photo"|"product"; value:unknown } };
 }
 
 const stateSchema = z.object({
@@ -43,13 +61,16 @@ const stateSchema = z.object({
   content: z.unknown(),
   page: z.unknown(),
   slugEdited: z.boolean(),
+  showExamples: z.boolean().optional(),
+  checklistHidden: z.boolean().optional(),
   published: z.unknown().nullable(),
   notes: z.array(z.string()).optional(),
+  setupDrafts: z.object({reviewEdit:z.boolean().optional(),goals:z.array(z.enum(["book","contact","services","products","work","call","message","browse","buy"])).optional(),connections:z.object({email:z.string(),phone:z.string(),whatsapp:z.string(),website:z.string(),instagram:z.string(),socials:z.record(z.string(),z.string()).optional()}).optional(),planIntent:z.enum(PLAN_IDS).optional(),backgroundEdited:z.boolean().optional(),colourway:z.string().optional(),colourMotion:z.boolean().optional(),keptColours:z.record(z.string(),z.string()).optional(),palette:z.string().optional(),colourUndo:z.object({page:z.unknown().optional(),appearance:z.unknown(),colourway:z.string().optional(),colourMotion:z.boolean().optional(),keptColours:z.record(z.string(),z.string()).optional(),palette:z.string().optional()}).optional(),services:z.array(z.object({id:z.string(),name:z.string(),price:z.string(),minutes:z.string(),priceMode:z.enum(["fixed","from","quote","free"]).optional()})).optional(),record:z.object({kind:z.enum(["vehicle","photo","product"]),value:z.unknown()}).optional()}).optional(),
 });
 
 export function blankContent(): BusinessContentInput {
   return {
-    identity: { name: "", slug: "", industryKey: "other", industryLabel: "" },
+    identity: { name: "", slug: "", industryKey: "other", industryLabel: "", showCategory: false },
     location: { mode: "premises", timezone: "Europe/London" },
     contacts: { social: [] },
     credentials: [],
@@ -70,11 +91,17 @@ export function blankContent(): BusinessContentInput {
 export function initialState(): DemoState {
   return {
     v: 2,
-    step: "industry",
+    step: "type",
     onboarded: false,
     plan: "business", // the review default shows every capability; switch in Settings to see gating
     content: blankContent(),
-    page: newPage("other"),
+    // A name alone already reads as a designed page: type leads and nothing waits for a logo or photo.
+    page: (() => {
+      // A curated look is on the page from the first keystroke: type-led, calm, and not tied to any kind of business.
+      const p = newPage("other");
+      const recommended = getStartingLook(RECOMMENDED_LOOK);
+      return recommended ? applyStartingLook(p, recommended, { reorder: true }) : p;
+    })(),
     slugEdited: false,
     published: null,
   };
@@ -111,7 +138,7 @@ function migrateLegacy(): DemoState | null {
     const industry = old.content.identity?.industryKey ?? "other";
     const state: DemoState = {
       v: 2,
-      step: "publish",
+      step: "finish",
       onboarded: Boolean(old.onboarded),
       plan: old.plan ?? "business",
       content: old.content,
@@ -129,6 +156,9 @@ function migrateLegacy(): DemoState | null {
 }
 
 function read(): DemoState | null {
+  // Storage refused the latest write (full/blocked) but may still hold the previous state: the
+  // in-memory copy is newer and must win, otherwise the edit vanishes from every view.
+  if (storageFailed && memoryNewer) return cachedState;
   let raw: string | null = null;
   try {
     raw = window.localStorage.getItem(KEY);
@@ -143,7 +173,7 @@ function read(): DemoState | null {
   cachedRaw = raw;
   if (!raw) return (cachedState = null);
   try {
-    cachedState = hydrate(stateSchema.parse(JSON.parse(raw)));
+    cachedState = hydrate(stateSchema.parse(migrateStep(JSON.parse(raw))));
   } catch {
     cachedState = null; // corrupted or unknown shape: start fresh rather than crash
   }
@@ -152,18 +182,50 @@ function read(): DemoState | null {
 
 /** True when the browser refused to save (quota/blocked). The tab keeps working in memory. */
 let storageFailed = false;
+let memoryNewer = false;
 export const storageHasFailed = () => storageFailed;
 
+/**
+ * When storage is blocked or full the other documents (the live preview iframe) cannot see a change
+ * through the `storage` event, so the new state is also handed over directly. Without this the editor
+ * and its preview silently diverge until the next reload.
+ */
+const CHANNEL = "taplo.demo.sync";
+let channel: BroadcastChannel | null | undefined;
+function bus() {
+  if (channel !== undefined) return channel;
+  try {
+    channel = typeof BroadcastChannel === "undefined" ? null : new BroadcastChannel(CHANNEL);
+    channel?.addEventListener("message", (e: MessageEvent) => {
+      if (!storageFailed && !e.data?.failed) return; // healthy storage: the storage event already covers this
+      try {
+        const next = e.data?.state ? hydrate(stateSchema.parse(migrateStep(e.data.state))) : null;
+        cachedRaw = undefined;
+        cachedState = next;
+        storageFailed = true;
+        memoryNewer = true;
+        emit();
+      } catch { /* ignore malformed message */ }
+    });
+  } catch { channel = null; }
+  return channel;
+}
+
 function write(next: DemoState | null) {
+  let failed = false;
   try {
     if (next) window.localStorage.setItem(KEY, JSON.stringify(next));
     else window.localStorage.removeItem(KEY);
     storageFailed = false;
+    memoryNewer = false;
   } catch {
+    failed = true;
+    memoryNewer = true;
     storageFailed = true;
     cachedRaw = undefined;
     cachedState = next; // storage blocked or full: keep working in-memory for this tab
   }
+  if (failed) { try { bus()?.postMessage({ failed: true, state: next }); } catch { /* too large to clone: nothing more to do */ } }
   emit();
 }
 
@@ -174,6 +236,35 @@ let past: Snapshot[] = [];
 let future: Snapshot[] = [];
 let lastCoalesce: { key: string; at: number } | null = null;
 let historyVersion = 0;
+// Undo survives a reload and closing the tab. It is stored with the page it leads back from and is only restored when that page is still
+// the stored one (another tab or a reset invalidates it). It is capped, and silently dropped when it would be large (uploaded pictures
+// are stored as data) rather than risk filling the page's own storage.
+const HISTORY_KEY = "taplo.demo.history.v1";
+const HISTORY_KEEP = 20;
+const HISTORY_MAX_CHARS = 250_000;
+function persistHistory() {
+  try {
+    const head = window.localStorage.getItem(KEY);
+    const body = JSON.stringify({ head, past: past.slice(-HISTORY_KEEP), future: future.slice(-HISTORY_KEEP) });
+    if (body.length > HISTORY_MAX_CHARS || head === null) window.localStorage.removeItem(HISTORY_KEY);
+    else window.localStorage.setItem(HISTORY_KEY, body);
+  } catch { /* history is a convenience; never block an edit */ }
+}
+let historyLoaded = false;
+function loadHistory() {
+  if (historyLoaded || typeof window === "undefined") return;
+  historyLoaded = true;
+  try {
+    const raw = window.localStorage.getItem(HISTORY_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw) as { head?: string | null; past?: Snapshot[]; future?: Snapshot[] };
+    // Only trust history that still leads to the stored page: otherwise another tab or a reset has moved on.
+    if (parsed.head !== window.localStorage.getItem(KEY)) { window.localStorage.removeItem(HISTORY_KEY); return; }
+    if (Array.isArray(parsed.past)) past = parsed.past;
+    if (Array.isArray(parsed.future)) future = parsed.future;
+    historyVersion += 1;
+  } catch { past = []; future = []; }
+}
 const snap = (s: DemoState): Snapshot => ({ content: structuredClone(s.content), page: structuredClone(s.page) });
 const same = (a: Snapshot, b: Snapshot) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -182,10 +273,17 @@ function subscribe(cb: () => void) {
   const onStorage = (e: StorageEvent) => {
     if (e.key === KEY || e.key === null) cb(); // fires in OTHER documents: how the preview iframe updates live
   };
+  // A tab restored from the back/forward cache or woken from sleep may hold a stale render.
+  const onWake = () => { if (document.visibilityState !== "hidden") cb(); };
   window.addEventListener("storage", onStorage);
+  window.addEventListener("pageshow", onWake);
+  document.addEventListener("visibilitychange", onWake);
+  bus();
   return () => {
     listeners.delete(cb);
     window.removeEventListener("storage", onStorage);
+    window.removeEventListener("pageshow", onWake);
+    document.removeEventListener("visibilitychange", onWake);
   };
 }
 
@@ -201,6 +299,7 @@ export interface UpdateOptions {
 
 /** `state` is undefined before hydration, null when nothing is stored yet. */
 export function useDemo() {
+  loadHistory();
   const state = useSyncExternalStore<DemoState | null | undefined>(subscribe, read, serverSnapshot);
   useSyncExternalStore(subscribe, historySnapshot, () => 0);
   const ready = state !== undefined;
@@ -213,6 +312,7 @@ export function useDemo() {
       lastCoalesce = null;
       historyVersion += 1;
       write(after);
+      persistHistory();
       return;
     }
     const a = snap(before);
@@ -229,6 +329,7 @@ export function useDemo() {
       historyVersion += 1;
     }
     write(after);
+    persistHistory();
   }, []);
   const undo = useCallback(() => {
     const cur = read();
@@ -238,6 +339,7 @@ export function useDemo() {
     lastCoalesce = null;
     historyVersion += 1;
     write({ ...cur, content: prev.content, page: prev.page });
+    persistHistory();
   }, []);
   const redo = useCallback(() => {
     const cur = read();
@@ -247,6 +349,7 @@ export function useDemo() {
     lastCoalesce = null;
     historyVersion += 1;
     write({ ...cur, content: next.content, page: next.page });
+    persistHistory();
   }, []);
   const reset = useCallback(() => {
     past = [];
@@ -254,6 +357,11 @@ export function useDemo() {
     lastCoalesce = null;
     historyVersion += 1;
     write(null);
+    persistHistory();
   }, []);
   return { ready, state: state ?? null, storageFailed: storageHasFailed(), update, undo, redo, canUndo: past.length > 0, canRedo: future.length > 0, reset };
 }
+
+/** Non-React access to the same store (used by tests and by code outside components). */
+export const readDemoState = () => read();
+export const writeDemoState = (next: DemoState | null) => write(next);

@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { THEMES } from "../../src/features/page/themes/catalogue";
-import { openEditorWithSample } from "./helpers";
+import { openEditorWithSample, selectPart, openStructure } from "./helpers";
 
 /** Serious and critical axe findings fail the build; each is printed with the offending selector. */
 async function scan(page: Page, context: string, include?: string) {
@@ -14,8 +14,11 @@ async function scan(page: Page, context: string, include?: string) {
 }
 
 test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", () => {
+  // Inspect the settled interface, rather than a partially transparent entrance frame.
+  test.use({ reducedMotion: "reduce" });
   for (const t of THEMES) {
     test(`public profile: every widget type in the ${t.id} theme`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
       for (const slug of ["demo-cafe", "demo-tutor"]) {
         await page.goto(`/${slug}?theme=${t.id}`, { waitUntil: "networkidle" });
         await scan(page, `${slug}/${t.id}`, "[data-taplo-page]");
@@ -24,6 +27,7 @@ test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", ()
   }
 
   test("public profile: each headline business in its own theme, phone and desktop", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" }); // scan the settled page, not a frame of the entrance animation
     for (const slug of ["demo-mechanic", "demo-barber", "demo-tutor", "demo-cafe", "demo-consultant", "demo-groomer"]) {
       for (const w of [390, 1280]) {
         await page.setViewportSize({ width: w, height: 900 });
@@ -34,21 +38,27 @@ test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", ()
   });
 
   test("themed booking dialog", async ({ page }) => {
-    for (const theme of ["midnight", "candy", "workshop", "ocean"]) {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    for (const theme of ["noir", "bloom", "garage", "paper"]) {
       await page.goto(`/demo-cafe?theme=${theme}`, { waitUntil: "networkidle" });
-      await page.locator('[data-widget="booking"] button').first().click();
+      await page.locator('.tp-actions-primary button, [data-widget="booking"] button').first().click();
       await expect(page.getByRole("dialog")).toBeVisible();
       await scan(page, `dialog/${theme}`, '[role="dialog"]');
       await page.keyboard.press("Escape");
     }
   });
 
-  test("editor: Content, Design and Page settings", async ({ page }) => {
+  test("editor: structure, page style, header, a block, details and settings", async ({ page }) => {
     await openEditorWithSample(page, "Barber");
-    await scan(page, "editor/content", '[data-testid="my-page"]');
-    await page.getByRole("tab", { name: "Design" }).click();
-    await scan(page, "editor/design", '[data-testid="my-page"]');
-    await page.getByRole("tab", { name: "Page settings" }).click();
+    await scan(page, "editor/page-style", '[data-testid="my-page"]');
+    await selectPart(page, "header");
+    await scan(page, "editor/header", '[data-testid="my-page"]');
+    await openStructure(page);
+    await page.getByTestId("select-widget").first().click();
+    await scan(page, "editor/widget", '[data-testid="my-page"]');
+    await selectPart(page, "details");
+    await scan(page, "editor/details", '[data-testid="my-page"]');
+    await selectPart(page, "settings");
     await scan(page, "editor/settings", '[data-testid="my-page"]');
   });
 
@@ -59,6 +69,7 @@ test.describe("automated accessibility (axe, WCAG 2.1 A/AA + best practice)", ()
     await scan(page, "onboarding/industry");
     await openEditorWithSample(page, "Mechanic");
     await page.getByTestId("add-widget").click();
+    await expect(page.getByTestId("add-content")).toHaveCSS("animation-name", "none");
     await scan(page, "add-widget dialog", '[role="dialog"]');
   });
 });

@@ -35,13 +35,13 @@ export const PLANS: Record<PlanId, PlanDefinition> = {
     name: "Pro",
     priceMinorGbp: 1999,
     summary: "Take bookings and payments online.",
-    highlights: ["Everything in Core", "Online bookings", "Deposits and payments", "Team pages", "Email confirmations", "Booking links", "Customer management"],
+    highlights: ["Everything in Core", "Online bookings", "Deposits and payments", "Up to 3 staff calendars", "Custom domain", "Email confirmations", "Booking links", "Customer management"],
   },
   business: {
     id: "business",
     name: "Business",
     priceMinorGbp: 3999,
     summary: "Run a multi-person, multi-location business.",
-    highlights: ["Everything in Pro", "Multiple staff", "Multiple locations", "Advanced analytics", "Custom domains", "Staff scheduling", "Permissions"],
+    highlights: ["Everything in Pro", "Unlimited staff calendars", "Multiple locations", "Advanced analytics", "Custom domains", "Staff scheduling", "Permissions"],
   },
 };

@@ -1,0 +1,117 @@
+{
+  "setup": {
+    "title": "Make your first page",
+    "file": "/marketing/walkthroughs/setup.mp4",
+    "poster": "/marketing/walkthroughs/setup-poster.webp",
+    "width": 780,
+    "height": 1928,
+    "duration": 35.4,
+    "fps": "25/1",
+    "bytes": 2762016,
+    "sha256": "ae2b635814fd39b651cacfed79131acc7616dbe3fbbdec6cd9fbc31b3fe3add6",
+    "recordedAt": "2026-10-25T15:57:46.636Z",
+    "source": "/onboarding?from=no-6-coffee",
+    "chapters": [
+      {
+        "seconds": 0,
+        "title": "Start with your identity",
+        "line": "Your name and logo, with a crop you approve before it is added."
+      },
+      {
+        "seconds": 5,
+        "title": "Say what you do",
+        "line": "Search for your business. Keep the setup relevant."
+      },
+      {
+        "seconds": 7.7,
+        "title": "Choose how people reach you",
+        "line": "A call fits this café. The menu does not need appointment bookings."
+      },
+      {
+        "seconds": 11.1,
+        "title": "Add something customers can buy",
+        "line": "A simple menu item and its price. No sample business records are copied."
+      },
+      {
+        "seconds": 15,
+        "title": "Add the practical details",
+        "line": "Your description, location, hours and links live in a focused popup."
+      },
+      {
+        "seconds": 17.7,
+        "title": "Make the page yours",
+        "line": "Choose a layout, then adjust the background and profile separately."
+      },
+      {
+        "seconds": 22.5,
+        "title": "Choose room to grow",
+        "line": "Compare the plans and save a preference. No payment is taken."
+      },
+      {
+        "seconds": 25.7,
+        "title": "Review the actual page",
+        "line": "Check the menu, contact details and opening hours before continuing."
+      },
+      {
+        "seconds": 29.3,
+        "title": "Keep making it yours",
+        "line": "Your draft is saved in this browser. Publishing and billing are not connected."
+      }
+    ],
+    "outcome": {
+      "name": "No. 6 Coffee",
+      "service": "Flat white",
+      "storage": "browser-only"
+    }
+  },
+  "booking": {
+    "title": "From a service to a booking",
+    "file": "/marketing/walkthroughs/booking.mp4",
+    "poster": "/marketing/walkthroughs/booking-poster.webp",
+    "width": 780,
+    "height": 1928,
+    "duration": 28.96,
+    "fps": "25/1",
+    "bytes": 932481,
+    "sha256": "fd9c1333f3d882942158c0bbffeb0948435308273afba399a84885b3dbe799a6",
+    "recordedAt": "2026-10-24T11:20:21.604Z",
+    "source": "/appearance/frame?scenario=station",
+    "chapters": [
+      {
+        "seconds": 0,
+        "title": "Start with the service",
+        "line": "See the actual price and what the haircut includes."
+      },
+      {
+        "seconds": 6.1,
+        "title": "Choose who you see",
+        "line": "Pick a barber, or use anyone available."
+      },
+      {
+        "seconds": 8.8,
+        "title": "Find a time",
+        "line": "Choose from the working preview calendar."
+      },
+      {
+        "seconds": 12.8,
+        "title": "Leave your details",
+        "line": "A name and email. No payment is taken here."
+      },
+      {
+        "seconds": 17.2,
+        "title": "Check before confirming",
+        "line": "The service, person, time and price are together."
+      },
+      {
+        "seconds": 21.9,
+        "title": "See the actual outcome",
+        "line": "This example booking is saved only in this browser."
+      }
+    ],
+    "outcome": {
+      "service": "Haircut",
+      "status": "confirmed",
+      "storage": "browser-only"
+    }
+  }
+}

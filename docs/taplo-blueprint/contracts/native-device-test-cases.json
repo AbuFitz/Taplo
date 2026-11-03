@@ -1,0 +1,189 @@
+{
+  "edition": "2.7",
+  "scope": "actual_wallet_scanner_and_native_behaviour",
+  "status": "no_native_cases_executed",
+  "required_missing_inputs": [
+    "signed_native_builds",
+    "issuer_accounts_credentials_and_test_passes",
+    "test_api_ledger_environment",
+    "physical_ios_android_devices"
+  ],
+  "cases": [
+    {
+      "id": "W01",
+      "steps": "Issue Apple test pass; add through web, then native entry; cancel once",
+      "expected": "Genuine signed pass rendered in Wallet; cancellation never says saved; returning to Taplo does not infer install from a click",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W02",
+      "steps": "Issue Google demo/test object; save through web/native eligible account",
+      "expected": "Intended class/object attached to correct account; test status recorded; no public publishing assertion",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W03",
+      "steps": "Reopen add link on same device and on second authorised device",
+      "expected": "Same intended relationship/pass identity; no duplicated loyalty account or balance",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W04",
+      "steps": "Scan Customer A on each of the four phone pairings",
+      "expected": "Server resolves correct business/programme; staff sees permitted safe context; no ledger mutation on decode",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W05",
+      "steps": "Select completed appointment A and confirm earn",
+      "expected": "Exactly one earn and one eligibility transition; reference to source appointment; UI receipt and authoritative progress eight",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W06",
+      "steps": "Repeat scan/confirmation on two staff phones concurrently",
+      "expected": "Same source cannot earn twice; second attempt retrieves existing result or conflict; one authoritative ledger effect",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W07",
+      "steps": "Redeem Customer B on two devices concurrently",
+      "expected": "At most one success; second shows current outcome; no negative reward balance or second entitlement",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W08",
+      "steps": "Disconnect before request, after server commit and before response separately",
+      "expected": "No false offline success; unknown outcome reconciles by original operation key; no blind replacement debit/earn",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W09",
+      "steps": "Scan wrong merchant, public professional card, foreign URL, malformed, expired or revoked code",
+      "expected": "No mutation; clear safe explanation; no arbitrary URL launch/script execution; no unauthorised tenant switch",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W10",
+      "steps": "Scan as staff without grant; remove authorised staff before confirmation",
+      "expected": "Server denies consequential action under current membership; cached UI cannot authorise it; no leaked private customer details",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W11",
+      "steps": "Copy loyalty QR screenshot; try high-value redemption and account access",
+      "expected": "Static reference is not account login or sufficient holder proof; required policy/challenge enforced; no automatic success",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W12",
+      "steps": "Record cash visit through supported manual workflow; earn; reverse eligible transaction",
+      "expected": "Correct manual/cash provenance and authority; source-linked earn/reversal; never labelled Stripe-confirmed",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W13",
+      "steps": "Update ledger and queue Apple/Google pass update; hold phone offline then reconnect",
+      "expected": "Ledger changes once; queued/delayed/failed status truthfully visible; provider cache is not money authority; eventual rendering observed and timed",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W14",
+      "steps": "Remove pass, add again; rotate signing material with approved procedure",
+      "expected": "Update registrations/objects handled without leaking access; documented recovery and continuity; no simulated certificate-expiry claim",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W15",
+      "steps": "Add Sam public card; scan with ordinary phone camera",
+      "expected": "Correct published mini-space/staff booking context opens without compulsory Taplo install; public code cannot redeem rewards",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W16",
+      "steps": "Unpublish Sam profile/remove staff while old pass remains on another offline phone",
+      "expected": "When public destination is requested it enforces current publication; no unrelated new-employer redirect or false promise remote card image is erased",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W17",
+      "steps": "Deny camera, revoke permission in OS, background scanner, scan under glare/low light",
+      "expected": "Accessible permission recovery/manual-code option; request only at task; no duplicate action on resume; no frame uploads unless separately justified",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W18",
+      "steps": "Change plan, pause programme, close merchant, refund already-earned qualifying work",
+      "expected": "Earned obligations retained under specified policy; new entitlement gates and financial/reward ledgers stay separate; no blanket points deletion",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W19",
+      "steps": "Inspect pass/back fields, scanner, logs, public link, push payload and screenshots",
+      "expected": "No email/private notes/balance secrets in public card; secrets/opaque tokens redacted from telemetry; scanner data minimised",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W20",
+      "steps": "Open customer/Studio widgets logged out, expired, removed staff and stale snapshot",
+      "expected": "Private fields redacted by default; no live-availability claim; deep link reauthorises; widget never directly refunds/redeems",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W21",
+      "steps": "Upgrade backend with older supported native build installed",
+      "expected": "Version compatibility or explicit safe upgrade gate; accepted work still has browser/support recovery route",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    },
+    {
+      "id": "W22",
+      "steps": "Exercise VoiceOver/TalkBack, large text and malformed input; verify copy and screen bounds",
+      "expected": "Correct reading/focus/error order, usable close/back/confirmation, QR readable with quiet zone; no clipped essential total/action",
+      "state": "blocked_prerequisite",
+      "observed_result": null,
+      "evidence": []
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+import { chromium } from "@playwright/test"
+const b=await chromium.launch({executablePath:"/opt/pw-browsers/chromium-1194/chrome-linux/chrome"})
+const p=await (await b.newContext({viewport:{width:1366,height:768},reducedMotion:"reduce"})).newPage()
+await p.goto("http://localhost:3000/inspiration");await p.waitForTimeout(2500)
+await p.getByRole("button",{name:/Jay.?s Barbers.*open this page/}).click();await p.waitForTimeout(2500)
+await p.screenshot({path:"docs/screens/r10/use-detail.png"})
+await p.getByRole("link",{name:/Use this design|Start with/}).first().click();await p.waitForTimeout(3500)
+await p.screenshot({path:"docs/screens/r10/use-start.png"})
+console.log(p.url())
+await b.close()

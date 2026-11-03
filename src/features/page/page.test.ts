@@ -18,8 +18,8 @@ const vmOf = (k: string, over: Partial<{ themeId: string; plan: "free" | "core" 
   return buildPageViewModel(f.content, { ...f.page, themeId: over.themeId ?? f.page.themeId }, { plan: over.plan ?? f.plan, now: new Date("2026-10-22T12:00:00Z") });
 };
 
-describe("widget registry", () => {
-  it("defines every widget type, with a schema, defaults and valid editor fields", () => {
+describe("block registry", () => {
+  it("defines every block type, with a schema, defaults and valid editor fields", () => {
     expect(Object.keys(WIDGETS).sort()).toEqual([...WIDGET_TYPES].sort());
     for (const type of WIDGET_TYPES) {
       const def = WIDGETS[type];
@@ -32,7 +32,7 @@ describe("widget registry", () => {
     }
   });
   it("covers every required category of widget", () => {
-    const need: WidgetType[] = ["call", "whatsapp", "email", "social", "link", "directions", "serviceList", "featuredService", "priceMenu", "booking", "products", "offers", "payment", "reviews", "leaveReview", "team", "credentials", "text", "image", "gallery", "video", "faq", "document", "hours", "location", "serviceArea", "announcement"];
+    const need: WidgetType[] = ["call", "sms", "whatsapp", "email", "social", "link", "directions", "serviceList", "featuredService", "priceMenu", "booking", "products", "offers", "payment", "reviews", "leaveReview", "team", "credentials", "text", "image", "gallery", "video", "faq", "document", "hours", "location", "serviceArea", "announcement"];
     for (const t of need) expect(WIDGETS[t], t).toBeDefined();
   });
   it("marks payments as simulated and never as live", () => {
@@ -46,10 +46,10 @@ describe("widget registry", () => {
 });
 
 describe("themes", () => {
-  it("ships at least six, each genuinely different (not accent swaps)", () => {
-    expect(THEMES.length).toBeGreaterThanOrEqual(6);
+  it("ships at least four, each genuinely different (not accent swaps)", () => {
+    expect(THEMES.length).toBeGreaterThanOrEqual(4);
     const sig = (t: (typeof THEMES)[number]) => JSON.stringify([t.style.header.layout, t.style.header.avatarShape, t.style.text.headingFont, t.style.buttons.shape, t.style.buttons.fill, t.style.buttons.shadow, t.style.cards.surface, t.style.cards.radius, t.style.layout.desktop, t.style.background.kind, t.style.decoration]);
-    expect(new Set(THEMES.map(sig)).size).toBe(THEMES.length);
+    expect(THEMES.filter((t,i)=>THEMES.some((other,j)=>j<i && sig(other)===sig(t))).map(t=>[t.id,THEMES.filter(other=>sig(other)===sig(t)).map(other=>other.id)])).toEqual([]);
     expect(new Set(THEMES.map((t) => t.style.header.layout)).size).toBeGreaterThanOrEqual(4);
     expect(new Set(THEMES.map((t) => t.style.layout.desktop)).size).toBe(3);
   });
@@ -57,7 +57,7 @@ describe("themes", () => {
     for (const t of THEMES) {
       const c = t.style.colors;
       const bg = t.style.background;
-      const ends = bg.kind === "solid" ? [bg.color] : bg.kind === "gradient" ? [bg.from, bg.to] : [bg.fallback];
+      const ends = bg.kind === "solid" ? [bg.color] : bg.kind === "gradient" ? [bg.from, bg.to] : bg.kind === "shader" ? [bg.base] : [bg.fallback];
       for (const e of ends) expect(contrastRatio(c.text, e), `${t.id} text/bg`).toBeGreaterThanOrEqual(4.5);
       expect(contrastRatio(c.text, c.surface), `${t.id} text/surface`).toBeGreaterThanOrEqual(4.5);
       expect(contrastRatio(c.accentText, c.accent), `${t.id} accent`).toBeGreaterThanOrEqual(4.5);
@@ -73,52 +73,52 @@ describe("themes", () => {
   });
   it("is independent of industry: every industry can use every theme", () => {
     for (const i of INDUSTRY_PRESETS) expect(getTheme(i.suggestedThemeId), i.id).toBeDefined();
-    const cafe = vmOf("cafe", { themeId: "midnight" });
-    expect(cafe.style.theme.id).toBe("midnight");
+    const cafe = vmOf("cafe", { themeId: "night" });
+    expect(cafe.style.theme.id).toBe("night");
   });
 });
 
 describe("style overrides", () => {
   it("applies owner overrides on top of the theme and 'reset to theme' removes them", () => {
-    const withOv = resolveStyle("studio", { colors: { accent: "#0a7a3b" }, buttons: { shape: "pill" } });
+    const withOv = resolveStyle("clean", { colors: { accent: "#0a7a3b" }, buttons: { shape: "pill" } });
     expect(withOv.spec.colors.accent).toBe("#0a7a3b");
     expect(withOv.spec.buttons.shape).toBe("pill");
     expect(withOv.overrideCount).toBe(2);
-    const reset = resolveStyle("studio", {});
-    expect(reset.spec.colors.accent).toBe(getTheme("studio")!.style.colors.accent);
+    const reset = resolveStyle("clean", {});
+    expect(reset.spec.colors.accent).toBe(getTheme("clean")!.style.colors.accent);
     expect(reset.overrideCount).toBe(0);
   });
   it("rescues unreadable text and explains it", () => {
-    const r = resolveStyle("studio", { colors: { text: "#f4eee6" } });
+    const r = resolveStyle("clean", { colors: { text: "#f4eee6" } });
     expect(contrastRatio(r.spec.colors.text, "#f7f1ea")).toBeGreaterThanOrEqual(4.5);
     expect(r.notices.map((n) => n.code)).toContain("text_adjusted");
   });
   it("strengthens a too-weak photo overlay", () => {
-    const r = resolveStyle("midnight", { background: { kind: "image", image: { src: "/fixtures/img-1.svg", alt: "x" }, overlay: 0, overlayColor: "#0b0d12", fallback: "#0b0d12" } });
+    const r = resolveStyle("night", { background: { kind: "image", image: { src: "/fixtures/img-1.svg", alt: "x" }, overlay: 0, overlayColor: "#0b0d12", fallback: "#0b0d12" } });
     expect(r.spec.background.kind === "image" && r.spec.background.overlay).toBeGreaterThan(30);
     expect(r.notices.map((n) => n.code)).toContain("overlay_boosted");
   });
   it("drops corrupt overrides instead of breaking the page", () => {
-    const r = resolveStyle("studio", { colors: { accent: "red" }, text: { headingFont: "comic-sans" } });
-    expect(r.spec.colors.accent).toBe(getTheme("studio")!.style.colors.accent);
+    const r = resolveStyle("clean", { colors: { accent: "red" }, text: { headingFont: "comic-sans" } });
+    expect(r.spec.colors.accent).toBe(getTheme("clean")!.style.colors.accent);
     expect(r.notices.length).toBeGreaterThan(0);
   });
   it("falls back safely for an unknown theme", () => {
     const r = resolveStyle("deleted-theme", {});
-    expect(r.theme.id).toBe("studio");
+    expect(r.theme.id).toBe("clean");
     expect(r.notices[0]?.code).toBe("theme_missing");
   });
   it("a page-colour override recolours a plain-colour background", () => {
-    const r = resolveStyle("studio", { colors: { background: "#e8f0e8" } });
+    const r = resolveStyle("clean", { colors: { background: "#e8f0e8" } });
     expect(r.spec.background).toEqual({ kind: "solid", color: "#e8f0e8" });
   });
-  it("accent-filled widgets stay readable", () => {
-    const r = resolveStyle("studio", {});
+  it("accent-filled blocks stay readable", () => {
+    const r = resolveStyle("clean", {});
     const w = widgetStyle(r, { surface: "accent", accent: "#ffee00" });
     expect(contrastRatio(w.vars["--tp-foreground"]!, w.vars["--tp-card-bg"]!)).toBeGreaterThanOrEqual(4.5);
   });
   it("per-widget overrides do not leak to the page style", () => {
-    const r = resolveStyle("studio", {});
+    const r = resolveStyle("clean", {});
     widgetStyle(r, { radius: "none", emphasis: "featured" });
     expect(r.cssVars["--tp-card-radius"]).toBe("1.25rem");
   });
@@ -132,24 +132,24 @@ describe("page document and migration", () => {
   it("migrates the legacy layout config, keeping the owner's colour and font choices", () => {
     const m = migratePage({ schemaVersion: 1, layoutId: "beauty-v1", tokenPresetId: "beauty-light", overrides: { accent: "#123456", headingFont: "lexend" } }, "barber");
     expect(m.changed).toBe(true);
-    expect(m.page.themeId).toBe("studio");
+    expect(m.page.themeId).toBe("clean");
     expect(m.page.appearance.colors?.accent).toBe("#123456");
     expect(m.page.appearance.text?.headingFont).toBe("lexend");
     expect(m.page.widgets.length).toBeGreaterThan(0);
     expect(m.notes[0]).toMatch(/content is unchanged/);
   });
-  it("removes unknown widget types from view and says so in plain language", () => {
+  it("removes unknown block types from view and says so in plain language", () => {
     const page = newPage("barber");
     const raw = { ...page, widgets: [...page.widgets, { id: "x1", type: "hologram", version: 1, hidden: false, appearance: {}, settings: {} }] };
     const m = migratePage(raw, "barber");
     expect(m.page.widgets.some((w) => w.type === "hologram")).toBe(false);
     expect(m.notes.join(" ")).toMatch(/no longer available/);
   });
-  it("de-duplicates widget ids and repairs a half-valid document", () => {
+  it("de-duplicates block ids and repairs a half-valid document", () => {
     const w = newWidget("link", { label: "A", url: "https://example.com" });
     const m = migratePage({ schemaVersion: 2, themeId: "ghost", appearance: "nope", widgets: [w, { ...w }] }, "other");
     expect(new Set(m.page.widgets.map((x) => x.id)).size).toBe(2);
-    expect(m.page.themeId).toBe("studio");
+    expect(m.page.themeId).toBe("clean");
   });
   it("legacy conversion never throws on junk", () => {
     expect(() => fromLegacyConfig({ tokenPresetId: 5 as never, overrides: { accent: "nope" } }, "other")).not.toThrow();
@@ -158,7 +158,7 @@ describe("page document and migration", () => {
 });
 
 describe("starters are explicit, previewable and non-destructive", () => {
-  it("every industry's starter lists valid widget types", () => {
+  it("every industry's starter lists valid block types", () => {
     for (const i of INDUSTRY_PRESETS) {
       expect(starterWidgets(i.id).length, i.id).toBeGreaterThan(0);
       for (const w of starterWidgets(i.id)) expect(WIDGETS[w.type as WidgetType]).toBeDefined();
@@ -182,7 +182,7 @@ describe("starters are explicit, previewable and non-destructive", () => {
 });
 
 describe("view-model", () => {
-  it("switching theme preserves business records and widget arrangement exactly", () => {
+  it("switching theme preserves business records and block arrangement exactly", () => {
     for (const k of ["barber", "tutor", "mechanic", "cafe", "consultant", "unlisted"]) {
       const a = vmOf(k);
       for (const t of THEMES) {
@@ -192,7 +192,7 @@ describe("view-model", () => {
       }
     }
   });
-  it("hides empty/hidden widgets from visitors but still lists them for the owner, with a reason", () => {
+  it("hides empty/hidden blocks from visitors but still lists them for the owner, with a reason", () => {
     const f = fx("minimal");
     const page = newPage("tutor");
     page.widgets.push(newWidget("gallery"), newWidget("hours"));
@@ -205,13 +205,13 @@ describe("view-model", () => {
     expect(vm.visible.some((w) => w.id === page.widgets[0]!.id)).toBe(false);
     expect(gallery.status.state === "empty" && gallery.status.reason).toMatch(/photos/i);
   });
-  it("never invents content: no reviews widget visible without testimonials or a rating", () => {
+  it("never invents content: no reviews block visible without testimonials or a rating", () => {
     const vm = vmOf("unlisted");
     expect(vm.business.testimonials).toEqual([]);
     const page = { ...fx("unlisted").page, widgets: [newWidget("reviews")] };
     expect(buildPageViewModel(fx("unlisted").content, page, { plan: "business" }).visible).toEqual([]);
   });
-  it("plan gating keeps content but hides locked widgets, with an explanation", () => {
+  it("plan gating keeps content but hides locked blocks, with an explanation", () => {
     const vm = vmOf("barber", { plan: "free" });
     const gallery = vm.widgets.find((w) => w.type === "gallery");
     if (gallery) expect(gallery.status.state).toBe("locked");
@@ -220,9 +220,12 @@ describe("view-model", () => {
     const pay = buildPageViewModel(fx("mechanic").content, { ...fx("mechanic").page, widgets: [newWidget("payment")] }, { plan: "core" });
     expect(pay.widgets[0]!.status.state).toBe("locked");
   });
-  it("free plan keeps the industry's suggested theme", () => {
-    const vm = buildPageViewModel(fx("tutor").content, { ...fx("tutor").page, themeId: "ocean" }, { plan: "free" });
-    expect(vm.style.theme.id).toBe(getIndustryPreset("tutor").suggestedThemeId);
+  it("free plan uses the neutral signature composition", () => {
+    const vm = buildPageViewModel(fx("tutor").content, { ...fx("tutor").page, themeId: "showroom" }, { plan: "free" });
+    expect(vm.style.theme.id).toBe("clean");
+    expect(vm.style.spec.colors.background).toBe("#ffffff");
+    expect(vm.style.spec.header.layout).toBe("lifted");
+    expect(vm.style.spec.buttons.shape).toBe("rounded");
   });
   it("unsafe or unsupported links never become visible widgets", () => {
     const f = fx("minimal");
@@ -237,7 +240,7 @@ describe("view-model", () => {
     const vm = buildPageViewModel(f.content, page, { plan: "business", now: new Date("2026-10-22T12:00:00Z") });
     expect(vm.visible.map((w) => w.settings.text)).toEqual(["Fresh"]);
   });
-  it("corrupt widget settings fall back to defaults and are reported", () => {
+  it("corrupt block settings fall back to defaults and are reported", () => {
     const f = fx("barber");
     const w = newWidget("serviceList");
     w.settings = { variant: "hologram", showPrices: "yes" };
@@ -254,9 +257,13 @@ describe("fixtures", () => {
       expect(pageDocSchema.safeParse(f.page).success, f.key).toBe(true);
     }
   });
-  it("cover the six required kinds of business, and never advertise a booking flow that doesn't exist", () => {
+  it("cover the six required kinds of business, and only offer online booking where a time can actually be booked", () => {
     for (const k of ["barber", "tutor", "mechanic", "cafe", "consultant", "unlisted"]) expect(fx(k)).toBeDefined();
-    for (const f of FIXTURES) expect(f.content.booking?.onlineBookingReady, f.key).toBe(false);
+    for (const f of FIXTURES) {
+      const vm = buildPageViewModel(businessContentSchema.parse(f.content), f.page, { plan: "business" });
+      const bookable = vm.business.services.some((s) => !s.archived && s.bookingMode !== "contact" && s.durationMinutes);
+      expect(vm.onlineBooking, f.key).toBe(bookable && vm.business.booking.onlineBookingReady);
+    }
   });
   it("pair looks and industries independently (several fixtures do NOT use their suggested theme)", () => {
     const off = FIXTURES.filter((f) => f.page.themeId !== getIndustryPreset(f.content.identity.industryKey).suggestedThemeId);

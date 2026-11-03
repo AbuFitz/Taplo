@@ -1,0 +1,250 @@
+"use client"
+
+import * as React from "react"
+import { getImageProps } from "next/image"
+import { PHONE, PhoneChrome } from "./PhoneChrome"
+import { BrowserChrome } from "./BrowserChrome"
+import { cn } from "@/lib/utils"
+import type { FromPreview, Selection, ToPreview } from "@/features/page/editor/selection"
+
+/**
+ * The one preview controller. It always gives the page a real viewport (an iframe of explicit
+ * CSS dimensions), because only an iframe's own width triggers the page's media queries, then
+ * decides how that viewport fits the space it was given:
+ *
+ *  - `fill`    Editing on a phone or tablet. The frame IS the available space: no scaling, no
+ *              handset. What you see is what a visitor on a screen this size sees.
+ *  - `device`  Previewing a phone page from a bigger screen. A device-sized viewport (default
+ *              390x844) scaled down only if it would not otherwise fit, centred.
+ *  - `desktop` Previewing the desktop page. A viewport between 1024 and 1440px wide chosen so the
+ *              scale stays readable; `actual` shows it 1:1 and lets the preview scroll.
+ *
+ * Selection (edit mode) is handled inside the frame in its own coordinates, so scaling never
+ * distorts hit-testing. `bottomInset` tells the page how much of its bottom edge is covered by a
+ * sheet so a selected widget is scrolled into the part that is still visible.
+ */
+export type PreviewMode = "fill" | "device" | "desktop"
+
+export interface PreviewViewport { w: number; h: number; scale: number }
+
+export interface PagePreviewProps {
+  src: string
+  loading?: "eager" | "lazy"
+  title: string
+  mode: PreviewMode
+  device?: { w: number; h: number }
+  zoom?: "fit" | "actual"
+  /** Decorative bezel / browser bar. Only for `device` and `desktop`, never while editing on a phone. */
+  chrome?: boolean
+  /** Address shown in the desktop browser bar. */
+  url?: string
+  frameRef?: (el: HTMLIFrameElement | null) => void
+  edit?: { selection: Selection; onSelect: (s: Selection) => void; bottomInset?: number }
+  onViewport?: (v: PreviewViewport) => void
+  className?: string
+  testId?: string
+  /** Decorative thumbnails cannot receive clicks or keyboard focus. */
+  poster?: string
+  /** Synchronously remeasure when a parent sheet expands, before the next paint. */
+  resizeKey?: boolean | number | string
+  interactive?: boolean
+  /** Pointer use stays live, but keyboard users skip the embedded page (reach it through the full preview control). */
+  skipTab?: boolean
+  /** Told the page's own background colour once it has loaded, for surfaces that want to echo it. */
+  onSurface?: (color: string) => void
+  /** Show a plain message with Retry if the page has not loaded after this many milliseconds. */
+  retryAfterMs?: number
+  /** Space occupied by fixed parent navigation when revealing a customer dialog. */
+  topInset?: number
+  /** Allow the authoring surface to reveal a customer dialog without reloading its document. */
+  onOverlayOpen?: () => void
+  /** Show the top of a full phone viewport when the available mobile canvas is short. */
+  cropDevice?: boolean
+  /** Largest scale a cropped device may be shown at (1 = natural size). Lets setup move in close on what is being edited. */
+  maxScale?: number
+  /** Animate the handset between sizes and positions. */
+  smooth?: boolean
+  /** Part of the page to bring into view inside the frame (header, actions, offer, social, top). */
+  focus?: string
+  /** Reframe after a deliberate layout change without reloading the page. */
+  /** Size the document to the visible stage rather than hiding part of a tall document. */
+  fitHeight?: boolean
+  focusKey?: string
+}
+
+const MIN_DESKTOP = 1024
+const MAX_DESKTOP = 1440
+const READABLE = 0.72
+
+export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, device = { w: 390, h: 844 }, zoom: "fit" | "actual" = "fit", chrome = false, cropDevice = false, maxScale = 1, fitHeight = false) {
+  if (mode === "fill") return { vw: box.w, vh: box.h, scale: 1, pad: 0, bar: 0, safeTop: 0, safeBottom: 0, outerW: box.w, outerH: box.h }
+  if (mode === "device") {
+    const pad = chrome ? PHONE.bezel : 0
+    const safeTop = 0
+    const safeBottom = 0
+    const outerW = device.w + pad * 2
+    if (fitHeight) {
+      const scale = Math.min(1, Math.max(1, box.w - 8) / outerW)
+      const vh = Math.max(120, Math.floor(box.h / scale) - pad * 2)
+      return { vw: device.w, vh, scale, pad, bar: 0, safeTop, safeBottom, outerW, outerH: vh + pad * 2 }
+    }
+    const outerH = device.h + pad * 2
+    const scale = zoom === "actual" ? 1 : Math.min(cropDevice ? maxScale : 1, Math.max(1,box.w - (chrome ? 8 : 0)) / outerW, cropDevice ? maxScale : box.h / outerH)
+    return { vw: device.w, vh: device.h - safeTop - safeBottom, scale, pad, bar: 0, safeTop, safeBottom, outerW, outerH }
+  }
+  const bar = chrome ? 38 : 0
+  if (zoom === "actual") return { vw: 1280, vh: Math.max(720, box.h - bar), scale: 1, pad: 0, bar, safeTop: 0, safeBottom: 0, outerW: 1280, outerH: Math.max(720, box.h) }
+  const vw = Math.round(Math.min(MAX_DESKTOP, Math.max(MIN_DESKTOP, box.w / READABLE)))
+  const scale = Math.min(1, box.w / vw)
+  const vh = Math.max(560, Math.round(box.h / scale) - bar)
+  return { vw, vh, scale, pad: 0, bar, safeTop: 0, safeBottom: 0, outerW: vw, outerH: vh + bar }
+}
+
+export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, skipTab = false, retryAfterMs, onSurface, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen, maxScale = 1, smooth = false, focus, focusKey, fitHeight = false }: PagePreviewProps) {
+  const host = React.useRef<HTMLDivElement>(null)
+  const frame = React.useRef<HTMLIFrameElement | null>(null)
+  const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
+  const [loaded, setLoaded] = React.useState(false)
+  const [attempt, setAttempt] = React.useState(0)
+  const [stalled, setStalled] = React.useState(false)
+  React.useEffect(() => {
+    if (!retryAfterMs || loaded) { const r = window.setTimeout(() => setStalled(false), 0); return () => window.clearTimeout(r) }
+    const t = window.setTimeout(() => setStalled(true), retryAfterMs)
+    return () => window.clearTimeout(t)
+  }, [retryAfterMs, loaded, attempt])
+  const isPhone = chrome && mode === "device"
+  const stopWatching = React.useRef<(() => void) | null>(null)
+  React.useEffect(() => () => stopWatching.current?.(), [])
+
+  const prepareDocument = React.useCallback(() => {
+    stopWatching.current?.()
+    const doc = frame.current?.contentDocument
+    if (!doc?.body) return
+    let page: Element | null = null
+    const sync = () => {
+      const next = doc.querySelector("[data-taplo-page]")
+      if (!next) return
+      if (page !== next) {
+        page = next
+        observer.disconnect()
+        observer.observe(next, { attributes: true, attributeFilter: ["style", "data-taplo-ready"] })
+      }
+      // A server-rendered button may be visible before its click handler mounts.
+      // Keep the loading surface until the themed client subtree is ready.
+      if (next.getAttribute("data-taplo-ready") !== "true") return
+      // Apply embedding attributes after hydration; changing the server document earlier
+      // causes a root-attribute mismatch in every preview iframe.
+      doc.documentElement.dataset.taploEmbedded = "true"
+      doc.documentElement.setAttribute("data-taplo-phone", String(isPhone))
+      const color = doc.defaultView?.getComputedStyle(next).getPropertyValue("--tp-background").trim()
+      if (color) { host.current?.style.setProperty("--phone-surface", color); onSurface?.(color) }
+      setLoaded(true)
+    }
+    const observer = new MutationObserver(sync)
+    observer.observe(doc.body, { childList: true, subtree: true })
+    sync()
+    stopWatching.current = () => observer.disconnect()
+  }, [isPhone, onSurface])
+
+  React.useEffect(() => {
+    const doc = frame.current?.contentDocument
+    if (doc?.querySelector('[data-taplo-ready="true"]')) doc.documentElement.setAttribute("data-taplo-phone", String(isPhone))
+  }, [isPhone])
+
+  React.useLayoutEffect(() => {
+    const el = host.current
+    if (!el) return
+    const measure = () => setBox({ w: el.clientWidth, h: el.clientHeight })
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [mode, zoom, resizeKey])
+
+  const decorated = chrome && mode !== "fill"
+  const L = box ? layoutPreview(mode, box, device, zoom, decorated, cropDevice, maxScale, fitHeight) : null
+  React.useEffect(() => { if (L) onViewport?.({ w: L.vw, h: L.vh, scale: L.scale }) }, [L?.vw, L?.vh, L?.scale]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const setFrame = React.useCallback((el: HTMLIFrameElement | null) => { frame.current = el; frameRef?.(el) }, [frameRef])
+
+  const selection = edit?.selection
+  const inset = edit?.bottomInset ?? 0
+  const post = React.useCallback(() => {
+    if (selection) frame.current?.contentWindow?.postMessage({ type: "taplo:selected", selection, bottomInset: inset } satisfies ToPreview, window.location.origin)
+  }, [selection, inset])
+  const onSelect = edit?.onSelect
+  React.useEffect(() => {
+    const onMessage = (e: MessageEvent<FromPreview>) => {
+      if (e.origin !== window.location.origin || e.source !== frame.current?.contentWindow) return
+      if (e.data?.type === "taplo:overlay-open") {
+        onOverlayOpen?.()
+        // Make the whole dialog visible before its next tap. A smooth outer scroll moves iframe hit targets during the flow.
+        const rect = host.current?.getBoundingClientRect()
+        if (rect && (rect.top < topInset || rect.bottom > window.innerHeight)) {
+          const top = topInset + Math.max(0, (window.innerHeight - topInset - rect.height) / 2)
+          window.scrollBy({ top: rect.top - top, behavior: "instant" })
+        }
+      } else if (e.data?.type === "taplo:select") onSelect?.(e.data.selection)
+      else if (e.data?.type === "taplo:ready" || (e.data as {type?: string})?.type === "taplo:lab-ready") { prepareDocument(); post() }
+    }
+    window.addEventListener("message", onMessage)
+    return () => window.removeEventListener("message", onMessage)
+  }, [onSelect, post, topInset, prepareDocument, onOverlayOpen])
+  React.useEffect(post, [post, L?.vw, L?.vh])
+  React.useEffect(() => {
+    if (!focus || !loaded) return
+    // The draft reaches the embedded renderer asynchronously. Reframe after its layout settles.
+    const timer = window.setTimeout(() => {
+      frame.current?.contentWindow?.postMessage({ type: "taplo:focus", target: focus }, window.location.origin)
+    }, 120)
+    return () => window.clearTimeout(timer)
+  }, [focus, focusKey, loaded])
+
+  const partialPhone = Boolean(L && fitHeight && mode === "device" && L.outerH < L.outerW * 1.6)
+
+  const iframe = L ? (
+    <iframe
+      key={attempt}
+      ref={setFrame}
+      title={title}
+      tabIndex={interactive && !skipTab ? undefined : -1}
+      aria-hidden={interactive ? undefined : true}
+      inert={!interactive || !loaded}
+      src={src}
+      loading={loading}
+      data-testid={testId ?? "preview-frame"}
+      onLoad={() => { prepareDocument(); post() }}
+      className="preview-document"
+      data-loaded={loaded}
+      style={{ width: mode === "fill" ? "100%" : L.vw, height: mode === "fill" ? "100%" : L.vh, border: 0, display: "block", background: "white", pointerEvents: interactive && loaded ? undefined : "none" }}
+    />
+  ) : null
+
+  return (
+    <div ref={host} className={cn("relative h-full w-full min-h-0", zoom === "actual" ? "overflow-auto" : "overflow-hidden", className)} data-preview-mode={mode}>
+      {/* Keep one DOM path for the iframe: changing viewport must not reload a booking or discard typed details. */}
+      {L ? (
+        <div className={cn("absolute inset-x-0 top-0 flex justify-center", mode === "device" && zoom !== "actual" && !cropDevice && "inset-y-0 items-center", zoom === "actual" && "relative")}>
+          <div style={{ width: L.outerW * L.scale, height: L.outerH * L.scale }} className={cn("shrink-0", smooth && "preview-camera")}>
+            <div
+              className={cn("relative origin-top-left", smooth && "preview-camera", decorated ? (mode === "device" ? "phone-shell" : "browser-shell") : "")}
+              data-preview-partial={partialPhone || undefined}
+              style={{ width: L.outerW, height: partialPhone ? Math.max(L.outerH, PHONE.height) : L.outerH, padding: L.pad, transform: L.scale === 1 ? undefined : `scale(${L.scale})` }}
+            >
+              {L.bar ? <BrowserChrome url={url} height={L.bar} /> : null}
+              <div className={cn("relative overflow-hidden bg-white", decorated && mode === "device" && "phone-screen")} style={{ width: L.vw, height: L.vh + L.safeTop + L.safeBottom, paddingTop: L.safeTop, paddingBottom: L.safeBottom, borderBottomLeftRadius: partialPhone ? 0 : undefined, borderBottomRightRadius: partialPhone ? 0 : undefined }}>
+                {iframe}
+                {!loaded && !stalled ? <div className="preview-screen-loading" aria-hidden="true"><span /><span /><span /></div> : null}
+                {stalled && !loaded ? <div role="alert" className="absolute inset-0 z-10 grid place-content-center gap-3 bg-white p-6 text-center text-sm text-neutral-800"><p>Preview unavailable. Your page and actions still work.</p><button type="button" className="mx-auto min-h-11 rounded-full border border-neutral-300 px-5 font-semibold" onClick={() => { setStalled(false); setAttempt((n) => n + 1) }}>Try again</button></div> : null}
+              </div>
+              {decorated && mode === "device" ? <PhoneChrome /> : null}
+            </div>
+          </div>
+        </div>
+      ) : null}
+      {!loaded && poster ? <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img {...getImageProps({ src: `${poster}?v=20261024-brands`, alt: "", width: mode === "desktop" ? 2200 : 780, height: mode === "desktop" ? 1520 : 1600, sizes: mode === "desktop" ? "550px" : "310px", loading: "eager", fetchPriority: "high" }).props} alt="" className={cn("size-full object-top", mode === "desktop" ? "object-contain" : "object-cover")} /></div> : null}
+    </div>
+  )
+}

@@ -1,0 +1,53 @@
+{
+  "edition": "2.8",
+  "status": "exact_proposed_contract_not_implemented_or_authority_evidence",
+  "permission": "schedule.manage",
+  "scope": "current_business_location_resource_and_field_projection",
+  "commands": [
+    {
+      "name": "PreviewWorkingHoursImpact",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/availability/working-hours/impact",
+      "request": "availability-v2.schema.json#/$defs/ImpactRequest",
+      "response": "availability-v2.schema.json#/$defs/ImpactResponse",
+      "mutation": "creates_expiring_bound_impact_not_hours_change",
+      "effect_on_customer_agreements": "none"
+    },
+    {
+      "name": "ApplyWorkingHours",
+      "method": "POST",
+      "path": "/v1/businesses/{business_id}/availability/working-hours/apply",
+      "request": "availability-v2.schema.json#/$defs/ApplyRequest",
+      "response": "availability-v2.schema.json#/$defs/ApplyResponse",
+      "headers": [
+        "Idempotency-Key",
+        "X-Request-ID",
+        "If-Match for existing rule; must equal proposal.expected_rule_version"
+      ],
+      "transaction": "current_authorisation_and_scopes_then_lock_resource_schedule_and_versions_recheck_impact_bound_hash_and_accepted_work_revision_write_rule_version_audit_and_outbox_atomically",
+      "events": [
+        "availability.working_pattern_changed.v2"
+      ],
+      "preserve": [
+        "existing_commitment_snapshots",
+        "advanced_breaks_exceptions",
+        "originating_offer_draft",
+        "public_opening_hours"
+      ],
+      "async": "projection_recomputation_not_new_commitment_acceptance_authority"
+    }
+  ],
+  "reconciliation": "AvailabilityRule.local_rule legacy string requires explicit versioned adapter/migration; do not roundtrip complex legacy recurrence through simple editor",
+  "runtime_cases": [
+    "unauthorised_business",
+    "resource_location_mismatch",
+    "stale_rule",
+    "new_booking_after_impact",
+    "expired_impact",
+    "reused_key_other_payload",
+    "timeout_after_commit",
+    "worker_retry",
+    "legacy_advanced_rule"
+  ],
+  "runtime_results": "not_executed"
+}

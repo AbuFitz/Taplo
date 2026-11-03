@@ -38,6 +38,12 @@ export function telHref(phone: string): string {
   return `tel:${phone}`;
 }
 
+/** Opens the customer's own text-messaging app with a message ready to send. Nothing is sent by Taplo. `?&body=` works on both iOS and Android. */
+export function smsHref(phone: string, text?: string): string {
+  const num = phone.replace(/[^\d+]/g, "");
+  return `sms:${num}${text ? `?&body=${encodeURIComponent(text)}` : ""}`;
+}
+
 /** wa.me wants digits only, with no leading plus. */
 export function whatsappHref(phone: string, text?: string): string {
   const digits = phone.replace(/\D/g, "");

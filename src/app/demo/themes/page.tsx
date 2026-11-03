@@ -1,26 +1,22 @@
 import Link from "next/link"
+import { PagePreview } from "@/features/preview/PagePreview"
 import type { Metadata } from "next"
 import { FIXTURES, getFixture } from "@/features/themes/fixtures"
 import { THEMES } from "@/features/page/themes/catalogue"
 
 export const dynamic = "force-dynamic"
-export const metadata: Metadata = { title: "Theme gallery — Taplo", robots: { index: false, follow: false } }
-
-const VIEWPORTS = { phone: 390, desktop: 1280 } as const
+export const metadata: Metadata = { title: "Theme gallery · Taplo", robots: { index: false, follow: false } }
 
 /** One business through every theme, side by side: shows themes change the page, not the content. */
 export default async function ThemeGallery({ searchParams }: { searchParams: Promise<{ fixture?: string; viewport?: string }> }) {
   const sp = await searchParams
   const fixture = getFixture(sp.fixture ?? "") ?? FIXTURES.find((f) => f.key === "barber")!
   const viewport = sp.viewport === "desktop" ? "desktop" : "phone"
-  const width = VIEWPORTS[viewport]
-  const scale = viewport === "phone" ? 0.62 : 0.28
-  const height = viewport === "phone" ? 980 : 900
   return (
     <div className="mx-auto w-full max-w-[1800px] p-4 sm:p-6">
       <p className="text-sm"><Link className="underline" href="/demo/profiles">← Sample profiles</Link></p>
       <h1 className="mt-2 text-xl font-semibold">{fixture.content.identity.name} in every look</h1>
-      <p className="mt-1 max-w-3xl text-sm text-neutral-600">Same business records, same widgets in the same order — only the theme changes. (Synthetic sample.)</p>
+      <p className="mt-1 max-w-3xl text-sm text-neutral-600">Same business records, same blocks in the same order. Only the theme changes. (Synthetic sample.)</p>
       <nav aria-label="Samples" className="mt-4 flex flex-wrap gap-2 text-sm">
         {FIXTURES.filter((f) => !["minimal", "no-contacts", "stress", "detailer"].includes(f.key)).map((f) => (
           <Link key={f.key} href={`/demo/themes?fixture=${f.key}&viewport=${viewport}`} className={`rounded-full border px-3 py-1.5 ${f.key === fixture.key ? "bg-neutral-900 text-white" : ""}`}>{f.label}</Link>
@@ -36,8 +32,8 @@ export default async function ThemeGallery({ searchParams }: { searchParams: Pro
               <Link className="text-sm underline underline-offset-4" href={`/${fixture.content.identity.slug}?theme=${t.id}`} target="_blank">Open</Link>
             </div>
             <p className="mb-2 text-xs text-neutral-600">{t.description}</p>
-            <div className="overflow-hidden rounded-lg border" style={{ width: width * scale, height: height * scale }}>
-              <iframe title={`${fixture.label} — ${t.name}`} src={`/${fixture.content.identity.slug}?theme=${t.id}`} loading="lazy" style={{ width, height, transform: `scale(${scale})`, transformOrigin: "top left", border: 0 }} />
+            <div className="h-[36rem] w-full">
+              <PagePreview loading="lazy" title={`${fixture.label} · ${t.name}`} src={`/${fixture.content.identity.slug}?theme=${t.id}`} mode={viewport === "phone" ? "device" : "desktop"} chrome />
             </div>
           </section>
         ))}

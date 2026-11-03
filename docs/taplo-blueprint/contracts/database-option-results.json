@@ -1,0 +1,164 @@
+{
+  "edition": "2.5",
+  "status": "assumed_workloads_not_actual_quotes_or_equal_capacity_benchmark",
+  "gbp_per_usd_assumption_not_live_fx": 0.8,
+  "neon_cases": [
+    {
+      "workload": "lean",
+      "plan": "launch",
+      "hours": 720,
+      "average_cu": 0.25,
+      "database_gb": 10,
+      "history_gb": 5,
+      "snapshot_gb_month": 10,
+      "usd_line_items": {
+        "compute": 19.08,
+        "database_storage": 3.5,
+        "retained_history": 1.0,
+        "one_snapshot_equivalent": 0.8999999999999999
+      },
+      "usd_total": 24.479999999999997,
+      "gbp_total": 19.584
+    },
+    {
+      "workload": "lean",
+      "plan": "scale",
+      "hours": 720,
+      "average_cu": 0.25,
+      "database_gb": 10,
+      "history_gb": 5,
+      "snapshot_gb_month": 10,
+      "usd_line_items": {
+        "compute": 39.96,
+        "database_storage": 3.5,
+        "retained_history": 1.0,
+        "one_snapshot_equivalent": 0.8999999999999999
+      },
+      "usd_total": 45.36,
+      "gbp_total": 36.288000000000004
+    },
+    {
+      "workload": "steady",
+      "plan": "launch",
+      "hours": 720,
+      "average_cu": 1,
+      "database_gb": 50,
+      "history_gb": 20,
+      "snapshot_gb_month": 50,
+      "usd_line_items": {
+        "compute": 76.32,
+        "database_storage": 17.5,
+        "retained_history": 4.0,
+        "one_snapshot_equivalent": 4.5
+      },
+      "usd_total": 102.32,
+      "gbp_total": 81.856
+    },
+    {
+      "workload": "steady",
+      "plan": "scale",
+      "hours": 720,
+      "average_cu": 1,
+      "database_gb": 50,
+      "history_gb": 20,
+      "snapshot_gb_month": 50,
+      "usd_line_items": {
+        "compute": 159.84,
+        "database_storage": 17.5,
+        "retained_history": 4.0,
+        "one_snapshot_equivalent": 4.5
+      },
+      "usd_total": 185.84,
+      "gbp_total": 148.672
+    },
+    {
+      "workload": "busier",
+      "plan": "launch",
+      "hours": 720,
+      "average_cu": 2,
+      "database_gb": 100,
+      "history_gb": 50,
+      "snapshot_gb_month": 100,
+      "usd_line_items": {
+        "compute": 152.64,
+        "database_storage": 35.0,
+        "retained_history": 10.0,
+        "one_snapshot_equivalent": 9.0
+      },
+      "usd_total": 206.64,
+      "gbp_total": 165.312
+    },
+    {
+      "workload": "busier",
+      "plan": "scale",
+      "hours": 720,
+      "average_cu": 2,
+      "database_gb": 100,
+      "history_gb": 50,
+      "snapshot_gb_month": 100,
+      "usd_line_items": {
+        "compute": 319.68,
+        "database_storage": 35.0,
+        "retained_history": 10.0,
+        "one_snapshot_equivalent": 9.0
+      },
+      "usd_total": 373.68,
+      "gbp_total": 298.944
+    }
+  ],
+  "small_staging_usd_line_items": {
+    "compute": 0.53,
+    "database_storage": 1.75,
+    "retained_history": 0.4,
+    "snapshot": 0.44999999999999996
+  },
+  "small_staging_usd_total": 3.13,
+  "small_staging_gbp_total": 2.504,
+  "supabase_scenarios": [
+    {
+      "scenario": "micro_daily_backups",
+      "usd_line_items": {
+        "pro_plan": 25,
+        "rounded_monthly_compute_anchor": 10,
+        "org_compute_credit": -10,
+        "extra_database_storage": 0.25,
+        "rounded_7day_pitr_anchor": 0
+      },
+      "usd_total": 25.25,
+      "gbp_total": 20.200000000000003
+    },
+    {
+      "scenario": "small_with_7day_pitr",
+      "usd_line_items": {
+        "pro_plan": 25,
+        "rounded_monthly_compute_anchor": 15,
+        "org_compute_credit": -10,
+        "extra_database_storage": 0.25,
+        "rounded_7day_pitr_anchor": 100
+      },
+      "usd_total": 130.25,
+      "gbp_total": 104.2
+    },
+    {
+      "scenario": "medium_with_7day_pitr",
+      "usd_line_items": {
+        "pro_plan": 25,
+        "rounded_monthly_compute_anchor": 60,
+        "org_compute_credit": -10,
+        "extra_database_storage": 5.25,
+        "rounded_7day_pitr_anchor": 100
+      },
+      "usd_total": 180.25,
+      "gbp_total": 144.20000000000002
+    }
+  ],
+  "exclusions": [
+    "provider_tax_fx_card_fees",
+    "auth_MAU_or_feature_addons",
+    "object_media_storage_and_transfer",
+    "additional_snapshots_history_branches_egress",
+    "independent_backup_storage_and_restore_labour",
+    "hosting_workers_email_sms_maps_support",
+    "load_test_evidence_and_migration_cost"
+  ]
+}

@@ -1,0 +1,1623 @@
+{
+  "edition": "2.8",
+  "status": "screen_state_production_inventory_not_completed_designs",
+  "screens": [
+    {
+      "id": "onboarding.identity",
+      "surface": "onboarding",
+      "required_content": "Name, business activity, useful intent",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "onboarding.category",
+      "surface": "onboarding",
+      "required_content": "Alias search, mixed/other, capability explanation",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "onboarding.look",
+      "surface": "onboarding",
+      "required_content": "Curated look/colour with real draft",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "onboarding.content",
+      "surface": "onboarding",
+      "required_content": "Optional intro/logo with no fabricated initial",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "onboarding.review",
+      "surface": "onboarding",
+      "required_content": "Readable non-interactive draft and public/private facts",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "onboarding.account",
+      "surface": "onboarding",
+      "required_content": "Apple/Google/email code and recovery",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "onboarding.resume",
+      "surface": "onboarding",
+      "required_content": "Interrupted registration/draft conflict",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "onboarding.studio_entry",
+      "surface": "onboarding",
+      "required_content": "Next useful action and preserved draft",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.today",
+      "surface": "studio",
+      "required_content": "Urgent work, upcoming work and next dependency",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.offer_list",
+      "surface": "studio",
+      "required_content": "Types, draft/live/unavailable and relevant actions",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.service_editor",
+      "surface": "studio",
+      "required_content": "Title, owner-entered price/duration and scheduling",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.hours_quick",
+      "surface": "studio",
+      "required_content": "Resource/timezone/week/effect/impact",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.availability_full",
+      "surface": "studio",
+      "required_content": "Exceptions, resources, stale external calendar",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.product_editor",
+      "surface": "studio",
+      "required_content": "Options, stock and fulfilment readiness",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.inventory",
+      "surface": "studio",
+      "required_content": "Actual/committed/unavailable stock and adjustments",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.session_editor",
+      "surface": "studio",
+      "required_content": "Date/timezone/capacity/host and series scope",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.quote",
+      "surface": "studio",
+      "required_content": "Scope/version/acceptance/variation",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.calendar",
+      "surface": "studio",
+      "required_content": "Agenda/week/resources and conflict",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.work_detail",
+      "surface": "studio",
+      "required_content": "Booking/order progress, customer and next action",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.fulfilment",
+      "surface": "studio",
+      "required_content": "Line quantities, collection/delivery/return",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.payment_setup",
+      "surface": "studio",
+      "required_content": "Hosted onboarding, charge/payout readiness",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.refund",
+      "surface": "studio",
+      "required_content": "Authority, amount/history and unknown outcome",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.team_invite",
+      "surface": "studio",
+      "required_content": "Resource/login/profile/grants and deliberate send",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.team_work",
+      "surface": "studio",
+      "required_content": "Assigned scope, own profile and temporary permissions",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.role_editor",
+      "surface": "studio",
+      "required_content": "Location/actions/fields summary, safe custom grants",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.page_editor",
+      "surface": "studio",
+      "required_content": "Look/Brand/Content/Order and source content",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.media_picker",
+      "surface": "studio",
+      "required_content": "Own/stock provenance, crop/contain and rights",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.reward_setup",
+      "surface": "studio",
+      "required_content": "Earn/reward/threshold and activation review",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.scanner",
+      "surface": "studio",
+      "required_content": "Camera/lookup/review/confirm/status",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.sharing_wallet",
+      "surface": "studio",
+      "required_content": "Public card/private loyalty split and provider handover",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.communications",
+      "surface": "studio",
+      "required_content": "Purpose, audience, template and dispatch cost",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.domain",
+      "surface": "studio",
+      "required_content": "Ownership/DNS/certificate and preserved MX",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.billing",
+      "surface": "studio",
+      "required_content": "Exact plan/extra purchase/change/exit",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.help",
+      "surface": "studio",
+      "required_content": "Contextual diagnostics, case and human route",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "studio.settings",
+      "surface": "studio",
+      "required_content": "Identity/security/privacy and business switches",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.explore_list",
+      "surface": "customer",
+      "required_content": "Business windows, query/category and chosen area",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.explore_map",
+      "surface": "customer",
+      "required_content": "Neutral styled map, pins/cluster and selected preview",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.location_search",
+      "surface": "customer",
+      "required_content": "Manual/geolocation/ambiguity/denial",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.mini_space",
+      "surface": "customer",
+      "required_content": "Identity, typed blocks, rails and source context",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.product_sheet",
+      "surface": "customer",
+      "required_content": "Options, price, seller and cart action",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.service_sheet",
+      "surface": "customer",
+      "required_content": "Offer/staff/location and booking action",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.time_select",
+      "surface": "customer",
+      "required_content": "Eligible times and timezone/resource context",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.class_select",
+      "surface": "customer",
+      "required_content": "Occurrence, seats/attendees and waitlist",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.quote_request",
+      "surface": "customer",
+      "required_content": "Relevant intake, scope and response expectation",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.bag",
+      "surface": "customer",
+      "required_content": "Single merchant, fulfilment and total",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.commit_review",
+      "surface": "customer",
+      "required_content": "Price/due-now/due-later/policy and exact commitment",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.payment",
+      "surface": "customer",
+      "required_content": "Actual processor states and unknown result",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.confirmation",
+      "surface": "customer",
+      "required_content": "Confirmed/requested/pending distinction",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.private_return",
+      "surface": "customer",
+      "required_content": "Access-scoped upcoming/order/action/rewards",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.manage_work",
+      "surface": "customer",
+      "required_content": "Change/cancel/impact and refund status",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.rewards",
+      "surface": "customer",
+      "required_content": "Join/progress/eligibility/Wallet add",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.saved",
+      "surface": "customer",
+      "required_content": "Known businesses and consistent back context",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.review_report",
+      "surface": "customer",
+      "required_content": "Authenticity/report/appeal and no positive gating",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.share",
+      "surface": "customer",
+      "required_content": "Public-safe link/card/QR and no private previews",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "customer.account",
+      "surface": "customer",
+      "required_content": "Identity/linking/guardian/privacy/delete/preferences",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "console.case_queue",
+      "surface": "console",
+      "required_content": "Owner/priority/deadline and safe scope",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "console.case_detail",
+      "surface": "console",
+      "required_content": "Timeline/evidence and next authorised action",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "console.financial",
+      "surface": "console",
+      "required_content": "Provider/ledger mismatch and approval",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "console.merchant_access",
+      "surface": "console",
+      "required_content": "Current memberships and ownership recovery",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "console.moderation",
+      "surface": "console",
+      "required_content": "Report/restriction/appeal and attribution",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "console.messages",
+      "surface": "console",
+      "required_content": "Abuse/queue/suppression and scoped pause",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "console.integration",
+      "surface": "console",
+      "required_content": "Provider state/credential scope and reconcile",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "console.incident",
+      "surface": "console",
+      "required_content": "Impact, status, containment and evidence",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "console.privacy",
+      "surface": "console",
+      "required_content": "Rights/deletion/retention/secure delivery",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "console.publication",
+      "surface": "console",
+      "required_content": "Actual legal/entity/category readiness",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "console.audit",
+      "surface": "console",
+      "required_content": "Actor/action/reason/evidence and redaction",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    },
+    {
+      "id": "console.settings",
+      "surface": "console",
+      "required_content": "Workforce MFA, roles and recovery",
+      "required_states": [
+        "normal_or_empty",
+        "loading",
+        "validation_where_editable",
+        "permission_denied_or_revoked",
+        "conflict_or_changed_facts_where_mutating",
+        "offline_or_unknown_result_where_remote",
+        "success_with_persistent_record_where_committed"
+      ],
+      "compositions": [
+        "390px_mobile",
+        "768px_tablet",
+        "1440px_desktop",
+        "light",
+        "dark",
+        "large_text_and_keyboard"
+      ],
+      "delivery_state": "specified_not_final_rendered",
+      "evidence": []
+    }
+  ],
+  "state_applicability": "mark_not_applicable_with_reason_per_frame_not_fake_pass_all_cartesian_states",
+  "selected_reference": "LOW-FRICTION-REFERENCE.html",
+  "selected_reference_scenes": [
+    "onboarding.look",
+    "studio.service_editor_and_hours_quick",
+    "customer.commit_review",
+    "console.financial"
+  ],
+  "native_and_provider_layouts_not_proved": true
+}

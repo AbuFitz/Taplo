@@ -1,0 +1,189 @@
+{
+  "assets": [
+    {
+      "id": "stillwater-hero",
+      "file": "/taplo-demo/stillwater-hero.png",
+      "width": 1536,
+      "height": 1024,
+      "alt": "A gloved hand wipes the bonnet of a blue coupe in an illustrative detailing workshop.",
+      "focalPoint": {
+        "x": 62,
+        "y": 48
+      },
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "created": "2026-10-24 Europe/London",
+      "status": "illustrative-fictional-demo",
+      "uses": [
+        "detailer example cover",
+        "creative direction review"
+      ],
+      "restrictions": [
+        "Not a real customer result",
+        "Not an identifiable vehicle listing",
+        "Not before-and-after proof"
+      ],
+      "prompt": "Use case: photorealistic-natural. Asset type: original premium car-detailing photography for a clearly fictional Taplo example business called Stillwater Detailing. Create a single polished editorial photograph, landscape 3:2. Close three-quarter view of the front quarter and bonnet of a deep midnight-blue unbranded sports coupe in a clean contemporary detailing bay. A technician's natural gloved hand uses a folded pale microfibre cloth on the bonnet, excellent plausible hand anatomy. Broad overhead strip lights reflected as controlled clean lines across flawless paint, restrained cool daylight, tactile real materials, subtly wet floor, sophisticated deep blue and silver palette. It should feel like a carefully commissioned independent automotive workshop photograph, credible and specific rather than a generic CGI supercar. Keep the car's front quarter in the centre-right with breathable dark workshop space upper left for crop flexibility. No text, no logos, no badges, no watermark, no before-and-after comparison, no invented performance claim. This is illustrative generated demo photography, not evidence of an actual business or completed job."
+    },
+    {
+      "id": "station-road-mark",
+      "file": "/taplo-demo/station-road-mark.svg",
+      "width": 240,
+      "height": 120,
+      "sourceType": "original-code-native-svg",
+      "status": "fictional-demo-wordmark",
+      "restrictions": [
+        "Not a real business identity or endorsement"
+      ],
+      "revision": "2026-10-24 coordinated monochrome-platform / customer-brand example identities; outlined Space Grotesk and Lexend wordmarks."
+    },
+    {
+      "id": "parkside-mark",
+      "file": "/taplo-demo/parkside-mark.svg",
+      "width": 240,
+      "height": 120,
+      "sourceType": "original-code-native-svg",
+      "status": "fictional-demo-wordmark",
+      "restrictions": [
+        "Not a real business identity or endorsement"
+      ],
+      "revision": "2026-10-24 coordinated monochrome-platform / customer-brand example identities; outlined Space Grotesk and Lexend wordmarks."
+    },
+    {
+      "id": "brookfield-golf",
+      "file": "/taplo-demo/brookfield-golf.png",
+      "width": 1536,
+      "height": 1024,
+      "alt": "An illustrative grey hatchback on a small British forecourt.",
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "generationSource": "exec-d57765d9-7026-4050-b20e-a7b5177d4862.png",
+      "created": "2026-10-24 Europe/London",
+      "status": "illustrative-fictional-demo",
+      "uses": [
+        "Brookfield Motors fictional stock example",
+        "Current renderer gallery captures"
+      ],
+      "restrictions": [
+        "Not a real vehicle, condition report or active listing",
+        "Generated details do not establish trim or specifications"
+      ],
+      "brief": "Natural eye-level front three-quarter listing photograph of an ordinary grey Mk8-style Golf at a small UK brick-workshop forecourt, overcast light, blank front plate, no sales overlays or dramatic CGI styling."
+    },
+    {
+      "id": "brookfield-cx5",
+      "file": "/taplo-demo/brookfield-cx5.png",
+      "width": 1536,
+      "height": 1024,
+      "alt": "An illustrative red SUV on a small British forecourt.",
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "generationSource": "exec-b8bfbe78-c211-48ff-af84-ff82dd98c457.png",
+      "referenceAsset": "brookfield-golf",
+      "created": "2026-10-24 Europe/London",
+      "status": "illustrative-fictional-demo",
+      "uses": [
+        "Brookfield Motors fictional stock example",
+        "Current renderer gallery captures"
+      ],
+      "restrictions": [
+        "Not a real vehicle, condition report or active listing",
+        "Generated details do not establish trim or specifications"
+      ],
+      "brief": "Replace only the reference car while preserving the same ordinary UK forecourt, natural cloudy light, sensible listing-photo perspective and blank front plate."
+    },
+    {
+      "id": "brookfield-mini",
+      "file": "/taplo-demo/brookfield-mini.png",
+      "width": 1536,
+      "height": 1024,
+      "alt": "An illustrative off-white compact hatchback on a small British forecourt.",
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "generationSource": "exec-99b04abb-a3de-4903-ac16-164d979ea798.png",
+      "referenceAsset": "brookfield-golf",
+      "created": "2026-10-24 Europe/London",
+      "status": "illustrative-fictional-demo",
+      "uses": [
+        "Brookfield Motors fictional stock example",
+        "Current renderer gallery captures"
+      ],
+      "restrictions": [
+        "Not a real vehicle, condition report or active listing",
+        "Generated details do not establish trim or specifications"
+      ],
+      "brief": "Replace only the reference car while preserving the same ordinary UK forecourt, natural cloudy light, sensible listing-photo perspective and blank front plate."
+    },
+    {
+      "id": "brookfield-mark",
+      "file": "/taplo-demo/brookfield-mark.svg",
+      "width": 240,
+      "height": 120,
+      "sourceType": "original-code-native-svg",
+      "status": "fictional-demo-wordmark",
+      "restrictions": [
+        "Not a real business identity or endorsement"
+      ],
+      "revision": "2026-10-24 coordinated monochrome-platform / customer-brand example identities; outlined Space Grotesk and Lexend wordmarks."
+    },
+    {
+      "id": "station-paste",
+      "file": "/taplo-demo/station-paste.png",
+      "width": 1152,
+      "height": 768,
+      "alt": "Illustrative navy styling-paste tin on a local barber counter",
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "generationSource": "exec-5d710fbb-e14f-41de-bfd2-9f69398501b4.png",
+      "created": "2026-10-24 Europe/London",
+      "status": "illustrative-fictional-demo",
+      "uses": [
+        "Station Road example product",
+        "Current engine product captures"
+      ],
+      "restrictions": [
+        "Not a real product or branded endorsement",
+        "No ingredient or performance claims implied"
+      ]
+    },
+    {
+      "id": "corner-table-cafe",
+      "file": "/taplo-demo/corner-table-cafe.png",
+      "width": 1536,
+      "height": 1024,
+      "alt": "Illustrative caf\u00e9 interior with mushrooms on toast and a flat white.",
+      "sourceType": "generated",
+      "generator": "built-in image generation tool",
+      "generatedSource": "/Users/abu-bakr/.codex/generated_images/01a16af8-45fc-7782-b54a-b39524f31f91/exec-77bbf821-f383-417b-b669-92dd23ece2c3.png",
+      "status": "fictional-demo-illustration",
+      "restrictions": [
+        "Not a real business, job, learner or endorsement",
+        "No qualifications, reviews or completed-job proof implied"
+      ]
+    },
+    {
+      "id": "corner-table-mark",
+      "file": "/taplo-demo/corner-table-mark.svg",
+      "width": 280,
+      "height": 120,
+      "sourceType": "original-code-native-svg",
+      "status": "fictional-demo-wordmark",
+      "restrictions": [
+        "Not a real business identity or endorsement"
+      ],
+      "revision": "2026-10-24 coordinated monochrome-platform / customer-brand example identities; outlined Space Grotesk and Lexend wordmarks."
+    },
+    {
+      "id": "oakfield-mark",
+      "file": "/taplo-demo/oakfield-mark.svg",
+      "width": 240,
+      "height": 120,
+      "sourceType": "original-code-native-svg",
+      "status": "fictional-demo-wordmark",
+      "restrictions": [
+        "Not a real business identity or endorsement"
+      ],
+      "revision": "2026-10-24 coordinated monochrome-platform / customer-brand example identities; outlined Space Grotesk and Lexend wordmarks."
+    }
+  ]
+}

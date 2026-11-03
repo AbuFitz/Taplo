@@ -1,0 +1,53 @@
+{
+  "profile": {
+    "file": "profile.webp",
+    "width": 780,
+    "height": 938,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "c0b9f966c68e"
+  },
+  "menu": {
+    "file": "menu.webp",
+    "width": 716,
+    "height": 1204,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "a81249e45e79"
+  },
+  "time": {
+    "file": "time.webp",
+    "width": 1408,
+    "height": 1620,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "f120cf20f9b2"
+  },
+  "stock": {
+    "file": "stock.webp",
+    "width": 1152,
+    "height": 1424,
+    "source": "/appearance/frame?scenario=brookfield",
+    "sha256": "d942475e9275"
+  },
+  "cafe": {
+    "file": "cafe.webp",
+    "width": 716,
+    "height": 1010,
+    "source": "/appearance/frame?scenario=corner&widget=priceMenu&treatment=soft",
+    "sha256": "c142b51a1a1b"
+  },
+  "page": {
+    "file": "page.webp",
+    "width": 780,
+    "height": 1688,
+    "source": "/appearance/frame?scenario=station",
+    "sha256": "60ffa6dc9656"
+  },
+  "brand": {
+    "file": "brand.png"
+  },
+  "identity": {
+    "file": "identity.png"
+  },
+  "qr": {
+    "file": "qr.png"
+  }
+}

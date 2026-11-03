@@ -1,0 +1,21 @@
+{
+  "checked": "2026-10-25",
+  "source": "https://shop.fixnowmechanics.co.uk/",
+  "usage": "Owner-requested reuse of their shop product content and photography. Prices were checked on the shop homepage; product links open the existing shop.",
+  "images": {
+    "thinkware-f70-pro.jpg": "https://cdn.shopify.com/s/files/1/1085/2584/6858/files/thinkware-f70-pro-pack.jpg?v=1791755772",
+    "thinkware-q200.jpg": "https://cdn.shopify.com/s/files/1/1085/2584/6858/files/thinkware-q200-front-rear-gps-pack.jpg?v=1791755807",
+    "thinkware-x800.jpg": "https://cdn.shopify.com/s/files/1/1085/2584/6858/files/x800-1.jpg?v=1791763401"
+  },
+  "businessSource": "https://www.fixnowmechanics.co.uk/",
+  "facts": [
+    "Mobile diagnostic \u00a345; brakes from \u00a355; servicing from \u00a3129; electrical work from \u00a3100. General repairs and suspension by quote.",
+    "Coverage approximately 25 miles by road from Hemel Hempstead, subject to postcode check."
+  ],
+  "wordmark": "Code-native typesetting of the existing Fix / Now / Mechanics website wordmark, using its verified yellow #f2b602; no invented badge or certification.",
+  "additionalImages": {
+    "van.jpg": "https://www.fixnowmechanics.co.uk/CompanyVan.jpg",
+    "mechanic.jpg": "https://www.fixnowmechanics.co.uk/assets/trust-mechanic-BhaVc_lg.jpg",
+    "diagnostic.jpg": "https://www.fixnowmechanics.co.uk/diagonstic.jpg"
+  }
+}

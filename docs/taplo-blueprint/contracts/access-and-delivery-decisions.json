@@ -1,0 +1,75 @@
+{
+  "edition": "2.6",
+  "status": "adopted_blueprint_proposals_not_deployed_configuration",
+  "database": {
+    "choice": "Neon_Postgres",
+    "existing_database_configured": false,
+    "account_opened": false,
+    "universal_cheaper_or_better_claim": false
+  },
+  "source_strategy": "one_private_monorepo_independent_apps_releases",
+  "native_products": [
+    "Taplo_customer_iOS_Android",
+    "Taplo_Studio_iOS_Android"
+  ],
+  "console_native_app": false,
+  "hosts": {
+    "mytaplo.com": "marketing_public_businesses_customer_browser",
+    "studio.mytaplo.com": "merchant_member_workspace",
+    "console.mytaplo.com": "restricted_workforce",
+    "api.mytaplo.com": "controlled_first_party_API_auth_workers",
+    "status.mytaplo.com": "independent_public_incidents"
+  },
+  "auth": {
+    "customer": [
+      "apple",
+      "google",
+      "email_otp"
+    ],
+    "merchant": [
+      "apple",
+      "google",
+      "email_otp"
+    ],
+    "sms_login": false,
+    "automatic_email_based_provider_merge": false,
+    "console_public_signup": false,
+    "protected_action_stepup_seconds": 300,
+    "all_enabled_methods_require_server_assurance_gate": true,
+    "otp": {
+      "digits": 6,
+      "expiry_seconds": 600,
+      "max_attempts": 5,
+      "resend_cooldown_seconds": 30
+    }
+  },
+  "wallets": {
+    "customer_loyalty_min_plan": "pro",
+    "public_professional_card_min_plan": "core",
+    "payment_wallet_separate": true,
+    "default_redemption": "authorised_Studio_camera_scan_server_confirm",
+    "offline_redemption": false,
+    "dedicated_hardware_required": false,
+    "nfc_wallet_terminal": "later_separate_approved_programme",
+    "public_card_token_can_redeem": false,
+    "public_professional_card_destination": "published_business_or_owner_approved_professional_profile",
+    "public_card_and_loyalty_code_namespaces_separate": true
+  },
+  "widgets": {
+    "types": [
+      "mini_page_block",
+      "controlled_website_embed",
+      "native_phone_widget"
+    ],
+    "real_time_guarantee": false,
+    "default_private_details": "redacted",
+    "direct_financial_mutation": false
+  },
+  "store_cost_anchors_usd": {
+    "apple_annual": 99,
+    "google_one_time": 25,
+    "expo_starter_monthly_plus_usage": 19
+  },
+  "ordinary_package_prices_changed": false,
+  "release_status": "provider_legal_runtime_native_evidence_required"
+}

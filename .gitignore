@@ -43,3 +43,24 @@ next-env.d.ts
 # test output
 /test-results/
 /playwright-report/
+
+# Intermediate browser walkthrough recordings
+/.cache/walkthroughs/
+
+# HyperFrames working files
+/marketing/film/.hyperframes/
+/marketing/film/renders/
+/marketing/film/formats/**/.hyperframes/
+/marketing/film/formats/**/renders/
+
+# Intermediate 3D scene review images
+/.cache/three-review/
+
+# Atomic intermediate film encodes
+/.cache/film/
+.claude/refs/
+
+.claude/skills/impeccable/scripts/bin/
+.impeccable/*.png
+.impeccable/review/
+.next-*

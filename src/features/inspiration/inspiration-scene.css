@@ -1,0 +1,9 @@
+.inspiration-site{min-height:100dvh;background:#080808;color:#fafafa}
+.inspiration-site .ig-detail-page{--foreground:#fafafa;--background:#080808;--muted:#18181b;--muted-foreground:#a1a1aa;color:#fafafa}
+.inspiration-site .ig-detail-page>section:first-child{padding-top:clamp(32px,5vw,72px)}
+.inspiration-site [data-testid=design-preview]{border-radius:28px;background:#151518;padding:clamp(14px,3vw,32px);border:1px solid #ffffff14}
+.inspiration-site [data-testid=design-preview] fieldset{background:#ffffff12}
+.inspiration-site [data-testid=design-preview] label:has(input:checked){background:#fafafa;color:#111}
+.inspiration-site [data-testid=design-preview] label:not(:has(input:checked)){color:#bdbdc5}
+.inspiration-site [aria-label="Related designs"]{border-top:1px solid #ffffff1a}
+.inspiration-site [aria-label="Related designs"] li>a>div{border-radius:24px;background:#161619}

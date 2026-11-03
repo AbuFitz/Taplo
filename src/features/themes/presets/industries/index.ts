@@ -1,3 +1,4 @@
+import { designsFor } from "@/features/page/themes/designs";
 import { industryPresetSchema, type IndustryPreset } from "../../contracts/industry";
 import type { WidgetType } from "@/features/page/contracts/widgets";
 
@@ -17,7 +18,7 @@ const T = {
   general: { services: "Services", team: "Team", booking: "Book", reviews: "Reviews" },
 } satisfies Record<string, Terms>;
 
-const SUGGESTED_THEME = { trades: "workshop", beauty: "studio", education: "classroom", professional: "editorial", general: "garden" } as const;
+const SUGGESTED_THEME = { trades: "clean", beauty: "clean", education: "clean", professional: "clean", general: "clean" } as const;
 
 /** Compact, link-first starting points. Empty widgets simply stay hidden until content exists. */
 const STARTER: Record<keyof typeof T, WidgetType[]> = {
@@ -94,14 +95,22 @@ const RAW: IndustryPreset[] = [
   // Clinics and other service businesses -> General layout
   preset("dentist", "Dentist / clinic", "general", "request", ["Check-up", "Hygiene appointment", "Consultation"], ["clinic", "dental"]),
   preset("physio", "Physio / therapist", "general", "request", ["Initial assessment", "Treatment session", "Follow-up"], ["physiotherapy", "chiropractor", "osteopath"]),
+  preset("car-dealer", "Car dealer", "general", "instant", ["Book a viewing", "Part-exchange valuation", "Finance conversation"], ["cars", "used cars", "motors", "forecourt"], { booking: "Book a viewing" }, { starterWidgets: ["booking", "products", "serviceList", "team", "reviews", "hours", "location", "enquiry"] }),
   preset("vet", "Vet / pet services", "general", "request", ["Consultation", "Vaccination", "Grooming", "Dog walking"], ["pet", "dog"]),
-  preset("hospitality", "Cafe / restaurant", "general", "contact", ["Menu", "Catering", "Private hire"], ["food", "cafe", "restaurant", "coffee", "bakery", "pub", "takeaway"], {}, { suggestedThemeId: "candy", starterWidgets: ["booking", "priceMenu", "document", "hours", "gallery", "location", "social", "reviews"] }),
+  preset("hospitality", "Cafe / restaurant", "general", "contact", ["Espresso", "Flat white", "Breakfast", "Cake"], ["food", "cafe", "restaurant", "coffee", "bakery", "pub", "takeaway"], { services: "Menu", booking: "Book a table" }, { suggestedThemeId: "clean", starterWidgets: ["booking", "priceMenu", "document", "hours", "gallery", "location", "social", "reviews"] }),
   preset("event-services", "Events / entertainment", "general", "request", ["Wedding package", "Corporate event", "Party"], ["dj", "catering", "wedding"]),
   // Fallback — always available, publishes immediately.
+  preset("designer", "Designer / creative studio", "professional", "contact", ["Brand identity", "Website design", "Design consultation"], ["graphic", "branding", "design", "portfolio"], {services:"Projects",booking:"Discuss a project"}, {suggestedThemeId:"index",starterWidgets:["gallery","text","serviceList","enquiry","social"]}),
+  preset("founder", "Founder / entrepreneur", "general", "contact", ["Working session", "Product feedback", "Collaboration"], ["startup", "entrepreneur", "creator", "independent"], {services:"Work together"}, {suggestedThemeId:"founder",starterWidgets:["text","gallery","enquiry","social"]}),
+  preset("maker", "Maker / independent shop", "general", "contact", [], ["ceramic", "pottery", "craft", "vintage", "retail", "shop"], {services:"Collection"}, {suggestedThemeId:"kiln",starterWidgets:["products","text","gallery","enquiry"]}),
+  preset("florist", "Florist / event stylist", "general", "contact", ["Seasonal bouquet", "Event flowers", "Flowers for a space"], ["floral", "flowers", "event styling"], {}, {suggestedThemeId:"petal",starterWidgets:["gallery","serviceList","enquiry","hours"]}),
+  preset("filmmaker", "Filmmaker / videographer", "professional", "contact", ["Brand film", "A day of filming", "Editing"], ["film", "video", "production", "portfolio"], {services:"Work together"}, {suggestedThemeId:"frame",starterWidgets:["gallery","serviceList","text","enquiry"]}),
+  preset("illustrator", "Illustrator / artist", "professional", "contact", ["Editorial illustration", "Personal commission"], ["art", "drawing", "lettering", "portfolio"], {services:"Commissions"}, {suggestedThemeId:"canvas",starterWidgets:["gallery","text","serviceList","enquiry"]}),
+  preset("interiors", "Interior designer", "professional", "contact", ["Room consultation", "Colour and materials", "Room plan"], ["interior", "styling", "spaces", "portfolio"], {}, {suggestedThemeId:"habitat",starterWidgets:["gallery","serviceList","text","enquiry"]}),
   preset("other", "Other / describe your business", "general", "contact", [], []),
 ];
 
-export const INDUSTRY_PRESETS: IndustryPreset[] = RAW.map((p) => industryPresetSchema.parse(p));
+export const INDUSTRY_PRESETS: IndustryPreset[] = RAW.map((p) => industryPresetSchema.parse(p)).map((p) => ({ ...p, suggestedThemeId: designsFor(p.id, 1)[0]?.id ?? p.suggestedThemeId }));
 export const OTHER_INDUSTRY_ID = "other";
 
 const byId = new Map(INDUSTRY_PRESETS.map((p) => [p.id, p]));

@@ -1,0 +1,3 @@
+:root{--background:#fff;--foreground:#0b1220;--primary:#0b1220;--signal:#1230ff;--signal-soft:#eceeff;--radius:.3rem;--border:#dde2ea;--muted:#f1f3f7;--secondary:#f1f3f7;--accent:#eceeff;--ring:#1230ff}
+body,button,input,textarea,select{font-family:Inter,sans-serif!important;font-variant-numeric:tabular-nums}
+*{box-shadow:none!important}

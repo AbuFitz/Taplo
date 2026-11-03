@@ -1,0 +1,1273 @@
+{
+  "base": "http://localhost:3100",
+  "dsf": 2,
+  "jobs": [
+    {
+      "id": "hero-barber",
+      "url": "/appearance/frame?scenario=station",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        700
+      ]
+    },
+    {
+      "id": "hero-dealer",
+      "url": "/appearance/frame?scenario=brookfield",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        700
+      ]
+    },
+    {
+      "id": "hero-trades",
+      "url": "/appearance/frame?scenario=oakfield",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        700
+      ]
+    },
+    {
+      "id": "yours-1-clean",
+      "url": "/appearance/frame?scenario=station&look=service",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        760
+      ]
+    },
+    {
+      "id": "yours-2-colour",
+      "url": "/appearance/frame?scenario=station&look=service",
+      "overrides": {
+        "header": {
+          "layout": "banner",
+          "avatarShape": "logo",
+          "align": "left"
+        }
+      },
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        760
+      ]
+    },
+    {
+      "id": "yours-3-type",
+      "url": "/appearance/frame?scenario=station&look=service",
+      "overrides": {
+        "header": {
+          "layout": "banner",
+          "avatarShape": "logo",
+          "align": "left"
+        },
+        "text": {
+          "headingFont": "inter",
+          "bodyFont": "inter",
+          "headingWeight": "bold",
+          "size": "lg"
+        }
+      },
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        760
+      ]
+    },
+    {
+      "id": "yours-4-final",
+      "url": "/appearance/frame?scenario=station&look=service",
+      "overrides": {
+        "header": {
+          "layout": "banner",
+          "avatarShape": "logo",
+          "align": "left"
+        },
+        "text": {
+          "headingFont": "inter",
+          "bodyFont": "inter",
+          "headingWeight": "bold",
+          "size": "lg"
+        },
+        "cards": {
+          "surface": "transparent",
+          "radius": "xl",
+          "border": "none",
+          "shadow": "none"
+        },
+        "layout": {
+          "density": "comfortable",
+          "rhythm": "editorial"
+        },
+        "buttons": {
+          "shape": "pill",
+          "fill": "solid",
+          "shadow": "none"
+        }
+      },
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        760
+      ]
+    },
+    {
+      "id": "cap-services",
+      "url": "/appearance/frame?scenario=station",
+      "viewport": [
+        390,
+        844
+      ],
+      "selector": "[data-widget=\"priceMenu\"]"
+    },
+    {
+      "id": "cap-product",
+      "url": "/appearance/frame?scenario=station",
+      "viewport": [
+        390,
+        844
+      ],
+      "selector": "[data-widget=\"products\"]"
+    },
+    {
+      "id": "cap-vehicles",
+      "url": "/appearance/frame?scenario=brookfield",
+      "viewport": [
+        390,
+        844
+      ],
+      "selector": "[data-widget=\"products\"]"
+    },
+    {
+      "id": "cap-fixed-prices",
+      "url": "/appearance/frame?scenario=oakfield",
+      "viewport": [
+        390,
+        844
+      ],
+      "selector": "[data-widget=\"serviceList\"]"
+    },
+    {
+      "id": "desk-barber",
+      "url": "/appearance/frame?scenario=station",
+      "viewport": [
+        1280,
+        800
+      ],
+      "clip": [
+        0,
+        0,
+        1280,
+        800
+      ],
+      "dsf": 1.5
+    },
+    {
+      "id": "desk-dealer",
+      "url": "/appearance/frame?scenario=brookfield",
+      "viewport": [
+        1280,
+        800
+      ],
+      "clip": [
+        0,
+        0,
+        1280,
+        800
+      ],
+      "dsf": 1.5
+    },
+    {
+      "id": "ex-marlowe-and-finch-phone",
+      "url": "/appearance/frame?scenario=barber",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-marlowe-and-finch-desk",
+      "url": "/appearance/frame?scenario=barber",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-hollin-physio-phone",
+      "url": "/appearance/frame?scenario=physio",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-hollin-physio-desk",
+      "url": "/appearance/frame?scenario=physio",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-pims-kitchen-phone",
+      "url": "/appearance/frame?scenario=cafe",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-pims-kitchen-desk",
+      "url": "/appearance/frame?scenario=cafe",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-ada-okafor-maths-phone",
+      "url": "/appearance/frame?scenario=tutor",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-ada-okafor-maths-desk",
+      "url": "/appearance/frame?scenario=tutor",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-forge-strength-phone",
+      "url": "/appearance/frame?scenario=gym",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-forge-strength-desk",
+      "url": "/appearance/frame?scenario=gym",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-northgate-heating-phone",
+      "url": "/appearance/frame?scenario=trades",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-northgate-heating-desk",
+      "url": "/appearance/frame?scenario=trades",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-aldous-motor-co-phone",
+      "url": "/appearance/frame?scenario=dealer",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-aldous-motor-co-desk",
+      "url": "/appearance/frame?scenario=dealer",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-station-road-barbers-phone",
+      "url": "/appearance/frame?scenario=station",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-station-road-barbers-desk",
+      "url": "/appearance/frame?scenario=station",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-parkside-valeting-phone",
+      "url": "/appearance/frame?scenario=detailer",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-parkside-valeting-desk",
+      "url": "/appearance/frame?scenario=detailer",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-brookfield-motors-phone",
+      "url": "/appearance/frame?scenario=brookfield",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-brookfield-motors-desk",
+      "url": "/appearance/frame?scenario=brookfield",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-corner-table-cafe-phone",
+      "url": "/appearance/frame?scenario=corner",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-corner-table-cafe-desk",
+      "url": "/appearance/frame?scenario=corner",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-oakfield-home-repairs-phone",
+      "url": "/appearance/frame?scenario=oakfield",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-oakfield-home-repairs-desk",
+      "url": "/appearance/frame?scenario=oakfield",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-rowan-learning-phone",
+      "url": "/appearance/frame?scenario=rowan",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-rowan-learning-desk",
+      "url": "/appearance/frame?scenario=rowan",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ],
+      "dsf": 2
+    },
+    {
+      "id": "ex-sora-fields-phone",
+      "url": "/appearance/frame?scenario=sora",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-sora-fields-desk",
+      "url": "/appearance/frame?scenario=sora",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-ellis-north-phone",
+      "url": "/appearance/frame?scenario=ellis",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-ellis-north-desk",
+      "url": "/appearance/frame?scenario=ellis",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-form-objects-phone",
+      "url": "/appearance/frame?scenario=form",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-form-objects-desk",
+      "url": "/appearance/frame?scenario=form",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-loop-with-liv-phone",
+      "url": "/appearance/frame?scenario=liv",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-loop-with-liv-desk",
+      "url": "/appearance/frame?scenario=liv",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-common-ground-flowers-phone",
+      "url": "/appearance/frame?scenario=petal",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-common-ground-flowers-desk",
+      "url": "/appearance/frame?scenario=petal",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-maya-builds-phone",
+      "url": "/appearance/frame?scenario=maya",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-maya-builds-desk",
+      "url": "/appearance/frame?scenario=maya",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-studio-nami-phone",
+      "url": "/appearance/frame?scenario=nami",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-studio-nami-desk",
+      "url": "/appearance/frame?scenario=nami",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-pace-studio-phone",
+      "url": "/appearance/frame?scenario=pace",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-pace-studio-desk",
+      "url": "/appearance/frame?scenario=pace",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-good-company-phone",
+      "url": "/appearance/frame?scenario=good",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-good-company-desk",
+      "url": "/appearance/frame?scenario=good",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-lune-nail-studio-phone",
+      "url": "/appearance/frame?scenario=lune",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-lune-nail-studio-desk",
+      "url": "/appearance/frame?scenario=lune",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-small-hours-bakery-phone",
+      "url": "/appearance/frame?scenario=hours",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-small-hours-bakery-desk",
+      "url": "/appearance/frame?scenario=hours",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-clean-slate-studio-phone",
+      "url": "/appearance/frame?scenario=slate",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-clean-slate-studio-desk",
+      "url": "/appearance/frame?scenario=slate",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-the-edit-room-phone",
+      "url": "/appearance/frame?scenario=edit",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-the-edit-room-desk",
+      "url": "/appearance/frame?scenario=edit",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-twelve-social-phone",
+      "url": "/appearance/frame?scenario=twelve",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-twelve-social-desk",
+      "url": "/appearance/frame?scenario=twelve",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-arlo-james-phone",
+      "url": "/appearance/frame?scenario=arlo",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-arlo-james-desk",
+      "url": "/appearance/frame?scenario=arlo",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-field-notes-by-bea-phone",
+      "url": "/appearance/frame?scenario=field",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-field-notes-by-bea-desk",
+      "url": "/appearance/frame?scenario=field",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-north-run-club-phone",
+      "url": "/appearance/frame?scenario=north",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-north-run-club-desk",
+      "url": "/appearance/frame?scenario=north",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-current-repairs-phone",
+      "url": "/appearance/frame?scenario=current",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-current-repairs-desk",
+      "url": "/appearance/frame?scenario=current",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-alba-gatherings-phone",
+      "url": "/appearance/frame?scenario=alba",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-alba-gatherings-desk",
+      "url": "/appearance/frame?scenario=alba",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-slow-form-phone",
+      "url": "/appearance/frame?scenario=slow",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-slow-form-desk",
+      "url": "/appearance/frame?scenario=slow",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-eden-cole-phone",
+      "url": "/appearance/frame?scenario=eden",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-eden-cole-desk",
+      "url": "/appearance/frame?scenario=eden",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-after-hours-audio-phone",
+      "url": "/appearance/frame?scenario=after",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-after-hours-audio-desk",
+      "url": "/appearance/frame?scenario=after",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-dune-rooms-phone",
+      "url": "/appearance/frame?scenario=dune",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-dune-rooms-desk",
+      "url": "/appearance/frame?scenario=dune",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    },
+    {
+      "id": "ex-leon-makes-phone",
+      "url": "/appearance/frame?scenario=leon",
+      "viewport": [
+        390,
+        844
+      ],
+      "clip": [
+        0,
+        0,
+        390,
+        844
+      ]
+    },
+    {
+      "id": "ex-leon-makes-desk",
+      "url": "/appearance/frame?scenario=leon",
+      "viewport": [
+        1100,
+        760
+      ],
+      "clip": [
+        0,
+        0,
+        1100,
+        760
+      ]
+    }
+  ]
+}

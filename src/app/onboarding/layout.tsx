@@ -4,7 +4,7 @@ import { demoModeEnabled } from "@/lib/env"
 // Read the demo flag per request, never frozen at build time.
 export const dynamic = "force-dynamic"
 
-export const metadata = { title: "Create your page — Taplo", robots: { index: false, follow: false } }
+export const metadata = { title: "Make your Taplo", robots: { index: false, follow: false } }
 
 export default function OnboardingLayout({ children }: { children: React.ReactNode }) {
   if (!demoModeEnabled()) {

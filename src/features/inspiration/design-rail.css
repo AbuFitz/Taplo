@@ -1,0 +1,158 @@
+.design-rail-shell {
+  min-width: 0;
+  --rail-card: clamp(240px, 26vw, 310px);
+  --rail-gap: clamp(24px, 5vw, 80px);
+}
+.design-frost-rail.design-gallery[data-view] {
+  position: relative;
+  display: flex !important;
+  align-items: start;
+  gap: var(--rail-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  padding: 28px 0 34px;
+  margin: 0;
+  list-style: none;
+  outline-offset: -3px;
+  perspective: 1500px;
+}
+/* Real flex spacers retain the final centring space in Firefox as well as WebKit. */
+.design-frost-rail::before,
+.design-frost-rail::after {
+  content: "";
+  height: 1px;
+  flex: 0 0 max(0px, calc((100% - var(--rail-card)) / 2 - var(--rail-gap)));
+}
+.design-frost-rail::-webkit-scrollbar {
+  display: none;
+}
+.design-frost-rail > li {
+  position: relative;
+  flex: 0 0 var(--rail-card);
+  width: var(--rail-card);
+  min-width: 0;
+  scroll-snap-align: center;
+  transform: perspective(1500px)
+    rotateY(calc(var(--design-distance, 0) * -9deg))
+    scale(var(--design-scale, 1));
+  transform-origin: 50% 30%;
+  transition: transform 0.2s ease;
+}
+.design-frost-rail[data-dragging="true"] {
+  scroll-snap-type: none;
+  cursor: grabbing;
+  user-select: none;
+}
+.design-frost-rail[data-dragging="true"] > li {
+  transition: none;
+  pointer-events: none;
+}
+.design-frost-rail .design-stage {
+  padding: 8px;
+  overflow: visible !important;
+  aspect-ratio: auto !important;
+}
+.design-frost-rail .design-surface {
+  width: 100%;
+  max-width: none;
+  filter: blur(var(--design-blur, 0px)) drop-shadow(0 24px 24px #0004);
+}
+.design-frost-rail .design-stage:hover,
+.design-frost-rail .design-surface {
+  transform: none !important;
+}
+.design-frost-rail[data-view="desktop"] {
+  --rail-card: min(76vw, 780px);
+  --rail-gap: 50px;
+}
+.design-frost-rail[data-view="desktop"] .design-surface {
+  border-radius: 0;
+  overflow: visible;
+}
+.design-rail-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  margin-top: 8px;
+}
+.design-rail-controls button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: inherit;
+  background: currentColor;
+  background: color-mix(in srgb, currentColor 7%, transparent);
+}
+.design-rail-controls button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.design-rail-controls button:not(:disabled):hover {
+  background: color-mix(in srgb, currentColor 13%, transparent);
+}
+.design-rail-controls button:focus-visible,
+.design-frost-rail:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+.design-rail-track {
+  width: min(180px, 35vw);
+  height: 3px;
+  border-radius: 99px;
+  background: color-mix(in srgb, currentColor 15%, transparent);
+  overflow: hidden;
+}
+.design-rail-track > span {
+  display: block;
+  height: 100%;
+  background: currentColor;
+  border-radius: inherit;
+  transition: transform 0.3s ease;
+}
+.home-designs .design-frost-rail .marketing-live-preview {
+  height: 500px;
+  overflow: hidden;
+  aspect-ratio: auto !important;
+}
+.home-designs .design-frost-rail .marketing-live-preview > [data-preview-mode] {
+  height: 660px;
+}
+@media (max-width: 767px) {
+  .design-rail-shell {
+    --rail-card: min(76vw, 290px);
+    --rail-gap: 24px;
+  }
+  .design-frost-rail.design-gallery[data-view] {
+    padding-block: 18px 26px;
+  }
+  .design-frost-rail > li {
+    transform: scale(var(--design-scale, 1));
+  }
+  .home-designs .design-frost-rail .marketing-live-preview {
+    height: 430px;
+  }
+  .home-designs
+    .design-frost-rail
+    .marketing-live-preview
+    > [data-preview-mode] {
+    height: 620px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .design-frost-rail > li {
+    transform: none !important;
+    transition: none;
+  }
+  .design-frost-rail .design-surface {
+    filter: drop-shadow(0 24px 24px #0004);
+  }
+  .design-rail-track > span {
+    transition: none;
+  }
+}

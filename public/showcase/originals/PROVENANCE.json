@@ -1,0 +1,150 @@
+{
+  "assets": [
+    {
+      "id": "pottery-studio",
+      "file": "/showcase/originals/pottery-studio.webp",
+      "sourceType": "Original AI-generated illustrative artwork",
+      "provider": "Built-in image_gen",
+      "generated": "2026-10-24",
+      "notActualBusinessPhotography": true
+    },
+    {
+      "id": "brand-stilllife",
+      "file": "/showcase/originals/brand-stilllife.webp",
+      "sourceType": "Original AI-generated illustrative artwork",
+      "provider": "Built-in image_gen",
+      "generated": "2026-10-24",
+      "notActualBusinessPhotography": true
+    },
+    {
+      "id": "florist-studio",
+      "file": "/showcase/originals/florist-studio.webp",
+      "sourceType": "Original AI-generated illustrative artwork",
+      "provider": "Built-in image_gen",
+      "generated": "2026-10-24",
+      "notActualBusinessPhotography": true
+    },
+    {
+      "id": "interior-studio",
+      "file": "/showcase/originals/interior-studio.webp",
+      "sourceType": "Original AI-generated illustrative artwork",
+      "provider": "Built-in image_gen",
+      "generated": "2026-10-24",
+      "notActualBusinessPhotography": true
+    },
+    {
+      "id": "film-studio",
+      "file": "/showcase/originals/film-studio.webp",
+      "sourceType": "Original AI-generated illustrative artwork",
+      "provider": "Built-in image_gen",
+      "generated": "2026-10-24",
+      "notActualBusinessPhotography": true
+    },
+    {
+      "id": "nail-studio",
+      "file": "/showcase/originals/nail-studio.webp",
+      "sourceType": "Original AI-generated illustrative artwork",
+      "provider": "Built-in image_gen",
+      "generated": "2026-10-24",
+      "notActualBusinessPhotography": true
+    },
+    {
+      "id": "bakery-studio",
+      "file": "/showcase/originals/bakery-studio.webp",
+      "sourceType": "Original AI-generated illustrative artwork",
+      "provider": "Built-in image_gen",
+      "generated": "2026-10-24",
+      "notActualBusinessPhotography": true
+    },
+    {
+      "id": "vintage-studio",
+      "file": "/showcase/originals/vintage-studio.webp",
+      "sourceType": "Original AI-generated illustrative artwork",
+      "provider": "Built-in image_gen",
+      "generated": "2026-10-24",
+      "notActualBusinessPhotography": true
+    },
+    {
+      "id": "audio-studio",
+      "file": "/showcase/originals/audio-studio.webp",
+      "sourceType": "Original AI-generated illustrative artwork",
+      "provider": "Built-in image_gen",
+      "generated": "2026-10-24",
+      "notActualBusinessPhotography": true
+    },
+    {
+      "id": "running-trail",
+      "file": "/showcase/originals/running-trail.webp",
+      "sourceType": "Original AI-generated illustrative artwork",
+      "provider": "Built-in image_gen",
+      "generated": "2026-10-24",
+      "notActualBusinessPhotography": true
+    },
+    {
+      "id": "repair-studio",
+      "file": "/showcase/originals/repair-studio.webp",
+      "sourceType": "Original AI-generated illustrative artwork",
+      "provider": "Built-in image_gen",
+      "generated": "2026-10-24",
+      "notActualBusinessPhotography": true
+    },
+    {
+      "id": "illustration-studio",
+      "file": "/showcase/originals/illustration-studio.webp",
+      "sourceType": "Original AI-generated illustrative artwork",
+      "provider": "Built-in image_gen",
+      "generated": "2026-10-25",
+      "notActualBusinessPhotography": true
+    }
+  ],
+  "prompts": [
+    {
+      "id": "pottery-studio",
+      "prompt": "Create one original editorial portfolio photograph for a fictional independent ceramic maker's website. Natural afternoon window light in a small working pottery studio: three handmade stoneware vessels, an irregular chalk-white vase, a low warm-grey bowl and a small terracotta cup, sitting on a scratched pale timber workbench with a folded linen cloth and a little clay dust. Asymmetrical composition, tactile imperfections, visibly handmade glazes, soft real shadows, shot as believable medium-format documentary still life. Warm neutral palette, absolutely no people, no logos, no text, no watermark, no luxury CGI perfection. Landscape composition, vessels grouped slightly right with breathing room to left. This is original fictional portfolio artwork, not a photograph of an existing business."
+    },
+    {
+      "id": "brand-stilllife",
+      "prompt": "Original commissioned portfolio artwork for a fictional young independent brand designer. Editorial still life of a small contemporary print identity project on a worn ivory desk: two thick warm-white business cards bearing only a simple black abstract two-circle geometric symbol, one folded ink-black poster with a single large cream circle, a pale terracotta booklet, a cropped strip of silver foil paper. No readable words, no existing brands, no screens, no people. Believable printed papers with slight curl, tactile uncoated grain and imperfect desk scratches. Strong asymmetrical graphic composition, soft directional daylight, tasteful black, paper, brick and silver. Landscape high-resolution art direction photograph, not a website screenshot or collage of screens. Must feel like real original creative work, not glossy stock CGI."
+    },
+    {
+      "id": "florist-studio",
+      "prompt": "Original natural editorial photograph for a fictional independent florist portfolio. A loose, sculptural arrangement of seasonal white cosmos, burgundy dahlias, pale butter-yellow garden roses and wild green stems in a low smoked-glass vase on an old pale plaster plinth in a small working flower studio. A pair of pruning scissors and a few fallen leaves at the edge. Natural overcast side-window light, irregular stems and imperfect petals, subtle film grain, beautiful restrained composition, no people, no logos, no words, no watermark. A realistic local creative studio rather than a glossy luxury advertising set. Landscape framing with breathing room."
+    },
+    {
+      "id": "interior-studio",
+      "prompt": "Original editorial portfolio photograph for a fictional interior designer. A modest restored British Victorian sitting room, with a tactile pale limewash wall, walnut sideboard, mushroom linen lounge chair, a sculptural black reading lamp, dog-eared architecture books and one small branch in an earthenware vase. Warm oak floor with honest wear, soft cloudy morning window light, slightly lived-in, asymmetric framing, cream and walnut and charcoal palette. No people, no logos, no readable words, no watermark, no sterile CGI or impossible architecture. Wide landscape composition, an authentic design project photograph."
+    },
+    {
+      "id": "film-studio",
+      "prompt": "Original natural editorial portfolio photograph for a fictional independent filmmaker. A compact cinema camera with a plain unbranded matte-black body and lens, folded cotton backdrop, handwritten illegible shot notes, gaffer tape and a small LED light on a weathered studio table. No people, no brand names, no readable text, no watermark. Directional late-afternoon light, deep graphite shadows and warm wood, visible fingerprints and practical working detail. Wide landscape composition, restrained, believable small production studio, not CGI or shiny stock."
+    },
+    {
+      "id": "nail-studio",
+      "prompt": "Original editorial still-life photograph for a fictional independent nail artist's portfolio. Four unlabeled glass nail polish bottles in deep oxblood, soft blush, milky white and clear topcoat, a tiny brush and a few curved sample nail tips neatly arranged on pale travertine with a cream linen towel. Natural window light, realistic small scuffs and reflections, beautiful quiet asymmetric composition. No human body parts, no people, no text or logos, no watermark. Landscape framing with room around objects, warm light grey and muted burgundy, believable small local studio rather than sterile luxury CGI."
+    },
+    {
+      "id": "bakery-studio",
+      "prompt": "Original natural editorial photograph for a fictional independent micro-bakery website. Two irregular hand-shaped sourdough loaves, a torn croissant with crumbs and a folded brown paper bag on a scratched stainless bakery bench beside an old cream tiled wall. Cloudy morning daylight, flour dust, very real uneven crust and honest baking textures. No people, no logos, no words, no watermark. Warm restrained cream, walnut and steel, landscape composition, not perfect glossy stock food styling."
+    },
+    {
+      "id": "vintage-studio",
+      "prompt": "Original documentary editorial photograph for a fictional independent curated vintage clothing shop. A simple black clothing rail with five carefully chosen pre-owned jackets in charcoal wool, worn indigo denim, tan corduroy and olive cotton, an old timber stool and a plain canvas tote in a small whitewashed shop. Natural daylight, visible fabric wear and texture, warm wood floor, no people, no words, no visible brand labels, no watermark. Landscape composition with relaxed asymmetry, believable young independent shop, no pristine CGI."
+    },
+    {
+      "id": "audio-studio",
+      "prompt": "Original editorial photograph for a fictional independent music producer's portfolio. A small music workstation with an unbranded compact synthesizer, matte black headphones resting naturally on a worn charcoal desk, coiled cables and a small speaker, dark acoustic wall, soft side light and subtle cool silver highlights. No people, no logos, no readable text, no watermark. Realistic intimate home studio, slight dust and use, not glossy CGI. Wide landscape framing, sophisticated black, grey and muted steel palette."
+    },
+    {
+      "id": "running-trail",
+      "prompt": "Original natural editorial landscape photograph for a fictional independent running coach website. A quiet winding gravel trail over green coastal hills in the British countryside, low early morning sun breaking through soft cloud, weathered grasses and a hint of sea far away. No people, no products, no buildings, no text, no watermark. Believable documentary photography with gentle film grain, restful green and pale sky, not hyper-saturated. Wide landscape, trail leads through the image, suitable for a personal coaching portfolio."
+    },
+    {
+      "id": "repair-studio",
+      "prompt": "Original documentary editorial photograph for a fictional independent phone repair shop website. A practical electronics workbench with a single unbranded smartphone opened beside its removed rear panel, a precision screwdriver, labelled-free small parts trays, anti-static mat and magnifying task lamp, soft cool window light. Honest local repair business setting, small scuffs, precise but not sterile, realistic circuitry, no people, no logos, no readable text, no watermark. Wide landscape composition, clean neutral grey and muted blue work mat, no futuristic CGI."
+    },
+    {
+      "id": "illustration-studio",
+      "prompt": "Create an original hand-painted editorial illustration for a fictional independent illustrator's portfolio, not a website screenshot. A joyful but restrained still life of a cobalt ceramic pitcher, a warm terracotta orange, two deep green pears and a branching leafy stem on a pale butter-yellow table. Simple confident imperfect forms, visible dry gouache brush texture and paper grain, slightly flattened perspective, beautiful generous negative space. Contemporary independent illustration, no reference to any particular artist, no text, no logo, no watermark, no people, no frame. Landscape artwork, earthy green, cobalt, cream and orange, sophisticated expressive colour with tactile handmade detail. The illustration itself is the final artwork."
+    }
+  ]
+}

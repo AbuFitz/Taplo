@@ -1,94 +1,87 @@
-"use client"
+"use client";
+import * as React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ArrowUpRight } from "lucide-react";
+import { StudioSkeleton } from "./dashboard/Studio";
+import { RouteSkeleton } from "./dashboard/workspace-navigation";
+import { WorkspaceNav } from "./dashboard/WorkspaceNav";
+import { Welcome } from "./Welcome";
+import { useDemo } from "./store";
+import "@/features/page/editor/portal-workspace.css";
+import "./dashboard/workspace-tools.css";
+import "./dashboard/workspace.css";
+import "./dashboard/workspace-polish.css";
+import "./dashboard/workspace-foundation.css";
 
-import * as React from "react"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { BarChart3, CalendarDays, LayoutDashboard, Menu, Package, Paintbrush, Settings, Star, Users, Wrench } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { cn } from "@/lib/utils"
-import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures"
-import { loadSample } from "./actions"
-import { useDemo } from "./store"
-import { DemoNotice } from "./ui"
-
-const NAV = [
-  { href: "/dashboard/page", label: "My page", icon: Paintbrush, primary: true },
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/dashboard/services", label: "Services", icon: Wrench },
-  { href: "/dashboard/bookings", label: "Bookings", icon: CalendarDays },
-  { href: "/dashboard/reviews", label: "Reviews", icon: Star },
-  { href: "/dashboard/team", label: "Team", icon: Users },
-  { href: "/dashboard/products", label: "Products", icon: Package },
-  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings },
-] as { href: string; label: string; icon: typeof Paintbrush; primary?: boolean }[]
-
-function NavList({ onNavigate }: { onNavigate?: () => void }) {
-  const path = usePathname()
-  return (
-    <nav aria-label="Dashboard" className="grid gap-1">
-      {NAV.map(({ href, label, icon: Icon, primary }) => {
-        const active = href === "/dashboard" ? path === href : path.startsWith(href)
-        return (
-          <Link key={href} href={href} onClick={onNavigate} aria-current={active ? "page" : undefined}
-            className={cn("flex min-h-11 items-center gap-3 rounded-md px-3 text-sm hover:bg-muted", active && "bg-muted font-semibold", primary && !active && "bg-primary/10 font-semibold text-primary hover:bg-primary/15", primary && active && "bg-primary text-primary-foreground")}>
-            <Icon className="size-4" aria-hidden="true" /> {label}
-          </Link>
-        )
-      })}
-    </nav>
-  )
-}
-
+const TITLES: Record<string, string> = {
+  services: "Services",
+  bookings: "Bookings",
+  team: "Team",
+  products: "Products",
+  reviews: "Reviews",
+  analytics: "Analytics",
+  settings: "Settings",
+  page: "Page builder",
+  profile: "Business details",
+  help: "Help & feedback",
+};
 export function DashboardShell({ children }: { children: React.ReactNode }) {
-  const { ready, state, update } = useDemo()
-  const router = useRouter()
-  const [open, setOpen] = React.useState(false)
-
-  const empty = ready && (!state || (!state.onboarded && !state.content.identity.name))
-
+  const { ready, state, storageFailed } = useDemo();
+  const path = usePathname();
+  const section = path.split("/")[2] || "overview";
+  const editor = section === "page";
+  const empty =
+    ready && (!state || (!state.onboarded && !state.content.identity.name));
   return (
-    <div className="flex min-h-screen flex-col lg:flex-row">
-      <aside className="hidden w-60 shrink-0 border-r p-4 lg:block">
-        <Link href="/" className="mb-6 block px-3 text-lg font-semibold">Taplo</Link>
-        <NavList />
-      </aside>
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center gap-3 border-b px-4 py-3 lg:px-8">
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open menu"><Menu /></Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-64">
-              <SheetHeader><SheetTitle>Taplo</SheetTitle></SheetHeader>
-              <div className="px-2"><NavList onNavigate={() => setOpen(false)} /></div>
-            </SheetContent>
-          </Sheet>
-          <p className="min-w-0 flex-1 truncate text-sm text-muted-foreground">
-            {state?.content.identity.name ? <>Managing <strong className="text-foreground">{state.content.identity.name}</strong></> : "No business yet"}
-          </p>
-          <span className="rounded-full border px-2.5 py-1 text-xs font-medium">Plan: {state?.plan ?? "business"} (simulated)</span>
+    <div
+      className="workspace-v2 portal-workspace"
+      data-workspace-section={editor ? "editor" : "manage"}
+      data-route={section}
+    >
+      <WorkspaceNav />
+      <div className="ws-main">
+        <header className="ws-topbar">
+          <div>
+            <strong>{TITLES[section] || "Overview"}</strong>
+          </div>
+          <div className="ws-topbar-actions">
+            <span className="ws-save-dot">
+              {state?.published ? "Published" : "Draft"}
+            </span>
+            {state?.content.identity.name ? (
+              <Link href="/demo/preview" target="_blank">
+                View page
+                <ArrowUpRight aria-hidden="true" />
+              </Link>
+            ) : null}
+          </div>
         </header>
-        <main className="min-w-0 flex-1 px-4 py-6 lg:px-8">
-          <DemoNotice className="mb-6" />
-          {!ready ? <p className="text-sm text-muted-foreground">Loading…</p> : empty ? (
-            <div className="max-w-xl">
-              <h1 className="text-2xl font-semibold">Let’s set up your page</h1>
-              <p className="mt-2 text-muted-foreground">Start the 5-step setup, or load a synthetic sample business to look around with content already in place.</p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                <Button asChild size="lg"><Link href="/onboarding">Start setup</Link></Button>
-              </div>
-              <p className="mb-2 mt-8 text-sm font-medium">Or explore a sample</p>
-              <div className="flex flex-wrap gap-2">
-                {INDUSTRY_FIXTURE_KEYS.map((k) => (
-                  <Button key={k} size="sm" variant="outline" onClick={() => { update((x) => loadSample(x, k), { resetHistory: true }); router.push("/dashboard/page") }}>{getFixture(k)!.label}</Button>
-                ))}
-              </div>
-            </div>
-          ) : children}
+        <main
+          className={`portal-content ws-content ${editor ? "ws-editor-content" : ""}`}
+        >
+          {!ready ? (
+            section === "overview" ? (
+              <StudioSkeleton />
+            ) : (
+              <RouteSkeleton />
+            )
+          ) : empty ? (
+            <Welcome />
+          ) : (
+            children
+          )}
         </main>
+        {!editor ? (
+          <footer className="ws-footer">
+            <span role={storageFailed ? "alert" : undefined}>
+              {storageFailed
+                ? "Changes could not be saved. Browser storage is unavailable."
+                : "Your changes are saved."}
+            </span>
+          </footer>
+        ) : null}
       </div>
     </div>
-  )
+  );
 }

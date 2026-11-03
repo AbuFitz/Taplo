@@ -1,0 +1,15 @@
+{
+  "edition": "1.8",
+  "kind": "proposed_category_preset_mapping_not_runtime_acl",
+  "pricing": {"team_logins": "included_no_per_member_fee", "bookable_team_members": "no_per_member_fee", "employee_is_connected_seller": false, "final_subscription_price": null},
+  "permission_source": "permissions.json",
+  "presets": [
+    {"category": "barber_beauty", "label": "Professional", "base_template": "practitioner", "scope": "assigned", "needs": ["eligible_service_assignment", "resource_location_scope", "own_profile_draft_only", "no_bank_access", "named_professional_change_review"]},
+    {"category": "tutoring", "label": "Tutor", "base_template": "practitioner", "scope": "assigned", "needs": ["assigned_learner_scope", "payer_guardian_learner_separation", "restricted_report_fields", "session_authority", "no_bulk_export"]},
+    {"category": "mobile_services", "label": "Technician", "base_template": "practitioner", "scope": "assigned", "needs": ["assigned_private_address_only", "travel_eligibility", "customer_approved_variation", "attributed_evidence", "no_implicit_collection_authority"]},
+    {"category": "retail", "label": "Fulfilment", "base_template": "fulfilment", "scope": "assigned_locations", "needs": ["necessary_order_lines_contact", "partial_quantity_actions", "return_disposition", "stock_adjustment_separate_grant", "refund_separate_grant"]},
+    {"category": "workshops", "label": "Instructor", "base_template": "practitioner", "scope": "assigned", "needs": ["assigned_roster_only", "attendee_quantity", "check_in_authority", "no_automatic_finance_access", "course_occurrence_distinction"]}
+  ],
+  "mandatory_guards": ["default_deny", "server_action_scope_field_authority", "versioned_grants", "revocation_across_api_realtime_export_jobs", "no_category_change_privilege_expansion", "no_preset_implies_sector_approval"],
+  "remaining_contract_work": ["specialist field-mask schemas", "exact attendance and fulfilment action inputs", "approval policies", "invite and revocation scenario fixtures", "all additional category presets"]
+}

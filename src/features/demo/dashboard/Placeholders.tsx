@@ -1,25 +1,25 @@
-import { NotBuilt, PageHeader } from "./Panel"
+"use client"
+import Link from "next/link"
+import { ArrowUpRight, BarChart3, MousePointer2, QrCode } from "lucide-react"
+import { EmptyPanel } from "@/components/taplo/illustrations"
+import { PageHeader } from "./Panel"
+import { useDraft } from "../hooks"
 
-export function BookingsPage() {
-  return (
-    <>
-      <PageHeader title="Bookings" description="Requests, appointments and payment state." />
-      <NotBuilt title="Bookings, calendar and availability" phase="Phase 6">
-        <p>Not built yet: availability rules, transactional slot holds, request/instant booking, cancellation and rescheduling, and confirmation emails.</p>
-        <p>What works now: customers reach you through the Call, WhatsApp and Email buttons on your page, with the chosen service pre-filled.</p>
-      </NotBuilt>
-    </>
-  )
-}
+export { OwnerBookings as BookingsPage } from "@/features/booking/ui/owner/OwnerBookings"
 
 export function AnalyticsPage() {
-  return (
+  const { ent } = useDraft()
+  if (ent && !ent.analytics) return (
     <>
-      <PageHeader title="Analytics" description="Profile views, call and WhatsApp clicks, bookings and revenue." />
-      <NotBuilt title="Analytics" phase="Phase 5">
-        <p>Not built yet: event collection, de-duplication, daily totals. When it is, dashboard previews and demo pages will never count as visits, and revenue will mean collected payments only.</p>
-        <p>The Overview page shows “—” rather than made-up numbers until then.</p>
-      </NotBuilt>
+      <PageHeader scene="analytics" title="Analytics" description="Profile views, call and WhatsApp clicks, bookings and revenue." />
+      <EmptyPanel scene="upgrade" title="Analytics comes with a paid plan" action={<Link className="text-sm font-medium underline underline-offset-4" href="/pricing">See plans</Link>}>
+        <p>See how many people view your page, scan your code and tap your buttons. Find out which parts of your page bring customers closer.</p>
+      </EmptyPanel>
     </>
   )
+  return <>
+    <PageHeader scene="analytics" title="Analytics" description="Understand how customers find and use your page." />
+    <div className="ws-analytics-metrics">{[{Icon:BarChart3,label:"Page views"},{Icon:MousePointer2,label:"Button taps"},{Icon:QrCode,label:"QR scans"}].map(({Icon,label})=><section key={label}><Icon aria-hidden="true" /><span>{label}</span><strong>—</strong><small>No activity yet</small></section>)}</div>
+    <section className="ws-analytics-empty"><BarChart3 aria-hidden="true" /><h2>Your audience starts here.</h2><p>When tracking is connected, this is where you’ll see visits, scans and the actions customers take. We won’t show made-up numbers.</p><Link className="ws-action" href="/dashboard/page">Open your page<ArrowUpRight /></Link></section>
+  </>
 }

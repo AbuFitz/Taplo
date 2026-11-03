@@ -1,0 +1,11 @@
+# Verification and release evidence
+
+Executed static checks for this baseline: JSON Schema validity/local references; unique command/API paths and exact input/result definitions; command-to-permission role coverage; screen-to-task/record bindings; thirteen category profile/config references; twelve journey command graphs; ordered build dependencies; unchanged package prices/zero commission; PostgreSQL syntax parsing; sixteen normative money/refund/stock/overlap/reward calculations and five new boundary shape cases. Operational token foreground/background contrast pairs exceed 4.5:1. Local third-party fonts/icons/licences and workbench data/script presence checked. JavaScript syntax is checked separately before packaging.
+
+These are specification/source checks. PostgreSQL syntax is not a deployed migration, RLS proof, database race test or real restore. Reference arithmetic is not actual provider or transaction behaviour. The design workbench contains 67 authored populated compositions and their applicable state variants; no full rendered visual/device pass is claimed.
+
+Browser verification attempted but blocked: local Chromium cannot create its required socket; the browser tool prohibits file URLs. No workaround or alternate browser surface was used after that policy rejection. Therefore responsive geometry, actual rendering, keyboard/screen-reader/runtime accessibility and complete visual polish still require rendered review during Codex implementation. Provider basemap/checkout/Wallet/native OS screens must be verified through their actual integrations, not inferred from reference shapes.
+
+Actual company/legal facts and specialist review, provider account/region/issuer contracts/approvals, real native/device/camera/widget behaviour, real concurrency/security/restore and real customer/pricing/cost evidence have not been obtained in this blueprint task. Their exact prerequisites and acceptance records are included so Codex does not invent results. The existing ten legal drafts remain unapproved for publication. No accounts/purchases/provider messages or app deployment were performed.
+
+Reproduce static validation with requirements-spec-checks.txt and python validate_spec.py. verification.json records this scope. Fill actual evidence by build packet; don't turn the whole platform ready from one successful build or screenshot.

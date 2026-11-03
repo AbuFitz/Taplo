@@ -1,3 +1,4 @@
+import { SOCIAL_IDS } from "@/features/page/social-platforms";
 import { z } from "zod";
 import { phoneSchema, safeUrl } from "@/lib/validation";
 
@@ -31,6 +32,14 @@ export const imageSchema = z.object({
   width: z.number().int().positive().optional(),
   height: z.number().int().positive().optional(),
   focal: focalSchema.optional(),
+  /** Keep illustrations whole when a photograph-style crop is unsuitable. */
+  fit: z.enum(["cover", "contain"]).optional(),
+  /** Derived only for transparent identity uploads; supplies a contrasting backing without changing the pixels. */
+  ink: z.enum(["dark", "light", "mixed", "mono"]).optional(),
+  /** Sampled from an uploaded identity; absent for monochrome marks. */
+  accent: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
+  /** The average colour along the bottom edge of an uploaded photograph, so a fade into the page never leaves a harsh line. */
+  tint: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
 });
 export type ImageRef = z.infer<typeof imageSchema>;
 
@@ -42,11 +51,18 @@ export const serviceSchema = z.object({
   id: text(64),
   name: text(120),
   description: optText(1200),
+  /** Ordered inclusions for packages and detailed services; stored once, referenced by all blocks. */
+  inclusions: z.array(text(140)).max(8).optional(),
   group: optText(80),
   priceMode: z.enum(PRICE_MODES),
   /** Integer minor units (pence). Required for fixed/from. */
   priceMinor: z.number().int().nonnegative().optional(),
   currency: z.string().length(3).default("GBP"),
+  /** Display basis only; a monthly price does not configure recurring billing. */
+  priceUnit: z.enum(["hour", "session", "month", "course"]).optional(),
+  /** Use the business’s existing site instead of starting a Taplo enquiry or booking. */
+  externalUrl: safeUrl.optional(),
+  externalLabel: optText(60),
   durationMinutes: z.number().int().positive().max(24 * 60).optional(),
   delivery: z.array(z.enum(DELIVERY_MODES)).default([]),
   bookingMode: z.enum(SERVICE_BOOKING_MODES).default("contact"),
@@ -54,6 +70,8 @@ export const serviceSchema = z.object({
   sortOrder: z.number().int().default(0),
   /** Archived services are hidden publicly but kept for historical bookings. */
   archived: z.boolean().default(false),
+  /** Sample content added to show how something looks. It is never treated as the owner's real offer and blocks publishing until replaced or removed. */
+  example: z.boolean().optional(),
 });
 export type ServiceContent = z.infer<typeof serviceSchema>;
 
@@ -65,6 +83,12 @@ export const staffSchema = z.object({
   bio: optText(1200),
   photo: imageSchema.optional(),
   subjects: z.array(text(80)).max(12).default([]),
+  /** Services this person provides and can be booked for. null = every service. Drives booking eligibility. */
+  serviceIds: z.array(text(64)).nullable().default(null),
+  /** Qualifications the business supplies for this person. Never inferred. */
+  credentials: z.array(text(160)).max(8).default([]),
+  /** Show a "Book with" action and allow choosing this person when booking. */
+  bookable: z.boolean().default(true),
 });
 export type StaffContent = z.infer<typeof staffSchema>;
 
@@ -125,10 +149,27 @@ export const productSchema = z.object({
   priceMinor: z.number().int().nonnegative().optional(),
   currency: z.string().length(3).default("GBP"),
   image: imageSchema.optional(),
+  /** Short label such as "Just arrived" or "Reserved". */
+  badge: optText(24),
+  /** Key facts shown as a compact list (size, year, mileage, fuel...). Any kind of product. */
+  facts: z.array(z.object({ label: text(30), value: text(60) })).max(8).default([]),
   /** "enquire": customer contacts the business. "link": opens the owner's own shop/payment link. No checkout is built. */
   mode: z.enum(["enquire", "link"]).default("enquire"),
   linkUrl: safeUrl.optional(),
+  linkLabel: optText(60),
+  /** What it is. Only changes wording and the suggested facts; every kind uses the same record. */
+  kind: z.enum(["product", "vehicle"]).default("product"),
+  /** Stock status. A sold or reserved item stays on the page (and in records) with its status shown. */
+  availability: z.enum(["available", "reserved", "sold", "unavailable"]).default("available"),
+  /** More pictures, shown in the item's detail view after `image`. */
+  images: z.array(imageSchema).max(8).default([]),
+  /** The link is an affiliate or referral link: shown as such so visitors are told. */
+  affiliate: z.boolean().default(false),
+  /** Optional group heading, e.g. "Hatchbacks" or "Oils". */
+  collection: optText(40),
   archived: z.boolean().default(false),
+  /** Sample content added to show how something looks. It is never treated as the owner's real offer and blocks publishing until replaced or removed. */
+  example: z.boolean().optional(),
 });
 export type ProductContent = z.infer<typeof productSchema>;
 
@@ -154,6 +195,10 @@ export const businessContentSchema = z.object({
     heroImage: imageSchema.optional(),
     industryKey: text(64),
     industryLabel: text(80),
+    /** Further kinds of work the business does. They add suggestions; they never change the design. */
+    alsoKeys: z.array(text(64)).max(2).optional(),
+    /** Whether the kind of business ("Barber") is written on the public page. Pages made before this choice existed show it. */
+    showCategory: z.boolean().optional(),
   }),
   location: z.object({
     mode: z.enum(LOCATION_MODES),
@@ -170,7 +215,7 @@ export const businessContentSchema = z.object({
     email: z.string().trim().email().max(254).optional(),
     website: safeUrl.optional(),
     social: z
-      .array(z.object({ platform: z.enum(["instagram", "facebook", "tiktok", "linkedin", "youtube", "x"]), url: safeUrl }))
+      .array(z.object({ platform: z.enum(SOCIAL_IDS), url: safeUrl }))
       .max(8)
       .default([]),
   }),
@@ -190,7 +235,7 @@ export const businessContentSchema = z.object({
   booking: z.object({
     mode: z.enum(["contact", "request", "instant"]),
     /** Set only once an operator has real availability configured. */
-    onlineBookingReady: z.boolean().default(false),
+    onlineBookingReady: z.boolean().default(true),
   }),
 });
 export type BusinessContent = z.infer<typeof businessContentSchema>;

@@ -1,0 +1,137 @@
+{
+  "edition": "2.2",
+  "date": "2026-11-03",
+  "status": "rough_estimate_not_observed_cost_or_demand",
+  "currency": "GBP",
+  "vat_registered_standard_rate_scenario": 0.2,
+  "gbp_per_usd_assumption_not_live_fx": 0.8,
+  "subscription_card_fee_fraction": 0.015,
+  "subscription_card_fee_fixed": 0.2,
+  "subscription_billing_fraction": 0.007,
+  "sms_gbp_per_segment_buffered_assumption": 0.05,
+  "email_gbp_per_send_assumption": 0.00072,
+  "support_gbp_per_minute_assumption": 0.5,
+  "plan_usage": [
+    {
+      "id": "core",
+      "variable_infrastructure": 0.8,
+      "operational_emails": 150,
+      "marketing_emails": 250,
+      "support_minutes": 5,
+      "saas_loss_reserve": 0.1
+    },
+    {
+      "id": "pro",
+      "variable_infrastructure": 1.5,
+      "operational_emails": 500,
+      "marketing_emails": 1000,
+      "support_minutes": 10,
+      "saas_loss_reserve": 0.2
+    },
+    {
+      "id": "business",
+      "variable_infrastructure": 3.0,
+      "operational_emails": 1500,
+      "marketing_emails": 3000,
+      "support_minutes": 20,
+      "saas_loss_reserve": 0.4
+    }
+  ],
+  "price_ladders": {
+    "lower": [
+      9.99,
+      19.99,
+      39.99
+    ],
+    "balanced": [
+      12,
+      24,
+      49
+    ],
+    "higher": [
+      15,
+      29,
+      59
+    ]
+  },
+  "sms_bundles": {
+    "none": [
+      0,
+      0,
+      0
+    ],
+    "light": [
+      25,
+      75,
+      150
+    ],
+    "larger": [
+      50,
+      150,
+      300
+    ],
+    "very_large": [
+      100,
+      300,
+      600
+    ]
+  },
+  "recommended_ladder": "balanced",
+  "recommended_bundle": "none",
+  "paid_plan_mix_assumption": [
+    0.6,
+    0.3,
+    0.1
+  ],
+  "free_account_cost_assumption": {
+    "variable_infrastructure": 0.15,
+    "operational_email": 0.03,
+    "support_minutes": 0.5,
+    "other": 0.02
+  },
+  "free_per_paid_base_assumption": 4,
+  "cohort_shared_overhead_assumptions": [
+    {
+      "paid": 100,
+      "fixed": 150
+    },
+    {
+      "paid": 500,
+      "fixed": 300
+    },
+    {
+      "paid": 1000,
+      "fixed": 500
+    }
+  ],
+  "cac_assumption": 30,
+  "one_time_onboarding_minutes_assumption": 20,
+  "monthly_paid_churn_assumption": 0.05,
+  "sms_topups": [
+    {
+      "segments": 100,
+      "headline": 9
+    },
+    {
+      "segments": 500,
+      "headline": 39
+    }
+  ],
+  "excluded_from_contribution": [
+    "fixed shared overhead",
+    "free-tier subsidy",
+    "acquisition and onboarding",
+    "product engineering salaries",
+    "general company overhead not in stated shared budget",
+    "income or corporation tax",
+    "merchant card processing borne by merchant"
+  ],
+  "guardrails": [
+    "supplier inputs are not exact all-in quotations",
+    "support and infrastructure allocations need measurement",
+    "normal operational email continues for accepted commitments",
+    "all four packages planned at launch per founder",
+    "no per-team-member fee",
+    "no automatic topup or paid upgrade without consent"
+  ]
+}

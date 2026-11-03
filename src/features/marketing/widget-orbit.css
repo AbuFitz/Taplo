@@ -1,0 +1,487 @@
+.widget-orbit {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+}
+.widget-orbit-world {
+  position: relative;
+  max-width: 1060px;
+  margin: auto;
+  height: 650px;
+  perspective: 1600px;
+  isolation: isolate;
+  overflow: clip;
+  container-type: inline-size;
+}
+/* The sculpture is a material accent, not an extra product interface. */
+.orbit-sculpture {
+  position: absolute;
+  left: 61%;
+  top: 7%;
+  width: 290px;
+  height: 350px;
+  z-index: 0;
+  transform: rotate(9deg);
+  filter: drop-shadow(16px 30px 18px #0008);
+}
+.orbit-sculpture img {
+  object-fit: contain;
+}
+.widget-orbit-core {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 49%;
+  width: 300px;
+  height: 400px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  transform: translate(-50%, -50%) rotateY(-4deg) rotateZ(-2deg);
+  border-radius: 30px;
+  background: linear-gradient(145deg, #48434e 0%, #242129 47%, #141217 100%);
+  color: #f5f2e8;
+  box-shadow:
+    20px 40px 65px -24px #000d,
+    0 1px 0 #ffffff55 inset;
+  overflow: hidden;
+}
+.widget-orbit-core::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, #fff0 20%, #ffffff10 47%, #fff0 67%);
+}
+.orbit-profile-mark {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  background: #ded7c7;
+  color: #26202c;
+  border-radius: 14px;
+  font-size: 31px;
+  font-weight: 600;
+  letter-spacing: -0.1em;
+  line-height: 1;
+}
+.orbit-profile-name {
+  font-family: var(--font-display);
+  font-size: 59px;
+  line-height: 0.91;
+  letter-spacing: -0.06em;
+  font-weight: 500;
+}
+.orbit-profile-name em {
+  font-style: normal;
+  color: #d8ceee;
+}
+.orbit-profile-bio {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #d3cbdc;
+  max-width: 22ch;
+}
+.orbit-profile-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 16px;
+  margin-top: 2px;
+  border-radius: 15px;
+  background: #e0d3f4;
+  color: #21192d;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow:
+    0 6px 12px #0003,
+    0 1px 0 #fff8 inset;
+}
+.orbit-profile-action svg {
+  width: 17px;
+  height: 17px;
+}
+.orbit-profile-signature {
+  margin-top: auto;
+  font-size: 9px;
+  color: #bfb5ca;
+}
+.widget-orbit-item {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 24px;
+  color: #262323;
+  box-shadow:
+    3px 4px 0 -1px #a29b92,
+    0 27px 35px -17px #000c,
+    0 1px 0 #fff9 inset;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+.orbit-mini-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+  font-size: 12px;
+}
+.orbit-mini-heading svg {
+  width: 17px;
+  height: 17px;
+}
+.orbit-booking {
+  width: 216px;
+  gap: 20px;
+  background: linear-gradient(140deg, #eee7fb, #c8b9e3);
+}
+.orbit-booking .orbit-mini-heading {
+  justify-content: flex-start;
+  font-weight: 500;
+}
+.orbit-date-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  width: 100%;
+}
+.orbit-date-strip > span {
+  display: grid;
+  gap: 9px;
+  place-items: center;
+  padding: 11px 3px;
+  border-radius: 13px;
+  background: #ffffff45;
+  font-size: 8px;
+  color: #62576f;
+}
+.orbit-date-strip b {
+  font-size: 25px;
+  font-weight: 500;
+  color: #382c47;
+}
+.orbit-date-strip > .orbit-date-selected {
+  background: #30213f;
+  color: #e0d3ee;
+  box-shadow: 0 6px 14px -7px #21162f99;
+}
+.orbit-date-selected b {
+  color: white;
+}
+.orbit-slot-strip {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  width: 100%;
+  font-size: 9px;
+}
+.orbit-slot-strip span {
+  padding: 8px;
+  border-radius: 8px;
+  background: #ffffff50;
+}
+.orbit-slot-strip span:nth-child(2) {
+  color: white;
+  background: #30213f;
+}
+.orbit-service {
+  width: 196px;
+  padding: 17px 20px;
+  gap: 8px;
+  background: linear-gradient(140deg, #f8f5eb, #d9d2bf);
+  border-radius: 20px;
+}
+.orbit-service > strong {
+  font-size: 13px;
+  font-weight: 500;
+}
+.orbit-service-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+.orbit-price {
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+.orbit-duration {
+  font-size: 10px;
+  color: #625d52;
+}
+.orbit-service-line svg {
+  width: 18px;
+  height: 18px;
+}
+.orbit-place {
+  width: 260px;
+  height: 193px;
+  padding: 0;
+  overflow: hidden;
+  background: #bdb3a1;
+}
+.orbit-place img {
+  object-fit: cover;
+  object-position: center;
+}
+.orbit-place::after {
+  content: "";
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(transparent, #0008);
+}
+.orbit-photo-caption {
+  position: absolute;
+  z-index: 1;
+  inset: auto 17px 17px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+.orbit-photo-caption svg {
+  width: 16px;
+  height: 16px;
+}
+.orbit-social {
+  width: auto;
+  flex-direction: row;
+  gap: 10px;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.orbit-social > span {
+  display: grid;
+  place-items: center;
+  width: 49px;
+  height: 49px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #ece7df, #bdb4a6);
+  box-shadow:
+    2px 3px 0 #8b8172,
+    0 12px 19px -6px #000b,
+    inset 0 1px 0 #fff;
+  color: #272329;
+}
+.orbit-social svg {
+  width: 21px;
+  height: 21px;
+}
+.widget-orbit-item[data-phase="0"] {
+  transform: translate(-50%, -50%) translate(260px, 116px) rotate(5deg);
+  z-index: 4;
+}
+.widget-orbit-item[data-phase="1"] {
+  transform: translate(-50%, -50%) translate(-265px, -125px) rotate(-8deg);
+  z-index: 3;
+}
+.widget-orbit-item[data-phase="2"] {
+  transform: translate(-50%, -50%) translate(280px, 233px) rotate(5deg);
+  z-index: 4;
+}
+.widget-orbit-item[data-phase="3"] {
+  transform: translate(-50%, -50%) translate(-260px, 162px) rotate(-7deg);
+  z-index: 4;
+}
+/* Readable vertical composition, rather than a miniature desktop scene. */
+@media (max-width: 899px) {
+  .widget-orbit-world {
+    height: 580px;
+  }
+  .orbit-sculpture {
+    left: auto;
+    right: -2%;
+    top: -2%;
+    width: 54%;
+    max-width: 220px;
+    height: 200px;
+    transform: rotate(9deg);
+  }
+  .widget-orbit-core {
+    width: 65%;
+    max-width: 250px;
+    height: 340px;
+    top: 52%;
+    padding: 70px 23px 23px;
+    gap: 14px;
+    border-radius: 26px;
+    transform: translate(-50%, -50%) rotateY(-4deg) rotateZ(-2deg);
+  }
+  .orbit-profile-mark {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    font-size: 27px;
+  }
+  .orbit-profile-name {
+    font-size: clamp(37px, 11cqw, 45px);
+  }
+  .orbit-profile-bio {
+    font-size: 10px;
+    max-width: 19ch;
+  }
+  .orbit-profile-action {
+    font-size: 11px;
+    padding: 13px;
+    border-radius: 12px;
+  }
+  .orbit-profile-signature {
+    font-size: 8px;
+  }
+  .widget-orbit-item {
+    padding: 16px;
+    border-radius: 20px;
+  }
+  .orbit-booking {
+    width: 42%;
+    max-width: 165px;
+    gap: 11px;
+  }
+  .orbit-mini-heading {
+    font-size: 10px;
+    gap: 7px;
+  }
+  .orbit-mini-heading svg {
+    width: 14px;
+    height: 14px;
+  }
+  .orbit-date-strip {
+    gap: 4px;
+  }
+  .orbit-date-strip > span {
+    font-size: 6px;
+    padding: 8px 2px;
+    gap: 5px;
+    border-radius: 9px;
+  }
+  .orbit-date-strip b {
+    font-size: 20px;
+  }
+  .orbit-slot-strip {
+    font-size: 7px;
+    gap: 3px;
+  }
+  .orbit-slot-strip span {
+    padding: 6px 4px;
+    border-radius: 6px;
+  }
+  .orbit-service {
+    width: 43%;
+    max-width: 162px;
+    padding: 13px 16px;
+    gap: 7px;
+  }
+  .orbit-service > strong {
+    font-size: 11px;
+  }
+  .orbit-price {
+    font-size: 29px;
+  }
+  .orbit-duration {
+    font-size: 8px;
+  }
+  .orbit-place {
+    width: 48%;
+    max-width: 185px;
+    height: 139px;
+    padding: 0;
+  }
+  .orbit-photo-caption {
+    inset: auto 12px 12px;
+    font-size: 11px;
+  }
+  .orbit-social {
+    width: auto;
+    padding: 0;
+    gap: 9px;
+  }
+  .orbit-social > span {
+    width: 37px;
+    height: 37px;
+  }
+  .orbit-social svg {
+    width: 17px;
+    height: 17px;
+  }
+  .widget-orbit-item[data-phase="0"] {
+    transform: translate(-50%, -50%) translate(22cqw, 179px) rotate(5deg);
+  }
+  .widget-orbit-item[data-phase="1"] {
+    transform: translate(-50%, -50%) translate(-22cqw, -198px) rotate(-8deg);
+  }
+  .widget-orbit-item[data-phase="2"] {
+    transform: translate(-50%, -50%) translate(24cqw, 260px) rotate(4deg);
+  }
+  .widget-orbit-item[data-phase="3"] {
+    transform: translate(-50%, -50%) translate(-23cqw, 196px) rotate(-7deg);
+  }
+}
+.widget-orbit[data-active="true"] .orbit-sculpture {
+  animation: orbit-metal 14s ease-in-out infinite;
+}
+.widget-orbit[data-active="true"] .orbit-profile-action {
+  animation: orbit-action 10s ease-in-out infinite;
+}
+.widget-orbit[data-active="true"] .orbit-date-selected {
+  animation: orbit-date 10s ease-in-out infinite;
+}
+@keyframes orbit-metal {
+  0%,
+  100% {
+    filter: drop-shadow(16px 30px 18px #0008) brightness(1);
+  }
+  50% {
+    filter: drop-shadow(10px 24px 15px #0008) brightness(1.04);
+  }
+}
+@keyframes orbit-action {
+  0%,
+  65%,
+  100% {
+    box-shadow:
+      0 6px 12px #0003,
+      0 1px 0 #fff8 inset;
+  }
+  76%,
+  84% {
+    box-shadow:
+      0 6px 18px #c7a9fa55,
+      0 1px 0 #fff inset;
+    background: #eee5fc;
+  }
+}
+@keyframes orbit-date {
+  0%,
+  40%,
+  100% {
+    background: #30213f;
+  }
+  50%,
+  65% {
+    background: #685080;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .widget-orbit-item {
+    will-change: auto;
+  }
+}

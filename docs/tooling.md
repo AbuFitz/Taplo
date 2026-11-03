@@ -1,0 +1,31 @@
+# Tooling decisions
+
+Versions checked on 23 October 2026 against the repository: React 19.3.0, Next 16.4.2, Tailwind 4, Motion 14.6.0, Base UI 1.9.0, `@dnd-kit/core` 6.3.1 + `@dnd-kit/sortable` 10.0.0 (the stable "legacy" generation), Radix Colors 3.0.0, Playwright 1.64.
+
+## Skills applied
+
+| Skill | Source and licence | How it is used here |
+| --- | --- | --- |
+| frontend-design | `anthropics/skills`, Apache-2.0 (read in full, not installed: it is guidance, and Taplo's brief overrides where they differ) | Composition, typography and writing. Its stated tells are the checklist for critique: single-word accents in headlines, tracked all-caps labels, numbered markers on non-sequences, identical rounded cards with one shadow, fade-and-slide entrances on every section, "→" on every link, tinted near-black. It also sets the process used for the directions: a compact token plan, a review against the generic default, then build |
+| web-design-guidelines | `vercel-labs/agent-skills`, rules fetched from `web-interface-guidelines` (read in full) | Implementation review only: labels, focus, forms, animation (transform/opacity, no `transition: all`, reduced motion), touch (`touch-action`, `overscroll-behavior: contain`), safe areas, content handling. It does not decide what looks good |
+| HyperFrames | `heygen-com/hyperframes`, already installed in this environment (hyperframes, -cli, -registry, media-use) | Entry skill and its launch/story/spec/review references are used for the film in the propagation phase: story in words, SPEC with every adjective as a number, snapshots, then render |
+
+## Tools
+
+| Tool | Problem it solves | Output | Compatible with | Licence / cost | Where | Decision |
+| --- | --- | --- | --- | --- | --- | --- |
+| Motion 14.6 (installed) | Interface transitions, shared-layout changes, scroll-linked storytelling | Look switcher, feature-section scroll story, editor selection transitions | React 19.3 | MIT, free | Shipped | **Primary UI animation system.** Used for the reference feature section |
+| Radix Colors 3.0 (installed) | Coordinated neutral and accent scales with light/dark steps | Palette generation for Taplo tokens and customer palettes (`looks.ts`) | Any | MIT | Shipped (small) | **Kept.** Platform tokens are semantic and take their steps from the slate/blue scales; custom-palette method followed for the one saturated accent |
+| Playwright 1.64 (installed) + axe | Interaction verification, captures, accessibility checks | 298 end-to-end tests, all captures | Chromium only here | Apache-2.0 | Dev | **Kept.** Playwright MCP (0.0.83, Apache-2.0) would add an interactive agent loop; it is not needed for scripted verification and is not added |
+| Chrome DevTools MCP 1.12 | Performance traces and network/console inspection | Traces of the homepage and editor | Needs an MCP connection this session does not have | Apache-2.0 | Dev | **Not adopted now.** Equivalent traces are taken through Playwright's CDP session; revisit if the MCP client becomes available |
+| Storybook 10.6.3 + `@storybook/nextjs-vite` + `@storybook/addon-mcp` | A standard component catalogue whose manifests an agent can read | Stories for header, widget and overlay families with usage docs | Next 16 and React 19 listed as peers; adds Vite as a dev dependency | MIT, free | Dev only | **Adopt in the workbench phase, after review.** The in-app workbench (`/workbench`, 109 stories on the real renderer) stays until the stories are ported; it is not replaced blindly |
+| Penpot (+ MCP) | Populated screen composition with a design file | Reusable screen specifications | The MCP needs a signed-in Penpot tab running the plugin; there is no such session here | Penpot is free and open source; MCP needs an account or a self-hosted instance | Dev | **Not usable here.** Fallback: a local browser workbench. The three directions below are composed on the real app by overriding tokens, which is a design workbench that cannot drift from the product |
+| Base UI Drawer 1.9.0 (installed) | Mobile sheets with swipe, snap points and keyboard handling | The editor's phone sheet | React 19 | MIT | Shipped | **Kept; verify.** The sheet is used for the editor already. A keyboard-open test (focus field, keyboard shrinks the visual viewport, scroll, return, dismiss) is added in the overlay phase to confirm or disprove a gap |
+| dnd-kit (installed: core 6 / sortable 10) | Reordering | Organise list | React 19 | MIT | Shipped | **Kept.** The new `@dnd-kit/react` 0.5.1 is a different API generation; mixing their examples would not work. No migration without a demonstrated gap |
+| Embla 8.6 | Carousels with drag physics, loop, plugins | — | React 19 | MIT | Shipped | **Not adopted.** Native CSS scroll snap covers the collections, with buttons and counts. Embla is justified only if a collection needs momentum or loop behaviour |
+| three 0.186 / `@react-three/fiber` 9.8.2 / `@react-three/drei` 10.7.9 | Real depth, lighting and camera movement | One authored marketing scene | R3F 9.8.2 requires React `>=19 <19.4`: 19.3.0 qualifies. Drei 10 needs R3F 9 | MIT, free | Shipped only on the page that uses it, loaded on demand | **Adopt for one purposeful scene** in the propagation phase (a page becoming a share card and QR asset). Static image fallback and reduced motion are required |
+| Puck 0.20 | Drag-and-drop page editor over a component config | — | React 19 | MIT | Shipped if adopted | **Not adopted.** Taplo's schema, widget registry, renderer and history already own page editing; Puck would be a second owner of the document. Compare in isolation only if a limitation is reproduced. None has been |
+| qr-code-styling 1.9.2 | Styled QR in canvas | — | Any | MIT | Shipped | **Not adopted.** The existing shared renderer already covers logo clearance, finder protection, transparency and exports, and runs in unit tests |
+| HyperFrames 0.8.186 | Authored product films | 16:9 film, portrait cuts, loops | Node, headless Chrome, ffmpeg | Open source runtime; the desktop app and cloud features are optional | Dev | **Kept** |
+
+Authoring tools stay out of the shipped bundle: Storybook, Vite, Playwright and HyperFrames are `devDependencies`; only Motion, Radix, Base UI and (for one page) R3F ship.

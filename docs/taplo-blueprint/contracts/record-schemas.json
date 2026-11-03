@@ -1,0 +1,3287 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Taplo core record contracts \u00b7 proposed edition 1.0",
+  "$comment": "Conceptual API/persistence contracts; fields not required are optional, not nullable. Runtime invariants, disclosure and retention are in specs 63\u201365. Not a complete deployed schema.",
+  "$defs": {
+    "ID": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*_[a-z0-9]{8,64}$"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "Money": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minor",
+        "currency"
+      ],
+      "properties": {
+        "minor": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        }
+      }
+    },
+    "Business": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "display_name",
+        "handle",
+        "status",
+        "capabilities",
+        "timezone"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "display_name": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "legal_name": {
+          "type": "string",
+          "maxLength": 250
+        },
+        "handle": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "active",
+            "paused",
+            "closing",
+            "closed"
+          ]
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "goods",
+              "appointments",
+              "classes",
+              "quotes",
+              "recurring",
+              "rewards",
+              "mobile",
+              "online"
+            ]
+          }
+        },
+        "timezone": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "logo_asset_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "wordmark_asset_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "published_page_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "primary_website_url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2048
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "display_name",
+        "verified_contact_refs",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "display_name": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "verified_contact_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "suspended",
+            "deletion_pending",
+            "deleted"
+          ]
+        }
+      }
+    },
+    "Membership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "user_id",
+        "role",
+        "status",
+        "location_ids",
+        "resource_ids",
+        "grant_ids"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "user_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "owner",
+            "manager",
+            "scheduler",
+            "practitioner",
+            "fulfilment",
+            "finance",
+            "support"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "invited",
+            "active",
+            "revoked"
+          ]
+        },
+        "location_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "resource_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "grant_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        }
+      }
+    },
+    "CustomerRelationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "user_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "guest_contact_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "blocked",
+            "anonymised"
+          ]
+        },
+        "marketing_consent_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "user_id"
+          ],
+          "not": {
+            "required": [
+              "guest_contact_ref"
+            ]
+          }
+        },
+        {
+          "required": [
+            "guest_contact_ref"
+          ],
+          "not": {
+            "required": [
+              "user_id"
+            ]
+          }
+        }
+      ]
+    },
+    "Participant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "relationship_id",
+        "display_name",
+        "kind"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "display_name": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "adult",
+            "learner",
+            "attendee"
+          ]
+        },
+        "guardian_relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "support_details_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      }
+    },
+    "Location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "label",
+        "kind",
+        "timezone",
+        "visibility"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "public_premises",
+            "private",
+            "mobile_coverage",
+            "online",
+            "event"
+          ]
+        },
+        "public_address_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "private_address_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "timezone": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "coverage_rule_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "visibility": {
+          "type": "string",
+          "enum": [
+            "public",
+            "approximate",
+            "private"
+          ]
+        }
+      }
+    },
+    "Offer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "kind",
+        "title",
+        "visibility",
+        "price_mode",
+        "policy_version_id",
+        "delivery_modes",
+        "configuration_ref"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "goods",
+            "appointment",
+            "class",
+            "quote"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 8000
+        },
+        "visibility": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "published",
+            "paused",
+            "archived"
+          ]
+        },
+        "price_mode": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "from",
+            "quote",
+            "free"
+          ]
+        },
+        "price": {
+          "$ref": "#/$defs/Money"
+        },
+        "policy_version_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "delivery_modes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "ship",
+              "collect",
+              "onsite",
+              "mobile",
+              "online"
+            ]
+          }
+        },
+        "configuration_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      }
+    },
+    "Variant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "offer_id",
+        "sku",
+        "option_values",
+        "price",
+        "inventory_mode",
+        "active"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "offer_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "sku": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "option_values": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "price": {
+          "$ref": "#/$defs/Money"
+        },
+        "inventory_mode": {
+          "type": "string",
+          "enum": [
+            "tracked",
+            "made_to_order",
+            "untracked"
+          ]
+        },
+        "active": {
+          "type": "boolean"
+        }
+      }
+    },
+    "InventoryBalance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "variant_id",
+        "location_id",
+        "on_hand",
+        "held",
+        "committed",
+        "unavailable"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "variant_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "location_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "on_hand": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "held": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "committed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unavailable": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "InventoryAdjustment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "balance_id",
+        "delta_on_hand",
+        "reason",
+        "origin_ref",
+        "actor_id"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "balance_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "delta_on_hand": {
+          "type": "integer"
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "received",
+            "count",
+            "damage",
+            "return",
+            "fulfilment",
+            "correction"
+          ]
+        },
+        "origin_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "actor_id": {
+          "$ref": "#/$defs/ID"
+        }
+      }
+    },
+    "Resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "kind",
+        "label",
+        "capacity",
+        "active"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "staff",
+            "room",
+            "equipment",
+            "vehicle"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "capacity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "active": {
+          "type": "boolean"
+        }
+      }
+    },
+    "AvailabilityRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "resource_ids",
+        "timezone",
+        "local_rule",
+        "effective_from",
+        "exception_refs"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "resource_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "timezone": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "local_rule": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "effective_from": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "effective_until": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "exception_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        }
+      }
+    },
+    "Session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "offer_id",
+        "starts_at",
+        "ends_at",
+        "timezone",
+        "resource_ids",
+        "capacity",
+        "held_seats",
+        "committed_seats",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "offer_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "starts_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "ends_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "timezone": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "resource_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "capacity": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "held_seats": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "committed_seats": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "series_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "occurrence_key": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "scheduled",
+            "cancelled",
+            "completed"
+          ]
+        }
+      }
+    },
+    "Cart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "relationship_id",
+        "status",
+        "lines",
+        "expires_at"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "open",
+            "converted",
+            "expired"
+          ]
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "variant_id",
+              "quantity"
+            ],
+            "properties": {
+              "variant_id": {
+                "$ref": "#/$defs/ID"
+              },
+              "quantity": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        "expires_at": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      }
+    },
+    "Reservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "relationship_id",
+        "kind",
+        "target_ids",
+        "quantity",
+        "quote_version_id",
+        "expires_at",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "inventory",
+            "appointment",
+            "session"
+          ]
+        },
+        "target_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "quote_version_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "held",
+            "committed",
+            "released",
+            "expired"
+          ]
+        }
+      }
+    },
+    "AgreementSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "seller_name",
+        "offer_title",
+        "unit_price",
+        "quantity",
+        "discount",
+        "tax",
+        "total",
+        "tax_rule_version",
+        "policy_version_id",
+        "fulfilment_mode"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "seller_name": {
+          "type": "string",
+          "maxLength": 250
+        },
+        "offer_title": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "unit_price": {
+          "$ref": "#/$defs/Money"
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "discount": {
+          "$ref": "#/$defs/Money"
+        },
+        "tax": {
+          "$ref": "#/$defs/Money"
+        },
+        "total": {
+          "$ref": "#/$defs/Money"
+        },
+        "tax_rule_version": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "policy_version_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "fulfilment_mode": {
+          "type": "string",
+          "enum": [
+            "ship",
+            "collect",
+            "onsite",
+            "mobile",
+            "online"
+          ]
+        }
+      }
+    },
+    "Booking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "relationship_id",
+        "participant_ids",
+        "offer_id",
+        "location_id",
+        "resource_ids",
+        "starts_at",
+        "ends_at",
+        "timezone",
+        "reservation_ids",
+        "agreement_id",
+        "payment_ids",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "participant_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "offer_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "session_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "location_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "resource_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "starts_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "ends_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "timezone": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "reservation_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "agreement_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "payment_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "requested",
+            "confirmed",
+            "declined",
+            "expired",
+            "cancelled",
+            "completed",
+            "no_show"
+          ]
+        },
+        "previous_version_id": {
+          "$ref": "#/$defs/ID"
+        }
+      }
+    },
+    "Order": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "relationship_id",
+        "agreement_ids",
+        "total",
+        "payment_ids",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "agreement_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "total": {
+          "$ref": "#/$defs/Money"
+        },
+        "payment_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "accepted",
+            "cancelled",
+            "closed"
+          ]
+        }
+      }
+    },
+    "Payment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "relationship_id",
+        "amount",
+        "status",
+        "provider",
+        "provider_account_ref",
+        "attempt_id",
+        "idempotency_ref"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "order_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "booking_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "amount": {
+          "$ref": "#/$defs/Money"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "created",
+            "requires_action",
+            "processing",
+            "failed",
+            "cancelled",
+            "succeeded"
+          ]
+        },
+        "provider": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "provider_account_ref": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "provider_payment_ref": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "idempotency_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      }
+    },
+    "Refund": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "payment_id",
+        "amount",
+        "reason",
+        "status",
+        "requested_by"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "payment_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "amount": {
+          "$ref": "#/$defs/Money"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "requested",
+            "processing",
+            "failed",
+            "succeeded"
+          ]
+        },
+        "provider_ref": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "requested_by": {
+          "$ref": "#/$defs/ID"
+        }
+      }
+    },
+    "Fulfilment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "order_id",
+        "mode",
+        "status",
+        "lines"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "order_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "ship",
+            "collect"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "unfulfilled",
+            "preparing",
+            "ready",
+            "dispatched",
+            "completed",
+            "cancelled"
+          ]
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "agreement_id",
+              "quantity"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "agreement_id": {
+                "$ref": "#/$defs/ID"
+              },
+              "quantity": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        "evidence_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      }
+    },
+    "Quote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "relationship_id",
+        "offer_id",
+        "scope",
+        "amount",
+        "expires_at",
+        "policy_version_id",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "offer_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "scope": {
+          "type": "string",
+          "maxLength": 8000
+        },
+        "amount": {
+          "$ref": "#/$defs/Money"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "policy_version_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "sent",
+            "accepted",
+            "declined",
+            "expired",
+            "superseded"
+          ]
+        },
+        "supersedes_id": {
+          "$ref": "#/$defs/ID"
+        }
+      }
+    },
+    "Subscription": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "relationship_id",
+        "purpose",
+        "amount",
+        "cadence",
+        "status",
+        "cancel_at_period_end",
+        "period_end",
+        "entitlement_version"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "merchant_customer_membership"
+          ]
+        },
+        "amount": {
+          "$ref": "#/$defs/Money"
+        },
+        "cadence": {
+          "type": "string",
+          "enum": [
+            "month",
+            "year"
+          ]
+        },
+        "provider_ref": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "trial",
+            "active",
+            "cancelled",
+            "past_due"
+          ]
+        },
+        "cancel_at_period_end": {
+          "type": "boolean"
+        },
+        "period_end": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "entitlement_version": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "WaitlistEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "session_id",
+        "relationship_id",
+        "quantity",
+        "joined_at",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "session_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "joined_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "offer_expires_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "reservation_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "waiting",
+            "offered",
+            "converted",
+            "expired",
+            "removed"
+          ]
+        }
+      }
+    },
+    "Conversation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "relationship_id",
+        "linked_record_ids",
+        "kind",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "linked_record_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "merchant",
+            "platform_support"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "open",
+            "closed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    "Message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "conversation_id",
+        "sender_id",
+        "sender_role",
+        "text",
+        "attachment_refs",
+        "status",
+        "client_message_key"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "conversation_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "sender_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "sender_role": {
+          "type": "string",
+          "enum": [
+            "customer",
+            "merchant",
+            "platform_support"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 12000
+        },
+        "attachment_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "accepted",
+            "delivery_pending",
+            "delivered",
+            "failed"
+          ]
+        },
+        "client_message_key": {
+          "type": "string",
+          "maxLength": 120
+        }
+      }
+    },
+    "RewardEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "relationship_id",
+        "rule_version_id",
+        "origin_id",
+        "units",
+        "kind"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "rule_version_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "origin_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "units": {
+          "type": "integer"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "earn",
+            "redeem",
+            "reverse",
+            "expire",
+            "adjust"
+          ]
+        },
+        "reverses_id": {
+          "$ref": "#/$defs/ID"
+        }
+      }
+    },
+    "WalletPass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "relationship_id",
+        "purpose",
+        "entitlement_id",
+        "provider",
+        "status",
+        "entitlement_version"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "loyalty",
+            "booking",
+            "membership"
+          ]
+        },
+        "entitlement_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "apple",
+            "google"
+          ]
+        },
+        "provider_ref": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "eligible",
+            "issuing",
+            "active",
+            "failed",
+            "update_pending",
+            "revoked"
+          ]
+        },
+        "entitlement_version": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "Domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "hostname",
+        "kind",
+        "status",
+        "auto_renew",
+        "is_primary"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "hostname": {
+          "type": "string",
+          "maxLength": 253
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "connected",
+            "registered"
+          ]
+        },
+        "provider_ref": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "verifying",
+            "failed",
+            "active",
+            "expired",
+            "detached"
+          ]
+        },
+        "registrant_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "renewal_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "auto_renew": {
+          "type": "boolean"
+        },
+        "is_primary": {
+          "type": "boolean"
+        }
+      }
+    },
+    "HardwareAsset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "serial_ref",
+        "claim_proof_hash_ref",
+        "redirect_id",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "serial_ref": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "claim_proof_hash_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "redirect_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "unclaimed",
+            "claimed",
+            "active",
+            "lost",
+            "revoked"
+          ]
+        },
+        "destination_kind": {
+          "type": "string",
+          "enum": [
+            "business",
+            "offer",
+            "review",
+            "contact"
+          ]
+        },
+        "destination_id": {
+          "$ref": "#/$defs/ID"
+        }
+      }
+    },
+    "SupportCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "linked_record_ids",
+        "kind",
+        "priority",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "relationship_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "linked_record_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "technical",
+            "merchant_service",
+            "payment",
+            "privacy",
+            "moderation",
+            "hardware",
+            "domain"
+          ]
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "urgent",
+            "high",
+            "normal",
+            "low"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "open",
+            "in_progress",
+            "waiting_customer",
+            "waiting_provider",
+            "resolved"
+          ]
+        },
+        "assigned_operator_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "next_action_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "outcome": {
+          "type": "string",
+          "maxLength": 4000
+        }
+      }
+    },
+    "AuditEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "actor_id",
+        "action",
+        "target_id",
+        "reason",
+        "request_id",
+        "changed_field_names"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "actor_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "action": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "target_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "request_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "changed_field_names": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 100
+          }
+        }
+      }
+    },
+    "EventEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "event_type",
+        "aggregate_id",
+        "aggregate_version",
+        "occurred_at",
+        "correlation_id",
+        "payload_ref"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "event_type": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "aggregate_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "aggregate_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "occurred_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "correlation_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "payload_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      }
+    },
+    "ProviderOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "provider",
+        "operation_kind",
+        "subject_id",
+        "status",
+        "attempt_count",
+        "idempotency_ref"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "provider": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "operation_kind": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "subject_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "running",
+            "uncertain",
+            "succeeded",
+            "failed"
+          ]
+        },
+        "attempt_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "next_retry_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "provider_ref": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "idempotency_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "last_error_code": {
+          "type": "string",
+          "maxLength": 100
+        }
+      }
+    },
+    "TeamProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "resource_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "membership_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "display_name": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "slug": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "bio": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "photo_asset_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "gallery_asset_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "service_offer_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "location_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "pending_review",
+            "published",
+            "hidden",
+            "archived"
+          ]
+        },
+        "appearance_policy": {
+          "type": "string",
+          "enum": [
+            "inherit_business"
+          ]
+        },
+        "published_version": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "resource_id",
+        "display_name",
+        "slug",
+        "gallery_asset_ids",
+        "service_offer_ids",
+        "location_ids",
+        "status",
+        "appearance_policy",
+        "published_version"
+      ]
+    },
+    "PermissionGrant": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "membership_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "action": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "own",
+            "assigned",
+            "assigned_locations",
+            "business"
+          ]
+        },
+        "location_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "resource_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "field_policy": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "revoked"
+          ]
+        },
+        "approved_by": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "membership_id",
+        "action",
+        "scope",
+        "location_ids",
+        "resource_ids",
+        "field_policy",
+        "status",
+        "approved_by"
+      ]
+    },
+    "AvailabilityChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "membership_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "resource_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "one_off",
+            "recurring",
+            "leave",
+            "busy_block"
+          ]
+        },
+        "proposed_rule": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "timezone": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "effective_from": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "requested",
+            "approved",
+            "rejected",
+            "cancelled"
+          ]
+        },
+        "impacted_booking_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "decision_reason": {
+          "type": "string",
+          "maxLength": 1000
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "membership_id",
+        "resource_id",
+        "kind",
+        "proposed_rule",
+        "timezone",
+        "effective_from",
+        "status",
+        "impacted_booking_ids"
+      ]
+    },
+    "CalendarConnection": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "membership_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "provider": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "provider_account_ref": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "calendar_ref": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "free_busy_import",
+            "one_way_export",
+            "two_way_reviewed"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "active",
+            "stale",
+            "revoked",
+            "failed"
+          ]
+        },
+        "last_success_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "cursor_ref": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "credential_secret_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "membership_id",
+        "provider",
+        "provider_account_ref",
+        "calendar_ref",
+        "mode",
+        "status",
+        "credential_secret_ref"
+      ]
+    },
+    "PolicyVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "saas",
+            "merchant_supply",
+            "hardware",
+            "domain",
+            "membership",
+            "privacy_notice",
+            "acceptable_use"
+          ]
+        },
+        "responsible_entity_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "jurisdiction_scope": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "content_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "content_hash": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "reviewed",
+            "active",
+            "retired"
+          ]
+        },
+        "effective_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "supersedes_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "review_evidence_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "kind",
+        "responsible_entity_id",
+        "jurisdiction_scope",
+        "content_ref",
+        "content_hash",
+        "status",
+        "effective_at"
+      ]
+    },
+    "PolicyAcceptance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "principal_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "authority_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "subject_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "policy_version_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "content_hash": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "action_kind": {
+          "type": "string",
+          "enum": [
+            "contract_accept",
+            "service_start_request",
+            "digital_supply_acknowledgement",
+            "notice_record"
+          ]
+        },
+        "copy_version": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "accepted_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "evidence_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "principal_id",
+        "subject_id",
+        "policy_version_id",
+        "content_hash",
+        "action_kind",
+        "copy_version",
+        "accepted_at",
+        "evidence_ref"
+      ]
+    },
+    "ConsentEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "principal_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "sender_entity_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "contact_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "email",
+            "sms",
+            "whatsapp"
+          ]
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "marketing"
+          ]
+        },
+        "legal_route": {
+          "type": "string",
+          "enum": [
+            "consent",
+            "reviewed_soft_opt_in"
+          ]
+        },
+        "notice_version_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "evidence_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "withdrawn",
+            "suppressed"
+          ]
+        },
+        "recorded_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "withdrawn_at": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "principal_id",
+        "sender_entity_id",
+        "contact_ref",
+        "channel",
+        "purpose",
+        "legal_route",
+        "notice_version_id",
+        "evidence_ref",
+        "status",
+        "recorded_at"
+      ]
+    },
+    "TeamInvitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "contact_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "grant_plan_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "token_secret_hash_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "accepted",
+            "expired",
+            "revoked"
+          ]
+        },
+        "accepted_user_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "invited_by": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "contact_ref",
+        "grant_plan_id",
+        "token_secret_hash_ref",
+        "expires_at",
+        "status",
+        "invited_by"
+      ]
+    },
+    "BusinessSubscription": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "amount": {
+          "$ref": "#/$defs/Money"
+        },
+        "cadence": {
+          "type": "string",
+          "enum": [
+            "month",
+            "year"
+          ]
+        },
+        "provider_ref": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "trial",
+            "active",
+            "cancelled",
+            "past_due"
+          ]
+        },
+        "cancel_at_period_end": {
+          "type": "boolean"
+        },
+        "period_end": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "entitlement_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "billing_contact_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "plan_version_id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "amount",
+        "cadence",
+        "status",
+        "cancel_at_period_end",
+        "period_end",
+        "entitlement_version",
+        "billing_contact_ref",
+        "plan_version_id"
+      ]
+    },
+    "ImportJob": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "requested_by": {
+          "$ref": "#/$defs/ID"
+        },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "merchant_website",
+            "merchant_upload",
+            "authorised_google"
+          ]
+        },
+        "source_url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "fetching",
+            "review_ready",
+            "applying",
+            "applied",
+            "failed",
+            "cancelled",
+            "expired"
+          ]
+        },
+        "source_use_status": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "permitted",
+            "blocked"
+          ]
+        },
+        "source_policy_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "candidate_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "warning_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "expires_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "applied_draft_version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "requested_by",
+        "source_type",
+        "source_url",
+        "status",
+        "source_use_status",
+        "source_policy_ref",
+        "candidate_ids",
+        "warning_codes",
+        "expires_at"
+      ]
+    },
+    "ImportCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "job_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "target_field": {
+          "type": "string",
+          "enum": [
+            "business.display_name",
+            "business.short_introduction",
+            "business.logo_asset",
+            "business.cover_asset",
+            "business.public_phone",
+            "business.public_email",
+            "business.social_links",
+            "business.website_url"
+          ]
+        },
+        "source_reference": {
+          "type": "string",
+          "maxLength": 2048
+        },
+        "value_reference": {
+          "$ref": "#/$defs/ID"
+        },
+        "extraction_method": {
+          "type": "string",
+          "enum": [
+            "structured_data",
+            "visible_text",
+            "asset_candidate",
+            "merchant_entry",
+            "provider_data"
+          ]
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "needs_review",
+            "selected",
+            "rejected"
+          ]
+        },
+        "conflict": {
+          "type": "boolean"
+        },
+        "source_policy_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "created_at",
+        "updated_at",
+        "business_id",
+        "job_id",
+        "target_field",
+        "source_reference",
+        "value_reference",
+        "extraction_method",
+        "decision",
+        "conflict",
+        "source_policy_ref",
+        "expires_at"
+      ]
+    }
+  }
+}

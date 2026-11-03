@@ -1,0 +1,123 @@
+{
+  "edition": "2.4",
+  "status": "proposed_extension_not_runtime_ACL",
+  "default": "deny",
+  "actions": {
+    "campaign.compose": {
+      "scope": "business_or_separately_authorised_platform",
+      "author": true,
+      "publisher": true
+    },
+    "audience.aggregate.read": {
+      "scope": "business_local_approved_facts",
+      "author": true,
+      "publisher": true,
+      "analyst": true
+    },
+    "campaign.approve": {
+      "scope": "permitted_campaign_revision",
+      "publisher": true
+    },
+    "campaign.dispatch": {
+      "scope": "approved_revision_revalidated_at_dispatch",
+      "publisher": true
+    },
+    "automation.manage": {
+      "scope": "business_allowed_recipe",
+      "publisher": true
+    },
+    "communication.spend": {
+      "scope": "explicit_pack_budget_and_permission",
+      "spend_admin": true
+    },
+    "consent.evidence.read": {
+      "scope": "restricted_purpose_justified",
+      "compliance": true
+    },
+    "audience.export": {
+      "scope": "separate_restricted_export_authority",
+      "compliance": true
+    },
+    "trust.report.create": {
+      "scope": "public_target_or_legitimate_private_access",
+      "public": true
+    },
+    "trust.case.triage": {
+      "scope": "assigned_queue",
+      "trust_triage": true
+    },
+    "trust.case.decide": {
+      "scope": "assigned_case_and_permitted_action",
+      "trust_specialist": true
+    },
+    "trust.appeal.review": {
+      "scope": "independent_or_conflict_recorded",
+      "trust_appeal": true
+    },
+    "review.reply.publish": {
+      "scope": "own_business_no_private_data",
+      "business_owner": true
+    },
+    "review.aggregate.rebuild": {
+      "scope": "server_only_published_eligible_native",
+      "verified_worker": true
+    },
+    "legal.document.publish": {
+      "scope": "reviewed_scope_no_unresolved_fields",
+      "legal_publisher": true
+    }
+  },
+  "role_rules": [
+    "Owner can combine merchant author/publisher/spend functions but not grant platform scope",
+    "Marketing roles do not imply finance/refund/customer-private-notes access",
+    "Business custom roles compose permitted actions but cannot bypass safety/tenant guards",
+    "Taplo marketing members operate in a separate platform workspace not all merchant accounts",
+    "Revocation invalidates sessions and scheduled dispatch grants; owner may adopt work with audit",
+    "Public reporting is bounded by anti-abuse and legitimate target access, not a blanket private-record read"
+  ],
+  "state_guards": [
+    {
+      "event": "campaign.approve",
+      "requires": [
+        "current revision",
+        "permitted actor",
+        "valid template and purpose",
+        "budget/audience preview"
+      ],
+      "effect": "approval binds current revision; edit invalidates approval"
+    },
+    {
+      "event": "campaign.dispatch",
+      "requires": [
+        "approved current revision",
+        "sender and account ready",
+        "current recipient permission",
+        "current suppression and source-record guard",
+        "available allowance/balance",
+        "contact limits",
+        "authorisation still active"
+      ],
+      "effect": "idempotent intent/attempt, no duplicate charge"
+    },
+    {
+      "event": "trust.case.decide",
+      "requires": [
+        "assigned scope",
+        "policy version",
+        "evidence and reason",
+        "proportionate restriction",
+        "notice or lawful withholding reason"
+      ],
+      "effect": "audited target-specific action; preserve safe existing-work access"
+    },
+    {
+      "event": "legal.document.publish",
+      "requires": [
+        "approved reviewer/scope",
+        "all facts/schedules complete",
+        "implemented corresponding route/controls"
+      ],
+      "effect": "immutable version, effective date, required notices; old agreements retain version"
+    }
+  ]
+}

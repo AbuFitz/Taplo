@@ -1,0 +1,145 @@
+{
+  "edition": "2.8",
+  "status": "drafts_not_approved_for_publication",
+  "documents": [
+    {
+      "file": "legal/01-customer-platform-terms.md",
+      "state": "draft",
+      "unresolved_fields": [
+        "COMPANY_NUMBER",
+        "COMPLAINTS_EMAIL",
+        "REGISTERED_ADDRESS",
+        "REGISTRATION_JURISDICTION",
+        "REVIEWED_CONSUMER_LIABILITY_AND_SERVICE_CLAUSES",
+        "REVIEWED_GOVERNING_LAW_AND_CONSUMER_JURISDICTION",
+        "REVIEWED_MINIMUM_AGE_AND_GUARDIAN_TERMS",
+        "SUPPORT_EMAIL",
+        "TAPLO_LEGAL_ENTITY"
+      ],
+      "approval_evidence": null,
+      "publishable": false
+    },
+    {
+      "file": "legal/02-merchant-software-terms.md",
+      "state": "draft",
+      "unresolved_fields": [
+        "APPROVED_BILLING_PRORATION_GRACE_AND_REFUND_SCHEDULE",
+        "APPROVED_EXIT_SCHEDULE",
+        "BUSINESS_SUPPORT_AND_COMPLAINTS_DETAILS",
+        "REVIEWED_BUSINESS_LIABILITY_INDEMNITY_INSURANCE_AND_JURISDICTION_CLAUSES",
+        "TAPLO_LEGAL_ENTITY_AND_REGISTERED_DETAILS",
+        "APPROVED_PRICE_CHANGE_AND_TRANSACTION_FEE_SCHEDULE"
+      ],
+      "approval_evidence": null,
+      "publishable": false
+    },
+    {
+      "file": "legal/03-platform-privacy-notice.md",
+      "state": "draft",
+      "unresolved_fields": [
+        "ACTUAL_PROVIDER_ROLE_LOCATION_TRANSFER_SCHEDULE",
+        "APPROVED_PURPOSE_AND_LAWFUL_BASIS_TABLE",
+        "APPROVED_RETENTION_SCHEDULE",
+        "AUTOMATED_DECISION_AND_PROFILING_DISCLOSURE",
+        "CHILD_ACCESS_AND_GUARDIAN_NOTICE",
+        "DPO_OR_REPRESENTATIVE_DETAILS_IF_REQUIRED",
+        "PRIVACY_CONTACT",
+        "TAPLO_LEGAL_ENTITY_AND_CONTACT"
+      ],
+      "approval_evidence": null,
+      "publishable": false
+    },
+    {
+      "file": "legal/04-cookie-and-device-technologies.md",
+      "state": "draft",
+      "unresolved_fields": [
+        "ACTUAL_DEVICE_TECHNOLOGY_INVENTORY",
+        "APPROVED_INVENTORY_AND_EXACT_BANNER_COPY",
+        "PRIVACY_CONTACT"
+      ],
+      "approval_evidence": null,
+      "publishable": false
+    },
+    {
+      "file": "legal/05-merchant-data-processing-addendum.md",
+      "state": "draft",
+      "unresolved_fields": [
+        "PARTIES",
+        "PRIOR_SPECIFIC_OR_GENERAL_WRITTEN_AUTHORISATION_MODEL",
+        "REVIEWED_NOTICE_PERIOD",
+        "REVIEWED_OBJECTION_RESOLUTION"
+      ],
+      "approval_evidence": null,
+      "publishable": false
+    },
+    {
+      "file": "legal/06-acceptable-use-and-supported-offers.md",
+      "state": "draft",
+      "unresolved_fields": [
+        "APPROVED_CATEGORY_SCHEDULE"
+      ],
+      "approval_evidence": null,
+      "publishable": false
+    },
+    {
+      "file": "legal/07-reviews-policy.md",
+      "state": "draft",
+      "unresolved_fields": [
+        "PUBLISHED_AGGREGATION_AND_SORT_RULES"
+      ],
+      "approval_evidence": null,
+      "publishable": false
+    },
+    {
+      "file": "legal/08-reporting-complaints-and-appeals.md",
+      "state": "draft",
+      "unresolved_fields": [
+        "APPEAL_ROUTE",
+        "APPROVED_EXTERNAL_COMPLAINTS_ADR_AND_AUTHORITY_INFORMATION",
+        "APPROVED_REVIEW_TARGETS",
+        "PRIVACY_ROUTE",
+        "PUBLIC_REPORT_URL",
+        "SUPPORT_ROUTE"
+      ],
+      "approval_evidence": null,
+      "publishable": false
+    },
+    {
+      "file": "legal/09-merchant-customer-supply-template.md",
+      "state": "draft",
+      "unresolved_fields": [
+        "CUSTOMER_CONTACT",
+        "DIGITAL_OR_RECURRING_SUPPLY_SCHEDULE",
+        "DISPATCH_COLLECTION_DELIVERY_AND_RISK",
+        "DISPLAY_NAME",
+        "GOODS_CANCELLATION_AND_FAULTY_GOODS_NOTICE",
+        "LEGAL_CONTACT_ADDRESS",
+        "MERCHANT_COMPLAINT_ROUTE",
+        "MERCHANT_LEGAL_NAME",
+        "OFFER_DESCRIPTION",
+        "PARTICIPANT_CAPACITY_REQUIREMENTS",
+        "REGISTRATION_VAT_OR_PROFESSIONAL_DETAILS_WHERE_REQUIRED",
+        "RESCHEDULING_CUTOFF_AND_REVIEWED_CANCELLATION_OUTCOME",
+        "REVIEWED_DATED_ACTIVITY_RIGHTS",
+        "REVIEWED_SELLER_LIABILITY_JURISDICTION_AND_COMPLAINTS_TERMS",
+        "REVIEWED_SERVICE_CANCELLATION_NOTICE",
+        "SERVICE_ACCEPTANCE_AND_SCOPE"
+      ],
+      "approval_evidence": null,
+      "publishable": false
+    },
+    {
+      "file": "legal/10-taplo-products-domains-and-exit-schedules.md",
+      "state": "draft",
+      "unresolved_fields": [
+        "APPROVED_EXIT_TIMINGS_AND_FORMATS",
+        "APPROVED_HARDWARE_SAFETY_CONFORMITY_RETURNS_AND_WARRANTY_SCHEDULE",
+        "APPROVED_NFC_STABLE_LINK_CONTINUITY",
+        "APPROVED_REGISTRAR_RESELLER_SCHEDULE",
+        "TAPLO_SELLER_DETAILS"
+      ],
+      "approval_evidence": null,
+      "publishable": false
+    }
+  ]
+}

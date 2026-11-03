@@ -1,0 +1,156 @@
+{
+  "scope": "normative_reference_arithmetic_not_actual_server_transactions",
+  "cases": [
+    {
+      "id": "deposit_fixed",
+      "kind": "deposit",
+      "total_minor": 2500,
+      "mode": "fixed",
+      "value": 1000,
+      "expected_minor": 1000
+    },
+    {
+      "id": "deposit_percent_round",
+      "kind": "deposit",
+      "total_minor": 1999,
+      "mode": "percent",
+      "value": 2500,
+      "expected_minor": 500
+    },
+    {
+      "id": "no_upfront",
+      "kind": "deposit",
+      "total_minor": 2500,
+      "mode": "none",
+      "value": 0,
+      "expected_minor": 0
+    },
+    {
+      "id": "full_upfront",
+      "kind": "deposit",
+      "total_minor": 2500,
+      "mode": "full",
+      "value": 0,
+      "expected_minor": 2500
+    },
+    {
+      "id": "deposit_over_total",
+      "kind": "deposit",
+      "total_minor": 2500,
+      "mode": "fixed",
+      "value": 3000,
+      "expected_error": true
+    },
+    {
+      "id": "refund_bound",
+      "kind": "refund",
+      "captured": 2500,
+      "succeeded": 1000,
+      "pending": 500,
+      "requested": 1000,
+      "allowed": true
+    },
+    {
+      "id": "refund_over_bound",
+      "kind": "refund",
+      "captured": 2500,
+      "succeeded": 1000,
+      "pending": 500,
+      "requested": 1001,
+      "allowed": false
+    },
+    {
+      "id": "pending_refund_not_free_again",
+      "kind": "refund",
+      "captured": 1000,
+      "succeeded": 0,
+      "pending": 1000,
+      "requested": 1000,
+      "allowed": false
+    },
+    {
+      "id": "stock_final_unit",
+      "kind": "stock",
+      "on_hand": 1,
+      "held": 1,
+      "committed": 0,
+      "unavailable": 0,
+      "requested": 1,
+      "allowed": false
+    },
+    {
+      "id": "stock_returns_not_sellable",
+      "kind": "stock",
+      "on_hand": 2,
+      "held": 0,
+      "committed": 0,
+      "unavailable": 2,
+      "requested": 1,
+      "allowed": false
+    },
+    {
+      "id": "class_party_capacity",
+      "kind": "stock",
+      "on_hand": 8,
+      "held": 1,
+      "committed": 5,
+      "unavailable": 0,
+      "requested": 2,
+      "allowed": true
+    },
+    {
+      "id": "class_party_too_large",
+      "kind": "stock",
+      "on_hand": 8,
+      "held": 1,
+      "committed": 5,
+      "unavailable": 0,
+      "requested": 3,
+      "allowed": false
+    },
+    {
+      "id": "half_open_intervals_adjacent",
+      "kind": "overlap",
+      "a": [
+        540,
+        600
+      ],
+      "b": [
+        600,
+        660
+      ],
+      "expected": false
+    },
+    {
+      "id": "overlap_inside_interval",
+      "kind": "overlap",
+      "a": [
+        540,
+        600
+      ],
+      "b": [
+        580,
+        620
+      ],
+      "expected": true
+    },
+    {
+      "id": "refund_reward_cumulative_rounding",
+      "kind": "reward_reverse",
+      "earned": 7,
+      "eligible_spend": 1000,
+      "total_refunded": 500,
+      "already_reversed": 2,
+      "expected": 1
+    },
+    {
+      "id": "refund_reward_full",
+      "kind": "reward_reverse",
+      "earned": 7,
+      "eligible_spend": 1000,
+      "total_refunded": 1000,
+      "already_reversed": 3,
+      "expected": 4
+    }
+  ]
+}

@@ -3,6 +3,7 @@ import { styleOverridesSchema } from "../contracts/style";
 import { DEFAULT_THEME_ID, getTheme, type ThemeDefinition } from "./catalogue";
 import { contrastRatio, ensureReadable, mix, readableOn } from "./color";
 import { FONT_STACKS } from "./fonts";
+import { deriveRoles, elevation } from "./roles";
 
 export interface StyleNotice {
   code: string;
@@ -31,11 +32,16 @@ export interface ResolvedStyle {
 const RADIUS = { none: "0px", sm: "0.375rem", md: "0.75rem", lg: "1.25rem", xl: "1.75rem", pill: "999px" } as const;
 const BTN_RADIUS = { square: "0px", rounded: "0.75rem", pill: "999px" } as const;
 const BORDER_W = { none: "0px", thin: "1px", thick: "2.5px" } as const;
-const PAD = { compact: "0.75rem", comfortable: "1rem", roomy: "1.5rem" } as const;
+const PAD = { none: "0px", compact: "0.75rem", comfortable: "1rem", roomy: "1.5rem" } as const;
+/** How much of a hero photograph fades into the page. Tested presets: text over the faded part always sits on the page colour. */
+const FADE = { soft: "34%", medium: "52%", strong: "74%" } as const;
 const WIDTH = { narrow: "30rem", regular: "36rem", wide: "44rem" } as const;
+/** The same choice on a computer: the page widens, it does not become a different layout. */
+const WIDTH_DESKTOP = { narrow: "38rem", regular: "48rem", wide: "60rem" } as const;
+/** Display faces with a small x-height read small at body proportions, so their headings are set larger. */
+const HEADING_SCALE: Partial<Record<string, string>> = { instrumentSerif: "1.3", fraunces: "1.08", barlowCondensed: "1.12", sourceSerif: "1.04" };
 const GAP = { compact: "0.625rem", comfortable: "0.875rem" } as const;
 const SCALE = { sm: "0.94", md: "1", lg: "1.1" } as const;
-const SOFT = "0 10px 28px -14px rgb(0 0 0 / 0.38)";
 
 export function countOverrides(o: StyleOverrides): number {
   let n = 0;
@@ -50,6 +56,7 @@ function bgSamples(spec: StyleSpec): string[] {
   const b = spec.background;
   if (b.kind === "solid") return [b.color];
   if (b.kind === "gradient") return [b.from, b.to, mix(b.from, b.to, 0.5)];
+  if (b.kind === "shader") return [b.base, ...b.colors];
   return [b.fallback];
 }
 
@@ -86,7 +93,7 @@ export function deriveButton(
   return { bg: soft, text: t.color, border: mix(colors.surface, accent, 0.3) };
 }
 
-export function resolveStyle(themeId: string, rawOverrides: unknown = {}): ResolvedStyle {
+export function resolveStyle(themeId: string, rawOverrides: unknown = {}, logoAccent?: string): ResolvedStyle {
   const notices: StyleNotice[] = [];
   let theme = getTheme(themeId);
   if (!theme) {
@@ -116,7 +123,27 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
     cards: { ...base.cards, ...ov.cards },
     layout: { ...base.layout, ...ov.layout },
     decoration: ov.decoration ?? base.decoration,
+    motion: ov.motion ?? base.motion ?? "subtle",
   };
+  // Retired profile arrangements render through the reviewed set. Stored owner
+  // data stays intact, while old drafts cannot reintroduce overlapping panels.
+  const layout = spec.header.layout;
+  spec.header.layout = ["centered", "poster", "editorial", "melt", "split", "bento", "type", "framed", "identity", "masthead", "duo", "lifted"].includes(layout) ? layout : ["side", "minimal", "portrait"].includes(layout) ? "side" : "banner";
+
+  if (spec.background.kind === "shader" && spec.background.source === "logo" && logoAccent && /^#[0-9a-fA-F]{6}$/.test(logoAccent)) {
+    const b = spec.background;
+    spec.background = { ...b, colors: [mix(b.base, logoAccent, .08), b.base, mix(b.base, logoAccent, .22)] };
+    if (!ov.colors?.accent) { spec.colors.accent = ensureReadable(logoAccent, b.base).color; spec.colors.accentText = readableOn(spec.colors.accent); }
+  }
+  if (spec.background.kind === "gradient" && spec.background.source === "logo") {
+    const dark = contrastRatio("#ffffff", spec.background.from) > contrastRatio("#000000", spec.background.from);
+    const accent = logoAccent && /^#[0-9a-fA-F]{6}$/.test(logoAccent) ? logoAccent : dark ? "#ffffff" : "#000000";
+    spec.background = { ...spec.background, from: dark ? "#000000" : "#ffffff", to: mix(dark ? "#000000" : "#ffffff", accent, dark ? .2 : .12) };
+    if (logoAccent && !ov.colors?.accent) {
+      spec.colors.accent = ensureReadable(logoAccent, spec.background.from).color;
+      spec.colors.accentText = readableOn(spec.colors.accent);
+    }
+  }
   // A "page colour" override recolours a plain-colour background (gradients/photos keep their own).
   if (!ov.background && ov.colors?.background && base.background.kind === "solid") spec.background = { kind: "solid", color: ov.colors.background };
   const contrast: ContrastCheck[] = [];
@@ -156,8 +183,8 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
     notices.push({ code: "accent_text_adjusted", message: "Button text colour was adjusted so it reads on your accent colour." });
     spec.colors.accentText = a.color;
   }
-  const btn = deriveButton(spec.colors, spec.buttons);
-  check("Button text", contrastRatio(btn.text, btn.bg === "transparent" ? spec.colors.background : btn.bg));
+  const btn = deriveButton({ ...spec.colors, background: refBg }, spec.buttons);
+  check("Button text", contrastRatio(btn.text, btn.bg === "transparent" ? refBg : btn.bg));
 
   const ratio = (n: number) => n;
   void ratio;
@@ -165,12 +192,20 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
   const cardBg =
     spec.cards.surface === "transparent"
       ? "transparent"
-      : `color-mix(in srgb, ${spec.colors.surface} ${spec.cards.surface === "glass" ? spec.cards.opacity : 100}%, transparent)`;
+      : spec.cards.surface === "soft"
+        ? "var(--tp-surface-2)"
+        : `color-mix(in srgb, ${spec.colors.surface} ${spec.cards.surface === "glass" ? spec.cards.opacity : 100}%, transparent)`;
 
   const bg = spec.background;
+  const pageBg = bg.kind === "solid" ? bg.color : bg.kind === "gradient" ? mix(bg.from, bg.to, 0.5) : bg.kind === "shader" ? bg.base : bg.fallback;
+  const roles = deriveRoles(spec.colors, pageBg);
+  const el = elevation(roles);
   const cssVars: Record<string, string> = {
-    "--tp-background": bg.kind === "solid" ? bg.color : bg.kind === "gradient" ? mix(bg.from, bg.to, 0.5) : bg.fallback,
+    "--tp-background": pageBg,
     "--tp-foreground": spec.colors.text,
+    // The page's own ink and button colours, which a header composition may override for itself but a lifted card must not inherit.
+    "--tp-ink": spec.colors.text,
+    "--tp-ink-muted": spec.colors.muted,
     "--tp-muted": spec.colors.muted,
     "--tp-surface": spec.colors.surface,
     "--tp-accent": spec.colors.accent,
@@ -182,20 +217,44 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
     "--tp-heading-weight": spec.text.headingWeight === "bold" ? "700" : "500",
     "--tp-heading-tracking": spec.text.headingCase === "upper" ? "0.02em" : "-0.01em",
     "--tp-scale": SCALE[spec.text.size],
+    "--tp-heading-scale": HEADING_SCALE[spec.text.headingFont] ?? "1",
     "--tp-text-align": spec.text.align,
     "--tp-card-bg": cardBg,
     "--tp-card-radius": RADIUS[spec.cards.radius],
     "--tp-card-border-w": BORDER_W[spec.cards.border],
-    "--tp-card-shadow": spec.cards.shadow === "soft" ? SOFT : spec.cards.shadow === "hard" ? hardShadow : "none",
+    "--tp-card-shadow": spec.cards.shadow === "soft" ? `${el.e2}, var(--tp-edge)` : spec.cards.shadow === "hard" ? hardShadow : "none",
     "--tp-card-pad": PAD[spec.cards.padding],
-    "--tp-card-blur": spec.cards.surface === "glass" ? "14px" : "0px",
+    "--tp-card-blur": spec.cards.surface === "glass" ? "22px" : "0px",
+    "--tp-card-filter": spec.cards.surface === "glass" ? "blur(22px) saturate(1.5)" : "none",
+    "--tp-card-border-color": spec.cards.surface === "glass" ? "color-mix(in srgb, var(--tp-foreground) 14%, transparent)" : spec.cards.surface === "soft" ? "transparent" : "var(--tp-border)",
+    "--tp-surface-2": roles.surface2,
+    "--tp-line": roles.line,
+    "--tp-line-strong": roles.lineStrong,
+    "--tp-ink-3": roles.ink3,
+    "--tp-accent-hover": roles.accentHover,
+    "--tp-accent-press": roles.accentPress,
+    "--tp-accent-soft": roles.accentSoft,
+    "--tp-accent-line": roles.accentLine,
+    "--tp-edge": el.edge,
+    "--tp-shadow-1": el.e1,
+    "--tp-shadow-2": el.e2,
+    "--tp-shadow-3": el.e3,
+    "--tp-radius-sm": `calc(${RADIUS[spec.cards.radius]} * 0.5)`,
+    "--tp-radius-md": `calc(${RADIUS[spec.cards.radius]} * 0.75)`,
+    "--tp-btn-sheen": spec.buttons.fill === "solid" && spec.buttons.shadow !== "hard" ? "inset 0 1px 0 0 rgb(255 255 255 / 0.2)" : "0 0 0 0 transparent",
+    "--tp-btn-hover": spec.buttons.fill === "solid" ? (contrastRatio(btn.text,roles.accentHover)>=4.5 ? roles.accentHover : btn.bg) : "transparent",
     "--tp-btn-bg": btn.bg,
+    "--tp-page-btn-bg": btn.bg,
+    "--tp-page-btn-text": btn.text,
+    "--tp-page-btn-border": btn.border,
     "--tp-btn-text": btn.text,
     "--tp-btn-border": btn.border,
     "--tp-btn-radius": BTN_RADIUS[spec.buttons.shape],
-    "--tp-btn-shadow": spec.buttons.shadow === "soft" ? SOFT : spec.buttons.shadow === "hard" ? hardShadow : "none",
+    "--tp-btn-shadow": spec.buttons.shadow === "soft" ? el.e1 : spec.buttons.shadow === "hard" ? hardShadow : "0 0 0 0 transparent",
     "--tp-btn-border-w": spec.buttons.fill === "outline" || spec.buttons.shadow === "hard" || spec.cards.border === "thick" ? "2px" : "1px",
+    "--tp-fade": FADE[spec.header.scrim ?? "medium"],
     "--tp-width": WIDTH[spec.layout.width],
+    "--tp-width-desktop": WIDTH_DESKTOP[spec.layout.width],
     "--tp-gap": GAP[spec.layout.density],
     "--tp-radius": RADIUS[spec.cards.radius],
   };
@@ -208,11 +267,18 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
       "data-decoration": spec.decoration,
       "data-motion": bg.kind === "gradient" && bg.motion ? "drift" : "none",
       "data-header": spec.header.layout,
+      "data-header-surface": spec.header.surface ?? "card",
       "data-desktop": spec.layout.desktop,
       "data-density": spec.layout.density,
+      "data-rhythm": spec.layout.rhythm ?? "even",
+      "data-composition": spec.layout.composition ?? "stack",
+      "data-finish": spec.layout.finish ?? "none",
       "data-card-surface": spec.cards.surface,
       "data-btn-fill": spec.buttons.fill,
       "data-btn-icons": spec.buttons.showIcons ? "on" : "off",
+      "data-bg": bg.kind,
+      "data-tone": roles.dark ? "dark" : "light",
+      "data-motion-level": spec.motion ?? "subtle",
     },
     notices,
     contrast,
@@ -220,11 +286,19 @@ export function resolveStyle(themeId: string, rawOverrides: unknown = {}): Resol
   };
 }
 
+/** Static stand-in for a shader wallpaper: layered radial colour fields on the base colour. Used until the shader mounts, for reduced motion and without WebGL. */
+export function shaderFallbackCss(b: { colors: string[]; base: string; anchors?: string[] }): string {
+  const spots = ["18% 12%", "88% 22%", "70% 92%", "8% 78%"];
+  const layers = b.colors.map((c, i) => `radial-gradient(${b.anchors ? "90% 80%" : "60% 55%"} at ${b.anchors?.[i] ?? spots[i % spots.length]}, ${c} 0%, transparent 70%)`);
+  return `${layers.join(", ")}, ${b.base}`;
+}
+
 /** Background layer CSS (solid/gradient only; images render as an element). */
 export function backgroundCss(spec: StyleSpec): string | undefined {
   const b = spec.background;
   if (b.kind === "solid") return b.color;
   if (b.kind === "gradient") return `linear-gradient(${b.angle}deg, ${b.from}, ${b.to})`;
+  if (b.kind === "shader") return shaderFallbackCss(b);
   return undefined;
 }
 
@@ -236,6 +310,13 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
   const accent = a.accent ?? spec.colors.accent;
   const featured = a.emphasis === "featured";
 
+  // A section owns its surface effects. Ancestor selectors must not keep applying a page's glass/soft styling.
+  if (a.surface) {
+    vars["--tp-card-filter"] = a.surface === "glass" ? "blur(22px) saturate(1.5)" : "none";
+    vars["--tp-card-blur"] = a.surface === "glass" ? "22px" : "0px";
+    vars["--tp-card-border-color"] = a.surface === "glass" ? "color-mix(in srgb, var(--tp-foreground) 14%, transparent)" : a.surface === "soft" ? "transparent" : "var(--tp-border)";
+  }
+
   if (a.surface === "accent") {
     const t = ensureReadable(spec.colors.accentText, accent);
     vars["--tp-card-bg"] = accent;
@@ -245,11 +326,16 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
     attrs["data-card-surface"] = "solid";
   } else if (a.surface === "transparent") {
     vars["--tp-card-bg"] = "transparent";
+    vars["--tp-card-blur"] = "0px";
     attrs["data-card-surface"] = "transparent";
   } else if (a.surface === "glass") {
     vars["--tp-card-bg"] = `color-mix(in srgb, ${spec.colors.surface} 62%, transparent)`;
-    vars["--tp-card-blur"] = "14px";
+    vars["--tp-card-blur"] = "22px";
     attrs["data-card-surface"] = "glass";
+  } else if (a.surface === "soft") {
+    vars["--tp-card-bg"] = "var(--tp-surface-2)";
+    vars["--tp-card-blur"] = "0px";
+    attrs["data-card-surface"] = "soft";
   } else if (a.surface === "solid") {
     vars["--tp-card-bg"] = spec.colors.surface;
     vars["--tp-card-blur"] = "0px";
@@ -261,7 +347,7 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
     vars["--tp-foreground"] = t.color;
     vars["--tp-muted"] = t.color;
   } else if (a.text && a.surface !== "accent") {
-    const surfaceNow = a.surface === "transparent" ? spec.colors.background : spec.colors.surface;
+    const surfaceNow = widgetBackground(style, a);
     const t = ensureReadable(a.text, surfaceNow);
     vars["--tp-foreground"] = t.color;
   }
@@ -269,31 +355,62 @@ export function widgetStyle(style: ResolvedStyle, a: WidgetAppearance): { vars: 
     vars["--tp-accent"] = a.accent;
     vars["--tp-accent-foreground"] = ensureReadable(spec.colors.accentText, a.accent).color;
   }
+  if (a.surface === "accent" || a.background) {
+    const background = widgetBackground(style, a);
+    const foreground = vars["--tp-foreground"] ?? spec.colors.text;
+    const roles = deriveRoles({ ...spec.colors, background, surface: background, text: foreground, muted: foreground }, background);
+    vars["--tp-line"] = roles.line;
+    vars["--tp-line-strong"] = roles.lineStrong;
+    vars["--tp-border"] = roles.lineStrong;
+    vars["--tp-muted"] = ensureReadable(mix(background, foreground, 0.68), background).color;
+    vars["--tp-ink-3"] = roles.ink3;
+    // Focus belongs to this surface, rather than an invisible page accent on an inverted panel.
+    vars["--tp-focus"] = foreground;
+  }
   if (a.radius) {
     vars["--tp-card-radius"] = RADIUS[a.radius];
     if (a.radius === "pill") vars["--tp-card-radius"] = "1.75rem";
   }
   if (a.border) vars["--tp-card-border-w"] = BORDER_W[a.border];
-  if (a.shadow) vars["--tp-card-shadow"] = a.shadow === "soft" ? SOFT : a.shadow === "hard" ? `4px 4px 0 0 ${vars["--tp-foreground"] ?? spec.colors.text}` : "none";
+  if (a.shadow) vars["--tp-card-shadow"] = a.shadow === "soft" ? `${style.cssVars["--tp-shadow-2"]}, var(--tp-edge)` : a.shadow === "hard" ? `4px 4px 0 0 ${vars["--tp-foreground"] ?? spec.colors.text}` : "none";
   if (a.padding) vars["--tp-card-pad"] = PAD[a.padding];
   if (a.align) vars["--tp-text-align"] = a.align;
   if (featured) {
-    vars["--tp-card-pad"] = PAD.roomy;
+    if (!a.padding) vars["--tp-card-pad"] = PAD.roomy;
     attrs["data-featured"] = "true";
+    // Emphasis supplies a default frame but must not override an explicit border choice.
+    if (a.border === undefined) vars["--tp-card-border-w"] = "1.5px";
   }
 
-  const needsButton = a.buttonFill || a.buttonShape || a.accent || a.background || a.text || a.surface === "accent";
+  const needsButton = a.buttonFill || a.buttonShape || a.accent || a.background || a.text || a.surface;
   if (needsButton) {
     // On an accent-filled card, buttons invert so they stay distinguishable.
     const inverted = a.surface === "accent";
+    const inverseInk = ensureReadable(spec.colors.accentText, accent).color;
     const btn = inverted
-      ? { bg: ensureReadable(spec.colors.accentText, accent).color, text: accent, border: ensureReadable(spec.colors.accentText, accent).color }
-      : deriveButton(spec.colors, spec.buttons, { fill: a.buttonFill, accent });
+      ? deriveButton({ ...spec.colors, background: accent, surface: accent, text: inverseInk, accent: inverseInk, accentText: accent }, spec.buttons, { fill: a.buttonFill, accent: inverseInk })
+      : deriveButton({ ...spec.colors, background: widgetBackground(style, a), surface: widgetBackground(style, a), text: vars["--tp-foreground"] ?? spec.colors.text }, spec.buttons, { fill: a.buttonFill, accent });
     vars["--tp-btn-bg"] = btn.bg;
     vars["--tp-btn-text"] = btn.text;
     vars["--tp-btn-border"] = btn.border;
+    const local = widgetBackground(style, a);
+    const buttonRoles = deriveRoles({ ...spec.colors, background: local, surface: local, text: vars["--tp-foreground"] ?? spec.colors.text, accent: btn.bg === "transparent" ? (inverted ? inverseInk : accent) : btn.bg }, local);
+    vars["--tp-btn-hover"] = btn.bg === "transparent" ? "transparent" : contrastRatio(btn.text, buttonRoles.accentHover) >= 4.5 ? buttonRoles.accentHover : btn.bg;
+    vars["--tp-accent-soft"] = contrastRatio(btn.text, buttonRoles.accentSoft) >= 4.5 ? buttonRoles.accentSoft : local;
     if (a.buttonFill) attrs["data-btn-fill"] = a.buttonFill;
   }
   if (a.buttonShape) vars["--tp-btn-radius"] = BTN_RADIUS[a.buttonShape];
   return { vars, attrs };
+}
+
+/** Effective solid sample used by controls/buttons. Wallpaper colours may differ from the saved palette. */
+export function widgetBackground(style: ResolvedStyle, a: WidgetAppearance): string {
+  if (a.background) return a.background;
+  const surface = a.surface ?? style.spec.cards.surface;
+  const page = style.cssVars["--tp-background"]!;
+  if (surface === "transparent") return page;
+  if (surface === "accent") return a.accent ?? style.spec.colors.accent;
+  if (surface === "soft") return style.cssVars["--tp-surface-2"]!;
+  if (surface === "glass") return mix(page, style.spec.colors.surface, a.surface === "glass" ? 0.62 : style.spec.cards.opacity / 100);
+  return style.spec.colors.surface;
 }

@@ -1,315 +1,523 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Check } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { TaploInput } from "@/components/taplo/taplo-input"
-import { LOCATION_MODES } from "@/features/businesses/content"
-import { SLUG_PROBLEM_MESSAGE } from "@/features/businesses/slug"
-import { newWidget } from "@/features/page/starter"
-import { ThemePicker } from "@/features/page/editor/ThemePicker"
-import { getTheme } from "@/features/page/themes/catalogue"
-import { getWidget } from "@/features/page/widgets/registry"
-import { buildPageViewModel } from "@/features/page/renderer"
-import { resolveEntitlements } from "@/features/subscriptions/entitlements"
-import { INDUSTRY_FIXTURE_KEYS, getFixture } from "@/features/themes/fixtures"
-import { OTHER_INDUSTRY_ID, getIndustryPreset, searchIndustries } from "@/features/themes/presets/industries"
-import { cn } from "@/lib/utils"
-import { applyIndustry, blankService, canPublish, hasContactChannel, loadSample, newId, normService, publish, readiness, setName, setSlug, slugProblems } from "./actions"
-import { ONBOARDING_STEPS, initialState, parseContent, useDemo, type OnboardingStep } from "./store"
-import { ServiceForm, serviceErrors } from "./ServiceForm"
-import { DemoNotice, EmailField, PhoneField, PreviewFrame } from "./ui"
-import type { WidgetType } from "@/features/page/contracts/widgets"
+import "./setup-form.css";
+import "./setup-flow.css";
+import * as React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { newWidget } from "@/features/page/starter";
+import {
+  getDesign,
+  applyDesign,
+  withArrangement,
+} from "@/features/page/themes/designs";
+import {
+  applyStartingLook,
+  getStartingLook,
+} from "@/features/page/themes/starting-looks";
+import { exampleStart } from "@/features/inspiration/suggest";
+import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
+import type { WidgetType } from "@/features/page/contracts/widgets";
+import { applyIndustry, slugProblems } from "./actions";
+import {
+  ONBOARDING_STEPS,
+  initialState,
+  useDemo,
+  type OnboardingStep,
+} from "./store";
+import { SetupLook } from "./SetupLook";
+import { SetupPlans } from "./SetupPlans";
+import { SetupCanvas } from "./SetupCanvas";
+import { SetupLoading } from "./SetupLoading";
+import { SetupShell, type SheetSnap } from "./SetupShell";
+import {
+  ActionStep,
+  FinishStep,
+  NameStep,
+  ServicesStep,
+  TypeStep,
+} from "./SetupSteps";
 
 const STEP_LABEL: Record<OnboardingStep, string> = {
-  industry: "Your business",
-  business: "Claim your page",
-  contacts: "Get in touch",
-  look: "Choose a look",
-  widgets: "Add what’s useful",
-  publish: "Preview & publish",
-}
+  type: "What you do",
+  name: "Name",
+  look: "Look",
+  action: "First action",
+  services: "Services",
+  plan: "Plan",
+  finish: "Finish",
+};
 const STEP_TITLE: Record<OnboardingStep, string> = {
-  industry: "What kind of business is it?",
-  business: "Claim your page",
-  contacts: "How can people reach you?",
-  look: "Choose a look",
-  widgets: "Add what’s useful",
-  publish: "Preview and publish",
-}
+  type: "What do you do?",
+  name: "What’s it called?",
+  look: "Style your page.",
+  action: "What should customers do first?",
+  services: "Add your services",
+  plan: "Pick a plan.",
+  finish: "Your draft is ready.",
+};
+const STEP_DESCRIPTION: Record<OnboardingStep, string> = {
+  type: "Start with the closest fit. We’ll suggest a page you can make your own.",
+  name: "Give it your name. Your page takes shape as you go.",
+  look: "Start with colours. Explore a different look whenever you like.",
+  action:
+    "Give visitors one clear next step. You can add more ways to connect later.",
+  services:
+    "One is enough to begin. Add your own details, or come back to this in Studio.",
+  plan: "Start with what you need today. You can change your plan later.",
+  finish: "A starting point that’s yours to build on.",
+};
+/** Where the live page scrolls to while each step is being filled in. */
+const FOCUS: Partial<Record<OnboardingStep, string>> = {
+  name: "header",
+  action: "actions",
+  services: "offer",
+};
+const SKIPPABLE: OnboardingStep[] = ["look", "action", "services"];
+const STAGE = "#ffffff";
 
-const LOCATION_LABEL = { premises: "A place customers visit", service_area: "I travel to customers (service area)", online: "Online only" } as const
+/** Any CSS colour to [r, g, b], or null. */
+function toRgb(color: string): [number, number, number] | null {
+  const probe = document.createElement("i");
+  probe.style.color = "";
+  probe.style.color = color;
+  if (!probe.style.color) return null;
+  document.body.appendChild(probe);
+  const m = getComputedStyle(probe).color.match(/\d+(\.\d+)?/g);
+  probe.remove();
+  return m && m.length >= 3 ? [Number(m[0]), Number(m[1]), Number(m[2])] : null;
+}
+const mixHex = (
+  rgb: [number, number, number],
+  base: [number, number, number],
+  t: number,
+) =>
+  "#" +
+  rgb
+    .map((v, i) =>
+      Math.round(v * t + base[i]! * (1 - t))
+        .toString(16)
+        .padStart(2, "0"),
+    )
+    .join("");
+
+const subscribeMobile = (cb: () => void) => {
+  const q = window.matchMedia("(max-width:1023px)");
+  q.addEventListener("change", cb);
+  return () => q.removeEventListener("change", cb);
+};
+const mobileSnapshot = () => window.matchMedia("(max-width:1023px)").matches;
 
 export function Onboarding() {
-  const router = useRouter()
-  const { ready, state, update } = useDemo()
-  const [showErrors, setShowErrors] = React.useState(false)
-  const [query, setQuery] = React.useState("")
-  const [mobilePreview, setMobilePreview] = React.useState(false)
-  const s = state ?? initialState()
-  const step = s.step
-  const stepIndex = ONBOARDING_STEPS.indexOf(step)
+  const shell = React.useRef<HTMLElement>(null);
+  const router = useRouter();
+  const params = useSearchParams();
+  const mobile = React.useSyncExternalStore(
+    subscribeMobile,
+    mobileSnapshot,
+    () => false,
+  );
+  const { ready, state, update, storageFailed } = useDemo();
+  const [snap, setSnap] = React.useState<SheetSnap>("default");
+  const [keyboard, setKeyboard] = React.useState(false);
+  const [showErrors, setShowErrors] = React.useState(false);
+  const [actionValid, setActionValid] = React.useState(true);
+  const [servicesValid, setServicesValid] = React.useState(true);
+  const navigated = React.useRef(false);
 
-  const go = (to: OnboardingStep) => {
-    setShowErrors(false)
-    update((x) => ({ ...x, step: to }))
-    window.scrollTo({ top: 0 })
-  }
-  const next = () => go(ONBOARDING_STEPS[Math.min(stepIndex + 1, ONBOARDING_STEPS.length - 1)]!)
-  const back = () => go(ONBOARDING_STEPS[Math.max(stepIndex - 1, 0)]!)
-
-  if (!ready) return <main className="p-8 text-sm text-muted-foreground">Loading…</main>
-
-  const c = s.content
-  const slugErrs = slugProblems(c.identity.slug)
-  const valid: Record<OnboardingStep, boolean> = {
-    industry: state !== null && Boolean(c.identity.industryLabel.trim()),
-    business: Boolean(c.identity.name.trim()) && slugErrs.length === 0,
-    contacts: hasContactChannel(c),
-    look: true,
-    widgets: true,
-    publish: canPublish(s),
-  }
-  const why: Record<OnboardingStep, string> = {
-    industry: "Choose what you do (or Other) and describe it in a few words.",
-    business: "Add a name and a valid web address.",
-    contacts: "Add at least one way for customers to reach you.",
-    look: "",
-    widgets: "",
-    publish: "Complete the earlier steps to publish.",
-  }
-
-  return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:py-10">
-      <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/" className="text-sm font-semibold">Taplo</Link>
-        <Link href="/dashboard/page" className="text-sm underline underline-offset-4">Skip to the page editor</Link>
-      </header>
-      <DemoNotice className="mb-6" />
-
-      <ol className="mb-8 flex flex-wrap gap-x-4 gap-y-2 text-sm" aria-label="Progress">
-        {ONBOARDING_STEPS.map((st, i) => (
-          <li key={st} aria-current={st === step ? "step" : undefined} className={cn("flex items-center gap-2", st === step ? "font-semibold" : "text-muted-foreground")}>
-            <span className={cn("grid size-6 place-items-center rounded-full border text-xs", i < stepIndex && "bg-primary text-primary-foreground")}>
-              {i < stepIndex ? <Check className="size-3.5" aria-hidden="true" /> : i + 1}
-            </span>
-            {STEP_LABEL[st]}
-          </li>
-        ))}
-      </ol>
-
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_400px]">
-        <section aria-labelledby="step-title" className="min-w-0">
-          <h1 id="step-title" className="mb-1 text-2xl font-semibold">{STEP_TITLE[step]}</h1>
-
-          {step === "industry" ? (
-            <div className="grid gap-6">
-              <p className="text-muted-foreground">Pick the closest match. It only suggests a starting point; you can change anything, including the look, later.</p>
-              <TaploInput label="Search (e.g. barber, tutor, café, plumber)" value={query} onChange={(e) => setQuery(e.target.value)} />
-              <ul className="grid gap-2 sm:grid-cols-2" aria-label="Types of business">
-                {searchIndustries(query).map((p) => {
-                  const selected = state !== null && c.identity.industryKey === p.id
-                  return (
-                    <li key={p.id}>
-                      <button type="button" aria-pressed={selected} onClick={() => update((x) => applyIndustry(x, p.id, p.id === OTHER_INDUSTRY_ID ? "" : p.label))}
-                        className={cn("min-h-11 w-full rounded-lg border px-4 py-2.5 text-left text-sm transition-colors hover:bg-muted", selected && "border-primary bg-muted font-semibold ring-2 ring-primary/30")}>
-                        {p.label}
-                      </button>
-                    </li>
-                  )
-                })}
-              </ul>
-              {state !== null ? (
-                <TaploInput
-                  label={c.identity.industryKey === OTHER_INDUSTRY_ID ? "Describe your business" : "How should we describe you? (shown on your page)"}
-                  hint={c.identity.industryKey === OTHER_INDUSTRY_ID ? "e.g. Dog groomer, Wedding florist, Piano restorer" : undefined}
-                  value={c.identity.industryLabel}
-                  maxLength={80}
-                  onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, industryLabel: e.target.value } } }), { coalesce: "ind-label" })}
-                />
-              ) : null}
-              <div className="rounded-lg border border-dashed p-4">
-                <p className="text-sm font-medium">Just looking around?</p>
-                <p className="mb-3 text-sm text-muted-foreground">Open a sample business with content already in place, or see them all on the <Link className="underline" href="/demo/profiles">sample profiles</Link> page.</p>
-                <div className="flex flex-wrap gap-2">
-                  {INDUSTRY_FIXTURE_KEYS.map((k) => (
-                    <Button key={k} size="sm" variant="outline" onClick={() => { update((x) => loadSample(x, k), { resetHistory: true }); router.push("/dashboard/page") }}>{getFixture(k)!.label}</Button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ) : null}
-
-          {step === "business" ? (
-            <div className="grid gap-5">
-              <p className="text-muted-foreground">Your name and your own web address. You can change both later.</p>
-              <TaploInput label="Business name" value={c.identity.name} maxLength={100} autoComplete="off" onChange={(e) => update((x) => setName(x, e.target.value), { coalesce: "name" })} />
-              <div>
-                <TaploInput label="Your web address" value={c.identity.slug} maxLength={40} autoCapitalize="none" autoCorrect="off" onChange={(e) => update((x) => setSlug(x, e.target.value), { coalesce: "slug" })} error={showErrors && slugErrs.length ? SLUG_PROBLEM_MESSAGE[slugErrs[0]!] : undefined} />
-                <p className="mt-1.5 text-sm text-muted-foreground">
-                  taplo.co/<strong>{c.identity.slug || "your-name"}</strong>
-                  {slugErrs.length && c.identity.slug ? <span className="block text-destructive">{SLUG_PROBLEM_MESSAGE[slugErrs[0]!]}</span> : null}
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">Demo note: whether an address is already taken is checked against the database when you publish on a connected environment. Reserved and invalid addresses are blocked now.</p>
-              </div>
-              <fieldset className="grid gap-2">
-                <legend className="mb-1 text-sm font-medium">Where do you work?</legend>
-                {LOCATION_MODES.map((m) => (
-                  <label key={m} className="flex min-h-11 items-center gap-3 rounded-lg border px-3 text-sm">
-                    <input type="radio" name="loc" className="size-4 accent-[var(--primary)]" checked={c.location.mode === m} onChange={() => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, mode: m } } }))} />
-                    {LOCATION_LABEL[m]}
-                  </label>
-                ))}
-              </fieldset>
-              <TaploInput label={c.location.mode === "service_area" ? "Areas you cover" : c.location.mode === "online" ? "Where you’re based (optional)" : "Town or area"} value={c.location.locality ?? ""} maxLength={120} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, location: { ...x.content.location, locality: e.target.value || undefined } } }), { coalesce: "loc" })} />
-              {c.location.mode === "premises" ? null : <p className="text-sm text-muted-foreground">Your private address is never published for travelling or online businesses.</p>}
-            </div>
-          ) : null}
-
-          {step === "contacts" ? (
-            <div className="grid gap-5">
-              <p className="text-muted-foreground">Customers act on these straight from your page. Only the ones you fill in appear. You can add a logo, description and more afterwards.</p>
-              <PhoneField label="Phone" value={c.contacts.phone} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, phone: v } } }), { coalesce: "phone" })} hint="Used for the Call button." />
-              <PhoneField label="WhatsApp number" value={c.contacts.whatsapp} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, whatsapp: v } } }), { coalesce: "wa" })} hint="Include the country code, e.g. +44." />
-              <EmailField value={c.contacts.email} onCommit={(v) => update((x) => ({ ...x, content: { ...x.content, contacts: { ...x.content.contacts, email: v } } }), { coalesce: "email" })} />
-              <TaploInput label="A line about you (optional)" hint="Shown under your name." value={c.identity.tagline ?? ""} maxLength={160} onChange={(e) => update((x) => ({ ...x, content: { ...x.content, identity: { ...x.content.identity, tagline: e.target.value || undefined } } }), { coalesce: "tag" })} />
-            </div>
-          ) : null}
-
-          {step === "look" ? (
-            <div className="grid gap-4">
-              <p className="text-muted-foreground">Pick any look you like: they work for every kind of business. Watch your page change on the right. You can fine-tune colours, fonts, buttons and more later.</p>
-              <ThemePicker themeId={s.page.themeId} canSwitch onPick={(id) => update((x) => ({ ...x, page: { ...x.page, themeId: id } }))} columns="grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3" />
-              <p className="text-xs text-muted-foreground">Suggested for {c.identity.industryLabel || "your business"}: {getTheme(getIndustryPreset(c.identity.industryKey).suggestedThemeId)?.name}. It’s only a suggestion.</p>
-            </div>
-          ) : null}
-
-          {step === "widgets" ? <WidgetsStep /> : null}
-          {step === "publish" ? <PublishStep onEditor={() => router.push("/dashboard/page")} /> : null}
-
-          {step !== "publish" ? (
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              {stepIndex > 0 ? <Button variant="outline" size="lg" onClick={back}>Back</Button> : null}
-              <Button size="lg" onClick={() => (valid[step] ? next() : setShowErrors(true))} aria-describedby="why-disabled">Continue</Button>
-              {!valid[step] && showErrors ? <p id="why-disabled" role="alert" className="text-sm text-destructive">{why[step]}</p> : null}
-            </div>
-          ) : (
-            <div className="mt-8"><Button variant="outline" size="lg" onClick={back}>Back</Button></div>
-          )}
-        </section>
-
-        <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
-          <div className="hidden lg:block"><h2 className="mb-2 text-sm font-semibold">Your page, taking shape</h2><PreviewFrame /></div>
-          <div className="lg:hidden">
-            <Button variant="outline" onClick={() => setMobilePreview((v) => !v)} aria-expanded={mobilePreview}>{mobilePreview ? "Hide preview" : "Show my page"}</Button>
-            {mobilePreview ? <div className="mt-3"><PreviewFrame /></div> : null}
-          </div>
-        </aside>
-      </div>
-    </main>
+  const s = state ?? initialState();
+  const step: OnboardingStep = (ONBOARDING_STEPS as readonly string[]).includes(
+    s.step,
   )
-}
+    ? s.step
+    : "type";
+  const index = ONBOARDING_STEPS.indexOf(step);
 
-/** Suggested widgets for this kind of business: tick to include. Nothing is added silently; empty ones explain what they need. */
-function WidgetsStep() {
-  const { state, update } = useDemo()
-  const s = state ?? initialState()
-  const industry = getIndustryPreset(s.content.identity.industryKey)
-  const parsed = parseContent(s.content)
-  const vm = React.useMemo(() => (parsed.success && parsed.data.identity.name ? buildPageViewModel(parsed.data, s.page, { plan: s.plan }) : null), [parsed, s.page, s.plan])
-  const have = new Set(s.page.widgets.map((w) => w.type as string))
-  const [svc, setSvc] = React.useState(() => (s.content.services ?? []).find((x) => !x.archived) ?? null)
-  const [showErr, setShowErr] = React.useState(false)
-  const first = (s.content.services ?? []).find((x) => !x.archived)
-  const current = first ? normService(first) : svc ? normService(svc) : blankService(0)
+  // The visible screen is what the sheet is sized from: the visual viewport, so an open keyboard never hides the footer.
+  React.useEffect(() => {
+    const vv = window.visualViewport;
+    const sync = () => {
+      const el = shell.current;
+      if (!el) return;
+      const height = vv?.height ?? window.innerHeight;
+      el.style.setProperty("--sf-vh", `${height}px`);
+      el.style.setProperty("--sf-top", `${vv?.offsetTop ?? 0}px`);
+      const open =
+        window.innerHeight - height > 180 &&
+        Boolean(document.activeElement?.matches("input,textarea,select"));
+      setKeyboard(open);
+    };
+    const later = () => requestAnimationFrame(sync);
+    window.scrollTo(0, 0);
+    sync();
+    vv?.addEventListener("resize", sync);
+    vv?.addEventListener("scroll", sync);
+    document.addEventListener("focusin", later);
+    document.addEventListener("focusout", later);
+    window.addEventListener("resize", sync);
+    return () => {
+      vv?.removeEventListener("resize", sync);
+      vv?.removeEventListener("scroll", sync);
+      document.removeEventListener("focusin", later);
+      document.removeEventListener("focusout", later);
+      window.removeEventListener("resize", sync);
+    };
+  }, []);
 
-  const toggle = (type: WidgetType, on: boolean) => update((x) => ({
-    ...x,
-    page: { ...x.page, widgets: on ? [...x.page.widgets, newWidget(type, {})] : x.page.widgets.filter((w) => w.type !== type) },
-  }))
-  const ent = resolveEntitlements(s.plan, "active")
-  void ent
-
-  return (
-    <div className="grid gap-6">
-      <p className="text-muted-foreground">These are the building blocks of your page. Tick the ones you want now; you can add, reorder and style widgets any time in the page editor.</p>
-      <ul className="grid gap-2" aria-label="Suggested widgets">
-        {industry.starterWidgets.map((type) => {
-          const def = getWidget(type)!
-          const st = vm?.widgets.find((w) => w.type === type)?.status
-          return (
-            <li key={type}>
-              <label className="flex min-h-12 items-start gap-3 rounded-lg border p-3 text-sm">
-                <input type="checkbox" className="mt-0.5 size-4 accent-[var(--primary)]" checked={have.has(type)} onChange={(e) => toggle(type, e.target.checked)} />
-                <span><span className="font-semibold">{def.label}</span> <span className="text-muted-foreground">— {def.description}</span>
-                  {have.has(type) && st && st.state !== "ready" ? <span className="block text-xs text-muted-foreground">Needs: {st.reason}</span> : null}</span>
-              </label>
-            </li>
-          )
-        })}
-      </ul>
-      <div className="rounded-xl border p-4">
-        <h2 className="font-semibold">Your first service <span className="text-sm font-normal text-muted-foreground">(optional)</span></h2>
-        <p className="mb-3 text-sm text-muted-foreground">You set every price; nothing is pre-filled. Skip this and add services later.</p>
-        {industry.suggestedServices.length ? (
-          <ul className="mb-3 flex flex-wrap gap-2" aria-label="Common services">
-            {industry.suggestedServices.map((sg) => (
-              <li key={sg.name}><button type="button" className="min-h-11 rounded-full border px-4 text-sm hover:bg-muted" onClick={() => { const base = { ...current, name: sg.name }; setSvc(base); save(base) }}>{sg.name}</button></li>
-            ))}
-          </ul>
-        ) : null}
-        <ServiceForm key={current.id} service={current} showErrors={showErr} onChange={(x) => { setSvc(x); save(x) }} />
-      </div>
-    </div>
-  )
-
-  function save(x: ReturnType<typeof normService>) {
-    const ok = Object.keys(serviceErrors(x)).length === 0
-    setShowErr(false)
-    if (!ok) { // keep typing local until it is a valid service, so the page never shows half-finished data
-      if (!x.name.trim()) return
+  // The browser chrome around the screen reads as part of the stage, never a white strip.
+  React.useEffect(() => {
+    const html = document.documentElement;
+    const before = {
+      bg: html.style.backgroundColor,
+      body: document.body.style.backgroundColor,
+    };
+    let meta = document.querySelector<HTMLMetaElement>(
+      'meta[name="theme-color"]',
+    );
+    const created = !meta;
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "theme-color";
+      document.head.append(meta);
     }
-    update((st) => {
-      const list = [...(st.content.services ?? [])]
-      const i = list.findIndex((q) => q.id === x.id)
-      if (ok) { if (i >= 0) list[i] = x; else list.push({ ...x, id: x.id || newId("svc") }) }
-      return { ...st, content: { ...st.content, services: list } }
-    }, { coalesce: "first-service" })
-  }
-}
+    const content = meta.content;
+    meta.setAttribute("content", STAGE);
+    html.style.backgroundColor = STAGE;
+    document.body.style.backgroundColor = STAGE;
+    return () => {
+      html.style.backgroundColor = before.bg;
+      document.body.style.backgroundColor = before.body;
+      if (created) meta.remove();
+      else meta.setAttribute("content", content);
+    };
+  }, []);
 
-function PublishStep({ onEditor }: { onEditor: () => void }) {
-  const { state, update } = useDemo()
-  const s = state ?? initialState()
-  const checks = readiness(s)
-  const ok = canPublish(s)
-  const theme = getTheme(s.page.themeId)
+  // The stage echoes the chosen look: a soft wash of the page's own colour, so choosing a look is a visible moment. The sheet stays monochrome.
+  const onSurface = React.useCallback((color: string) => {
+    const rgb = toRgb(color);
+    if (!rgb) return;
+    shell.current?.style.setProperty(
+      "--sf-stage",
+      mixHex(rgb, [255, 255, 255], 0.12),
+    );
+  }, []);
+
+  const go = React.useCallback(
+    (to: OnboardingStep, opts: { push?: boolean; replace?: boolean } = {}) => {
+      setSnap("default");
+      setShowErrors(false);
+      navigated.current = true;
+      if (document.activeElement instanceof HTMLElement)
+        document.activeElement.blur();
+      if (opts.replace)
+        window.history.replaceState(
+          { step: to },
+          "",
+          `${window.location.pathname}?step=${to}`,
+        );
+      else if (opts.push !== false)
+        window.history.pushState(
+          { step: to },
+          "",
+          `${window.location.pathname}?step=${to}`,
+        );
+      update((x) => ({ ...x, step: to }));
+    },
+    [update],
+  );
+
+  // Each step is a history entry: the browser's Back goes to the step before, with everything entered still there.
+  React.useEffect(() => {
+    const onPop = () => {
+      const to = new URLSearchParams(window.location.search).get("step");
+      if (to && (ONBOARDING_STEPS as readonly string[]).includes(to))
+        go(to as OnboardingStep, { push: false });
+      else if (!to) go("type", { push: false });
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [go]);
+
+  React.useEffect(() => {
+    if (!navigated.current) return;
+    shell.current
+      ?.querySelector<HTMLElement>("#step-title")
+      ?.focus({ preventScroll: true });
+  }, [step]);
+
+  // A link can open a given step (the address `?step=name`); the draft keeps everything entered so far.
+  const [startStep] = React.useState(() => {
+    const t = params.get("step");
+    return t && (ONBOARDING_STEPS as readonly string[]).includes(t)
+      ? (t as OnboardingStep)
+      : null;
+  });
+  React.useEffect(() => {
+    if (ready && startStep)
+      update((x) =>
+        x.step === startStep ||
+        (ONBOARDING_STEPS.indexOf(startStep) > 1 &&
+          !x.content.identity.name.trim())
+          ? x
+          : { ...x, step: startStep },
+      );
+  }, [ready, startStep]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // A plan chosen on the pricing page carries through setup without taking payment.
+  const [intent] = React.useState<PlanId | null>(() => {
+    const p = params.get("plan");
+    return p && (PLAN_IDS as readonly string[]).includes(p)
+      ? (p as PlanId)
+      : null;
+  });
+  React.useEffect(() => {
+    if (ready && intent)
+      update((x) =>
+        x.setupDrafts?.planIntent === intent
+          ? x
+          : { ...x, setupDrafts: { ...x.setupDrafts, planIntent: intent } },
+      );
+  }, [ready, intent]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // "Start from this" on an inspiration page: its kind of business, look and content types, never its sample content.
+  const [from] = React.useState(() => {
+    const slug = params.get("from");
+    return slug ? exampleStart(slug) : null;
+  });
+  React.useEffect(() => {
+    if (!ready || !from) return;
+    window.history.replaceState(null, "", window.location.pathname);
+    update((x) => {
+      const withIndustry = applyIndustry(
+        x,
+        from.industryKey,
+        from.industryLabel,
+      );
+      return {
+        ...withIndustry,
+        content: {
+          ...withIndustry.content,
+          booking: { ...withIndustry.content.booking, mode: from.bookingMode },
+        },
+        page: {
+          ...withIndustry.page,
+          themeId: from.lookId,
+          appearance: structuredClone(from.overrides),
+          widgets: from.widgets.map((w) => ({
+            ...newWidget(w.type as WidgetType, w.settings),
+            appearance: structuredClone(w.appearance),
+          })),
+        },
+      };
+    });
+  }, [ready, from]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // A design chosen in the gallery: setup begins with it on the page.
+  const [chosenDesign] = React.useState(() => {
+    const id = params.get("design");
+    return id ? (getDesign(id) ?? null) : null;
+  });
+  const [arr] = React.useState(() => params.get("arr") ?? undefined);
+  const [chosenLook] = React.useState(
+    () => getStartingLook(params.get("look") ?? undefined) ?? null,
+  );
+  React.useEffect(() => {
+    if (!ready || !chosenDesign) return;
+    window.history.replaceState(null, "", window.location.pathname);
+    update((x) => ({
+      ...x,
+      page: withArrangement(
+        chosenLook
+          ? applyStartingLook(x.page, chosenLook, { reorder: true })
+          : applyDesign(x.page, chosenDesign, { reorder: true }),
+        arr,
+      ),
+      ...(chosenLook
+        ? { setupDrafts: { ...x.setupDrafts, colourway: chosenLook.id } }
+        : {}),
+    }));
+  }, [ready, chosenDesign]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // A first visit has no saved draft yet; start one so the live page shows a populated sample from the first moment.
+  React.useEffect(() => {
+    if (ready && state === null) update((x) => x, { resetHistory: true });
+  }, [ready, state]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!ready) return <SetupLoading />;
+
+  const c = s.content;
+  const valid: Record<OnboardingStep, boolean> = {
+    type: Boolean(c.identity.industryLabel.trim()),
+    name:
+      Boolean(c.identity.name.trim()) &&
+      slugProblems(c.identity.slug).length === 0,
+    look: true,
+    action: actionValid,
+    services: servicesValid,
+    plan: true,
+    finish: true,
+  };
+  const why: Record<OnboardingStep, string> = {
+    type: "Choose what you do.",
+    name: s.content.identity.name.trim()
+      ? "Choose a page link with at least 3 letters or numbers."
+      : "",
+    look: "",
+    action: "Add the detail for the choice you made, or choose Get in touch.",
+    services:
+      "Finish the service name and price, or choose quote or free pricing.",
+    plan: "",
+    finish: "",
+  };
+  const next = () => {
+    if (step === "plan" && !s.setupDrafts?.planIntent)
+      update((x) => ({
+        ...x,
+        setupDrafts: { ...x.setupDrafts, planIntent: "free" },
+      }));
+    go(ONBOARDING_STEPS[Math.min(index + 1, ONBOARDING_STEPS.length - 1)]!);
+  };
+  const back = () => {
+    if (index > 0) go(ONBOARDING_STEPS[index - 1]!, { replace: true });
+  };
+  const press = () => {
+    if (valid[step]) return next();
+    setShowErrors(true);
+    // Errors are read out once and focus moves to the first field that needs attention.
+    requestAnimationFrame(() =>
+      shell.current
+        ?.querySelector<HTMLElement>(
+          "#setup-controls input:not([type=hidden]), #setup-controls [role=radio][aria-checked=true]",
+        )
+        ?.focus(),
+    );
+  };
+  const planName = PLANS[s.setupDrafts?.planIntent ?? "free"].name;
+
+  const notice = storageFailed ? (
+    <p
+      role="alert"
+      className="sf-notice sf-notice-warn"
+      data-testid="storage-failed"
+    >
+      Your browser couldn’t save your latest change (storage is full or
+      blocked). It’s showing here but may be lost if you reload. Remove a large
+      picture to continue safely.
+    </p>
+  ) : showErrors && !valid[step] && why[step] ? (
+    <p role="alert" className="sf-notice" id="why-disabled">
+      {why[step]}
+    </p>
+  ) : null;
+
+  const footer = (
+    <>
+      {index > 0 ? (
+        <button type="button" className="sf-back" onClick={back}>
+          Back
+        </button>
+      ) : (
+        <span />
+      )}
+      {step !== "finish" && SKIPPABLE.includes(step) ? (
+        <button type="button" className="sf-skip" onClick={next}>
+          Skip
+        </button>
+      ) : (
+        <span />
+      )}
+      {step === "finish" ? (
+        <span />
+      ) : (
+        <Button
+          className="sf-primary"
+          size="lg"
+          onClick={press}
+          aria-disabled={!valid[step]}
+          data-ready={valid[step]}
+          aria-describedby={
+            !valid[step] && showErrors ? "why-disabled" : undefined
+          }
+        >
+          {step === "plan" ? `Continue with ${planName}` : "Continue"}
+        </Button>
+      )}
+    </>
+  );
+
+  const origin =
+    chosenDesign || from || intent ? (
+      <p className="sf-origin">
+        {chosenDesign ? (
+          <span data-testid="from-design">
+            Starting with {chosenDesign.name}
+          </span>
+        ) : null}
+        {from ? (
+          <span data-testid="from-example">Starting from {from.name}</span>
+        ) : null}
+        {intent ? (
+          <span data-testid="plan-intent">{PLANS[intent].name} plan</span>
+        ) : null}
+      </p>
+    ) : null;
+
   return (
-    <div className="grid gap-5">
-      <p className="text-muted-foreground">Your page uses the <strong>{theme?.name}</strong> look with {s.page.widgets.length} widget{s.page.widgets.length === 1 ? "" : "s"}. Check the preview, then publish. Everything can be changed afterwards.</p>
-      <ul className="grid gap-2">
-        {checks.filter((c) => c.required).map((c) => (
-          <li key={c.id} className="flex items-center gap-2 text-sm">
-            <span className={cn("grid size-5 place-items-center rounded-full border", c.done && "bg-primary text-primary-foreground")}>{c.done ? <Check className="size-3" aria-hidden="true" /> : null}</span>
-            <span>{c.label}</span>
-            {!c.done ? <span className="text-destructive"> — missing</span> : null}
-          </li>
-        ))}
-      </ul>
-      <p className="text-sm text-muted-foreground">Optional and can wait: logo and cover picture, photos, services, reviews, team, payments.</p>
-      {s.published ? (
-        <div role="status" className="rounded-lg border border-green-600/40 bg-green-50 p-4 text-sm text-green-950">
-          <p className="font-semibold">Published (demo) — version {s.published.version}</p>
-          <p className="mt-1">View it at <Link className="underline" href={`/demo/p/${s.published.content.identity.slug}`} target="_blank">/demo/p/{s.published.content.identity.slug}</Link> in this browser.</p>
+    <SetupShell
+      ref={shell}
+      step={index}
+      steps={ONBOARDING_STEPS.length}
+      stepLabel={STEP_LABEL[step]}
+      title={STEP_TITLE[step]}
+      description={STEP_DESCRIPTION[step]}
+      snap={snap}
+      onSnap={setSnap}
+      mobile={mobile}
+      keyboard={keyboard}
+      bodyKey={step}
+      onBack={back}
+      notice={notice}
+      footer={footer}
+      preview={
+        <div className="sf-canvas">
+          <SetupCanvas
+            src="/demo/preview"
+            expanded={false}
+            closeUp={false}
+            fit={!mobile || snap === "peek"}
+            focus={
+              mobile &&
+              (step === "name" ||
+                step === "look" ||
+                step === "plan" ||
+                step === "type")
+                ? "identity"
+                : FOCUS[step]
+            }
+            onSurface={onSurface}
+            onOverlayOpen={() => {
+              if (mobile) setSnap("peek");
+            }}
+          />
         </div>
+      }
+    >
+      {origin}
+      {step === "type" ? <TypeStep /> : null}
+      {step === "name" ? (
+        <NameStep showErrors={showErrors} desktop={!mobile} />
       ) : null}
-      <div className="flex flex-wrap gap-3">
-        <Button size="lg" disabled={!ok} onClick={() => update((x) => ({ ...publish(x), onboarded: true }))}>{s.published ? "Publish changes" : "Publish my page"}</Button>
-        <Button size="lg" variant="outline" onClick={() => { update((x) => ({ ...x, onboarded: true })); onEditor() }}>Customise my page</Button>
-      </div>
-      {!ok ? <p className="text-sm text-destructive" role="alert">Finish the steps marked missing to publish.</p> : null}
-    </div>
-  )
+      {step === "look" ? <SetupLook /> : null}
+      {step === "action" ? (
+        <ActionStep showErrors={showErrors} onValidity={setActionValid} />
+      ) : null}
+      {step === "services" ? (
+        <ServicesStep onValidity={setServicesValid} />
+      ) : null}
+      {step === "plan" ? <SetupPlans inline /> : null}
+      {step === "finish" ? (
+        <FinishStep onStudio={() => router.push("/dashboard")} />
+      ) : null}
+    </SetupShell>
+  );
 }

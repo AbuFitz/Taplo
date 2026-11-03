@@ -5,7 +5,7 @@ import { DashboardShell } from "@/features/demo/DashboardShell"
 // Read the demo flag per request, never frozen at build time.
 export const dynamic = "force-dynamic"
 
-export const metadata = { title: "Dashboard — Taplo", robots: { index: false, follow: false } }
+export const metadata = { title: "Dashboard · Taplo", robots: { index: false, follow: false } }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   if (!demoModeEnabled()) {

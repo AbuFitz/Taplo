@@ -29,8 +29,24 @@ export const textSchema = z.object({
   align: z.enum(["left", "center"]),
 });
 
+/** Optional animated wallpaper. Always has a static equivalent: reduced motion, no WebGL and print all use `colors`. */
+export const SHADER_STYLES = ["aurora", "silk", "grain", "warp", "orbs", "rays", "swirl", "smoke"] as const;
+export const backgroundShaderSchema = z.object({
+  kind: z.literal("shader"),
+  style: z.enum(SHADER_STYLES),
+  source: z.enum(["manual", "logo"]).optional(),
+  motion: z.boolean().optional(),
+  pace: z.enum(["slow", "steady", "expressive"]).optional(),
+  colors: z.array(hex).min(2).max(4),
+  /** Base colour behind the shader and in the static fallback. */
+  base: hex,
+  /** Where each colour glows in the still version ("88% 5%"); defaults to four spread positions. */
+  anchors: z.array(z.string().regex(/^\d{1,3}% \d{1,3}%$/)).max(4).optional(),
+});
+
 export const backgroundSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("solid"), color: hex }),
+  backgroundShaderSchema,
   z.object({
     kind: z.literal("gradient"),
     from: hex,
@@ -38,6 +54,9 @@ export const backgroundSchema = z.discriminatedUnion("kind", [
     angle: z.number().min(0).max(360),
     /** Slow colour drift. Disabled for visitors who prefer reduced motion. */
     motion: z.boolean(),
+    pace: z.enum(["slow", "steady", "expressive"]).optional(),
+    /** Linked gradients recompute from identity metadata; manual edits detach the link. */
+    source: z.enum(["manual", "logo"]).optional(),
   }),
   z.object({
     kind: z.literal("image"),
@@ -49,15 +68,33 @@ export const backgroundSchema = z.discriminatedUnion("kind", [
   }),
 ]);
 
-export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal"] as const;
+/** Only these reviewed arrangements are offered for new profile choices. Older stored values remain readable. */
+/** The five profile arrangements offered everywhere. Older arrangements still render for pages that saved them. */
+export const PROFILE_CHOICES = [
+  { id: "framed", name: "Framed blend", line: "A photo fades into a contained profile with an overlapping mark", needs: "none" },
+  { id: "melt", name: "Open blend", line: "The photo flows into the page; identity and content read as one", needs: "none" },
+  { id: "identity", name: "Centred identity", line: "A cover frames a centred, prominent mark", needs: "none" },
+  { id: "masthead", name: "Editorial cover", line: "Type leads; the photo follows as a supporting chapter", needs: "none" },
+  { id: "duo", name: "Side by side", line: "Identity and photo share one compact introduction", needs: "none" },
+  { id: "lifted", name: "Floating profile", line: "An identity panel rests on the photo, then hands off to content", needs: "none" },
+  { id: "split", name: "Curved cover", line: "A rounded photo with your mark resting on its edge", needs: "photo" },
+  { id: "bento", name: "Floating Bento", line: "One lifted card with everything in reach", needs: "none" },
+  { id: "type", name: "Editorial Poster", line: "Bold type, no photo needed", needs: "none" },
+] as const;
+export const HEADER_LAYOUTS = ["centered", "cover", "side", "poster", "minimal", "feature", "editorial", "banner", "floating", "portrait", "melt", "split", "bento", "type", "framed", "identity", "masthead", "duo", "lifted"] as const;
 export const headerSchema = z.object({
   layout: z.enum(HEADER_LAYOUTS),
-  avatarShape: z.enum(["circle", "rounded", "square", "arch", "none"]),
+  /** "logo" shows the picture uncropped at its own proportions (for wide wordmarks); a wide logo is never cropped to a face shape regardless. */
+  avatarShape: z.enum(["circle", "rounded", "square", "none", "logo"]).or(z.literal("arch").transform(() => "rounded" as const)),
   avatarSize: z.enum(["sm", "md", "lg"]),
   align: z.enum(["left", "center"]),
   /** How the primary contact actions appear under the name. */
-  actions: z.enum(["buttons", "icons", "none"]),
+  actions: z.enum(["primary", "buttons", "icons", "none"]),
   showLocation: z.boolean(),
+  /** How far the cover or hero photograph fades into the page: tested presets, not a free slider. */
+  scrim: z.enum(["soft", "medium", "strong"]).default("medium"),
+  /** "card" sits the profile on its own raised surface; "open" lets it stand directly on the page. */
+  surface: z.enum(["card", "open"]).optional(),
 });
 
 export const buttonsSchema = z.object({
@@ -72,7 +109,7 @@ export const buttonsSchema = z.object({
 });
 
 export const cardsSchema = z.object({
-  surface: z.enum(["solid", "glass", "transparent"]),
+  surface: z.enum(["solid", "glass", "transparent", "soft"]),
   opacity: z.number().min(0).max(100),
   radius: z.enum(["none", "sm", "md", "lg", "xl"]),
   border: z.enum(["none", "thin", "thick"]),
@@ -83,9 +120,16 @@ export const cardsSchema = z.object({
 export const layoutSchema = z.object({
   width: z.enum(["narrow", "regular", "wide"]),
   density: z.enum(["compact", "comfortable"]),
+  rhythm: z.enum(["even", "editorial", "tight"]).optional(),
   /** Phones are always a single column. */
   desktop: z.enum(["centered", "split", "columns"]),
+  /** How the sections relate to each other and to the profile: stacked cards, a compact two-up grid, a sheet rising over the profile, or a frameless numbered ledger. */
+  composition: z.enum(["stack", "bento", "sheet", "sheet-bold", "ledger"]).optional(),
+  /** The material the sections are made of: frosted glass, elevated solid, editorial flat (hairlines) or industrial grid (tiles). */
+  finish: z.enum(["frosted", "solid", "flat", "grid"]).optional(),
 });
+
+export const MOTION_LEVELS = ["none", "subtle", "lively"] as const;
 
 export const DECORATIONS = ["none", "grain", "dots", "grid", "stripes", "glow"] as const;
 
@@ -98,6 +142,8 @@ export const styleSpecSchema = z.object({
   cards: cardsSchema,
   layout: layoutSchema,
   decoration: z.enum(DECORATIONS),
+  /** Entrance and hover motion. Always off for visitors who prefer reduced motion. */
+  motion: z.enum(MOTION_LEVELS).optional(),
 });
 export type StyleSpec = z.infer<typeof styleSpecSchema>;
 
@@ -112,6 +158,7 @@ export const styleOverridesSchema = z
     cards: cardsSchema.partial(),
     layout: layoutSchema.partial(),
     decoration: z.enum(DECORATIONS),
+    motion: z.enum(MOTION_LEVELS),
   })
   .partial();
 export type StyleOverrides = z.infer<typeof styleOverridesSchema>;
@@ -119,14 +166,14 @@ export type StyleOverrides = z.infer<typeof styleOverridesSchema>;
 /** Per-widget overrides: all optional; absent = follow the page style. */
 export const widgetAppearanceSchema = z
   .object({
-    surface: z.enum(["solid", "glass", "transparent", "accent"]),
+    surface: z.enum(["solid", "glass", "transparent", "accent", "soft"]),
     background: hex,
     text: hex,
     accent: hex,
     radius: z.enum(["none", "sm", "md", "lg", "xl", "pill"]),
     border: z.enum(["none", "thin", "thick"]),
     shadow: z.enum(["none", "soft", "hard"]),
-    padding: z.enum(["compact", "comfortable", "roomy"]),
+    padding: z.enum(["none", "compact", "comfortable", "roomy"]),
     align: z.enum(["left", "center"]),
     emphasis: z.enum(["normal", "featured"]),
     buttonFill: z.enum(["solid", "outline", "soft"]),

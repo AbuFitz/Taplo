@@ -1,0 +1,44 @@
+import { applyRecipe, getDesign } from "@/features/page/themes/designs"
+import { getWidget } from "@/features/page/widgets/registry"
+import { bySlug } from "./examples"
+import { LOOKS, type Look } from "@/features/page/themes/looks"
+import { SCENARIOS } from "@/features/showcase/content"
+import { EXAMPLE_LOOK, EXAMPLE_OVERRIDES, widgetsFor } from "@/features/showcase/lab-state"
+
+import { suggestedLookIds } from "@/features/themes/presets/look-suggestions"
+
+/** Looks in the order worth showing for a kind of business; every look stays available. */
+export function suggestedLooks(industryKey: string): Look[] {
+  const g = suggestedLookIds(industryKey)
+  return g.map((id) => LOOKS.find((l) => l.id === id)!).filter(Boolean)
+}
+
+/** What "Start from this" needs from an example: the business kind, the look and the content types, never the sample content itself. */
+export function exampleStart(slug: string) {
+  const e = bySlug(slug)
+  if (!e) return null
+  const sc = SCENARIOS[e.scenario]
+  return {
+    name: sc.content.identity.name,
+    industryKey: sc.content.identity.industryKey,
+    industryLabel: sc.content.identity.industryLabel ?? "",
+    lookId: EXAMPLE_LOOK[e.scenario],
+    overrides: EXAMPLE_OVERRIDES[e.scenario],
+    bookingMode: sc.content.booking?.mode ?? "contact",
+    widgets: (getDesign(EXAMPLE_LOOK[e.scenario]) ? applyRecipe(widgetsFor(e.scenario), getDesign(EXAMPLE_LOOK[e.scenario])!.recipe) : widgetsFor(e.scenario)).map((w) => {
+      // References belong to the fictional business. A new owner's sections follow their own records.
+      const settings = { ...w.settings } as Record<string, unknown>
+      for (const field of getWidget(w.type)?.fields ?? []) if (field.kind === "refs" || field.kind === "record") delete settings[field.key]
+      // A sample may name itself in its share button; a new owner starts with the neutral label.
+      if (w.type === "share") delete settings.label
+      if (w.type === "text") { settings.body = ""; delete settings.title }
+      if (w.type === "image") { settings.image = undefined; delete settings.caption; delete settings.linkUrl }
+      if (w.type === "announcement") { settings.text = ""; delete settings.linkUrl; delete settings.linkLabel }
+      if (w.type === "link") { settings.url = ""; settings.label = "Add a link"; delete settings.subtitle }
+      if (w.type === "enquiry") { delete settings.title; delete settings.intro; settings.buttonLabel = "Get in touch" }
+      const appearance = structuredClone(w.appearance)
+      delete appearance.thumbnail
+      return { type: w.type, settings, appearance }
+    }),
+  }
+}

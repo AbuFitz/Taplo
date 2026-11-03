@@ -1,3 +1,4 @@
+import { TaploLogo } from "@/components/taplo/brand"
 import Link from "next/link"
 import type { Metadata } from "next"
 import { FIXTURES } from "@/features/themes/fixtures"
@@ -5,7 +6,7 @@ import { THEMES, getTheme } from "@/features/page/themes/catalogue"
 import { getIndustryPreset } from "@/features/themes/presets/industries"
 
 export const dynamic = "force-dynamic"
-export const metadata: Metadata = { title: "Sample profiles — Taplo", robots: { index: false, follow: false } }
+export const metadata: Metadata = { title: "Sample profiles · Taplo", robots: { index: false, follow: false } }
 
 const HEADLINE = ["mechanic", "barber", "tutor", "cafe", "consultant", "unlisted"]
 
@@ -14,7 +15,7 @@ export default function SampleProfiles() {
   const featured = HEADLINE.map((k) => FIXTURES.find((f) => f.key === k)!)
   return (
     <main className="mx-auto w-full max-w-5xl px-5 py-10">
-      <p className="text-sm font-semibold text-neutral-600"><Link href="/">Taplo</Link></p>
+      <p className="text-sm font-semibold text-neutral-600"><Link href="/" aria-label="Taplo home"><TaploLogo /></Link></p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight">Sample profiles</h1>
       <p className="mt-2 max-w-2xl text-neutral-600">
         Invented businesses, rendered by the same engine as every real Taplo page. Industry and look are independent: a mechanic can be soft and light, a tutor dark and bold. Open any link on your phone.
@@ -38,7 +39,7 @@ export default function SampleProfiles() {
       <ul className="mt-3 flex flex-wrap gap-2 text-sm">
         {THEMES.map((t) => <li key={t.id}><Link className="rounded-full border px-3 py-1.5" href={`/demo-barber?theme=${t.id}`}>{t.name}</Link></li>)}
       </ul>
-      <p className="mt-10 text-sm text-neutral-600">Build your own: <Link className="underline" href="/onboarding">Create your page</Link> · <Link className="underline" href="/dashboard/page">My page editor</Link></p>
+      <p className="mt-10 text-sm text-neutral-600">Build your own: <Link className="underline" href="/onboarding">Make your Taplo</Link> · <Link className="underline" href="/dashboard/page">My page editor</Link></p>
     </main>
   )
 }

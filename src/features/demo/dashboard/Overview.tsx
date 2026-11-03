@@ -1,5 +1,8 @@
 "use client"
 
+import { businessAddress } from "@/lib/domains"
+
+import { WHEN_UNAVAILABLE } from "@/lib/capabilities"
 import * as React from "react"
 import Link from "next/link"
 import { Check, Copy } from "lucide-react"
@@ -9,6 +12,7 @@ import { canPublish, hasUnpublishedChanges, publish, readiness, unpublish } from
 import { useDraft } from "../hooks"
 import { PreviewFrame } from "../ui"
 import { Panel, PageHeader } from "./Panel"
+import { UpcomingBookings } from "./UpcomingBookings"
 
 const METRICS = ["Profile views", "Calls", "WhatsApp clicks", "Booking clicks", "Bookings made", "Revenue collected", "Review clicks"]
 
@@ -31,9 +35,9 @@ export function Overview() {
           <Panel title="Publish status">
             <div className="flex flex-wrap items-center gap-3">
               <span className={cn("rounded-full border px-3 py-1 text-sm font-medium", s.published && "border-green-600/50 bg-green-50 text-green-950")}>
-                {s.published ? `Published · v${s.published.version}` : "Draft — not published"}
+                {s.published ? `Published · v${s.published.version}` : "Draft · not published"}
               </span>
-              {draftDiffers ? <span className="text-sm text-amber-800">You have unpublished changes.</span> : null}
+              {draftDiffers ? <span className="text-sm text-foreground">You have unpublished changes.</span> : null}
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               <Button disabled={!canPublish(s)} onClick={() => patch(publish)}>{s.published ? "Publish changes" : "Publish"}</Button>
@@ -46,7 +50,7 @@ export function Overview() {
               ) : null}
             </div>
             {!canPublish(s) ? <p className="mt-3 text-sm text-muted-foreground">To publish you still need: {checks.filter((c) => c.required && !c.done).map((c) => c.label.toLowerCase()).join(", ")}.</p> : null}
-            <p className="mt-3 text-xs text-muted-foreground">Demo pages open at /demo/p/&lt;address&gt; and only work in this browser. On a connected environment the address is taplo.co/&lt;address&gt;.</p>
+            <p className="mt-3 text-xs text-muted-foreground">{WHEN_UNAVAILABLE.publicPublishing}</p>
           </Panel>
 
           <Panel title={`Set-up progress · ${requiredDone}/${requiredTotal} required`}>
@@ -68,7 +72,7 @@ export function Overview() {
               {METRICS.map((m) => (
                 <div key={m} className="rounded-lg border p-3">
                   <dt className="text-xs text-muted-foreground">{m}</dt>
-                  <dd className="mt-1 text-xl font-semibold" aria-label={`${m}: not tracked yet`}>—</dd>
+                  <dd className="mt-1 text-xl font-semibold" aria-label={`${m}: not tracked yet`}>Not tracked</dd>
                 </div>
               ))}
             </dl>
@@ -76,10 +80,10 @@ export function Overview() {
           </Panel>
 
           <Panel title="Upcoming bookings">
-            <p className="text-sm text-muted-foreground">No bookings yet. Online booking is built in a later phase; for now customers call, WhatsApp or email you from your page.</p>
+            <UpcomingBookings />
           </Panel>
         </div>
-        <div className="min-w-0"><h2 className="mb-2 text-sm font-semibold">Your page</h2><PreviewFrame height={620} /></div>
+        <div className="min-w-0"><h2 className="mb-2 text-sm font-semibold">Your page</h2><PreviewFrame url={businessAddress(s.content.identity.slug)} height={620} /></div>
       </div>
     </>
   )

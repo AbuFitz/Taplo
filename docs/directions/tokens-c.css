@@ -1,0 +1,4 @@
+:root{--background:#e8ecf2;--foreground:#0e1522;--primary:#0e1522;--signal:#5a3cf0;--signal-soft:#e6e0ff;--radius:.2rem;--border:#c9d1de;--card:#f6f8fb;--muted:#dde3ec;--secondary:#dde3ec;--accent:#e6e0ff;--ring:#5a3cf0}
+body{background:#e8ecf2!important}
+h1,h2,[data-testid=inspector-title],.text-base.font-semibold{font-family:'Instrument Serif',serif!important;font-weight:400!important;font-size:1.45em;letter-spacing:-.01em}
+button[data-testid=publish]{background:#5a3cf0!important}

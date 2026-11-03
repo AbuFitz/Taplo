@@ -1,0 +1,289 @@
+.home-work {
+  position: relative;
+  background: #eeeae2;
+  color: #25231f;
+  overflow: clip;
+}
+.home-work::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 180px;
+  background: linear-gradient(
+    180deg,
+    #080808,
+    #343431 30%,
+    #c4c0b7 72%,
+    #eeeae2
+  );
+}
+.home-work-inner {
+  position: relative;
+  max-width: 1280px;
+  margin: auto;
+  padding: 210px 32px 92px;
+}
+.home-work-title {
+  margin-left: 7%;
+  position: relative;
+  z-index: 2;
+}
+.home-work h2 {
+  font-family: var(--font-display);
+  font-size: clamp(42px, 6.5vw, 82px);
+  letter-spacing: -0.055em;
+  font-weight: 500;
+  line-height: 1.03;
+}
+.home-work h2 span {
+  color: #777166;
+}
+.home-work-composition {
+  position: relative;
+  height: 560px;
+  margin-top: 25px;
+  isolation: isolate;
+}
+.home-work-main {
+  position: absolute;
+  left: 5%;
+  top: 15px;
+  width: 72%;
+  height: 440px;
+}
+.home-work-photo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  transform: rotate(-3deg);
+  box-shadow: 0 28px 48px -22px #30291c66;
+}
+.home-work-photo img,
+.home-work-sample img {
+  object-fit: cover;
+}
+.home-work-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#0003, transparent 60%);
+}
+.home-work-wordmark {
+  position: absolute;
+  top: 28px;
+  left: 30px;
+  z-index: 1;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+.home-work-detail {
+  position: absolute;
+  width: 29%;
+  height: 260px;
+  right: 2%;
+  bottom: 20px;
+  z-index: 2;
+}
+.home-work-sample {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  transform: rotate(6deg);
+  box-shadow: 0 23px 40px -18px #332b2055;
+}
+.home-work-enquiry {
+  position: absolute;
+  left: 20%;
+  bottom: 40px;
+  z-index: 3;
+}
+.home-work-enquiry > span {
+  display: flex;
+  align-items: center;
+  gap: 55px;
+  padding: 22px 27px;
+  border-radius: 16px;
+  background: #fffdf6;
+  color: #25231f;
+  font-size: 16px;
+  box-shadow: 0 16px 26px -13px #40392a55;
+  transform: rotate(-2deg);
+}
+.home-work-enquiry svg {
+  width: 19px;
+  height: 19px;
+}
+.home-work-note {
+  margin: 15px 14% 0 auto;
+  max-width: 37ch;
+  font-size: 17px;
+  line-height: 1.75;
+  color: #655e52;
+}
+@media (max-width: 767px) {
+  .home-work::before {
+    height: 110px;
+  }
+  .home-work-inner {
+    padding: 140px 20px 65px;
+  }
+  .home-work-title {
+    margin-left: 0;
+  }
+  .home-work h2 {
+    font-size: clamp(36px, 10.5vw, 58px);
+  }
+  .home-work-composition {
+    height: 365px;
+    margin-top: 34px;
+  }
+  .home-work-main {
+    left: 1%;
+    top: 0;
+    width: 88%;
+    height: 245px;
+  }
+  .home-work-photo {
+    border-radius: 15px;
+  }
+  .home-work-wordmark {
+    top: 19px;
+    left: 20px;
+    font-size: 23px;
+  }
+  .home-work-detail {
+    width: 42%;
+    height: 155px;
+    right: 2%;
+    bottom: 14px;
+  }
+  .home-work-sample {
+    border-radius: 14px;
+  }
+  .home-work-enquiry {
+    left: 0;
+    bottom: 50px;
+  }
+  .home-work-enquiry > span {
+    padding: 15px 18px;
+    font-size: 12px;
+    gap: 20px;
+    border-radius: 12px;
+  }
+  .home-work-note {
+    margin: 20px 0 0 auto;
+    max-width: 29ch;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+}
+.home-design-live-phone {
+  width: min(100%, 310px);
+  margin-inline: auto;
+  filter: drop-shadow(0 24px 24px #0003);
+}
+.home-designs .home-design-art {
+  height: 560px;
+  overflow: hidden;
+  mask-image: linear-gradient(#000 90%, transparent);
+  padding-top: 12px;
+}
+.marketing-phone-placeholder {
+  height: 100%;
+  margin-inline: 2%;
+  border-radius: 13%/6%;
+  background: linear-gradient(145deg, #242424, #151515);
+  box-shadow: 0 18px 35px -25px #0009;
+}
+.marketing-browser-placeholder {
+  height: 100%;
+  border-radius: 16px;
+  background: #242424;
+}
+@media (max-width: 767px) {
+  .home-designs .home-design-art {
+    height: 430px;
+  }
+  .home-design-live-phone {
+    width: 280px;
+  }
+}
+.home-design-summary {
+  max-width: 760px;
+}
+.home-design-summary > fieldset {
+  gap: 8px;
+}
+.home-starting-rail {
+  margin-inline: calc(clamp(20px, 3vw, 32px) * -1);
+  margin-top: 30px;
+  color: #111;
+}
+.home-designs .home-design-summary .font-display {
+  font-size: clamp(25px, 3vw, 36px);
+}
+
+/* A cool, light plan chapter separates pricing from the dark product composition. */
+.home-plans {
+  background: #e8eef2;
+  color: #172a38;
+}
+.home-plans-inner {
+  max-width: 88rem;
+  margin: auto;
+  padding: 72px 20px;
+  display: grid;
+  gap: 38px;
+}
+.home-plans-intro,
+.home-plan-summary {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #4c6070;
+}
+.home-plans-intro {
+  margin-top: 18px;
+  max-width: 32ch;
+}
+.home-plans-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  margin-top: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #244d68;
+}
+.home-plans-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 5px;
+  border-radius: 4px;
+}
+.home-plans-list {
+  border-block: 1px solid #c7d3dc;
+}
+.home-plans-list > li + li {
+  border-top: 1px solid #c7d3dc;
+}
+.home-plans-list h3 {
+  color: #172a38;
+}
+@media (min-width: 768px) {
+  .home-plans-inner {
+    padding: 88px 32px;
+  }
+}
+@media (min-width: 1024px) {
+  .home-plans-inner {
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 80px;
+  }
+}

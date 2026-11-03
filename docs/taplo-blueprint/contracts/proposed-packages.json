@@ -1,0 +1,161 @@
+{
+  "edition": "2.8",
+  "status": "cost_informed_launch_model_not_published_billing_or_validated_demand",
+  "currency": "GBP",
+  "cadence": "monthly",
+  "headline_tax_policy": "inclusive_of_applicable_VAT_subject_to_actual_registration_and_supply_review",
+  "team_member_fee_minor": 0,
+  "platform_transaction_commission_percent": 0,
+  "processor_fees": "separate_under_actual_provider_agreement",
+  "plans": [
+    {
+      "id": "free",
+      "headline_minor": 0,
+      "active_offers": 5,
+      "new_commitments_monthly": 30,
+      "locations": 1,
+      "value": "genuine_presence_and_first_working_transactions",
+      "includes": [
+        "curated_page",
+        "basic_blocks_links",
+        "basic_bookings_orders_enquiries",
+        "eligible_deposits",
+        "necessary_operational_email",
+        "customer_return",
+        "team_access",
+        "basic_totals",
+        "qr"
+      ],
+      "included_uk_sms_units_monthly": 0,
+      "included_marketing_email_sends_monthly": 0,
+      "launch_intent": true
+    },
+    {
+      "id": "core",
+      "headline_minor": 1200,
+      "active_offers": null,
+      "new_commitments_monthly": null,
+      "locations": 1,
+      "value": "everyday_operations",
+      "inherits": "free",
+      "includes": [
+        "supported_catalogue_scheduling",
+        "inventory_fulfilment",
+        "external_calendar",
+        "owned_custom_domain_connection",
+        "essential_reports",
+        "richer_appearance",
+        "supported_public_business_team_wallet_cards"
+      ],
+      "included_uk_sms_units_monthly": 0,
+      "included_marketing_email_sends_monthly": 250,
+      "launch_intent": true
+    },
+    {
+      "id": "pro",
+      "headline_minor": 2400,
+      "active_offers": null,
+      "new_commitments_monthly": null,
+      "locations": 1,
+      "value": "repeat_business_and_growth",
+      "inherits": "core",
+      "includes": [
+        "supported_customer_rewards_wallet",
+        "advanced_packages_series_quote_automation",
+        "richer_analytics",
+        "controlled_template_branding",
+        "eligible_campaign_tools"
+      ],
+      "included_uk_sms_units_monthly": 0,
+      "included_marketing_email_sends_monthly": 1000,
+      "launch_intent": true
+    },
+    {
+      "id": "business",
+      "headline_minor": 4900,
+      "active_offers": null,
+      "new_commitments_monthly": null,
+      "locations": 3,
+      "value": "organisational_complexity",
+      "inherits": "pro",
+      "includes": [
+        "cross_location_controls",
+        "delegated_admin_custom_role_tools",
+        "advanced_exports_automation",
+        "staffed_priority_queue"
+      ],
+      "included_uk_sms_units_monthly": 0,
+      "included_marketing_email_sends_monthly": 3000,
+      "launch_intent": true
+    }
+  ],
+  "null_allowance_meaning": "no_routine_count_cap_proposed_not_unlimited_infrastructure_or_abuse_rights",
+  "separate_cost_services": [
+    "optional_sms",
+    "domain_purchase_renewal",
+    "hardware",
+    "shipping",
+    "optional_managed_services"
+  ],
+  "mandatory_guards": [
+    "release_only_supported_capabilities",
+    "meter_unique_commitment_once",
+    "no_charge_on_retry_or_reschedule",
+    "existing_work_and_required_notifications_preserved",
+    "no_automatic_paid_upgrade",
+    "privacy_security_and_financial_safeguards_not_upsells"
+  ],
+  "open_before_publication": [
+    "unit_economics_and_tax",
+    "group_compound_metering_fixtures",
+    "extra_location_price",
+    "downgrade_behaviour",
+    "final_supported_feature_scope",
+    "willingness_to_pay_evidence",
+    "sms_pack_economics_actual_supplier_confirmation"
+  ],
+  "presentation_strategy": "all_four_packages_at_launch_software_plus_one_optional_sms_service",
+  "price_evidence": "researched_supplier_rates_plus_explicit_rough_operating_assumptions_not_actual_costs_or_demand",
+  "operational_email": "included_for_valid_accepted_activity",
+  "paid_delivery_extras": [
+    "optional_uk_sms_packs"
+  ],
+  "cost_model": "economics-assumptions.json",
+  "sms_topups": [
+    {
+      "units": 100,
+      "headline_minor": 900
+    },
+    {
+      "units": 500,
+      "headline_minor": 3900
+    }
+  ],
+  "decision_document": "PRICING-DECISION.md",
+  "marketing_email_overage": "pause_new_promotional_sends_or_deliberate_upgrade_no_automatic_overage_bill",
+  "sms_auto_topup_default": false,
+  "comparison_document": "PACKAGE-COMPARISON.md",
+  "provider_stack": "PROVIDER-STACK.md",
+  "integration_boundaries": "INTEGRATIONS-AND-SUPPORT.md",
+  "launch_exclusions": [
+    "external_shop_stock_order_sync",
+    "public_headless_api",
+    "arbitrary_custom_code",
+    "bespoke_development_in_subscription",
+    "custom_authenticated_from_domain",
+    "whatsapp_bundled_with_sms"
+  ],
+  "all_plan_safety_and_identity_features": [
+    "native_reviews_under_uniform_policy",
+    "public_reporting_and_appropriate_appeal",
+    "browser_core_customer_journeys_no_compulsory_app",
+    "basic_safe_communication_role_templates",
+    "apple_google_email_code_signin",
+    "strong_business_security_not_paid_upsell"
+  ],
+  "advanced_marketing_recipes": "pro_and_business_supported_recipes_not_operational_reminders",
+  "launch_cost_readout": "LAUNCH-BUDGET-AND-PACKAGE-READOUT.md",
+  "rewards_spec": "REWARDS-STUDIO-AND-CATEGORY-RULES.md",
+  "full_display_feature_map": "package-feature-map.json",
+  "fee_change_policy": "TRANSACTION-FEE-OPTIONS-AND-CHANGE-POLICY.md"
+}

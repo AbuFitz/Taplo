@@ -1,0 +1,155 @@
+[
+  {
+    "file": "barber.webp",
+    "author": "Glib Albovsky",
+    "source": "https://unsplash.com/photos/a-man-with-a-beard-is-getting-his-hair-cut-cmoQYMqGgoI",
+    "license": "https://unsplash.com/license",
+    "changes": "Resized, converted to WebP; responsive display crops vary.",
+    "bytes": 553504,
+    "sha256": "3aa4a042c7bc04795bb73f9fe6be5b7fbb89da3451a319245a017f5e7bd49ea4"
+  },
+  {
+    "file": "valet.webp",
+    "author": "Avenir Visuals",
+    "source": "https://unsplash.com/photos/person-washing-a-black-car-with-soap-and-water-9U-_m0dfNuw",
+    "license": "https://unsplash.com/license",
+    "changes": "Resized, converted to WebP; responsive display crops vary.",
+    "bytes": 154080,
+    "sha256": "eacc9c5a96490e32c1c074d441b3e66a3d86cf6ca4724c30448399e3c0ac9bc1"
+  },
+  {
+    "file": "coffee.webp",
+    "author": "Jan Wright",
+    "source": "https://www.pexels.com/photo/cozy-indoor-cafe-seating-area-in-england-35671255/",
+    "license": "https://www.pexels.com/license/",
+    "changes": "Resized, converted to WebP; responsive display crops vary.",
+    "bytes": 152694,
+    "sha256": "c4ba32d2c47c287096946dacf7ed38d54beeae8d23a7ae05589d43e425bba38a"
+  },
+  {
+    "file": "generated/barber-counter.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: barber's counter with razor, brush, comb and amber bottle, warm window light; no people, no text",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized, converted to WebP.",
+    "bytes": 66004,
+    "sha256": "8cd101bd1aa14e921886667e4c2fb2b53497e4867354657b13e94c1f0b3e754a"
+  },
+  {
+    "file": "generated/barber-chair.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: empty vintage barber chair facing a mirror, tungsten light; no people, no text",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized, converted to WebP.",
+    "bytes": 136778,
+    "sha256": "567ea84fadf5f0cffba76c2a04c64e6e0f9fe7a6c3b035aceab1253171ea7922"
+  },
+  {
+    "file": "generated/detail-door.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: graphite car door panel with water beads; no people, no text",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized, converted to WebP.",
+    "bytes": 75376,
+    "sha256": "418c400b1fed76dd9c227bb8831e2373c5935c466b1928d68994c46018ad34c3"
+  },
+  {
+    "file": "generated/detail-kit.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: detailing supplies on a van tailgate: microfibre cloths, applicator, spray bottles; no people, no text",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized, converted to WebP.",
+    "bytes": 92918,
+    "sha256": "0123ef774d99293468d46829e7e8b52e9ab701d887d6d72f485c7d5b74df6de3"
+  },
+  {
+    "file": "generated/tutor-desk.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: study desk with notebook, pencil, tea and plant; no people, no text",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized, converted to WebP.",
+    "bytes": 100934,
+    "sha256": "274fbc975c5c5bf8a68b18f8d0cb1c2d11b305bac694665c9594595a45012d74"
+  },
+  {
+    "file": "generated/tutor-room.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: small bright tutoring room with round table and whiteboard; no people, no text",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized, converted to WebP.",
+    "bytes": 125824,
+    "sha256": "3a1db70ec5c5e467c4b604009a909ed7b9020bbb8615c45a856f986fc81c1027"
+  },
+  {
+    "file": "generated/trades.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: tools laid out on a worn van workbench: spanner, pipe wrench, pliers, screwdrivers, copper pipe, cable coil; window light; no people, no text",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 1000px wide (4:5 portrait), converted to WebP quality 82.",
+    "bytes": 120110,
+    "sha256": "f7984344e98e847e5861ab99b678bb5938f6bcfdeea4930a28a3a9e8c3cf5df4"
+  },
+  {
+    "file": "generated/cafe.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: small cafe counter with espresso machine, stacked cups, pastry case, morning light; no people, no text",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 1000px wide (4:5 portrait), converted to WebP quality 82.",
+    "bytes": 119758,
+    "sha256": "b94f6c793a15bcf18b9b22cf323ca036d4e71824bcad66e32fb5ce5fbec33958"
+  },
+  {
+    "file": "generated/dealer.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: small car dealer forecourt with two hatchbacks seen from the side, low warm sun; no plates, badges, people or text",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 1000px wide (4:5 portrait), converted to WebP quality 82.",
+    "bytes": 157348,
+    "sha256": "f6080db8fc176421a93202d07c5744cdf010beeef7bcc0d62de47de9969b6f64"
+  },
+  {
+    "file": "generated/tiles/personal-trainer.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: kettlebell and dumbbells on a dark rubber gym floor, low window light; no people, no faces, no text, no logos",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 280x200 (cover crop), converted to WebP quality 82.",
+    "bytes": 8588,
+    "sha256": "0ac12c6dfdf66c19fb35477977dff14d2318f2fef86b340ec00c87dbf403b4ee"
+  },
+  {
+    "file": "generated/tiles/cleaner.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: sunlit bright clean kitchen counter with unlabelled spray bottle, folded microfibre cloths and wooden brush, soft window light; no people, no faces, no text, no labels",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 280x200 (cover crop), converted to WebP quality 82.",
+    "bytes": 5512,
+    "sha256": "b0de4de263942866c9f166a2b3445ff1c249334821775ed9b8ce33a6722189ca"
+  },
+  {
+    "file": "generated/tiles/salon.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: hair salon styling station detail with mirror, scissors, comb, brushes and unlabelled bottles, warm tungsten light, dark lower third; no people, no faces, no portraits, no text, no labels, no logos",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 280x200 (cover crop), converted to WebP quality 82.",
+    "bytes": 8128,
+    "sha256": "20bb7dfa5771210c71f103a76e9f4377765ce1f4a72cb5865509a29f4d5674ed"
+  },
+  {
+    "file": "generated/tiles/photographer.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: camera on a wooden table in soft window light, lens beside it and a blurred printed contact sheet, dark lower third; no people, no faces, no text, no logos",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 280x200 (cover crop), converted to WebP quality 82.",
+    "bytes": 8104,
+    "sha256": "eb64217c515dc7dba8edec778ceeaafac2efc47f197846e0b4f5e8e2eceb1784"
+  },
+  {
+    "file": "generated/tiles/general.webp",
+    "author": "Generated with Figma AI (gemini-3.1-flash-image) for Taplo",
+    "source": "Figma file IJjCbpKBGmqmxgcN7UIwGu, prompt: tidy independent-business counter or workbench in warm natural window light with a small closed notebook and plain ceramic mug, dark lower third; no people, no faces, no text, no labels, no logos",
+    "license": "Generated image, no third-party photographer. Commercial use follows Figma's AI terms: confirm before launch.",
+    "changes": "Resized to 280x200 (cover crop), converted to WebP quality 82.",
+    "bytes": 10756,
+    "sha256": "7035def36140ed17d64e4d1f0e5733577ade553d34868972378c03a66c258aa2"
+  }
+]

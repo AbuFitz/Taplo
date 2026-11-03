@@ -1,0 +1,143 @@
+{
+  "renderer": "Authored Three.js device geometry, lighting and camera motion; deterministic Playwright rendering and FFmpeg encoding",
+  "description": "Silent 3D product films; fictional UK businesses; actual shared-renderer pages mapped onto authored device geometry.",
+  "sourceSceneSha256": "1f4448213cf25ea3640585666e00bb5b03705de739d72ea7583fd23102b4b11d",
+  "threeVersion": "0.186.1",
+  "sourceInputs": {
+    "station.webp": "60ffa6dc9656d5ed176f5a5f7fd25ef581493a904c4298b6f33fe6b57f18400f",
+    "detailer.webp": "9a9221b7dbe24909f7acf60c5012d44dc170a691a3af22af959b0afe98167055",
+    "dealer.webp": "8b215ba242a8b75d9f89a73e04afa223f3fdfc833eed7742bbfdb297567e7d34",
+    "desktop.webp": "de5d27bf5326f035ab5b631c51d9523f39c3d0230fc808dfb73530153b60a917",
+    "booking.webp": "aa521c0cdc398c3f37a9f9ee0a63ea545ea952e2db8c776b31726a8d4a5295cf",
+    "display.woff2": "0640890476fc1198ab4de571fb658de443c4d85b66466ec09534a8737ab1ce9d",
+    "body.woff2": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62"
+  },
+  "outputs": [
+    {
+      "name": "taplo-intro",
+      "width": 1920,
+      "height": 1080,
+      "source": "three-landscape.html",
+      "duration": 18,
+      "sceneStarts": [
+        0,
+        3,
+        6,
+        10,
+        14
+      ],
+      "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuv420p",
+      "frames": 540,
+      "bytes": 6354308,
+      "sha256": "3105474f3d45a760186c28547cc1eb063f121af39c6bb964d7b801cb6eca5a8b",
+      "sourceSha256": "f60e908c65d273e48c4bf9488f65fe4c66c375a328cb1d67e3a70153ff927110"
+    },
+    {
+      "name": "taplo-portrait",
+      "width": 1080,
+      "height": 1920,
+      "source": "three-portrait.html",
+      "duration": 18,
+      "sceneStarts": [
+        0,
+        3,
+        6,
+        10,
+        14
+      ],
+      "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuv420p",
+      "frames": 540,
+      "bytes": 6712344,
+      "sha256": "2564fa5c0a77a6a17d74f70c85e888730d2da2ce2835d9a7262604064b970e9e",
+      "sourceSha256": "4ad0750433ef02fdb509d0aa9629f77b9191ed55b2c01cf510125f46b488bbb6"
+    },
+    {
+      "name": "taplo-square",
+      "width": 1080,
+      "height": 1080,
+      "source": "three-square.html",
+      "duration": 18,
+      "sceneStarts": [
+        0,
+        3,
+        6,
+        10,
+        14
+      ],
+      "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuv420p",
+      "frames": 540,
+      "bytes": 2554008,
+      "sha256": "212b9eddf928d59f237fea04a6dcd8e8030bc37d37fe1291ce6d16f5fbbe28ad",
+      "sourceSha256": "ad99d7227657693fef382639441b0118a21789e020f73f6d421ed0194c7faaf0"
+    },
+    {
+      "name": "taplo-feed",
+      "width": 1080,
+      "height": 1350,
+      "source": "three-feed.html",
+      "duration": 20,
+      "sceneStarts": [
+        0,
+        3.333333,
+        6.666667,
+        11.111111,
+        15.555556
+      ],
+      "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuv420p",
+      "frames": 600,
+      "bytes": 3634449,
+      "sha256": "807fcea59b0d70a2e973201b627225ce438ddf8c45278681b3273e62865418d9",
+      "sourceSha256": "527c1f52240840039b850bbe076d816a045a8109b6a76ad36961dfbc141f6f4a"
+    },
+    {
+      "name": "booking-clip",
+      "width": 1920,
+      "height": 1080,
+      "source": "taplo-intro.mp4#t=3,6",
+      "duration": 3,
+      "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuv420p",
+      "frames": 90,
+      "bytes": 745202,
+      "sha256": "53b90d8117572b0b38440934a0adbdd38bc28d41dd74b6bd732b9e2820eebf7c",
+      "sourceSha256": null
+    },
+    {
+      "name": "design-clip",
+      "width": 1920,
+      "height": 1080,
+      "source": "taplo-intro.mp4#t=6,9",
+      "duration": 3,
+      "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuv420p",
+      "frames": 90,
+      "bytes": 771546,
+      "sha256": "20c3270c65b321442bb2ad283667b069055d407d2e987dbbc437ffbf92a22bf2",
+      "sourceSha256": null
+    },
+    {
+      "name": "stock-clip",
+      "width": 1920,
+      "height": 1080,
+      "source": "taplo-intro.mp4#t=10,13",
+      "duration": 3,
+      "fps": "30/1",
+      "codec": "h264",
+      "pixelFormat": "yuv420p",
+      "frames": 90,
+      "bytes": 787248,
+      "sha256": "8ef74d623a81f13621783c2d55dedfc5c205e7fdb642af0affa82aee7a126f29",
+      "sourceSha256": null
+    }
+  ]
+}

@@ -1,0 +1,794 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Proposed typed command inputs; server resolves principal/tenant/authoritative amounts",
+  "$defs": {
+    "ID": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*_[a-z0-9]{8,64}$"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "Money": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minor",
+        "currency"
+      ],
+      "properties": {
+        "minor": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        }
+      }
+    },
+    "CreateReservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "inventory",
+            "appointment",
+            "session"
+          ]
+        },
+        "target_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          },
+          "minItems": 1
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "candidate_start": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "offer_version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "business_id",
+        "kind",
+        "target_ids",
+        "quantity",
+        "offer_version"
+      ]
+    },
+    "CommitBooking": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "reservation_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          },
+          "minItems": 1
+        },
+        "participant_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          },
+          "minItems": 1
+        },
+        "offer_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "location_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "agreement_version_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "payment_attempt_id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "business_id",
+        "reservation_ids",
+        "participant_ids",
+        "offer_id",
+        "location_id",
+        "agreement_version_id"
+      ]
+    },
+    "RescheduleBooking": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "booking_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "replacement_reservation_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          },
+          "minItems": 1
+        },
+        "reviewed_change_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000
+        }
+      },
+      "required": [
+        "booking_id",
+        "expected_version",
+        "replacement_reservation_ids",
+        "reviewed_change_id"
+      ]
+    },
+    "CancelBooking": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "booking_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "reviewed_impact_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000
+        }
+      },
+      "required": [
+        "booking_id",
+        "expected_version",
+        "reviewed_impact_id"
+      ]
+    },
+    "CreateOrder": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "cart_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "cart_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "reservation_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "agreement_version_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          },
+          "minItems": 1
+        },
+        "fulfilment_selection_id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "business_id",
+        "cart_id",
+        "cart_version",
+        "reservation_ids",
+        "agreement_version_ids",
+        "fulfilment_selection_id"
+      ]
+    },
+    "StartPayment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "order_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "booking_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "quote_acceptance_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "payment_method_ref": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "agreement_version_id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "business_id",
+        "agreement_version_id"
+      ],
+      "oneOf": [
+        {
+          "required": [
+            "order_id"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "booking_id"
+                ]
+              },
+              {
+                "required": [
+                  "quote_acceptance_id"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "required": [
+            "booking_id"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "order_id"
+                ]
+              },
+              {
+                "required": [
+                  "quote_acceptance_id"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "required": [
+            "quote_acceptance_id"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "booking_id"
+                ]
+              },
+              {
+                "required": [
+                  "order_id"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "RequestRefund": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "payment_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "amount": {
+          "$ref": "#/$defs/Money"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "reviewed_impact_id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "payment_id",
+        "expected_version",
+        "amount",
+        "reason",
+        "reviewed_impact_id"
+      ]
+    },
+    "UpdateFulfilment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fulfilment_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "prepare",
+            "mark_ready",
+            "dispatch",
+            "collect",
+            "deliver",
+            "cancel"
+          ]
+        },
+        "evidence_ref": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "fulfilment_id",
+        "expected_version",
+        "action"
+      ]
+    },
+    "PublishPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "draft_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "validated_preview_id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "business_id",
+        "draft_version",
+        "validated_preview_id"
+      ]
+    },
+    "SendMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "conversation_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 12000
+        },
+        "attachment_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "client_message_key": {
+          "type": "string",
+          "maxLength": 200
+        }
+      },
+      "required": [
+        "conversation_id",
+        "text",
+        "attachment_refs",
+        "client_message_key"
+      ]
+    },
+    "AcceptQuote": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "quote_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "agreement_version_id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "quote_id",
+        "expected_version",
+        "agreement_version_id"
+      ]
+    },
+    "JoinWaitlist": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "participant_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        }
+      },
+      "required": [
+        "session_id",
+        "quantity",
+        "participant_ids"
+      ]
+    },
+    "IssuePass": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "entitlement_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "apple",
+            "google"
+          ]
+        }
+      },
+      "required": [
+        "business_id",
+        "entitlement_id",
+        "provider"
+      ]
+    },
+    "ConnectDomain": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "hostname": {
+          "type": "string",
+          "maxLength": 253
+        },
+        "make_primary": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "business_id",
+        "hostname",
+        "make_primary"
+      ]
+    },
+    "ClaimHardware": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "serial_ref": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "claim_proof": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "business_id",
+        "serial_ref",
+        "claim_proof"
+      ]
+    },
+    "ExportBusiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "dataset": {
+          "type": "string",
+          "enum": [
+            "catalogue",
+            "customers",
+            "work",
+            "financial",
+            "all_permitted"
+          ]
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "csv_json_bundle"
+          ]
+        }
+      },
+      "required": [
+        "business_id",
+        "dataset",
+        "format"
+      ]
+    },
+    "CloseBusiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "reviewed_closure_plan_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "effective_at": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "business_id",
+        "expected_version",
+        "reviewed_closure_plan_id",
+        "effective_at"
+      ]
+    },
+    "ReconcileProvider": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "inbox_receipt_id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": [
+        "inbox_receipt_id"
+      ]
+    },
+    "InviteMember": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "contact_ref": {
+          "$ref": "#/$defs/ID"
+        },
+        "role_template": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "location_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "resource_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "send_invitation": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "business_id",
+        "contact_ref",
+        "role_template",
+        "location_ids",
+        "resource_ids",
+        "send_invitation"
+      ]
+    },
+    "RequestAvailabilityChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "resource_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "one_off",
+            "recurring",
+            "leave",
+            "busy_block"
+          ]
+        },
+        "proposed_rule": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "timezone": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "effective_from": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "business_id",
+        "resource_id",
+        "kind",
+        "proposed_rule",
+        "timezone",
+        "effective_from"
+      ]
+    },
+    "UpdateOwnTeamProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "profile_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "bio": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "photo_asset_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "gallery_asset_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        }
+      },
+      "required": [
+        "profile_id",
+        "expected_version"
+      ]
+    },
+    "RevokeMember": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "membership_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "reviewed_work_plan_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      },
+      "required": [
+        "membership_id",
+        "expected_version",
+        "reviewed_work_plan_id",
+        "reason"
+      ]
+    },
+    "StartImport": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "merchant_website",
+            "merchant_upload",
+            "authorised_google"
+          ]
+        },
+        "source_url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "authority_confirmation": {
+          "type": "boolean",
+          "const": true
+        }
+      },
+      "required": [
+        "business_id",
+        "source_type",
+        "source_url",
+        "authority_confirmation"
+      ]
+    },
+    "ApplyImportDraft": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "job_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "expected_draft_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "selected_candidate_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/ID"
+          }
+        },
+        "reviewed_rights_confirmation": {
+          "type": "boolean",
+          "const": true
+        }
+      },
+      "required": [
+        "job_id",
+        "expected_draft_version",
+        "selected_candidate_ids",
+        "reviewed_rights_confirmation"
+      ]
+    }
+  }
+}

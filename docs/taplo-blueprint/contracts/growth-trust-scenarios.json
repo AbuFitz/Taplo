@@ -1,0 +1,76 @@
+{
+  "edition": "2.4",
+  "status": "specified_expectations_not_passed_runtime_tests",
+  "cases": [
+    {
+      "id": "marketing-withdrawal-after-queue",
+      "given": "approved campaign and consent, recipient withdraws before dispatch",
+      "expect": "suppressed, no provider send or used allowance"
+    },
+    {
+      "id": "promotional-reminder",
+      "given": "offer added to necessary booking reminder",
+      "expect": "cannot use operational template; marketing classification/permission required"
+    },
+    {
+      "id": "provider-timeout-after-accept",
+      "given": "provider may have accepted, response lost",
+      "expect": "reconciling; no duplicate retry or released allowance until resolved"
+    },
+    {
+      "id": "staff-revoked-before-scheduled-send",
+      "given": "publisher removed before scheduled dispatch",
+      "expect": "pause or explicit owner adoption, no stale permission"
+    },
+    {
+      "id": "cancelled-genuine-review",
+      "given": "customer genuinely booked but merchant cancelled",
+      "expect": "experience verification path; no automatic exclusion for noncompletion"
+    },
+    {
+      "id": "negative-review-paid-merchant",
+      "given": "published valid criticism and merchant pays Business",
+      "expect": "no veto/removal priority based on payment"
+    },
+    {
+      "id": "report-no-login",
+      "given": "guest sees suspicious public business",
+      "expect": "safe report with idempotent receipt; no compulsory account"
+    },
+    {
+      "id": "private-thread-report",
+      "given": "reporter supplies another users private message id",
+      "expect": "deny unauthorised context retrieval; accept separate public concern without leak"
+    },
+    {
+      "id": "google-native-score",
+      "given": "business has Google and native review information",
+      "expect": "separate sources; no merged score"
+    },
+    {
+      "id": "unresolved-legal-publish",
+      "given": "privacy draft contains [LEGAL_ENTITY] or missing data schedule",
+      "expect": "publication blocked; no fabricated substitution"
+    },
+    {
+      "id": "app-prompt-at-cancel",
+      "given": "customer cancelling in browser",
+      "expect": "complete cancellation without install interstitial"
+    },
+    {
+      "id": "merchant-suppression-scope",
+      "given": "opted out of merchant A email campaigns",
+      "expect": "A email marketing suppressed; no consent inferred for merchant B or Taplo"
+    },
+    {
+      "id": "review-removal-cache",
+      "given": "eligible review removed by authorised decision",
+      "expect": "native count/rating/cache/metadata update once; appeal evidence retained"
+    },
+    {
+      "id": "scope-business-owner",
+      "given": "merchant owner wants to inspect platform reports about rivals",
+      "expect": "denied; owner role is not Console authority"
+    }
+  ]
+}

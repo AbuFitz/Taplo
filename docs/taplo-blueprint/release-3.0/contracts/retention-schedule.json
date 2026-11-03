@@ -1,0 +1,118 @@
+{
+  "status": "specified_working_defaults_require_actual_scope_review_before_production",
+  "source_rule": "UK GDPR has no universal period; purpose necessity and actual obligations govern; no blanket retain all data six years",
+  "schedule": [
+    {
+      "key": "anonymous_draft",
+      "records": "OnboardingDraft",
+      "trigger": "last_edit",
+      "duration": "7 days",
+      "action": "Delete abandoned draft and derived previews; never public",
+      "hold": "none unless actual incident hold"
+    },
+    {
+      "key": "failed_upload",
+      "records": "quarantined media",
+      "trigger": "upload",
+      "duration": "24 hours for unclaimed upload; malicious quarantine separately assessed",
+      "action": "Delete incomplete files/derivatives/keys",
+      "hold": "security investigation scope"
+    },
+    {
+      "key": "service_intake",
+      "records": "necessary booking intake",
+      "trigger": "completed_or_cancelled",
+      "duration": "90 days working default",
+      "action": "Delete unnecessary intake/attachments; preserve minimal agreement/financial proof separately",
+      "hold": "actual dispute or legal obligation"
+    },
+    {
+      "key": "financial_proof",
+      "records": "AgreementSnapshot/Payment/Refund/receipt",
+      "trigger": "relevant_financial_year_end",
+      "duration": "6 years proposed UK-first records schedule, actual accountant/legal scope review required",
+      "action": "Restricted evidence retention; minimise unrelated customer/profile data",
+      "hold": "active dispute/tax/required hold"
+    },
+    {
+      "key": "marketing_evidence",
+      "records": "ConsentEvidence",
+      "trigger": "last_reliance_or_withdrawal",
+      "duration": "while relying on basis; reviewed dispute-proof period after withdrawal",
+      "action": "Restrict evidence; stop marketing immediately",
+      "hold": "minimal proof/suppression only"
+    },
+    {
+      "key": "marketing_suppression",
+      "records": "Suppression",
+      "trigger": "opt_out",
+      "duration": "while sender may otherwise recontact; review annually",
+      "action": "Keep minimum pseudonymous contact/channel suppression; no marketing profile reuse",
+      "hold": "avoid reimport/recontact"
+    },
+    {
+      "key": "delivery_debug",
+      "records": "provider attempts/events",
+      "trigger": "attempt",
+      "duration": "30 days raw redacted details, 90 days aggregate diagnostic reference",
+      "action": "Delete bodies/contacts; retain necessary logical delivery audit separately",
+      "hold": "active incident/case"
+    },
+    {
+      "key": "security_audit",
+      "records": "AuditEvent/auth traces",
+      "trigger": "event",
+      "duration": "90 days detailed redacted logs proposed; financial/ownership audit scoped longer as necessary",
+      "action": "Role restricted, minimise IP/identifiers",
+      "hold": "incident/legal hold"
+    },
+    {
+      "key": "temporary_gps",
+      "records": "Explore precise location",
+      "trigger": "search_session",
+      "duration": "session only, no history by default",
+      "action": "Discard exact GPS after session; coarse aggregate only where lawful",
+      "hold": "none by default"
+    },
+    {
+      "key": "public_media",
+      "records": "authorised business assets",
+      "trigger": "publication_end",
+      "duration": "until deletion request/exit plus 30-day recovery window where agreed",
+      "action": "Remove public/CDN versions and authorised backing assets; backups age out",
+      "hold": "IP/dispute evidence minimum"
+    },
+    {
+      "key": "widget_cache",
+      "records": "WidgetSnapshot",
+      "trigger": "as_of",
+      "duration": "15 minutes reference freshness; purge account switch/revocation best effort",
+      "action": "Redacted cache, deep-link reauth; OS may retain offline image",
+      "hold": "no guarantee remote instantaneous erase"
+    },
+    {
+      "key": "support_case",
+      "records": "SupportCase",
+      "trigger": "case_closed",
+      "duration": "12 months working default, longer justified financial/security case only",
+      "action": "Redact unnecessary attachments; keep decision/notice metadata",
+      "hold": "actual complaint/dispute/legal hold"
+    },
+    {
+      "key": "credential",
+      "records": "provider refresh/API secret",
+      "trigger": "disconnect_or_rotation",
+      "duration": "revoke immediately; remove stored active secret when no longer required",
+      "action": "Secret manager key removal and reference tombstone",
+      "hold": "no raw secret in audit"
+    },
+    {
+      "key": "backup",
+      "records": "encrypted independent snapshot",
+      "trigger": "snapshot",
+      "duration": "35-day rolling working default, actual quoted restore/RPO scope required",
+      "action": "Expiry plus deletion reapplication after restore; no active use of expired profile",
+      "hold": "controlled preservation only"
+    }
+  ]
+}

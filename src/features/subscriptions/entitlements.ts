@@ -9,7 +9,7 @@ import type { PlanId } from "./plans";
  */
 export interface Entitlements {
   maxServices: number | null; // null = unlimited
-  maxStaffBookable: number;
+  maxStaffBookable: number | null; // null = unlimited
   maxLocations: number;
   callAndWhatsapp: boolean;
   themeSwitching: boolean;
@@ -72,17 +72,20 @@ const CORE: Entitlements = {
 
 const PRO: Entitlements = {
   ...CORE,
-  maxStaffBookable: 1, // ASSUMPTION: one bookable operator on Pro
+  maxStaffBookable: 3,
   onlineBooking: true,
   payments: true,
   teamPages: true,
   emailConfirmations: true,
   customerManagement: true,
+  multiStaff: true,
+  customDomains: true,
+  staffScheduling: true,
 };
 
 const BUSINESS: Entitlements = {
   ...PRO,
-  maxStaffBookable: 50,
+  maxStaffBookable: null,
   maxLocations: 20,
   advancedAnalytics: true,
   multiStaff: true,

@@ -1,0 +1,3047 @@
+{
+  "edition": "3.0",
+  "scope": "67 authored screen compositions with state variants; reference rendering not production/provider proof",
+  "screens": [
+    {
+      "id": "onboarding.identity",
+      "surface": "onboarding",
+      "title": "Let\u2019s start with your business.",
+      "subtitle": "A name and what you do. The rest can come together as you go.",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "Business name",
+          "value": "Chapter Barbers",
+          "type": "text"
+        },
+        {
+          "label": "What do you do?",
+          "value": "Barber",
+          "type": "text"
+        }
+      ],
+      "rows": [],
+      "actions": [
+        "Continue",
+        "Skip for now"
+      ],
+      "source_record": "Business",
+      "command": "UpsertOnboardingDraft",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family UpsertOnboardingDraft; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "onboarding.category",
+      "surface": "onboarding",
+      "title": "What best describes your work?",
+      "subtitle": "Choose a starting point. You can combine different kinds of work.",
+      "composition": "choices",
+      "fields": [
+        {
+          "label": "Search business types",
+          "value": "barber",
+          "type": "search"
+        }
+      ],
+      "rows": [
+        [
+          "Barber & hair",
+          "Appointments, professionals and products"
+        ],
+        [
+          "Mobile services",
+          "Jobs, coverage and quotes"
+        ],
+        [
+          "Something else",
+          "Choose the tools you need"
+        ]
+      ],
+      "actions": [
+        "Use this starting point",
+        "Choose capabilities"
+      ],
+      "source_record": "Business",
+      "command": "UpsertOnboardingDraft",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family UpsertOnboardingDraft; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "onboarding.look",
+      "surface": "onboarding",
+      "title": "Choose a look.",
+      "subtitle": "Your content stays with you when you change the design.",
+      "composition": "choices",
+      "fields": [],
+      "rows": [
+        [
+          "Type first",
+          "Bold name, clear actions"
+        ],
+        [
+          "Gallery first",
+          "Let your own photos introduce you"
+        ],
+        [
+          "Cover first",
+          "One image, then what you offer"
+        ]
+      ],
+      "actions": [
+        "Continue",
+        "Back"
+      ],
+      "source_record": "Business",
+      "command": "UpsertOnboardingDraft",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family UpsertOnboardingDraft; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "onboarding.content",
+      "surface": "onboarding",
+      "title": "Make it sound like you.",
+      "subtitle": "Your words and your work. Photos can come later.",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "Introduction",
+          "value": "Good cuts. A familiar face. Time that works for you.",
+          "type": "text"
+        },
+        {
+          "label": "Website",
+          "value": "https://example.com",
+          "type": "url"
+        }
+      ],
+      "rows": [],
+      "actions": [
+        "Preview your page",
+        "Skip for now"
+      ],
+      "source_record": "Business",
+      "command": "UpsertOnboardingDraft",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family UpsertOnboardingDraft; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "onboarding.review",
+      "surface": "onboarding",
+      "title": "Your page is taking shape.",
+      "subtitle": "Review your draft. You choose when it goes live.",
+      "composition": "mini",
+      "fields": [],
+      "rows": [
+        [
+          "Chapter Barbers",
+          "Appointments and styling products"
+        ],
+        [
+          "Services",
+          "Add your price and duration"
+        ],
+        [
+          "Contact",
+          "Add the details customers should see"
+        ]
+      ],
+      "actions": [
+        "Create your account",
+        "Back to editing"
+      ],
+      "source_record": "Business",
+      "command": "PreviewPublish",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family PreviewPublish; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "onboarding.account",
+      "surface": "onboarding",
+      "title": "Keep what you\u2019ve made.",
+      "subtitle": "Create your account to continue in Studio.",
+      "composition": "auth",
+      "fields": [
+        {
+          "label": "Email",
+          "value": "owner@example.com",
+          "type": "email"
+        }
+      ],
+      "rows": [
+        [
+          "Continue with Apple",
+          ""
+        ],
+        [
+          "Continue with Google",
+          ""
+        ]
+      ],
+      "actions": [
+        "Continue with email",
+        "Back"
+      ],
+      "source_record": "User",
+      "command": "BeginSignIn",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family BeginSignIn; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "onboarding.resume",
+      "surface": "onboarding",
+      "title": "Pick up where you left off.",
+      "subtitle": "Your draft is ready to continue.",
+      "composition": "list",
+      "fields": [],
+      "rows": [
+        [
+          "Chapter Barbers",
+          "Last edited today"
+        ],
+        [
+          "Look and introduction",
+          "Saved in your draft"
+        ],
+        [
+          "First offer",
+          "Ready to set up"
+        ]
+      ],
+      "actions": [
+        "Continue draft",
+        "Start another business"
+      ],
+      "source_record": "Business",
+      "command": "UpsertOnboardingDraft",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family UpsertOnboardingDraft; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "onboarding.studio_entry",
+      "surface": "onboarding",
+      "title": "Your next useful step.",
+      "subtitle": "Make one offer ready for a real customer.",
+      "composition": "today",
+      "fields": [],
+      "rows": [
+        [
+          "Add your first service",
+          "Name, price and duration"
+        ],
+        [
+          "Set working time",
+          "For the professional customers can book"
+        ],
+        [
+          "Review and publish",
+          "See what customers will get"
+        ]
+      ],
+      "actions": [
+        "Add a service",
+        "View your page"
+      ],
+      "source_record": "CapabilityReadiness",
+      "command": "EvaluateReadiness",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family EvaluateReadiness; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.today",
+      "surface": "studio",
+      "title": "Today, in one place.",
+      "subtitle": "Tuesday 3 November \u00b7 Chapter Barbers",
+      "composition": "today",
+      "fields": [],
+      "rows": [
+        [
+          "14:00",
+          "Skin fade \u00b7 Sam \u00b7 confirmed"
+        ],
+        [
+          "15:00",
+          "Haircut \u00b7 Riley \u00b7 confirmed"
+        ],
+        [
+          "Collection",
+          "Styling clay \u00b7 ready to collect"
+        ]
+      ],
+      "actions": [
+        "Open calendar",
+        "Add work"
+      ],
+      "source_record": "Booking",
+      "command": "ListWork",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family ListWork; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.offer_list",
+      "surface": "studio",
+      "title": "What you offer.",
+      "subtitle": "Services, products and sessions share one home.",
+      "composition": "list",
+      "fields": [
+        {
+          "label": "Find an offer",
+          "value": "",
+          "type": "search"
+        }
+      ],
+      "rows": [
+        [
+          "Skin fade",
+          "Service \u00b7 \u00a325 \u00b7 live"
+        ],
+        [
+          "Styling clay",
+          "Product \u00b7 \u00a314 \u00b7 12 available"
+        ],
+        [
+          "First cut consultation",
+          "Service \u00b7 draft"
+        ]
+      ],
+      "actions": [
+        "Add offer",
+        "Review drafts"
+      ],
+      "source_record": "Offer",
+      "command": "UpdateOfferDraft",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family UpdateOfferDraft; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.service_editor",
+      "surface": "studio",
+      "title": "Set up your service.",
+      "subtitle": "Start with the facts customers need.",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "Service name",
+          "value": "Skin fade",
+          "type": "text"
+        },
+        {
+          "label": "Price (\u00a3)",
+          "value": "25.00",
+          "type": "number"
+        },
+        {
+          "label": "Duration (minutes)",
+          "value": "40",
+          "type": "number"
+        }
+      ],
+      "rows": [
+        [
+          "Bookable with",
+          "Sam \u00b7 main location"
+        ],
+        [
+          "Working time",
+          "Add or edit here"
+        ],
+        [
+          "Payment",
+          "No upfront payment"
+        ]
+      ],
+      "actions": [
+        "Save draft",
+        "Review service"
+      ],
+      "source_record": "Offer",
+      "command": "UpdateOfferDraft",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family UpdateOfferDraft; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.hours_quick",
+      "surface": "studio",
+      "title": "Sam\u2019s working hours.",
+      "subtitle": "Main location \u00b7 Europe/London \u00b7 starts 4 November",
+      "composition": "hours",
+      "fields": [],
+      "rows": [
+        [
+          "Monday",
+          "09:00\u201317:00"
+        ],
+        [
+          "Tuesday",
+          "09:00\u201317:00"
+        ],
+        [
+          "Wednesday",
+          "09:00\u201317:00"
+        ],
+        [
+          "Thursday",
+          "09:00\u201317:00"
+        ],
+        [
+          "Friday",
+          "09:00\u201317:00"
+        ],
+        [
+          "Saturday",
+          "Closed"
+        ],
+        [
+          "Sunday",
+          "Closed"
+        ]
+      ],
+      "actions": [
+        "Review impact",
+        "More availability settings"
+      ],
+      "source_record": "AvailabilityRule",
+      "command": "PreviewWorkingHoursImpact",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family PreviewWorkingHoursImpact; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.availability_full",
+      "surface": "studio",
+      "title": "Availability that fits the work.",
+      "subtitle": "Working time, exceptions and busy calendars stay distinct.",
+      "composition": "calendar",
+      "fields": [],
+      "rows": [
+        [
+          "Weekly pattern",
+          "Monday\u2013Friday \u00b7 09:00\u201317:00"
+        ],
+        [
+          "Lunch break",
+          "12:30\u201313:00"
+        ],
+        [
+          "Time off",
+          "Friday 20 November"
+        ],
+        [
+          "Calendar connection",
+          "Last checked 2 minutes ago"
+        ]
+      ],
+      "actions": [
+        "Edit weekly pattern",
+        "Add exception"
+      ],
+      "source_record": "AvailabilityRule",
+      "command": "ApplyWorkingHours",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family ApplyWorkingHours; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.product_editor",
+      "surface": "studio",
+      "title": "Add a product.",
+      "subtitle": "Keep the item, its options and fulfilment clear.",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "Product name",
+          "value": "Styling clay",
+          "type": "text"
+        },
+        {
+          "label": "Price (\u00a3)",
+          "value": "14.00",
+          "type": "number"
+        },
+        {
+          "label": "Opening stock",
+          "value": "12",
+          "type": "number"
+        }
+      ],
+      "rows": [
+        [
+          "Stock mode",
+          "Tracked"
+        ],
+        [
+          "Fulfilment",
+          "Collection \u00b7 main location"
+        ]
+      ],
+      "actions": [
+        "Save draft",
+        "Review product"
+      ],
+      "source_record": "Variant",
+      "command": "UpdateProductDraft",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family UpdateProductDraft; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.inventory",
+      "surface": "studio",
+      "title": "Know what\u2019s available.",
+      "subtitle": "Reserved, sold and unavailable stock are shown separately.",
+      "composition": "table",
+      "fields": [],
+      "rows": [
+        [
+          "Styling clay",
+          "12 sellable",
+          "2 reserved"
+        ],
+        [
+          "Texture spray",
+          "8 sellable",
+          "1 committed"
+        ],
+        [
+          "Return awaiting inspection",
+          "1 unavailable",
+          "No restock yet"
+        ]
+      ],
+      "actions": [
+        "Record adjustment",
+        "View stock history"
+      ],
+      "source_record": "InventoryBalance",
+      "command": "AdjustInventory",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family AdjustInventory; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.session_editor",
+      "surface": "studio",
+      "title": "Set up a session.",
+      "subtitle": "A real date, the right host and the right number of places.",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "Session name",
+          "value": "Introduction to pottery",
+          "type": "text"
+        },
+        {
+          "label": "Date",
+          "value": "2026-11-14",
+          "type": "date"
+        },
+        {
+          "label": "Start time",
+          "value": "10:00",
+          "type": "time"
+        },
+        {
+          "label": "Capacity",
+          "value": "8",
+          "type": "number"
+        },
+        {
+          "label": "Price (\u00a3)",
+          "value": "35.00",
+          "type": "number"
+        }
+      ],
+      "rows": [
+        [
+          "Host",
+          "Alex"
+        ],
+        [
+          "Room",
+          "Studio one"
+        ],
+        [
+          "Timezone",
+          "Europe/London"
+        ]
+      ],
+      "actions": [
+        "Save session draft",
+        "Review session"
+      ],
+      "source_record": "Session",
+      "command": "UpsertSessionDraft",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family UpsertSessionDraft; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.quote",
+      "surface": "studio",
+      "title": "Agree the work before it starts.",
+      "subtitle": "Quote Q-014 \u00b7 current revision 2",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "Scope",
+          "value": "Vehicle interior detail, seats and carpets",
+          "type": "text"
+        },
+        {
+          "label": "Quote total (\u00a3)",
+          "value": "120.00",
+          "type": "number"
+        }
+      ],
+      "rows": [
+        [
+          "Customer decision",
+          "Awaiting acceptance"
+        ],
+        [
+          "Scheduling",
+          "No date reserved yet"
+        ],
+        [
+          "Deposit",
+          "Shown before acceptance"
+        ]
+      ],
+      "actions": [
+        "Review quote",
+        "Save draft"
+      ],
+      "source_record": "Quote",
+      "command": "CreateQuoteDraft",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family CreateQuoteDraft; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.calendar",
+      "surface": "studio",
+      "title": "A clear view of your time.",
+      "subtitle": "Agenda \u00b7 main location \u00b7 all permitted professionals",
+      "composition": "calendar",
+      "fields": [],
+      "rows": [
+        [
+          "09:00",
+          "Haircut \u00b7 Riley \u00b7 30 minutes"
+        ],
+        [
+          "10:00",
+          "Skin fade \u00b7 Sam \u00b7 40 minutes"
+        ],
+        [
+          "12:30",
+          "Lunch \u00b7 unavailable"
+        ],
+        [
+          "14:00",
+          "Skin fade \u00b7 Sam \u00b7 40 minutes"
+        ]
+      ],
+      "actions": [
+        "Add booking",
+        "Change view"
+      ],
+      "source_record": "Booking",
+      "command": "ListWork",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family ListWork; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.work_detail",
+      "surface": "studio",
+      "title": "Skin fade with Sam.",
+      "subtitle": "Booking B-014 \u00b7 confirmed",
+      "composition": "detail",
+      "fields": [],
+      "rows": [
+        [
+          "Customer",
+          "Jordan \u00b7 verified relationship"
+        ],
+        [
+          "When",
+          "12 November \u00b7 14:00 \u00b7 40 minutes"
+        ],
+        [
+          "Payment",
+          "\u00a310 paid \u00b7 \u00a315 due"
+        ],
+        [
+          "Policy",
+          "Accepted version attached"
+        ]
+      ],
+      "actions": [
+        "Manage appointment",
+        "View payment"
+      ],
+      "source_record": "Booking",
+      "command": "AssessCancellation",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family AssessCancellation; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.fulfilment",
+      "surface": "studio",
+      "title": "Prepare the right order.",
+      "subtitle": "Order O-021 \u00b7 collection",
+      "composition": "table",
+      "fields": [],
+      "rows": [
+        [
+          "Styling clay",
+          "2 ordered",
+          "1 prepared"
+        ],
+        [
+          "Collection",
+          "Main location",
+          "After 16:00"
+        ],
+        [
+          "Payment",
+          "\u00a328 received",
+          "Receipt attached"
+        ]
+      ],
+      "actions": [
+        "Mark ready",
+        "Open order history"
+      ],
+      "source_record": "Fulfilment",
+      "command": "UpdateFulfilment",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family UpdateFulfilment; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.payment_setup",
+      "surface": "studio",
+      "title": "Get ready to take payments.",
+      "subtitle": "Your business connects directly with Stripe.",
+      "composition": "detail",
+      "fields": [],
+      "rows": [
+        [
+          "Identity verification",
+          "Action required"
+        ],
+        [
+          "Accept payments",
+          "Not ready"
+        ],
+        [
+          "Receive payouts",
+          "Not ready"
+        ]
+      ],
+      "actions": [
+        "Continue secure setup",
+        "View requirements"
+      ],
+      "source_record": "PaymentAuthority",
+      "command": "StartMerchantOnboarding",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success",
+        "unknown"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family StartMerchantOnboarding; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.refund",
+      "surface": "studio",
+      "title": "Review the refund.",
+      "subtitle": "Keep the payment, refund and stock decisions separate.",
+      "composition": "policy",
+      "fields": [
+        {
+          "label": "Refund amount (\u00a3)",
+          "value": "10.00",
+          "type": "number"
+        },
+        {
+          "label": "Reason",
+          "value": "Customer cancellation",
+          "type": "text"
+        }
+      ],
+      "rows": [
+        [
+          "Captured",
+          "\u00a325.00"
+        ],
+        [
+          "Already refunded",
+          "\u00a30.00"
+        ],
+        [
+          "Available to refund",
+          "\u00a325.00"
+        ]
+      ],
+      "actions": [
+        "Review refund",
+        "Back"
+      ],
+      "source_record": "Refund",
+      "command": "RequestRefund",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success",
+        "unknown"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family RequestRefund; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.team_invite",
+      "surface": "studio",
+      "title": "Give them the access they need.",
+      "subtitle": "A calendar resource, login and public profile are separate choices.",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "Name",
+          "value": "Sam Taylor",
+          "type": "text"
+        },
+        {
+          "label": "Invitation email",
+          "value": "sam@example.com",
+          "type": "email"
+        }
+      ],
+      "rows": [
+        [
+          "Work scope",
+          "Own assigned appointments"
+        ],
+        [
+          "Location",
+          "Main location"
+        ],
+        [
+          "Profile",
+          "Draft bio and gallery only"
+        ]
+      ],
+      "actions": [
+        "Review invitation",
+        "Save draft"
+      ],
+      "source_record": "TeamInvitation",
+      "command": "InviteMember",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family InviteMember; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.team_work",
+      "surface": "studio",
+      "title": "Your work.",
+      "subtitle": "Sam \u00b7 Chapter Barbers \u00b7 main location",
+      "composition": "calendar",
+      "fields": [],
+      "rows": [
+        [
+          "14:00",
+          "Skin fade \u00b7 Jordan"
+        ],
+        [
+          "15:00",
+          "Haircut \u00b7 Morgan"
+        ],
+        [
+          "Profile",
+          "Your draft edits await publication"
+        ]
+      ],
+      "actions": [
+        "Open appointment",
+        "Edit my profile"
+      ],
+      "source_record": "Membership",
+      "command": "ListWork",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family ListWork; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.role_editor",
+      "surface": "studio",
+      "title": "Make access understandable.",
+      "subtitle": "Choose actions and scope, then review what this person can see.",
+      "composition": "roles",
+      "fields": [],
+      "rows": [
+        [
+          "Appointments",
+          "Own assigned work"
+        ],
+        [
+          "Customer information",
+          "Necessary details only"
+        ],
+        [
+          "Refunds",
+          "Cannot approve"
+        ],
+        [
+          "Exports",
+          "Not permitted"
+        ]
+      ],
+      "actions": [
+        "Save access",
+        "Preview their navigation"
+      ],
+      "source_record": "PermissionGrant",
+      "command": "InviteMember",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family InviteMember; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.page_editor",
+      "surface": "studio",
+      "title": "Your business, your arrangement.",
+      "subtitle": "Content is edited once and used wherever it appears.",
+      "composition": "editor",
+      "fields": [],
+      "rows": [
+        [
+          "Look",
+          "Type first"
+        ],
+        [
+          "Brand",
+          "Cobalt \u00b7 strong contrast"
+        ],
+        [
+          "Content",
+          "Services, products, gallery"
+        ],
+        [
+          "Order",
+          "Services \u2192 products \u2192 contact"
+        ]
+      ],
+      "actions": [
+        "Preview page",
+        "Review changes"
+      ],
+      "source_record": "Business",
+      "command": "SetPageAppearance",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family SetPageAppearance; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.media_picker",
+      "surface": "studio",
+      "title": "Choose the right image.",
+      "subtitle": "Your work and stock decoration stay clearly separate.",
+      "composition": "gallery",
+      "fields": [],
+      "rows": [
+        [
+          "Your uploads",
+          "3 authorised images"
+        ],
+        [
+          "Stock decoration",
+          "Search approved source"
+        ],
+        [
+          "Image treatment",
+          "Contain logo \u00b7 preserve transparency"
+        ]
+      ],
+      "actions": [
+        "Use selected image",
+        "Upload image"
+      ],
+      "source_record": "ImportCandidate",
+      "command": "AttachMediaAsset",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family AttachMediaAsset; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.reward_setup",
+      "surface": "studio",
+      "title": "Give customers a reason to return.",
+      "subtitle": "Choose a clear promise your business can fulfil.",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "Earn rule",
+          "value": "One stamp per completed haircut",
+          "type": "text"
+        },
+        {
+          "label": "Reward",
+          "value": "Free standard haircut",
+          "type": "text"
+        },
+        {
+          "label": "Stamps needed",
+          "value": "8",
+          "type": "number"
+        }
+      ],
+      "rows": [
+        [
+          "Refund handling",
+          "Qualifying earn reversed once"
+        ],
+        [
+          "Expiry",
+          "None"
+        ],
+        [
+          "Customer review",
+          "Rules shown before joining"
+        ]
+      ],
+      "actions": [
+        "Review programme",
+        "Save draft"
+      ],
+      "source_record": "RewardProgramme",
+      "command": "CreateRewardProgramme",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family CreateRewardProgramme; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.scanner",
+      "surface": "studio",
+      "title": "Scan their pass.",
+      "subtitle": "Use the QR code shown in the customer\u2019s Wallet.",
+      "composition": "scanner",
+      "fields": [],
+      "rows": [
+        [
+          "After scanning",
+          "Check the programme and customer"
+        ],
+        [
+          "Before confirming",
+          "Select eligible work or reward"
+        ],
+        [
+          "Connection",
+          "Required to earn or redeem"
+        ]
+      ],
+      "actions": [
+        "Enable camera",
+        "Enter code instead"
+      ],
+      "source_record": "RewardProgramme",
+      "command": "ResolveRewardCode",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success",
+        "unknown"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family ResolveRewardCode; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.sharing_wallet",
+      "surface": "studio",
+      "title": "One link, ready to share.",
+      "subtitle": "Public business cards and customer loyalty passes do different jobs.",
+      "composition": "share",
+      "fields": [],
+      "rows": [
+        [
+          "Business card",
+          "Scan to view Chapter"
+        ],
+        [
+          "Team card",
+          "Scan to book with Sam"
+        ],
+        [
+          "Customer loyalty",
+          "Private reward programme"
+        ]
+      ],
+      "actions": [
+        "Preview business card",
+        "Copy public link"
+      ],
+      "source_record": "WalletPass",
+      "command": "IssueWalletPass",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success",
+        "unknown"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family IssueWalletPass; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.communications",
+      "surface": "studio",
+      "title": "Say the right thing, at the right time.",
+      "subtitle": "Operational updates and marketing have separate rules.",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "Campaign name",
+          "value": "A space for your next visit",
+          "type": "text"
+        },
+        {
+          "label": "Message",
+          "value": "Book your next visit at Chapter.",
+          "type": "text"
+        }
+      ],
+      "rows": [
+        [
+          "Eligible audience",
+          "83 recipients"
+        ],
+        [
+          "Excluded",
+          "12 opted out or unavailable"
+        ],
+        [
+          "Allowance",
+          "83 of 250 sends"
+        ]
+      ],
+      "actions": [
+        "Preview and review",
+        "Save draft"
+      ],
+      "source_record": "Campaign",
+      "command": "PreviewCampaign",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family PreviewCampaign; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.domain",
+      "surface": "studio",
+      "title": "Use an address you own.",
+      "subtitle": "Connect your domain without disrupting business email.",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "Domain",
+          "value": "book.example.com",
+          "type": "text"
+        }
+      ],
+      "rows": [
+        [
+          "Ownership",
+          "Verification required"
+        ],
+        [
+          "DNS",
+          "Use the exact supplied record"
+        ],
+        [
+          "Email records",
+          "Keep existing MX records"
+        ]
+      ],
+      "actions": [
+        "Check connection",
+        "View setup steps"
+      ],
+      "source_record": "Domain",
+      "command": "ConnectDomain",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family ConnectDomain; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.billing",
+      "surface": "studio",
+      "title": "A plan that fits your work.",
+      "subtitle": "No charge per team member. Optional purchases stay deliberate.",
+      "composition": "plans",
+      "fields": [],
+      "rows": [
+        [
+          "Free",
+          "\u00a30",
+          "5 offers \u00b7 30 new bookings/orders"
+        ],
+        [
+          "Core",
+          "\u00a312/month",
+          "Everyday operations"
+        ],
+        [
+          "Pro",
+          "\u00a324/month",
+          "Rewards and repeat work"
+        ],
+        [
+          "Business",
+          "\u00a349/month",
+          "Up to three locations"
+        ]
+      ],
+      "actions": [
+        "Review plan change",
+        "View invoices"
+      ],
+      "source_record": "BusinessSubscription",
+      "command": "ChangePlan",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family ChangePlan; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.help",
+      "surface": "studio",
+      "title": "Get back to the task.",
+      "subtitle": "Start with the relevant fix. A human route stays available.",
+      "composition": "detail",
+      "fields": [],
+      "rows": [
+        [
+          "Why are no times showing?",
+          "Check working time, resources and busy calendars"
+        ],
+        [
+          "Payment still processing?",
+          "Check the original operation"
+        ],
+        [
+          "Need more help?",
+          "Include safe task diagnostics"
+        ]
+      ],
+      "actions": [
+        "Open a support case",
+        "Return to task"
+      ],
+      "source_record": "SupportCase",
+      "command": "OpenSupportCase",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family OpenSupportCase; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "studio.settings",
+      "surface": "studio",
+      "title": "Settings, without the hunt.",
+      "subtitle": "Business details, security and preferences in their proper places.",
+      "composition": "list",
+      "fields": [],
+      "rows": [
+        [
+          "Appearance",
+          "System \u00b7 light and dark supported"
+        ],
+        [
+          "Security",
+          "Sign-in and strong verification"
+        ],
+        [
+          "Business",
+          "Locations, team and ownership"
+        ],
+        [
+          "Privacy",
+          "Exports and account closure"
+        ]
+      ],
+      "actions": [
+        "Open security",
+        "Manage business"
+      ],
+      "source_record": "User",
+      "command": "SetAppearancePreference",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family SetAppearancePreference; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.explore_list",
+      "surface": "customer",
+      "title": "Find your next good place.",
+      "subtitle": "Choose an area. Discover businesses in their own style.",
+      "composition": "explore",
+      "fields": [
+        {
+          "label": "What are you looking for?",
+          "value": "Haircuts",
+          "type": "search"
+        },
+        {
+          "label": "Area",
+          "value": "Hemel Hempstead",
+          "type": "search"
+        }
+      ],
+      "rows": [
+        [
+          "Chapter Barbers",
+          "Appointments \u00b7 local premises"
+        ],
+        [
+          "Moss Studio",
+          "Pottery workshops \u00b7 collection"
+        ],
+        [
+          "Field & Form",
+          "Mobile detailing \u00b7 comes to you"
+        ]
+      ],
+      "actions": [
+        "Map",
+        "Filters"
+      ],
+      "source_record": "Business",
+      "command": "QueryExplore",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family QueryExplore; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.explore_map",
+      "surface": "customer",
+      "title": "Around your chosen area.",
+      "subtitle": "The same businesses, with location context.",
+      "composition": "map",
+      "fields": [],
+      "rows": [
+        [
+          "Chapter Barbers",
+          "Public premises"
+        ],
+        [
+          "Moss Studio",
+          "Workshop venue"
+        ],
+        [
+          "Field & Form",
+          "Service coverage area"
+        ]
+      ],
+      "actions": [
+        "List",
+        "Search this area"
+      ],
+      "source_record": "Location",
+      "command": "QueryExplore",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family QueryExplore; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.location_search",
+      "surface": "customer",
+      "title": "Where should we look?",
+      "subtitle": "Location permission is optional.",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "Town or postcode",
+          "value": "Hemel Hempstead",
+          "type": "search"
+        }
+      ],
+      "rows": [
+        [
+          "Use my location",
+          "Only when you choose"
+        ],
+        [
+          "Manual area",
+          "Browse without GPS"
+        ]
+      ],
+      "actions": [
+        "Use this area",
+        "Use my location"
+      ],
+      "source_record": "Location",
+      "command": "QueryExplore",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family QueryExplore; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.mini_space",
+      "surface": "customer",
+      "title": "Chapter Barbers",
+      "subtitle": "Good cuts. A familiar face. Time that works for you.",
+      "composition": "mini",
+      "fields": [],
+      "rows": [
+        [
+          "Skin fade",
+          "\u00a325 \u00b7 40 min"
+        ],
+        [
+          "Haircut",
+          "\u00a320 \u00b7 30 min"
+        ],
+        [
+          "Styling clay",
+          "\u00a314 \u00b7 collection"
+        ]
+      ],
+      "actions": [
+        "Book an appointment",
+        "Save business"
+      ],
+      "source_record": "Offer",
+      "command": "CreateReservation",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family CreateReservation; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.product_sheet",
+      "surface": "customer",
+      "title": "Styling clay.",
+      "subtitle": "Chapter Barbers \u00b7 collection available",
+      "composition": "sheet",
+      "fields": [
+        {
+          "label": "Quantity",
+          "value": "1",
+          "type": "number"
+        }
+      ],
+      "rows": [
+        [
+          "Price",
+          "\u00a314.00"
+        ],
+        [
+          "Collection",
+          "Main location"
+        ],
+        [
+          "More from Chapter",
+          "Texture spray \u00b7 \u00a312"
+        ]
+      ],
+      "actions": [
+        "Add to bag",
+        "Close"
+      ],
+      "source_record": "Variant",
+      "command": "CreateOrder",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family CreateOrder; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.service_sheet",
+      "surface": "customer",
+      "title": "Skin fade.",
+      "subtitle": "Choose the professional and time that work for you.",
+      "composition": "sheet",
+      "fields": [],
+      "rows": [
+        [
+          "Price",
+          "\u00a325"
+        ],
+        [
+          "Duration",
+          "40 minutes"
+        ],
+        [
+          "Professional",
+          "Sam or any eligible professional"
+        ]
+      ],
+      "actions": [
+        "Choose a time",
+        "Close"
+      ],
+      "source_record": "Offer",
+      "command": "CreateReservation",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family CreateReservation; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.time_select",
+      "surface": "customer",
+      "title": "Choose your time.",
+      "subtitle": "Skin fade \u00b7 Sam \u00b7 Europe/London",
+      "composition": "slots",
+      "fields": [],
+      "rows": [
+        [
+          "Thursday 12 November",
+          "14:00",
+          "14:45",
+          "16:00"
+        ],
+        [
+          "Friday 13 November",
+          "09:00",
+          "11:30",
+          "15:00"
+        ]
+      ],
+      "actions": [
+        "Continue",
+        "Change professional"
+      ],
+      "source_record": "Reservation",
+      "command": "CreateReservation",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family CreateReservation; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.class_select",
+      "surface": "customer",
+      "title": "A place at the table.",
+      "subtitle": "Introduction to pottery \u00b7 Moss Studio",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "Places",
+          "value": "2",
+          "type": "number"
+        }
+      ],
+      "rows": [
+        [
+          "Saturday 14 November",
+          "10:00\u201312:00"
+        ],
+        [
+          "Places available",
+          "4"
+        ],
+        [
+          "Price",
+          "\u00a335 per person"
+        ]
+      ],
+      "actions": [
+        "Review booking",
+        "Join waitlist"
+      ],
+      "source_record": "Session",
+      "command": "CreateReservation",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family CreateReservation; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.quote_request",
+      "surface": "customer",
+      "title": "Tell them what you need.",
+      "subtitle": "Field & Form will review the scope before agreeing the work.",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "What needs doing?",
+          "value": "Interior detail for a family car",
+          "type": "text"
+        },
+        {
+          "label": "Service postcode",
+          "value": "HP2",
+          "type": "text"
+        }
+      ],
+      "rows": [
+        [
+          "Next step",
+          "The business replies with scope and price"
+        ],
+        [
+          "Status",
+          "An enquiry does not reserve a date"
+        ]
+      ],
+      "actions": [
+        "Send enquiry",
+        "Back"
+      ],
+      "source_record": "Quote",
+      "command": "SendMessage",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family SendMessage; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.bag",
+      "surface": "customer",
+      "title": "Your bag.",
+      "subtitle": "Everything here is sold by Chapter Barbers.",
+      "composition": "table",
+      "fields": [],
+      "rows": [
+        [
+          "Styling clay",
+          "1 \u00d7 \u00a314",
+          "\u00a314.00"
+        ],
+        [
+          "Collection",
+          "Main location",
+          "\u00a30.00"
+        ],
+        [
+          "Total",
+          " ",
+          "\u00a314.00"
+        ]
+      ],
+      "actions": [
+        "Review order",
+        "Keep browsing"
+      ],
+      "source_record": "Cart",
+      "command": "CreateOrder",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family CreateOrder; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.commit_review",
+      "surface": "customer",
+      "title": "Check your appointment.",
+      "subtitle": "Skin fade with Sam \u00b7 Thursday 12 November \u00b7 14:00",
+      "composition": "policy",
+      "fields": [],
+      "rows": [
+        [
+          "Appointment total",
+          "\u00a325.00"
+        ],
+        [
+          "Deposit today",
+          "\u00a310.00"
+        ],
+        [
+          "Pay at appointment",
+          "\u00a315.00"
+        ],
+        [
+          "Cancellation",
+          "Read Chapter\u2019s accepted policy"
+        ]
+      ],
+      "actions": [
+        "Continue to payment",
+        "View policy"
+      ],
+      "source_record": "AgreementSnapshot",
+      "command": "CommitBooking",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family CommitBooking; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.payment",
+      "surface": "customer",
+      "title": "Complete your payment.",
+      "subtitle": "Chapter Barbers \u00b7 \u00a310 deposit",
+      "composition": "payment",
+      "fields": [],
+      "rows": [
+        [
+          "Amount today",
+          "\u00a310.00"
+        ],
+        [
+          "Seller",
+          "Chapter Barbers"
+        ],
+        [
+          "Payment method",
+          "Secure provider entry"
+        ]
+      ],
+      "actions": [
+        "Continue securely",
+        "Back"
+      ],
+      "source_record": "Payment",
+      "command": "StartPayment",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "unknown"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family StartPayment; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.confirmation",
+      "surface": "customer",
+      "title": "You\u2019re booked.",
+      "subtitle": "Skin fade with Sam \u00b7 12 November \u00b7 14:00",
+      "composition": "confirmation",
+      "fields": [],
+      "rows": [
+        [
+          "Deposit received",
+          "\u00a310.00"
+        ],
+        [
+          "Remaining balance",
+          "\u00a315.00"
+        ],
+        [
+          "Your next step",
+          "Arrive at your selected location"
+        ]
+      ],
+      "actions": [
+        "View appointment",
+        "Save business"
+      ],
+      "source_record": "Booking",
+      "command": "GetOperation",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family GetOperation; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.private_return",
+      "surface": "customer",
+      "title": "Your next visit, right here.",
+      "subtitle": "Your private view of Chapter Barbers.",
+      "composition": "today",
+      "fields": [],
+      "rows": [
+        [
+          "Next appointment",
+          "12 November \u00b7 14:00 \u00b7 Sam"
+        ],
+        [
+          "Order",
+          "Styling clay \u00b7 ready to collect"
+        ],
+        [
+          "Rewards",
+          "7 of 8 stamps"
+        ]
+      ],
+      "actions": [
+        "Manage appointment",
+        "View rewards"
+      ],
+      "source_record": "CustomerRelationship",
+      "command": "GetOperation",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family GetOperation; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.manage_work",
+      "surface": "customer",
+      "title": "Manage your appointment.",
+      "subtitle": "See the effect before changing anything.",
+      "composition": "policy",
+      "fields": [],
+      "rows": [
+        [
+          "Current time",
+          "12 November \u00b7 14:00"
+        ],
+        [
+          "Deposit paid",
+          "\u00a310.00"
+        ],
+        [
+          "Cancellation assessment",
+          "Policy and applicable rights checked first"
+        ]
+      ],
+      "actions": [
+        "Change time",
+        "Review cancellation"
+      ],
+      "source_record": "CancellationAssessment",
+      "command": "AssessCancellation",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family AssessCancellation; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.rewards",
+      "surface": "customer",
+      "title": "One more visit.",
+      "subtitle": "Chapter\u2019s reward programme \u00b7 7 of 8 stamps",
+      "composition": "rewards",
+      "fields": [],
+      "rows": [
+        [
+          "Earn",
+          "One stamp per qualifying completed haircut"
+        ],
+        [
+          "Reward",
+          "Free standard haircut"
+        ],
+        [
+          "Expiry",
+          "None"
+        ]
+      ],
+      "actions": [
+        "Add to Wallet",
+        "View programme rules"
+      ],
+      "source_record": "RewardProgramme",
+      "command": "IssueWalletPass",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family IssueWalletPass; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.saved",
+      "surface": "customer",
+      "title": "Your familiar places.",
+      "subtitle": "Keep the businesses you want to come back to.",
+      "composition": "explore",
+      "fields": [],
+      "rows": [
+        [
+          "Chapter Barbers",
+          "Next appointment \u00b7 12 November"
+        ],
+        [
+          "Moss Studio",
+          "New workshop dates"
+        ],
+        [
+          "Field & Form",
+          "Your mobile service"
+        ]
+      ],
+      "actions": [
+        "Explore businesses",
+        "Open activity"
+      ],
+      "source_record": "CustomerRelationship",
+      "command": "SaveBusiness",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family SaveBusiness; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.review_report",
+      "surface": "customer",
+      "title": "How was your visit?",
+      "subtitle": "Your honest experience helps other people choose.",
+      "composition": "form",
+      "fields": [
+        {
+          "label": "Rating",
+          "value": "5",
+          "type": "number"
+        },
+        {
+          "label": "Your review",
+          "value": "Friendly, on time and exactly what I asked for.",
+          "type": "text"
+        }
+      ],
+      "rows": [
+        [
+          "Review basis",
+          "Eligible completed appointment"
+        ],
+        [
+          "Report a concern",
+          "A separate reporting route"
+        ]
+      ],
+      "actions": [
+        "Review and publish",
+        "Report a concern"
+      ],
+      "source_record": "Review",
+      "command": "SubmitReview",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family SubmitReview; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.share",
+      "surface": "customer",
+      "title": "Share Chapter.",
+      "subtitle": "Send the public business page. Your private activity stays private.",
+      "composition": "share",
+      "fields": [],
+      "rows": [
+        [
+          "Public link",
+          "mytaplo.com/chapter"
+        ],
+        [
+          "QR code",
+          "Public business destination"
+        ],
+        [
+          "Link preview",
+          "Business identity, never your appointment"
+        ]
+      ],
+      "actions": [
+        "Copy link",
+        "Download QR"
+      ],
+      "source_record": "PublicShare",
+      "command": "GetPublicShare",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family GetPublicShare; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "customer.account",
+      "surface": "customer",
+      "title": "Your account.",
+      "subtitle": "Sign-in, preferences and privacy together.",
+      "composition": "list",
+      "fields": [],
+      "rows": [
+        [
+          "Sign-in",
+          "Apple, Google or email code"
+        ],
+        [
+          "Appearance",
+          "System"
+        ],
+        [
+          "Private activity",
+          "Your authorised relationships"
+        ],
+        [
+          "Privacy",
+          "Export or deletion request"
+        ]
+      ],
+      "actions": [
+        "Manage preferences",
+        "Get help"
+      ],
+      "source_record": "User",
+      "command": "SetAppearancePreference",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family SetAppearancePreference; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "console.case_queue",
+      "surface": "console",
+      "title": "Keep the next action clear.",
+      "subtitle": "Cases are assigned, scoped and auditable.",
+      "composition": "table",
+      "fields": [],
+      "rows": [
+        [
+          "PAY-014",
+          "Refund outcome unknown",
+          "Payments support"
+        ],
+        [
+          "ACC-009",
+          "Owner access recovery",
+          "Access support"
+        ],
+        [
+          "TRU-006",
+          "Business report",
+          "Trust review"
+        ]
+      ],
+      "actions": [
+        "Open assigned case",
+        "Filter cases"
+      ],
+      "source_record": "SupportCase",
+      "command": "OpenSupportCase",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family OpenSupportCase; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "console.case_detail",
+      "surface": "console",
+      "title": "One case, one clear history.",
+      "subtitle": "PAY-014 \u00b7 Chapter Barbers",
+      "composition": "case",
+      "fields": [],
+      "rows": [
+        [
+          "Customer request",
+          "Cancellation reported"
+        ],
+        [
+          "Merchant action",
+          "Refund authorised"
+        ],
+        [
+          "Provider result",
+          "Unknown"
+        ],
+        [
+          "Next owner",
+          "Payments support"
+        ]
+      ],
+      "actions": [
+        "Check operation",
+        "Add case note"
+      ],
+      "source_record": "SupportCase",
+      "command": "ReconcileProvider",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family ReconcileProvider; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "console.financial",
+      "surface": "console",
+      "title": "Check the outcome first.",
+      "subtitle": "A timeout is not proof the refund failed.",
+      "composition": "case",
+      "fields": [],
+      "rows": [
+        [
+          "Original payment",
+          "\u00a325.00 captured"
+        ],
+        [
+          "Refund intent",
+          "\u00a310.00"
+        ],
+        [
+          "Provider response",
+          "Interrupted"
+        ],
+        [
+          "Next action",
+          "Reconcile original operation"
+        ]
+      ],
+      "actions": [
+        "Check status",
+        "View audit trail"
+      ],
+      "source_record": "ProviderOperation",
+      "command": "ReconcileProvider",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success",
+        "unknown"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family ReconcileProvider; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "console.merchant_access",
+      "surface": "console",
+      "title": "Recover access safely.",
+      "subtitle": "Identity, ownership and team grants are separate.",
+      "composition": "detail",
+      "fields": [],
+      "rows": [
+        [
+          "Claim",
+          "Lost owner device"
+        ],
+        [
+          "Current memberships",
+          "Visible to authorised workforce only"
+        ],
+        [
+          "Required evidence",
+          "Verified ownership recovery procedure"
+        ]
+      ],
+      "actions": [
+        "Review evidence",
+        "Record decision"
+      ],
+      "source_record": "Membership",
+      "command": "RevokeMember",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family RevokeMember; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "console.moderation",
+      "surface": "console",
+      "title": "Review the evidence.",
+      "subtitle": "A report triggers review, not automatic guilt.",
+      "composition": "case",
+      "fields": [],
+      "rows": [
+        [
+          "Concern",
+          "Possible impersonation"
+        ],
+        [
+          "Affected scope",
+          "Public business page"
+        ],
+        [
+          "Evidence",
+          "Restricted case attachments"
+        ],
+        [
+          "Action",
+          "Smallest justified restriction"
+        ]
+      ],
+      "actions": [
+        "Review restriction",
+        "Request clarification"
+      ],
+      "source_record": "TrustReport",
+      "command": "RestrictSubject",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family RestrictSubject; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "console.messages",
+      "surface": "console",
+      "title": "Protect delivery without hiding work.",
+      "subtitle": "Campaign abuse and operational updates have different scopes.",
+      "composition": "table",
+      "fields": [],
+      "rows": [
+        [
+          "Merchant campaign",
+          "Paused for review"
+        ],
+        [
+          "Security messages",
+          "Separate protected stream"
+        ],
+        [
+          "Recipient suppression",
+          "Must remain enforced"
+        ]
+      ],
+      "actions": [
+        "Open campaign case",
+        "Review queue"
+      ],
+      "source_record": "NotificationIntent",
+      "command": "PauseCampaign",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family PauseCampaign; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "console.integration",
+      "surface": "console",
+      "title": "See the actual connection state.",
+      "subtitle": "Credentials, capability and projection freshness are separate.",
+      "composition": "table",
+      "fields": [],
+      "rows": [
+        [
+          "Stripe",
+          "Verification pending"
+        ],
+        [
+          "Calendar",
+          "Token revoked"
+        ],
+        [
+          "Wallet",
+          "Update queued"
+        ],
+        [
+          "Domain",
+          "Certificate pending"
+        ]
+      ],
+      "actions": [
+        "Reconcile selected operation",
+        "Open related case"
+      ],
+      "source_record": "ProviderOperation",
+      "command": "ReconcileProvider",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family ReconcileProvider; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "console.incident",
+      "surface": "console",
+      "title": "Contain, recover, communicate.",
+      "subtitle": "Incident INC-003 \u00b7 synthetic exercise",
+      "composition": "case",
+      "fields": [],
+      "rows": [
+        [
+          "Impact",
+          "Accepted work status delayed"
+        ],
+        [
+          "Containment",
+          "Affected worker paused"
+        ],
+        [
+          "Recovery",
+          "Reconcile before replay"
+        ],
+        [
+          "Communication",
+          "Status update owned"
+        ]
+      ],
+      "actions": [
+        "Open recovery checklist",
+        "Record update"
+      ],
+      "source_record": "SupportCase",
+      "command": "ReconcileProvider",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family ReconcileProvider; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "console.privacy",
+      "surface": "console",
+      "title": "Handle the right records.",
+      "subtitle": "Verify scope, redact and deliver securely.",
+      "composition": "detail",
+      "fields": [],
+      "rows": [
+        [
+          "Request",
+          "Data access"
+        ],
+        [
+          "Identity",
+          "Verification required"
+        ],
+        [
+          "Scope",
+          "Relevant controller/processor records"
+        ],
+        [
+          "Deadline",
+          "Case-specific statutory assessment"
+        ]
+      ],
+      "actions": [
+        "Review request",
+        "View retention holds"
+      ],
+      "source_record": "SupportCase",
+      "command": "ExportBusiness",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family ExportBusiness; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "console.publication",
+      "surface": "console",
+      "title": "Evidence before enablement.",
+      "subtitle": "A document existing does not make a control verified.",
+      "composition": "table",
+      "fields": [],
+      "rows": [
+        [
+          "Entity facts",
+          "Required before publication"
+        ],
+        [
+          "Provider agreement",
+          "Actual scope needed"
+        ],
+        [
+          "Category readiness",
+          "Scoped review"
+        ],
+        [
+          "Approval evidence",
+          "Named reviewer and artefact"
+        ]
+      ],
+      "actions": [
+        "Open evidence record",
+        "View affected capability"
+      ],
+      "source_record": "LaunchEvidence",
+      "command": "CompleteEvidenceControl",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family CompleteEvidenceControl; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "console.audit",
+      "surface": "console",
+      "title": "Know who changed what.",
+      "subtitle": "Attributed actions, reasons and authoritative references.",
+      "composition": "table",
+      "fields": [],
+      "rows": [
+        [
+          "14:02 \u00b7 Merchant",
+          "Refund requested",
+          "Operation \u20269A41"
+        ],
+        [
+          "14:02 \u00b7 Worker",
+          "Provider response interrupted",
+          "Reconciliation queued"
+        ],
+        [
+          "14:04 \u00b7 Support",
+          "Case assigned",
+          "No second refund"
+        ]
+      ],
+      "actions": [
+        "Filter audit",
+        "Open referenced case"
+      ],
+      "source_record": "AuditEvent",
+      "command": "GetOperation",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family GetOperation; navigation/preflight never commits an action by itself."
+    },
+    {
+      "id": "console.settings",
+      "surface": "console",
+      "title": "Workforce controls.",
+      "subtitle": "Console access is separate from owner and customer accounts.",
+      "composition": "roles",
+      "fields": [],
+      "rows": [
+        [
+          "Sign-in",
+          "Mandatory strong verification"
+        ],
+        [
+          "Role",
+          "Assigned workforce scope"
+        ],
+        [
+          "Sensitive actions",
+          "Fresh step-up and audit"
+        ],
+        [
+          "Recovery",
+          "Authorised procedure"
+        ]
+      ],
+      "actions": [
+        "Review my access",
+        "Open security guidance"
+      ],
+      "source_record": "PermissionGrant",
+      "command": "CompleteEvidenceControl",
+      "states": [
+        "normal",
+        "loading",
+        "empty",
+        "offline",
+        "validation",
+        "conflict",
+        "denied",
+        "success"
+      ],
+      "mobile": "single readable task; bottom-safe main action; 20px gutter; explicit back/close; keyboard keeps focused input visible",
+      "desktop": "frameless task canvas; max 1240px shell, 680px edit measure; contextual preview only if task benefits; no universal side panel",
+      "accessibility": "44px targets; visible focus; named controls; semantic table/list; labelled validation and live status; no essential hover-only content",
+      "interaction": "local reference selector demonstrates states; implementation uses exact command/current authority; preserve source draft and safe back context",
+      "command_binding": "Task family CompleteEvidenceControl; navigation/preflight never commits an action by itself."
+    }
+  ]
+}

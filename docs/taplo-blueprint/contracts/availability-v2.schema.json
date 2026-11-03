@@ -1,0 +1,310 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://specs.mytaplo.com/proposed/availability-v2.schema.json",
+  "title": "Proposed Taplo working-hours impact/apply contracts 2.8",
+  "$comment": "Documentary proposal, not a deployed API. This URI is an identifier, not a claim the domain/path is hosted. Runtime/tenant/concurrency constraints are in WORKING-HOURS-EXACT-CONTRACT.md.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/ImpactRequest"
+    },
+    {
+      "$ref": "#/$defs/ImpactResponse"
+    },
+    {
+      "$ref": "#/$defs/ApplyRequest"
+    },
+    {
+      "$ref": "#/$defs/ApplyResponse"
+    },
+    {
+      "$ref": "#/$defs/Error"
+    }
+  ],
+  "$defs": {
+    "WorkingPattern": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "timezone",
+        "effective_local_date",
+        "days"
+      ],
+      "properties": {
+        "format": {
+          "const": "weekly_intervals_v2"
+        },
+        "timezone": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "effective_local_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "weekday",
+              "intervals"
+            ],
+            "properties": {
+              "weekday": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 7
+              },
+              "intervals": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "start_minute",
+                    "end_minute"
+                  ],
+                  "properties": {
+                    "start_minute": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1439
+                    },
+                    "end_minute": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 1440
+                    }
+                  }
+                },
+                "maxItems": 8
+              }
+            }
+          },
+          "maxItems": 7,
+          "minItems": 7
+        }
+      }
+    },
+    "ImpactRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resource_id",
+        "location_id",
+        "rule_id",
+        "expected_rule_version",
+        "pattern"
+      ],
+      "properties": {
+        "resource_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*_[a-z0-9]{8,64}$"
+        },
+        "location_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*_[a-z0-9]{8,64}$"
+        },
+        "rule_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9]*_[a-z0-9]{8,64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expected_rule_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pattern": {
+          "$ref": "#/$defs/WorkingPattern"
+        }
+      }
+    },
+    "ImpactResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "impact_id",
+        "expires_at",
+        "payload_hash",
+        "rule_version",
+        "accepted_work_revision",
+        "affected_commitment_count",
+        "advanced_rules_preserved",
+        "bookable_time_present",
+        "confirmation_required"
+      ],
+      "properties": {
+        "impact_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*_[a-z0-9]{8,64}$"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "payload_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "rule_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "accepted_work_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "affected_commitment_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "advanced_rules_preserved": {
+          "type": "boolean"
+        },
+        "bookable_time_present": {
+          "type": "boolean"
+        },
+        "confirmation_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ApplyRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "proposal",
+        "impact_id",
+        "acknowledge_preserved_commitments"
+      ],
+      "properties": {
+        "proposal": {
+          "$ref": "#/$defs/ImpactRequest"
+        },
+        "impact_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*_[a-z0-9]{8,64}$"
+        },
+        "acknowledge_preserved_commitments": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ApplyResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_id",
+        "status",
+        "rule_id",
+        "rule_version",
+        "request_id",
+        "next_action"
+      ],
+      "properties": {
+        "operation_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*_[a-z0-9]{8,64}$"
+        },
+        "status": {
+          "enum": [
+            "applied",
+            "recomputing"
+          ]
+        },
+        "rule_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*_[a-z0-9]{8,64}$"
+        },
+        "rule_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "next_action": {
+          "enum": [
+            "continue_offer",
+            "review_other_readiness",
+            "wait_for_availability"
+          ]
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "message_key",
+        "field_errors",
+        "request_id",
+        "retryable"
+      ],
+      "properties": {
+        "code": {
+          "enum": [
+            "INVALID_INPUT",
+            "INVALID_TIMEZONE",
+            "DUPLICATE_WEEKDAY",
+            "INVALID_INTERVAL",
+            "OVERLAPPING_INTERVALS",
+            "VERIFICATION_REQUIRED",
+            "FORBIDDEN",
+            "NOT_FOUND_OR_NOT_PERMITTED",
+            "RULE_VERSION_CHANGED",
+            "IMPACT_CHANGED",
+            "IMPACT_EXPIRED",
+            "IDEMPOTENCY_CONFLICT",
+            "ADVANCED_PATTERN_REQUIRED",
+            "LOCATION_RESOURCE_MISMATCH",
+            "RATE_LIMITED",
+            "TEMPORARILY_UNAVAILABLE"
+          ]
+        },
+        "message_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field_errors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "message_key"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "message_key": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

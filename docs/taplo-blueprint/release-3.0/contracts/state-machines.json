@@ -1,0 +1,1149 @@
+{
+  "contract_version": "3.0",
+  "notes": [
+    "State graphs are guarded recommendations, not executable business logic.",
+    "Creating a free/instant booking can commit requested and confirmed within one transaction; requested need not be customer-visible.",
+    "Reschedule is a versioned command on a confirmed booking, not cancellation followed by hopeful rebooking.",
+    "Payment refund/dispute are separate records; succeeded Payment is not changed to refunded.",
+    "Retry failed provider work with a linked new attempt, not an illegal transition out of a terminal state.",
+    "Campaign approval invalidates on material edit; notify provider accepted work cannot be recalled. Notification suppression during dispatch is allowed only with definite preacceptance outcome; unknown result reconciles first.",
+    "Failed provider/pass retry creates linked attempt with same logical intent and valid idempotency; no terminal financial outcome reset.",
+    "CapabilityReadiness is derived, not arbitrarily set by client or guidance dismissal."
+  ],
+  "machines": {
+    "Reservation": {
+      "initial": "held",
+      "states": [
+        "held",
+        "committed",
+        "released",
+        "expired"
+      ],
+      "terminal": [
+        "committed",
+        "released",
+        "expired"
+      ],
+      "transitions": [
+        {
+          "from": "held",
+          "to": "committed",
+          "command": "commit",
+          "guard": "not expired; exact quote, inventory/time and payment rule valid"
+        },
+        {
+          "from": "held",
+          "to": "released",
+          "command": "release",
+          "guard": "same tenant; authorised principal"
+        },
+        {
+          "from": "held",
+          "to": "expired",
+          "command": "expire",
+          "guard": "server clock >= expiry"
+        }
+      ]
+    },
+    "Booking": {
+      "initial": "requested",
+      "states": [
+        "requested",
+        "confirmed",
+        "declined",
+        "expired",
+        "cancelled",
+        "completed",
+        "no_show"
+      ],
+      "terminal": [
+        "declined",
+        "expired",
+        "cancelled",
+        "completed",
+        "no_show"
+      ],
+      "transitions": [
+        {
+          "from": "requested",
+          "to": "confirmed",
+          "command": "confirm",
+          "guard": "required payment/availability committed atomically"
+        },
+        {
+          "from": "requested",
+          "to": "declined",
+          "command": "decline",
+          "guard": "reason and customer notification queued"
+        },
+        {
+          "from": "requested",
+          "to": "expired",
+          "command": "expire",
+          "guard": "request deadline reached"
+        },
+        {
+          "from": "requested",
+          "to": "cancelled",
+          "command": "cancel",
+          "guard": "policy evaluated"
+        },
+        {
+          "from": "confirmed",
+          "to": "completed",
+          "command": "complete",
+          "guard": "service occurrence ended; authorised staff"
+        },
+        {
+          "from": "confirmed",
+          "to": "no_show",
+          "command": "mark_no_show",
+          "guard": "occurrence started; evidence/reason recorded"
+        },
+        {
+          "from": "confirmed",
+          "to": "cancelled",
+          "command": "cancel",
+          "guard": "impact reviewed; capacity released; refund separate"
+        }
+      ]
+    },
+    "Order": {
+      "initial": "pending",
+      "states": [
+        "pending",
+        "accepted",
+        "cancelled",
+        "closed"
+      ],
+      "terminal": [
+        "closed",
+        "cancelled"
+      ],
+      "transitions": [
+        {
+          "from": "pending",
+          "to": "accepted",
+          "command": "accept",
+          "guard": "payment rule satisfied and inventory committed"
+        },
+        {
+          "from": "pending",
+          "to": "cancelled",
+          "command": "cancel",
+          "guard": "no irreversible work; compensate any payment"
+        },
+        {
+          "from": "accepted",
+          "to": "closed",
+          "command": "close",
+          "guard": "all lines fulfilled or cancelled and no operational work remains"
+        },
+        {
+          "from": "accepted",
+          "to": "cancelled",
+          "command": "cancel",
+          "guard": "remaining work cancelled; stock/refund evaluated"
+        }
+      ]
+    },
+    "Payment": {
+      "initial": "created",
+      "states": [
+        "created",
+        "requires_action",
+        "processing",
+        "failed",
+        "cancelled",
+        "succeeded"
+      ],
+      "terminal": [
+        "succeeded",
+        "failed",
+        "cancelled"
+      ],
+      "transitions": [
+        {
+          "from": "created",
+          "to": "requires_action",
+          "command": "start",
+          "guard": "provider challenge required"
+        },
+        {
+          "from": "created",
+          "to": "processing",
+          "command": "start",
+          "guard": "provider accepted attempt"
+        },
+        {
+          "from": "created",
+          "to": "failed",
+          "command": "fail",
+          "guard": "provider authoritative failure"
+        },
+        {
+          "from": "created",
+          "to": "cancelled",
+          "command": "cancel",
+          "guard": "provider confirms cancellation"
+        },
+        {
+          "from": "requires_action",
+          "to": "processing",
+          "command": "continue",
+          "guard": "provider accepted challenge"
+        },
+        {
+          "from": "requires_action",
+          "to": "succeeded",
+          "command": "reconcile",
+          "guard": "provider verified success"
+        },
+        {
+          "from": "requires_action",
+          "to": "failed",
+          "command": "fail",
+          "guard": "provider verified failure"
+        },
+        {
+          "from": "requires_action",
+          "to": "cancelled",
+          "command": "cancel",
+          "guard": "provider confirms cancellation"
+        },
+        {
+          "from": "processing",
+          "to": "succeeded",
+          "command": "reconcile",
+          "guard": "verified amount/currency/connected account"
+        },
+        {
+          "from": "processing",
+          "to": "failed",
+          "command": "reconcile",
+          "guard": "provider verified failure"
+        },
+        {
+          "from": "processing",
+          "to": "cancelled",
+          "command": "reconcile",
+          "guard": "provider verified cancellation"
+        },
+        {
+          "from": "created",
+          "to": "succeeded",
+          "command": "reconcile",
+          "guard": "verified immediate provider success; exact amount/currency/account"
+        }
+      ]
+    },
+    "Refund": {
+      "initial": "requested",
+      "states": [
+        "requested",
+        "processing",
+        "failed",
+        "succeeded"
+      ],
+      "terminal": [
+        "succeeded",
+        "failed"
+      ],
+      "transitions": [
+        {
+          "from": "requested",
+          "to": "processing",
+          "command": "submit",
+          "guard": "authority; remaining refundable amount reserved"
+        },
+        {
+          "from": "requested",
+          "to": "failed",
+          "command": "reject",
+          "guard": "reason recorded"
+        },
+        {
+          "from": "processing",
+          "to": "succeeded",
+          "command": "reconcile",
+          "guard": "provider confirms outcome"
+        },
+        {
+          "from": "processing",
+          "to": "failed",
+          "command": "reconcile",
+          "guard": "provider confirms failure"
+        }
+      ]
+    },
+    "Fulfilment": {
+      "initial": "unfulfilled",
+      "states": [
+        "unfulfilled",
+        "preparing",
+        "ready",
+        "dispatched",
+        "completed",
+        "cancelled"
+      ],
+      "terminal": [
+        "completed",
+        "cancelled"
+      ],
+      "transitions": [
+        {
+          "from": "unfulfilled",
+          "to": "preparing",
+          "command": "prepare",
+          "guard": "accepted order; line quantities valid"
+        },
+        {
+          "from": "preparing",
+          "to": "ready",
+          "command": "mark_ready",
+          "guard": "collection lines prepared"
+        },
+        {
+          "from": "preparing",
+          "to": "dispatched",
+          "command": "dispatch",
+          "guard": "delivery evidence and valid quantities"
+        },
+        {
+          "from": "ready",
+          "to": "completed",
+          "command": "collect",
+          "guard": "authorised handover evidence"
+        },
+        {
+          "from": "dispatched",
+          "to": "completed",
+          "command": "deliver",
+          "guard": "appropriate delivery evidence"
+        },
+        {
+          "from": "unfulfilled",
+          "to": "cancelled",
+          "command": "cancel",
+          "guard": "eligible remaining lines"
+        },
+        {
+          "from": "preparing",
+          "to": "cancelled",
+          "command": "cancel",
+          "guard": "impact approved"
+        },
+        {
+          "from": "ready",
+          "to": "cancelled",
+          "command": "cancel",
+          "guard": "impact approved"
+        }
+      ]
+    },
+    "Quote": {
+      "initial": "draft",
+      "states": [
+        "draft",
+        "sent",
+        "accepted",
+        "declined",
+        "expired",
+        "superseded"
+      ],
+      "terminal": [
+        "accepted",
+        "declined",
+        "expired",
+        "superseded"
+      ],
+      "transitions": [
+        {
+          "from": "draft",
+          "to": "sent",
+          "command": "send",
+          "guard": "version, scope, validity and price complete"
+        },
+        {
+          "from": "sent",
+          "to": "accepted",
+          "command": "accept",
+          "guard": "latest version; before expires_at; authorised customer"
+        },
+        {
+          "from": "sent",
+          "to": "declined",
+          "command": "decline",
+          "guard": "authorised customer"
+        },
+        {
+          "from": "sent",
+          "to": "expired",
+          "command": "expire",
+          "guard": "server clock reached"
+        },
+        {
+          "from": "sent",
+          "to": "superseded",
+          "command": "revise",
+          "guard": "new immutable version; explain impact"
+        }
+      ]
+    },
+    "Subscription": {
+      "initial": "pending",
+      "states": [
+        "pending",
+        "trial",
+        "active",
+        "cancelled",
+        "past_due"
+      ],
+      "terminal": [
+        "cancelled"
+      ],
+      "transitions": [
+        {
+          "from": "pending",
+          "to": "trial",
+          "command": "start_trial",
+          "guard": "agreed supported trial"
+        },
+        {
+          "from": "pending",
+          "to": "active",
+          "command": "activate",
+          "guard": "verified payment/activation rule"
+        },
+        {
+          "from": "pending",
+          "to": "cancelled",
+          "command": "cancel",
+          "guard": "before activation"
+        },
+        {
+          "from": "trial",
+          "to": "active",
+          "command": "activate",
+          "guard": "billing terms agreed and provider outcome valid"
+        },
+        {
+          "from": "trial",
+          "to": "cancelled",
+          "command": "cancel",
+          "guard": "customer choice; entitlements policy applied"
+        },
+        {
+          "from": "active",
+          "to": "past_due",
+          "command": "reconcile",
+          "guard": "verified unpaid renewal"
+        },
+        {
+          "from": "past_due",
+          "to": "active",
+          "command": "recover",
+          "guard": "verified payment; entitlement restored once"
+        },
+        {
+          "from": "active",
+          "to": "cancelled",
+          "command": "end",
+          "guard": "effective cancellation date reached"
+        },
+        {
+          "from": "past_due",
+          "to": "cancelled",
+          "command": "end",
+          "guard": "dunning/grace policy exhausted"
+        }
+      ]
+    },
+    "WaitlistEntry": {
+      "initial": "waiting",
+      "states": [
+        "waiting",
+        "offered",
+        "converted",
+        "expired",
+        "removed"
+      ],
+      "terminal": [
+        "converted",
+        "expired",
+        "removed"
+      ],
+      "transitions": [
+        {
+          "from": "waiting",
+          "to": "offered",
+          "command": "offer_place",
+          "guard": "capacity reserved for explicit quantity; expiry set"
+        },
+        {
+          "from": "offered",
+          "to": "converted",
+          "command": "accept",
+          "guard": "valid token; capacity/payment committed"
+        },
+        {
+          "from": "offered",
+          "to": "expired",
+          "command": "expire",
+          "guard": "offer deadline reached; release reservation"
+        },
+        {
+          "from": "waiting",
+          "to": "removed",
+          "command": "leave",
+          "guard": "authorised customer/staff"
+        },
+        {
+          "from": "offered",
+          "to": "removed",
+          "command": "leave",
+          "guard": "release offered place"
+        }
+      ]
+    },
+    "WalletPass": {
+      "states": [
+        "eligible",
+        "issuing",
+        "issued",
+        "update_pending",
+        "failed",
+        "revoked"
+      ],
+      "transitions": [
+        {
+          "from": "eligible",
+          "to": "issuing",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "eligible",
+          "to": "revoked",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "issuing",
+          "to": "issued",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "issuing",
+          "to": "failed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "issuing",
+          "to": "revoked",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "issued",
+          "to": "update_pending",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "issued",
+          "to": "revoked",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "update_pending",
+          "to": "issued",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "update_pending",
+          "to": "failed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "update_pending",
+          "to": "revoked",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "failed",
+          "to": "issuing",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "failed",
+          "to": "revoked",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        }
+      ],
+      "terminal": [
+        "revoked"
+      ]
+    },
+    "Domain": {
+      "initial": "pending",
+      "states": [
+        "pending",
+        "verifying",
+        "failed",
+        "active",
+        "expired",
+        "detached"
+      ],
+      "terminal": [
+        "failed",
+        "detached"
+      ],
+      "transitions": [
+        {
+          "from": "pending",
+          "to": "verifying",
+          "command": "provision",
+          "guard": "registration/ownership evidence and provider reference"
+        },
+        {
+          "from": "pending",
+          "to": "failed",
+          "command": "fail",
+          "guard": "provider confirms failure"
+        },
+        {
+          "from": "verifying",
+          "to": "active",
+          "command": "verify",
+          "guard": "host mapping and certificate verified"
+        },
+        {
+          "from": "verifying",
+          "to": "failed",
+          "command": "fail",
+          "guard": "deadline/recovery path"
+        },
+        {
+          "from": "active",
+          "to": "expired",
+          "command": "expire",
+          "guard": "registration/ownership expired"
+        },
+        {
+          "from": "active",
+          "to": "detached",
+          "command": "detach",
+          "guard": "ownership confirmed; canonical fallback prepared"
+        },
+        {
+          "from": "expired",
+          "to": "active",
+          "command": "renew",
+          "guard": "provider and routing/certificate verified"
+        }
+      ]
+    },
+    "HardwareAsset": {
+      "initial": "unclaimed",
+      "states": [
+        "unclaimed",
+        "claimed",
+        "active",
+        "lost",
+        "revoked"
+      ],
+      "terminal": [
+        "revoked"
+      ],
+      "transitions": [
+        {
+          "from": "unclaimed",
+          "to": "claimed",
+          "command": "claim",
+          "guard": "nonpublic proof; order/ownership verified; claim race protected"
+        },
+        {
+          "from": "claimed",
+          "to": "active",
+          "command": "configure",
+          "guard": "safe destination; optional write/read-back verified"
+        },
+        {
+          "from": "active",
+          "to": "lost",
+          "command": "report_lost",
+          "guard": "owner permission; redirect disposition explicit"
+        },
+        {
+          "from": "lost",
+          "to": "active",
+          "command": "recover",
+          "guard": "ownership reverified"
+        },
+        {
+          "from": "active",
+          "to": "revoked",
+          "command": "revoke",
+          "guard": "owner/security authority"
+        },
+        {
+          "from": "claimed",
+          "to": "revoked",
+          "command": "revoke",
+          "guard": "owner/security authority"
+        }
+      ]
+    },
+    "SupportCase": {
+      "initial": "open",
+      "states": [
+        "open",
+        "in_progress",
+        "waiting_customer",
+        "waiting_provider",
+        "resolved"
+      ],
+      "terminal": [],
+      "transitions": [
+        {
+          "from": "open",
+          "to": "in_progress",
+          "command": "assign",
+          "guard": "permitted operator accepts ownership"
+        },
+        {
+          "from": "in_progress",
+          "to": "waiting_customer",
+          "command": "request_info",
+          "guard": "necessary evidence request"
+        },
+        {
+          "from": "in_progress",
+          "to": "waiting_provider",
+          "command": "escalate",
+          "guard": "provider reference and follow-up date"
+        },
+        {
+          "from": "waiting_customer",
+          "to": "in_progress",
+          "command": "reply",
+          "guard": "authorised participant"
+        },
+        {
+          "from": "waiting_provider",
+          "to": "in_progress",
+          "command": "provider_update",
+          "guard": "verified response"
+        },
+        {
+          "from": "in_progress",
+          "to": "resolved",
+          "command": "resolve",
+          "guard": "outcome and responsible party recorded"
+        },
+        {
+          "from": "resolved",
+          "to": "in_progress",
+          "command": "reopen",
+          "guard": "related unresolved issue; preserve history"
+        }
+      ]
+    },
+    "PaymentPolicy": {
+      "states": [
+        "draft",
+        "reviewed",
+        "active",
+        "retired"
+      ],
+      "transitions": [
+        {
+          "from": "draft",
+          "to": "reviewed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "reviewed",
+          "to": "active",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "reviewed",
+          "to": "retired",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "active",
+          "to": "retired",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        }
+      ],
+      "terminal": [
+        "retired"
+      ]
+    },
+    "RewardProgramme": {
+      "states": [
+        "draft",
+        "active",
+        "paused",
+        "closed"
+      ],
+      "transitions": [
+        {
+          "from": "draft",
+          "to": "active",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "draft",
+          "to": "closed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "active",
+          "to": "paused",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "active",
+          "to": "closed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "paused",
+          "to": "active",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "paused",
+          "to": "closed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        }
+      ],
+      "terminal": [
+        "closed"
+      ]
+    },
+    "Campaign": {
+      "states": [
+        "draft",
+        "awaiting_approval",
+        "approved",
+        "scheduled",
+        "dispatching",
+        "paused",
+        "finished",
+        "cancelled"
+      ],
+      "transitions": [
+        {
+          "from": "draft",
+          "to": "awaiting_approval",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "draft",
+          "to": "cancelled",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "awaiting_approval",
+          "to": "approved",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "awaiting_approval",
+          "to": "draft",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "awaiting_approval",
+          "to": "cancelled",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "approved",
+          "to": "scheduled",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "approved",
+          "to": "draft",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "approved",
+          "to": "cancelled",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "scheduled",
+          "to": "dispatching",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "scheduled",
+          "to": "paused",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "scheduled",
+          "to": "cancelled",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "dispatching",
+          "to": "paused",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "dispatching",
+          "to": "finished",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "paused",
+          "to": "scheduled",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "paused",
+          "to": "dispatching",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "paused",
+          "to": "cancelled",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        }
+      ],
+      "terminal": [
+        "finished",
+        "cancelled"
+      ]
+    },
+    "NotificationIntent": {
+      "states": [
+        "planned",
+        "queued",
+        "dispatching",
+        "reconciling",
+        "provider_accepted",
+        "delivered",
+        "failed",
+        "suppressed",
+        "expired",
+        "cancelled"
+      ],
+      "transitions": [
+        {
+          "from": "planned",
+          "to": "queued",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "planned",
+          "to": "cancelled",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "planned",
+          "to": "suppressed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "queued",
+          "to": "dispatching",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "queued",
+          "to": "suppressed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "queued",
+          "to": "expired",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "queued",
+          "to": "cancelled",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "dispatching",
+          "to": "provider_accepted",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "dispatching",
+          "to": "reconciling",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "dispatching",
+          "to": "failed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "dispatching",
+          "to": "suppressed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "reconciling",
+          "to": "provider_accepted",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "reconciling",
+          "to": "failed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "reconciling",
+          "to": "suppressed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "provider_accepted",
+          "to": "delivered",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "provider_accepted",
+          "to": "failed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        }
+      ],
+      "terminal": [
+        "delivered",
+        "failed",
+        "suppressed",
+        "expired",
+        "cancelled"
+      ]
+    },
+    "ProviderOperation": {
+      "states": [
+        "queued",
+        "running",
+        "uncertain",
+        "succeeded",
+        "failed"
+      ],
+      "transitions": [
+        {
+          "from": "queued",
+          "to": "running",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "queued",
+          "to": "failed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "running",
+          "to": "uncertain",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "running",
+          "to": "succeeded",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "running",
+          "to": "failed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "uncertain",
+          "to": "succeeded",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "uncertain",
+          "to": "failed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        }
+      ],
+      "terminal": [
+        "succeeded",
+        "failed"
+      ]
+    },
+    "GuidanceProgress": {
+      "states": [
+        "available",
+        "opened",
+        "dismissed",
+        "completed",
+        "invalidated"
+      ],
+      "transitions": [
+        {
+          "from": "available",
+          "to": "opened",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "available",
+          "to": "dismissed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "available",
+          "to": "completed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "opened",
+          "to": "dismissed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "opened",
+          "to": "completed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "opened",
+          "to": "invalidated",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "dismissed",
+          "to": "available",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "dismissed",
+          "to": "completed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "dismissed",
+          "to": "invalidated",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "completed",
+          "to": "invalidated",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "invalidated",
+          "to": "available",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        },
+        {
+          "from": "invalidated",
+          "to": "completed",
+          "guard": "current canonical command/policy/source version and documented actor scope; not status-only authority"
+        }
+      ],
+      "terminal": []
+    }
+  }
+}

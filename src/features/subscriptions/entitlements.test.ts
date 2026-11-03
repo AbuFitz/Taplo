@@ -13,8 +13,10 @@ describe("entitlements", () => {
     const c = resolveEntitlements("core");
     expect([c.maxServices, c.gallery, c.analytics, c.removeBranding, c.onlineBooking, c.payments]).toEqual([null, true, true, true, false, false]);
     const p = resolveEntitlements("pro");
-    expect([p.onlineBooking, p.payments, p.teamPages, p.emailConfirmations, p.multiStaff, p.customDomains]).toEqual([true, true, true, true, false, false]);
+    expect([p.onlineBooking, p.payments, p.teamPages, p.emailConfirmations, p.multiStaff, p.customDomains]).toEqual([true, true, true, true, true, true]);
+    expect(p.maxStaffBookable).toBe(3);
     const b = resolveEntitlements("business");
+    expect(b.maxStaffBookable).toBeNull();
     expect([b.multiStaff, b.multiLocation, b.customDomains, b.staffScheduling, b.rolePermissions, b.advancedAnalytics]).toEqual([true, true, true, true, true, true]);
   });
   it("downgrades on unpaid/canceled but keeps access while past_due", () => {

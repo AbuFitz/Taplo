@@ -11,16 +11,17 @@ export function formatMoney(minor: number, currency = "GBP"): string {
 }
 
 /** Honest price label. "fixed"/"from" without an amount degrades to "Price on request". */
-export function formatPrice(s: Pick<ServiceContent, "priceMode" | "priceMinor" | "currency">): string {
+export function formatPrice(s: Pick<ServiceContent, "priceMode" | "priceMinor" | "currency" | "priceUnit">): string {
+  const suffix = s.priceUnit ? ` per ${s.priceUnit}` : "";
   switch (s.priceMode) {
     case "free":
       return "Free";
     case "quote":
       return "Quote on request";
     case "fixed":
-      return s.priceMinor === undefined ? "Price on request" : formatMoney(s.priceMinor, s.currency);
+      return s.priceMinor === undefined ? "Price on request" : formatMoney(s.priceMinor, s.currency) + suffix;
     case "from":
-      return s.priceMinor === undefined ? "Price on request" : `From ${formatMoney(s.priceMinor, s.currency)}`;
+      return s.priceMinor === undefined ? "Price on request" : `From ${formatMoney(s.priceMinor, s.currency)}${suffix}`;
   }
 }
 

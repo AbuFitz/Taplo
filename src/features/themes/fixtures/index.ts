@@ -2,6 +2,7 @@ import type { BusinessContentInput } from "@/features/businesses/content";
 import type { PlanId } from "@/features/subscriptions/plans";
 import type { PageDoc } from "@/features/page/contracts/page";
 import { newPage, newWidget, type StoredWidget } from "@/features/page/starter";
+import { BARBER, DEALER, SCENARIOS } from "@/features/showcase/content";
 
 /**
  * SYNTHETIC fixtures for development and visual QA only.
@@ -148,7 +149,7 @@ const tutor: Omit<Fixture, "page"> = {
     location: { mode: "online", locality: "Online, and in Bushey", timezone: "Europe/London" },
     contacts: { phone: "01632 960321", whatsapp: "07700 900321", email: "lessons@example.com", social: [] },
     about: "Tuition built around understanding, not memorising. Every student starts with a short diagnostic so lessons target the gaps that matter. Sample text for layout testing.",
-    credentials: ["Sample: Maths degree (placeholder credential)", "Sample: Enhanced DBS (placeholder)"],
+    credentials: ["Example: Maths degree", "Example: Enhanced DBS"],
     hours: [],
     services: [
       svc("s1", "GCSE Maths", "fixed", 4000, 60, "Foundation and higher tier, exam technique included.", { delivery: ["online", "premises"] }),
@@ -157,8 +158,8 @@ const tutor: Omit<Fixture, "page"> = {
       svc("s4", "Free introductory call", "free", undefined, 15, "Meet, discuss goals, no obligation.", { delivery: ["online"], bookingMode: "request" }),
     ].map((s, i) => ({ ...s, sortOrder: i })),
     staff: [
-      { id: "t1", slug: "priya", name: "Priya Example", role: "Maths tutor", bio: "Sample biography for layout testing.", photo: img(7, SAMPLE), subjects: ["GCSE Maths", "A-level Maths"] },
-      { id: "t2", slug: "daniel", name: "Daniel Example", role: "Science tutor", bio: "Sample biography for layout testing.", photo: img(4, SAMPLE), subjects: ["Physics", "Chemistry"] },
+      { id: "t1", slug: "priya", name: "Priya Example", role: "Maths tutor", bio: "Example biography: replace it with your own.", photo: img(7, SAMPLE), subjects: ["GCSE Maths", "A-level Maths"] },
+      { id: "t2", slug: "daniel", name: "Daniel Example", role: "Science tutor", bio: "Example biography: replace it with your own.", photo: img(4, SAMPLE), subjects: ["Physics", "Chemistry"] },
     ],
     gallery: [],
     testimonials: [
@@ -184,14 +185,14 @@ const consultant: Omit<Fixture, "page"> = {
     location: { mode: "online", locality: "London and remote", timezone: "Europe/London" },
     contacts: { phone: "01632 960654", email: "enquiries@example.com", website: "https://example.com", social: [{ platform: "linkedin", url: "https://example.com/linkedin" }] },
     about: "We work with founders who have outgrown improvisation. Engagements are short, specific and finish with a plan your team can run without us. This is synthetic sample copy.",
-    credentials: ["Sample: Chartered status (placeholder)"],
+    credentials: ["Example: Chartered status"],
     hours: [],
     services: [
       svc("s1", "Strategy review", "from", 150000, undefined, "A focused two-week review of positioning, pricing and operations, ending in a prioritised plan.", { bookingMode: "request" }),
       svc("s2", "Advisory retainer", "quote", undefined, undefined, "Monthly access for decisions that cannot wait for a project.", { bookingMode: "request" }),
       svc("s3", "Leadership workshop", "fixed", 90000, 240, "A half-day session for the leadership team.", { bookingMode: "request" }),
     ].map((s, i) => ({ ...s, sortOrder: i })),
-    staff: [{ id: "t1", slug: "alex", name: "Alex Example", role: "Principal", bio: "Sample biography.", subjects: [] }],
+    staff: [{ id: "t1", slug: "alex", name: "Alex Example", role: "Principal", bio: "Example biography: replace it with your own.", subjects: [] }],
     gallery: [],
     testimonials: [{ id: "r1", quote: "A synthetic client comment included purely so the pull-quote treatment can be reviewed.", author: "Sample Director", source: "owner_supplied", permissionConfirmed: true }],
     reviewLinks: [],
@@ -344,42 +345,49 @@ const withPage = (f: Omit<Fixture, "page">, themeId: string, tweak?: (w: StoredW
 
 export const FIXTURES: Fixture[] = [
   // Soft light theme for a mechanic: theme is independent of industry.
-  withPage(mechanic, "studio", (w) => {
+  withPage(mechanic, "clean", (w) => {
     const featured = newWidget("featuredService", { serviceId: "s1", headline: "Most booked" });
     featured.appearance = { emphasis: "featured" };
-    const notice = newWidget("announcement", { text: "Open Saturdays 9–1 this month (sample notice).", tone: "promo" });
+    const notice = newWidget("announcement", { text: "Open Saturdays 9am to 1pm this month (sample notice).", tone: "promo" });
     notice.appearance = { surface: "accent" };
     const pay = newWidget("payment", { label: "Pay a diagnostics deposit", kind: "deposit", serviceId: "s3" });
     return [notice, newWidget("call", { subtitle: "Talk to a mechanic" }), ...w.slice(0, 1), featured, ...w.slice(1), pay];
   }),
-  withPage(detailer, "ocean", (w) => [...w.filter((x) => x.type !== "serviceArea"), newWidget("serviceArea"), newWidget("whatsapp", { label: "Send photos of your car on WhatsApp", variant: "card" })]),
+  withPage(detailer, "showroom", (w) => [...w.filter((x) => x.type !== "serviceArea"), newWidget("serviceArea"), newWidget("whatsapp", { label: "Send photos of your car on WhatsApp" })]),
   // Hard-edged yellow theme for a barber.
-  withPage(barber, "workshop", (w) => {
+  withPage(barber, "showroom", (w) => {
     const hrs = w.find((x) => x.type === "hours");
     if (hrs) hrs.settings = { ...hrs.settings, variant: "compact" };
     return w;
   }),
   // Dark, bold theme for a tutor.
-  withPage(tutor, "midnight", (w) => {
+  withPage(tutor, "night", (w) => {
     const video = newWidget("video", { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", title: "How a first lesson works (sample link)" });
     const intro = newWidget("link", { label: "Free 15-minute introductory call", url: "https://example.com/intro", subtitle: "No obligation", variant: "card" });
     intro.appearance = { emphasis: "featured" };
     return [intro, ...w, video];
   }),
-  withPage(cafe, "candy", (w) => {
+  withPage(cafe, "colour", (w) => {
     const offers = newWidget("offers", { title: "Today’s offer" });
     const products = newWidget("products", { title: "Take some home", variant: "grid" });
     const doc = newWidget("document", { title: "Download the full menu", url: "https://example.com/menu.pdf", description: "PDF, updated weekly (sample)" });
     return [offers, ...w.filter((x) => x.type !== "document"), products, doc, newWidget("directions", { label: "Walk in: get directions" })];
   }),
-  withPage(consultant, "editorial"),
-  withPage(unlisted, "garden", (w) => [...w, newWidget("whatsapp", { label: "WhatsApp a photo of your dog", variant: "card" })]),
-  withPage(minimal, "classroom"),
-  withPage(noContacts, "studio"),
-  withPage(stress, "workshop"),
+  withPage(consultant, "clean"),
+  withPage(unlisted, "clean", (w) => [...w, newWidget("whatsapp", { label: "WhatsApp a photo of your dog", variant: "card" })]),
+  withPage(minimal, "colour"),
+  withPage(noContacts, "clean"),
+  withPage(stress, "showroom"),
 ];
 
-export const INDUSTRY_FIXTURE_KEYS = ["mechanic", "barber", "tutor", "cafe", "consultant", "unlisted"];
+/** The polished showcase businesses, offered as ready-made starting points in the dashboard. */
+const showcase = (key: string, label: string, content: BusinessContentInput, scenario: "barber" | "dealer", themeId: string): Fixture => ({
+  key, label, plan: "business", content,
+  page: { schemaVersion: 2, themeId, appearance: {}, meta: { searchVisible: true, primaryAction: "auto" }, widgets: SCENARIOS[scenario].widgets(), savedLooks: [], savedStyles: [] },
+});
+FIXTURES.push(showcase("showcase-barber", "Barber", BARBER, "barber", "folio"), showcase("showcase-dealer", "Car dealer", DEALER, "dealer", "showroom"));
+
+export const INDUSTRY_FIXTURE_KEYS = ["showcase-barber", "showcase-dealer", "mechanic", "tutor", "cafe", "consultant", "unlisted"];
 
 const byKey = new Map(FIXTURES.map((f) => [f.key, f]));
 const bySlug = new Map(FIXTURES.map((f) => [f.content.identity.slug, f]));

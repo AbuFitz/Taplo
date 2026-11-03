@@ -1,0 +1,800 @@
+{
+  "purpose": "Synthetic shape-validation examples only; not business/relational acceptance evidence",
+  "fixtures": {
+    "record-schemas.json:ID": "ref_abcdefgh",
+    "record-schemas.json:Timestamp": "2026-11-03T10:00:00Z",
+    "record-schemas.json:Money": {
+      "minor": 0,
+      "currency": "GBP"
+    },
+    "record-schemas.json:Business": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "display_name": "x",
+      "handle": "x",
+      "status": "draft",
+      "capabilities": [],
+      "timezone": "x"
+    },
+    "record-schemas.json:User": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "display_name": "x",
+      "verified_contact_refs": [],
+      "status": "active"
+    },
+    "record-schemas.json:Membership": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "user_id": "ref_abcdefgh",
+      "role": "owner",
+      "status": "invited",
+      "location_ids": [],
+      "resource_ids": [],
+      "grant_ids": []
+    },
+    "record-schemas.json:CustomerRelationship": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "status": "active",
+      "user_id": "ref_abcdefgh"
+    },
+    "record-schemas.json:Participant": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "relationship_id": "ref_abcdefgh",
+      "display_name": "x",
+      "kind": "adult"
+    },
+    "record-schemas.json:Location": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "label": "x",
+      "kind": "public_premises",
+      "timezone": "x",
+      "visibility": "public"
+    },
+    "record-schemas.json:Offer": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "kind": "goods",
+      "title": "x",
+      "visibility": "draft",
+      "price_mode": "fixed",
+      "policy_version_id": "ref_abcdefgh",
+      "delivery_modes": [
+        "ship"
+      ],
+      "configuration_ref": "ref_abcdefgh"
+    },
+    "record-schemas.json:Variant": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "offer_id": "ref_abcdefgh",
+      "sku": "x",
+      "option_values": {},
+      "price": {
+        "minor": 0,
+        "currency": "GBP"
+      },
+      "inventory_mode": "tracked",
+      "active": false
+    },
+    "record-schemas.json:InventoryBalance": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "variant_id": "ref_abcdefgh",
+      "location_id": "ref_abcdefgh",
+      "on_hand": 0,
+      "held": 0,
+      "committed": 0,
+      "unavailable": 0
+    },
+    "record-schemas.json:InventoryAdjustment": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "balance_id": "ref_abcdefgh",
+      "delta_on_hand": 0,
+      "reason": "received",
+      "origin_ref": "ref_abcdefgh",
+      "actor_id": "ref_abcdefgh"
+    },
+    "record-schemas.json:Resource": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "kind": "staff",
+      "label": "x",
+      "capacity": 1,
+      "active": false
+    },
+    "record-schemas.json:AvailabilityRule": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "resource_ids": [],
+      "timezone": "x",
+      "local_rule": "x",
+      "effective_from": "2026-11-03T10:00:00Z",
+      "exception_refs": []
+    },
+    "record-schemas.json:Session": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "offer_id": "ref_abcdefgh",
+      "starts_at": "2026-11-03T10:00:00Z",
+      "ends_at": "2026-11-03T10:00:00Z",
+      "timezone": "x",
+      "resource_ids": [],
+      "capacity": 0,
+      "held_seats": 0,
+      "committed_seats": 0,
+      "status": "scheduled"
+    },
+    "record-schemas.json:Cart": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "relationship_id": "ref_abcdefgh",
+      "status": "open",
+      "lines": [],
+      "expires_at": "2026-11-03T10:00:00Z"
+    },
+    "record-schemas.json:Reservation": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "relationship_id": "ref_abcdefgh",
+      "kind": "inventory",
+      "target_ids": [],
+      "quantity": 1,
+      "quote_version_id": "ref_abcdefgh",
+      "expires_at": "2026-11-03T10:00:00Z",
+      "status": "held"
+    },
+    "record-schemas.json:AgreementSnapshot": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "seller_name": "x",
+      "offer_title": "x",
+      "unit_price": {
+        "minor": 0,
+        "currency": "GBP"
+      },
+      "quantity": 1,
+      "discount": {
+        "minor": 0,
+        "currency": "GBP"
+      },
+      "tax": {
+        "minor": 0,
+        "currency": "GBP"
+      },
+      "total": {
+        "minor": 0,
+        "currency": "GBP"
+      },
+      "tax_rule_version": "x",
+      "policy_version_id": "ref_abcdefgh",
+      "fulfilment_mode": "ship"
+    },
+    "record-schemas.json:Booking": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "relationship_id": "ref_abcdefgh",
+      "participant_ids": [],
+      "offer_id": "ref_abcdefgh",
+      "location_id": "ref_abcdefgh",
+      "resource_ids": [],
+      "starts_at": "2026-11-03T10:00:00Z",
+      "ends_at": "2026-11-03T10:00:00Z",
+      "timezone": "x",
+      "reservation_ids": [],
+      "agreement_id": "ref_abcdefgh",
+      "payment_ids": [],
+      "status": "requested"
+    },
+    "record-schemas.json:Order": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "relationship_id": "ref_abcdefgh",
+      "agreement_ids": [],
+      "total": {
+        "minor": 0,
+        "currency": "GBP"
+      },
+      "payment_ids": [],
+      "status": "pending"
+    },
+    "record-schemas.json:Payment": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "relationship_id": "ref_abcdefgh",
+      "amount": {
+        "minor": 0,
+        "currency": "GBP"
+      },
+      "status": "created",
+      "provider": "x",
+      "provider_account_ref": "x",
+      "attempt_id": "ref_abcdefgh",
+      "idempotency_ref": "ref_abcdefgh"
+    },
+    "record-schemas.json:Refund": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "payment_id": "ref_abcdefgh",
+      "amount": {
+        "minor": 0,
+        "currency": "GBP"
+      },
+      "reason": "x",
+      "status": "requested",
+      "requested_by": "ref_abcdefgh"
+    },
+    "record-schemas.json:Fulfilment": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "order_id": "ref_abcdefgh",
+      "mode": "ship",
+      "status": "unfulfilled",
+      "lines": []
+    },
+    "record-schemas.json:Quote": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "relationship_id": "ref_abcdefgh",
+      "offer_id": "ref_abcdefgh",
+      "scope": "x",
+      "amount": {
+        "minor": 0,
+        "currency": "GBP"
+      },
+      "expires_at": "2026-11-03T10:00:00Z",
+      "policy_version_id": "ref_abcdefgh",
+      "status": "draft"
+    },
+    "record-schemas.json:Subscription": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "relationship_id": "ref_abcdefgh",
+      "purpose": "merchant_customer_membership",
+      "amount": {
+        "minor": 0,
+        "currency": "GBP"
+      },
+      "cadence": "month",
+      "status": "pending",
+      "cancel_at_period_end": false,
+      "period_end": "2026-11-03T10:00:00Z",
+      "entitlement_version": 0
+    },
+    "record-schemas.json:WaitlistEntry": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "session_id": "ref_abcdefgh",
+      "relationship_id": "ref_abcdefgh",
+      "quantity": 1,
+      "joined_at": "2026-11-03T10:00:00Z",
+      "status": "waiting"
+    },
+    "record-schemas.json:Conversation": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "relationship_id": "ref_abcdefgh",
+      "linked_record_ids": [],
+      "kind": "merchant",
+      "status": "open"
+    },
+    "record-schemas.json:Message": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "conversation_id": "ref_abcdefgh",
+      "sender_id": "ref_abcdefgh",
+      "sender_role": "customer",
+      "text": "x",
+      "attachment_refs": [],
+      "status": "accepted",
+      "client_message_key": "x"
+    },
+    "record-schemas.json:RewardEntry": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "relationship_id": "ref_abcdefgh",
+      "rule_version_id": "ref_abcdefgh",
+      "origin_id": "ref_abcdefgh",
+      "units": 0,
+      "kind": "earn"
+    },
+    "record-schemas.json:WalletPass": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "relationship_id": "ref_abcdefgh",
+      "purpose": "loyalty",
+      "entitlement_id": "ref_abcdefgh",
+      "provider": "apple",
+      "status": "eligible",
+      "entitlement_version": 0
+    },
+    "record-schemas.json:Domain": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "hostname": "x",
+      "kind": "connected",
+      "status": "pending",
+      "auto_renew": false,
+      "is_primary": false
+    },
+    "record-schemas.json:HardwareAsset": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "serial_ref": "x",
+      "claim_proof_hash_ref": "ref_abcdefgh",
+      "redirect_id": "ref_abcdefgh",
+      "status": "unclaimed"
+    },
+    "record-schemas.json:SupportCase": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "linked_record_ids": [],
+      "kind": "technical",
+      "priority": "urgent",
+      "status": "open"
+    },
+    "record-schemas.json:AuditEvent": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "actor_id": "ref_abcdefgh",
+      "action": "x",
+      "target_id": "ref_abcdefgh",
+      "reason": "x",
+      "request_id": "ref_abcdefgh",
+      "changed_field_names": []
+    },
+    "record-schemas.json:EventEnvelope": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "event_type": "x",
+      "aggregate_id": "ref_abcdefgh",
+      "aggregate_version": 1,
+      "occurred_at": "2026-11-03T10:00:00Z",
+      "correlation_id": "ref_abcdefgh",
+      "payload_ref": "ref_abcdefgh"
+    },
+    "record-schemas.json:ProviderOperation": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "provider": "x",
+      "operation_kind": "x",
+      "subject_id": "ref_abcdefgh",
+      "status": "queued",
+      "attempt_count": 0,
+      "idempotency_ref": "ref_abcdefgh"
+    },
+    "record-schemas.json:TeamProfile": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "resource_id": "ref_abcdefgh",
+      "display_name": "x",
+      "slug": "x",
+      "gallery_asset_ids": [],
+      "service_offer_ids": [],
+      "location_ids": [],
+      "status": "draft",
+      "appearance_policy": "inherit_business",
+      "published_version": 0
+    },
+    "record-schemas.json:PermissionGrant": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "membership_id": "ref_abcdefgh",
+      "action": "x",
+      "scope": "own",
+      "location_ids": [],
+      "resource_ids": [],
+      "field_policy": "x",
+      "status": "active",
+      "approved_by": "ref_abcdefgh"
+    },
+    "record-schemas.json:AvailabilityChange": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "membership_id": "ref_abcdefgh",
+      "resource_id": "ref_abcdefgh",
+      "kind": "one_off",
+      "proposed_rule": "x",
+      "timezone": "x",
+      "effective_from": "2026-11-03T10:00:00Z",
+      "status": "requested",
+      "impacted_booking_ids": []
+    },
+    "record-schemas.json:CalendarConnection": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "membership_id": "ref_abcdefgh",
+      "provider": "x",
+      "provider_account_ref": "x",
+      "calendar_ref": "x",
+      "mode": "free_busy_import",
+      "status": "pending",
+      "credential_secret_ref": "ref_abcdefgh"
+    },
+    "record-schemas.json:PolicyVersion": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "kind": "saas",
+      "responsible_entity_id": "ref_abcdefgh",
+      "jurisdiction_scope": "x",
+      "content_ref": "ref_abcdefgh",
+      "content_hash": "x",
+      "status": "draft",
+      "effective_at": "2026-11-03T10:00:00Z"
+    },
+    "record-schemas.json:PolicyAcceptance": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "principal_id": "ref_abcdefgh",
+      "subject_id": "ref_abcdefgh",
+      "policy_version_id": "ref_abcdefgh",
+      "content_hash": "x",
+      "action_kind": "contract_accept",
+      "copy_version": "x",
+      "accepted_at": "2026-11-03T10:00:00Z",
+      "evidence_ref": "ref_abcdefgh"
+    },
+    "record-schemas.json:ConsentEvidence": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "principal_id": "ref_abcdefgh",
+      "sender_entity_id": "ref_abcdefgh",
+      "contact_ref": "ref_abcdefgh",
+      "channel": "email",
+      "purpose": "marketing",
+      "legal_route": "consent",
+      "notice_version_id": "ref_abcdefgh",
+      "evidence_ref": "ref_abcdefgh",
+      "status": "active",
+      "recorded_at": "2026-11-03T10:00:00Z"
+    },
+    "record-schemas.json:TeamInvitation": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "contact_ref": "ref_abcdefgh",
+      "grant_plan_id": "ref_abcdefgh",
+      "token_secret_hash_ref": "ref_abcdefgh",
+      "expires_at": "2026-11-03T10:00:00Z",
+      "status": "pending",
+      "invited_by": "ref_abcdefgh"
+    },
+    "record-schemas.json:BusinessSubscription": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "amount": {
+        "minor": 0,
+        "currency": "GBP"
+      },
+      "cadence": "month",
+      "status": "pending",
+      "cancel_at_period_end": false,
+      "period_end": "2026-11-03T10:00:00Z",
+      "entitlement_version": 0,
+      "billing_contact_ref": "ref_abcdefgh",
+      "plan_version_id": "ref_abcdefgh"
+    },
+    "record-schemas.json:ImportJob": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "requested_by": "ref_abcdefgh",
+      "source_type": "merchant_website",
+      "source_url": "https://example.test",
+      "status": "queued",
+      "source_use_status": "unreviewed",
+      "source_policy_ref": "ref_abcdefgh",
+      "candidate_ids": [],
+      "warning_codes": [],
+      "expires_at": "2026-11-03T10:00:00Z"
+    },
+    "record-schemas.json:ImportCandidate": {
+      "id": "ref_abcdefgh",
+      "version": 1,
+      "created_at": "2026-11-03T10:00:00Z",
+      "updated_at": "2026-11-03T10:00:00Z",
+      "business_id": "ref_abcdefgh",
+      "job_id": "ref_abcdefgh",
+      "target_field": "business.display_name",
+      "source_reference": "x",
+      "value_reference": "ref_abcdefgh",
+      "extraction_method": "structured_data",
+      "decision": "needs_review",
+      "conflict": false,
+      "source_policy_ref": "ref_abcdefgh",
+      "expires_at": "2026-11-03T10:00:00Z"
+    },
+    "command-inputs.json:ID": "ref_abcdefgh",
+    "command-inputs.json:Timestamp": "2026-11-03T10:00:00Z",
+    "command-inputs.json:Money": {
+      "minor": 0,
+      "currency": "GBP"
+    },
+    "command-inputs.json:CreateReservation": {
+      "business_id": "ref_abcdefgh",
+      "kind": "inventory",
+      "target_ids": [
+        "ref_abcdefgh"
+      ],
+      "quantity": 1,
+      "offer_version": 1
+    },
+    "command-inputs.json:CommitBooking": {
+      "business_id": "ref_abcdefgh",
+      "reservation_ids": [
+        "ref_abcdefgh"
+      ],
+      "participant_ids": [
+        "ref_abcdefgh"
+      ],
+      "offer_id": "ref_abcdefgh",
+      "location_id": "ref_abcdefgh",
+      "agreement_version_id": "ref_abcdefgh"
+    },
+    "command-inputs.json:RescheduleBooking": {
+      "booking_id": "ref_abcdefgh",
+      "expected_version": 1,
+      "replacement_reservation_ids": [
+        "ref_abcdefgh"
+      ],
+      "reviewed_change_id": "ref_abcdefgh"
+    },
+    "command-inputs.json:CancelBooking": {
+      "booking_id": "ref_abcdefgh",
+      "expected_version": 1,
+      "reviewed_impact_id": "ref_abcdefgh"
+    },
+    "command-inputs.json:CreateOrder": {
+      "business_id": "ref_abcdefgh",
+      "cart_id": "ref_abcdefgh",
+      "cart_version": 1,
+      "reservation_ids": [],
+      "agreement_version_ids": [
+        "ref_abcdefgh"
+      ],
+      "fulfilment_selection_id": "ref_abcdefgh"
+    },
+    "command-inputs.json:StartPayment": {
+      "business_id": "ref_abcdefgh",
+      "agreement_version_id": "ref_abcdefgh",
+      "order_id": "ref_abcdefgh"
+    },
+    "command-inputs.json:RequestRefund": {
+      "payment_id": "ref_abcdefgh",
+      "expected_version": 1,
+      "amount": {
+        "minor": 0,
+        "currency": "GBP"
+      },
+      "reason": "x",
+      "reviewed_impact_id": "ref_abcdefgh"
+    },
+    "command-inputs.json:UpdateFulfilment": {
+      "fulfilment_id": "ref_abcdefgh",
+      "expected_version": 1,
+      "action": "prepare"
+    },
+    "command-inputs.json:PublishPage": {
+      "business_id": "ref_abcdefgh",
+      "draft_version": 1,
+      "validated_preview_id": "ref_abcdefgh"
+    },
+    "command-inputs.json:SendMessage": {
+      "conversation_id": "ref_abcdefgh",
+      "text": "x",
+      "attachment_refs": [],
+      "client_message_key": "x"
+    },
+    "command-inputs.json:AcceptQuote": {
+      "quote_id": "ref_abcdefgh",
+      "expected_version": 1,
+      "agreement_version_id": "ref_abcdefgh"
+    },
+    "command-inputs.json:JoinWaitlist": {
+      "session_id": "ref_abcdefgh",
+      "quantity": 1,
+      "participant_ids": []
+    },
+    "command-inputs.json:IssuePass": {
+      "business_id": "ref_abcdefgh",
+      "entitlement_id": "ref_abcdefgh",
+      "provider": "apple"
+    },
+    "command-inputs.json:ConnectDomain": {
+      "business_id": "ref_abcdefgh",
+      "hostname": "x",
+      "make_primary": false
+    },
+    "command-inputs.json:ClaimHardware": {
+      "business_id": "ref_abcdefgh",
+      "serial_ref": "x",
+      "claim_proof": "xxxxxxxxxxxxxxxxxxxx"
+    },
+    "command-inputs.json:ExportBusiness": {
+      "business_id": "ref_abcdefgh",
+      "dataset": "catalogue",
+      "format": "csv_json_bundle"
+    },
+    "command-inputs.json:CloseBusiness": {
+      "business_id": "ref_abcdefgh",
+      "expected_version": 1,
+      "reviewed_closure_plan_id": "ref_abcdefgh",
+      "effective_at": "2026-11-03T10:00:00Z"
+    },
+    "command-inputs.json:ReconcileProvider": {
+      "inbox_receipt_id": "ref_abcdefgh"
+    },
+    "command-inputs.json:InviteMember": {
+      "business_id": "ref_abcdefgh",
+      "contact_ref": "ref_abcdefgh",
+      "role_template": "x",
+      "location_ids": [],
+      "resource_ids": [],
+      "send_invitation": false
+    },
+    "command-inputs.json:RequestAvailabilityChange": {
+      "business_id": "ref_abcdefgh",
+      "resource_id": "ref_abcdefgh",
+      "kind": "one_off",
+      "proposed_rule": "x",
+      "timezone": "x",
+      "effective_from": "2026-11-03T10:00:00Z"
+    },
+    "command-inputs.json:UpdateOwnTeamProfile": {
+      "profile_id": "ref_abcdefgh",
+      "expected_version": 1
+    },
+    "command-inputs.json:RevokeMember": {
+      "membership_id": "ref_abcdefgh",
+      "expected_version": 1,
+      "reviewed_work_plan_id": "ref_abcdefgh",
+      "reason": "x"
+    },
+    "command-inputs.json:StartImport": {
+      "business_id": "ref_abcdefgh",
+      "source_type": "merchant_website",
+      "source_url": "https://example.test",
+      "authority_confirmation": true
+    },
+    "command-inputs.json:ApplyImportDraft": {
+      "job_id": "ref_abcdefgh",
+      "expected_draft_version": 1,
+      "selected_candidate_ids": [
+        "ref_abcdefgh"
+      ],
+      "reviewed_rights_confirmation": true
+    }
+  }
+}

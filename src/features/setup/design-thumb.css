@@ -1,0 +1,5 @@
+/* design thumbnails */
+.sf-thumb{position:relative;display:block;overflow:hidden;border-radius:20px;background:#e9e9ed;isolation:isolate}
+.sf-thumb-inner{position:absolute;left:0;top:0;display:block;transform-origin:0 0;pointer-events:none;overflow:hidden;contain:paint}
+.sf-thumb-inner [data-taplo-page]{min-height:100%}
+.sf-thumb-inner .tp-bg-gradient,.sf-thumb-inner .tp-shader,.sf-thumb-inner [data-bg] > *{position:absolute!important}

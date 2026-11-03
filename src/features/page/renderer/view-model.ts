@@ -1,3 +1,5 @@
+import { SIGNATURE_APPEARANCE } from "../themes/starting-looks";
+import { serviceActionLabel } from "@/features/booking/model";
 import { businessContentSchema, type BusinessContent, type BusinessContentInput } from "@/features/businesses/content";
 import { resolveEntitlements, type Entitlements, type SubscriptionStatus } from "@/features/subscriptions/entitlements";
 import type { PlanId } from "@/features/subscriptions/plans";
@@ -9,6 +11,7 @@ import { WIDGET_TYPES, parseSettings, type WidgetType } from "../contracts/widge
 import type { WidgetAppearance } from "../contracts/style";
 import { migratePage } from "../migrate";
 import { resolveStyle, widgetStyle, type ResolvedStyle } from "../themes/resolve";
+import { selectedService } from "../widgets/selection";
 import { getWidget } from "../widgets/registry";
 import type { WidgetContext, WidgetStatus } from "../widgets/types";
 
@@ -41,6 +44,10 @@ export interface PageViewModel {
   /** What visitors see: not hidden and status ready. */
   visible: RenderWidget[];
   actions: PageAction[];
+  /** The one dominant action at the top of the page (separate from widget order); null when the page has none. */
+  primary: { kind: ActionKind; label: string; href: string; event?: PageAction["event"] } | null;
+  /** A widget shown as the main action instead of in the list, so it is not drawn twice. */
+  promotedWidgetId: string | null;
   locationLine: string | null;
   showBranding: boolean;
   onlineBooking: boolean;
@@ -54,6 +61,15 @@ export interface BuildOptions {
   /** Overrides the theme only for synthetic demo links (?theme=). Never used for real pages. */
   themeOverride?: string;
   now?: Date;
+  /** Setup only: show the chosen main action before its details exist, so the draft reflects each choice at once. It links nowhere. */
+  draftAction?: boolean;
+}
+
+/** The booking button says what will happen: a request is never worded as a booking. */
+export function bookingLabel(term: string, mode: "instant" | "request" | "contact"): string {
+  if (mode !== "request" || /^request/i.test(term)) return term;
+  if (term === "Book") return "Request a booking";
+  return term.replace(/^Book\b/, "Request");
 }
 
 function todayIn(tz: string, now: Date): string {
@@ -77,14 +93,18 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
     rating: ent.reviewLinks ? parsed.rating : undefined,
   };
 
-  const onlineBooking = ent.onlineBooking && business.booking.onlineBookingReady && business.services.some((s) => s.bookingMode !== "contact");
-  const ctx: WidgetContext = { business, ent, industry, onlineBooking, today: todayIn(business.location.timezone, opts.now ?? new Date()) };
+  const onlineBooking = ent.onlineBooking && business.booking.onlineBookingReady && business.services.some((s) => !s.archived && !s.externalUrl && s.bookingMode !== "contact" && Boolean(s.durationMinutes));
+  const ctx: WidgetContext = { business, ent, industry, onlineBooking, paymentsConnected: false, today: todayIn(business.location.timezone, opts.now ?? new Date()) };
 
   const mig = migratePage(pageRaw, parsed.identity.industryKey);
   const page: PageDoc = opts.themeOverride ? { ...mig.page, themeId: opts.themeOverride } : mig.page;
-  const style = resolveStyle(page.themeId, page.appearance);
+  ctx.featuredServiceIds = [...new Set(page.widgets.filter((w) => w.type === "featuredService" && !w.hidden).map((w) => {
+    const { settings } = parseSettings("featuredService", w.settings);
+    return selectedService(business.services, settings.serviceId)?.id;
+  }).filter((id): id is string => Boolean(id)))];
+  const style = resolveStyle(page.themeId, page.appearance, business.identity.logo?.accent);
   // Theme choice is a Core+ capability: Free keeps the industry's suggested theme.
-  const effectiveStyle = ent.themeSwitching || opts.themeOverride ? style : resolveStyle(industry.suggestedThemeId, {});
+  const effectiveStyle = ent.themeSwitching || opts.themeOverride ? style : resolveStyle("clean", { ...SIGNATURE_APPEARANCE, colors: { background: "#ffffff", text: "#141414", muted: "#62666d", surface: "#ffffff", accent: "#141414", accentText: "#ffffff", border: "#e7e9ed" }, background: { kind: "solid", color: "#ffffff" } });
 
   const widgets: RenderWidget[] = [];
   const notes = [...mig.notes, ...effectiveStyle.notices.map((n) => n.message)];
@@ -105,11 +125,35 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
   }
 
   const k = business.contacts;
+  const bookingWidget = widgets.find((w) => w.type === "booking" && !w.hidden && w.status.state === "ready");
+  const bookingService = bookingWidget?.settings.serviceId ? selectedService(business.services,bookingWidget.settings.serviceId) : undefined
   const actions: PageAction[] = [];
-  if (onlineBooking) actions.push({ kind: "book", label: industry.terminology.booking, href: `/${business.identity.slug}/book`, event: "booking_click" });
+  // A ready booking widget is a booking action even when online booking is not set up: it opens the enquiry. Without this the widget is promoted into a header slot that has no button for it, and the action disappears.
+  if (onlineBooking || bookingWidget) actions.push({ kind: "book", label: serviceActionLabel(bookingService,onlineBooking,bookingLabel(industry.terminology.booking, business.booking.mode)), href: bookingService?.externalUrl || `/${business.identity.slug}/book`, event: "booking_click" });
   if (k.phone) actions.push({ kind: "call", label: "Call", href: telHref(k.phone), event: "call_click" });
   if (k.whatsapp) actions.push({ kind: "whatsapp", label: "WhatsApp", href: whatsappHref(k.whatsapp, `Hi ${business.identity.name}, I found you on Taplo.`), event: "whatsapp_click" });
   if (k.email) actions.push({ kind: "email", label: "Email", href: `mailto:${k.email}` });
+
+  // ---- main action: chosen on the page, independent of widget order
+  const primaryMode = effectiveStyle.spec.header.actions === "primary";
+  const available: Record<ActionKind, boolean> = { book: Boolean(bookingWidget) || onlineBooking, call: Boolean(k.phone), whatsapp: Boolean(k.whatsapp), email: Boolean(k.email) };
+  const order: ActionKind[] = ["book", "call", "whatsapp", "email"];
+  const pref = page.meta.primaryAction;
+  const chosen: ActionKind | undefined = pref === "none" ? undefined : pref !== "auto" && available[pref] ? pref : order.find((o) => available[o]);
+  let primary: PageViewModel["primary"] = null;
+  if (primaryMode && chosen) {
+    const found = actions.find((a) => a.kind === chosen);
+    if (chosen === "book") primary = { kind: "book", label: (bookingWidget?.settings.label as string | undefined) || found?.label || bookingLabel(industry.terminology.booking, business.booking.mode), href: found?.href ?? "", event: "booking_click" };
+    else if (found) primary = { kind: found.kind, label: found.kind === "call" ? "Call" : found.label, href: found.href, event: found.event };
+  }
+  if (opts.draftAction && primaryMode && !primary && pref !== "none") {
+    primary = pref === "auto"
+      ? { kind: "email", label: "Get in touch", href: "#" }
+      : { kind: pref, label: { book: "Book now", call: "Call", whatsapp: "WhatsApp", email: "Message" }[pref], href: "#" };
+  }
+  // The booking widget stands in for the header's own booking button (the main action, or one of the header's buttons) so a
+  // page never shows two booking buttons. Header icons cannot carry a booking flow, so there the widget stays in the list.
+  const promotedWidgetId = bookingWidget && (primary?.kind === "book" || effectiveStyle.spec.header.actions === "buttons") ? bookingWidget.id : null;
 
   const l = business.location;
   const locationLine = l.mode === "online" ? (l.locality ? l.locality : "Online") : l.mode === "service_area" ? (l.locality ? `Covering ${l.locality}` : "Service area") : (l.locality ?? null);
@@ -121,8 +165,10 @@ export function buildPageViewModel(contentInput: BusinessContentInput | Business
     style: effectiveStyle,
     ctx,
     widgets,
-    visible: widgets.filter((w) => !w.hidden && w.status.state === "ready"),
+    visible: widgets.filter((w) => !w.hidden && w.status.state === "ready" && w.id !== promotedWidgetId),
     actions,
+    primary,
+    promotedWidgetId,
     locationLine,
     showBranding: !ent.removeBranding,
     onlineBooking,

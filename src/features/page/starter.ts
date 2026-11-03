@@ -1,5 +1,6 @@
 import type { IndustryPreset } from "@/features/themes/contracts/industry";
 import { getIndustryPreset } from "@/features/themes/presets/industries";
+import { suggestedLookIds } from "@/features/themes/presets/look-suggestions";
 import type { PageDoc } from "./contracts/page";
 import type { WidgetType } from "./contracts/widgets";
 import { defaultSettings, getWidget } from "./widgets/registry";
@@ -22,8 +23,9 @@ export function newWidget(type: WidgetType, settings: Record<string, unknown> = 
 function tune(type: WidgetType, industry: IndustryPreset): Record<string, unknown> {
   const t = industry.terminology;
   switch (type) {
-    case "serviceList": return { title: t.services, variant: industry.suggestedThemeId === "classroom" ? "cards" : "list" };
-    case "priceMenu": return { title: t.services };
+    case "products": return industry.id === "car-dealer" ? { title: "Current stock", variant: "catalogue" } : {};
+    case "serviceList": return { title: t.services, variant: industry.id === "detailer" ? "spotlight" : ["tutor","personal-trainer","consultant"].includes(industry.id) ? "cards" : "list" };
+    case "priceMenu": return { title: t.services, ...(industry.id === "hospitality" ? {variant:"panels"} : {}) };
     case "team": return { title: t.team };
     case "reviews": return { title: t.reviews };
     case "text": return { title: "About" };
@@ -45,13 +47,14 @@ export function starterWidgets(industryKey: string): StoredWidget[] {
 }
 
 export function newPage(industryKey: string): PageDoc {
-  const industry = getIndustryPreset(industryKey);
   return {
     schemaVersion: 2,
-    themeId: getTheme(industry.suggestedThemeId) ? industry.suggestedThemeId : DEFAULT_THEME_ID,
+    themeId: getTheme(suggestedLookIds(industryKey)[0]!) ? suggestedLookIds(industryKey)[0]! : DEFAULT_THEME_ID,
     appearance: {},
-    meta: { searchVisible: true },
+    meta: { searchVisible: true, primaryAction: "auto" },
     widgets: starterWidgets(industryKey),
+    savedLooks: [],
+    savedStyles: [],
   };
 }
 

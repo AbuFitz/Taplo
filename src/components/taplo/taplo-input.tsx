@@ -16,7 +16,7 @@ export function TaploInput({ label, error, hint, id, className, ...rest }: Props
   const describedBy = error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined
   return (
     <div className={cn("grid gap-1.5", className)}>
-      <Label htmlFor={inputId}>{label}</Label>
+      <Label htmlFor={inputId} className="text-base font-semibold leading-6">{label}</Label>
       <Input id={inputId} aria-invalid={error ? true : undefined} aria-describedby={describedBy} className="min-h-11" {...rest} />
       {error ? (
         <p id={`${inputId}-error`} role="alert" className="text-sm text-destructive">

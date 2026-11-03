@@ -1,0 +1,115 @@
+{
+  "status": "specified_provider_intent_not_signed_vendor_or_region_facts",
+  "providers": [
+    {
+      "name": "Vercel",
+      "purpose": "web/API/hosting, public/private media references",
+      "data": "application IP/logs and hosted content",
+      "required_confirmation": "UK region preferred for execution where supported; actual data subprocessors/transfers scope required",
+      "actual_contract_ref": null,
+      "actual_region": null,
+      "dpa_ref": null,
+      "approval_state": "requires_account_scope_confirmation"
+    },
+    {
+      "name": "Neon",
+      "purpose": "server-owned Postgres",
+      "data": "tenant-scoped operational records",
+      "required_confirmation": "supported UK/EEA region selected only after account/plan confirmation",
+      "actual_contract_ref": null,
+      "actual_region": null,
+      "dpa_ref": null,
+      "approval_state": "requires_account_scope_confirmation"
+    },
+    {
+      "name": "Stripe",
+      "purpose": "merchant direct payments; Taplo software billing separate",
+      "data": "provider-held payment/KYC; Taplo IDs/status/necessary financial evidence",
+      "required_confirmation": "actual controller/loss/account agreement; not all privacy/tax duties delegated",
+      "actual_contract_ref": null,
+      "actual_region": null,
+      "dpa_ref": null,
+      "approval_state": "requires_account_scope_confirmation"
+    },
+    {
+      "name": "Resend",
+      "purpose": "critical identity and merchant message streams",
+      "data": "recipient/message purpose/template/provider events",
+      "required_confirmation": "provider-approved account/stream separation and DPA/region/retention approval",
+      "actual_contract_ref": null,
+      "actual_region": null,
+      "dpa_ref": null,
+      "approval_state": "requires_account_scope_confirmation"
+    },
+    {
+      "name": "Twilio",
+      "purpose": "optional UK SMS",
+      "data": "recipient/sender/message/segment status",
+      "required_confirmation": "actual supported sender/fees/consent scope; no implied replies from one-way sender",
+      "actual_contract_ref": null,
+      "actual_region": null,
+      "dpa_ref": null,
+      "approval_state": "requires_account_scope_confirmation"
+    },
+    {
+      "name": "Mapbox",
+      "purpose": "custom basemap and location services",
+      "data": "device/map telemetry and minimal chosen area/query",
+      "required_confirmation": "actual native billing/temporary-vs-permanent geocode licence, attribution and transfers",
+      "actual_contract_ref": null,
+      "actual_region": null,
+      "dpa_ref": null,
+      "approval_state": "requires_account_scope_confirmation"
+    },
+    {
+      "name": "Google/Microsoft",
+      "purpose": "owner-authorised calendar adapters",
+      "data": "busy intervals and chosen Taplo event projections",
+      "required_confirmation": "OAuth scope/account type/grants and verification; private event titles not shared unnecessarily",
+      "actual_contract_ref": null,
+      "actual_region": null,
+      "dpa_ref": null,
+      "approval_state": "requires_account_scope_confirmation"
+    },
+    {
+      "name": "Apple/Google Wallet",
+      "purpose": "pass issue/update",
+      "data": "minimum pass/object/device registration identifiers",
+      "required_confirmation": "actual issuer/certificate/publication approval; merchant/public-card eligibility and retention",
+      "actual_contract_ref": null,
+      "actual_region": null,
+      "dpa_ref": null,
+      "approval_state": "requires_account_scope_confirmation"
+    },
+    {
+      "name": "Expo/Apple/Google stores",
+      "purpose": "native build/distribution/push",
+      "data": "build credentials and privacy-declared SDK telemetry/push tokens",
+      "required_confirmation": "company-owned actual accounts; store/native SKU approvals and disclosures",
+      "actual_contract_ref": null,
+      "actual_region": null,
+      "dpa_ref": null,
+      "approval_state": "requires_account_scope_confirmation"
+    },
+    {
+      "name": "Crisp",
+      "purpose": "Taplo support inbox",
+      "data": "minimum permitted case/contact/diagnostic context",
+      "required_confirmation": "staff scope, DPA/retention and routing; no blanket customer record export",
+      "actual_contract_ref": null,
+      "actual_region": null,
+      "dpa_ref": null,
+      "approval_state": "requires_account_scope_confirmation"
+    },
+    {
+      "name": "Error monitoring",
+      "purpose": "redacted diagnostics",
+      "data": "request IDs/technical errors, no sensitive payload by default",
+      "required_confirmation": "selected plan/region/processor actual contract required; no default session recording",
+      "actual_contract_ref": null,
+      "actual_region": null,
+      "dpa_ref": null,
+      "approval_state": "requires_account_scope_confirmation"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "status": "Illustrative cost scenarios plus dated published supplier inputs; proposed Taplo prices in proposed-packages.json are unvalidated",
+  "currency": "GBP",
+  "verified_supplier_inputs": {
+    "hosting_allocation": null,
+    "sms_unit_cost": null,
+    "whatsapp_unit_cost": null,
+    "email_unit_cost": null,
+    "processor_platform_fees": null,
+    "fully_loaded_support_per_minute": null,
+    "hardware_landed_cost": null,
+    "domain_registration_renewal": null,
+    "fraud_loss_allowance": null
+  },
+  "formulas": {
+    "monthly_cost": "hosting + messaging + integration_fees_borne + support_minutes * support_cost_per_minute + losses_borne + onboarding_amortisation",
+    "contribution": "net_revenue - monthly_cost",
+    "contribution_margin": "contribution / net_revenue when net_revenue > 0",
+    "revenue_for_target_margin": "monthly_cost / (1 - target_margin), target_margin < 1",
+    "acquisition_payback_months": "acquisition_cost / monthly_contribution when contribution > 0"
+  },
+  "illustrative_scenarios": [
+    {
+      "label": "light use",
+      "hosting": 2,
+      "messaging": 0.5,
+      "support_minutes": 4,
+      "support_cost_per_minute": 0.5,
+      "other": 0,
+      "illustrative_cost": 4.5
+    },
+    {
+      "label": "ordinary mixed use",
+      "hosting": 3,
+      "messaging": 3,
+      "support_minutes": 12,
+      "support_cost_per_minute": 0.5,
+      "other": 1,
+      "illustrative_cost": 13
+    },
+    {
+      "label": "support-heavy month",
+      "hosting": 4,
+      "messaging": 6,
+      "support_minutes": 70,
+      "support_cost_per_minute": 0.5,
+      "other": 3,
+      "illustrative_cost": 48
+    }
+  ],
+  "excluded_from_examples": [
+    "tax/VAT treatment",
+    "actual provider quotes",
+    "acquisition and fixed overhead",
+    "capital/cash timing",
+    "any automatic charge or advertised plan price"
+  ],
+  "allowance_decisions": [
+    "what unit counts",
+    "metering source",
+    "period/timezone",
+    "included quantity",
+    "soft/hard limit",
+    "notification thresholds",
+    "explicit overage consent",
+    "existing-work protection"
+  ],
+  "published_supplier_inputs": [
+    {
+      "supplier": "Twilio UK common outbound SMS",
+      "currency": "USD",
+      "unit": "segment",
+      "amount": 0.056,
+      "date": "2026-11-03",
+      "source": "R77",
+      "excludes": "FX,tax,carrier,sender,failed-message and optional fees as applicable"
+    },
+    {
+      "supplier": "Postmark Basic displayed volume",
+      "currency": "USD",
+      "unit": "month_10000_emails",
+      "amount": 15,
+      "date": "2026-11-03",
+      "source": "R78",
+      "excludes": "tax,FX,overage,and actual required plan configuration"
+    }
+  ]
+}
