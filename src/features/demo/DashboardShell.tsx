@@ -44,7 +44,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <AppearanceSelect />
       </header>
       <div className="ws-main">
-        <header className="ws-topbar">
+        <div className="ws-topbar" role="group" aria-label="Page controls">
           <div>
             <strong>{TITLES[section] || "Today"}</strong>
           </div>
@@ -59,7 +59,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               </Link>
             ) : null}
           </div>
-        </header>
+        </div>
         <main id="studio-content" tabIndex={-1}
           className={`portal-content ws-content ${editor ? "ws-editor-content" : ""}`}
         >

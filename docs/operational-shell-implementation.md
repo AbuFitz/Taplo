@@ -19,3 +19,6 @@ Mobile composition follow-up: Today is the consistent home destination, required
 
 
 CI run 41741472191 exercised the service form and reported only the Optional disclosure label at 4.04:1 in dark mode. That label now uses the canonical muted token and 12px minimum type. The desktop audit remains a required check and was not bypassed. Mobile/device/keyboard cases continued to pass. Operational icon mapping and the contrast correction await the next source-version checks.
+
+
+CI run 41742495794: dark form audit passed, but the subsequent header audit found two banner landmarks (global navigation and the legacy page-action header). Page actions now form a labelled group, leaving one actual application banner. The mobile/device/keyboard tests remained passing. All corrective checks stay enabled.
