@@ -38,7 +38,7 @@ export function BookingStory() {
         <div className="booking-object-scene"><Shot id={s.capture} alt={s.alt} width={520} frame="none" fluid className="w-full" /></div>
       </div>)}
       <Link href="/inspiration/jays-barbers" className="mx-auto mt-6 flex min-h-11 w-fit items-center gap-2 text-sm font-semibold underline underline-offset-4">Try the example yourself<ArrowUpRight aria-hidden="true" className="size-4" /></Link>
-      <p className="mt-2 text-center text-xs text-white/60">{step.id === "story-4-done" ? "Demo confirmation. Nothing is sent to a business." : "Jay’s Barbers · design example"}</p>
+      <p className="mt-2 text-center text-xs text-white/60">{step.id === "story-4-done" ? "Example booking confirmation" : "Jay’s Barbers · design example"}</p>
     </div>
   </div>
 }

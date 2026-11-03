@@ -1,0 +1,10 @@
+.hyperframes/
+renders/
+proof/
+check.json
+render.log
+node_modules/
+
+*.log
+/AGENTS.md
+/CLAUDE.md

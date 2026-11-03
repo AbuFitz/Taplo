@@ -1,25 +1,36 @@
 import * as React from "react";
+import { type StudioScene } from "./art/StudioArt";
+import { SectionSetup } from "@/features/experience/SectionSetup";
 import { cn } from "@/lib/utils";
 
 export function PageHeader({
   title,
   description,
   actions,
+  scene,
 }: {
   title: string;
   description?: string;
   actions?: React.ReactNode;
+  scene?: StudioScene;
 }) {
   return (
-    <div className="portal-page-heading">
-      <div>
-        <h1 className="portal-page-title">{title}</h1>
-        {description ? (
-          <p className="portal-page-description">{description}</p>
-        ) : null}
+    <>
+      <div className="portal-page-heading ws-page-heading" data-scene={scene}>
+        <div className="ws-page-intro">
+          <div>
+            <h1 className="portal-page-title">{title}</h1>
+            {description ? (
+              <p className="portal-page-description">{description}</p>
+            ) : null}
+          </div>
+        </div>
+        {actions ? <div className="ws-heading-actions">{actions}</div> : null}
       </div>
-      {actions}
-    </div>
+      {scene ? (
+        <SectionSetup topic={scene === "design" ? "page" : scene} />
+      ) : null}
+    </>
   );
 }
 

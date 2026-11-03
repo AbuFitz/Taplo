@@ -66,19 +66,28 @@ export interface PagePreviewProps {
   smooth?: boolean
   /** Part of the page to bring into view inside the frame (header, actions, offer, social, top). */
   focus?: string
+  /** Reframe after a deliberate layout change without reloading the page. */
+  /** Size the document to the visible stage rather than hiding part of a tall document. */
+  fitHeight?: boolean
+  focusKey?: string
 }
 
 const MIN_DESKTOP = 1024
 const MAX_DESKTOP = 1440
 const READABLE = 0.72
 
-export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, device = { w: 390, h: 844 }, zoom: "fit" | "actual" = "fit", chrome = false, cropDevice = false, maxScale = 1) {
+export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, device = { w: 390, h: 844 }, zoom: "fit" | "actual" = "fit", chrome = false, cropDevice = false, maxScale = 1, fitHeight = false) {
   if (mode === "fill") return { vw: box.w, vh: box.h, scale: 1, pad: 0, bar: 0, safeTop: 0, safeBottom: 0, outerW: box.w, outerH: box.h }
   if (mode === "device") {
     const pad = chrome ? PHONE.bezel : 0
     const safeTop = 0
     const safeBottom = 0
     const outerW = device.w + pad * 2
+    if (fitHeight) {
+      const scale = Math.min(1, Math.max(1, box.w - 8) / outerW)
+      const vh = Math.max(120, Math.floor(box.h / scale) - pad * 2)
+      return { vw: device.w, vh, scale, pad, bar: 0, safeTop, safeBottom, outerW, outerH: vh + pad * 2 }
+    }
     const outerH = device.h + pad * 2
     const scale = zoom === "actual" ? 1 : Math.min(cropDevice ? maxScale : 1, Math.max(1,box.w - (chrome ? 8 : 0)) / outerW, cropDevice ? maxScale : box.h / outerH)
     return { vw: device.w, vh: device.h - safeTop - safeBottom, scale, pad, bar: 0, safeTop, safeBottom, outerW, outerH }
@@ -91,7 +100,7 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   return { vw, vh, scale, pad: 0, bar, safeTop: 0, safeBottom: 0, outerW: vw, outerH: vh + bar }
 }
 
-export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, skipTab = false, retryAfterMs, onSurface, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen, maxScale = 1, smooth = false, focus }: PagePreviewProps) {
+export function PagePreview({ src, loading = "eager", title, mode, device, zoom = "fit", chrome = false, url, frameRef, edit, onViewport, className, testId, poster, interactive = true, skipTab = false, retryAfterMs, onSurface, resizeKey, topInset = 0, cropDevice = false, onOverlayOpen, maxScale = 1, smooth = false, focus, focusKey, fitHeight = false }: PagePreviewProps) {
   const host = React.useRef<HTMLDivElement>(null)
   const frame = React.useRef<HTMLIFrameElement | null>(null)
   const [box, setBox] = React.useState<{ w: number; h: number } | null>(null)
@@ -153,7 +162,7 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
   }, [mode, zoom, resizeKey])
 
   const decorated = chrome && mode !== "fill"
-  const L = box ? layoutPreview(mode, box, device, zoom, decorated, cropDevice, maxScale) : null
+  const L = box ? layoutPreview(mode, box, device, zoom, decorated, cropDevice, maxScale, fitHeight) : null
   React.useEffect(() => { if (L) onViewport?.({ w: L.vw, h: L.vh, scale: L.scale }) }, [L?.vw, L?.vh, L?.scale]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const setFrame = React.useCallback((el: HTMLIFrameElement | null) => { frame.current = el; frameRef?.(el) }, [frameRef])
@@ -184,8 +193,14 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
   React.useEffect(post, [post, L?.vw, L?.vh])
   React.useEffect(() => {
     if (!focus || !loaded) return
-    frame.current?.contentWindow?.postMessage({ type: "taplo:focus", target: focus }, window.location.origin)
-  }, [focus, loaded])
+    // The draft reaches the embedded renderer asynchronously. Reframe after its layout settles.
+    const timer = window.setTimeout(() => {
+      frame.current?.contentWindow?.postMessage({ type: "taplo:focus", target: focus }, window.location.origin)
+    }, 120)
+    return () => window.clearTimeout(timer)
+  }, [focus, focusKey, loaded])
+
+  const partialPhone = Boolean(L && fitHeight && mode === "device" && L.outerH < L.outerW * 1.6)
 
   const iframe = L ? (
     <iframe
@@ -213,10 +228,11 @@ export function PagePreview({ src, loading = "eager", title, mode, device, zoom 
           <div style={{ width: L.outerW * L.scale, height: L.outerH * L.scale }} className={cn("shrink-0", smooth && "preview-camera")}>
             <div
               className={cn("relative origin-top-left", smooth && "preview-camera", decorated ? (mode === "device" ? "phone-shell" : "browser-shell") : "")}
-              style={{ width: L.outerW, height: L.outerH, padding: L.pad, transform: L.scale === 1 ? undefined : `scale(${L.scale})` }}
+              data-preview-partial={partialPhone || undefined}
+              style={{ width: L.outerW, height: partialPhone ? Math.max(L.outerH, PHONE.height) : L.outerH, padding: L.pad, transform: L.scale === 1 ? undefined : `scale(${L.scale})` }}
             >
               {L.bar ? <BrowserChrome url={url} height={L.bar} /> : null}
-              <div className={cn("relative overflow-hidden bg-white", decorated && mode === "device" && "phone-screen")} style={{ width: L.vw, height: L.vh + L.safeTop + L.safeBottom, paddingTop: L.safeTop, paddingBottom: L.safeBottom }}>
+              <div className={cn("relative overflow-hidden bg-white", decorated && mode === "device" && "phone-screen")} style={{ width: L.vw, height: L.vh + L.safeTop + L.safeBottom, paddingTop: L.safeTop, paddingBottom: L.safeBottom, borderBottomLeftRadius: partialPhone ? 0 : undefined, borderBottomRightRadius: partialPhone ? 0 : undefined }}>
                 {iframe}
                 {!loaded && !stalled ? <div className="preview-screen-loading" aria-hidden="true"><span /><span /><span /></div> : null}
                 {stalled && !loaded ? <div role="alert" className="absolute inset-0 z-10 grid place-content-center gap-3 bg-white p-6 text-center text-sm text-neutral-800"><p>Preview unavailable. Your page and actions still work.</p><button type="button" className="mx-auto min-h-11 rounded-full border border-neutral-300 px-5 font-semibold" onClick={() => { setStalled(false); setAttempt((n) => n + 1) }}>Try again</button></div> : null}

@@ -1,0 +1,78 @@
+{
+  "baseline": "3.0",
+  "branch": "claude/modest-cerf-4tont1",
+  "packets": [
+    {
+      "id": "P01",
+      "state": "source_implemented_acceptance_pending",
+      "evidence": "../foundation-implementation.md",
+      "actual_checks": [
+        {
+          "commit": "0ce2db5c151f9e7d40f1dd0c723d36ac9f6c2885",
+          "check": "Next route type generation and TypeScript",
+          "result": "passed in GitHub Actions run 41729459257"
+        },
+        {
+          "commit": "0ce2db5c151f9e7d40f1dd0c723d36ac9f6c2885",
+          "check": "lint",
+          "result": "failed on existing merged capture/vendor/test files; corrective commit 5210b8197cd940491725f7b7cce41d044b3a4c7a awaiting verification"
+        }
+      ]
+    },
+    {
+      "id": "P02",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P03",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P04",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P05",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P06",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P07",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P08",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P09",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P10",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P11",
+      "state": "pending",
+      "evidence": null
+    },
+    {
+      "id": "P12",
+      "state": "pending",
+      "evidence": null
+    }
+  ]
+}

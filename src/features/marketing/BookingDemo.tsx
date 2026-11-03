@@ -47,7 +47,7 @@ export function BookingDemo({ examples }: { examples: BookingExample[] }) {
         <ThemeRoot family="page" cssVars={example.cssVars} attrs={example.attrs} className="booking-flow-scope">
           <BookingFlow key={example.slug} ctx={example.context} serviceId={example.serviceId} title={`Book with ${example.name}`} trigger={<button type="button" className="booking-cta booking-cta-light"><CalendarCheck size={18} aria-hidden="true" />Try a booking<ArrowRight size={18} aria-hidden="true" /></button>} />
         </ThemeRoot>
-        <p className="booking-demo-note">Sample businesses. Nothing is sent or charged. Bookings stay in this browser.</p>
+        <p className="booking-demo-note">Example businesses · explore the booking experience.</p>
         <Link className="booking-text-link" href={`/onboarding?from=${example.slug}`} data-testid="booking-adopt">Start with this design<ArrowUpRight size={16} aria-hidden="true" /></Link>
       </div>
       <div className="booking-demo-art">

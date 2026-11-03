@@ -28,6 +28,11 @@ const still = (b: Background): Background => b;
 
 export const COLOURWAYS: Colourway[] = [
   {
+    id: "standard", name: "Signature", kind: "Solid light", tone: "light",
+    colors: { background: "#ffffff", text: "#141414", muted: "#62666d", surface: "#ffffff", accent: "#141414", accentText: "#ffffff", border: "#e7e9ed" },
+    background: { kind: "solid", color: "#ffffff" },
+  },
+  {
     id: "sand", name: "Warm sand", kind: "Solid light", tone: "light",
     colors: { background: "#e9dfd3", text: "#382a22", muted: "#635044", surface: "#fffcf7", accent: "#6c412e", accentText: "#ffffff", border: "#cbbbaa" },
     background: { kind: "solid", color: "#e9dfd3" },

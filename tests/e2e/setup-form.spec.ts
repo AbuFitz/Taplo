@@ -11,12 +11,13 @@ const title = (page: Page) => page.locator("#step-title")
 const cont = (page: Page) => page.getByRole("button", { name: /^Continue/ })
 const state = (page: Page) => page.evaluate((k) => JSON.parse(localStorage.getItem(k) ?? "null"), K)
 const toName = async (page: Page, kind = "barber") => { await page.getByTestId(`tile-${kind}`).click(); await cont(page).click(); await expect(title(page)).toHaveText("What’s it called?") }
-const toLook = async (page: Page) => { await toName(page); await page.getByLabel("Business name", { exact: true }).fill("Fade Street Barbers"); await cont(page).click(); await expect(title(page)).toHaveText("Choose a look.") }
+const toLook = async (page: Page) => { await toName(page); await page.getByLabel("Business name", { exact: true }).fill("Fade Street Barbers"); await cont(page).click(); await expect(title(page)).toHaveText("Style your page.") }
 
-test("the steps run in order with the agreed titles and a words-first progress", async ({ page }) => {
+test("the steps run in order with accessible bar-only progress", async ({ page }) => {
   await open(page)
   await expect(title(page)).toHaveText("What do you do?")
-  await expect(page.getByTestId("setup-progress-text")).toHaveText("Step 1 of 7")
+  await expect(page.getByRole("progressbar", { name: "Setup progress" })).toHaveAttribute("aria-valuenow", "1")
+  await expect(page.getByTestId("setup-progress-text")).toHaveCount(0)
   await toLook(page)
   await expect(page.getByRole("radio", { name: "Looks", exact: true })).toBeVisible()
   await expect(page.getByRole("radio", { name: "Colours", exact: true })).toBeVisible()
@@ -27,23 +28,32 @@ test("the steps run in order with the agreed titles and a words-first progress",
   await cont(page).click()
   await expect(title(page)).toHaveText("Pick a plan.")
   await page.getByRole("button", { name: /^Continue with Free/ }).click()
-  await expect(title(page)).toHaveText("Your page is ready.")
-  await expect(page.getByTestId("setup-progress-text")).toHaveText("Step 7 of 7")
+  await expect(title(page)).toHaveText("Your draft is ready.")
+  await expect(page.getByRole("progressbar", { name: "Setup progress" })).toHaveAttribute("aria-valuenow", "7")
 })
 
 for (const [w, h, label] of [[390, 844, "844"], [390, 600, "600"]] as const) {
-  test(`the sheet is the same height on every step at 390x${label}, so the page never jumps`, async ({ page }) => {
+  test(`setup actions stay within the visible viewport at 390x${label}`, async ({ page }) => {
     await open(page, w, h)
-    const expected = Math.round(h * (h <= 700 ? 0.78 : 0.52))
-    const heights: number[] = []
-    const measure = async () => { await page.waitForTimeout(350); heights.push(Math.round((await page.getByTestId("setup-sheet").boundingBox())!.height)) }
+    const measure = async () => {
+      const sheet = await page.getByTestId("setup-sheet").boundingBox()
+      expect(sheet).not.toBeNull()
+      expect(sheet!.y).toBeGreaterThanOrEqual(0)
+      expect(sheet!.y + sheet!.height).toBeLessThanOrEqual(h + 2)
+      const action = cont(page)
+      if (await action.count()) {
+        await expect(action).toBeVisible()
+        const button = await action.boundingBox()
+        expect(button!.y).toBeGreaterThanOrEqual(0)
+        expect(button!.y + button!.height).toBeLessThanOrEqual(h + 2)
+      }
+    }
     await measure()
     await toLook(page); await measure()
     await cont(page).click(); await measure()
     await cont(page).click(); await measure()
     await cont(page).click(); await measure()
     await page.getByRole("button", { name: /^Continue with/ }).click(); await measure()
-    for (const v of heights) expect(Math.abs(v - expected)).toBeLessThanOrEqual(2)
   })
 }
 
@@ -88,7 +98,7 @@ test("the action step is one choice with one detail, and a call button needs a n
 test("skipping services saves none; a typed service saves only that one", async ({ page }) => {
   await open(page)
   await toLook(page); await cont(page).click(); await cont(page).click()
-  await page.getByRole("button", { name: "Skip for now" }).click()
+  await page.getByRole("button", { name: "Skip", exact: true }).click()
   await expect(title(page)).toHaveText("Pick a plan.")
   expect(((await state(page)).content.services ?? []).length).toBe(0)
   await page.getByRole("button", { name: "Back" }).click()
@@ -236,7 +246,7 @@ test("every look is reachable whatever the business type, and choosing one chang
   for (const kind of ["car-dealer", "cafe-placeholder"]) {
     if (kind === "cafe-placeholder") { await page.goto("/onboarding"); await page.evaluate((k) => localStorage.removeItem(k), K); await page.reload(); await page.getByTestId("tile-hospitality").click(); await cont(page).click(); await page.getByLabel("Business name", { exact: true }).fill("The Corner Cafe"); await cont(page).click() }
     else { await toLook(page); await page.getByRole("button", { name: "Back" }).click(); await page.getByRole("button", { name: "Back" }).click(); await page.getByTestId("tile-car-dealer").click(); await cont(page).click(); await cont(page).click() }
-    await expect(title(page)).toHaveText("Choose a look.")
+    await expect(title(page)).toHaveText("Style your page.")
     counts.push(await page.getByRole("radiogroup", { name: "Looks" }).getByRole("radio").count())
   }
   expect(counts[0]).toBeGreaterThanOrEqual(8)

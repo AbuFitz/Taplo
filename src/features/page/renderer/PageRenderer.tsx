@@ -6,6 +6,7 @@ import { ThemeRoot } from "@/components/taplo/theme-root"
 import { renderWidgetBody } from "../widgets/renderers"
 import { SharePanel } from "../widgets/ShareClient"
 import { Share2, ArrowUpRight } from "lucide-react"
+import { ReportDialog } from "@/features/support/ReportDialog"
 import { Background } from "./Background"
 import { PageHeader } from "./Header"
 import type { PageViewModel } from "./view-model"
@@ -50,6 +51,7 @@ export function PageRenderer({ vm, bare = false, fragment, still = false }: { vm
         {fragment || still ? null : <footer aria-label={`${vm.business.identity.name} business page footer`} className="pb-2 text-center text-sm tp-muted" style={{ gridColumn: "1 / -1" }}>
           {[vm.business.identity.heroImage, ...vm.business.products.map(p => p.image)].some(image => image?.src.startsWith('/photography/')) ? <p className="mb-2 text-xs"><a href="/credits" target="_blank" rel="noreferrer" className="underline underline-offset-4">Photography credits</a></p> : null}
           <SharePanel data={{ name: vm.business.identity.name, slug: vm.business.identity.slug }} trigger={<button type="button" className="mx-auto mb-3 inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4" aria-label="Share page"><Share2 aria-hidden="true" className="size-4" />Share</button>} />
+          <div className="tp-report"><ReportDialog kind="page" businessName={vm.business.identity.name}/></div>
           {vm.showBranding ? <Link href="/onboarding" target="_top" className="tp-made"><span className="tp-made-mark" aria-hidden="true" /><span>Powered by <strong>Taplo</strong></span><span className="tp-made-cta">Build your own<ArrowUpRight aria-hidden="true" className="size-3" /></span></Link> : null}
         </footer>}
       </div>

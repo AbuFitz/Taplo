@@ -1,3 +1,5 @@
+import { showPreviewNotices } from "@/lib/presentation";
+import { featureNote, featureState } from "@/lib/feature-status";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -15,8 +17,6 @@ import { LookSwitcher } from "./home/LookSwitcher";
 import { BookingStory } from "./home/BookingStory";
 import type { ProductPage } from "./product";
 import {
-  featureNote,
-  featureState,
   type FeatureId,
 } from "@/lib/feature-status";
 import { cn } from "@/lib/utils";
@@ -262,8 +262,7 @@ function Booking() {
             className="w-full"
           />
           <Label>
-            A valet requested, with approval still to come. Preview actions stay
-            in this browser.
+            A valet requested, ready for the business to review.
           </Label>
         </div>
       </section>
@@ -653,7 +652,7 @@ function Sharing() {
             className="mx-auto w-full"
           />
           <Label>
-            The QR code opens the working example. Your own public address needs publishing connected.
+            Scan the QR code to explore this example page.
           </Label>
         </div>
       </section>
@@ -670,8 +669,8 @@ function Sharing() {
               "Save a clear PNG for your own printed material.",
             ],
             [
-              "A digital business card",
-              "Wallet passes are in development, alongside physical plaques.",
+              "Share your business",
+              "Keep your business details together in a page customers can open anywhere.",
             ],
             ["Share from your phone", "Into the apps your device supports."],
           ].map(([t, b], n) => (
@@ -703,7 +702,7 @@ const MESSAGE_KINDS: {
   {
     id: "enquiryInbox",
     title: "A proper enquiry",
-    body: "Keep the question with the person's details and what they were asking about. Preview enquiries stay in this browser.",
+    body: "Keep the question with the person's details and what they were asking about. Manage enquiries from your dashboard.",
     icon: MessageSquare,
   },
   {
@@ -753,7 +752,7 @@ function Messages() {
                   {m.body}
                 </p>
               </div>
-              <div>
+              <div hidden={!showPreviewNotices}>
                 <p
                   className={cn(
                     "inline-flex rounded-full px-3 py-1.5 text-sm font-semibold",
@@ -762,9 +761,9 @@ function Messages() {
                       : "bg-neutral-200 text-neutral-800",
                   )}
                 >
-                  {live ? "Try in the preview" : "Needs messaging connected"}
+                  {live ? "Explore the experience" : "Messages and reminders"}
                 </p>
-                {!live && (
+                {showPreviewNotices && !live && (
                   <p className="mt-3 text-sm leading-relaxed text-foreground/65">
                     {featureNote(m.id)}
                   </p>

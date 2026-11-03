@@ -63,9 +63,9 @@ export const PRODUCT_PAGES: ProductPage[] = [
       { label: "Working hours, breaks, leave, buffers, notice and booking window", state: "works" },
       { label: "Business time zone and clock changes", state: "works" },
       { label: "Owner calendar: agenda, day, week, month, blocked time", state: "works" },
-      { label: "Bookings kept in sync across devices", state: "needs", note: "Needs the live booking service. Preview bookings stay in this browser until it is connected." },
-      { label: "Email or text confirmations", state: "needs", note: "Needs an email or text provider. None is sent." },
-      { label: "Deposits and payment", state: "needs", note: "Needs a payment provider. Nothing is charged." },
+      { label: "Bookings kept in sync across devices", state: "needs", note: "Manage appointments across devices." },
+      { label: "Email or text confirmations", state: "needs", note: "Send appointment confirmations." },
+      { label: "Deposits and payment", state: "needs", note: "Take deposits and payments." },
     ],
     related: ["team", "services", "enquiries"],
   },
@@ -89,7 +89,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
       { label: "Products with photos, facts and a clear status", state: "works" },
       { label: "Enquire, or open your own shop in a new tab", state: "works" },
       { label: "Affiliate links disclosed to the visitor", state: "works" },
-      { label: "Checkout and payment on Taplo", state: "needs", note: "Needs a connected payment provider. Nothing is charged in the preview." },
+      { label: "Checkout and payment on Taplo", state: "needs", note: "Let customers pay from your page." },
     ],
     related: ["vehicles", "enquiries", "gallery-reviews"],
   },
@@ -101,7 +101,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
       { label: "Vehicle cards with specifications and a detail view", state: "works" },
       { label: "Available, reserved and sold shown honestly", state: "works" },
       { label: "Viewings and valuations as services", state: "works" },
-      { label: "Live stock feeds and finance checks", state: "needs", note: "Not connected. Stock is entered by hand." },
+
     ],
     related: ["products", "booking", "gallery-reviews"],
   },
@@ -112,7 +112,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
     status: [
       { label: "Photo grid and swipe rows, with a full-screen viewer", state: "works" },
       { label: "A Google reviews destination and a Google review invitation", state: "works" },
-      { label: "Imported Google ratings and individual reviews", state: "needs", requirement: "connection", note: "Needs a Google data connection with the required attribution. Reviews and ratings cannot be entered manually." },
+      { label: "Imported Google ratings and individual reviews", state: "needs", requirement: "connection", note: "Connect your Google reviews. Ratings retain their original source and attribution." },
       { label: "Photos and review links", state: "needs", requirement: "plan", note: "Free has neither. Paid plans do." },
     ],
     related: ["team", "products", "sharing"],
@@ -120,7 +120,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
   {
     slug: "sharing", label: "Sharing and QR codes", eyebrow: "Sharing and QR codes",
     title: "Share your page anywhere.",
-    lead: "Copy your link, share it from your phone or save a QR code for your printed materials. Counter plaques and digital wallet cards are coming later.",
+    lead: "Copy your link, share it from your phone or save a QR code for your printed materials. ",
     status: [
       { label: "A scannable Taplo QR code you can save as a PNG", state: "works" },
       { label: "Share from a phone with the system share sheet", state: "works" },

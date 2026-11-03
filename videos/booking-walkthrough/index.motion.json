@@ -1,0 +1,1 @@
+{"duration":9,"assertions":[{"kind":"appearsBy","selector":"#booking-card","bySec":0.6},{"kind":"appearsBy","selector":"#time-panel","bySec":3.5},{"kind":"appearsBy","selector":"#received-panel","bySec":6.7},{"kind":"staysInFrame","selector":"#booking-card"}]}

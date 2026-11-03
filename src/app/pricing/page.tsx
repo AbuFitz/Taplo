@@ -74,12 +74,12 @@ const ROWS: Row[] = [
   },
   {
     label: "Deposits and payments",
-    note: "Requires a payment provider.",
+    note: "Accept deposits and payments.",
     value: (e) => e.payments,
   },
   {
     label: "Email confirmations",
-    note: "Requires an email provider.",
+    note: "Send appointment confirmations.",
     value: (e) => e.emailConfirmations,
   },
   {

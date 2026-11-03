@@ -5,6 +5,8 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  // Historical Node capture script uses CommonJS intentionally.
+  { files: ["docs/team/form/alt/capture.js"], rules: { "@typescript-eslint/no-require-imports": "off" } },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
@@ -13,6 +15,7 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "marketing/film/**/gsap.min.js",
+    "videos/**/assets/gsap.min.js",
   ]),
 ]);
 

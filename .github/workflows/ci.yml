@@ -17,9 +17,16 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
+        id: dependencies
+      - run: npx next typegen
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
       - run: npm run build
+        id: build
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
       - run: npx playwright install --with-deps chromium
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}

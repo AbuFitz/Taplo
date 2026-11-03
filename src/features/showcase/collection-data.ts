@@ -8,9 +8,9 @@ export const COLLECTION_BRIEFS = [
     "label": "Photographer",
     "sector": "portfolios",
     "key": "photographer",
-    "line": "Still life. Small places. Honest light.",
+    "line": "Product and interior photography for independent brands.",
     "town": "Bristol",
-    "hero": "interior-studio",
+    "hero": "photographer-studio-v2",
     "gallery": "masonry",
     "bio": "A photographer working with independent makers, spaces and good objects. I keep the light natural and the crew small.",
     "services": [
@@ -298,9 +298,9 @@ export const COLLECTION_BRIEFS = [
     "label": "Micro-bakery",
     "sector": "food",
     "key": "hospitality",
-    "line": "Up early. Gone when it is gone.",
+    "line": "Fresh bread, good pastries and your weekend favourites.",
     "town": "Norwich",
-    "hero": "bakery-studio",
+    "hero": "bakery-studio-v2",
     "gallery": "grid",
     "bio": "A small neighbourhood bake with a short changing menu. Bread and pastries made in batches, with weekend collection by arrangement.",
     "services": [

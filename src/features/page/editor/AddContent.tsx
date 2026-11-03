@@ -228,9 +228,9 @@ export function AddContent({
           disabled={cl || Boolean(c.blocked)}
           data-testid="choice"
           data-choice-id={c.id}
-          className="grid h-full w-full grid-rows-[6rem_auto] gap-2.5 rounded-2xl border bg-card p-2.5 shadow-[0_3px_12px_-8px_#00000055] text-left outline-none transition-colors enabled:hover:border-primary enabled:hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-60"
+          className="block-library-choice"
         >
-          <span className="block overflow-hidden rounded-xl bg-neutral-100">
+          <span className="block-library-art">
             <ContentPicture choice={c} content={ed.state.content} />
           </span>
           <span className="grid gap-0.5 px-0.5 pb-0.5">
@@ -341,11 +341,11 @@ export function AddContent({
               <p className="mb-2 text-xs text-muted-foreground">
                 Based on your category. It is only a starting point.
               </p>
-              <ul className="grid grid-cols-2 gap-2">{suggested.map(card)}</ul>
+              <ul className="block-library-grid">{suggested.map(card)}</ul>
             </section>
           ) : null}
           {(Object.keys(GROUP_LABEL) as ContentChoice["group"][]).map((g) => {
-            const items = filtered.filter((c) => c.group === g);
+            const items = filtered.filter((c) => c.group === g && (q.trim() || !suggested.some(s => s.id === c.id)));
             if (!items.length) return null;
             return (
               <section key={g} aria-labelledby={`g-${g}`}>
@@ -355,7 +355,7 @@ export function AddContent({
                 <p className="mb-2 text-xs text-muted-foreground">
                   {GROUP_LABEL[g].hint}
                 </p>
-                <ul className="grid grid-cols-2 gap-2">{items.map(card)}</ul>
+                <ul className="block-library-grid">{items.map(card)}</ul>
               </section>
             );
           })}

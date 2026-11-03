@@ -46,7 +46,7 @@ export function useEditor(): Editor | null {
     // The editor works before a name exists: statuses are computed against a placeholder name.
     const base = parseContent(state.content).success ? state.content : { ...state.content, identity: { ...state.content.identity, name: state.content.identity.name || "Your business", slug: state.content.identity.slug || "your-page" } }
     const p = parseContent(base)
-    return p.success ? buildPageViewModel(p.data, state.page, { plan: state.plan }) : null
+    return p.success ? buildPageViewModel(p.data, state.page, { plan: state.plan, themeOverride: state.page.themeId }) : null
   }, [state])
 
   const setPage = useCallback((fn: (p: PageDoc) => PageDoc, coalesce?: string) => update((s) => ({ ...s, page: fn(s.page) }), { coalesce }), [update])

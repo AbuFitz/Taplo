@@ -220,9 +220,12 @@ describe("view-model", () => {
     const pay = buildPageViewModel(fx("mechanic").content, { ...fx("mechanic").page, widgets: [newWidget("payment")] }, { plan: "core" });
     expect(pay.widgets[0]!.status.state).toBe("locked");
   });
-  it("free plan keeps the industry's suggested theme", () => {
+  it("free plan uses the neutral signature composition", () => {
     const vm = buildPageViewModel(fx("tutor").content, { ...fx("tutor").page, themeId: "showroom" }, { plan: "free" });
-    expect(vm.style.theme.id).toBe(getIndustryPreset("tutor").suggestedThemeId);
+    expect(vm.style.theme.id).toBe("clean");
+    expect(vm.style.spec.colors.background).toBe("#ffffff");
+    expect(vm.style.spec.header.layout).toBe("lifted");
+    expect(vm.style.spec.buttons.shape).toBe("rounded");
   });
   it("unsafe or unsupported links never become visible widgets", () => {
     const f = fx("minimal");

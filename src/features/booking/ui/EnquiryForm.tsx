@@ -52,7 +52,7 @@ export function EnquiryForm({ slug, businessName, services, serviceId, topic, it
       <div className="grid gap-3" role="status" data-testid="enquiry-sent">
         <div className="grid size-11 place-items-center rounded-full bg-tp-accent text-tp-accent-fg"><Check aria-hidden="true" className="size-5" /></div>
         <h3 ref={sent} tabIndex={-1} className="font-tp-heading text-xl outline-none">Enquiry saved</h3>
-        <p className="text-sm text-tp-muted">{topic ? `Your enquiry about ${topic} is saved in this browser.` : "Your enquiry is saved in this browser."} No time was reserved.</p>
+        <p className="text-sm text-tp-muted">{topic ? `Your enquiry about ${topic} has been saved.` : "Your enquiry has been saved."} No time was reserved.</p>
         <p className="text-xs text-tp-muted">{businessName} was not emailed or texted.</p>
       </div>
     )
@@ -66,7 +66,7 @@ export function EnquiryForm({ slug, businessName, services, serviceId, topic, it
           <span className="min-w-0"><span className="block text-xs text-tp-muted">Asking about</span><span className="block truncate font-semibold">{subject}</span></span>
         </div>
       ) : null}
-      {status === "error" ? <p role="alert" className="rounded-xl border border-amber-500/50 bg-amber-50 px-3 py-2 text-sm text-amber-950">Your browser could not save this (storage is full or blocked). Your message is still here; try again.</p> : null}
+      {status === "error" ? <p role="alert" className="rounded-xl border border-amber-500/50 bg-amber-50 px-3 py-2 text-sm text-amber-950">We couldn’t save your enquiry. Your message is still here; please try again.</p> : null}
       <TaploInput label="Your name" autoComplete="name" value={form.name} error={errors.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
       <TaploInput label="Email" type="email" autoComplete="email" inputMode="email" value={form.email} error={errors.email} hint="Email or phone is enough." onChange={(e) => setForm({ ...form, email: e.target.value })} />
       <TaploInput label="Phone (optional)" type="tel" autoComplete="tel" inputMode="tel" value={form.phone} error={errors.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
@@ -85,7 +85,7 @@ export function EnquiryForm({ slug, businessName, services, serviceId, topic, it
         {errors.message ? <p id={messageErrorId} role="alert" className="text-sm text-destructive">{errors.message}</p> : null}
       </div>
       <Button type="submit" className="min-h-12" disabled={status === "sending"}>{status === "sending" ? "Sending…" : submitLabel}</Button>
-      <p className="text-xs text-tp-muted">This preview saves the enquiry in this browser. No time is reserved.</p>
+      <p className="text-xs text-tp-muted">Ask a question about this service. An enquiry does not reserve a time.</p>
     </form>
   )
 }

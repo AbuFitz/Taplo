@@ -1,3 +1,5 @@
+import { signatureWidgets } from "@/features/page/themes/starting-looks";
+import { colourwayOf } from "@/features/page/themes/colourways";
 import type { BusinessContentInput, ProductContent, ServiceContent } from "@/features/businesses/content";
 import { normalizeSlug, validateSlug, type SlugProblem } from "@/features/businesses/slug";
 import { newPage, starterWidgets } from "@/features/page/starter";
@@ -17,7 +19,11 @@ export function applyIndustry(s: DemoState, industryKey: string, label?: string)
   const next = getIndustryPreset(industryKey);
   // A chosen design presents the starting sections its own way; "untouched" is judged with that presentation applied.
   const design = getDesign(s.page.themeId);
-  const starters = (id: string) => (design ? applyRecipe(starterWidgets(id), design.recipe) : starterWidgets(id));
+  const present = (widgets: ReturnType<typeof starterWidgets>) => {
+    const arranged = design ? applyRecipe(widgets, design.recipe) : widgets;
+    return colourwayOf(s.page)?.id === "standard" ? signatureWidgets(arranged) : arranged;
+  };
+  const starters = (id: string) => present(starterWidgets(id));
   const untouchedWidgets = JSON.stringify(s.page.widgets.map((w) => [w.type, w.hidden, w.appearance, w.settings])) === JSON.stringify(starters(prev.id).map((w) => [w.type, w.hidden, w.appearance, w.settings]));
   const previousDefaultLook = getTheme(suggestedLookIds(prev.id)[0]!)?.id ?? DEFAULT_THEME_ID;
   // The blank start page carries only the type-led header, which is not an owner choice.
@@ -34,7 +40,7 @@ export function applyIndustry(s: DemoState, industryKey: string, label?: string)
     page: {
       ...s.page,
       themeId: s.page.themeId, // the look is the owner's; a category suggests content, never taste
-      widgets: untouchedWidgets ? (design ? applyRecipe(fresh.widgets, design.recipe) : fresh.widgets) : s.page.widgets,
+      widgets: untouchedWidgets ? present(fresh.widgets) : s.page.widgets,
       meta: { ...s.page.meta, primaryAction: next.suggestedBookingMode === "contact" ? "auto" : "book" },
     },
   };

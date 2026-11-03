@@ -2,6 +2,7 @@
 import * as React from "react"
 import dynamic from "next/dynamic"
 import { cn } from "@/lib/utils"
+import { useReducedMotion } from "@/lib/use-reduced-motion"
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false })
 
@@ -24,9 +25,8 @@ const load = (src: string) => {
 
 export function Scene({ name, className, label }: { name: SceneName; className?: string; label?: string }) {
   const [data, setData] = React.useState<object | null>(null)
-  const [still, setStill] = React.useState(false)
+  const still = useReducedMotion()
   React.useEffect(() => {
-    setStill(window.matchMedia("(prefers-reduced-motion: reduce)").matches)
     let live = true
     load(FILES[name]).then((d) => live && setData(d)).catch(() => {})
     return () => { live = false }

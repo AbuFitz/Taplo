@@ -4,11 +4,10 @@ import type { Metadata } from "next";
 import { InspirationFrame } from "@/features/inspiration/InspirationFrame";
 import { ArrowLink } from "@/features/marketing/Scenes";
 import { MarketingPreview } from "@/features/marketing/MarketingPreview";
-import { DesignPreview } from "@/features/inspiration/DesignPreview";
+import { DesignExperience } from "@/features/inspiration/DesignGallery";
 import { EXAMPLES, bySlug, describe } from "@/features/inspiration/examples";
 import { INDUSTRY_FILTERS } from "@/features/marketing/ia";
 import { relatedExamples } from "@/features/inspiration/related";
-import { UseDesign } from "@/features/inspiration/UseDesign";
 
 export function generateStaticParams() {
   return EXAMPLES.map((e) => ({ slug: e.slug }));
@@ -30,17 +29,21 @@ export const dynamic = "force-dynamic";
 
 export default async function ExamplePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const e = bySlug((await params).slug);
   if (!e) notFound();
+  const query = await searchParams;
+  const param = (key: string) => typeof query[key] === "string" ? query[key] as string : undefined;
   const f = describe(e);
   const industry = INDUSTRY_FILTERS.find((i) => i.id === e.industry)!;
   const others = relatedExamples(e);
   return (
     <InspirationFrame>
-      <div className="ig-detail-page text-foreground [--foreground:#111111] [--background:#ffffff] [--muted:#f3f3f5] [--muted-foreground:#6b6b72]">
+      <div className="ig-detail-page">
         <section className="mx-auto w-full max-w-7xl px-5 pb-8 pt-8 sm:pt-12">
           <nav aria-label="Breadcrumb" className="text-sm text-foreground/60">
             <Link href="/inspiration" className="underline underline-offset-4">
@@ -57,7 +60,7 @@ export default async function ExamplePage({
                 {f.name}
               </h1>
               <p className="mt-3 text-sm text-foreground/60">
-                On the {f.lookName} design ·{" "}
+                Design example ·{" "}
                 <Link
                   href="/inspiration"
                   className="underline underline-offset-4"
@@ -66,12 +69,7 @@ export default async function ExamplePage({
                 </Link>
               </p>
             </div>
-            <UseDesign
-              slug={e.slug}
-              lookId={f.lookId}
-              lookName={f.lookName}
-              overrides={f.overrides}
-            />
+
           </div>
         </section>
 
@@ -79,7 +77,7 @@ export default async function ExamplePage({
           aria-label="Try this design"
           className="mx-auto w-full max-w-7xl px-5 pb-14"
         >
-          <DesignPreview scenario={e.scenario} name={f.name} slug={e.slug} />
+          <DesignExperience scenario={e.scenario} initialDesign={param("design")} initialLook={param("colourway")} initialArrangement={param("arr")} hideLogo={param("logo") === "0"} />
         </section>
 
         <section
