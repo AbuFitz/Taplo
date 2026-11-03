@@ -81,3 +81,12 @@
 .workspace-v2.operational-root .section-setup,.workspace-v2.operational-root .setup-reopen {color:var(--op-text);}
 .workspace-v2.operational-root .ws-sheet-nav .ws-nav-group a:not([aria-current="page"]),.workspace-v2.operational-root .ws-sheet-nav .ws-nav-group a[aria-current="page"] {color:var(--op-text);}
 .workspace-v2.operational-root :is(.ws-first-run h1,.ws-welcome h1) {font-size:clamp(32px,4vw,44px);line-height:1.12;font-weight:750;letter-spacing:-1.5px;}
+.workspace-v2.operational-root .ws-page-intro .portal-page-title {color:var(--op-text);font-weight:750;}
+.workspace-v2.operational-root[data-operational] :is(input:not([type="checkbox"]):not([type="radio"]),textarea):not(:where([data-taplo-theme] *)) {background:var(--op-surface);color:var(--op-text);border-color:var(--op-line);}
+.workspace-v2.operational-root[data-operational] :is(input,textarea):not(:where([data-taplo-theme] *))::placeholder {color:var(--op-muted);opacity:1;}
+.workspace-v2.operational-root[data-operational] [data-slot="button"]:not(:where([data-taplo-theme] *)) {color:var(--op-text);}
+.workspace-v2.operational-root[data-operational] [data-slot="button"][data-variant="default"]:not(:where([data-taplo-theme] *)) {background:var(--op-text);color:var(--op-surface);}
+.workspace-v2.operational-root[data-operational] [data-slot="button"][data-variant="outline"]:not(:where([data-taplo-theme] *)) {background:var(--op-surface);color:var(--op-text);border-color:var(--op-line);}
+.workspace-v2.operational-root[data-operational] [data-slot="button"][data-variant="ghost"]:not(:where([data-taplo-theme] *)) {background:transparent;color:var(--op-text);}
+.workspace-v2.operational-root[data-operational] [data-slot="button"][data-variant="destructive"]:not(:where([data-taplo-theme] *)) {color:var(--destructive);background:color-mix(in srgb,var(--destructive) 12%,var(--op-surface));}
+.workspace-v2.operational-root .ws-action {background:var(--op-text);color:var(--op-surface);}

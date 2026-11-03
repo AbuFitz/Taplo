@@ -20,6 +20,7 @@ export function WorkspaceNav() {
   const path = usePathname();
   const [open, setOpen] = React.useState(false);
   const opener = React.useRef<HTMLButtonElement | null>(null);
+  const closeForNavigation = () => { opener.current = null; setOpen(false); };
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => { opener.current = event.currentTarget; setOpen(true); };
   const groups = [
     { name: "Workspace", items: primary },
@@ -38,7 +39,7 @@ export function WorkspaceNav() {
               key={href}
               href={href}
               aria-current={isActive(href) ? "page" : undefined}
-              onClick={() => setOpen(false)}
+              onClick={closeForNavigation}
             >
               <Icon aria-hidden="true" />
               <span>
@@ -115,19 +116,20 @@ export function WorkspaceNav() {
         title="Your workspace"
         kind="dialog"
         onCloseAutoFocus={(event) => {
+          if (!opener.current) { event.preventDefault(); return; }
           const active = document.activeElement;
           if (!active || active === document.body || active.closest('[role="dialog"]')) { event.preventDefault(); opener.current?.focus(); }
         }}
       >
         <nav className="ws-sheet-nav">
           {links}
-          <Link href="/" onClick={() => setOpen(false)}>Taplo website</Link>
-          <Link href="/dashboard/help" onClick={() => setOpen(false)}>
+          <Link href="/" onClick={closeForNavigation}>Taplo website</Link>
+          <Link href="/dashboard/help" onClick={closeForNavigation}>
             <CircleHelp />
             Help & feedback
             <ChevronRight />
           </Link>
-          <Link href="/dashboard/settings" onClick={() => setOpen(false)}>
+          <Link href="/dashboard/settings" onClick={closeForNavigation}>
             <Settings />
             Settings
             <ChevronRight />
