@@ -15,13 +15,33 @@
         {
           "check": "targeted foundation unit tests",
           "result": "13 passed locally on canonical branch (policy and HTTP boundary)"
+        },
+        {
+          "commit": "9e4656553f4fb39dc68b493ed04145a4b254402d",
+          "check": "TypeScript, lint, 487 unit/PostgreSQL tests and production build",
+          "result": "passed in CI run 41743228789 verify job 126289696949"
         }
       ]
     },
     {
       "id": "P02",
-      "state": "implementation_in_progress_visual_acceptance_pending",
-      "evidence": "../operational-shell-implementation.md"
+      "state": "shared_shell_verified_remaining_screen_adoption_pending",
+      "evidence": "../operational-shell-implementation.md",
+      "actual_checks": [
+        {
+          "commit": "9e4656553f4fb39dc68b493ed04145a4b254402d",
+          "check": "3 operational browser checks: desktop theme persistence/business content preservation/service form and header axe; mobile navigation/overflow/menu focus in light and dark; system theme/keyboard skip",
+          "result": "all passed in CI run 41743228789 verify job 126289696949"
+        },
+        {
+          "check": "deployed desktop inspection and CI mobile captures",
+          "result": "reviewed; discovered contrast/focus/composition defects corrected"
+        },
+        {
+          "check": "full browser regression",
+          "result": "separate job 126290820896 still running; no pass claimed"
+        }
+      ]
     },
     {
       "id": "P03",
