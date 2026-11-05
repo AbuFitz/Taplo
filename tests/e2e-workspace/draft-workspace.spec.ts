@@ -80,6 +80,15 @@ for (const width of [390, 1440]) {
     const draft = await open(page);
     await page.getByTestId("save-draft").click();
     await page.waitForURL("**/dashboard");
+    const studio = page.getByTestId("studio");
+    await expect(studio).toBeVisible();
+    // Arrival animation must settle before assessing contrast or composition.
+    await expect(studio).toHaveCSS("opacity", "1");
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
     const response = await context.request.get("/v1/onboarding/drafts");
     const remote = (await response.json()).draft;
     expect(remote.workspace_snapshot).toEqual(captureWorkspace(draft));
@@ -92,6 +101,7 @@ for (const width of [390, 1440]) {
     await page.screenshot({
       path: info.outputPath("connected-studio.png"),
       fullPage: true,
+      animations: "disabled",
     });
   });
 
@@ -124,6 +134,7 @@ for (const width of [390, 1440]) {
     await page.screenshot({
       path: info.outputPath("draft-conflict.png"),
       fullPage: true,
+      animations: "disabled",
     });
     await conflict
       .getByRole("button", { name: "Use saved draft", exact: true })
