@@ -1,0 +1,24 @@
+# Studio direction and connected quick setup · 5 November 2026
+
+The founder explicitly authorised replacing previous-session design decisions. This pass uses the 3.0 blueprint as product direction, preserving useful records and behaviour rather than preserving old screen composition.
+
+## What this changes
+
+- Rebuilt Today as a frameless task canvas. Date, actual work, reply needs, useful details and the business page have separate hierarchy. Removed decorative dashboard art, redundant Today toolbar and invented identity avatars. Real logos remain unframed and contained without cropping.
+- Desktop uses an operational work column and a contextual details column. Mobile puts first-offer and quick setup before the calendar; the permanent navigation retains all tools without repeating the complete desktop directory. The DOM order matches the responsive reading order.
+- First-run Studio is typography-led, with one setup action and optional synthetic examples. Examples preserve the existing safety check against overwriting a draft.
+- Contact and public-hours editors open on the current task. They retain inputs, validate before commit, focus the relevant field, guard unsaved dismissal, acknowledge actual save failures, restore focus, and protect same-field edits made in another tab. Loading the latest values is explicit.
+- Public hours retain multiple opening periods, reject overlaps/reversed/invalid times, copy the owner's Monday periods to weekdays while preserving weekends, and show/hide their public block explicitly. No default opening times are represented as the merchant's facts.
+- Found and addressed a legacy coupling: booking config may be derived from public opening hours. Before a quick public-hours update, preserve the current booking pattern with a checked persistence result. A failed snapshot prevents the public-hours update. No appointment slots or booking readiness are silently changed by editing public display hours.
+- Today's work uses business-local dates, current pending expiry and real recorded statuses. It handles invalid time zones, updates on time/focus changes, and excludes expired/finished/cancelled work. It does not invent revenue, payment state or order fulfilment.
+- Attention links open the actual enquiry section. Appointment links open that specific appointment; closing removes the selection URL, and missing appointments give a recoverable state without inventing details.
+
+## Contracts and scope
+
+Advances P02 and the usable P03 Studio journey, with studio.today and the quick-edit design principles. The new public-hours editor is deliberately distinct from staff/resource working-time editing. It does **not** close PreviewWorkingHoursImpact, scheduling concurrency, live provider connections, authenticated cloud persistence or the wider P03/P04/P07 contracts. Existing accepted work, scheduling rules, identities, public page design and unrelated user content are retained. No Neon data/schema/roles or provider configuration changed in this pass.
+
+## Verification
+
+Local typecheck, changed-file lint, production build and unit checks are performed against the changed source. Before the final routing additions, the local complete unit suite recorded 522 passed and 67 database-dependent skips; skips do not count as success. Actual CI runs include isolated PostgreSQL.
+
+Added connected browser coverage for 320/390/1440 light/dark composition and contact editing, validation/focus, persistence after reload, dirty dismissal, cross-tab conflict, split hours, preserving the old appointment pattern, public block projection, enquiry routing and appointment deep-link recovery. Existing first-offer and operational-shell cases remain part of verification. Screenshot/a11y results are recorded from the run, not inferred from test authorship. Final rendered composition still receives inspection after the deployed build is ready.

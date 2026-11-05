@@ -73,9 +73,12 @@ export function OwnerBookings({
   const o = useOwner();
   const router = useRouter();
   const [chosenTab, setChosenTab] = React.useState<Tab | null>(null);
+  const requestedSection = params.get("section");
   const tab =
-    params.get("section") === "availability"
-      ? "availability"
+    requestedSection === "availability" ||
+    requestedSection === "enquiries" ||
+    requestedSection === "calendar"
+      ? requestedSection
       : (chosenTab ?? initialSection);
   const setTab = (next: Tab) => {
     setChosenTab(next);
@@ -111,13 +114,21 @@ export function OwnerBookings({
       </p>
     );
   const { ctx, config, state, update } = o;
+  const requestedBooking = params.get("booking");
+  const selectedBooking = requestedBooking
+    ? (state.bookings.find((booking) => booking.id === requestedBooking) ??
+      null)
+    : open;
   const tz = config.timezone;
   const today = localParts(now, tz).date;
   const date = anchor ?? today;
   const staff = ctx.staff;
   const list = state.bookings.filter((b) => who === "all" || b.staffId === who);
   const pendingCount = state.bookings.filter(
-    (b) => b.status === "pending",
+    (b) =>
+      b.status === "pending" &&
+      b.endsAt > now &&
+      (!b.expiresAt || b.expiresAt > now),
   ).length;
   const online = o.records.booking.onlineBookingReady;
   const entitled = o.ed?.vm?.ent.onlineBooking ?? true;
@@ -257,6 +268,12 @@ export function OwnerBookings({
         title="Bookings"
         description="Appointments and availability."
       />
+      {requestedBooking && !selectedBooking ? (
+        <p role="alert" className="mb-4 text-sm text-muted-foreground">
+          That appointment is no longer available. Review your calendar for the
+          latest details.
+        </p>
+      ) : null}
       <div className="grid max-w-6xl gap-4">
         <div
           role="tablist"
@@ -641,12 +658,16 @@ export function OwnerBookings({
       ) : null}
 
       <BookingDetail
-        booking={open}
+        booking={selectedBooking}
         ctx={ctx}
         config={config}
         state={state}
         update={update}
-        onClose={() => setOpen(null)}
+        onClose={() => {
+          setOpen(null);
+          if (requestedBooking)
+            router.replace("/dashboard/bookings", { scroll: false });
+        }}
         notify={say}
       />
 

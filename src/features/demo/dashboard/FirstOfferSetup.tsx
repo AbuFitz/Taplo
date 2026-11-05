@@ -37,7 +37,7 @@ export function FirstOfferSetup() {
   const hasOffer = [
     ...(state.content.services ?? []),
     ...(state.content.products ?? []),
-  ].some((item) => !item.archived);
+  ].some((item) => !item.archived && !item.example);
   if (hasOffer && !open && !saved && !failed) return null;
   // Creative portfolios and vehicle stock retain their richer, dedicated authoring paths.
   if (journey.kind === "photo" || journey.kind === "vehicle") return null;

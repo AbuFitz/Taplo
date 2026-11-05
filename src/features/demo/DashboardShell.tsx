@@ -5,7 +5,11 @@ import { usePathname } from "next/navigation";
 import { workspaceModel } from "./dashboard/workspace-model";
 import { StudioIcons } from "@/features/platform/icons";
 const ArrowUpRight = StudioIcons.external;
-import { OperationalRoot, AppearanceSelect, OperationalLogo } from "@/features/platform/OperationalTheme";
+import {
+  OperationalRoot,
+  AppearanceSelect,
+  OperationalLogo,
+} from "@/features/platform/OperationalTheme";
 import { StudioSkeleton } from "./dashboard/Studio";
 import { RouteSkeleton } from "./dashboard/workspace-navigation";
 import { WorkspaceNav } from "./dashboard/WorkspaceNav";
@@ -34,36 +38,54 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const section = path.split("/")[2] || "overview";
   const editor = section === "page";
-  const terms = workspaceModel(state?.content.identity.industryKey, state?.content.identity.industryLabel).terms;
-  const title = section in terms ? terms[section as keyof typeof terms] : TITLES[section] || "Today";
+  const terms = workspaceModel(
+    state?.content.identity.industryKey,
+    state?.content.identity.industryLabel,
+  ).terms;
+  const title =
+    section in terms
+      ? terms[section as keyof typeof terms]
+      : TITLES[section] || "Today";
   const empty =
     ready && (!state || (!state.onboarded && !state.content.identity.name));
   return (
     <OperationalRoot section={editor ? "editor" : "manage"} route={section}>
-      <a className="studio-skip" href="#studio-content">Skip to content</a>
+      <a className="studio-skip" href="#studio-content">
+        Skip to content
+      </a>
       <header className="studio-header">
-        <Link href="/dashboard" className="studio-brand" aria-label="Taplo home"><OperationalLogo /></Link>
+        <Link
+          href="/dashboard"
+          className="studio-brand"
+          aria-label="Taplo home"
+        >
+          <OperationalLogo />
+        </Link>
         <WorkspaceNav />
         <AppearanceSelect />
       </header>
       <div className="ws-main">
-        <div className="ws-topbar" role="group" aria-label="Page controls">
-          <div>
-            <strong>{title}</strong>
+        {section !== "overview" ? (
+          <div className="ws-topbar" role="group" aria-label="Page controls">
+            <div>
+              <strong>{title}</strong>
+            </div>
+            <div className="ws-topbar-actions">
+              <span className="ws-save-dot">
+                {state?.published ? "Published" : "Draft"}
+              </span>
+              {state?.content.identity.name ? (
+                <Link href="/demo/preview" target="_blank">
+                  View page
+                  <ArrowUpRight aria-hidden="true" />
+                </Link>
+              ) : null}
+            </div>
           </div>
-          <div className="ws-topbar-actions">
-            <span className="ws-save-dot">
-              {state?.published ? "Published" : "Draft"}
-            </span>
-            {state?.content.identity.name ? (
-              <Link href="/demo/preview" target="_blank">
-                View page
-                <ArrowUpRight aria-hidden="true" />
-              </Link>
-            ) : null}
-          </div>
-        </div>
-        <main id="studio-content" tabIndex={-1}
+        ) : null}
+        <main
+          id="studio-content"
+          tabIndex={-1}
           className={`portal-content ws-content ${editor ? "ws-editor-content" : ""}`}
         >
           {!ready ? (

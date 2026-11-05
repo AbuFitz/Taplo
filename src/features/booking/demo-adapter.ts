@@ -43,7 +43,7 @@ export function readConfig(slug: string): SchedulingConfig | null {
   try { const raw = window.localStorage.getItem(CFG(slug)); return raw ? schedulingConfig.parse(JSON.parse(raw)) : null } catch { return null }
 }
 export function writeConfig(slug: string, config: SchedulingConfig) {
-  try { window.localStorage.setItem(CFG(slug), JSON.stringify(config)); window.dispatchEvent(new Event(EVENT)) } catch { /* storage full or blocked */ }
+  try { window.localStorage.setItem(CFG(slug), JSON.stringify(config)); window.dispatchEvent(new Event(EVENT)); return true } catch { return false }
 }
 
 function subscribe(cb: () => void) {

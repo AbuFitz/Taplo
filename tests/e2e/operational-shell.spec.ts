@@ -38,7 +38,7 @@ test("mobile navigation and dialogs remain reachable in both colour schemes", as
   await page.setViewportSize({ width: 390, height: 844 });
   await openSample(page);
   await page.goto("/dashboard");
-  await page.locator(".ws-overview").evaluate(async (element) => { await Promise.all(element.getAnimations().map((animation) => animation.finished)); });
+  await page.getByTestId("studio").evaluate(async (element) => { await Promise.all(element.getAnimations().map((animation) => animation.finished)); });
   for (const theme of ["light", "dark"] as const) {
     await page.getByRole("combobox", { name: "Colour mode" }).selectOption(theme);
     const dock = page.getByRole("navigation", { name: "Studio", exact: true });

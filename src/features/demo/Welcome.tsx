@@ -11,7 +11,7 @@ import {
   toPage,
 } from "@/features/showcase/lab-state";
 import type { Scenario } from "@/features/showcase/content";
-import { StudioArt } from "./dashboard/art/StudioArt";
+import "./dashboard/studio-today.css";
 import { initialState, useDemo } from "./store";
 
 const SAMPLES: {
@@ -105,67 +105,64 @@ export function Welcome() {
     router.push("/dashboard/page");
   };
   return (
-    <div className="ws-first-run" data-testid="first-run">
-      <StudioArt scene="design" className="ws-welcome-art" />
+    <div className="studio-welcome" data-testid="first-run">
+      <p className="studio-eyebrow">Your workspace</p>
       <h1>Welcome to Studio.</h1>
-      <p>
+      <p className="studio-welcome-intro">
         {resumeName
-          ? `Continue setting up ${resumeName}. Your draft is saved.`
-          : "Give your business a home, then make it yours."}
+          ? `Pick up where you left off with ${resumeName}.`
+          : "A place for your business to come together. Start with a page that feels like you."}
       </p>
-      <Link className="ws-action" href="/onboarding">
+      <Link className="studio-button" href="/onboarding">
         {resumeName ? "Continue setup" : "Start setup"}
-        <ArrowRight />
+        <ArrowRight aria-hidden="true" />
       </Link>
-      <div className="ws-start-steps">
+      <ol className="studio-welcome-steps">
         {[
           {
-            title: "Your business",
-            line: "Start with a name and what you do.",
+            title: "Make it yours",
+            line: "Your name, your look and the work you do.",
           },
           {
-            title: "Your page",
-            line: "Choose your content and shape the look.",
+            title: "Add something useful",
+            line: "A service, a product or a way to get in touch.",
           },
           {
-            title: "Your next step",
-            line: "Review the details before sharing.",
+            title: "Share when you’re ready",
+            line: "Review your page. You decide when it goes live.",
           },
         ].map((item, i) => (
-          <section key={item.title}>
-            <span>{i + 1}</span>
+          <li key={item.title}>
+            <span>0{i + 1}</span>
             <h2>{item.title}</h2>
             <p>{item.line}</p>
-          </section>
+          </li>
         ))}
-      </div>
-      <details className="ws-start-examples">
+      </ol>
+      <details className="studio-welcome-examples">
         <summary>
           Explore with a sample business
-          <ArrowRight />
+          <ArrowRight aria-hidden="true" />
         </summary>
-        <p>
-          Fictional business details let you try the tools. They won’t replace
-          an existing draft.
-        </p>
-        <div>
+        <p>Try the tools with fictional details. Your own draft stays yours.</p>
+        <ul>
           {SAMPLES.map((sample) => (
-            <button
-              key={sample.scenario}
-              type="button"
-              onClick={() => load(sample.scenario)}
-            >
-              <strong>{sample.name}</strong>
-              <small>
-                {sample.category}
-                {lookName(sample.scenario)
-                  ? ` · ${lookName(sample.scenario)}`
-                  : ""}
-              </small>
-              <ArrowRight />
-            </button>
+            <li key={sample.scenario}>
+              <button type="button" onClick={() => load(sample.scenario)}>
+                <span>
+                  <strong>{sample.name}</strong>
+                  <small>
+                    {sample.category}
+                    {lookName(sample.scenario)
+                      ? ` · ${lookName(sample.scenario)}`
+                      : ""}
+                  </small>
+                </span>
+                <ArrowRight aria-hidden="true" />
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
       </details>
     </div>
   );
