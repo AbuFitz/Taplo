@@ -98,3 +98,9 @@
 .workspace-v2 [data-testid="editor-panel"] > [role="tablist"] > button[aria-selected="true"] { background: var(--secondary); color: var(--op-text); }
 
 .workspace-v2 .content-list-heading :is(summary, details p) { color: var(--op-muted); }
+
+/* Operational appearance takes precedence over the legacy fixed light tab surfaces. */
+.workspace-v2.operational-root [data-testid="editor-panel"] > [role="tablist"] { background: var(--secondary) !important; }
+.workspace-v2.operational-root [data-testid="editor-panel"] > [role="tablist"] > button[aria-selected="true"] { background: var(--op-surface) !important; color: var(--op-text); }
+.workspace-v2 :is(.mobile-studio-identity span, .mobile-studio-requirements, .mobile-studio-tabs button) { color: var(--op-muted); }
+.workspace-v2 .mobile-studio-tabs button[aria-pressed="true"] { color: var(--op-text); }

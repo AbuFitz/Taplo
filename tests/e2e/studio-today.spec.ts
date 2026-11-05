@@ -674,3 +674,21 @@ for (const width of [390, 1440])
       ),
     ).toEqual([]);
   });
+
+for (const width of [390, 1440])
+  for (const scheme of ["light", "dark"] as const) {
+    test("profile task menu is readable at " + width + " in " + scheme, async ({ page }, info) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.emulateMedia({ colorScheme: scheme, reducedMotion: "reduce" });
+      await prepare(page, "barber");
+      await page.goto("/dashboard/page");
+      await selectPart(page, "header");
+      await expect(page.getByTestId("header-panel")).toBeVisible();
+      const result = await new AxeBuilder({ page })
+        .include('[data-testid="header-panel"], [data-testid="editor-panel"] > [role="tablist"], .mobile-studio-tabs')
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze();
+      expect(result.violations.filter(v => v.impact === "serious" || v.impact === "critical").map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) }))).toEqual([]);
+      await page.screenshot({ path: info.outputPath("profile-menu.png"), fullPage: true });
+    });
+  }

@@ -36,3 +36,8 @@ Meaningful work now also precedes setup in the actual DOM on mobile: actual appo
 
 
 Dealer guidance is keyed to actual vehicle records, so an existing viewing service does not erase the first-stock action. Mixed vehicle/accessory catalogues count their actual record types rather than calling every item a vehicle. The dealer journey fixtures include an existing viewing service and an accessory product to verify both category-specific behaviour and cross-category flexibility.
+
+
+The next editor scan advanced past the Content menu and found low-contrast descriptions in the legacy Profile task menu. Menu descriptions, neutral task surfaces and guidance now use the operational palette with defined fallbacks. Merchant colour-preview figures retain their explicit preview colours. Legacy fixed-light tab backgrounds are overridden in the operational scope, and mobile navigation text uses the same palette. Added scoped Profile-menu and editor-tab contrast checks at phone/desktop widths in both appearances; this does not claim every untouched panel is visually final.
+
+The local execution workspace disconnected during this follow-through. These final text changes were reconstructed from the exact committed source through GitHub, with no changes to unrelated files, database settings or provider credentials. Validation proceeds against the actual committed source in CI; local or visual checks unavailable after the disconnection are not claimed.
