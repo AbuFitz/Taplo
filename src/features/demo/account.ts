@@ -1,5 +1,3 @@
-import { capabilities } from "@/lib/capabilities";
-
 /** Cookie sessions stay server-verified; no authentication tokens are written to browser storage. */
 export type AccountResult =
   | { ok: true }
@@ -13,7 +11,6 @@ export type AccountResult =
         | "rate-limited";
     };
 export const accountsConfigured = () =>
-  capabilities().accounts &&
   process.env.NEXT_PUBLIC_TAPLO_AUTH_PROVIDER === "better-auth";
 
 async function authRequest(
@@ -28,8 +25,14 @@ async function authRequest(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    if (response.ok) return { ok: true };
     const data = await response.json().catch(() => ({}));
+    if (response.ok) {
+      const acknowledged =
+        path === "email-otp/send-verification-otp"
+          ? data.success === true
+          : typeof data.user?.id === "string";
+      return acknowledged ? { ok: true } : { ok: false, reason: "failed" };
+    }
     return {
       ok: false,
       reason:

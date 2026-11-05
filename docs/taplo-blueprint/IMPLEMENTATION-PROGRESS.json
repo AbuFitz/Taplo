@@ -30,6 +30,11 @@
           "commit": "cb3d19585d2e55e0bcaf04327f5d1dfc60ed7f77",
           "check": "CI verify: 500 unit/PostgreSQL tests; type generation/checking, lint, build; 3 operational + 3 appearance + 104 public-profile/control browser checks",
           "result": "passed in run 41977156083 job 127078898149. Actual phone captures inspected. Separate full browser-regression job 127082303349 still running; no overall regression pass claimed."
+        },
+        {
+          "commit": "9711e56be236e8794ad32b659c86d971353bfa59",
+          "check": "Dedicated Neon development and isolated validation databases; migrations 0001\u20130003, restricted runtime role, rollback-only tenant/RLS checks",
+          "result": "Passed on real Neon via connected SQL tools. Direct local Node connectivity blocked by DNS. Preview-only environment configured; deployed app connection probe remains unverified. Production database settings unchanged."
         }
       ]
     },
@@ -65,12 +70,17 @@
           "commit": "cb3d19585d2e55e0bcaf04327f5d1dfc60ed7f77",
           "check": "CI verify: 500 unit/PostgreSQL tests; type generation/checking, lint, build; 3 operational + 3 appearance + 104 public-profile/control browser checks",
           "result": "passed in run 41977156083 job 127078898149. Actual phone captures inspected. Separate full browser-regression job 127082303349 still running; no overall regression pass claimed."
+        },
+        {
+          "commit": "158804fa7dccfd886951a01b4582288980d26950",
+          "check": "Mobile preview resize and validation recovery",
+          "result": "CI run 41985143637: preview resize passed; invalid-link recovery timed out because aria-disabled prevented the intended validation action. Corrected in afa8a84; replacement focused browser step passed in run 41987976395."
         }
       ]
     },
     {
       "id": "P03",
-      "state": "claim_and_first_offer_commands_isolated_checks_passed_frontend_journey_pending",
+      "state": "claim_offer_and_passwordless_source_implemented_canonical_frontend_and_activation_pending",
       "evidence": "../onboarding-claim-implementation.md",
       "actual_checks": [
         {
@@ -91,11 +101,25 @@
           "commit": "cb3d19585d2e55e0bcaf04327f5d1dfc60ed7f77",
           "check": "CI verify: 500 unit/PostgreSQL tests; type generation/checking, lint, build; 3 operational + 3 appearance + 104 public-profile/control browser checks",
           "result": "passed in run 41977156083 job 127078898149. Actual phone captures inspected. Separate full browser-regression job 127082303349 still running; no overall regression pass claimed."
+        },
+        {
+          "commit": "afa8a84a89ce196af5b2de0c94e05b7f8b64c1a0",
+          "check": "Maintained email-code SDK against isolated PostgreSQL; unit suite/typecheck/lint/build and focused browser recovery",
+          "result": "All these steps passed in run 41987976395 job 127113158306. Public/control regression still running when recorded. No live email or production-auth activation is claimed."
+        },
+        {
+          "check": "Canonical cookie-to-person bridge, provider-scoped policy migration and service edit preservation",
+          "result": "Local checkpoint: 472 passed, 67 PostgreSQL cases skipped; typecheck, targeted lint and build passed. Four additional browser-adapter tests subsequently passed. New provider-binding PostgreSQL cases await CI. No new SQL applied to live Neon."
         }
       ],
       "implemented_commands": [
         "ClaimOnboardingDraft",
         "CreateOfferDraft"
+      ],
+      "supporting_evidence": [
+        "../passwordless-auth-implementation.md",
+        "../neon-development-implementation.md",
+        "../mobile-setup-progress-2026-11-05.md"
       ]
     },
     {

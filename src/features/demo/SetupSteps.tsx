@@ -712,22 +712,27 @@ export function ServicesStep({
     update(
       (st) => {
         const kept = (st.content.services ?? []).filter((x) => x.archived);
-        const done = next.filter(validRow).map((r, i) => {
+        const done = next.flatMap((r, i) => {
           const prev = (st.content.services ?? []).find((x) => x.id === r.id);
+          // Keep the last valid record while an existing row is being corrected.
+          // Removing a row still removes it deliberately because it is absent from next.
+          if (!validRow(r)) return prev ? [{ ...prev, sortOrder: i + 1 }] : [];
           const minutes = r.minutes ? Number(r.minutes) : undefined;
-          return normService({
-            ...(prev ?? blankService(i)),
-            id: r.id,
-            name: r.name.trim(),
-            priceMode: r.priceMode ?? "fixed",
-            priceMinor:
-              r.priceMode === "quote" || r.priceMode === "free"
-                ? undefined
-                : Math.round(parseFloat(r.price) * 100),
-            durationMinutes: minutes && minutes > 0 ? minutes : undefined,
-            bookingMode: booking ? "request" : "contact",
-            sortOrder: i + 1,
-          });
+          return [
+            normService({
+              ...(prev ?? blankService(i)),
+              id: r.id,
+              name: r.name.trim(),
+              priceMode: r.priceMode ?? "fixed",
+              priceMinor:
+                r.priceMode === "quote" || r.priceMode === "free"
+                  ? undefined
+                  : Math.round(parseFloat(r.price) * 100),
+              durationMinutes: minutes && minutes > 0 ? minutes : undefined,
+              bookingMode: booking ? "request" : "contact",
+              sortOrder: i + 1,
+            }),
+          ];
         });
         return {
           ...st,
