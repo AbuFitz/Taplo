@@ -365,7 +365,7 @@ export function Onboarding() {
     look: "",
     action: "Add the detail for the choice you made, or choose Get in touch.",
     services:
-      "Finish the service name and price, or choose quote or free pricing.",
+      "Review the highlighted service details, or skip this step for now.",
     plan: "",
     finish: "",
   };
@@ -436,7 +436,6 @@ export function Onboarding() {
           className="sf-primary"
           size="lg"
           onClick={press}
-          aria-disabled={!valid[step]}
           data-ready={valid[step]}
           aria-describedby={
             !valid[step] && showErrors ? "why-disabled" : undefined
@@ -515,7 +514,7 @@ export function Onboarding() {
         <ActionStep showErrors={showErrors} onValidity={setActionValid} />
       ) : null}
       {step === "services" ? (
-        <ServicesStep onValidity={setServicesValid} />
+        <ServicesStep onValidity={setServicesValid} showErrors={showErrors} />
       ) : null}
       {step === "plan" ? <SetupPlans inline /> : null}
       {step === "finish" ? (

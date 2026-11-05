@@ -1,19 +1,71 @@
 import { capabilities } from "@/lib/capabilities";
 
-/**
- * The boundary between setup and an account. No sign-up provider is connected in this build, so every call here says so plainly
- * rather than pretending. When a provider is added, only this file changes: `session()` reports an existing signed-in user (who then
- * skips sign-up) and `connect()` creates or signs in and persists the draft, resolving only once that has really happened.
- */
-export type AccountResult = { ok: true } | { ok: false; reason: "not-configured" | "cancelled" | "failed" };
+/** Cookie sessions stay server-verified; no authentication tokens are written to browser storage. */
+export type AccountResult =
+  | { ok: true }
+  | {
+      ok: false;
+      reason:
+        | "not-configured"
+        | "failed"
+        | "invalid-code"
+        | "expired-code"
+        | "rate-limited";
+    };
+export const accountsConfigured = () =>
+  capabilities().accounts &&
+  process.env.NEXT_PUBLIC_TAPLO_AUTH_PROVIDER === "better-auth";
 
-export const accountsConfigured = (): boolean => capabilities().accounts && Boolean(process.env.NEXT_PUBLIC_TAPLO_AUTH_PROVIDER);
-
-export async function session(): Promise<{ signedIn: boolean }> {
-  return { signedIn: false };
-}
-
-export async function connect(): Promise<AccountResult> {
+async function authRequest(
+  path: string,
+  body: unknown,
+): Promise<AccountResult> {
   if (!accountsConfigured()) return { ok: false, reason: "not-configured" };
-  return { ok: false, reason: "failed" };
+  try {
+    const response = await fetch(`/api/auth/${path}`, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (response.ok) return { ok: true };
+    const data = await response.json().catch(() => ({}));
+    return {
+      ok: false,
+      reason:
+        response.status === 429
+          ? "rate-limited"
+          : data.code === "OTP_EXPIRED"
+            ? "expired-code"
+            : data.code === "INVALID_OTP" || data.code === "TOO_MANY_ATTEMPTS"
+              ? "invalid-code"
+              : "failed",
+    };
+  } catch {
+    return { ok: false, reason: "failed" };
+  }
+}
+export const requestSignInCode = (email: string) =>
+  authRequest("email-otp/send-verification-otp", {
+    email: email.trim(),
+    type: "sign-in",
+  });
+export const verifySignInCode = (email: string, otp: string) =>
+  authRequest("sign-in/email-otp", { email: email.trim(), otp });
+export async function session(): Promise<{ signedIn: boolean }> {
+  if (!accountsConfigured()) return { signedIn: false };
+  try {
+    const response = await fetch("/api/auth/get-session", {
+      credentials: "same-origin",
+      cache: "no-store",
+    });
+    const data = response.ok ? await response.json() : null;
+    return {
+      signedIn: Boolean(
+        data?.session?.id && data?.user?.id && data?.user?.emailVerified,
+      ),
+    };
+  } catch {
+    return { signedIn: false };
+  }
 }

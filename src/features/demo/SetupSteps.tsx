@@ -21,10 +21,16 @@ import {
 } from "@/features/themes/presets/industries";
 import { normalizePhone } from "@/lib/validation";
 import { cn } from "@/lib/utils";
-import { WHEN_UNAVAILABLE } from "@/lib/capabilities";
 import { BusinessIcon } from "./BusinessIcon";
-import { accountsConfigured, connect, session } from "./account";
+import { accountsConfigured, session } from "./account";
+import { EmailCodeAccount } from "./EmailCodeAccount";
 import { setupJourney } from "./setup-journey";
+import {
+  serviceRowErrors,
+  serviceRowEmpty,
+  serviceRowValid as validRow,
+  type SetupServiceRow as Row,
+} from "./setup-service";
 import {
   applyIndustry,
   blankService,
@@ -650,27 +656,16 @@ export function ActionStep({
 
 const toPounds = (minor?: number) =>
   minor === undefined ? "" : (minor / 100).toFixed(minor % 100 === 0 ? 0 : 2);
-interface Row {
-  id: string;
-  name: string;
-  price: string;
-  minutes: string;
-  priceMode?: "fixed" | "from" | "quote" | "free";
-}
-const validRow = (r: Row) =>
-  r.name.trim().length > 0 &&
-  (r.priceMode === "quote" ||
-    r.priceMode === "free" ||
-    /^\d{1,6}(\.\d{1,2})?$/.test(r.price.trim()));
-
 /**
  * Services are the last thing asked because they ask the most. Rows save as soon as they are complete, so the page fills in while the owner types.
  * Nothing is suggested as a price; the examples already on the page stay labelled as examples until the owner adds their own.
  */
 export function ServicesStep({
   onValidity,
+  showErrors = false,
 }: {
   onValidity: (valid: boolean) => void;
+  showErrors?: boolean;
 }) {
   const { state, update } = useDemo();
   const s = state ?? initialState();
@@ -692,11 +687,7 @@ export function ServicesStep({
       : [{ id: newId("svc"), name: "", price: "", minutes: "" }];
   });
   React.useEffect(() => {
-    onValidity(
-      rows.every(
-        (r) => (!r.name.trim() && !r.price && !r.minutes) || validRow(r),
-      ),
-    );
+    onValidity(rows.every((r) => serviceRowEmpty(r) || validRow(r)));
   }, [rows, onValidity]);
   const [focus, setFocus] = React.useState<string | null>(null);
   const [pricing, setPricing] = React.useState<string | null>(null);
@@ -723,9 +714,7 @@ export function ServicesStep({
         const kept = (st.content.services ?? []).filter((x) => x.archived);
         const done = next.filter(validRow).map((r, i) => {
           const prev = (st.content.services ?? []).find((x) => x.id === r.id);
-          const minutes = r.minutes
-            ? Math.min(parseInt(r.minutes, 10), 1440)
-            : undefined;
+          const minutes = r.minutes ? Number(r.minutes) : undefined;
           return normService({
             ...(prev ?? blankService(i)),
             id: r.id,
@@ -795,91 +784,141 @@ export function ServicesStep({
         <span />
       </div>
       <ul className="sf-stack">
-        {rows.map((r, i) => (
-          <li key={r.id} className="sf-service">
-            <label>
-              <span className="sr-only">{`Service ${i + 1} name`}</span>
-              <input
-                className={field}
-                aria-label={`Service ${i + 1} name`}
-                placeholder={`e.g. ${industry.suggestedServices[0]?.name ?? "Initial consultation"}`}
-                maxLength={120}
-                autoFocus={focus === `${r.id}-name`}
-                value={r.name}
-                onChange={(e) => patch(r.id, { name: e.target.value })}
-              />
-            </label>
-            <label>
-              <span className="sr-only">Price</span>
-              <input
-                className={field}
-                aria-label={`Service ${i + 1} price`}
-                inputMode="decimal"
-                disabled={r.priceMode === "quote" || r.priceMode === "free"}
-                placeholder={
-                  r.priceMode === "quote"
-                    ? "Quote"
-                    : r.priceMode === "free"
-                      ? "Free"
-                      : "0"
-                }
-                autoFocus={focus === `${r.id}-price`}
-                value={
-                  r.priceMode === "quote" || r.priceMode === "free"
-                    ? ""
-                    : r.price
-                }
-                onChange={(e) => {
-                  if (/^\d{0,6}(\.\d{0,2})?$/.test(e.target.value))
-                    patch(r.id, { price: e.target.value });
+        {rows.map((r, i) => {
+          const errors =
+            showErrors && !serviceRowEmpty(r) ? serviceRowErrors(r) : {};
+          return (
+            <li key={r.id} className="sf-service">
+              <label>
+                <span className="sr-only">{`Service ${i + 1} name`}</span>
+                <input
+                  className={field}
+                  aria-label={`Service ${i + 1} name`}
+                  aria-invalid={Boolean(errors.name)}
+                  aria-describedby={
+                    errors.name ? `${r.id}-name-error` : undefined
+                  }
+                  placeholder={`e.g. ${industry.suggestedServices[0]?.name ?? "Initial consultation"}`}
+                  maxLength={120}
+                  autoFocus={focus === `${r.id}-name`}
+                  value={r.name}
+                  onChange={(e) => patch(r.id, { name: e.target.value })}
+                />
+                {errors.name ? (
+                  <span
+                    id={`${r.id}-name-error`}
+                    className="sf-error"
+                    role="alert"
+                  >
+                    {errors.name}
+                  </span>
+                ) : null}
+              </label>
+              <label>
+                <span className="sr-only">Price</span>
+                <input
+                  className={field}
+                  aria-label={`Service ${i + 1} price`}
+                  aria-invalid={Boolean(errors.price)}
+                  aria-describedby={
+                    errors.price ? `${r.id}-price-error` : undefined
+                  }
+                  inputMode="decimal"
+                  disabled={r.priceMode === "quote" || r.priceMode === "free"}
+                  placeholder={
+                    r.priceMode === "quote"
+                      ? "Quote"
+                      : r.priceMode === "free"
+                        ? "Free"
+                        : "0"
+                  }
+                  autoFocus={focus === `${r.id}-price`}
+                  value={
+                    r.priceMode === "quote" || r.priceMode === "free"
+                      ? ""
+                      : r.price
+                  }
+                  onChange={(e) => {
+                    if (/^\d{0,6}(\.\d{0,2})?$/.test(e.target.value))
+                      patch(r.id, { price: e.target.value });
+                  }}
+                />
+                {errors.price ? (
+                  <span
+                    id={`${r.id}-price-error`}
+                    className="sf-error"
+                    role="alert"
+                  >
+                    {errors.price}
+                  </span>
+                ) : null}
+              </label>
+              <label className={cn(industry.id === "hospitality" && "hidden")}>
+                <span className="sr-only">Minutes</span>
+                <input
+                  className={field}
+                  aria-label={`Service ${i + 1} minutes`}
+                  aria-invalid={Boolean(errors.minutes)}
+                  aria-describedby={
+                    errors.minutes ? `${r.id}-minutes-error` : undefined
+                  }
+                  inputMode="numeric"
+                  placeholder="30"
+                  value={r.minutes}
+                  onChange={(e) =>
+                    patch(r.id, {
+                      minutes: e.target.value.replace(/\D/g, "").slice(0, 4),
+                    })
+                  }
+                />
+                {errors.minutes ? (
+                  <span
+                    id={`${r.id}-minutes-error`}
+                    className="sf-error"
+                    role="alert"
+                  >
+                    {errors.minutes}
+                  </span>
+                ) : null}
+              </label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="size-11"
+                aria-label={`Remove service ${i + 1}`}
+                disabled={rows.length === 1 && serviceRowEmpty(r)}
+                onClick={() => {
+                  const next = rows.filter((x) => x.id !== r.id);
+                  sync(
+                    next.length
+                      ? next
+                      : [
+                          {
+                            id: newId("svc"),
+                            name: "",
+                            price: "",
+                            minutes: "",
+                          },
+                        ],
+                  );
                 }}
-              />
-            </label>
-            <label className={cn(industry.id === "hospitality" && "hidden")}>
-              <span className="sr-only">Minutes</span>
-              <input
-                className={field}
-                aria-label={`Service ${i + 1} minutes`}
-                inputMode="numeric"
-                placeholder="30"
-                value={r.minutes}
-                onChange={(e) =>
-                  patch(r.id, {
-                    minutes: e.target.value.replace(/\D/g, "").slice(0, 4),
-                  })
-                }
-              />
-            </label>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="size-11"
-              aria-label={`Remove service ${i + 1}`}
-              disabled={rows.length === 1 && !r.name && !r.price}
-              onClick={() => {
-                const next = rows.filter((x) => x.id !== r.id);
-                sync(
-                  next.length
-                    ? next
-                    : [{ id: newId("svc"), name: "", price: "", minutes: "" }],
-                );
-              }}
-            >
-              <Trash2 />
-            </Button>
-            <button
-              type="button"
-              className="sf-link sf-service-more"
-              onClick={() => setPricing(r.id)}
-            >
-              How is it priced?
-              {r.priceMode && r.priceMode !== "fixed"
-                ? ` · ${r.priceMode}`
-                : ""}
-            </button>
-          </li>
-        ))}
+              >
+                <Trash2 />
+              </Button>
+              <button
+                type="button"
+                className="sf-link sf-service-more"
+                onClick={() => setPricing(r.id)}
+              >
+                How is it priced?
+                {r.priceMode && r.priceMode !== "fixed"
+                  ? ` · ${r.priceMode}`
+                  : ""}
+              </button>
+            </li>
+          );
+        })}
       </ul>
       <Overlay
         open={pricing !== null}
@@ -935,21 +974,11 @@ export function ServicesStep({
 
 /* ---------------------------------------------------------------- Finish */
 
-/** Account last. In an environment without accounts the screen says so plainly and offers only a labelled testing route. */
+/** Account last. Sandbox editing stays available without claiming an authenticated account. */
 export function FinishStep({ onStudio }: { onStudio: () => void }) {
   const { state, update } = useDemo();
   const s = state ?? initialState();
   const [signedIn, setSignedIn] = React.useState(false);
-  const [phase, setPhase] = React.useState<"idle" | "connecting" | "done">(
-    "idle",
-  );
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [errors, setErrors] = React.useState<{
-    email?: string;
-    password?: string;
-  }>({});
-  const [failure, setFailure] = React.useState("");
   const [saveFailed, setSaveFailed] = React.useState(false);
   const configured = accountsConfigured();
   React.useEffect(() => {
@@ -967,31 +996,6 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
       else onStudio();
     }, 0);
   };
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const next: { email?: string; password?: string } = {};
-    if (!emailOk(email))
-      next.email = "Enter an email address like name@example.com.";
-    if (password.length < 8) next.password = "Use at least 8 characters.";
-    setErrors(next);
-    setFailure("");
-    if (next.email || next.password) return;
-    setPhase("connecting");
-    const r = await connect();
-    if (r.ok) {
-      setPhase("done");
-      window.setTimeout(toStudio, 900);
-      return;
-    }
-    setPhase("idle");
-    setFailure(
-      r.reason === "cancelled"
-        ? "Sign-up was cancelled. Your draft is still here."
-        : r.reason === "not-configured"
-          ? "We couldn’t create your account. Your draft is safe. Please try again."
-          : "That didn’t work. Your draft is unchanged, so you can try again.",
-    );
-  };
   return (
     <div className="sf-stack" data-testid="finish-step">
       <p className="sf-lede">
@@ -1005,12 +1009,7 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
           <Check aria-hidden="true" /> Saved as a draft. Not published.
         </p>
       ) : null}
-      {phase === "done" ? (
-        <p role="status" className="sf-ok">
-          <Check aria-hidden="true" /> Account connected and draft saved.
-          Opening Studio…
-        </p>
-      ) : signedIn ? (
+      {signedIn ? (
         <div className="sf-sticky">
           <Button
             size="lg"
@@ -1022,48 +1021,7 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
           </Button>
         </div>
       ) : configured ? (
-        <form
-          className="sf-stack"
-          data-testid="account-step"
-          onSubmit={(e) => void submit(e)}
-          noValidate
-        >
-          <TaploInput
-            label="Email"
-            type="email"
-            autoComplete="email"
-            inputMode="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            error={errors.email}
-            aria-invalid={Boolean(errors.email)}
-          />
-          <TaploInput
-            label="Password"
-            type="password"
-            autoComplete="new-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            error={errors.password}
-            aria-invalid={Boolean(errors.password)}
-            hint="At least 8 characters."
-          />
-          <Button
-            size="lg"
-            type="submit"
-            className="sf-primary"
-            disabled={phase === "connecting"}
-          >
-            {phase === "connecting"
-              ? "Creating account…"
-              : "Create account and open Studio"}
-          </Button>
-          {failure ? (
-            <p role="alert" className="sf-error" data-testid="account-failure">
-              {failure}
-            </p>
-          ) : null}
-        </form>
+        <EmailCodeAccount onConnected={toStudio} />
       ) : (
         <div className="sf-testing" data-testid="dev-route">
           <div className="sf-sticky">
@@ -1077,7 +1035,7 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
             </Button>
           </div>
           <p className="sf-help" data-testid="draft-note">
-            {WHEN_UNAVAILABLE.accounts}
+            You can keep editing before you publish.
           </p>
         </div>
       )}

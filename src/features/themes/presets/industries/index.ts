@@ -67,7 +67,7 @@ const RAW: IndustryPreset[] = [
   preset("handyman", "Handyman", "trades", "request", ["Odd jobs", "Flat-pack assembly", "Painting and decorating", "Small repairs"], []),
   preset("pest-control", "Pest control", "trades", "request", ["Inspection", "Treatment", "Prevention plan"], []),
   // Beauty
-  preset("barber", "Barber", "beauty", "instant", ["Haircut", "Skin fade", "Beard trim", "Hot towel shave"], ["hair", "fade"]),
+  preset("barber", "Barber", "beauty", "instant", ["Haircut", "Skin fade", "Beard trim", "Hot towel shave"], ["hair", "fade"], { services: "Services", team: "Barbers" }),
   preset("hairdresser", "Hair salon", "beauty", "instant", ["Cut and finish", "Colour", "Highlights", "Treatment"], ["salon", "stylist"]),
   preset("nails", "Nail technician", "beauty", "instant", ["Gel manicure", "Acrylic set", "Pedicure", "Nail art"], ["manicure"]),
   preset("lashes-brows", "Lashes and brows", "beauty", "instant", ["Lash lift", "Lash extensions", "Brow lamination", "Brow tint"], []),
