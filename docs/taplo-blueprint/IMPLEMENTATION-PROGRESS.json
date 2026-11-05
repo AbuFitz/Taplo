@@ -39,14 +39,14 @@
         },
         {
           "check": "full browser regression",
-          "result": "separate job 126290820896 still running; no pass claimed"
+          "result": "prior run 41743228789 failed: 334 failed, 448 passed, 5 skipped. Shared report contrast fixed and task-navigation tests updated; replacement CI pending."
         }
       ]
     },
     {
       "id": "P03",
-      "state": "pending",
-      "evidence": null
+      "state": "claim_command_implemented_verification_pending_first_offer_journey_pending",
+      "evidence": "../onboarding-claim-implementation.md"
     },
     {
       "id": "P04",
