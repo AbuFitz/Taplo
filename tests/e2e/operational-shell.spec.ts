@@ -29,6 +29,7 @@ test("operational appearance survives navigation and reload without changing the
   expect(formAudit.violations).toEqual([]);
   await form.screenshot({ path: "shots/p02-service-form-dark.png" });
   await form.getByRole("button", { name: "Cancel", exact: true }).click();
+  await expect(form).toBeHidden();
   await page.screenshot({ path: "shots/p02-desktop-dark.png", fullPage: true });
   await page.getByRole("combobox", { name: "Colour mode" }).selectOption("light");
   await page.screenshot({ path: "shots/p02-desktop-light.png", fullPage: true });
