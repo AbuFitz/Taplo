@@ -59,11 +59,16 @@ export function Products() {
   const [saveProblem, setSaveProblem] = React.useState("");
   const [conflict, setConflict] = React.useState(false);
   const [formVersion, setFormVersion] = React.useState(0);
-  const [editingBusiness, setEditingBusiness] = React.useState<string | null>(null);
+  const [openedFromLink, setOpenedFromLink] = React.useState(false);
+  const addButton = React.useRef<HTMLButtonElement>(null);
+  const [editingBusiness, setEditingBusiness] = React.useState<string | null>(
+    null,
+  );
   const editorFields = React.useRef<HTMLDivElement>(null);
   useSetupIntent(
     "new",
     () => {
+      setOpenedFromLink(true);
       setEditingBusiness(c?.identity.slug ?? null);
       const p = blankProduct(
         c?.identity.industryKey === "car-dealer" ? "vehicle" : "product",
@@ -83,6 +88,7 @@ export function Products() {
   const commit = (list: ProductContent[]) =>
     setContent((x) => ({ ...x, products: list }));
   const open = (p: ProductContent, isNew: boolean) => {
+    setOpenedFromLink(false);
     setEditingBusiness(c.identity.slug);
     setBefore(JSON.stringify(p));
     setShowErr(false);
@@ -143,6 +149,7 @@ export function Products() {
         description="Manage the items you sell, recommend or have in stock."
         actions={
           <Button
+            ref={addButton}
             onClick={() =>
               open(
                 blankProduct(
@@ -291,6 +298,12 @@ export function Products() {
         open={editing !== null}
         onOpenChange={(open) => !open && setEditing(null)}
         kind="detail"
+        onCloseAutoFocus={(event) => {
+          if (openedFromLink && addButton.current?.isConnected) {
+            event.preventDefault();
+            addButton.current.focus();
+          }
+        }}
         title={
           editing?.isNew
             ? editing.p.kind === "vehicle"

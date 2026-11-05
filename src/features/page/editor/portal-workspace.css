@@ -96,3 +96,5 @@
 .workspace-v2 [data-testid="editor-panel"] > [role="tablist"] { background: var(--op-surface); }
 .workspace-v2 [data-testid="editor-panel"] > [role="tablist"] > button { color: var(--op-muted); }
 .workspace-v2 [data-testid="editor-panel"] > [role="tablist"] > button[aria-selected="true"] { background: var(--secondary); color: var(--op-text); }
+
+.workspace-v2 .content-list-heading :is(summary, details p) { color: var(--op-muted); }

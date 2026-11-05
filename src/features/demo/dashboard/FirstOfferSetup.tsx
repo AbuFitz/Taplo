@@ -39,8 +39,28 @@ export function FirstOfferSetup() {
     ...(state.content.products ?? []),
   ].some((item) => !item.archived && !item.example);
   if (hasOffer && !open && !saved && !failed) return null;
-  // Creative portfolios and vehicle stock retain their richer, dedicated authoring paths.
-  if (journey.kind === "photo" || journey.kind === "vehicle") return null;
+  // Vehicle details use their dedicated editor, but still need a clear first action in Studio.
+  if (journey.kind === "vehicle")
+    return hasOffer ? null : (
+      <section
+        className="ws-first-offer"
+        aria-labelledby="first-offer-heading"
+        data-testid="first-offer-setup"
+      >
+        <span className="ws-first-offer-kicker">Your next step</span>
+        <h2 id="first-offer-heading">Add your first vehicle.</h2>
+        <p>
+          Start with its name. Add a price, photos and vehicle details as you
+          go.
+        </p>
+        <Link className="ws-action" href="/dashboard/products?new=1">
+          <Plus aria-hidden="true" />
+          Add a vehicle
+        </Link>
+      </section>
+    );
+  // Creative portfolios retain their dedicated authoring path.
+  if (journey.kind === "photo") return null;
   const destination = input.kind === "product" ? "products" : "services";
   const begin = () => {
     setInput((current) => ({

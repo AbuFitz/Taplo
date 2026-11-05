@@ -77,7 +77,7 @@ export function Studio() {
     },
     {
       key: "team",
-      label: "Team",
+      label: model.terms.team,
       detail: "People and public profiles",
       count: facts.team,
       Glyph: Icon.team,
@@ -107,6 +107,236 @@ export function Studio() {
         }).format(at)
       : "Check time zone";
   const next = work.today.length ? work.today : work.upcoming.slice(0, 3);
+
+  const prioritiseWork =
+    work.upcoming.length > 0 ||
+    (productsFirst && actualProducts.length > 0) ||
+    !work.timezone;
+  const setupView = (
+    <aside
+      className="studio-today-secondary"
+      aria-label="Your business page and setup"
+    >
+      <section className="studio-setup" aria-labelledby="studio-setup-heading">
+        <div className="studio-section-heading">
+          <h2 id="studio-setup-heading">The useful details</h2>
+        </div>
+        <p className="studio-section-note">
+          Quick changes here. Full control whenever you need it.
+        </p>
+        <ul>
+          <li>
+            <button
+              type="button"
+              onClick={(event) => openEditor("contact", event)}
+            >
+              <span className="studio-task-indicator" data-done={facts.contact}>
+                {facts.contact ? <Icon.check /> : <span />}
+              </span>
+              <span>
+                <strong>Contact details</strong>
+                <small>
+                  {facts.contact
+                    ? "Review how customers reach you"
+                    : "Add a way to get in touch"}
+                </small>
+              </span>
+              <Icon.next />
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              onClick={(event) => openEditor("hours", event)}
+            >
+              <span
+                className="studio-task-indicator"
+                data-done={facts.hasHours}
+              >
+                {facts.hasHours ? <Icon.check /> : <span />}
+              </span>
+              <span>
+                <strong>Opening hours</strong>
+                <small>
+                  {facts.hasHours
+                    ? "Review your public opening times"
+                    : "Let people know when you’re open"}
+                </small>
+              </span>
+              <Icon.next />
+            </button>
+          </li>
+          <li>
+            <Link href="/dashboard/bookings?section=availability">
+              <span className="studio-task-indicator">
+                <Icon.clock />
+              </span>
+              <span>
+                <strong>Booking availability</strong>
+                <small>Working times, breaks and booking rules</small>
+              </span>
+              <Icon.next />
+            </Link>
+          </li>
+        </ul>
+      </section>
+      <section
+        className="studio-page-status"
+        aria-labelledby="your-page-heading"
+      >
+        <div className="studio-section-heading">
+          <h2 id="your-page-heading">Your page</h2>
+          <span className="studio-page-state">
+            <i />
+            {publicStatus}
+          </span>
+        </div>
+        <div className="studio-business-identity">
+          {s.content.identity.logo ? (
+            <Image
+              src={s.content.identity.logo.src}
+              alt=""
+              width={40}
+              height={40}
+              unoptimized
+            />
+          ) : null}
+          <h3>{s.content.identity.name}</h3>
+        </div>
+        <p className="studio-page-address">
+          {TAPLO_DOMAINS.host}/{s.content.identity.slug}
+        </p>
+        <div className="studio-page-tools">
+          <Link className="studio-button" href="/dashboard/page">
+            Edit your page
+            <Icon.page />
+          </Link>
+          <Link href="/demo/preview" target="_blank">
+            Preview
+            <Icon.external />
+          </Link>
+        </div>
+        <p className="studio-page-note">
+          {missing.length
+            ? missing[0]?.id === "contact"
+              ? "Add a contact method before sharing your page."
+              : `${missing[0]?.label}.`
+            : changed && s.published
+              ? "Review your latest changes before publishing them."
+              : s.published
+                ? "Your published version is ready to share."
+                : "Your draft is ready for a final look. You choose when to publish."}
+        </p>
+        <Link className="studio-inline-link" href="/dashboard/page">
+          Review & publish
+          <Icon.next />
+        </Link>
+      </section>
+      <Link className="studio-help-link" href="/dashboard/help">
+        <Icon.help />
+        <span>
+          Need a hand?<small>Find a guide or get in touch.</small>
+        </span>
+        <Icon.next />
+      </Link>
+    </aside>
+  );
+  const workView = (
+    <>
+      {productsFirst && work.timezone && !work.upcoming.length ? (
+        actualProducts.length ? (
+          <CatalogueWork
+            products={actualProducts}
+            vehicles={s.content.identity.industryKey === "car-dealer"}
+          />
+        ) : null
+      ) : (
+        <section
+          className="studio-work"
+          aria-labelledby="studio-work-heading"
+          data-testid="upcoming-bookings"
+        >
+          <div className="studio-section-heading">
+            <h2 id="studio-work-heading">
+              {work.today.length
+                ? "On the day"
+                : work.upcoming.length
+                  ? "Coming up"
+                  : "Your time"}
+            </h2>
+            <Link href="/dashboard/bookings">
+              Open calendar
+              <Icon.external />
+            </Link>
+          </div>
+          {!work.timezone ? (
+            <div className="studio-quiet-state">
+              <Icon.clock />
+              <h3>Check your business time zone</h3>
+              <p>
+                Choose a valid time zone before reviewing appointment times.
+              </p>
+              <Link href="/dashboard/profile">
+                Review business details
+                <Icon.next />
+              </Link>
+            </div>
+          ) : next.length ? (
+            <ul className="studio-agenda">
+              {next.slice(0, 5).map((booking) => (
+                <li key={booking.id}>
+                  <Link
+                    href={`/dashboard/bookings?booking=${encodeURIComponent(booking.id)}`}
+                  >
+                    <time dateTime={new Date(booking.startsAt).toISOString()}>
+                      {time(booking.startsAt, !work.today.length)}
+                    </time>
+                    <div>
+                      <strong>{booking.serviceName}</strong>
+                      <span>{booking.customer.name}</span>
+                    </div>
+                    <span
+                      className="studio-work-status"
+                      data-pending={booking.status === "pending"}
+                    >
+                      {booking.status === "pending"
+                        ? "Needs a reply"
+                        : "Confirmed"}
+                    </span>
+                    <Icon.next />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="studio-quiet-state">
+              <Icon.bookings />
+              <h3>
+                {productsFirst
+                  ? "Make room for the work you do."
+                  : "Space for your next appointment."}
+              </h3>
+              <p>
+                {productsFirst
+                  ? "Add appointments when they’re part of your business. Your products have their own home."
+                  : "Your upcoming appointments will appear here. Choose your working times when you’re ready."}
+              </p>
+              <Link href="/dashboard/bookings?section=availability">
+                Manage booking availability
+                <Icon.next />
+              </Link>
+            </div>
+          )}
+          {work.today.length && work.upcoming.length > work.today.length ? (
+            <p className="studio-work-following">
+              {work.upcoming.length - work.today.length} more upcoming ·{" "}
+              <Link href="/dashboard/bookings">See your calendar</Link>
+            </p>
+          ) : null}
+        </section>
+      )}
+    </>
+  );
 
   return (
     <div className="studio-today" data-testid="studio">
@@ -162,231 +392,10 @@ export function Studio() {
         <div className="studio-today-start">
           <FirstOfferSetup />
         </div>
-        <aside
-          className="studio-today-secondary"
-          aria-label="Your business page and setup"
-        >
-          <section
-            className="studio-setup"
-            aria-labelledby="studio-setup-heading"
-          >
-            <div className="studio-section-heading">
-              <h2 id="studio-setup-heading">The useful details</h2>
-            </div>
-            <p className="studio-section-note">
-              Quick changes here. Full control whenever you need it.
-            </p>
-            <ul>
-              <li>
-                <button
-                  type="button"
-                  onClick={(event) => openEditor("contact", event)}
-                >
-                  <span
-                    className="studio-task-indicator"
-                    data-done={facts.contact}
-                  >
-                    {facts.contact ? <Icon.check /> : <span />}
-                  </span>
-                  <span>
-                    <strong>Contact details</strong>
-                    <small>
-                      {facts.contact
-                        ? "Review how customers reach you"
-                        : "Add a way to get in touch"}
-                    </small>
-                  </span>
-                  <Icon.next />
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={(event) => openEditor("hours", event)}
-                >
-                  <span
-                    className="studio-task-indicator"
-                    data-done={facts.hasHours}
-                  >
-                    {facts.hasHours ? <Icon.check /> : <span />}
-                  </span>
-                  <span>
-                    <strong>Opening hours</strong>
-                    <small>
-                      {facts.hasHours
-                        ? "Review your public opening times"
-                        : "Let people know when you’re open"}
-                    </small>
-                  </span>
-                  <Icon.next />
-                </button>
-              </li>
-              <li>
-                <Link href="/dashboard/bookings?section=availability">
-                  <span className="studio-task-indicator">
-                    <Icon.clock />
-                  </span>
-                  <span>
-                    <strong>Booking availability</strong>
-                    <small>Working times, breaks and booking rules</small>
-                  </span>
-                  <Icon.next />
-                </Link>
-              </li>
-            </ul>
-          </section>
-          <section
-            className="studio-page-status"
-            aria-labelledby="your-page-heading"
-          >
-            <div className="studio-section-heading">
-              <h2 id="your-page-heading">Your page</h2>
-              <span className="studio-page-state">
-                <i />
-                {publicStatus}
-              </span>
-            </div>
-            <div className="studio-business-identity">
-              {s.content.identity.logo ? (
-                <Image
-                  src={s.content.identity.logo.src}
-                  alt=""
-                  width={40}
-                  height={40}
-                  unoptimized
-                />
-              ) : null}
-              <h3>{s.content.identity.name}</h3>
-            </div>
-            <p className="studio-page-address">
-              {TAPLO_DOMAINS.host}/{s.content.identity.slug}
-            </p>
-            <div className="studio-page-tools">
-              <Link className="studio-button" href="/dashboard/page">
-                Edit your page
-                <Icon.page />
-              </Link>
-              <Link href="/demo/preview" target="_blank">
-                Preview
-                <Icon.external />
-              </Link>
-            </div>
-            <p className="studio-page-note">
-              {missing.length
-                ? missing[0]?.id === "contact"
-                  ? "Add a contact method before sharing your page."
-                  : `${missing[0]?.label}.`
-                : changed && s.published
-                  ? "Review your latest changes before publishing them."
-                  : s.published
-                    ? "Your published version is ready to share."
-                    : "Your draft is ready for a final look. You choose when to publish."}
-            </p>
-            <Link className="studio-inline-link" href="/dashboard/page">
-              Review & publish
-              <Icon.next />
-            </Link>
-          </section>
-          <Link className="studio-help-link" href="/dashboard/help">
-            <Icon.help />
-            <span>
-              Need a hand?<small>Find a guide or get in touch.</small>
-            </span>
-            <Icon.next />
-          </Link>
-        </aside>
-        {productsFirst && work.timezone && !work.upcoming.length ? (
-          actualProducts.length ? (
-            <CatalogueWork
-              products={actualProducts}
-              vehicles={s.content.identity.industryKey === "car-dealer"}
-            />
-          ) : null
-        ) : (
-          <section
-            className="studio-work"
-            aria-labelledby="studio-work-heading"
-            data-testid="upcoming-bookings"
-          >
-            <div className="studio-section-heading">
-              <h2 id="studio-work-heading">
-                {work.today.length
-                  ? "On the day"
-                  : work.upcoming.length
-                    ? "Coming up"
-                    : "Your time"}
-              </h2>
-              <Link href="/dashboard/bookings">
-                Open calendar
-                <Icon.external />
-              </Link>
-            </div>
-            {!work.timezone ? (
-              <div className="studio-quiet-state">
-                <Icon.clock />
-                <h3>Check your business time zone</h3>
-                <p>
-                  Choose a valid time zone before reviewing appointment times.
-                </p>
-                <Link href="/dashboard/profile">
-                  Review business details
-                  <Icon.next />
-                </Link>
-              </div>
-            ) : next.length ? (
-              <ul className="studio-agenda">
-                {next.slice(0, 5).map((booking) => (
-                  <li key={booking.id}>
-                    <Link
-                      href={`/dashboard/bookings?booking=${encodeURIComponent(booking.id)}`}
-                    >
-                      <time dateTime={new Date(booking.startsAt).toISOString()}>
-                        {time(booking.startsAt, !work.today.length)}
-                      </time>
-                      <div>
-                        <strong>{booking.serviceName}</strong>
-                        <span>{booking.customer.name}</span>
-                      </div>
-                      <span
-                        className="studio-work-status"
-                        data-pending={booking.status === "pending"}
-                      >
-                        {booking.status === "pending"
-                          ? "Needs a reply"
-                          : "Confirmed"}
-                      </span>
-                      <Icon.next />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="studio-quiet-state">
-                <Icon.bookings />
-                <h3>
-                  {productsFirst
-                    ? "Make room for the work you do."
-                    : "Space for your next appointment."}
-                </h3>
-                <p>
-                  {productsFirst
-                    ? "Add appointments when they’re part of your business. Your products have their own home."
-                    : "Your upcoming appointments will appear here. Choose your working times when you’re ready."}
-                </p>
-                <Link href="/dashboard/bookings?section=availability">
-                  Manage booking availability
-                  <Icon.next />
-                </Link>
-              </div>
-            )}
-            {work.today.length && work.upcoming.length > work.today.length ? (
-              <p className="studio-work-following">
-                {work.upcoming.length - work.today.length} more upcoming ·{" "}
-                <Link href="/dashboard/bookings">See your calendar</Link>
-              </p>
-            ) : null}
-          </section>
-        )}
+
+        {prioritiseWork ? workView : null}
+        {setupView}
+        {!prioritiseWork ? workView : null}
         <section
           className="studio-catalogue"
           aria-labelledby="studio-catalogue-heading"
@@ -404,7 +413,7 @@ export function Studio() {
                     <strong>{label}</strong>
                     <small>{detail}</small>
                   </span>
-                  <b aria-label={`${count} ${label.toLowerCase()}`}>{count}</b>
+                  <b>{count}</b>
                   <Icon.next />
                 </Link>
               </li>

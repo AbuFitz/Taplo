@@ -22,3 +22,14 @@ Advances P02/P03 Studio composition and catalogue authoring, and the related int
 Added record-merge unit coverage for same-save retry, conflicts, deleted records and retaining unrelated products; connected phone/desktop coverage for catalogue priority, native creation links, validation focus, save failure/retry, concurrent edits and plan contrast. The primary CI job now also exercises the affected editor/discovery accessibility and vertical block ordering surfaces. Test results must be recorded from execution, not inferred from authorship.
 
 This is the current frontend draft adapter, not a server-side commerce transaction. It does not complete cloud draft claiming, authenticated tenant authorisation, stock reservations, Stripe checkout/refunds, native apps, the customer return view or Console. No database configuration, migration or production data is changed here. The complete older regression failure set remains open until its cases are reconciled and executed against the current product direction.
+
+
+## Connected follow-through
+
+The first new browser run caught a genuine dealer gap: the old first-offer component deliberately returned nothing for vehicles, leaving an empty dealer without a useful starting action. Vehicle setup now has its own first-action card linked to the vehicle editor. Manual deployed review confirmed stock emphasis and field-error focus, and found that closing a route-opened creation form returned focus to the document. Route-opened forms now return to the catalogue add action; ordinary Edit buttons keep their own focus restoration. Catalogue counts no longer repeat uncountable navigation labels, and team labels follow the category terminology.
+
+
+The first CI run passed 615 unit/database tests, 25 of 27 connected cases, 3 shell checks, 3 look/navigation checks, 3 mobile recovery checks, 5 of 6 recovery accessibility cases, all 7 vertical-ordering cases and all 104 public contrast/design-control cases. The two connected failures exposed the missing dealer first-action card (fixed in the follow-up). The remaining accessibility finding was the legacy “How it works” disclosure's low-contrast text (also fixed in the follow-up). Recovery browser groups now use separate output directories so a later passing group cannot erase the earlier failing group's evidence before upload. None of these targeted results closes the broader 123-context regression register.
+
+
+Meaningful work now also precedes setup in the actual DOM on mobile: actual appointments, catalogue work or a timezone recovery take priority, while a first-time empty business keeps setup first. Desktop uses the same named grid areas. This is record-driven composition, not a CSS order override that disagrees with keyboard/reading order. Phone catalogue checks verify the work section precedes setup and capture its actual composition.

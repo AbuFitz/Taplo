@@ -306,115 +306,125 @@ test("a second tab cannot silently overwrite contact details", async ({
   await other.close();
 });
 
-test("Today routes enquiries and individual work to the correct task", async ({
-  page,
-}) => {
-  const draft = await prepare(page, "barber", (state) => {
-    state.content.services = [
-      {
-        id: "svc_visit",
-        name: "Consultation",
-        priceMode: "fixed",
-        priceMinor: 2500,
-        currency: "GBP",
-        durationMinutes: 30,
-        delivery: ["premises"],
-        bookingMode: "request",
-        sortOrder: 0,
-        archived: false,
-      },
-    ];
+for (const category of ["barber", "maker"])
+  test(`Today routes actual work for ${category} to the correct task`, async ({
+    page,
+  }) => {
+    const draft = await prepare(page, category, (state) => {
+      if (category === "maker")
+        state.content.products = [
+          { id: "own-cup", name: "Workshop cup", priceMinor: 1200 },
+        ];
+      state.content.services = [
+        {
+          id: "svc_visit",
+          name: "Consultation",
+          priceMode: "fixed",
+          priceMinor: 2500,
+          currency: "GBP",
+          durationMinutes: 30,
+          delivery: ["premises"],
+          bookingMode: "request",
+          sortOrder: 0,
+          archived: false,
+        },
+      ];
+    });
+    const now = Date.now(),
+      start = now + 3600000;
+    const booking = {
+      id: "bk_valid",
+      serviceId: "svc_visit",
+      serviceName: "Consultation",
+      staffId: "",
+      startsAt: start,
+      endsAt: start + 1800000,
+      blockStart: start,
+      blockEnd: start + 1800000,
+      status: "pending",
+      mode: "request",
+      customer: { name: "Riley Demo", email: "riley@example.test" },
+      durationMinutes: 30,
+      priceLabel: "£25",
+      createdAt: now,
+      expiresAt: now + 86400000,
+      idempotencyKey: "synthetic-one",
+      manageToken: "synthetic-only",
+      history: [{ at: now, status: "pending" }],
+    };
+    const state = {
+      bookings: [
+        booking,
+        {
+          ...booking,
+          id: "bk_expired",
+          customer: { name: "Expired request", email: "expired@example.test" },
+          expiresAt: now - 1000,
+        },
+      ],
+      holds: [],
+      enquiries: [
+        {
+          id: "enq_one",
+          name: "Example customer",
+          email: "example@example.test",
+          message: "Could we arrange a consultation?",
+          createdAt: now,
+          status: "new",
+          idempotencyKey: "enquiry-only",
+        },
+      ],
+    };
+    await page.evaluate(
+      ({ slug, value }) =>
+        localStorage.setItem(
+          `taplo.demo.bookings.v1:${slug}`,
+          JSON.stringify(value),
+        ),
+      { slug: draft.content.identity.slug, value: state },
+    );
+    await page.reload();
+    if (category === "maker")
+      await expect(page.getByTestId("catalogue-work")).toHaveCount(0);
+    const attention = page.getByRole("region", {
+      name: "A reply is needed",
+      exact: true,
+    });
+    await expect(
+      attention.getByRole("link", { name: "1 booking request", exact: true }),
+    ).toBeVisible();
+    await attention
+      .getByRole("link", { name: "1 new enquiry", exact: true })
+      .click();
+    await expect(page.getByRole("tab", { name: /^Enquiries/ })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    await expect(
+      page.getByText("Could we arrange a consultation?", { exact: true }),
+    ).toBeVisible();
+    await page.goto("/dashboard");
+    await page
+      .locator(".studio-agenda")
+      .getByRole("link")
+      .filter({ hasText: "Riley Demo" })
+      .click();
+    await expect(page).toHaveURL(/booking=bk_valid/);
+    const detail = page.getByRole("dialog", {
+      name: "Riley Demo",
+      exact: true,
+    });
+    await expect(detail).toBeVisible();
+    await detail.getByRole("button", { name: "Close", exact: true }).click();
+    await expect(detail).not.toBeVisible();
+    await expect(page).not.toHaveURL(/booking=/);
+    await page.goto("/dashboard/bookings?booking=not-available");
+    await expect(
+      page
+        .getByRole("alert")
+        .filter({ hasText: "That appointment is no longer available" }),
+    ).toBeVisible();
   });
-  const now = Date.now(),
-    start = now + 3600000;
-  const booking = {
-    id: "bk_valid",
-    serviceId: "svc_visit",
-    serviceName: "Consultation",
-    staffId: "",
-    startsAt: start,
-    endsAt: start + 1800000,
-    blockStart: start,
-    blockEnd: start + 1800000,
-    status: "pending",
-    mode: "request",
-    customer: { name: "Riley Demo", email: "riley@example.test" },
-    durationMinutes: 30,
-    priceLabel: "£25",
-    createdAt: now,
-    expiresAt: now + 86400000,
-    idempotencyKey: "synthetic-one",
-    manageToken: "synthetic-only",
-    history: [{ at: now, status: "pending" }],
-  };
-  const state = {
-    bookings: [
-      booking,
-      {
-        ...booking,
-        id: "bk_expired",
-        customer: { name: "Expired request", email: "expired@example.test" },
-        expiresAt: now - 1000,
-      },
-    ],
-    holds: [],
-    enquiries: [
-      {
-        id: "enq_one",
-        name: "Example customer",
-        email: "example@example.test",
-        message: "Could we arrange a consultation?",
-        createdAt: now,
-        status: "new",
-        idempotencyKey: "enquiry-only",
-      },
-    ],
-  };
-  await page.evaluate(
-    ({ slug, value }) =>
-      localStorage.setItem(
-        `taplo.demo.bookings.v1:${slug}`,
-        JSON.stringify(value),
-      ),
-    { slug: draft.content.identity.slug, value: state },
-  );
-  await page.reload();
-  const attention = page.getByRole("region", {
-    name: "A reply is needed",
-    exact: true,
-  });
-  await expect(
-    attention.getByRole("link", { name: "1 booking request", exact: true }),
-  ).toBeVisible();
-  await attention
-    .getByRole("link", { name: "1 new enquiry", exact: true })
-    .click();
-  await expect(page.getByRole("tab", { name: /^Enquiries/ })).toHaveAttribute(
-    "aria-selected",
-    "true",
-  );
-  await expect(
-    page.getByText("Could we arrange a consultation?", { exact: true }),
-  ).toBeVisible();
-  await page.goto("/dashboard");
-  await page
-    .locator(".studio-agenda")
-    .getByRole("link")
-    .filter({ hasText: "Riley Demo" })
-    .click();
-  await expect(page).toHaveURL(/booking=bk_valid/);
-  const detail = page.getByRole("dialog", { name: "Riley Demo", exact: true });
-  await expect(detail).toBeVisible();
-  await detail.getByRole("button", { name: "Close", exact: true }).click();
-  await expect(detail).not.toBeVisible();
-  await expect(page).not.toHaveURL(/booking=/);
-  await page.goto("/dashboard/bookings?booking=not-available");
-  await expect(
-    page
-      .getByRole("alert")
-      .filter({ hasText: "That appointment is no longer available" }),
-  ).toBeVisible();
-});
 
 for (const width of [390, 1440]) {
   test(`customer team profile returns focus without invented portraits at ${width}`, async ({
@@ -458,7 +468,7 @@ for (const width of [390, 1440])
   for (const category of ["maker", "car-dealer"]) {
     test(`catalogue-first Studio connects to item setup for ${category} at ${width}`, async ({
       page,
-    }) => {
+    }, info) => {
       await page.setViewportSize({ width, height: 900 });
       await prepare(page, category, (draft) => {
         draft.content.products = [];
@@ -484,6 +494,15 @@ for (const width of [390, 1440])
       await expect(catalogue).not.toContainText("Archived item");
       await expect(catalogue).not.toContainText("Example item");
       await expect(page.getByTestId("upcoming-bookings")).toHaveCount(0);
+      await page.screenshot({
+        path: info.outputPath("catalogue-work.png"),
+        fullPage: true,
+      });
+      const position = await catalogue.boundingBox();
+      const setup = await page
+        .getByRole("complementary", { name: "Your business page and setup" })
+        .boundingBox();
+      if (width === 390) expect(position!.y).toBeLessThan(setup!.y);
       await catalogue
         .getByRole("link", {
           name: category === "car-dealer" ? "Add a vehicle" : "Add a product",
@@ -499,6 +518,12 @@ for (const width of [390, 1440])
         .getByRole("button", { name: "Save product", exact: true })
         .click();
       await expect(dialog.getByLabel("Name", { exact: true })).toBeFocused();
+      await dialog.getByRole("button", { name: "Close", exact: true }).click();
+      await expect(dialog).not.toBeVisible();
+      await expect(
+        page.getByRole("button", { name: "Add item", exact: true }),
+      ).toBeFocused();
+      await page.getByRole("button", { name: "Add item", exact: true }).click();
       await dialog
         .getByLabel("Name", { exact: true })
         .fill("Second owner item");

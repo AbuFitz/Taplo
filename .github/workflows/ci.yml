@@ -59,10 +59,10 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
       - name: Editor and discovery accessibility recovery
-        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/a11y.spec.ts tests/e2e/design-a11y.spec.ts tests/e2e/workbench.spec.ts --grep "editor:|onboarding and|design discovery|Team.*avatars"
+        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/a11y.spec.ts tests/e2e/design-a11y.spec.ts tests/e2e/workbench.spec.ts --grep "editor:|onboarding and|design discovery|Team.*avatars" --output=test-results/accessibility-recovery
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - name: Vertical block ordering recovery
-        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/content.spec.ts --grep "ordering|touch drag"
+        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/content.spec.ts --grep "ordering|touch drag" --output=test-results/ordering-recovery
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
