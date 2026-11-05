@@ -11,7 +11,10 @@ import { FIXTURES } from "../../src/features/themes/fixtures";
 import { captureWorkspace } from "../../src/features/setup/workspace";
 import { upsertDraft, readDraft } from "../../src/server/foundation/drafts";
 import { claimDraft } from "../../src/server/foundation/claim";
-import { readBusinessWorkspace } from "../../src/server/foundation/workspaces";
+import {
+  readBusinessWorkspace,
+  saveBusinessWorkspace,
+} from "../../src/server/foundation/workspaces";
 import { transaction } from "../../src/server/foundation/database";
 
 const owner = {
@@ -393,6 +396,58 @@ describe.skipIf(!TEST_DB_URL)(
         (await readBusinessWorkspace(db, owner, claimed.value.id))
           .workspace_snapshot,
       ).toEqual(raw.workspace_snapshot);
+    });
+    it("saves a claimed owner's complete workspace once across retries and refuses a stale replay", async () => {
+      const token = randomBytes(32).toString("hex");
+      const raw = input();
+      const draft = (await upsertDraft(db, token, raw, "claimed-write-draft123", "req_draft")).value;
+      const business = (await claimDraft(db, owner, token, {
+        draft_id: draft.id, expected_draft_version: draft.version,
+      }, "claimed-write-claim123", "req_claim")).value;
+      const replacement = structuredClone(raw.workspace_snapshot);
+      replacement.page.meta.shareTitle = "Owner's revised page";
+      replacement.progress.setupDrafts = { services: [{ id: "unfinished-price", name: "Next service", price: "12.", minutes: "" }] };
+      const save = { expected_version: 1, workspace_snapshot: replacement };
+      const results = await Promise.all([1, 2].map((n) => saveBusinessWorkspace(
+        db, owner, business.id, save, "claimed-write-save123", `req_save${n}`,
+      )));
+      expect(results.map((result) => result.replayed).sort()).toEqual([false, true]);
+      expect(results[0].value.version).toBe(2);
+      expect(results[0].value.workspace_snapshot).toEqual(replacement);
+      expect((await readBusinessWorkspace(db, owner, business.id)).workspace_snapshot).toEqual(replacement);
+      const receipts = (await db.query("SELECT response FROM taplo.command_receipt WHERE key='claimed-write-save123'")).rows;
+      expect(receipts).toHaveLength(1);
+      expect(receipts[0].response).not.toHaveProperty("workspace_snapshot");
+      const events = (await db.query("SELECT * FROM taplo.event_outbox WHERE business_id=$1 AND event_type='save_business_workspace.v1'", [business.id])).rows;
+      expect(events).toHaveLength(1);
+      const newer = structuredClone(replacement);
+      newer.page.meta.shareTitle = "A newer choice";
+      await saveBusinessWorkspace(db, owner, business.id, { expected_version: 2, workspace_snapshot: newer }, "claimed-write-newer123", "req_newer");
+      await expect(saveBusinessWorkspace(db, owner, business.id, save, "claimed-write-save123", "req_old_replay")).rejects.toMatchObject({ status: 409 });
+      await expect(saveBusinessWorkspace(db, owner, business.id, save, "claimed-write-stale123", "req_stale")).rejects.toMatchObject({ status: 409 });
+      expect((await readBusinessWorkspace(db, owner, business.id)).workspace_snapshot.page.meta.shareTitle).toBe("A newer choice");
+    });
+    it("enforces tenant, role, status and column grants for claimed writes", async () => {
+      const token = randomBytes(32).toString("hex");
+      const raw = input();
+      const draft = (await upsertDraft(db, token, raw, "claimed-roles-draft123", "req_draft")).value;
+      const business = (await claimDraft(db, owner, token, {
+        draft_id: draft.id, expected_draft_version: draft.version,
+      }, "claimed-roles-claim123", "req_claim")).value;
+      const payload = { expected_version: 1, workspace_snapshot: raw.workspace_snapshot };
+      await expect(saveBusinessWorkspace(db, other, business.id, payload, "claimed-roles-foreign123", "req_foreign")).rejects.toMatchObject({ status: 404 });
+      await expect(saveBusinessWorkspace(db, { ...owner, audience: "customer" }, business.id, payload, "claimed-roles-customer123", "req_customer")).rejects.toMatchObject({ status: 403 });
+      await db.query("UPDATE taplo.membership SET role='practitioner' WHERE business_id=$1 AND user_id=$2", [business.id, owner.id]);
+      await expect(saveBusinessWorkspace(db, owner, business.id, payload, "claimed-roles-practitioner123", "req_practitioner")).rejects.toMatchObject({ status: 403 });
+      await db.query("UPDATE taplo.membership SET role='manager' WHERE business_id=$1 AND user_id=$2", [business.id, owner.id]);
+      const result = await saveBusinessWorkspace(db, owner, business.id, payload, "claimed-roles-manager123", "req_manager");
+      expect(result.value.version).toBe(2);
+      await db.query("UPDATE taplo.membership SET status='revoked' WHERE business_id=$1 AND user_id=$2", [business.id, owner.id]);
+      await expect(saveBusinessWorkspace(db, owner, business.id, payload, "claimed-roles-revoked123", "req_revoked")).rejects.toMatchObject({ status: 404 });
+      await db.query("UPDATE taplo.membership SET status='active' WHERE business_id=$1 AND user_id=$2", [business.id, owner.id]);
+      await db.query("UPDATE taplo.business SET status='closing' WHERE id=$1", [business.id]);
+      await expect(saveBusinessWorkspace(db, owner, business.id, payload, "claimed-roles-closing123", "req_closing")).rejects.toMatchObject({ status: 422 });
+      expect((await db.query("SELECT has_column_privilege('taplo_app','taplo.business_workspace','source_draft_id','UPDATE') AS source,has_column_privilege('taplo_app','taplo.business_workspace','snapshot','UPDATE') AS snapshot")).rows[0]).toEqual({ source: false, snapshot: true });
     });
   },
 );

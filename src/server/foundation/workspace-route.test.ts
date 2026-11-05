@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
-import { GET } from "@/app/v1/businesses/[business_id]/workspace/route";
+import { GET, PUT } from "@/app/v1/businesses/[business_id]/workspace/route";
 import { CommandError } from "./errors";
 
-const mocks = vi.hoisted(() => ({ db: vi.fn(), principal: vi.fn(), workspace: vi.fn() }));
+const mocks = vi.hoisted(() => ({ db: vi.fn(), principal: vi.fn(), workspace: vi.fn(), save: vi.fn() }));
 vi.mock("./database", () => ({ database: mocks.db }));
 vi.mock("@/server/auth/principal", () => ({ verifyRequestPrincipal: mocks.principal }));
-vi.mock("./workspaces", () => ({ readBusinessWorkspace: mocks.workspace }));
+vi.mock("./workspaces", () => ({ readBusinessWorkspace: mocks.workspace, saveBusinessWorkspace: mocks.save }));
 afterEach(() => { vi.unstubAllEnvs(); vi.resetAllMocks(); });
 const context = () => ({ params: Promise.resolve({ business_id: "biz_workspace123" }) });
 
@@ -36,5 +36,31 @@ describe("private workspace HTTP projection", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("Cache-Control")).toBe("no-store"); expect(response.headers.get("ETag")).toBe('"2"');
     expect(mocks.workspace).toHaveBeenCalledWith("isolated-db", principal, "biz_workspace123");
+  });
+});
+
+describe("private workspace HTTP writes", () => {
+  const request = (headers: Record<string, string> = {}) => new NextRequest(
+    "https://taplo.test/v1/businesses/biz_workspace123/workspace",
+    { method: "PUT", headers: { Origin: "https://taplo.test", "Content-Type": "application/json", "If-Match": '"1"', "Idempotency-Key": "workspace-save123", ...headers }, body: JSON.stringify({ expected_version: 1, workspace_snapshot: { schema_version: 1 } }) },
+  );
+  it("rejects foreign origin and stale headers before any mutation", async () => {
+    vi.stubEnv("TAPLO_SERVER_DRAFTS", "1");
+    expect((await PUT(request({ Origin: "https://elsewhere.test" }), context())).status).toBe(403);
+    expect((await PUT(request({ "If-Match": '"2"' }), context())).status).toBe(409);
+    expect(mocks.db).not.toHaveBeenCalled();
+    expect(mocks.save).not.toHaveBeenCalled();
+  });
+  it("sends the bounded body to the verified merchant and returns an uncached version", async () => {
+    vi.stubEnv("TAPLO_SERVER_DRAFTS", "1");
+    const principal = { id: "usr_verified123", audience: "merchant", assurance: "aal1" };
+    mocks.db.mockReturnValue("isolated-db");
+    mocks.principal.mockResolvedValue(principal);
+    mocks.save.mockResolvedValue({ value: { business_id: "biz_workspace123", version: 2 }, replayed: false });
+    const response = await PUT(request(), context());
+    expect(response.status).toBe(200);
+    expect(response.headers.get("ETag")).toBe('"2"');
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
+    expect(mocks.save).toHaveBeenCalledWith("isolated-db", principal, "biz_workspace123", { expected_version: 1, workspace_snapshot: { schema_version: 1 } }, "workspace-save123", expect.any(String));
   });
 });

@@ -3506,6 +3506,23 @@
         "page",
         "progress"
       ]
+    },
+    "SaveBusinessWorkspace": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "workspace_snapshot": {
+          "$ref": "#/$defs/PrivateWorkspaceSnapshot"
+        }
+      },
+      "required": [
+        "expected_version",
+        "workspace_snapshot"
+      ]
     }
   }
 }

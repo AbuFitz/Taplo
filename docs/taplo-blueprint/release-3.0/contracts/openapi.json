@@ -7879,6 +7879,84 @@
         "x-permission": "business.profile.manage",
         "x-guards": "active server-verified merchant; active own-tenant owner/manager; no anonymous draft-cookie authentication; no shared cache",
         "x-events": []
+      },
+      "put": {
+        "operationId": "SaveBusinessWorkspace",
+        "description": "Versioned private authoring document only; never publishes or changes operational offer authority.",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "business_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "./inputs.schema.json#/$defs/ID"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[1-9][0-9]*\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 160
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./inputs.schema.json#/$defs/SaveBusinessWorkspace"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Private saved version with no-store and ETag",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./records.schema.json#/$defs/BusinessWorkspace"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stale or conflicting version, read current workspace and reconcile"
+          },
+          "default": {
+            "description": "Typed safe error envelope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-permission": "business.profile.manage",
+        "x-guards": "active merchant owner/manager; exact If-Match and version; serialized writes; no cross-site write; receipt projection excludes private snapshot",
+        "x-events": [
+          "save_business_workspace.v1"
+        ]
       }
     }
   },
