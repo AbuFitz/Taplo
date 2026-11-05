@@ -60,33 +60,6 @@ export function Studio() {
   const actualProducts = (s.content.products ?? [])
     .map(normProduct)
     .filter((p) => !p.archived && !p.example);
-  const catalogue = [
-    {
-      key: "services",
-      label: model.terms.services,
-      detail: "Prices, durations and service details",
-      count: facts.services,
-      Glyph: Icon.services,
-    },
-    {
-      key: "products",
-      label: model.terms.products,
-      detail: "Items, photos and availability",
-      count: facts.products,
-      Glyph: Icon.products,
-    },
-    {
-      key: "team",
-      label: model.terms.team,
-      detail: "People and public profiles",
-      count: facts.team,
-      Glyph: Icon.team,
-    },
-  ].sort((a, b) =>
-    productsFirst
-      ? Number(b.key === "products") - Number(a.key === "products")
-      : 0,
-  );
   const openEditor = (
     mode: BusinessEdit,
     event: React.MouseEvent<HTMLButtonElement>,
@@ -108,10 +81,6 @@ export function Studio() {
       : "Check time zone";
   const next = work.today.length ? work.today : work.upcoming.slice(0, 3);
 
-  const prioritiseWork =
-    work.upcoming.length > 0 ||
-    (productsFirst && actualProducts.length > 0) ||
-    !work.timezone;
   const setupView = (
     <aside
       className="studio-today-secondary"
@@ -215,18 +184,18 @@ export function Studio() {
               <Icon.next />
             </button>
           </li>
-          <li>
-            <Link href="/dashboard/bookings?section=availability">
-              <span className="studio-task-indicator">
-                <Icon.clock />
-              </span>
-              <span>
-                <strong>Booking availability</strong>
-                <small>Working times, breaks and booking rules</small>
-              </span>
-              <Icon.next />
-            </Link>
-          </li>
+          {(!productsFirst || facts.services > 0) ? (
+            <li>
+              <Link href="/dashboard/bookings?section=availability">
+                <span className="studio-task-indicator"><Icon.clock /></span>
+                <span>
+                  <strong>Booking availability</strong>
+                  <small>Working times, breaks and booking rules</small>
+                </span>
+                <Icon.next />
+              </Link>
+            </li>
+          ) : null}
         </ul>
       </section>
       <Link className="studio-help-link" href="/dashboard/help">
@@ -377,33 +346,8 @@ export function Studio() {
           <FirstOfferSetup />
         </div>
 
-        {prioritiseWork ? workView : null}
+        {workView}
         {setupView}
-        {!prioritiseWork ? workView : null}
-        <section
-          className="studio-catalogue"
-          aria-labelledby="studio-catalogue-heading"
-        >
-          <div className="studio-section-heading">
-            <h2 id="studio-catalogue-heading">Your business</h2>
-            <span>Keep the essentials in reach</span>
-          </div>
-          <ul>
-            {catalogue.map(({ key, label, detail, count, Glyph }) => (
-              <li key={key}>
-                <Link href={`/dashboard/${key}`}>
-                  <Glyph />
-                  <span>
-                    <strong>{label}</strong>
-                    <small>{detail}</small>
-                  </span>
-                  <b>{count}</b>
-                  <Icon.next />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
       </div>
       <p className="studio-save-notice" role="status">
         {notice}
