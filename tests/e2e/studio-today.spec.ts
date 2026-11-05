@@ -1,6 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { initialState, type DemoState } from "../../src/features/demo/store";
+import { selectPart } from "./helpers";
 import { applyIndustry, setName } from "../../src/features/demo/actions";
 
 async function prepare(
@@ -191,6 +192,18 @@ for (const width of [390, 1440]) {
     await page.goto("/demo/preview");
     await expect(page.locator('[data-widget="hours"]')).toContainText("10:00");
     await expect(page.locator('[data-widget="hours"]')).toContainText("19:00");
+    await page.goto("/dashboard/page");
+    await selectPart(page, "details");
+    await page.getByText("Location and opening hours", { exact: true }).click();
+    const publicHours = page.getByRole("definition").filter({ hasText: "19:00" });
+    await expect(publicHours).toHaveCount(5);
+    await page.getByRole("button", { name: "Edit opening hours", exact: true }).click();
+    const reopened = page.getByRole("dialog", { name: "Your opening hours", exact: true });
+    await expect(reopened.getByLabel("Monday period 2 closes", { exact: true })).toHaveValue("19:00");
+    await expect(reopened.getByLabel("Sunday open", { exact: true })).not.toBeChecked();
+    await reopened.getByRole("button", { name: "Close", exact: true }).click();
+    await expect(page.getByRole("button", { name: "Edit opening hours", exact: true })).toBeFocused();
+
   });
 }
 

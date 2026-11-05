@@ -24,6 +24,8 @@ import {
   type HoursDay,
 } from "./quick-business";
 
+import "./quick-business.css";
+
 export type BusinessEdit = "contact" | "hours";
 export function QuickBusinessEditor({
   mode,

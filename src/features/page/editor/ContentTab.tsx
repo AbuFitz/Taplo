@@ -3,7 +3,6 @@
 import * as React from "react"
 import { Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { TaploInput } from "@/components/taplo/taplo-input"
@@ -14,6 +13,8 @@ import { Segmented } from "./controls"
 import { prepareImage } from "./image"
 import type { Editor } from "./useEditor"
 import { SocialLinksEditor } from "./SocialLinksEditor"
+import { QuickBusinessEditor } from "@/features/demo/dashboard/QuickBusinessEditor"
+import { openingPeriods } from "../widgets/HoursClient"
 
 const LOCATION_LABEL = { premises: "At a location", service_area: "At customers’ locations", online: "Online only" } as const
 const DAYS = [["mon", "Monday"], ["tue", "Tuesday"], ["wed", "Wednesday"], ["thu", "Thursday"], ["fri", "Friday"], ["sat", "Saturday"], ["sun", "Sunday"]] as const
@@ -38,17 +39,9 @@ export function ProfileSections({ ed, only, identityOpen = true }: { ed: Editor;
   const gallery = c.gallery ?? []
   const hours = c.hours ?? []
 
-  const setHours = (day: string, patch: { open?: boolean; opens?: string; closes?: string }) =>
-    set((x) => {
-      const list = [...(x.hours ?? [])]
-      const i = list.findIndex((h) => h.day === day)
-      if (patch.open === false) return { ...x, hours: list.filter((h) => h.day !== day) }
-      const cur = i >= 0 ? list[i]! : { day: day as "mon", opens: "09:00", closes: "17:00" }
-      const next = { ...cur, opens: patch.opens ?? cur.opens ?? "09:00", closes: patch.closes ?? cur.closes ?? "17:00" }
-      if (i >= 0) list[i] = next
-      else list.push(next)
-      return { ...x, hours: list }
-    }, `hours:${day}`)
+  const [editingHours, setEditingHours] = React.useState(false)
+  const [hoursNotice, setHoursNotice] = React.useState("")
+  const hoursTrigger = React.useRef<HTMLButtonElement>(null)
 
   async function addPhotos(files: FileList | null) {
     if (!files?.length) return
@@ -91,23 +84,19 @@ export function ProfileSections({ ed, only, identityOpen = true }: { ed: Editor;
         <TaploInput label={c.location.mode === "service_area" ? "Areas you cover (comma separated)" : "Town or area"} value={c.location.locality ?? ""} maxLength={120} onChange={(e) => set((x) => ({ ...x, location: { ...x.location, locality: e.target.value || undefined } }), "loc")} />
         {c.location.mode === "premises" ? <TaploInput label="Street address (optional)" value={c.location.addressLine ?? ""} maxLength={240} onChange={(e) => set((x) => ({ ...x, location: { ...x.location, addressLine: e.target.value || undefined } }), "addr")} /> : null}
         <UrlField label="Directions link (optional)" value={c.location.directionsUrl} onCommit={(v) => set((x) => ({ ...x, location: { ...x.location, directionsUrl: v } }), "dir")} />
-        <fieldset className="grid gap-1.5">
-          <legend className="mb-1 text-sm font-medium">Opening hours</legend>
-          {DAYS.map(([d, name]) => {
-            const h = hours.find((x) => x.day === d)
-            return (
-              <div key={d} className="grid min-h-11 grid-cols-[6.5rem_1fr] items-center gap-2 sm:grid-cols-[7rem_1fr_1fr_auto]">
-                <label className="flex items-center gap-2 text-sm"><Checkbox checked={Boolean(h)} onCheckedChange={(v) => setHours(d, { open: v === true })} aria-label={`${name} open`} />{name}</label>
-                {h ? (
-                  <>
-                    <input type="time" aria-label={`${name} opens`} value={h.opens ?? "09:00"} onChange={(e) => setHours(d, { opens: e.target.value })} className="h-10 rounded-lg border bg-transparent px-2 text-sm" />
-                    <input type="time" aria-label={`${name} closes`} value={h.closes ?? "17:00"} onChange={(e) => setHours(d, { closes: e.target.value })} className="h-10 rounded-lg border bg-transparent px-2 text-sm" />
-                  </>
-                ) : <span className="text-sm text-muted-foreground sm:col-span-3">Closed</span>}
-              </div>
-            )
-          })}
-        </fieldset>
+        <div className="grid gap-3">
+          <h3 className="text-sm font-medium">Public opening hours</h3>
+          <dl className="grid gap-2 text-sm" aria-label="Public opening hours">
+            {DAYS.map(([day, name]) => {
+              const periods = openingPeriods(hours, day)
+              return <div key={day} className="flex items-start justify-between gap-3"><dt>{name}</dt><dd className="text-right text-muted-foreground">{periods.length ? periods.map((period, index) => <React.Fragment key={period.opens}>{index ? <br /> : null}{period.opens} to {period.closes}</React.Fragment>) : "Closed"}</dd></div>
+            })}
+          </dl>
+          <Button type="button" variant="outline" ref={hoursTrigger} className="min-h-11 justify-self-start" onClick={() => setEditingHours(true)}>Edit opening hours</Button>
+          <p className="text-xs text-muted-foreground">Public opening times stay separate from appointment availability.</p>
+          <p role="status" className="text-xs text-muted-foreground">{hoursNotice}</p>
+        </div>
+        {editingHours ? <QuickBusinessEditor mode="hours" initial={ed.state} onClose={() => setEditingHours(false)} onSaved={() => setHoursNotice("Opening hours updated.")} restoreFocus={() => { const trigger = hoursTrigger.current; if (!trigger?.isConnected) return false; trigger.focus(); return true }} /> : null}
       </Section>
 
       <Section title="Credentials and questions">

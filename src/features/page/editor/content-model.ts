@@ -505,7 +505,7 @@ export function summarise(
         summary = r.location.locality ?? "";
         break;
       case "hours": {
-        const open = r.hours.filter((h) => h.opens).length;
+        const open = new Set(r.hours.filter((h) => h.opens && h.closes && h.opens < h.closes).map((h) => h.day)).size;
         summary = open
           ? `Open ${open} ${open === 1 ? "day" : "days"} a week`
           : "";

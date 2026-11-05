@@ -1,0 +1,185 @@
+/* Quick editors share a floating neutral surface; a merchant's theme never colours operational facts. */
+.workspace-v2 .studio-quick-dialog {
+  width: min(600px, calc(100vw - 32px));
+  background: var(--op-surface);
+  color: var(--op-text);
+}
+.workspace-v2 .studio-quick-dialog > header {
+  padding: 24px 24px 16px;
+  border-color: var(--op-line);
+}
+.workspace-v2 .studio-quick-dialog [data-overlay-body] {
+  padding: 24px;
+}
+.workspace-v2 .studio-quick-dialog > footer {
+  padding: 16px 24px max(16px, env(safe-area-inset-bottom));
+  background: var(--op-surface);
+  border-color: var(--op-line);
+}
+.workspace-v2 .studio-quick-form {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.workspace-v2 .studio-quick-form > div > label {
+  font-size: 13px;
+}
+.workspace-v2 .studio-quick-hint {
+  margin: 0;
+  color: var(--op-muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.workspace-v2 .studio-quick-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.workspace-v2 .studio-quick-footer a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.workspace-v2 .studio-quick-error {
+  background: var(--secondary);
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.workspace-v2 .studio-quick-error button {
+  min-height: 44px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.workspace-v2 .studio-hours-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+}
+.workspace-v2 .studio-hours-intro > span {
+  color: var(--op-muted);
+}
+.workspace-v2 .studio-hours-intro button {
+  min-height: 44px;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.workspace-v2 .studio-hours-intro button:disabled {
+  opacity: 0.5;
+  cursor: default;
+  text-decoration: none;
+}
+.workspace-v2 .studio-hours-list {
+  display: grid;
+}
+.workspace-v2 .studio-hours-day {
+  border: 0;
+  border-top: 1px solid var(--op-line);
+  margin: 0;
+  padding: 12px 0;
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.workspace-v2 .studio-hours-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.workspace-v2 .studio-hours-toggle input,
+.workspace-v2 .studio-hours-display input {
+  accent-color: var(--op-text);
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+.workspace-v2 .studio-hours-toggle small {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--op-muted);
+}
+.workspace-v2 .studio-hours-times {
+  display: grid;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr) 12px minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+}
+.workspace-v2 .studio-hours-times > span {
+  padding-top: 36px;
+  font-size: 13px;
+  color: var(--op-muted);
+}
+.workspace-v2 .studio-hours-times input {
+  width: 100%;
+  min-width: 0;
+}
+.workspace-v2 .studio-hours-times label {
+  font-size: 12px;
+}
+.workspace-v2 .studio-hours-display {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  padding-top: 12px;
+  cursor: pointer;
+}
+.workspace-v2 .studio-hours-display small {
+  display: block;
+  font-size: 12px;
+  color: var(--op-muted);
+  margin-top: 6px;
+}
+@media (max-width: 480px) {
+  .workspace-v2 .studio-quick-dialog {
+    width: 100%;
+    border-radius: 28px 28px 0 0;
+  }
+  .workspace-v2 .studio-quick-dialog > header {
+    padding: 20px 20px 14px;
+  }
+  .workspace-v2 .studio-quick-dialog [data-overlay-body] {
+    padding: 20px;
+  }
+  .workspace-v2 .studio-quick-dialog > footer {
+    padding-inline: 20px;
+  }
+  .workspace-v2 .studio-quick-footer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+  .workspace-v2 .studio-quick-footer a {
+    justify-content: center;
+  }
+}
+.workspace-v2 .studio-hours-extra {
+  padding-top: 12px;
+  border-top: 1px dashed var(--op-line);
+}
+.workspace-v2 .studio-hours-extra > button,
+.workspace-v2 .studio-hours-add {
+  justify-self: start;
+  min-height: 44px;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
