@@ -47,26 +47,27 @@ export function TeamMembers({ members, variant: chosen, ctx }: { members: TeamMe
   // Portrait cards need portraits. With none supplied, a wall of identical silhouettes says "unfinished", so people are listed instead.
   const variant = (chosen === "swipe" || chosen === "grid") && !members.some((m) => m.photo) ? "list" : chosen
   const [profile, setProfile] = React.useState<string | null>(null)
+  const opener = React.useRef<HTMLButtonElement | null>(null)
   const [book, setBook] = React.useState<{ staffId: string } | null>(null)
   const member = members.find((m) => m.id === profile) ?? null
   const canBook = (m: TeamMemberData) => Boolean(ctx && m.bookable && ctx.staff.some((s) => s.id === m.id) && m.services.some((s) => ctx.services.find((x) => x.id === s.id && isOnlineBookable(x))))
 
   const card = (m: TeamMemberData, ratio = "4 / 5") => (
     <article className="tp-team-card" data-testid="team-card">
-      <button type="button" className="tp-team-open" onClick={() => setProfile(m.id)}>
+      <button type="button" className="tp-team-open" onClick={(event) => { opener.current = event.currentTarget; setProfile(m.id) }}>
         <Portrait m={m} ratio={ratio} />
         <span className="tp-team-name">{m.name}</span>
         {m.role ? <span className="tp-team-role">{m.role}</span> : null}
         {m.summary ? <span className="tp-team-summary">{m.summary}</span> : null}
         <span className="sr-only">. View profile</span>
       </button>
-      {canBook(m) ? <button type="button" className="tp-btn" data-variant="compact" onClick={() => setBook({ staffId: m.id })}><span className="tp-btn-main"><span className="tp-btn-label">Book with {first(m.name)}</span></span><ArrowRight aria-hidden="true" className="size-4" /></button> : null}
+      {canBook(m) ? <button type="button" className="tp-btn" data-variant="compact" onClick={(event) => { opener.current = event.currentTarget; setBook({ staffId: m.id }) }}><span className="tp-btn-main"><span className="tp-btn-label">Book with {first(m.name)}</span></span><ArrowRight aria-hidden="true" className="size-4" /></button> : null}
     </article>
   )
 
   const row = (m: TeamMemberData) => (
     <li key={m.id} className="tp-team-row" data-testid="team-card">
-      <button type="button" className="tp-team-row-open" onClick={() => setProfile(m.id)}>
+      <button type="button" className="tp-team-row-open" onClick={(event) => { opener.current = event.currentTarget; setProfile(m.id) }}>
         <Portrait m={m} className="tp-portrait-sm" ratio="1 / 1" sizes="56px" />
         <span className="min-w-0 text-left"><span className="tp-team-name block">{m.name}</span>{m.role ? <span className="tp-team-role block">{m.role}</span> : null}{m.summary ? <span className="tp-team-summary block">{m.summary}</span> : null}<span className="sr-only">. View profile</span></span>
         <ArrowRight aria-hidden="true" className="size-4 shrink-0 opacity-60" />
@@ -78,13 +79,13 @@ export function TeamMembers({ members, variant: chosen, ctx }: { members: TeamMe
     <>
       {variant === "swipe" ? <Collection label="Team" compact>{members.map((m) => <React.Fragment key={m.id}>{card(m, "1 / 1")}</React.Fragment>)}</Collection>
         : variant === "grid" ? <ul className="tp-team-grid">{members.map((m) => <li key={m.id}>{card(m)}</li>)}</ul>
-        : variant === "avatars" ? <ul className="tp-team-avatars">{members.map((m) => <li key={m.id}><button type="button" onClick={() => setProfile(m.id)}><Portrait m={m} className="tp-portrait-sm" ratio="1 / 1" sizes="64px" decorative /><span className="text-sm font-semibold leading-tight">{m.photo ? first(m.name) : m.name}</span><span className="sr-only">{m.photo ? m.name.slice(first(m.name).length) : ""}. View profile</span></button></li>)}</ul>
+        : variant === "avatars" ? <ul className="tp-team-avatars">{members.map((m) => <li key={m.id}><button type="button" onClick={(event) => { opener.current = event.currentTarget; setProfile(m.id) }}><Portrait m={m} className="tp-portrait-sm" ratio="1 / 1" sizes="64px" decorative /><span className="text-sm font-semibold leading-tight">{m.photo ? first(m.name) : m.name}</span><span className="sr-only">{m.photo ? m.name.slice(first(m.name).length) : ""}. View profile</span></button></li>)}</ul>
         : <ul className="tp-rows tp-team-list">{members.map(row)}</ul>}
 
       <Overlay tone="page" kind="detail" open={profile !== null} onOpenChange={(o) => !o && setProfile(null)} title={member?.name ?? "Profile"} description={member?.role} testId="team-profile" footer={member && canBook(member) ? <button type="button" className="tp-btn tp-profile-book" onClick={() => { setProfile(null); setBook({ staffId: member.id }) }}><CalendarCheck aria-hidden="true" className="size-4"/><span>Book with {first(member.name)}</span><ArrowRight aria-hidden="true" className="size-4"/></button> : undefined}>
         {member ? <Profile m={member} ctx={ctx} canBook={canBook(member)} /> : null}
       </Overlay>
-      {ctx ? <BookingFlow ctx={ctx} staffId={book?.staffId} open={book !== null} onOpenChange={(o) => !o && setBook(null)} title={book ? `Book with ${first(ctx.staff.find((s) => s.id === book.staffId)?.name ?? "")}` : undefined} key={book?.staffId ?? "none"} /> : null}
+      {ctx ? <BookingFlow ctx={ctx} staffId={book?.staffId} open={book !== null} onOpenChange={(o) => !o && setBook(null)} onCloseAutoFocus={(event) => { if (opener.current?.isConnected) { event.preventDefault(); opener.current.focus() } }} title={book ? `Book with ${first(ctx.staff.find((s) => s.id === book.staffId)?.name ?? "")}` : undefined} key={book?.staffId ?? "none"} /> : null}
     </>
   )
 }

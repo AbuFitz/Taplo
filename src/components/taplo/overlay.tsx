@@ -70,6 +70,7 @@ export interface OverlayProps {
 export function Overlay({ open, onOpenChange, trigger, kind = "dialog", tone = "admin", title, description, onBack, dirty, footer, hideTitle, onCloseAutoFocus, className, bodyClassName, testId, children }: OverlayProps) {
   const container = usePortalContainer()
   const [shell, setShell] = React.useState<HTMLElement | null>(null)
+  const opener = React.useRef<HTMLElement | null>(null)
   const [confirming, setConfirming] = React.useState(false)
   const [internal, setInternal] = React.useState(false)
   const controlled = open !== undefined
@@ -96,11 +97,20 @@ export function Overlay({ open, onOpenChange, trigger, kind = "dialog", tone = "
         <DialogPrimitive.Overlay className={cn("fixed inset-0 z-50 bg-black/45 backdrop-blur-sm data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none!", page && "bg-black/50 backdrop-blur-[3px]")} />
         <DialogPrimitive.Content
           ref={setShell}
+          onOpenAutoFocus={() => {
+            // Controlled dialogs may be opened by several buttons without a Radix Trigger.
+            // Capture before the focus scope moves focus into the dialog.
+            opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+          }}
           onCloseAutoFocus={event => {
             onCloseAutoFocus?.(event)
             // A quick tap into the next field takes priority over delayed exit focus restoration.
             const active = document.activeElement
             if (!event.defaultPrevented && active instanceof HTMLElement && active !== document.body && active.isConnected && !shell?.contains(active)) event.preventDefault()
+            else if (!event.defaultPrevented && !trigger && opener.current?.isConnected && opener.current !== document.body) {
+              event.preventDefault()
+              opener.current.focus()
+            }
           }}
           data-overlay={kind}
           data-overlay-tone={tone}

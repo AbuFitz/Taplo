@@ -37,3 +37,6 @@ The correction run passed all 17 focused browser journeys, including public spli
 ### Identity without invented marks
 
 Public profile marks now require supplied imagery; no business initials are generated from a name. Missing cover imagery retains the selected colour-field composition without a repeated monogram. Team members without photos keep their real names and profile actions without fabricated initials or blank portraits. Photo-backed arrangements and logo proportions remain intact. Updated the legacy browser assertions that explicitly expected fabricated initials and added mixed/no-photo render coverage. This follows the founder's identity directive and does not create, remove or alter stored logos/photos.
+
+
+Live customer review confirmed that the team profile lost focus to the document after dismissal. The shared controlled Overlay now captures the initiating element before autofocus and restores it on close when no explicit trigger/callback owns restoration. A newly focused field in another overlay takes precedence. Added phone/desktop connected checks for both close-button and Escape dismissal, without fabricated team portraits.

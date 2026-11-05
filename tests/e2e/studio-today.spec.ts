@@ -398,3 +398,33 @@ test("Today routes enquiries and individual work to the correct task", async ({
       .filter({ hasText: "That appointment is no longer available" }),
   ).toBeVisible();
 });
+
+
+for (const width of [390, 1440]) {
+  test(`customer team profile returns focus without invented portraits at ${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/appearance/frame?scenario=station&widget=team&variant=list");
+    const person = page.getByTestId("team-card").filter({ hasText: "Sam Ellis" }).getByRole("button", { name: /View profile/ });
+    await expect(person).toBeVisible();
+    await expect(person.locator(".tp-portrait")).toHaveCount(0);
+    await person.click();
+    const dialog = page.getByTestId("team-profile");
+    await expect(dialog).toBeVisible();
+    await dialog.getByRole("button", { name: "Close", exact: true }).click();
+    await expect(dialog).not.toBeVisible();
+    await expect(person).toBeFocused();
+    await person.click();
+    await dialog.press("Escape");
+    await expect(dialog).not.toBeVisible();
+    await expect(person).toBeFocused();
+    await person.click();
+    await dialog.getByRole("button", { name: "Book with Sam", exact: true }).click();
+    const booking = page.getByTestId("booking-flow");
+    await expect(booking).toBeVisible();
+    await expect(dialog).not.toBeVisible();
+    await expect(booking.locator(":focus")).toHaveCount(1);
+    await booking.getByRole("button", { name: "Close", exact: true }).click();
+    await expect(booking).not.toBeVisible();
+    await expect(person).toBeFocused();
+  });
+}
