@@ -54,3 +54,9 @@ The local execution workspace disconnected during this follow-through. These fin
 - These edits were prepared through repository access after the local workspace disconnected. Their result must be taken from the committed CI run, not inferred from source inspection.
 
 Mobile chrome follow-through: the current phone editor had fixed light backgrounds and foregrounds around otherwise themed task surfaces. The follow-up scopes operational colours to that chrome, including its active-tab indicator. The branded page remains isolated in its preview. Profile contrast checks now include the mobile header/footer and assert that the requested appearance is actually active.
+
+## Observed Profile follow-through results
+
+On commit 67a92e7, all 615 unit/database checks passed; 31 of 32 connected browser cases passed. The extra case identified the unselected phone navigation text in dark mode. The mobile-chrome follow-up addresses the fixed white surface responsible for it.
+
+The broad editor accessibility journey passed page-style and Profile, then identified the nested block Appearance tab's translucent foreground. Nested operational tab lists/triggers now use the same solid text and surface tokens as the surrounding Studio. The check remains enabled and must proceed through Details and Settings before it can be marked complete. The interrupted public/control group is not counted as passed.

@@ -111,3 +111,8 @@
 .workspace-v2.operational-root :is(.mobile-studio-preview, .mobile-studio-back) { background: var(--op-surface); color: var(--op-text); border-color: var(--op-line); }
 .workspace-v2.operational-root .mobile-studio-tabs button[aria-pressed="true"]::after { background: var(--op-text); }
 .workspace-v2.operational-root .mobile-studio-footer > p { color: var(--op-muted); }
+
+/* Nested block Content/Appearance tabs use the same readable operational text. */
+.workspace-v2.operational-root [data-slot="tabs-list"]:not(:where([data-taplo-theme] *)) { background: var(--secondary); color: var(--op-muted); }
+.workspace-v2.operational-root [data-slot="tabs-trigger"]:not(:where([data-taplo-theme] *)) { color: var(--op-muted); }
+.workspace-v2.operational-root [data-slot="tabs-trigger"][aria-selected="true"]:not(:where([data-taplo-theme] *)) { background: var(--op-surface); color: var(--op-text); }
