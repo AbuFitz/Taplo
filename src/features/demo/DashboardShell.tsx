@@ -2,9 +2,6 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { workspaceModel } from "./dashboard/workspace-model";
-import { StudioIcons } from "@/features/platform/icons";
-const ArrowUpRight = StudioIcons.external;
 import {
   OperationalRoot,
   AppearanceSelect,
@@ -22,31 +19,11 @@ import "./dashboard/workspace-polish.css";
 import "./dashboard/workspace-foundation.css";
 import "./dashboard/studio-shell.css";
 
-const TITLES: Record<string, string> = {
-  services: "Services",
-  bookings: "Bookings",
-  team: "Team",
-  products: "Products",
-  reviews: "Reviews",
-  analytics: "Analytics",
-  settings: "Settings",
-  page: "Your page",
-  profile: "Business details",
-  help: "Help & feedback",
-};
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { ready, state, storageFailed } = useDemo();
   const path = usePathname();
   const section = path.split("/")[2] || "overview";
   const editor = section === "page";
-  const terms = workspaceModel(
-    state?.content.identity.industryKey,
-    state?.content.identity.industryLabel,
-  ).terms;
-  const title =
-    section in terms
-      ? terms[section as keyof typeof terms]
-      : TITLES[section] || "Today";
   const empty =
     ready && (!state || (!state.onboarded && !state.content.identity.name));
   return (
@@ -70,24 +47,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </header>
           <WorkspaceNav variant="mobile" />
           <div className="ws-main">
-        {section !== "overview" ? (
-          <div className="ws-topbar" role="group" aria-label="Page controls">
-            <div>
-              <strong>{title}</strong>
-            </div>
-            <div className="ws-topbar-actions">
-              <span className="ws-save-dot">
-                {state?.published ? "Published" : "Draft"}
-              </span>
-              {state?.content.identity.name ? (
-                <Link href="/demo/preview" target="_blank">
-                  View page
-                  <ArrowUpRight aria-hidden="true" />
-                </Link>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
         <main
           id="studio-content"
           tabIndex={-1}
