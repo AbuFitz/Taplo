@@ -22,7 +22,6 @@ import {
 import { useDraft } from "../hooks";
 import { GettingStarted } from "@/features/experience/SectionSetup";
 import { StudioArt } from "./art/StudioArt";
-import { getIndustryPreset } from "@/features/themes/presets/industries";
 import { FirstOfferSetup } from "./FirstOfferSetup";
 import { workspaceModel } from "./workspace-model";
 import { UpcomingBookings } from "./UpcomingBookings";
@@ -33,7 +32,10 @@ export function Studio() {
   const [now] = React.useState(() => Date.now());
   const [notice, setNotice] = React.useState("");
   if (!s) return <StudioSkeleton />;
-  const vocabulary = workspaceModel(s.content.identity.industryKey, s.content.identity.industryLabel);
+  const vocabulary = workspaceModel(
+    s.content.identity.industryKey,
+    s.content.identity.industryLabel,
+  );
   const missing = readiness(s).filter((c) => c.required && !c.done);
   const ready = canPublish(s);
   const changed = hasUnpublishedChanges(s);
@@ -54,7 +56,11 @@ export function Studio() {
       <div className="ws-welcome">
         <div>
           <h1>Today</h1>
-          <p>Appointments, enquiries and your next steps.</p>
+          <p>
+            {vocabulary.mobileWork === "products"
+              ? "Your products, enquiries and your next steps."
+              : "Appointments, enquiries and your next steps."}
+          </p>
         </div>
       </div>
       <FirstOfferSetup />
@@ -93,7 +99,11 @@ export function Studio() {
               />
             ) : null}
           </div>
-          <details className="ws-next-step" data-testid="studio-next" open={missing.length > 0}>
+          <details
+            className="ws-next-step"
+            data-testid="studio-next"
+            open={missing.length > 0}
+          >
             <summary>
               {missing.length
                 ? `${missing.length} ${missing.length === 1 ? "step" : "steps"} before publishing`
@@ -129,9 +139,7 @@ export function Studio() {
                 type="button"
                 onClick={() => {
                   patch(publish);
-                  setNotice(
-                    "Page version saved.",
-                  );
+                  setNotice("Page version saved.");
                 }}
               >
                 Publish this version
@@ -150,7 +158,10 @@ export function Studio() {
         </div>
       </section>
       <details className="ws-learning">
-        <summary>Quick guides<ChevronRight aria-hidden="true" /></summary>
+        <summary>
+          Quick guides
+          <ChevronRight aria-hidden="true" />
+        </summary>
         <GettingStarted />
       </details>
       <div className="ws-home-columns">
@@ -163,8 +174,7 @@ export function Studio() {
               {
                 href: "services",
                 Icon: Layers3,
-                label: getIndustryPreset(s.content.identity.industryKey)
-                  .terminology.services,
+                label: vocabulary.terms.services,
                 line: "Prices, durations and what you offer",
                 n: counts.services,
               },

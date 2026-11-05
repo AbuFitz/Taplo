@@ -144,4 +144,34 @@
   color: #63576e;
 }
 
-.sf-root[data-step="type"] .sf-category-picker .sf-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.sf-root[data-step="type"] .sf-category-picker .sf-tiles {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Keep grid and native search intrinsic sizes inside the 320px composition. */
+.sf-root[data-step="type"] .sf-category-picker,
+.sf-root[data-step="type"] .sf-category-picker > *,
+.sf-root[data-step="type"] .sf-category-picker .sf-search,
+.sf-root[data-step="type"] .sf-category-picker .sf-tiles {
+  min-width: 0;
+  max-width: 100%;
+}
+.sf-root[data-step="type"] .sf-category-picker .sf-search input {
+  width: 0;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.sf-root[data-step="type"]
+  .sf-category-picker
+  .sf-tiles
+  .sf-tile
+  .sf-tile-icon {
+  background: transparent;
+  color: #63576e;
+}
+.sf-root[data-step="type"] .sf-category-picker .sf-category-options {
+  min-width: 0;
+}
+.sf-root[data-step="type"] .sf-category-picker .sf-category-options button {
+  white-space: normal;
+}

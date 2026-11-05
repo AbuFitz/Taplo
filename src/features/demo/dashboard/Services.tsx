@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Overlay } from "@/components/taplo/overlay";
-import { getIndustryPreset } from "@/features/themes/presets/industries";
+import { workspaceModel } from "./workspace-model";
 import { formatDuration, formatPrice } from "@/features/services/format";
 import type { ServiceContent } from "@/features/businesses/content";
 import { blankService, normService } from "../actions";
@@ -80,7 +80,7 @@ export function Services() {
   return (
     <>
       <PageHeader scene="services"
-        title={getIndustryPreset(c.identity.industryKey).terminology.services}
+        title={workspaceModel(c.identity.industryKey, c.identity.industryLabel).terms.services}
         description="Manage your prices, durations and bookable services."
         actions={
           <Button

@@ -13,6 +13,14 @@ for (const width of [320, 390, 1440]) {
       name: "Search or enter your business type",
     });
     await expect(search).toBeVisible();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    const searchBox = await search.boundingBox();
+    expect(searchBox!.x + searchBox!.width).toBeLessThanOrEqual(width);
+    await expect(page.frameLocator("iframe").getByRole("heading", { name: "Your business name", exact: true })).toBeVisible();
     await page.screenshot({
       path: testInfo.outputPath("category-picker.png"),
       fullPage: true,
