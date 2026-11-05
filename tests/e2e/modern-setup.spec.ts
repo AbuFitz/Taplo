@@ -13,7 +13,20 @@ for (const width of [390, 1440]) test(`homepage shows the real rendered page in 
 
 test('Google review setup preserves old records but never publishes them as Google content', async ({ page }) => {
   await openSampleBusiness(page, "Jay’s Barbers")
-  const original = await page.evaluate(() => JSON.parse(localStorage.getItem('taplo.demo.v2')!).content.testimonials)
+  // The public sample intentionally has no invented reviews. Seed one legacy
+  // owner-supplied record so preservation and non-publication are non-vacuous.
+  const original = await page.evaluate(() => {
+    const draft = JSON.parse(localStorage.getItem('taplo.demo.v2')!)
+    draft.content.testimonials = [...(draft.content.testimonials ?? []), {
+      id: "legacy-owner-review",
+      quote: "Synthetic legacy testimonial for preservation testing only.",
+      author: "Synthetic Customer",
+      source: "owner_supplied",
+      permissionConfirmed: true,
+    }]
+    localStorage.setItem('taplo.demo.v2', JSON.stringify(draft))
+    return draft.content.testimonials
+  })
   await page.goto('/dashboard/reviews')
   await expect(page.getByRole('heading', { name: 'Reviews', exact: true })).toBeVisible()
   await expect(page.getByLabel('Customer name')).toHaveCount(0)

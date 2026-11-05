@@ -70,3 +70,5 @@ Remaining defects from that run:
 2. Google-review setup's test queried /^Google reviews/ against the entire content card. Real decorative preview content precedes that label. It now selects the explicit reviews choice ID while preserving the assertions for the real Google URL and unchanged testimonial records.
 
 These two follow-ups need their own committed CI result. Previously passing cases are recorded as targeted recovery only; the full browser regression and server-backed draft/claim/Studio integration remain open.
+
+Review test precondition: the authored public sample intentionally contains no invented customer testimonials. The test now seeds a clearly synthetic legacy owner-supplied record in its isolated browser context, so preservation and non-publication assertions check an actual record rather than an empty array. Public sample content is unchanged.
