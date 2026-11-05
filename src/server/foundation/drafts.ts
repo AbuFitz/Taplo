@@ -205,13 +205,28 @@ export async function upsertDraft(
         });
         return value;
       },
-      async (value) => {
-        // A claim revokes anonymous access, including old successful save receipts.
-        const visible = await c.query(
-          "SELECT id FROM taplo.onboarding_draft WHERE id=$1",
-          [value.id],
-        );
-        if (!visible.rows[0]) throw hidden();
+      {
+        project: (value) => {
+          // Retrying must not multiply private image/page blobs in receipt storage.
+          const summary = { ...value };
+          delete summary.workspace_snapshot;
+          return summary;
+        },
+        replay: async (value) => {
+          // Claim/expiry revokes access, including old successful save receipts.
+          const visible = await c.query(
+            "SELECT * FROM taplo.onboarding_draft WHERE id=$1 FOR SHARE",
+            [value.id],
+          );
+          if (!visible.rows[0]) throw hidden();
+          if (Number(visible.rows[0].version) !== value.version)
+            throw new CommandError(
+              "VERSION_OR_AVAILABILITY_CONFLICT",
+              409,
+              "Your draft has changed. Review the latest version before continuing.",
+            );
+          return project(visible.rows[0]);
+        },
       },
     ),
   );

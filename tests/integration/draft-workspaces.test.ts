@@ -139,6 +139,12 @@ describe.skipIf(!TEST_DB_URL)(
       ).rows;
       expect(audit).toHaveLength(1);
       expect(audit[0].changed_field_names).toContain("workspace_snapshot");
+      const receipt = (
+        await db.query(
+          "SELECT response FROM taplo.command_receipt WHERE key='workspace-save123'",
+        )
+      ).rows[0].response;
+      expect(receipt).not.toHaveProperty("workspace_snapshot");
       expect(
         (await db.query("SELECT count(*) FROM taplo.offer")).rows[0].count,
       ).toBe("0");
@@ -189,6 +195,30 @@ describe.skipIf(!TEST_DB_URL)(
         (await readDraft(db, token))?.workspace_snapshot?.page.meta.shareTitle,
       ).toMatch(/-edit$/);
     });
+    it("refuses to replay an obsolete full-workspace response over a newer edit", async () => {
+      const token = randomBytes(32).toString("hex");
+      const raw = input();
+      const first = (
+        await upsertDraft(db, token, raw, "workspace-replay123", "req_first")
+      ).value;
+      const next = input();
+      next.workspace_snapshot.page.meta.shareTitle = "Newer owner choice";
+      await upsertDraft(
+        db,
+        token,
+        { ...next, draft_id: first.id, expected_version: 1 },
+        "workspace-newer123",
+        "req_newer",
+        '\"1\"',
+      );
+      await expect(
+        upsertDraft(db, token, raw, "workspace-replay123", "req_replay"),
+      ).rejects.toMatchObject({ code: "VERSION_OR_AVAILABILITY_CONFLICT" });
+      expect(
+        (await readDraft(db, token))?.workspace_snapshot?.page.meta.shareTitle,
+      ).toBe("Newer owner choice");
+    });
+
     it("rejects unsupported fields and forged authority without creating a draft or receipt", async () => {
       const token = randomBytes(32).toString("hex");
       const raw = input();

@@ -87,6 +87,12 @@ describe("private workspace boundary", () => {
     expect(() => parseWorkspace(snapshot)).toThrow("too_complex");
   });
 
+  it("bounds very wide untrusted settings before allocating an unbounded traversal stack", () => {
+    const snapshot = workspaceFixture();
+    snapshot.page.widgets[0].settings.extra = Array(60000).fill(0);
+    expect(() => parseWorkspace(snapshot)).toThrow("too_complex");
+  });
+
   it("does not turn an invalid business time zone into an implicit UK operating schedule", () => {
     const snapshot = workspaceFixture();
     snapshot.content.location.timezone = "Wrong/Zone";

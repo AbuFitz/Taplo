@@ -27,8 +27,14 @@ Remaining P03 work: connect verified account completion to the claim command and
 
 ## Verification
 
-- Current full local unit/integration suite: **641 passed**, including real isolated PostgreSQL transactions, RLS, concurrent writes, receipt retries, rollback and legacy pre-migration compatibility. Local PostgreSQL binary: 18.6; CI independently uses PostgreSQL 16.
+- Current full local unit/integration suite after storage/replay follow-through: **643 passed**, including real isolated PostgreSQL transactions, RLS, concurrent writes, receipt retries, rollback and legacy pre-migration compatibility. Local PostgreSQL binary: 18.6; CI independently uses PostgreSQL 16.
 - TypeScript and targeted lint passed; the explicitly configured Next production build passed.
 - Local Chromium launch was blocked by the workspace Unix-socket sandbox before any browser test could execute. That is environment evidence, not a product test result.
 - Added a separate configured browser suite/CI job with a throwaway PostgreSQL 16 service, real migration/API writes, and six phone/desktop save, conflict, restore, replacement and retry checks. Its actual committed results and screenshots must be reviewed; do not infer a pass from test definitions.
 - Previous app commit `07f7a211fcdf20e54eb18ac611a30a8a04488334`: all primary 615 unit/database and 175 selected browser checks passed. Its wider regression finished with **724 passed, 98 failed and 5 skipped** in run 42069834538. That wider recovery is still open and is not superseded by the new focused suite.
+
+## Storage/replay follow-through
+
+Draft command receipts retain only the small acknowledgement metadata, rather than duplicating the complete document and inline images on every save. A permitted retry rehydrates the document under a row lock only while its stored version still matches that receipt. A newer edit returns a conflict, and claimed/expired drafts remain hidden. A targeted database case checks both the absence of a snapshot blob in the receipt and refusal to replay an obsolete version. Other commands retain their existing full-receipt behaviour. Per-origin/credential quotas, provider asset storage and retention-worker execution are still activation prerequisites; this change does not claim to supply a complete abuse-control system.
+
+Browser-runner follow-through: the first configured CI job stalled while installing Chromium/dependencies before reaching the tests. The configured suite now detects the runner's installed Google Chrome and records its version, falling back to Playwright Chromium if unavailable. Primary verification retains its pinned Chromium coverage. The configured job has bounded installation/job timeouts. Browser launch/runtime results remain distinct from device/provider proof.

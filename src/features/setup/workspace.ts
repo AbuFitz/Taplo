@@ -53,8 +53,11 @@ export function parseWorkspace(input: unknown): WorkspaceSnapshot {
     if (++nodes > 50000 || entry.depth > 32)
       throw new Error("workspace.too_complex");
     if (entry.value && typeof entry.value === "object")
-      for (const value of Object.values(entry.value))
+      for (const value of Object.values(entry.value)) {
+        if (nodes + pending.length >= 50000)
+          throw new Error("workspace.too_complex");
         pending.push({ value, depth: entry.depth + 1 });
+      }
   }
   if (
     new TextEncoder().encode(JSON.stringify(input)).byteLength >
