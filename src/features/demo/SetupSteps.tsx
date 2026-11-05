@@ -36,7 +36,8 @@ import {
   setSlug,
   slugProblems,
 } from "./actions";
-import { initialState, storageHasFailed, useDemo } from "./store";
+import { initialState, readDemoState, storageHasFailed, useDemo } from "./store";
+import { draftWorkspaceClient, saveSetupWorkspace, type SavedDraft } from "@/features/setup/draft-client";
 
 export { TypeStep } from "./TypeStep";
 
@@ -778,30 +779,117 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
   const [signedIn, setSignedIn] = React.useState(false);
   const [saveFailed, setSaveFailed] = React.useState(false);
   const configured = accountsConfigured();
+  const [saving, setSaving] = React.useState(false);
+  const [remoteError, setRemoteError] = React.useState("");
+  const [conflict, setConflict] = React.useState<SavedDraft | null>(null);
+  const finishAction = React.useRef<HTMLButtonElement>(null);
+  const recoveryHeading = React.useRef<HTMLHeadingElement>(null);
+  const recoveryError = React.useRef<HTMLParagraphElement>(null);
+  const lock = React.useRef(false);
+  const alive = React.useRef(true);
+  React.useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
+    };
+  }, []);
   React.useEffect(() => {
     void session().then((r) => setSignedIn(r.signedIn));
   }, []);
-  const toStudio = () => {
-    update((x) => ({
-      ...x,
-      onboarded: true,
-      plan: x.setupDrafts?.planIntent ?? x.plan,
-    }));
-    // The draft is only called saved once the browser has accepted the write.
-    window.setTimeout(() => {
-      if (storageHasFailed()) setSaveFailed(true);
-      else onStudio();
-    }, 0);
+  React.useEffect(() => {
+    if (remoteError) recoveryError.current?.focus();
+    else if (conflict) recoveryHeading.current?.focus();
+  }, [remoteError, conflict]);
+  const toStudio = async (replace?: SavedDraft) => {
+    if (lock.current) return;
+    const draft = readDemoState();
+    if (!draft) return;
+    const fingerprint = (value: typeof draft | null) =>
+      value
+        ? JSON.stringify([
+            value.content,
+            value.page,
+            value.step,
+            value.setupDrafts,
+            value.slugEdited,
+            value.showExamples,
+          ])
+        : "";
+    const before = fingerprint(draft);
+    lock.current = true;
+    setSaving(true);
+    setRemoteError("");
+    setSaveFailed(false);
+    try {
+      const result = await saveSetupWorkspace(draft, replace);
+      if (!alive.current) return;
+      if (fingerprint(readDemoState()) !== before) {
+        setRemoteError(
+          "Your draft changed while saving. Review your latest changes and try again.",
+        );
+        return;
+      }
+      if (!result.ok) {
+        if (result.reason === "conflict") setConflict(result.draft);
+        else
+          setRemoteError(
+            result.reason === "too-large"
+              ? "Your draft is too large to save. Try using smaller images. Your changes are still here."
+              : result.reason === "rate-limited"
+                ? "Please wait a moment before saving again."
+                : result.reason === "invalid"
+                  ? "Review your business details and images before saving. Your changes are still here."
+                  : "We couldn’t save your complete draft. Your changes are still here. Please try again.",
+          );
+        return;
+      }
+      setConflict(null);
+      update((x) => ({
+        ...x,
+        onboarded: true,
+        plan: x.setupDrafts?.planIntent ?? x.plan,
+      }));
+      window.setTimeout(() => {
+        if (!alive.current) return;
+        if (storageHasFailed()) setSaveFailed(true);
+        else onStudio();
+      }, 0);
+    } finally {
+      lock.current = false;
+      if (alive.current) setSaving(false);
+    }
   };
+  const useSaved = () => {
+    if (!conflict?.workspace_snapshot || lock.current) return;
+    const snapshot = conflict.workspace_snapshot;
+    update(
+      (x) => ({
+        ...x,
+        content: snapshot.content,
+        page: snapshot.page,
+        ...snapshot.progress,
+        step: "finish",
+        onboarded: false,
+        published: null,
+      }),
+      { resetHistory: true },
+    );
+    draftWorkspaceClient.acceptVersion(conflict);
+    setConflict(null);
+    setRemoteError("");
+    setSaveFailed(storageHasFailed());
+    requestAnimationFrame(() => finishAction.current?.focus());
+  };
+
   return (
-    <div className="sf-stack" data-testid="finish-step">
+    <div className="sf-stack" data-testid="finish-step" aria-busy={saving}>
       <p className="sf-lede">
         {s.content.identity.name
           ? `Your first draft of ${s.content.identity.name} is here.`
           : "Your first draft is here."}{" "}
         Open Studio to add the finishing touches. You decide when to publish.
       </p>
-      {!storageHasFailed() ? (
+      {!storageHasFailed() && !saving && !remoteError && !conflict ? (
         <p className="sf-saved" data-testid="saved-status">
           <Check aria-hidden="true" /> Saved as a draft. Not published.
         </p>
@@ -812,13 +900,20 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
             size="lg"
             className="sf-primary"
             data-testid="save-draft"
-            onClick={toStudio}
+            ref={finishAction}
+            onClick={() => void toStudio()}
+            disabled={saving}
           >
-            Open Studio
+            {saving ? "Saving your draft…" : "Open Studio"}
           </Button>
         </div>
       ) : configured ? (
-        <EmailCodeAccount onConnected={toStudio} />
+        <EmailCodeAccount
+          onConnected={() => {
+            setSignedIn(true);
+            void toStudio();
+          }}
+        />
       ) : (
         <div className="sf-testing" data-testid="dev-route">
           <div className="sf-sticky">
@@ -826,9 +921,11 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
               size="lg"
               className="sf-primary"
               data-testid="save-draft"
-              onClick={toStudio}
+              ref={finishAction}
+              onClick={() => void toStudio()}
+              disabled={saving}
             >
-              Open Studio
+              {saving ? "Saving your draft…" : "Open Studio"}
             </Button>
           </div>
           <p className="sf-help" data-testid="draft-note">
@@ -836,10 +933,53 @@ export function FinishStep({ onStudio }: { onStudio: () => void }) {
           </p>
         </div>
       )}
+      {conflict ? (
+        <section
+          className="sf-stack"
+          aria-labelledby="saved-draft-conflict"
+          data-testid="saved-draft-conflict"
+        >
+          <h2 id="saved-draft-conflict" ref={recoveryHeading} tabIndex={-1}>
+            Choose the draft to continue with
+          </h2>
+          <p className="sf-help" role="alert">
+            Another version of {conflict.display_name} is saved. Your current
+            changes are still here.
+          </p>
+          {conflict.workspace_snapshot ? (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={saving}
+              onClick={useSaved}
+            >
+              Use saved draft
+            </Button>
+          ) : null}
+          <Button
+            type="button"
+            variant="outline"
+            disabled={saving}
+            onClick={() => void toStudio(conflict)}
+          >
+            Keep this draft
+          </Button>
+        </section>
+      ) : null}
+      {remoteError ? (
+        <p
+          role="alert"
+          ref={recoveryError}
+          tabIndex={-1}
+          className="sf-error"
+          data-testid="draft-save-error"
+        >
+          {remoteError}
+        </p>
+      ) : null}
       {saveFailed ? (
         <p role="alert" className="sf-error" data-testid="save-failed">
-          Your browser couldn’t save this draft (storage is full or blocked), so
-          it isn’t saved yet. Remove a large picture and try again.
+          Your changes couldn’t be saved. Try using a smaller picture, then save again.
         </p>
       ) : null}
     </div>

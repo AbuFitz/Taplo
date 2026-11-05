@@ -1,6 +1,6 @@
 # Taplo blueprint
 
-Complete blueprint imported from saved edition 3.0 (source file version 25, 3 November 2026). All 305 source files are preserved byte-for-byte; this README and the ready-to-use prompt are repository entry documents.
+Complete blueprint imported from saved edition 3.0 (source file version 25, 3 November 2026). The original 305-file import is preserved in Git history. This README and the ready-to-use prompt are repository entry documents; implementation-driven contract extensions are recorded under `docs/implementation/`.
 
 Start with [Codex implementation handoff](release-3.0/CODEX-START-HERE.md), [baseline](release-3.0/BASELINE.md) and [ordered build packets](release-3.0/contracts/build-packets.json). [Copyable Codex prompt](CODEX-BUILD-PROMPT.md).
 

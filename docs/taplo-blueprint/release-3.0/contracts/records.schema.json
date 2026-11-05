@@ -5812,6 +5812,9 @@
         },
         "expires_at": {
           "$ref": "#/$defs/Timestamp"
+        },
+        "workspace_snapshot": {
+          "$ref": "#/$defs/PrivateWorkspaceSnapshot"
         }
       },
       "required": [
@@ -6735,6 +6738,56 @@
           "$ref": "#/$defs/Timestamp"
         }
       }
+    },
+    "PrivateWorkspaceSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "P03 compatibility envelope. content, page and progress are additionally validated by the existing application Zod contracts; private staging only, never publication, entitlement or operational offer authority.",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "content": {
+          "type": "object"
+        },
+        "page": {
+          "type": "object"
+        },
+        "progress": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "schema_version",
+        "content",
+        "page",
+        "progress"
+      ]
+    },
+    "BusinessWorkspace": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "workspace_snapshot": {
+          "$ref": "#/$defs/PrivateWorkspaceSnapshot"
+        }
+      },
+      "required": [
+        "business_id",
+        "version",
+        "updated_at",
+        "workspace_snapshot"
+      ]
     }
   }
 }

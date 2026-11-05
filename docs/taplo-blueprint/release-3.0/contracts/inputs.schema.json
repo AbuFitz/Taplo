@@ -2330,6 +2330,9 @@
         "introduction": {
           "type": "string",
           "maxLength": 500
+        },
+        "workspace_snapshot": {
+          "$ref": "#/$defs/PrivateWorkspaceSnapshot"
         }
       },
       "required": [
@@ -3478,6 +3481,31 @@
           "uniqueItems": true
         }
       }
+    },
+    "PrivateWorkspaceSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "P03 compatibility envelope. content, page and progress are additionally validated by the existing application Zod contracts; private staging only, never publication, entitlement or operational offer authority.",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "content": {
+          "type": "object"
+        },
+        "page": {
+          "type": "object"
+        },
+        "progress": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "schema_version",
+        "content",
+        "page",
+        "progress"
+      ]
     }
   }
 }

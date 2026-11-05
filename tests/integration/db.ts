@@ -85,3 +85,10 @@ export async function as<T>(pool: Pool, actor: Actor, fn: (q: Client["query"]) =
     c.release();
   }
 }
+
+/** Test the installed foundation chain, including newly added compatibility migrations. */
+export async function applyFoundationMigrations(pool: Pool) {
+  const dir = join(process.cwd(), "db/migrations");
+  for (const file of readdirSync(dir).filter(name => name.endsWith(".sql")).sort())
+    await pool.query(readFileSync(join(dir, file), "utf8"));
+}

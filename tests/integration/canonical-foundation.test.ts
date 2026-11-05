@@ -1,7 +1,6 @@
-import { readFileSync } from "node:fs";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { Pool } from "pg";
-import { TEST_DB_URL, createCleanDatabase } from "./db";
+import { TEST_DB_URL, createCleanDatabase, applyFoundationMigrations } from "./db";
 import { readDraft, upsertDraft } from "../../src/server/foundation/drafts";
 import { transaction } from "../../src/server/foundation/database";
 import { emit, idempotent } from "../../src/server/foundation/commands";
@@ -11,7 +10,7 @@ const token = "a".repeat(64), other = "b".repeat(64);
 
 describe.skipIf(!TEST_DB_URL)("canonical foundation on isolated PostgreSQL", () => {
  let db: Pool, drop: () => Promise<void>;
- beforeAll(async () => { const setup=await createCleanDatabase(); db=setup.pool; drop=setup.drop; await db.query(readFileSync("db/migrations/0001_foundation.sql","utf8")); },30000);
+ beforeAll(async () => { const setup=await createCleanDatabase(); db=setup.pool; drop=setup.drop; await applyFoundationMigrations(db); },30000);
  afterAll(async () => { await drop?.(); });
  it("concurrent identical requests write one draft, audit event and outbox record", async () => {
   const input={expected_version:0,display_name:"Form Workshop",category_query:"ceramics"};

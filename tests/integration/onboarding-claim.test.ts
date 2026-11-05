@@ -1,7 +1,6 @@
-import { readFileSync } from "node:fs";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import type { Pool } from "pg";
-import { TEST_DB_URL, createCleanDatabase } from "./db";
+import { TEST_DB_URL, createCleanDatabase, applyFoundationMigrations } from "./db";
 import { readDraft, upsertDraft } from "../../src/server/foundation/drafts";
 import { createOfferDraft } from "../../src/server/foundation/offers";
 import { claimDraft } from "../../src/server/foundation/claim";
@@ -18,7 +17,7 @@ describe.skipIf(!TEST_DB_URL)("onboarding claim on isolated PostgreSQL", () => {
   let db: Pool, drop: () => Promise<void>, draftId: string, businessId: string;
   beforeAll(async () => {
     const setup = await createCleanDatabase(); db = setup.pool; drop = setup.drop;
-    for (const migration of ["0001_foundation", "0002_onboarding_claim", "0003_offer_drafts"]) await db.query(readFileSync(`db/migrations/${migration}.sql`, "utf8"));
+    await applyFoundationMigrations(db);
     await db.query("INSERT INTO taplo.\"user\"(id,display_name,status) VALUES($1,'Owner','active'),($2,'Other','active')", [owner.id, stranger.id]);
     const draft = await upsertDraft(db, token, { expected_version: 0, display_name: "Form Workshop", category_query: "ceramics" }, "setup-claim-123", "req_setup123");
     draftId = draft.value.id;

@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import pg from "pg";
 if (!process.env.TAPLO_MIGRATION_DATABASE_URL) throw new Error("Set TAPLO_MIGRATION_DATABASE_URL to an isolated database; no fallback to production credentials.");
 if (process.env.TAPLO_APPLY_FOUNDATION !== "yes") throw new Error("Review the inventory and migrations, then set TAPLO_APPLY_FOUNDATION=yes.");
-const migrations = ["0001_foundation", "0002_onboarding_claim", "0003_offer_drafts", "0004_identity_providers"];
+const migrations = ["0001_foundation", "0002_onboarding_claim", "0003_offer_drafts", "0004_identity_providers", "0005_draft_workspaces"];
 const client = new pg.Client({ connectionString: process.env.TAPLO_MIGRATION_DATABASE_URL });
 await client.connect();
 try {

@@ -84,6 +84,39 @@ jobs:
           path: test-results/
           if-no-files-found: ignore
           retention-days: 7
+  workspace-browser:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: postgres }
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      # Throwaway CI service only. Real provider configuration is not changed.
+      TAPLO_MIGRATION_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+      TAPLO_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+      TAPLO_APPLY_FOUNDATION: "yes"
+      TAPLO_SERVER_DRAFTS: "1"
+      NEXT_PUBLIC_TAPLO_SERVER_DRAFTS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run db:migrate:foundation
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Complete draft, conflict and retry through the real API and database
+        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- --config playwright.workspace.config.ts --output=test-results/workspace
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: workspace-browser-evidence
+          path: test-results/workspace/
+          if-no-files-found: ignore
+          retention-days: 7
   browser-regression:
     needs: verify
     runs-on: ubuntu-latest

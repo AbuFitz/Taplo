@@ -7833,6 +7833,53 @@
           "update_reward_rule.v1"
         ]
       }
+    },
+    "/v1/businesses/{business_id}/workspace": {
+      "get": {
+        "operationId": "ReadBusinessWorkspace",
+        "description": "Private P03 authoring projection. This is not public page, offer or entitlement authority.",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "business_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9]*_[a-z0-9]{8,64}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Private saved workspace; Cache-Control no-store and version ETag",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./records.schema.json#/$defs/BusinessWorkspace"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Typed safe error envelope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-permission": "business.profile.manage",
+        "x-guards": "active server-verified merchant; active own-tenant owner/manager; no anonymous draft-cookie authentication; no shared cache",
+        "x-events": []
+      }
     }
   },
   "components": {
