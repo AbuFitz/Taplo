@@ -30,12 +30,14 @@ export function Services() {
     svc: ServiceContent;
     isNew: boolean;
   } | null>(null);
+  const [editorOpen, setEditorOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
   const [before, setBefore] = React.useState("");
   const begin = (svc: ServiceContent, isNew: boolean) => {
     setBefore(JSON.stringify(svc));
     setShowErrors(false);
     setEditing({ svc, isNew });
+    setEditorOpen(true);
   };
   const [showErrors, setShowErrors] = React.useState(false);
   useSetupIntent("new", () => begin(blankService(c?.services?.length ?? 0), true), Boolean(c));
@@ -73,7 +75,7 @@ export function Services() {
         ? [...all, editing.svc]
         : all.map((s) => (s.id === editing.svc.id ? editing.svc : s)),
     );
-    setEditing(null);
+    setEditorOpen(false);
     setShowErrors(false);
   };
 
@@ -199,14 +201,14 @@ export function Services() {
       <details className="ws-secondary-task"><summary>Offers and promotions</summary><Offers /></details>
 
       <Overlay
-        open={editing !== null}
-        onOpenChange={(open) => !open && setEditing(null)}
+        open={editorOpen}
+        onOpenChange={setEditorOpen}
         title={editing?.isNew ? "Add a service" : "Edit service"}
         kind="detail"
         dirty={Boolean(editing && JSON.stringify(editing.svc) !== before)}
         footer={
           <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={() => setEditing(null)}>
+            <Button variant="outline" onClick={() => setEditorOpen(false)}>
               Cancel
             </Button>
             <Button onClick={save}>Save service</Button>

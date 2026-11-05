@@ -92,12 +92,22 @@
 .workspace-v2.operational-root .ws-mobile-nav { display: none; }
 .workspace-v2.operational-root .ws-main { max-width: 1288px; }
 .workspace-v2.operational-root .ws-topbar { max-width: 1240px; width: 100%; margin-inline: auto; }
-.workspace-v2.operational-root .studio-directory { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; }
+.workspace-v2.operational-root .studio-directory {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas: "start start" "create run" "understand utilities" "preferences preferences";
+  gap: 8px 20px;
+}
+.workspace-v2.operational-root .studio-directory .studio-section:nth-child(1) { grid-area: start; }
+.workspace-v2.operational-root .studio-directory .studio-section:nth-child(2) { grid-area: create; }
+.workspace-v2.operational-root .studio-directory .studio-section:nth-child(3) { grid-area: run; }
+.workspace-v2.operational-root .studio-directory .studio-section:nth-child(4) { grid-area: understand; }
+.workspace-v2.operational-root .studio-directory .studio-utility-links { grid-area: utilities; }
 .workspace-v2.operational-root .studio-directory .studio-section { margin: 0 0 8px; }
 .workspace-v2.operational-root .studio-directory .studio-section h2 { margin: 4px 10px 7px; }
 .workspace-v2.operational-root .studio-directory .studio-section > a { min-height: 52px; padding: 8px 10px; color: var(--op-text); }
 .workspace-v2.operational-root .studio-directory .studio-destination-arrow { width: 16px; height: 16px; color: var(--op-muted); }
-.workspace-v2.operational-root .studio-directory-preferences { grid-column: 1 / -1; border-top: 1px solid var(--op-line); padding: 16px 10px 0; }
+.workspace-v2.operational-root .studio-directory-preferences { grid-area: preferences; border-top: 1px solid var(--op-line); padding: 16px 10px 0; }
 .workspace-v2.operational-root .studio-directory-preferences .studio-appearance { display: flex; align-items: center; margin: 0; }
 .workspace-v2.operational-root .studio-directory-preferences .studio-appearance::before { content: "Appearance"; margin-right: auto; color: var(--op-muted); font-size: 13px; }
 .workspace-v2.operational-root[data-workspace-section="editor"] .studio-layout { display: block; }
@@ -153,8 +163,11 @@
   .workspace-v2.operational-root[data-workspace-section="editor"] .studio-header,
   .workspace-v2.operational-root[data-workspace-section="editor"] .ws-mobile-nav { display: none; }
 }
-@media (max-width: 390px) {
-  .workspace-v2.operational-root .studio-directory { grid-template-columns: 1fr; }
+@media (max-width: 359px) {
+  .workspace-v2.operational-root .studio-directory {
+    grid-template-columns: 1fr;
+    grid-template-areas: "start" "create" "run" "understand" "utilities" "preferences";
+  }
   .workspace-v2.operational-root .studio-directory .studio-section { margin-bottom: 0; }
   .workspace-v2.operational-root .studio-directory .studio-section > a { min-height: 46px; }
 }
