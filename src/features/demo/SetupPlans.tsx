@@ -9,6 +9,7 @@ import {
   Palette,
   Store,
 } from "lucide-react";
+import { BusinessIcon } from "./BusinessIcon";
 import { Overlay } from "@/components/taplo/overlay";
 import { Button } from "@/components/ui/button";
 import { PLANS, PLAN_IDS, type PlanId } from "@/features/subscriptions/plans";
@@ -53,8 +54,7 @@ const FEATURES: { label: (e: Entitlements) => string | null }[] = [
           : null,
   },
   {
-    label: (e) =>
-      e.payments ? "Deposits and payments" : null,
+    label: (e) => (e.payments ? "Deposits and payments" : null),
   },
   { label: (e) => (e.customDomains ? "Custom domain" : null) },
   { label: (e) => (e.multiLocation ? "More than one location" : null) },
@@ -130,7 +130,7 @@ export function SetupPlans({ inline = false }: { inline?: boolean }) {
           <span className="plan-art-orbit" />
           <div className="plan-art-page">
             <span className="plan-art-avatar">
-              {(s.content.identity.name || "T").slice(0, 1)}
+              <BusinessIcon id={s.content.identity.industryKey} />
             </span>
             <b>{s.content.identity.name || "Your business"}</b>
             <i />
@@ -208,7 +208,8 @@ export function SetupPlans({ inline = false }: { inline?: boolean }) {
       <p className="plan-choice-notice" data-testid="plan-disclosure">
         <Info aria-hidden="true" />
         <span>
-          Choose the features that fit your business. Review your selected plan before continuing.
+          Choose the features that fit your business. Review your selected plan
+          before continuing.
         </span>
       </p>
     </div>

@@ -10,12 +10,10 @@ import "./category-picker.css";
 
 const TILES = [
   ["barber", "Barber"],
-  ["hairdresser", "Hair salon"],
   ["detailer", "Car detailing"],
   ["plumber", "Plumbing & heating"],
   ["tutor", "Tutor"],
   ["maker", "Shop & handmade"],
-  ["hospitality", "Food & drink"],
   ["photographer", "Photography"],
 ] as const;
 

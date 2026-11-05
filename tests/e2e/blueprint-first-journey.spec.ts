@@ -115,7 +115,9 @@ for (const scheme of ["light", "dark"] as const) {
     await page
       .getByRole("button", { name: "Add to your page", exact: true })
       .click();
-    await expect(page.getByRole("alert")).toContainText("Enter an amount");
+    await expect(
+      page.getByRole("alert").filter({ hasText: "Enter an amount" }),
+    ).toBeVisible();
     await expect(page.getByLabel("Amount (£)", { exact: true })).toBeFocused();
     await page.getByLabel("Amount (£)", { exact: true }).fill("18.50");
     await page
@@ -140,3 +142,27 @@ for (const scheme of ["light", "dark"] as const) {
     ).toBeVisible();
   });
 }
+
+test("reserved page addresses show one precise field error", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/onboarding");
+  await page.getByTestId("tile-barber").click();
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page
+    .getByRole("textbox", { name: "Business name", exact: true })
+    .fill("taplo-support");
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(
+    page.getByText("That address is reserved. Try another.", { exact: true }),
+  ).toHaveCount(1);
+  await expect(
+    page.getByRole("textbox", { name: "Your Taplo link", exact: true }),
+  ).toBeFocused();
+  await expect(
+    page.getByText("Choose a page link with at least 3 letters or numbers.", {
+      exact: true,
+    }),
+  ).toHaveCount(0);
+});

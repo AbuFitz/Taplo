@@ -359,9 +359,7 @@ export function Onboarding() {
   };
   const why: Record<OnboardingStep, string> = {
     type: "Choose what you do.",
-    name: s.content.identity.name.trim()
-      ? "Choose a page link with at least 3 letters or numbers."
-      : "",
+    name: "", // NameStep owns the precise, associated field error.
     look: "",
     action: "Add the detail for the choice you made, or choose Get in touch.",
     services:
@@ -438,7 +436,7 @@ export function Onboarding() {
           onClick={press}
           data-ready={valid[step]}
           aria-describedby={
-            !valid[step] && showErrors ? "why-disabled" : undefined
+            !valid[step] && showErrors && why[step] ? "why-disabled" : undefined
           }
         >
           {step === "plan" ? `Continue with ${planName}` : "Continue"}

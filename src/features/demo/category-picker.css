@@ -127,3 +127,21 @@
     font-size: 11px;
   }
 }
+
+/* The old ninth Other tile spanned both columns; this picker has six equal choices. */
+.sf-root[data-step="type"] .sf-category-picker .sf-tiles > li:last-child {
+  grid-column: auto;
+}
+.sf-root[data-step="type"] .sf-category-picker .sf-tile {
+  flex-direction: row;
+  min-height: 58px;
+}
+.sf-root[data-step="type"] .sf-category-picker .sf-tile-label {
+  text-align: left;
+}
+.sf-root[data-step="type"] .sf-category-picker .sf-tile-icon {
+  background: transparent;
+  color: #63576e;
+}
+
+.sf-root[data-step="type"] .sf-category-picker .sf-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }

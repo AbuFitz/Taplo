@@ -105,3 +105,29 @@ describe("workspace emphasis", () => {
     expect(workspaceModel("barber", "Barber").terms.team).toBe("Barbers");
   });
 });
+
+describe("category location suggestions", () => {
+  it("changes only untouched setup defaults when switching between mobile and premises work", () => {
+    const mobile = applyIndustry(initialState(), "detailer");
+    expect(mobile.content.location.mode).toBe("service_area");
+    expect(applyIndustry(mobile, "barber").content.location.mode).toBe(
+      "premises",
+    );
+  });
+  it("never changes an existing business location", () => {
+    const before = initialState();
+    before.content.location = {
+      mode: "premises",
+      addressLine: "1 Example Street",
+      timezone: "Europe/London",
+    };
+    expect(applyIndustry(before, "detailer").content.location).toBe(
+      before.content.location,
+    );
+    before.onboarded = true;
+    before.content.location = { mode: "online", timezone: "Europe/London" };
+    expect(applyIndustry(before, "barber").content.location).toBe(
+      before.content.location,
+    );
+  });
+});

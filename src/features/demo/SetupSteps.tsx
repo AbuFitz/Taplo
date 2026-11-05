@@ -58,12 +58,13 @@ export function NameStep({
   const [lineOpen, setLineOpen] = React.useState(Boolean(c.identity.tagline));
   const errs = slugProblems(c.identity.slug);
   const nameMissing = showErrors && !c.identity.name.trim();
+  const slugEditorVisible = editSlug || (showErrors && errs.length > 0);
   return (
     <div className="sf-stack" data-testid="name-step">
       <TaploInput
         label="Business name"
         autoFocus={desktop}
-        placeholder="e.g. Fade Street Barbers"
+        placeholder="The name customers know you by"
         value={c.identity.name}
         maxLength={100}
         autoComplete="organization"
@@ -80,18 +81,18 @@ export function NameStep({
         <button
           type="button"
           onClick={() => setEditSlug((v) => !v)}
-          aria-expanded={editSlug || (showErrors && errs.length > 0)}
+          aria-expanded={slugEditorVisible}
           className="sf-link"
         >
           {editSlug ? "Done" : "Change"}
         </button>
-        {errs.length && c.identity.slug ? (
+        {errs.length && c.identity.slug && !slugEditorVisible ? (
           <span className="sf-error" role="alert">
             {SLUG_PROBLEM_MESSAGE[errs[0]!]}
           </span>
         ) : null}
       </div>
-      {editSlug || (showErrors && errs.length) ? (
+      {slugEditorVisible ? (
         <TaploInput
           label="Your Taplo link"
           autoComplete="off"
