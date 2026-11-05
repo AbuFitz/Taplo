@@ -24,11 +24,11 @@ export function ApplyDesign({ design, industry, arrangement, look, className, ch
   const owner = ready && state?.onboarded ? state : null
   const [open, setOpen] = React.useState(false)
   const label = children ?? "Use this design"
-  if (!owner) return <Link data-brand-action href={`/onboarding?design=${design.id}${look ? `&look=${look}` : ""}${arrangement ? `&arr=${arrangement}` : ""}`} className={cn("sf-use", className)} aria-label={`Start with the ${design.name} design`} data-testid="start-design">{label}</Link>
+  if (!owner) return <Link data-brand-action href={`/onboarding?design=${design.id}${look ? `&look=${look}` : ""}${arrangement ? `&arr=${arrangement}` : ""}`} className={cn("sf-use", className)} data-testid="start-design">{label}</Link>
   const applied = owner.page.themeId === design.id
   return (
     <>
-      <button type="button" className={cn("sf-use", className)} onClick={() => setOpen(true)} aria-label={applied ? `${design.name} is on your page` : `Use the ${design.name} design`}>{applied ? <><Check aria-hidden="true" />On your page</> : label}</button>
+      <button type="button" className={cn("sf-use", className)} onClick={() => setOpen(true)}>{applied ? <><Check aria-hidden="true" />On your page</> : label}</button>
       {open ? <ApplyDialog design={design} industry={industry} arrangement={arrangement} look={look} onClose={() => setOpen(false)} /> : null}
     </>
   )

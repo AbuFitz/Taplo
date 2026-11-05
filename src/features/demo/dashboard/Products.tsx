@@ -23,9 +23,10 @@ import {
   AVAILABILITY_LABEL,
 } from "../ProductForm";
 import { useDraft } from "../hooks";
-import { EmptyPanel } from "@/components/taplo/illustrations";
 import { ProfileImage } from "@/features/page/renderer/ProfileImage";
 import { PageHeader } from "./Panel";
+import { storageHasFailed } from "../store";
+import { mergeProductEdit } from "./product-edit";
 
 export const blankProduct = (
   kind: ProductContent["kind"] = "product",
@@ -55,7 +56,26 @@ export function Products() {
   const [query, setQuery] = React.useState("");
   const [before, setBefore] = React.useState("");
   const [showErr, setShowErr] = React.useState(false);
-  useSetupIntent("new", () => { const p=blankProduct(c?.identity.industryKey === "car-dealer" ? "vehicle" : "product"); setBefore(JSON.stringify(p)); setShowErr(false); setEditing({p,isNew:true}); }, Boolean(c));
+  const [saveProblem, setSaveProblem] = React.useState("");
+  const [conflict, setConflict] = React.useState(false);
+  const [formVersion, setFormVersion] = React.useState(0);
+  const [editingBusiness, setEditingBusiness] = React.useState<string | null>(null);
+  const editorFields = React.useRef<HTMLDivElement>(null);
+  useSetupIntent(
+    "new",
+    () => {
+      setEditingBusiness(c?.identity.slug ?? null);
+      const p = blankProduct(
+        c?.identity.industryKey === "car-dealer" ? "vehicle" : "product",
+      );
+      setBefore(JSON.stringify(p));
+      setShowErr(false);
+      setSaveProblem("");
+      setConflict(false);
+      setEditing({ p, isNew: true });
+    },
+    Boolean(c),
+  );
   if (!c) return null;
   const all = (c.products ?? []).map(normProduct);
   const active = all.filter((p) => !p.archived);
@@ -63,18 +83,54 @@ export function Products() {
   const commit = (list: ProductContent[]) =>
     setContent((x) => ({ ...x, products: list }));
   const open = (p: ProductContent, isNew: boolean) => {
+    setEditingBusiness(c.identity.slug);
     setBefore(JSON.stringify(p));
     setShowErr(false);
+    setSaveProblem("");
+    setConflict(false);
     setEditing({ p, isNew });
   };
   const save = () => {
     if (!editing) return;
-    if (Object.keys(productErrors(editing.p)).length) return setShowErr(true);
-    commit(
-      editing.isNew
-        ? [...all, editing.p]
-        : all.map((x) => (x.id === editing.p.id ? editing.p : x)),
-    );
+    if (Object.keys(productErrors(editing.p)).length) {
+      setShowErr(true);
+      requestAnimationFrame(() =>
+        editorFields.current
+          ?.querySelector<HTMLInputElement>('[aria-invalid="true"]')
+          ?.focus(),
+      );
+      return;
+    }
+    let changedElsewhere = false;
+    setContent((current) => {
+      if (current.identity.slug !== editingBusiness) {
+        changedElsewhere = true;
+        return current;
+      }
+      const result = mergeProductEdit(
+        current.products,
+        editing.p,
+        editing.isNew ? null : before,
+      );
+      if (result.conflict) {
+        changedElsewhere = true;
+        return current;
+      }
+      return { ...current, products: result.products };
+    });
+    if (changedElsewhere) {
+      setConflict(true);
+      setSaveProblem(
+        "This item changed elsewhere or was removed. Your changes are still here. Load the latest item before saving.",
+      );
+      return;
+    }
+    if (storageHasFailed()) {
+      setSaveProblem(
+        "We couldn’t save your changes. Your details are still here. Please try again before leaving.",
+      );
+      return;
+    }
     setEditing(null);
   };
   return (
@@ -230,16 +286,6 @@ export function Products() {
             </ul>
           </section>
         ) : null}
-        <EmptyPanel
-          illustration="connect"
-          title="Checkout and NFC products are not built yet"
-        >
-          <p>
-            Today a product opens an enquiry (call, WhatsApp or email) or a link
-            to your own shop. Cart, payments, orders and optional NFC cards,
-            stickers and keyrings come later.
-          </p>
-        </EmptyPanel>
       </div>
       <Overlay
         open={editing !== null}
@@ -262,12 +308,40 @@ export function Products() {
           </div>
         }
       >
+        {saveProblem ? (
+          <div role="alert" className="mb-4 rounded-xl bg-muted p-4 text-sm">
+            <p>{saveProblem}</p>
+            {conflict &&
+            editing &&
+            c.identity.slug === editingBusiness &&
+            all.some((p) => p.id === editing.p.id) ? (
+              <Button
+                type="button"
+                variant="outline"
+                className="mt-3 min-h-11"
+                onClick={() => {
+                  const latest = all.find((p) => p.id === editing.p.id)!;
+                  setBefore(JSON.stringify(latest));
+                  setEditing({ p: latest, isNew: false });
+                  setSaveProblem("");
+                  setConflict(false);
+                  setFormVersion((v) => v + 1);
+                }}
+              >
+                Load latest item
+              </Button>
+            ) : null}
+          </div>
+        ) : null}
         {editing ? (
-          <ProductForm
-            product={editing.p}
-            onChange={(p) => setEditing({ ...editing, p })}
-            showErrors={showErr}
-          />
+          <div ref={editorFields}>
+            <ProductForm
+              key={formVersion}
+              product={editing.p}
+              onChange={(p) => setEditing({ ...editing, p })}
+              showErrors={showErr}
+            />
+          </div>
         ) : null}
       </Overlay>
     </>

@@ -59,7 +59,9 @@ for (const width of [320, 390, 1440])
       });
       await expect(dialog).toBeVisible();
       await dialog.evaluate(async (element) => {
-        await Promise.all(element.getAnimations().map((animation) => animation.finished));
+        await Promise.all(
+          element.getAnimations().map((animation) => animation.finished),
+        );
       });
       const bounds = await dialog.boundingBox();
       expect(bounds!.x).toBeGreaterThanOrEqual(0);
@@ -194,16 +196,31 @@ for (const width of [390, 1440]) {
     await expect(page.locator('[data-widget="hours"]')).toContainText("19:00");
     await page.goto("/dashboard/page");
     await selectPart(page, "details");
-    await page.locator("summary").filter({ hasText: "Location and opening hours" }).click();
-    const publicHours = page.getByRole("definition").filter({ hasText: "19:00" });
+    await page
+      .locator("summary")
+      .filter({ hasText: "Location and opening hours" })
+      .click();
+    const publicHours = page
+      .getByRole("definition")
+      .filter({ hasText: "19:00" });
     await expect(publicHours).toHaveCount(5);
-    await page.getByRole("button", { name: "Edit opening hours", exact: true }).click();
-    const reopened = page.getByRole("dialog", { name: "Your opening hours", exact: true });
-    await expect(reopened.getByLabel("Monday period 2 closes", { exact: true })).toHaveValue("19:00");
-    await expect(reopened.getByLabel("Sunday open", { exact: true })).not.toBeChecked();
+    await page
+      .getByRole("button", { name: "Edit opening hours", exact: true })
+      .click();
+    const reopened = page.getByRole("dialog", {
+      name: "Your opening hours",
+      exact: true,
+    });
+    await expect(
+      reopened.getByLabel("Monday period 2 closes", { exact: true }),
+    ).toHaveValue("19:00");
+    await expect(
+      reopened.getByLabel("Sunday open", { exact: true }),
+    ).not.toBeChecked();
     await reopened.getByRole("button", { name: "Close", exact: true }).click();
-    await expect(page.getByRole("button", { name: "Edit opening hours", exact: true })).toBeFocused();
-
+    await expect(
+      page.getByRole("button", { name: "Edit opening hours", exact: true }),
+    ).toBeFocused();
   });
 }
 
@@ -399,12 +416,18 @@ test("Today routes enquiries and individual work to the correct task", async ({
   ).toBeVisible();
 });
 
-
 for (const width of [390, 1440]) {
-  test(`customer team profile returns focus without invented portraits at ${width}`, async ({ page }) => {
+  test(`customer team profile returns focus without invented portraits at ${width}`, async ({
+    page,
+  }) => {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto("/appearance/frame?scenario=station&widget=team&variant=list");
-    const person = page.getByTestId("team-card").filter({ hasText: "Sam Ellis" }).getByRole("button", { name: /View profile/ });
+    await page.goto(
+      "/appearance/frame?scenario=station&widget=team&variant=list",
+    );
+    const person = page
+      .getByTestId("team-card")
+      .filter({ hasText: "Sam Ellis" })
+      .getByRole("button", { name: /View profile/ });
     await expect(person).toBeVisible();
     await expect(person.locator(".tp-portrait")).toHaveCount(0);
     await person.click();
@@ -418,7 +441,9 @@ for (const width of [390, 1440]) {
     await expect(dialog).not.toBeVisible();
     await expect(person).toBeFocused();
     await person.click();
-    await dialog.getByRole("button", { name: "Book with Sam", exact: true }).click();
+    await dialog
+      .getByRole("button", { name: "Book with Sam", exact: true })
+      .click();
     const booking = page.getByTestId("booking-flow");
     await expect(booking).toBeVisible();
     await expect(dialog).not.toBeVisible();
@@ -428,3 +453,183 @@ for (const width of [390, 1440]) {
     await expect(person).toBeFocused();
   });
 }
+
+for (const width of [390, 1440])
+  for (const category of ["maker", "car-dealer"]) {
+    test(`catalogue-first Studio connects to item setup for ${category} at ${width}`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await prepare(page, category, (draft) => {
+        draft.content.products = [];
+      });
+      await expect(page.getByTestId("upcoming-bookings")).toHaveCount(0);
+      await expect(page.getByTestId("first-offer-setup")).toBeVisible();
+      await prepare(page, category, (draft) => {
+        draft.content.products = [
+          {
+            id: "own-catalogue-item",
+            name: "Owner catalogue item",
+            priceMinor: 2300,
+            kind: category === "car-dealer" ? "vehicle" : "product",
+            availability: "reserved",
+          },
+          { id: "old-item", name: "Archived item", archived: true },
+          { id: "sample-item", name: "Example item", example: true },
+        ];
+      });
+      const catalogue = page.getByTestId("catalogue-work");
+      await expect(catalogue).toContainText("Owner catalogue item");
+      await expect(catalogue).toContainText("Reserved");
+      await expect(catalogue).not.toContainText("Archived item");
+      await expect(catalogue).not.toContainText("Example item");
+      await expect(page.getByTestId("upcoming-bookings")).toHaveCount(0);
+      await catalogue
+        .getByRole("link", {
+          name: category === "car-dealer" ? "Add a vehicle" : "Add a product",
+          exact: true,
+        })
+        .click();
+      const dialog = page.getByRole("dialog", {
+        name: category === "car-dealer" ? "Add a vehicle" : "Add a product",
+        exact: true,
+      });
+      await expect(dialog).toBeVisible();
+      await dialog
+        .getByRole("button", { name: "Save product", exact: true })
+        .click();
+      await expect(dialog.getByLabel("Name", { exact: true })).toBeFocused();
+      await dialog
+        .getByLabel("Name", { exact: true })
+        .fill("Second owner item");
+      await dialog
+        .getByRole("button", { name: "Save product", exact: true })
+        .click();
+      await expect(dialog).not.toBeVisible();
+      await page.goto("/dashboard");
+      await expect(page.getByTestId("catalogue-work")).toContainText(
+        "Second owner item",
+      );
+    });
+  }
+
+test("product save failure retains inputs and retry never duplicates the item", async ({
+  page,
+}) => {
+  await prepare(page, "maker", (draft) => {
+    draft.content.products = [];
+  });
+  await page.goto("/dashboard/products?new=1");
+  const dialog = page.getByRole("dialog", {
+    name: "Add a product",
+    exact: true,
+  });
+  await dialog.getByLabel("Name", { exact: true }).fill("Retry cup");
+  await page.evaluate(() => {
+    const original = Storage.prototype.setItem;
+    let rejected = false;
+    Storage.prototype.setItem = function (key, value) {
+      if (key === "taplo.demo.v2" && !rejected) {
+        rejected = true;
+        throw new DOMException("Full storage", "QuotaExceededError");
+      }
+      return original.call(this, key, value);
+    };
+  });
+  await dialog
+    .getByRole("button", { name: "Save product", exact: true })
+    .click();
+  await expect(dialog.getByRole("alert")).toContainText("couldn’t save");
+  await expect(dialog.getByLabel("Name", { exact: true })).toHaveValue(
+    "Retry cup",
+  );
+  await dialog
+    .getByRole("button", { name: "Save product", exact: true })
+    .click();
+  await expect(dialog).not.toBeVisible();
+  const saved = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("taplo.demo.v2")!).content.products.filter(
+      (product: { name: string }) => product.name === "Retry cup",
+    ),
+  );
+  expect(saved).toHaveLength(1);
+  await page.reload();
+  await expect(page.getByText("Retry cup", { exact: true })).toBeVisible();
+});
+
+test("conflicting product edits retain inputs and explicitly load the latest price", async ({
+  page,
+}) => {
+  await prepare(page, "maker", (draft) => {
+    draft.content.products = [
+      { id: "cup", name: "Original cup", priceMinor: 1200 },
+    ];
+  });
+  await page.goto("/dashboard/products");
+  await page.getByRole("button", { name: "Edit", exact: true }).click();
+  const dialog = page.getByRole("dialog", {
+    name: "Edit product",
+    exact: true,
+  });
+  await dialog.getByLabel("Name", { exact: true }).fill("My unsaved name");
+  const other = await page.context().newPage();
+  await other.goto("/dashboard/products");
+  await other.getByRole("button", { name: "Edit", exact: true }).click();
+  const theirs = other.getByRole("dialog", {
+    name: "Edit product",
+    exact: true,
+  });
+  await theirs.getByLabel("Name", { exact: true }).fill("Other tab cup");
+  await theirs.getByLabel("Price (£, optional)", { exact: true }).fill("18");
+  await theirs
+    .getByRole("button", { name: "Save product", exact: true })
+    .click();
+  await expect(theirs).not.toBeVisible();
+  await expect(page.locator(".ws-product-copy")).toContainText("Other tab cup");
+  await dialog
+    .getByRole("button", { name: "Save product", exact: true })
+    .click();
+  await expect(dialog.getByRole("alert")).toContainText("changed elsewhere");
+  await expect(dialog.getByLabel("Name", { exact: true })).toHaveValue(
+    "My unsaved name",
+  );
+  await dialog
+    .getByRole("button", { name: "Load latest item", exact: true })
+    .click();
+  await expect(dialog.getByLabel("Name", { exact: true })).toHaveValue(
+    "Other tab cup",
+  );
+  await expect(
+    dialog.getByLabel("Price (£, optional)", { exact: true }),
+  ).toHaveValue("18");
+  await dialog.getByRole("button", { name: "Close", exact: true }).click();
+  await expect(dialog).not.toBeVisible();
+  await other.close();
+});
+
+for (const width of [390, 1440])
+  test(`plan choices stay readable at ${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const draft = setName(
+      applyIndustry(initialState(), "barber"),
+      "Clear Studio",
+    );
+    draft.step = "plan";
+    await page.goto("/onboarding");
+    await page.evaluate(
+      (state) => localStorage.setItem("taplo.demo.v2", JSON.stringify(state)),
+      draft,
+    );
+    await page.goto("/onboarding?step=plan");
+    await expect(page.getByTestId("setup-plans")).toBeVisible();
+    const result = await new AxeBuilder({ page })
+      .include('[data-testid="setup-plans"]')
+      .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+      .analyze();
+    expect(
+      result.violations.filter(
+        (v) => v.impact === "serious" || v.impact === "critical",
+      ),
+    ).toEqual([]);
+  });

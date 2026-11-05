@@ -79,7 +79,7 @@ test.describe("My page editor", () => {
     await handle.focus();
     await page.keyboard.press("Space");
     await page.waitForTimeout(120); // dnd-kit registers its listeners on the next frame
-    await page.keyboard.press("ArrowRight");
+    await page.keyboard.press("ArrowDown");
     await page.waitForTimeout(120);
     await page.keyboard.press("Space");
     await expect.poll(() => rowOrder(page)).not.toEqual(start);

@@ -43,7 +43,7 @@ test("a gallery selection opens the final design experience directly", async ({ 
   await expect(page).toHaveURL(/\/inspiration\/[^?]+\?design=/);
   await expect(detail.getByRole("link", { name: "Open the demo" })).toHaveCount(0);
   await expect(detail.locator("dd", { hasText: "Curved cover" })).toBeVisible();
-  await detail.getByRole("link", { name: /Start with the .* design/ }).click();
+  await detail.getByRole("link", { name: "Use this design" }).click();
   await expect(page).toHaveURL(/\/onboarding/);
   await expect(page.getByTestId("from-design")).toContainText("Starting with");
   // The draft is dressed from the first step: the chosen arrangement and design are on the preview.

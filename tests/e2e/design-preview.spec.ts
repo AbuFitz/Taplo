@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test"
 import path from "node:path"
-import { EXAMPLES } from "../../src/features/inspiration/examples"
 
 for (const width of [390, 1440]) {
   test(`design preview switches real responsive widths without losing a booking at ${width}px`, async ({ page }) => {
@@ -35,7 +34,7 @@ for (const width of [390, 1440]) {
     await frame.getByRole("button", { name: "Close", exact: true }).click()
     await expect(flow).not.toBeVisible()
     await page.getByRole("heading", { level: 1 }).scrollIntoViewIfNeeded()
-    await expect(preview.getByRole("link", { name: /Start with the .* design/ })).toBeVisible()
+    await expect(preview.getByRole("link", { name: "Use this design" })).toBeVisible()
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `design-detail-${width}.png`), fullPage: false })
     await preview.getByText("Desktop", { exact: true }).click()

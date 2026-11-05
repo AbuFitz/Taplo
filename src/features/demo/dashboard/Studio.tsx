@@ -3,11 +3,13 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import type { ProductContent } from "@/features/businesses/content";
+import { formatMoney } from "@/features/services/format";
 import { StudioIcons as Icon } from "@/features/platform/icons";
 import { useOwner } from "@/features/booking/ui/owner/useOwner";
 import { nowMs } from "@/features/booking/clock";
 import { TAPLO_DOMAINS } from "@/lib/domains";
-import { hasUnpublishedChanges, readiness } from "../actions";
+import { hasUnpublishedChanges, readiness, normProduct } from "../actions";
 import { useDraft } from "../hooks";
 import { FirstOfferSetup } from "./FirstOfferSetup";
 import { QuickBusinessEditor, type BusinessEdit } from "./QuickBusinessEditor";
@@ -55,6 +57,9 @@ export function Studio() {
       : "Published"
     : "Draft";
   const productsFirst = model.mobileWork === "products";
+  const actualProducts = (s.content.products ?? [])
+    .map(normProduct)
+    .filter((p) => !p.archived && !p.example);
   const catalogue = [
     {
       key: "services",
@@ -290,89 +295,98 @@ export function Studio() {
             <Icon.next />
           </Link>
         </aside>
-        <section
-          className="studio-work"
-          aria-labelledby="studio-work-heading"
-          data-testid="upcoming-bookings"
-        >
-          <div className="studio-section-heading">
-            <h2 id="studio-work-heading">
-              {work.today.length
-                ? "On the day"
-                : work.upcoming.length
-                  ? "Coming up"
-                  : "Your time"}
-            </h2>
-            <Link href="/dashboard/bookings">
-              Open calendar
-              <Icon.external />
-            </Link>
-          </div>
-          {!work.timezone ? (
-            <div className="studio-quiet-state">
-              <Icon.clock />
-              <h3>Check your business time zone</h3>
-              <p>
-                Choose a valid time zone before reviewing appointment times.
-              </p>
-              <Link href="/dashboard/profile">
-                Review business details
-                <Icon.next />
+        {productsFirst && work.timezone && !work.upcoming.length ? (
+          actualProducts.length ? (
+            <CatalogueWork
+              products={actualProducts}
+              vehicles={s.content.identity.industryKey === "car-dealer"}
+            />
+          ) : null
+        ) : (
+          <section
+            className="studio-work"
+            aria-labelledby="studio-work-heading"
+            data-testid="upcoming-bookings"
+          >
+            <div className="studio-section-heading">
+              <h2 id="studio-work-heading">
+                {work.today.length
+                  ? "On the day"
+                  : work.upcoming.length
+                    ? "Coming up"
+                    : "Your time"}
+              </h2>
+              <Link href="/dashboard/bookings">
+                Open calendar
+                <Icon.external />
               </Link>
             </div>
-          ) : next.length ? (
-            <ul className="studio-agenda">
-              {next.slice(0, 5).map((booking) => (
-                <li key={booking.id}>
-                  <Link
-                    href={`/dashboard/bookings?booking=${encodeURIComponent(booking.id)}`}
-                  >
-                    <time dateTime={new Date(booking.startsAt).toISOString()}>
-                      {time(booking.startsAt, !work.today.length)}
-                    </time>
-                    <div>
-                      <strong>{booking.serviceName}</strong>
-                      <span>{booking.customer.name}</span>
-                    </div>
-                    <span
-                      className="studio-work-status"
-                      data-pending={booking.status === "pending"}
+            {!work.timezone ? (
+              <div className="studio-quiet-state">
+                <Icon.clock />
+                <h3>Check your business time zone</h3>
+                <p>
+                  Choose a valid time zone before reviewing appointment times.
+                </p>
+                <Link href="/dashboard/profile">
+                  Review business details
+                  <Icon.next />
+                </Link>
+              </div>
+            ) : next.length ? (
+              <ul className="studio-agenda">
+                {next.slice(0, 5).map((booking) => (
+                  <li key={booking.id}>
+                    <Link
+                      href={`/dashboard/bookings?booking=${encodeURIComponent(booking.id)}`}
                     >
-                      {booking.status === "pending"
-                        ? "Needs a reply"
-                        : "Confirmed"}
-                    </span>
-                    <Icon.next />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="studio-quiet-state">
-              <Icon.bookings />
-              <h3>
-                {productsFirst
-                  ? "Make room for the work you do."
-                  : "Space for your next appointment."}
-              </h3>
-              <p>
-                {productsFirst
-                  ? "Add appointments when they’re part of your business. Your products have their own home."
-                  : "Your upcoming appointments will appear here. Choose your working times when you’re ready."}
+                      <time dateTime={new Date(booking.startsAt).toISOString()}>
+                        {time(booking.startsAt, !work.today.length)}
+                      </time>
+                      <div>
+                        <strong>{booking.serviceName}</strong>
+                        <span>{booking.customer.name}</span>
+                      </div>
+                      <span
+                        className="studio-work-status"
+                        data-pending={booking.status === "pending"}
+                      >
+                        {booking.status === "pending"
+                          ? "Needs a reply"
+                          : "Confirmed"}
+                      </span>
+                      <Icon.next />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="studio-quiet-state">
+                <Icon.bookings />
+                <h3>
+                  {productsFirst
+                    ? "Make room for the work you do."
+                    : "Space for your next appointment."}
+                </h3>
+                <p>
+                  {productsFirst
+                    ? "Add appointments when they’re part of your business. Your products have their own home."
+                    : "Your upcoming appointments will appear here. Choose your working times when you’re ready."}
+                </p>
+                <Link href="/dashboard/bookings?section=availability">
+                  Manage booking availability
+                  <Icon.next />
+                </Link>
+              </div>
+            )}
+            {work.today.length && work.upcoming.length > work.today.length ? (
+              <p className="studio-work-following">
+                {work.upcoming.length - work.today.length} more upcoming ·{" "}
+                <Link href="/dashboard/bookings">See your calendar</Link>
               </p>
-              <Link href="/dashboard/bookings?section=availability">
-                Manage booking availability
-                <Icon.next />
-              </Link>
-            </div>
-          )}
-          {work.today.length && work.upcoming.length > work.today.length ? (
-            <p className="studio-work-following">
-              {work.upcoming.length - work.today.length} more upcoming ·{" "}
-              <Link href="/dashboard/bookings">See your calendar</Link>
-            </p>
-          ) : null}
-        </section>
+            ) : null}
+          </section>
+        )}
         <section
           className="studio-catalogue"
           aria-labelledby="studio-catalogue-heading"
@@ -436,5 +450,68 @@ export function StudioSkeleton() {
       <span />
       <span />
     </div>
+  );
+}
+
+/** The primary work surface follows the business's actual work, without inventing orders or stock quantities. */
+function CatalogueWork({
+  products,
+  vehicles,
+}: {
+  products: ProductContent[];
+  vehicles: boolean;
+}) {
+  const labels = {
+    available: "Available",
+    reserved: "Reserved",
+    sold: "Sold",
+    unavailable: "Not available",
+  };
+  return (
+    <section
+      className="studio-work"
+      aria-labelledby="catalogue-work-heading"
+      data-testid="catalogue-work"
+    >
+      <div className="studio-section-heading">
+        <h2 id="catalogue-work-heading">
+          {vehicles ? "Your vehicle stock" : "Your products"}
+        </h2>
+        <Link href="/dashboard/products">
+          {vehicles ? "Manage stock" : "Open catalogue"}
+          <Icon.external />
+        </Link>
+      </div>
+      <ul className="studio-product-summary">
+        {products.slice(0, 3).map((product) => (
+          <li key={product.id}>
+            <div>
+              <strong>{product.name}</strong>
+              <span>{labels[product.availability ?? "available"]}</span>
+            </div>
+            <span>
+              {product.priceMinor !== undefined
+                ? formatMoney(product.priceMinor, product.currency ?? "GBP")
+                : "Price on enquiry"}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p className="studio-section-note">
+        {products.length}{" "}
+        {vehicles
+          ? products.length === 1
+            ? "vehicle"
+            : "vehicles"
+          : products.length === 1
+            ? "product"
+            : "products"}{" "}
+        in your catalogue
+      </p>
+      <Link className="studio-inline-link" href="/dashboard/products?new=1">
+        {vehicles ? "Add a vehicle" : "Add a product"}
+        <Icon.next />
+      </Link>
+    </section>
   );
 }

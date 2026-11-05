@@ -103,7 +103,7 @@ export function DesignGallery() {
       <div className="dg-toolbar" role="region" aria-label="Find a design">
         <div className="dg-toolbar-row">
           <div className="dg-search"><Search aria-hidden="true" /><input type="search" aria-label="Search pages" placeholder="Search: florist, plumber, tutor…" value={query} onChange={(e) => setQuery(e.target.value)} />{query ? <button type="button" aria-label="Clear search" onClick={() => setQuery("")}><X /></button> : null}</div>
-          <button type="button" className="dg-style-btn" onClick={() => setStyleOpen(true)} aria-label="Filter designs" aria-haspopup="dialog" data-active={styleCount > 0}>
+          <button type="button" className="dg-style-btn" onClick={() => setStyleOpen(true)} aria-label="Explore styles" aria-haspopup="dialog" data-active={styleCount > 0}>
             <SlidersHorizontal aria-hidden="true" /><span>Explore styles</span>{styleCount > 0 ? <b aria-label={`${styleCount} chosen`}>{styleCount}</b> : null}
           </button>
         </div>

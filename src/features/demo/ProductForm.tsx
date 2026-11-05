@@ -89,7 +89,7 @@ export function ProductForm({ product, onChange, showErrors, setup = false }: { 
         <legend className="sr-only">What happens when someone taps it</legend>
         <span className="text-sm font-medium">What happens when someone taps it?</span>
         <Segment label="Tap action" value={product.mode} options={[{ value: "enquire", label: "They enquire" }, { value: "link", label: "Opens a link" }]} onChange={(v) => set({ mode: v })} />
-        {product.mode === "enquire" ? <p className="text-xs text-muted-foreground">They choose to call, WhatsApp or email you about it. This is an enquiry, not a purchase: nothing is paid on Taplo.</p> : (
+        {product.mode === "enquire" ? <p className="text-xs text-muted-foreground">Customers can call, WhatsApp or email you about this item.</p> : (
           <>
             <UrlField label="Web address to open" value={product.linkUrl} onCommit={(v) => set({ linkUrl: v })} help={errors.link} />
             <TaploInput label="Link text (optional)" placeholder={product.kind === "vehicle" ? "View listing" : "View in shop"} value={product.linkLabel ?? ""} maxLength={60} onChange={event => set({linkLabel:event.target.value || undefined})} />
@@ -97,7 +97,7 @@ export function ProductForm({ product, onChange, showErrors, setup = false }: { 
               <Label htmlFor={`${product.id}-aff`} className="text-sm font-normal">This is an affiliate or referral link<span className="block text-xs text-muted-foreground">Visitors are told it is one before they follow it.</span></Label>
               <Switch id={`${product.id}-aff`} checked={product.affiliate} onCheckedChange={(v) => set({ affiliate: v })} />
             </div>
-            <p className="text-xs text-muted-foreground">The link opens in a new tab on the other site. Taplo does not take payment or see the order.</p>
+            <p className="text-xs text-muted-foreground">Customers follow this link in a new tab.</p>
           </>
         )}
       </fieldset>

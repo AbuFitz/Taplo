@@ -123,7 +123,7 @@ test.describe("ordering", () => {
     const handle = page.locator("[data-widget-row-id]").first().getByTestId("drag-handle")
     await handle.focus()
     await page.keyboard.press("Space"); await page.waitForTimeout(120)
-    await page.keyboard.press("ArrowRight"); await page.waitForTimeout(120)
+    await page.keyboard.press("ArrowDown"); await page.waitForTimeout(120)
     await page.keyboard.press("Space")
     await expect.poll(() => rowOrder(page)).not.toEqual(start)
     expect((await rowOrder(page))[1]).toBe(start[0])

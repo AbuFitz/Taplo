@@ -58,6 +58,19 @@ jobs:
             test-results/
           if-no-files-found: ignore
           retention-days: 7
+      - name: Editor and discovery accessibility recovery
+        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/a11y.spec.ts tests/e2e/design-a11y.spec.ts tests/e2e/workbench.spec.ts --grep "editor:|onboarding and|design discovery|Team.*avatars"
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      - name: Vertical block ordering recovery
+        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/content.spec.ts --grep "ordering|touch drag"
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        with:
+          name: regression-recovery-evidence
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Public theme contrast and design-control regression
         run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/controls.spec.ts tests/e2e/a11y.spec.ts --grep "public profile|design controls" --max-failures=5
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
