@@ -37,3 +37,5 @@ The actual 390px CI capture showed the beginning of the profile mark clipped out
 Source `357c6aa` passed the full verify job in run 41974661435: 500 unit/PostgreSQL tests, type generation/checking, lint, build, three operational browser checks, two task/real-preview checks and 104 public-profile/control checks. This is not a pass for the subsequent mobile/replay changes or the full browser-regression job, which was superseded by newer work.
 
 Exact mobile block selection now leaves scrolling to the selection bridge's widget ID, instead of posting a second generic focus request which could jump back to the header (or the first block of the same type). The content-list default also starts at the top. Added a phone check that selects Questions and verifies it remains in the preview after the deferred focus window settles.
+
+The first selected-Questions test incorrectly used a barber fixture whose starter page has no Questions block. It now uses the mechanic fixture, which contains that block; the viewport/selection assertions remain unchanged. Playwright captures failing screens automatically for diagnosis.

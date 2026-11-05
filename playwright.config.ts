@@ -5,6 +5,7 @@ export default defineConfig({
   timeout: 60_000,
   workers: 2,
   use: {
+    screenshot: "only-on-failure",
     baseURL: process.env.BASE_URL ?? "http://localhost:3100",
     launchOptions: { executablePath: process.env.PW_CHROMIUM ?? "/opt/pw-browsers/chromium-1194/chrome-linux/chrome" },
   },

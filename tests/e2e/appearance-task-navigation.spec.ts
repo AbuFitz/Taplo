@@ -40,7 +40,7 @@ for (const width of [390, 1440]) {
 test("mobile block selection stays on the selected block after preview reframing settles", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 1000 });
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await openEditorWithSample(page, "Barber");
+  await openEditorWithSample(page, "Mechanic");
   await page.getByTestId("tab-content").click();
   await page.locator('[data-widget-row="faq"]').getByTestId("select-widget").click();
   const selected = previewFrame(page).locator('[data-widget="faq"][data-tp-selected]');

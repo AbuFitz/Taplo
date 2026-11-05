@@ -36,9 +36,6 @@ jobs:
       - name: Starting-look navigation on phone and desktop
         run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/appearance-task-navigation.spec.ts
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
-      - name: Public theme contrast and design-control regression
-        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/controls.spec.ts tests/e2e/a11y.spec.ts --grep "public profile|design controls" --max-failures=5
-        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         with:
@@ -46,6 +43,16 @@ jobs:
           path: |
             shots/p02-*.png
             test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Public theme contrast and design-control regression
+        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/controls.spec.ts tests/e2e/a11y.spec.ts --grep "public profile|design controls" --max-failures=5
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        with:
+          name: public-control-evidence
+          path: test-results/
           if-no-files-found: ignore
           retention-days: 7
   browser-regression:
