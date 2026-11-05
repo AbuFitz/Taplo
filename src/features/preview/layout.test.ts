@@ -10,6 +10,7 @@ describe("visible mobile document viewport", () => {
       expect(layout.outerH * layout.scale).toBeLessThanOrEqual(box.h);
       expect(box.h - layout.outerH * layout.scale).toBeLessThan(1);
       expect(layout.vh).toBeGreaterThan(150);
+      expect(layout.safeTop).toBeGreaterThanOrEqual(36);
     });
   }
 });

@@ -205,7 +205,7 @@ export function MobileEditor({
           testId="preview-frame"
           focus={
             section === "design" || section === "header"
-              ? "identity"
+              ? "top"
               : inspecting && widget
                 ? ((
                     {

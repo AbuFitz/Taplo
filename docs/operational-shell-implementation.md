@@ -29,3 +29,9 @@ Verified source 9e4656553f4fb39dc68b493ed04145a4b254402d: GitHub Actions run 417
 ## Deployed editor review — 5 November
 
 Reviewed the deployed desktop editor through its real sample-entry route and selected Noir through the Look control. Selection changed the business renderer. Found a separate defect: current design IDs were requested as absent `/looks/{id}.webp` assets. The chooser now uses the existing visibility-mounted real-renderer preview for current designs; legacy captures remain in place. Removed the duplicate desktop design walkthrough trigger. Added phone/desktop browser checks for a loaded real design preview, a single walkthrough trigger and retained selection when navigating between design tasks. These new browser checks await their CI result.
+
+## Mobile framing correction
+
+The actual 390px CI capture showed the beginning of the profile mark clipped out of the short editor preview. Design/Profile tabs were requesting focus on `.tp-name`, which scrolled past the mark. They now reset to the page top when reframing. Decorated handset previews also reserve their camera/status area outside the document viewport, including the shortened mobile stage. Unframed choice previews retain the full document viewport. Geometry unit checks pass; the phone browser check now asserts the complete mark is visible and that the iframe begins below the decorative island. New browser assertions await CI.
+
+Source `357c6aa` passed the full verify job in run 41974661435: 500 unit/PostgreSQL tests, type generation/checking, lint, build, three operational browser checks, two task/real-preview checks and 104 public-profile/control checks. This is not a pass for the subsequent mobile/replay changes or the full browser-regression job, which was superseded by newer work.

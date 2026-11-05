@@ -80,13 +80,14 @@ export function layoutPreview(mode: PreviewMode, box: { w: number; h: number }, 
   if (mode === "fill") return { vw: box.w, vh: box.h, scale: 1, pad: 0, bar: 0, safeTop: 0, safeBottom: 0, outerW: box.w, outerH: box.h }
   if (mode === "device") {
     const pad = chrome ? PHONE.bezel : 0
-    const safeTop = 0
-    const safeBottom = 0
+    // Hardware belongs outside the document, including a shortened mobile editing stage.
+    const safeTop = chrome ? PHONE.top : 0
+    const safeBottom = chrome && !fitHeight ? PHONE.bottom : 0
     const outerW = device.w + pad * 2
     if (fitHeight) {
       const scale = Math.min(1, Math.max(1, box.w - 8) / outerW)
-      const vh = Math.max(120, Math.floor(box.h / scale) - pad * 2)
-      return { vw: device.w, vh, scale, pad, bar: 0, safeTop, safeBottom, outerW, outerH: vh + pad * 2 }
+      const vh = Math.max(120, Math.floor(box.h / scale) - pad * 2 - safeTop - safeBottom)
+      return { vw: device.w, vh, scale, pad, bar: 0, safeTop, safeBottom, outerW, outerH: vh + pad * 2 + safeTop + safeBottom }
     }
     const outerH = device.h + pad * 2
     const scale = zoom === "actual" ? 1 : Math.min(cropDevice ? maxScale : 1, Math.max(1,box.w - (chrome ? 8 : 0)) / outerW, cropDevice ? maxScale : box.h / outerH)

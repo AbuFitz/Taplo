@@ -21,6 +21,18 @@ for (const width of [390, 1440]) {
     await openDesignTask(page, "look");
     await expect(choice.locator('input[type="radio"]')).toBeChecked();
     await expect(previewFrame(page).locator("[data-taplo-page]")).toBeAttached();
+    if (width === 390) {
+      // The complete profile mark remains in the short document viewport, rather than scrolling straight to the name.
+      await expect.poll(() => previewFrame(page).locator(".tp-avatar").evaluate(el => {
+        const rect = el.getBoundingClientRect();
+        return rect.top >= 0 && rect.bottom <= window.innerHeight;
+      })).toBe(true);
+      const frame = await page.locator('iframe[title="Live preview of your page"]').boundingBox();
+      const island = await page.locator('.mobile-studio-live .phone-island').boundingBox();
+      expect(frame).not.toBeNull();
+      expect(island).not.toBeNull();
+      expect(frame!.y).toBeGreaterThanOrEqual(island!.y + island!.height);
+    }
     await page.screenshot({ path: `shots/p02-look-chooser-${width}.png` });
   });
 }

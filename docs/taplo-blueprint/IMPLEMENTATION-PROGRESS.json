@@ -20,6 +20,11 @@
           "commit": "9e4656553f4fb39dc68b493ed04145a4b254402d",
           "check": "TypeScript, lint, 487 unit/PostgreSQL tests and production build",
           "result": "passed in CI run 41743228789 verify job 126289696949"
+        },
+        {
+          "commit": "357c6aa1346e450f2ac26dcae20e085985f9b9ae",
+          "check": "CI verify: 500 unit/PostgreSQL tests, type checking, lint, production build, 3 operational + 2 appearance navigation + 104 public profile/control browser checks",
+          "result": "passed in run 41974661435 job 127070897803; full browser-regression was superseded, not claimed passed"
         }
       ]
     },
@@ -40,6 +45,11 @@
         {
           "check": "full browser regression",
           "result": "prior run 41743228789 failed: 334 failed, 448 passed, 5 skipped. Shared report contrast fixed and task-navigation tests updated; replacement CI pending."
+        },
+        {
+          "commit": "357c6aa1346e450f2ac26dcae20e085985f9b9ae",
+          "check": "CI verify: 500 unit/PostgreSQL tests, type checking, lint, production build, 3 operational + 2 appearance navigation + 104 public profile/control browser checks",
+          "result": "passed in run 41974661435 job 127070897803; full browser-regression was superseded, not claimed passed"
         }
       ]
     },
@@ -56,6 +66,11 @@
         {
           "check": "Local lifecycle validation, permission and HTTP tests; full unit run; blueprint static checks and migration SQL parsing",
           "result": "15 targeted tests passed; full unit run 439 passed, 61 DB skipped; static blueprint checks and all three SQL parses passed. New offer DB cases await CI."
+        },
+        {
+          "commit": "357c6aa1346e450f2ac26dcae20e085985f9b9ae",
+          "check": "CI verify: 500 unit/PostgreSQL tests, type checking, lint, production build, 3 operational + 2 appearance navigation + 104 public profile/control browser checks",
+          "result": "passed in run 41974661435 job 127070897803; full browser-regression was superseded, not claimed passed"
         }
       ],
       "implemented_commands": [
