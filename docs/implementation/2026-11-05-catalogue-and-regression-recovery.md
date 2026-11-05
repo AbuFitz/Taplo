@@ -33,3 +33,6 @@ The first CI run passed 615 unit/database tests, 25 of 27 connected cases, 3 she
 
 
 Meaningful work now also precedes setup in the actual DOM on mobile: actual appointments, catalogue work or a timezone recovery take priority, while a first-time empty business keeps setup first. Desktop uses the same named grid areas. This is record-driven composition, not a CSS order override that disagrees with keyboard/reading order. Phone catalogue checks verify the work section precedes setup and capture its actual composition.
+
+
+Dealer guidance is keyed to actual vehicle records, so an existing viewing service does not erase the first-stock action. Mixed vehicle/accessory catalogues count their actual record types rather than calling every item a vehicle. The dealer journey fixtures include an existing viewing service and an accessory product to verify both category-specific behaviour and cross-category flexibility.

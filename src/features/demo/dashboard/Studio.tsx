@@ -470,6 +470,20 @@ function CatalogueWork({
   products: ProductContent[];
   vehicles: boolean;
 }) {
+  const vehicleCount = products.filter(
+    (product) => product.kind === "vehicle",
+  ).length;
+  const productCount = products.length - vehicleCount;
+  const countLabel = [
+    vehicleCount
+      ? `${vehicleCount} ${vehicleCount === 1 ? "vehicle" : "vehicles"}`
+      : "",
+    productCount
+      ? `${productCount} ${productCount === 1 ? "product" : "products"}`
+      : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
   const labels = {
     available: "Available",
     reserved: "Reserved",
@@ -484,7 +498,11 @@ function CatalogueWork({
     >
       <div className="studio-section-heading">
         <h2 id="catalogue-work-heading">
-          {vehicles ? "Your vehicle stock" : "Your products"}
+          {vehicles
+            ? productCount
+              ? "Your stock"
+              : "Your vehicle stock"
+            : "Your products"}
         </h2>
         <Link href="/dashboard/products">
           {vehicles ? "Manage stock" : "Open catalogue"}
@@ -506,17 +524,7 @@ function CatalogueWork({
           </li>
         ))}
       </ul>
-      <p className="studio-section-note">
-        {products.length}{" "}
-        {vehicles
-          ? products.length === 1
-            ? "vehicle"
-            : "vehicles"
-          : products.length === 1
-            ? "product"
-            : "products"}{" "}
-        in your catalogue
-      </p>
+      <p className="studio-section-note">{countLabel} in your catalogue</p>
       <Link className="studio-inline-link" href="/dashboard/products?new=1">
         {vehicles ? "Add a vehicle" : "Add a product"}
         <Icon.next />

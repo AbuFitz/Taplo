@@ -38,10 +38,11 @@ export function FirstOfferSetup() {
     ...(state.content.services ?? []),
     ...(state.content.products ?? []),
   ].some((item) => !item.archived && !item.example);
-  if (hasOffer && !open && !saved && !failed) return null;
   // Vehicle details use their dedicated editor, but still need a clear first action in Studio.
   if (journey.kind === "vehicle")
-    return hasOffer ? null : (
+    return (state.content.products ?? []).some(
+      (item) => item.kind === "vehicle" && !item.archived && !item.example,
+    ) ? null : (
       <section
         className="ws-first-offer"
         aria-labelledby="first-offer-heading"
@@ -59,6 +60,7 @@ export function FirstOfferSetup() {
         </Link>
       </section>
     );
+  if (hasOffer && !open && !saved && !failed) return null;
   // Creative portfolios retain their dedicated authoring path.
   if (journey.kind === "photo") return null;
   const destination = input.kind === "product" ? "products" : "services";

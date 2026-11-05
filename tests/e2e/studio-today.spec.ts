@@ -472,6 +472,10 @@ for (const width of [390, 1440])
       await page.setViewportSize({ width, height: 900 });
       await prepare(page, category, (draft) => {
         draft.content.products = [];
+        if (category === "car-dealer")
+          draft.content.services = [
+            { id: "viewing", name: "Arrange a viewing", priceMode: "quote" },
+          ];
       });
       await expect(page.getByTestId("upcoming-bookings")).toHaveCount(0);
       await expect(page.getByTestId("first-offer-setup")).toBeVisible();
@@ -486,9 +490,21 @@ for (const width of [390, 1440])
           },
           { id: "old-item", name: "Archived item", archived: true },
           { id: "sample-item", name: "Example item", example: true },
+          ...(category === "car-dealer"
+            ? [
+                {
+                  id: "care-kit",
+                  name: "Car care kit",
+                  kind: "product" as const,
+                  priceMinor: 2000,
+                },
+              ]
+            : []),
         ];
       });
       const catalogue = page.getByTestId("catalogue-work");
+      if (category === "car-dealer")
+        await expect(catalogue).toContainText("1 vehicle · 1 product");
       await expect(catalogue).toContainText("Owner catalogue item");
       await expect(catalogue).toContainText("Reserved");
       await expect(catalogue).not.toContainText("Archived item");
