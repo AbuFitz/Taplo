@@ -5,7 +5,6 @@ import { bookingProps } from "../widgets/renderers"
 import { ProfileImage } from "./ProfileImage"
 import { ProfileMark } from "./ProfileMark"
 import { HeaderStatus } from "./HeaderStatus"
-import { initialsOf } from "@/lib/validation"
 import type { PageAction, PageViewModel } from "./view-model"
 
 const ICON = { book: CalendarCheck, call: Phone, whatsapp: MessageCircle, email: Mail } as const
@@ -99,9 +98,9 @@ function Text({ vm }: { vm: PageViewModel }) {
   )
 }
 
-/** Without a photograph the arrangement stays designed: a drifting colour field and the business monogram, never an empty upload box. */
-function Art({ vm }: { vm: PageViewModel }) {
-  return <div className="tp-art" aria-hidden="true"><span>{initialsOf(vm.business.identity.name)}</span></div>
+/** A missing photograph uses the chosen colour field, without inventing a business mark. */
+function Art() {
+  return <div className="tp-art" aria-hidden="true" />
 }
 
 function Shoulder({ vm }: { vm: PageViewModel }) {
@@ -125,7 +124,7 @@ function Arrangement({ vm }: { vm: PageViewModel }) {
   const b = vm.business
   if (h.layout === "melt") return (
     <header aria-label={label} className="tp-header" data-layout="melt" data-align={h.align} data-cover={cover ? "" : undefined} style={cover?.tint ? ({ "--melt-tint": cover.tint } as React.CSSProperties) : undefined}>
-      <div className="tp-melt-media">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : <Art vm={vm} />}</div>
+      <div className="tp-melt-media">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : <Art />}</div>
       <div className="tp-melt-body">{id.logo ? <Avatar vm={vm} /> : null}<Text vm={vm} /><Actions vm={vm} /></div>
     </header>
   )
@@ -166,7 +165,7 @@ function Arrangement({ vm }: { vm: PageViewModel }) {
   )
   if (h.layout === "split") return (
     <header aria-label={label} className="tp-header" data-layout="split" data-align="left" data-cover={cover ? "" : undefined}>
-      <div className="tp-split-cover">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : <Art vm={vm} />}</div>
+      <div className="tp-split-cover">{cover ? <ProfileImage image={cover} sizes="(min-width:900px) 40rem, 100vw" priority /> : <Art />}</div>
       <div className="tp-split-shoulder">{id.logo ? <div className="tp-split-badge"><Avatar vm={vm} /></div> : <span />}<Shoulder vm={vm} /></div>
       <div className="tp-split-body"><Text vm={vm} /><Actions vm={vm} only="primary" /></div>
     </header>

@@ -4,7 +4,6 @@ import * as React from "react"
 import { ArrowRight, CalendarCheck, Check } from "lucide-react"
 import { Overlay } from "@/components/taplo/overlay"
 import { cn } from "@/lib/utils"
-import { initialsOf } from "@/lib/validation"
 import { nextAvailableDate } from "@/features/booking/availability"
 import { useBookingState, useSchedulingConfig } from "@/features/booking/demo-adapter"
 import { eligibleStaff, isOnlineBookable, type BookingContext } from "@/features/booking/model"
@@ -30,11 +29,10 @@ export interface TeamMemberData {
 const first = (name: string) => name.split(/\s+/)[0] ?? name
 
 function Portrait({ m, className, ratio = "4 / 5", sizes = "(min-width:720px) 20rem, 50vw", decorative = false }: { m: TeamMemberData; className?: string; ratio?: string; sizes?: string; decorative?: boolean }) {
+  if (!m.photo) return null
   return (
     <div className={cn("tp-portrait", className)} style={{ aspectRatio: ratio }} aria-hidden={decorative || undefined}>
-      {m.photo ? (
-        <ProfileImage image={m.photo} sizes={sizes} />
-      ) : <span aria-hidden="true" className="tp-portrait-blank"><span className="font-tp-heading text-xl font-semibold">{initialsOf(m.name)}</span></span>}
+      <ProfileImage image={m.photo} sizes={sizes} />
     </div>
   )
 }
@@ -80,7 +78,7 @@ export function TeamMembers({ members, variant: chosen, ctx }: { members: TeamMe
     <>
       {variant === "swipe" ? <Collection label="Team" compact>{members.map((m) => <React.Fragment key={m.id}>{card(m, "1 / 1")}</React.Fragment>)}</Collection>
         : variant === "grid" ? <ul className="tp-team-grid">{members.map((m) => <li key={m.id}>{card(m)}</li>)}</ul>
-        : variant === "avatars" ? <ul className="tp-team-avatars">{members.map((m) => <li key={m.id}><button type="button" onClick={() => setProfile(m.id)}><Portrait m={m} className="tp-portrait-sm" ratio="1 / 1" sizes="64px" decorative /><span className="text-sm font-semibold leading-tight">{first(m.name)}</span><span className="sr-only">{m.name.slice(first(m.name).length)}. View profile</span></button></li>)}</ul>
+        : variant === "avatars" ? <ul className="tp-team-avatars">{members.map((m) => <li key={m.id}><button type="button" onClick={() => setProfile(m.id)}><Portrait m={m} className="tp-portrait-sm" ratio="1 / 1" sizes="64px" decorative /><span className="text-sm font-semibold leading-tight">{m.photo ? first(m.name) : m.name}</span><span className="sr-only">{m.photo ? m.name.slice(first(m.name).length) : ""}. View profile</span></button></li>)}</ul>
         : <ul className="tp-rows tp-team-list">{members.map(row)}</ul>}
 
       <Overlay tone="page" kind="detail" open={profile !== null} onOpenChange={(o) => !o && setProfile(null)} title={member?.name ?? "Profile"} description={member?.role} testId="team-profile" footer={member && canBook(member) ? <button type="button" className="tp-btn tp-profile-book" onClick={() => { setProfile(null); setBook({ staffId: member.id }) }}><CalendarCheck aria-hidden="true" className="size-4"/><span>Book with {first(member.name)}</span><ArrowRight aria-hidden="true" className="size-4"/></button> : undefined}>

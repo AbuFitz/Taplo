@@ -194,7 +194,7 @@ for (const width of [390, 1440]) {
     await expect(page.locator('[data-widget="hours"]')).toContainText("19:00");
     await page.goto("/dashboard/page");
     await selectPart(page, "details");
-    await page.getByText("Location and opening hours", { exact: true }).click();
+    await page.locator("summary").filter({ hasText: "Location and opening hours" }).click();
     const publicHours = page.getByRole("definition").filter({ hasText: "19:00" });
     await expect(publicHours).toHaveCount(5);
     await page.getByRole("button", { name: "Edit opening hours", exact: true }).click();

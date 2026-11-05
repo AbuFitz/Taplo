@@ -32,3 +32,8 @@ Reviewed actual 320/390/1440 captures and the deployed Studio, including neutral
 
 
 The correction run passed all 17 focused browser journeys, including public split-hours display; operational-shell, appearance navigation and selected setup recovery also passed. During follow-through, the older Business details hours editor was found to use a different single-period/closed-day interpretation. It now displays every saved interval and opens the same validated, conflict-aware quick editor without navigation. The shared editor owns its CSS for direct-entry consistency. Content summaries count distinct open days rather than periods. Browser coverage now continues from Today through the public page into Business details, verifies both periods and the closed Sunday, and returns focus after dismissal.
+
+
+### Identity without invented marks
+
+Public profile marks now require supplied imagery; no business initials are generated from a name. Missing cover imagery retains the selected colour-field composition without a repeated monogram. Team members without photos keep their real names and profile actions without fabricated initials or blank portraits. Photo-backed arrangements and logo proportions remain intact. Updated the legacy browser assertions that explicitly expected fabricated initials and added mixed/no-photo render coverage. This follows the founder's identity directive and does not create, remove or alter stored logos/photos.

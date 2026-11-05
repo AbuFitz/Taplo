@@ -302,8 +302,9 @@ test.describe("My page editor", () => {
     await openEditorWithSample(page, "Unlisted");
     const frame = previewFrame(page);
     await selectPart(page, "header");
-    // no logo → initials fallback, never a broken image
-    await expect(frame.locator(".tp-avatar")).toContainText("PG");
+    // No uploaded logo means a complete text-led identity, without invented initials.
+    await expect(frame.locator(".tp-avatar")).toHaveCount(0);
+    await expect(frame.getByRole("heading", { level: 1 })).toBeVisible();
     await openSection(page, "Logo and cover");
     const upload = page.getByLabel("Logo or profile picture: upload a picture");
     await upload.setInputFiles({ name: "notes.txt", mimeType: "text/plain", buffer: Buffer.from("hello") });
@@ -323,7 +324,7 @@ test.describe("My page editor", () => {
     expect(src).toMatch(/^data:image\/png;base64,/);
     expect(src.length).toBeLessThan(400_000);
     await page.getByTestId("image-edit-dialog").getByRole("button",{name:"Done",exact:true}).click();
-    // remove → initials again
+    // Removing an image returns to the text-led identity.
     await page.getByRole("button", { name: "Remove" }).first().click();
     await expect(frame.locator(".tp-avatar img")).toHaveCount(0);
   });
@@ -365,8 +366,9 @@ test.describe("My page editor", () => {
 
     // remove every widget → clear empty state in the editor, header-only page for visitors
     await page.setViewportSize({ width: 1440, height: 900 });
-    // no images at all → initials, no broken <img>, no layout collapse
-    await expect(frame.locator(".tp-avatar")).toBeVisible();
+    // No imagery leaves the real name intact without a generated profile mark.
+    await expect(frame.locator(".tp-avatar")).toHaveCount(0);
+    await expect(frame.getByRole("heading", { level: 1 })).toContainText("Extraordinarily Long-Named");
     for (let i = 0; i < 25; i++) {
       const r = page.locator("[data-widget-row]").first();
       if (!(await r.count())) break;
