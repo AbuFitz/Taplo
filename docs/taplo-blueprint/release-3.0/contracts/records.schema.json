@@ -441,9 +441,7 @@
         "title",
         "visibility",
         "price_mode",
-        "policy_version_id",
-        "delivery_modes",
-        "configuration_ref"
+        "delivery_modes"
       ],
       "properties": {
         "id": {
@@ -505,7 +503,6 @@
         },
         "delivery_modes": {
           "type": "array",
-          "minItems": 1,
           "items": {
             "type": "string",
             "enum": [
@@ -520,7 +517,35 @@
         "configuration_ref": {
           "$ref": "#/$defs/ID"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "visibility": {
+                "enum": [
+                  "published",
+                  "paused"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "policy_version_id",
+              "configuration_ref"
+            ],
+            "properties": {
+              "delivery_modes": {
+                "minItems": 1
+              },
+              "title": {
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
     },
     "Variant": {
       "type": "object",

@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import type { Pool } from "pg";
 import { TEST_DB_URL, createCleanDatabase } from "./db";
 import { readDraft, upsertDraft } from "../../src/server/foundation/drafts";
+import { createOfferDraft } from "../../src/server/foundation/offers";
 import { claimDraft } from "../../src/server/foundation/claim";
 import { transaction } from "../../src/server/foundation/database";
 import { verifyPrincipal } from "../../src/server/foundation/identity";
@@ -14,10 +15,10 @@ const stranger = { ...owner, id: "usr_claimother123" };
 const token = "d".repeat(64);
 
 describe.skipIf(!TEST_DB_URL)("onboarding claim on isolated PostgreSQL", () => {
-  let db: Pool, drop: () => Promise<void>, draftId: string;
+  let db: Pool, drop: () => Promise<void>, draftId: string, businessId: string;
   beforeAll(async () => {
     const setup = await createCleanDatabase(); db = setup.pool; drop = setup.drop;
-    for (const migration of ["0001_foundation", "0002_onboarding_claim"]) await db.query(readFileSync(`db/migrations/${migration}.sql`, "utf8"));
+    for (const migration of ["0001_foundation", "0002_onboarding_claim", "0003_offer_drafts"]) await db.query(readFileSync(`db/migrations/${migration}.sql`, "utf8"));
     await db.query("INSERT INTO taplo.\"user\"(id,display_name,status) VALUES($1,'Owner','active'),($2,'Other','active')", [owner.id, stranger.id]);
     const draft = await upsertDraft(db, token, { expected_version: 0, display_name: "Form Workshop", category_query: "ceramics" }, "setup-claim-123", "req_setup123");
     draftId = draft.value.id;
@@ -57,6 +58,7 @@ describe.skipIf(!TEST_DB_URL)("onboarding claim on isolated PostgreSQL", () => {
     expect(results[0].value).toEqual(results[1].value);
     expect(results.map(r => r.replayed).sort()).toEqual([false, true]);
     const business = results[0].value;
+    businessId = business.id;
     expect(business).toMatchObject({ display_name: "Form Workshop", status: "draft", timezone: "Europe/London", capabilities: [] });
     expect(business).not.toHaveProperty("published_page_version");
     expect((await db.query("SELECT role,status,user_id FROM taplo.membership WHERE business_id=$1", [business.id])).rows).toEqual([{ role: "owner", status: "active", user_id: owner.id }]);
@@ -79,6 +81,32 @@ describe.skipIf(!TEST_DB_URL)("onboarding claim on isolated PostgreSQL", () => {
   it("retains ordinary runtime's prohibition on creating businesses and owners", async () => {
     await expect(transaction(db, { actorId: owner.id, businessId: "biz_forbidden123" }, c => c.query("INSERT INTO taplo.business(id,display_name,handle) VALUES('biz_forbidden123','No','not-allowed')"))).rejects.toThrow(/permission denied/);
     await expect(transaction(db, { actorId: owner.id }, c => c.query("DELETE FROM taplo.audit_event"))).rejects.toThrow(/permission denied/);
+  });
+  it("connects the claimed business to a deliberate first-offer draft without publishing it", async () => {
+    const offer = { kind: "appointment", title: "Pottery consultation", price_mode: "fixed", price: { minor: 2500, currency: "GBP" } };
+    const results = await Promise.all([1, 2].map(n => createOfferDraft(db, owner, businessId, offer, "first-offer-123", `req_offer${n}123`)));
+    expect(results[0].value).toEqual(results[1].value);
+    expect(results.map(r => r.replayed).sort()).toEqual([false, true]);
+    expect(results[0].value).toMatchObject({ business_id: businessId, title: offer.title, price: offer.price, visibility: "draft", delivery_modes: [] });
+    expect(results[0].value).not.toHaveProperty("policy_version_id");
+    expect(results[0].value).not.toHaveProperty("configuration_ref");
+    expect((await db.query("SELECT count(*) FROM taplo.offer")).rows[0].count).toBe("1");
+    expect((await db.query("SELECT count(*) FROM taplo.event_outbox WHERE event_type='create_offer_draft.v1'")).rows[0].count).toBe("1");
+    await expect(createOfferDraft(db, owner, businessId, { ...offer, title: "Changed" }, "first-offer-123", "req_changed123")).rejects.toMatchObject({ code: "IDEMPOTENCY_CONFLICT" });
+  });
+  it("blocks foreign tenants, customer audiences and revoked members before offer receipts replay", async () => {
+    const offer = { kind: "appointment", title: "Pottery consultation", price_mode: "fixed", price: { minor: 2500, currency: "GBP" } };
+    await expect(createOfferDraft(db, stranger, businessId, offer, "stranger-offer123", "req_stranger123")).rejects.toMatchObject({ status: 404 });
+    await expect(createOfferDraft(db, { ...owner, audience: "customer" }, businessId, offer, "customer-offer123", "req_customer123")).rejects.toMatchObject({ status: 403 });
+    await db.query("UPDATE taplo.membership SET status='revoked' WHERE business_id=$1 AND user_id=$2", [businessId, owner.id]);
+    await expect(createOfferDraft(db, owner, businessId, offer, "first-offer-123", "req_revoked123")).rejects.toMatchObject({ status: 404 });
+    await db.query("UPDATE taplo.membership SET status='active' WHERE business_id=$1 AND user_id=$2", [businessId, owner.id]);
+  });
+  it("allows an incomplete draft price but rejects contradictory free pricing and cannot directly publish", async () => {
+    const draft = await createOfferDraft(db, owner, businessId, { kind: "goods", title: "Hand-thrown cup", price_mode: "fixed" }, "incomplete-offer123", "req_incomplete123");
+    expect(draft.value).not.toHaveProperty("price");
+    await expect(createOfferDraft(db, owner, businessId, { kind: "goods", title: "Cup", price_mode: "free", price: { minor: 100, currency: "GBP" } }, "invalid-price123", "req_invalid123")).rejects.toMatchObject({ status: 422 });
+    await expect(transaction(db, { actorId: owner.id, businessId }, c => c.query("UPDATE taplo.offer SET visibility='published' WHERE id=$1", [draft.value.id]))).rejects.toThrow(/permission denied/);
   });
   it("hides expired credentials even when a matching claim receipt exists", async () => {
     await db.query("UPDATE taplo.onboarding_draft SET expires_at=now()-interval '1 second' WHERE id=$1", [draftId]);

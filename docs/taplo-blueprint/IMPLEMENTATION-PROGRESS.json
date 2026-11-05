@@ -45,14 +45,22 @@
     },
     {
       "id": "P03",
-      "state": "claim_command_isolated_checks_passed_frontend_first_offer_journey_pending",
+      "state": "claim_command_isolated_checks_passed_offer_draft_added_frontend_journey_pending",
       "evidence": "../onboarding-claim-implementation.md",
       "actual_checks": [
         {
           "commit": "ad14252e398325d6ea8be38887e6dbc113aae98b",
           "check": "TypeScript, lint, unit/PostgreSQL tests, production build and operational shell browser checks",
           "result": "passed in CI run 41973258290 verify job 127066139433; expanded theme/control regression still running when recorded"
+        },
+        {
+          "check": "Local lifecycle validation, permission and HTTP tests; full unit run; blueprint static checks and migration SQL parsing",
+          "result": "15 targeted tests passed; full unit run 439 passed, 61 DB skipped; static blueprint checks and all three SQL parses passed. New offer DB cases await CI."
         }
+      ],
+      "implemented_commands": [
+        "ClaimOnboardingDraft",
+        "CreateOfferDraft"
       ]
     },
     {

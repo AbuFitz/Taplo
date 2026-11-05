@@ -26,6 +26,24 @@ const AUTH_STUB = `
 export async function createCleanDatabase(): Promise<{ pool: Pool; drop: () => Promise<void>; name: string }> {
   const admin = new Client({ connectionString: TEST_DB_URL });
   await admin.connect();
+  // Roles are cluster-wide, while fixture databases are independent. Bootstrap them under
+  // a lock in the shared admin database before concurrent suites enter their own databases.
+  await admin.query("begin");
+  try {
+    await admin.query("select pg_advisory_xact_lock(hashtextextended('taplo:test-role-bootstrap',0))");
+    await admin.query(`do $$ declare role_name text; begin
+      foreach role_name in array array['anon','authenticated','taplo_app','taplo_identity','taplo_worker','taplo_onboarding'] loop
+        if not exists(select 1 from pg_roles where rolname=role_name) then
+          execute format('create role %I nologin nosuperuser nobypassrls', role_name);
+        end if;
+      end loop;
+    end $$`);
+    await admin.query("commit");
+  } catch (error) {
+    await admin.query("rollback");
+    await admin.end();
+    throw error;
+  }
   const name = `taplo_test_${Date.now()}_${Math.floor(Math.random() * 1e4)}`;
   await admin.query(`create database ${name}`);
   const url = new URL(TEST_DB_URL!);
