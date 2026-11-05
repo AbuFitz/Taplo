@@ -117,13 +117,62 @@ export function Studio() {
       className="studio-today-secondary"
       aria-label="Your business page and setup"
     >
+      <section
+        className="studio-page-status"
+        aria-labelledby="your-page-heading"
+      >
+        <div className="studio-section-heading">
+          <h2 id="your-page-heading">Your page</h2>
+          <span className="studio-page-state">
+            <i />
+            {publicStatus}
+          </span>
+        </div>
+        <div className="studio-business-identity">
+          {s.content.identity.logo ? (
+            <Image
+              src={s.content.identity.logo.src}
+              alt=""
+              width={40}
+              height={40}
+              unoptimized
+            />
+          ) : null}
+          <h3>{s.content.identity.name}</h3>
+        </div>
+        {s.content.identity.tagline ? (
+          <p className="studio-page-tagline">{s.content.identity.tagline}</p>
+        ) : null}
+        <p className="studio-page-address">
+          {TAPLO_DOMAINS.host}/{s.content.identity.slug}
+        </p>
+        <p className="studio-page-note">
+          {missing.length
+            ? missing[0]?.id === "contact"
+              ? "Add a contact method before sharing your page."
+              : `${missing[0]?.label}.`
+            : changed && s.published
+              ? "Review your latest changes before publishing them."
+              : s.published
+                ? "Your published version is ready to share."
+                : "Your draft is ready for a final look. You choose when to publish."}
+        </p>
+        <div className="studio-page-tools">
+          <Link className="studio-button" href="/dashboard/page">
+            {s.published && !changed ? "Edit your page" : "Review your page"}
+            <Icon.next />
+          </Link>
+          <Link href="/demo/preview" target="_blank">
+            Preview
+            <Icon.external />
+          </Link>
+        </div>
+      </section>
       <section className="studio-setup" aria-labelledby="studio-setup-heading">
         <div className="studio-section-heading">
-          <h2 id="studio-setup-heading">The useful details</h2>
+          <h2 id="studio-setup-heading">Quick edits</h2>
         </div>
-        <p className="studio-section-note">
-          Quick changes here. Full control whenever you need it.
-        </p>
+        <p className="studio-section-note">The details customers rely on.</p>
         <ul>
           <li>
             <button
@@ -179,58 +228,6 @@ export function Studio() {
             </Link>
           </li>
         </ul>
-      </section>
-      <section
-        className="studio-page-status"
-        aria-labelledby="your-page-heading"
-      >
-        <div className="studio-section-heading">
-          <h2 id="your-page-heading">Your page</h2>
-          <span className="studio-page-state">
-            <i />
-            {publicStatus}
-          </span>
-        </div>
-        <div className="studio-business-identity">
-          {s.content.identity.logo ? (
-            <Image
-              src={s.content.identity.logo.src}
-              alt=""
-              width={40}
-              height={40}
-              unoptimized
-            />
-          ) : null}
-          <h3>{s.content.identity.name}</h3>
-        </div>
-        <p className="studio-page-address">
-          {TAPLO_DOMAINS.host}/{s.content.identity.slug}
-        </p>
-        <div className="studio-page-tools">
-          <Link className="studio-button" href="/dashboard/page">
-            Edit your page
-            <Icon.page />
-          </Link>
-          <Link href="/demo/preview" target="_blank">
-            Preview
-            <Icon.external />
-          </Link>
-        </div>
-        <p className="studio-page-note">
-          {missing.length
-            ? missing[0]?.id === "contact"
-              ? "Add a contact method before sharing your page."
-              : `${missing[0]?.label}.`
-            : changed && s.published
-              ? "Review your latest changes before publishing them."
-              : s.published
-                ? "Your published version is ready to share."
-                : "Your draft is ready for a final look. You choose when to publish."}
-        </p>
-        <Link className="studio-inline-link" href="/dashboard/page">
-          Review & publish
-          <Icon.next />
-        </Link>
       </section>
       <Link className="studio-help-link" href="/dashboard/help">
         <Icon.help />
@@ -344,20 +341,7 @@ export function Studio() {
         <div>
           <p className="studio-eyebrow">{work.dateLabel}</p>
           <h1>Today</h1>
-          <p>
-            {productsFirst
-              ? "Your business, ready for what’s next."
-              : "A little clarity for the day ahead."}
-          </p>
         </div>
-        <Link
-          className="studio-button studio-button-secondary"
-          href="/demo/preview"
-          target="_blank"
-        >
-          View page
-          <Icon.external />
-        </Link>
       </header>
 
       {work.awaiting.length || enquiries ? (

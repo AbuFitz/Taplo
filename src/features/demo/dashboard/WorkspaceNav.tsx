@@ -124,7 +124,7 @@ export function WorkspaceNav() {
           aria-current={path === "/dashboard/page" ? "page" : undefined}
         >
           <LayoutTemplate />
-          Build
+          Page
         </Link>
         {mobileWork ? (
           <Link
