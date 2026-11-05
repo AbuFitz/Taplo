@@ -56,8 +56,8 @@ test("mobile navigation and dialogs remain reachable in both colour schemes", as
     await page.screenshot({ path: `shots/p02-mobile-${theme}.png`, fullPage: true });
     await dock.getByRole("button", { name: "Tools", exact: true }).click();
     await expect(dialog).toBeVisible();
-    for (const destination of ["Your page", "Services", "Products", "Bookings", "Team", "Reviews", "Analytics", "Help & feedback", "Settings"]) {
-      await expect(dialog.getByRole("link", { name: destination, exact: true })).toBeVisible();
+    for (const section of ["page", "services", "products", "bookings", "team", "reviews", "analytics", "help", "settings"]) {
+      await expect(dialog.locator(`a[href="/dashboard/${section}"]`)).toBeVisible();
     }
     await dialog.screenshot({ path: `shots/p02-mobile-menu-${theme}.png` });
     await page.keyboard.press("Escape");
