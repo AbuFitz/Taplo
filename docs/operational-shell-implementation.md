@@ -25,3 +25,7 @@ CI run 41742495794: dark form audit passed, but the subsequent header audit foun
 
 
 Verified source 9e4656553f4fb39dc68b493ed04145a4b254402d: GitHub Actions run 41743228789, verify job 126289696949 passed Next route types, TypeScript, lint, 487 unit/PostgreSQL tests, production build and all 3 operational Playwright checks. Service-form and navigation header axe audits passed with no rules disabled. Browser-regression job 126290820896 remained running when recorded. P02 shared shell is verified; remaining screen/state adoption and later packet journeys are not represented as complete. P03–P12 remain pending.
+
+## Deployed editor review — 5 November
+
+Reviewed the deployed desktop editor through its real sample-entry route and selected Noir through the Look control. Selection changed the business renderer. Found a separate defect: current design IDs were requested as absent `/looks/{id}.webp` assets. The chooser now uses the existing visibility-mounted real-renderer preview for current designs; legacy captures remain in place. Removed the duplicate desktop design walkthrough trigger. Added phone/desktop browser checks for a loaded real design preview, a single walkthrough trigger and retained selection when navigating between design tasks. These new browser checks await their CI result.

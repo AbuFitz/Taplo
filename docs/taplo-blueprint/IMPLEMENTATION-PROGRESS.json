@@ -45,8 +45,15 @@
     },
     {
       "id": "P03",
-      "state": "claim_command_implemented_verification_pending_first_offer_journey_pending",
-      "evidence": "../onboarding-claim-implementation.md"
+      "state": "claim_command_isolated_checks_passed_frontend_first_offer_journey_pending",
+      "evidence": "../onboarding-claim-implementation.md",
+      "actual_checks": [
+        {
+          "commit": "ad14252e398325d6ea8be38887e6dbc113aae98b",
+          "check": "TypeScript, lint, unit/PostgreSQL tests, production build and operational shell browser checks",
+          "result": "passed in CI run 41973258290 verify job 127066139433; expanded theme/control regression still running when recorded"
+        }
+      ]
     },
     {
       "id": "P04",
