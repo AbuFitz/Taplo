@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test"
-import { openEditorWithSample, previewFrame, selectPart } from "./helpers"
+import { openEditorWithSample, previewFrame, selectPart, openDesignTask, openProfileTask } from "./helpers"
 
 /**
  * The design control matrix. Every control the owner editor offers is operated through the real editor and must
@@ -20,11 +20,12 @@ async function disclosure(page: Page, title: string) {
   const open = await sum.evaluate((el) => (el.parentElement as HTMLDetailsElement).open)
   if (!open) await sum.click()
 }
-const radio = (group: string, value: string) => async (page: Page) => { if (group === "Look") await disclosure(page, "Look"); await page.getByRole("radiogroup", { name: group, exact: true }).locator("label", { has: page.locator(`input[value="${value}"]`) }).first().click() }
+const radio = (group: string, value: string) => async (page: Page) => { if (group === "Look") await openDesignTask(page, "look"); await page.getByRole("radiogroup", { name: group, exact: true }).locator("label", { has: page.locator(`input[value="${value}"]`) }).first().click() }
 const toggle = (label: string) => async (page: Page) => { await page.getByRole("switch", { name: label }).click() }
 const MORE = new Set(["Secondary text", "Text on accent", "Borders"])
 const hex = (label: string, value: string) => async (page: Page) => {
   if (MORE.has(label)) await disclosure(page, "More colours")
+  else await disclosure(page, "Fine-tune individual colours")
   const i = page.getByRole("textbox", { name: `${label} hex value`, exact: true }); await i.fill(value); await i.blur()
 }
 const slider = (label: string, value: number) => async (page: Page) => { await page.getByRole("slider", { name: label }).fill(String(value)) }
@@ -83,7 +84,15 @@ const C: Control[] = [
 
 async function go(page: Page, c: Control) {
   await selectPart(page, c.part)
-  if (c.open) await disclosure(page, c.open)
+  if (c.part === "header") {
+    await openProfileTask(page, "layout")
+    const browse = page.getByRole("button", { name: "Browse every arrangement", exact: true })
+    if (await browse.isVisible()) await browse.click()
+  }
+  if (c.open) {
+    const tasks = { Colour: "colours", Type: "type", Wallpaper: "wallpaper", Buttons: "buttons", Cards: "cards", "Layout and motion": "layout" } as const
+    await openDesignTask(page, tasks[c.open as keyof typeof tasks])
+  }
   if (c.more) await disclosure(page, c.more)
   if (c.also) await c.also(page)
 }

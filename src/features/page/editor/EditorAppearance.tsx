@@ -180,7 +180,11 @@ export function PageStylePanel({
   const [task, setTask] = React.useState<DesignTask | null>(null);
   const chosen = DESIGN_TASKS.find((t) => t.id === task);
   return (
-    <div className="design-studio" data-testid="appearance-panel">
+    <div
+      className="design-studio"
+      data-testid="appearance-panel"
+      data-design-task-active={task ?? "overview"}
+    >
       {chosen ? (
         <>
           <div className="design-task-heading">
@@ -360,7 +364,11 @@ export function HeaderPanel({
   ];
   const current = areas.find((a) => a.id === area);
   return (
-    <div className="design-studio" data-testid="header-panel">
+    <div
+      className="design-studio"
+      data-testid="header-panel"
+      data-profile-task-active={area ?? "overview"}
+    >
       {current ? (
         <>
           <div className="design-task-heading">
@@ -448,7 +456,12 @@ export function HeaderPanel({
           </div>
           <div className="design-task-list">
             {areas.map((a) => (
-              <button type="button" key={a.id} onClick={() => setArea(a.id)}>
+              <button
+                type="button"
+                key={a.id}
+                data-profile-task={a.id}
+                onClick={() => setArea(a.id)}
+              >
                 <span>
                   <strong>{a.name}</strong>
                   <small>{a.line}</small>

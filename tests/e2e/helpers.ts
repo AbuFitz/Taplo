@@ -108,6 +108,47 @@ export async function selectPart(
   void compact;
 }
 
+/** Follow the same task drill-in an owner uses, retaining the active screen between tab visits. */
+export async function openDesignTask(
+  page: Page,
+  task:
+    | "look"
+    | "colours"
+    | "wallpaper"
+    | "type"
+    | "buttons"
+    | "cards"
+    | "layout"
+    | "readability",
+) {
+  await selectPart(page, "page");
+  const panel = page.getByTestId("appearance-panel");
+  if ((await panel.getAttribute("data-design-task-active")) === task) return;
+  const back = panel.getByRole("button", {
+    name: "Back to design",
+    exact: true,
+  });
+  if (await back.isVisible()) await back.click();
+  await panel.locator(`button[data-design-task="${task}"]`).click();
+  await expect(panel).toHaveAttribute("data-design-task-active", task);
+}
+
+export async function openProfileTask(
+  page: Page,
+  task: "identity" | "layout" | "images" | "action",
+) {
+  await selectPart(page, "header");
+  const panel = page.getByTestId("header-panel");
+  if ((await panel.getAttribute("data-profile-task-active")) === task) return;
+  const back = panel.getByRole("button", {
+    name: "Back to profile",
+    exact: true,
+  });
+  if (await back.isVisible()) await back.click();
+  await panel.locator(`button[data-profile-task="${task}"]`).click();
+  await expect(panel).toHaveAttribute("data-profile-task-active", task);
+}
+
 /** Select a widget from the structure list; its controls open in the inspector. */
 export async function openRow(page: Page, type: string, nth = 0) {
   await openStructure(page);
@@ -157,8 +198,7 @@ export async function seedFixture(page: Page, state: unknown) {
 
 /** Choose an optional starting look (collapsed by default: nothing requires it). */
 export async function pickLook(page: Page, id: string) {
-  await selectPart(page, "page");
-  await openSection(page, /^Look/);
+  await openDesignTask(page, "look");
   await look(page, id).click();
 }
 
