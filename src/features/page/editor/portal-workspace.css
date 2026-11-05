@@ -116,3 +116,6 @@
 .workspace-v2.operational-root [data-slot="tabs-list"]:not(:where([data-taplo-theme] *)) { background: var(--secondary); color: var(--op-muted); }
 .workspace-v2.operational-root [data-slot="tabs-trigger"]:not(:where([data-taplo-theme] *)) { color: var(--op-muted); }
 .workspace-v2.operational-root [data-slot="tabs-trigger"][aria-selected="true"]:not(:where([data-taplo-theme] *)) { background: var(--op-surface); color: var(--op-text); }
+
+/* Active mobile tabs must override the retired fixed-white selected state too. */
+.workspace-v2.operational-root .mobile-studio-tabs button[aria-pressed="true"] { background: var(--secondary); color: var(--op-text); }

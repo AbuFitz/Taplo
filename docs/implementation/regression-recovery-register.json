@@ -8,7 +8,7 @@
     {
       "case": "a11y-automated-accessibili-735d9-g-and-the-add-widget-dialog",
       "status": "targeted_case_passed_a99f3c5",
-      "observed_failure": "Error: add-widget dialog expect(received).toEqual(expected) // deep equality - Expected - 1 + Received + 3 - Array [] + Array [ + \"color-contrast (serious): .content-art[data-group=\\\"offer\\\"][data-art=\\\"button\\\"] > .content-art-calendar > em \u2014 Elements must meet minimum color contrast ratio thresholds\", + ]",
+      "observed_failure": "Error: add-widget dialog expect(received).toEqual(expected) // deep equality - Expected - 1 + Received + 3 - Array [] + Array [ + \"color-contrast (serious): .content-art[data-group=\\\"offer\\\"][data-art=\\\"button\\\"] > .content-art-calendar > em — Elements must meet minimum color contrast ratio thresholds\", + ]",
       "verification": {
         "run_id": 42057739576,
         "job_id": 127350640810,
@@ -17,18 +17,23 @@
     },
     {
       "case": "a11y-automated-accessibili-854c0--block-details-and-settings",
-      "status": "tabs_fixed_additional_disclosure_contrast_fix_pending_verification",
-      "observed_failure": "Error: editor/page-style expect(received).toEqual(expected) // deep equality - Expected - 1 + Received + 3 - Array [] + Array [ + \"color-contrast (serious): #tab-header | #tab-design | #tab-settings \u2014 Elements must meet minimum color contrast ratio thresholds\", + ]"
+      "status": "targeted_case_passed_4c0d93c",
+      "observed_failure": "Error: editor/page-style expect(received).toEqual(expected) // deep equality - Expected - 1 + Received + 3 - Array [] + Array [ + \"color-contrast (serious): #tab-header | #tab-design | #tab-settings — Elements must meet minimum color contrast ratio thresholds\", + ]",
+      "verification": {
+        "run_id": 42066376275,
+        "job_id": 127382298871,
+        "group": "Editor and discovery accessibility recovery"
+      }
     },
     {
       "case": "booking-customer-booking-j-ba21c-nds-in-the-owner-s-calendar",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('booking-flow').getByTestId('bk-done') Expected substring: \"was not emailed or texted\" Received string: \"Booking confirmedConfirmed appointment. Your time is reserved.ServiceSignature cutWhenThu 5 Nov 16:00 GMT+0Price\u00a334Appointment details saved. Customer notification not sent. Add to calendarCancel bookingBookings can be moved up to 24 hours before. Please contact the business.Done\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('booking-flow').getByTestId('bk-done') with timeout 5000ms - waiting for getByTestId('booking-flow').getByTestId('bk-done') 14 \u00d7 locator resolved to <section class=\"grid gap-4\" data-testid=\"bk-done\" aria-labelledby=\"bk-h\" dat"
+      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('booking-flow').getByTestId('bk-done') Expected substring: \"was not emailed or texted\" Received string: \"Booking confirmedConfirmed appointment. Your time is reserved.ServiceSignature cutWhenThu 5 Nov 16:00 GMT+0Price£34Appointment details saved. Customer notification not sent. Add to calendarCancel bookingBookings can be moved up to 24 hours before. Please contact the business.Done\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('booking-flow').getByTestId('bk-done') with timeout 5000ms - waiting for getByTestId('booking-flow').getByTestId('bk-done') 14 × locator resolved to <section class=\"grid gap-4\" data-testid=\"bk-done\" aria-labelledby=\"bk-h\" dat"
     },
     {
       "case": "business-inspiration-real--42806--clean-adoption-work-at-390",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toBeVisible() failed Locator: getByTestId('design-preview') Expected: visible Timeout: 5000ms Error: element(s) not found Call log: - Expect \"toBeVisible\" getByTestId('design-preview') with timeout 5000ms - waiting for getByTestId('design-preview') yaml - banner \"Taplo website\": - link \"Taplo home\": - /url: / - img \"Taplo\" - link \"Start free\": - /url: /onboarding - button \"Open menu\" - main: - navigation \"Breadcrumb\": - link \"Designs\": - /url: /inspiration - text: FixNow Mechanics - heading \"FixNow Mechanics\" [level=1] - paragraph: - text: Design example \u00b7 - link \"Car dealers and garages\": - /url: /inspiration - region \"Try this design\": - region \"Explore FixNow Mechanics\": - iframe - radiogroup \"Preview size\": - radi"
+      "observed_failure": "Error: expect(locator).toBeVisible() failed Locator: getByTestId('design-preview') Expected: visible Timeout: 5000ms Error: element(s) not found Call log: - Expect \"toBeVisible\" getByTestId('design-preview') with timeout 5000ms - waiting for getByTestId('design-preview') yaml - banner \"Taplo website\": - link \"Taplo home\": - /url: / - img \"Taplo\" - link \"Start free\": - /url: /onboarding - button \"Open menu\" - main: - navigation \"Breadcrumb\": - link \"Designs\": - /url: /inspiration - text: FixNow Mechanics - heading \"FixNow Mechanics\" [level=1] - paragraph: - text: Design example · - link \"Car dealers and garages\": - /url: /inspiration - region \"Try this design\": - region \"Explore FixNow Mechanics\": - iframe - radiogroup \"Preview size\": - radi"
     },
     {
       "case": "business-inspiration-real--81025-clean-adoption-work-at-1440",
@@ -73,37 +78,47 @@
     {
       "case": "content-ordering-keyboard--c82c0-e-drops-and-it-is-announced",
       "status": "replacement_vertical_keyboard_check_passed_in_a99f3c5",
-      "observed_failure": "Error: expect(received).not.toEqual(expected) // deep equality Expected: not [\"announcement\", \"call\", \"booking\", \"featuredService\", \"serviceList\", \"reviews\", \"gallery\", \"serviceArea\", \"location\", \"faq\", \u2026] Call Log: - Timeout 5000ms exceeded while waiting on the predicate"
+      "observed_failure": "Error: expect(received).not.toEqual(expected) // deep equality Expected: not [\"announcement\", \"call\", \"booking\", \"featuredService\", \"serviceList\", \"reviews\", \"gallery\", \"serviceArea\", \"location\", \"faq\", …] Call Log: - Timeout 5000ms exceeded while waiting on the predicate"
     },
     {
       "case": "cross-browser-1440px-nativ-3076b--their-records-after-reload",
-      "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay\u2019s Barbers', exact: true })"
+      "status": "targeted_case_passed_4c0d93c",
+      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay’s Barbers', exact: true })",
+      "verification": {
+        "run_id": 42066376275,
+        "job_id": 127382298871,
+        "group": "Owner entry and saved customisation recovery"
+      }
     },
     {
       "case": "cross-browser-390px-native-8b17f--their-records-after-reload",
-      "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay\u2019s Barbers', exact: true })"
+      "status": "targeted_case_passed_4c0d93c",
+      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay’s Barbers', exact: true })",
+      "verification": {
+        "run_id": 42066376275,
+        "job_id": 127382298871,
+        "group": "Owner entry and saved customisation recovery"
+      }
     },
     {
       "case": "customer-details-paired-ga-6e7ac-om-and-return-focus-at-1440",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('lightbox') Expected substring: \"2 of 3\" Received string: \"Our work: picture 2 of 62 of 6\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('lightbox') with timeout 5000ms - waiting for getByTestId('lightbox') 14 \u00d7 locator resolved to <div role=\"dialog\" tabindex=\"-1\" id=\"radix-_r_6_\" data-state=\"open\" data-overlay=\"detail\" data-testid=\"lightbox\" data-overlay-tone=\"page\" aria-labelledby=\"radix-_r_7_\" class=\"fixed z-50 flex flex-col overflow-hidden outline-none shadow-[0_2px_6px_rgb(0_0_0/0.12),0_40px_120px_-24px_rgb(0_0_0/0.5)] data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none! max-sm:data-"
+      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('lightbox') Expected substring: \"2 of 3\" Received string: \"Our work: picture 2 of 62 of 6\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('lightbox') with timeout 5000ms - waiting for getByTestId('lightbox') 14 × locator resolved to <div role=\"dialog\" tabindex=\"-1\" id=\"radix-_r_6_\" data-state=\"open\" data-overlay=\"detail\" data-testid=\"lightbox\" data-overlay-tone=\"page\" aria-labelledby=\"radix-_r_7_\" class=\"fixed z-50 flex flex-col overflow-hidden outline-none shadow-[0_2px_6px_rgb(0_0_0/0.12),0_40px_120px_-24px_rgb(0_0_0/0.5)] data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none! max-sm:data-"
     },
     {
       "case": "customer-details-paired-ga-87235-oom-and-return-focus-at-320",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('lightbox') Expected substring: \"2 of 3\" Received string: \"Our work: picture 2 of 62 of 6\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('lightbox') with timeout 5000ms - waiting for getByTestId('lightbox') 14 \u00d7 locator resolved to <div role=\"dialog\" tabindex=\"-1\" id=\"radix-_r_6_\" data-state=\"open\" data-overlay=\"detail\" data-testid=\"lightbox\" data-overlay-tone=\"page\" aria-labelledby=\"radix-_r_7_\" class=\"fixed z-50 flex flex-col overflow-hidden outline-none shadow-[0_2px_6px_rgb(0_0_0/0.12),0_40px_120px_-24px_rgb(0_0_0/0.5)] data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none! max-sm:data-"
+      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('lightbox') Expected substring: \"2 of 3\" Received string: \"Our work: picture 2 of 62 of 6\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('lightbox') with timeout 5000ms - waiting for getByTestId('lightbox') 14 × locator resolved to <div role=\"dialog\" tabindex=\"-1\" id=\"radix-_r_6_\" data-state=\"open\" data-overlay=\"detail\" data-testid=\"lightbox\" data-overlay-tone=\"page\" aria-labelledby=\"radix-_r_7_\" class=\"fixed z-50 flex flex-col overflow-hidden outline-none shadow-[0_2px_6px_rgb(0_0_0/0.12),0_40px_120px_-24px_rgb(0_0_0/0.5)] data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none! max-sm:data-"
     },
     {
       "case": "customer-details-paired-ga-91398-oom-and-return-focus-at-390",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('lightbox') Expected substring: \"2 of 3\" Received string: \"Our work: picture 2 of 62 of 6\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('lightbox') with timeout 5000ms - waiting for getByTestId('lightbox') 14 \u00d7 locator resolved to <div role=\"dialog\" tabindex=\"-1\" id=\"radix-_r_6_\" data-state=\"open\" data-overlay=\"detail\" data-testid=\"lightbox\" data-overlay-tone=\"page\" aria-labelledby=\"radix-_r_7_\" class=\"fixed z-50 flex flex-col overflow-hidden outline-none shadow-[0_2px_6px_rgb(0_0_0/0.12),0_40px_120px_-24px_rgb(0_0_0/0.5)] data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none! max-sm:data-"
+      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('lightbox') Expected substring: \"2 of 3\" Received string: \"Our work: picture 2 of 62 of 6\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('lightbox') with timeout 5000ms - waiting for getByTestId('lightbox') 14 × locator resolved to <div role=\"dialog\" tabindex=\"-1\" id=\"radix-_r_6_\" data-state=\"open\" data-overlay=\"detail\" data-testid=\"lightbox\" data-overlay-tone=\"page\" aria-labelledby=\"radix-_r_7_\" class=\"fixed z-50 flex flex-col overflow-hidden outline-none shadow-[0_2px_6px_rgb(0_0_0/0.12),0_40px_120px_-24px_rgb(0_0_0/0.5)] data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none! max-sm:data-"
     },
     {
       "case": "customer-details-paired-ga-e3882-oom-and-return-focus-at-768",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('lightbox') Expected substring: \"2 of 3\" Received string: \"Our work: picture 2 of 62 of 6\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('lightbox') with timeout 5000ms - waiting for getByTestId('lightbox') 14 \u00d7 locator resolved to <div role=\"dialog\" tabindex=\"-1\" id=\"radix-_r_6_\" data-state=\"open\" data-overlay=\"detail\" data-testid=\"lightbox\" data-overlay-tone=\"page\" aria-labelledby=\"radix-_r_7_\" class=\"fixed z-50 flex flex-col overflow-hidden outline-none shadow-[0_2px_6px_rgb(0_0_0/0.12),0_40px_120px_-24px_rgb(0_0_0/0.5)] data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none! max-sm:data-"
+      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('lightbox') Expected substring: \"2 of 3\" Received string: \"Our work: picture 2 of 62 of 6\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('lightbox') with timeout 5000ms - waiting for getByTestId('lightbox') 14 × locator resolved to <div role=\"dialog\" tabindex=\"-1\" id=\"radix-_r_6_\" data-state=\"open\" data-overlay=\"detail\" data-testid=\"lightbox\" data-overlay-tone=\"page\" aria-labelledby=\"radix-_r_7_\" class=\"fixed z-50 flex flex-col overflow-hidden outline-none shadow-[0_2px_6px_rgb(0_0_0/0.12),0_40px_120px_-24px_rgb(0_0_0/0.5)] data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none! max-sm:data-"
     },
     {
       "case": "design-a11y-design-discove-18c1c-sibility-findings-at-1440px",
@@ -138,7 +153,7 @@
     {
       "case": "editor-My-page-editor-add--89d04-cks-records-survive-removal",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: locator('[data-widget-row=\"video\"]').first() Expected substring: \"Nothing to show yet\" Received string: \"VideoFinish setting this upNot on your page yet\" Timeout: 5000ms Call log: - Expect \"toContainText\" locator('[data-widget-row=\"video\"]').first() with timeout 5000ms - waiting for locator('[data-widget-row=\"video\"]').first() 14 \u00d7 locator resolved to <li data-widget-row=\"video\" data-widget-row-id=\"video-mw3luns92vqfu\" class=\"content-block-card content-block-row bg-card transition-colors\">\u2026</li> - unexpected value \"VideoFinish setting this upNot on your page yet\" yaml - listitem: - button \"Reorder Video. Position 8 of 8. Press space, then the arrow keys.\" - button \"Video Finish "
+      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: locator('[data-widget-row=\"video\"]').first() Expected substring: \"Nothing to show yet\" Received string: \"VideoFinish setting this upNot on your page yet\" Timeout: 5000ms Call log: - Expect \"toContainText\" locator('[data-widget-row=\"video\"]').first() with timeout 5000ms - waiting for locator('[data-widget-row=\"video\"]').first() 14 × locator resolved to <li data-widget-row=\"video\" data-widget-row-id=\"video-mw3luns92vqfu\" class=\"content-block-card content-block-row bg-card transition-colors\">…</li> - unexpected value \"VideoFinish setting this upNot on your page yet\" yaml - listitem: - button \"Reorder Video. Position 8 of 8. Press space, then the arrow keys.\" - button \"Video Finish "
     },
     {
       "case": "editor-My-page-editor-edge-0237b-ages-no-contacts-empty-page",
@@ -158,7 +173,7 @@
     {
       "case": "editor-My-page-editor-publ-cab78-es-need-an-explicit-publish",
       "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByRole('note') Expected substring: \"opens in this browser only\" Received string: \"Your page. Review the details, layout and customer experience.\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByRole('note') with timeout 5000ms - waiting for getByRole('note') 13 \u00d7 locator resolved to <div role=\"note\" class=\"relative z-10 bg-amber-300 px-4 py-2 text-center text-sm font-medium text-black\">Your page. Review the details, layout and custome\u2026</div> - unexpected value \"Your page. Review the details, layout and customer experience.\" yaml - note: Your page. Review the details, layout and customer experience."
+      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByRole('note') Expected substring: \"opens in this browser only\" Received string: \"Your page. Review the details, layout and customer experience.\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByRole('note') with timeout 5000ms - waiting for getByRole('note') 13 × locator resolved to <div role=\"note\" class=\"relative z-10 bg-amber-300 px-4 py-2 text-center text-sm font-medium text-black\">Your page. Review the details, layout and custome…</div> - unexpected value \"Your page. Review the details, layout and customer experience.\" yaml - note: Your page. Review the details, layout and customer experience."
     },
     {
       "case": "editor-My-page-editor-read-4c70b-are-corrected-and-explained",
@@ -168,7 +183,7 @@
     {
       "case": "editor-My-page-editor-reor-3f6c7-pointer-drag-and-touch-drag",
       "status": "vertical_direction_updated_legacy_composite_migration_pending",
-      "observed_failure": "Error: expect(received).not.toEqual(expected) // deep equality Expected: not [\"announcement\", \"call\", \"booking\", \"featuredService\", \"serviceList\", \"reviews\", \"gallery\", \"serviceArea\", \"location\", \"faq\", \u2026] Call Log: - Timeout 5000ms exceeded while waiting on the predicate"
+      "observed_failure": "Error: expect(received).not.toEqual(expected) // deep equality Expected: not [\"announcement\", \"call\", \"booking\", \"featuredService\", \"serviceList\", \"reviews\", \"gallery\", \"serviceArea\", \"location\", \"faq\", …] Call Log: - Timeout 5000ms exceeded while waiting on the predicate"
     },
     {
       "case": "editor-My-page-editor-undo-733a9-t-persistence-after-refresh",
@@ -188,7 +203,7 @@
     {
       "case": "empty-states-dashboard-sho-aacdc-k-labels-and-a-resume-entry",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toBeVisible() failed Locator: locator('section[aria-labelledby=sample-title]').getByText(/ \u00b7 /).first() Expected: visible Timeout: 5000ms Error: element(s) not found Call log: - Expect \"toBeVisible\" locator('section[aria-labelledby=sample-title]').getByText(/ \u00b7 /).first() with timeout 5000ms - waiting for locator('section[aria-labelledby=sample-title]').getByText(/ \u00b7 /).first() yaml - link \"Skip to content\": - /url: \"#studio-content\" - banner: - link \"Taplo home\": - /url: /dashboard - img \"Taplo\" - navigation \"Studio\": - link \"Today\": - /url: /dashboard - link \"Build\": - /url: /dashboard/page - button \"More\" - text: Colour mode - combobox \"Colour mode\": - option \"Device theme\" [selected] - option \"Light\" - option \"Dar"
+      "observed_failure": "Error: expect(locator).toBeVisible() failed Locator: locator('section[aria-labelledby=sample-title]').getByText(/ · /).first() Expected: visible Timeout: 5000ms Error: element(s) not found Call log: - Expect \"toBeVisible\" locator('section[aria-labelledby=sample-title]').getByText(/ · /).first() with timeout 5000ms - waiting for locator('section[aria-labelledby=sample-title]').getByText(/ · /).first() yaml - link \"Skip to content\": - /url: \"#studio-content\" - banner: - link \"Taplo home\": - /url: /dashboard - img \"Taplo\" - navigation \"Studio\": - link \"Today\": - /url: /dashboard - link \"Build\": - /url: /dashboard/page - button \"More\" - text: Colour mode - combobox \"Colour mode\": - option \"Device theme\" [selected] - option \"Light\" - option \"Dar"
     },
     {
       "case": "empty-states-illustrations-14036-reduced-motion-is-requested",
@@ -208,7 +223,7 @@
     {
       "case": "engine-Taplo-page-engine-s-78b2a-and-never-overwrite-choices",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toBeVisible() failed Locator: getByTestId('recommendations') Expected: visible Received: hidden Timeout: 5000ms Call log: - Expect \"toBeVisible\" getByTestId('recommendations') with timeout 5000ms - waiting for getByTestId('recommendations') 14 \u00d7 locator resolved to <section aria-label=\"Suggestions\" data-testid=\"recommendations\" class=\"grid gap-2 rounded-xl border bg-muted/40 p-3\">\u2026</section> - unexpected value \"hidden\" yaml - link \"Skip to content\": - /url: \"#studio-content\" - group \"Page controls\": - strong: Your page - text: Draft - link \"View page\": - /url: /demo/preview - main: - toolbar \"Page actions\": - paragraph: Paws & Polish Grooming - paragraph: Draft saved - button \"Undo\" [disabled] - button \"Redo\" [disable"
+      "observed_failure": "Error: expect(locator).toBeVisible() failed Locator: getByTestId('recommendations') Expected: visible Received: hidden Timeout: 5000ms Call log: - Expect \"toBeVisible\" getByTestId('recommendations') with timeout 5000ms - waiting for getByTestId('recommendations') 14 × locator resolved to <section aria-label=\"Suggestions\" data-testid=\"recommendations\" class=\"grid gap-2 rounded-xl border bg-muted/40 p-3\">…</section> - unexpected value \"hidden\" yaml - link \"Skip to content\": - /url: \"#studio-content\" - group \"Page controls\": - strong: Your page - text: Draft - link \"View page\": - /url: /demo/preview - main: - toolbar \"Page actions\": - paragraph: Paws & Polish Grooming - paragraph: Draft saved - button \"Undo\" [disabled] - button \"Redo\" [disable"
     },
     {
       "case": "engine-Taplo-page-engine-s-80507-and-reset-to-the-page-style",
@@ -273,22 +288,22 @@
     {
       "case": "freeform-marketing-direct--48e40--freeform-pages-work-at-390",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toHaveText(expected) failed Locator: getByRole('heading', { level: 1 }) Expected: \"Pages for every kind of business.\" Received: \"Your business.Your point of view.\" Timeout: 5000ms Call log: - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms - waiting for getByRole('heading', { level: 1 }) 13 \u00d7 locator resolved to <h1>\u2026</h1> - unexpected value \"Your business.Your point of view.\" yaml - heading \"Your business. Your point of view.\" [level=1]"
+      "observed_failure": "Error: expect(locator).toHaveText(expected) failed Locator: getByRole('heading', { level: 1 }) Expected: \"Pages for every kind of business.\" Received: \"Your business.Your point of view.\" Timeout: 5000ms Call log: - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms - waiting for getByRole('heading', { level: 1 }) 13 × locator resolved to <h1>…</h1> - unexpected value \"Your business.Your point of view.\" yaml - heading \"Your business. Your point of view.\" [level=1]"
     },
     {
       "case": "freeform-marketing-direct--62038--freeform-pages-work-at-320",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toHaveText(expected) failed Locator: getByRole('heading', { level: 1 }) Expected: \"Pages for every kind of business.\" Received: \"Your business.Your point of view.\" Timeout: 5000ms Call log: - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms - waiting for getByRole('heading', { level: 1 }) 12 \u00d7 locator resolved to <h1>\u2026</h1> - unexpected value \"Your business.Your point of view.\" yaml - heading \"Your business. Your point of view.\" [level=1]"
+      "observed_failure": "Error: expect(locator).toHaveText(expected) failed Locator: getByRole('heading', { level: 1 }) Expected: \"Pages for every kind of business.\" Received: \"Your business.Your point of view.\" Timeout: 5000ms Call log: - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms - waiting for getByRole('heading', { level: 1 }) 12 × locator resolved to <h1>…</h1> - unexpected value \"Your business.Your point of view.\" yaml - heading \"Your business. Your point of view.\" [level=1]"
     },
     {
       "case": "freeform-marketing-direct--cf7b8--freeform-pages-work-at-768",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toHaveText(expected) failed Locator: getByRole('heading', { level: 1 }) Expected: \"Pages for every kind of business.\" Received: \"Your business.Your point of view.\" Timeout: 5000ms Call log: - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms - waiting for getByRole('heading', { level: 1 }) 13 \u00d7 locator resolved to <h1>\u2026</h1> - unexpected value \"Your business.Your point of view.\" yaml - heading \"Your business. Your point of view.\" [level=1]"
+      "observed_failure": "Error: expect(locator).toHaveText(expected) failed Locator: getByRole('heading', { level: 1 }) Expected: \"Pages for every kind of business.\" Received: \"Your business.Your point of view.\" Timeout: 5000ms Call log: - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms - waiting for getByRole('heading', { level: 1 }) 13 × locator resolved to <h1>…</h1> - unexpected value \"Your business.Your point of view.\" yaml - heading \"Your business. Your point of view.\" [level=1]"
     },
     {
       "case": "freeform-marketing-direct--e0b2c-freeform-pages-work-at-1440",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toHaveText(expected) failed Locator: getByRole('heading', { level: 1 }) Expected: \"Pages for every kind of business.\" Received: \"Your business.Your point of view.\" Timeout: 5000ms Call log: - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms - waiting for getByRole('heading', { level: 1 }) 13 \u00d7 locator resolved to <h1>\u2026</h1> - unexpected value \"Your business.Your point of view.\" yaml - heading \"Your business. Your point of view.\" [level=1]"
+      "observed_failure": "Error: expect(locator).toHaveText(expected) failed Locator: getByRole('heading', { level: 1 }) Expected: \"Pages for every kind of business.\" Received: \"Your business.Your point of view.\" Timeout: 5000ms Call log: - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms - waiting for getByRole('heading', { level: 1 }) 13 × locator resolved to <h1>…</h1> - unexpected value \"Your business.Your point of view.\" yaml - heading \"Your business. Your point of view.\" [level=1]"
     },
     {
       "case": "gallery-studio-the-gallery-b51e2-ets-and-filters-them-at-390",
@@ -303,7 +318,7 @@
     {
       "case": "inspiration-navigation-ins-062b2-s-website-navigation-at-390",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toBeVisible() failed Locator: getByRole('heading', { name: 'Your business.Your point of view.', level: 1 }) Expected: visible Timeout: 5000ms Error: element(s) not found Call log: - Expect \"toBeVisible\" getByRole('heading', { name: 'Your business.Your point of view.', level: 1 }) with timeout 5000ms - waiting for getByRole('heading', { name: 'Your business.Your point of view.', level: 1 }) yaml - banner \"Taplo website\": - link \"Taplo home\": - /url: / - img \"Taplo\" - link \"Start free\": - /url: /onboarding - button \"Open menu\" - main: - heading \"Your business. Your point of view.\" [level=1] - paragraph: Find a direction. Explore the details. Make it your own\u2014with your content, your colours and your way of doing business"
+      "observed_failure": "Error: expect(locator).toBeVisible() failed Locator: getByRole('heading', { name: 'Your business.Your point of view.', level: 1 }) Expected: visible Timeout: 5000ms Error: element(s) not found Call log: - Expect \"toBeVisible\" getByRole('heading', { name: 'Your business.Your point of view.', level: 1 }) with timeout 5000ms - waiting for getByRole('heading', { name: 'Your business.Your point of view.', level: 1 }) yaml - banner \"Taplo website\": - link \"Taplo home\": - /url: / - img \"Taplo\" - link \"Start free\": - /url: /onboarding - button \"Open menu\" - main: - heading \"Your business. Your point of view.\" [level=1] - paragraph: Find a direction. Explore the details. Make it your own—with your content, your colours and your way of doing business"
     },
     {
       "case": "inspiration-navigation-ins-1a98b--website-navigation-at-1440",
@@ -313,7 +328,7 @@
     {
       "case": "inspiration-navigation-ins-e3501-s-website-navigation-at-320",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toBeVisible() failed Locator: getByRole('heading', { name: 'Your business.Your point of view.', level: 1 }) Expected: visible Timeout: 5000ms Error: element(s) not found Call log: - Expect \"toBeVisible\" getByRole('heading', { name: 'Your business.Your point of view.', level: 1 }) with timeout 5000ms - waiting for getByRole('heading', { name: 'Your business.Your point of view.', level: 1 }) yaml - banner \"Taplo website\": - link \"Taplo home\": - /url: / - img \"Taplo\" - link \"Start free\": - /url: /onboarding - button \"Open menu\" - main: - heading \"Your business. Your point of view.\" [level=1] - paragraph: Find a direction. Explore the details. Make it your own\u2014with your content, your colours and your way of doing business"
+      "observed_failure": "Error: expect(locator).toBeVisible() failed Locator: getByRole('heading', { name: 'Your business.Your point of view.', level: 1 }) Expected: visible Timeout: 5000ms Error: element(s) not found Call log: - Expect \"toBeVisible\" getByRole('heading', { name: 'Your business.Your point of view.', level: 1 }) with timeout 5000ms - waiting for getByRole('heading', { name: 'Your business.Your point of view.', level: 1 }) yaml - banner \"Taplo website\": - link \"Taplo home\": - /url: / - img \"Taplo\" - link \"Start free\": - /url: /onboarding - button \"Open menu\" - main: - heading \"Your business. Your point of view.\" [level=1] - paragraph: Find a direction. Explore the details. Make it your own—with your content, your colours and your way of doing business"
     },
     {
       "case": "inspiration-navigation-ins-fbea6-s-website-navigation-at-768",
@@ -351,7 +366,7 @@
       "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('combobox', { name: 'Plan' })"
     },
     {
-      "case": "journeys-records-flow-into-e4276--\u2192-block-explains-and-hides",
+      "case": "journeys-records-flow-into-e4276--→-block-explains-and-hides",
       "status": "requires_triage",
       "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Add offer' })"
     },
@@ -368,12 +383,12 @@
     {
       "case": "marketing-inspiration-ever-dc2c6--and-a-way-to-start-from-it",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toHaveAttribute(expected) failed Locator: getByTestId('start-design') Expected: \"/onboarding?from=harris-cars\" Received: \"/onboarding?design=bento&look=cloud&arr=lifted\" Timeout: 5000ms Call log: - Expect \"toHaveAttribute\" getByTestId('start-design') with timeout 5000ms - waiting for getByTestId('start-design') 14 \u00d7 locator resolved to <a class=\"sf-use dg-use\" data-brand-action=\"true\" data-testid=\"start-design\" aria-label=\"Start with the Bento design\" href=\"/onboarding?design=bento&look=cloud&arr=lifted\">Use this design</a> - unexpected value \"/onboarding?design=bento&look=cloud&arr=lifted\" yaml - link \"Start with the Bento design\": - /url: /onboarding?design=bento&look=cloud&arr=lifted - text: Use this design"
+      "observed_failure": "Error: expect(locator).toHaveAttribute(expected) failed Locator: getByTestId('start-design') Expected: \"/onboarding?from=harris-cars\" Received: \"/onboarding?design=bento&look=cloud&arr=lifted\" Timeout: 5000ms Call log: - Expect \"toHaveAttribute\" getByTestId('start-design') with timeout 5000ms - waiting for getByTestId('start-design') 14 × locator resolved to <a class=\"sf-use dg-use\" data-brand-action=\"true\" data-testid=\"start-design\" aria-label=\"Start with the Bento design\" href=\"/onboarding?design=bento&look=cloud&arr=lifted\">Use this design</a> - unexpected value \"/onboarding?design=bento&look=cloud&arr=lifted\" yaml - link \"Start with the Bento design\": - /url: /onboarding?design=bento&look=cloud&arr=lifted - text: Use this design"
     },
     {
       "case": "marketing-product-pages-th-b9cc7-outcome-at-the-point-of-use",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('booking-marketing-demo') Expected substring: \"Nothing is sent or charged.\" Received string: \"Try it for yourselfBook it in.Or agree it first.Choose a booking exampleClinicCoachingHollin PhysiotherapyInitial assessment\u00a37560 minutes\u00b7Request to bookChoose a practitioner and a time. The clinic reviews your request before confirming.Try a bookingExample businesses \u00b7 explore the booking experience.Start with this designOpen demo\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('booking-marketing-demo') with timeout 5000ms - waiting for getByTestId('booking-marketing-demo') 13 \u00d7 locator resolved to <div class=\"booking-demo\" data-testid=\"booking-marketing-dem"
+      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('booking-marketing-demo') Expected substring: \"Nothing is sent or charged.\" Received string: \"Try it for yourselfBook it in.Or agree it first.Choose a booking exampleClinicCoachingHollin PhysiotherapyInitial assessment£7560 minutes·Request to bookChoose a practitioner and a time. The clinic reviews your request before confirming.Try a bookingExample businesses · explore the booking experience.Start with this designOpen demo\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('booking-marketing-demo') with timeout 5000ms - waiting for getByTestId('booking-marketing-demo') 13 × locator resolved to <div class=\"booking-demo\" data-testid=\"booking-marketing-dem"
     },
     {
       "case": "master-navigation-Pro-expo-1d70e-Business-retains-the-fourth",
@@ -387,8 +402,9 @@
     },
     {
       "case": "modern-setup-Google-review-73eb5-shes-them-as-Google-content",
-      "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay\u2019s Barbers', exact: true })"
+      "status": "stable_review_choice_selector_fixed_pending_verification",
+      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay’s Barbers', exact: true })",
+      "latest_observation": "Current entry and review-link configuration passed. Legacy /^Google reviews/ matched the complete preview card, whose decorative content precedes the label. Select the explicit reviews choice ID."
     },
     {
       "case": "neutral-compositions-secti-825c2-ad-without-changing-content",
@@ -427,18 +443,23 @@
     },
     {
       "case": "owner-entry-dashboard-show-abe76--than-a-fixed-empty-message",
-      "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay\u2019s Barbers' })"
+      "status": "targeted_case_passed_4c0d93c",
+      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay’s Barbers' })",
+      "verification": {
+        "run_id": 42066376275,
+        "job_id": 127382298871,
+        "group": "Owner entry and saved customisation recovery"
+      }
     },
     {
       "case": "profile-engine-section-rec-7ff28-nel-undo-and-persist-at-390",
       "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay\u2019s Barbers', exact: true })"
+      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay’s Barbers', exact: true })"
     },
     {
       "case": "profile-engine-section-rec-b2992-el-undo-and-persist-at-1440",
       "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay\u2019s Barbers', exact: true })"
+      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay’s Barbers', exact: true })"
     },
     {
       "case": "profile-engine-transparent-ac5cd-ves-a-profile-change-at-390",
@@ -473,12 +494,12 @@
     {
       "case": "registration-looks-colours-7a9af-ks-reset-and-undone-at-1440",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toHaveCount(expected) failed Locator: getByRole('radiogroup', { name: 'Colours' }).getByRole('radio') Expected: 6 Received: 7 Timeout: 5000ms Call log: - Expect \"toHaveCount\" getByRole('radiogroup', { name: 'Colours' }).getByRole('radio') with timeout 5000ms - waiting for getByRole('radiogroup', { name: 'Colours' }).getByRole('radio') 12 \u00d7 locator resolved to 7 elements - unexpected value \"7\""
+      "observed_failure": "Error: expect(locator).toHaveCount(expected) failed Locator: getByRole('radiogroup', { name: 'Colours' }).getByRole('radio') Expected: 6 Received: 7 Timeout: 5000ms Call log: - Expect \"toHaveCount\" getByRole('radiogroup', { name: 'Colours' }).getByRole('radio') with timeout 5000ms - waiting for getByRole('radiogroup', { name: 'Colours' }).getByRole('radio') 12 × locator resolved to 7 elements - unexpected value \"7\""
     },
     {
       "case": "registration-looks-colours-d28d8-oks-reset-and-undone-at-390",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toHaveCount(expected) failed Locator: getByRole('radiogroup', { name: 'Colours' }).getByRole('radio') Expected: 6 Received: 7 Timeout: 5000ms Call log: - Expect \"toHaveCount\" getByRole('radiogroup', { name: 'Colours' }).getByRole('radio') with timeout 5000ms - waiting for getByRole('radiogroup', { name: 'Colours' }).getByRole('radio') 13 \u00d7 locator resolved to 7 elements - unexpected value \"7\""
+      "observed_failure": "Error: expect(locator).toHaveCount(expected) failed Locator: getByRole('radiogroup', { name: 'Colours' }).getByRole('radio') Expected: 6 Received: 7 Timeout: 5000ms Call log: - Expect \"toHaveCount\" getByRole('radiogroup', { name: 'Colours' }).getByRole('radio') with timeout 5000ms - waiting for getByRole('radiogroup', { name: 'Colours' }).getByRole('radio') 13 × locator resolved to 7 elements - unexpected value \"7\""
     },
     {
       "case": "registration-looks-gradien-6124a-uced-motion-is-still-at-390",
@@ -492,28 +513,53 @@
     },
     {
       "case": "saved-looks-1440px-saved-l-38199-nd-apply-independent-copies",
-      "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay\u2019s Barbers' })"
+      "status": "targeted_case_passed_4c0d93c",
+      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay’s Barbers' })",
+      "verification": {
+        "run_id": 42066376275,
+        "job_id": 127382298871,
+        "group": "Owner entry and saved customisation recovery"
+      }
     },
     {
       "case": "saved-looks-1440px-saved-l-6efcf-g-and-undo-preserve-content",
-      "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay\u2019s Barbers' })"
+      "status": "targeted_case_passed_4c0d93c",
+      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay’s Barbers' })",
+      "verification": {
+        "run_id": 42066376275,
+        "job_id": 127382298871,
+        "group": "Owner entry and saved customisation recovery"
+      }
     },
     {
       "case": "saved-looks-390px-saved-lo-6f3b9-g-and-undo-preserve-content",
-      "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay\u2019s Barbers' })"
+      "status": "targeted_case_passed_4c0d93c",
+      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay’s Barbers' })",
+      "verification": {
+        "run_id": 42066376275,
+        "job_id": 127382298871,
+        "group": "Owner entry and saved customisation recovery"
+      }
     },
     {
       "case": "saved-looks-390px-saved-lo-d29f4-nd-apply-independent-copies",
-      "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay\u2019s Barbers' })"
+      "status": "targeted_case_passed_4c0d93c",
+      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.click: Test timeout of 60000ms exceeded. Call log: - waiting for getByRole('button', { name: 'Try Jay’s Barbers' })",
+      "verification": {
+        "run_id": 42066376275,
+        "job_id": 127382298871,
+        "group": "Owner entry and saved customisation recovery"
+      }
     },
     {
       "case": "saved-looks-full-shelves-k-6b510-s-rather-than-evicting-them",
-      "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.getAttribute: Test timeout of 60000ms exceeded. Call log: - waiting for locator('summary').filter({ hasText: /^Look/ }).first().locator('..')"
+      "status": "targeted_case_passed_4c0d93c",
+      "observed_failure": "Test timeout of 60000ms exceeded. Error: locator.getAttribute: Test timeout of 60000ms exceeded. Call log: - waiting for locator('summary').filter({ hasText: /^Look/ }).first().locator('..')",
+      "verification": {
+        "run_id": 42066376275,
+        "job_id": 127382298871,
+        "group": "Owner entry and saved customisation recovery"
+      }
     },
     {
       "case": "service-authoring-service--3eb88-sist-through-editing-at-390",
@@ -563,7 +609,7 @@
     {
       "case": "setup-form-finish-is-truth-87481--route-an-unpublished-draft",
       "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('dev-route') Expected pattern: /testing route/i Received string: \"Open StudioYou can keep editing before you publish.\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('dev-route') with timeout 5000ms - waiting for getByTestId('dev-route') 13 \u00d7 locator resolved to <div class=\"sf-testing\" data-testid=\"dev-route\">\u2026</div> - unexpected value \"Open StudioYou can keep editing before you publish.\" yaml - button \"Open Studio\" - paragraph: You can keep editing before you publish."
+      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('dev-route') Expected pattern: /testing route/i Received string: \"Open StudioYou can keep editing before you publish.\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('dev-route') with timeout 5000ms - waiting for getByTestId('dev-route') 13 × locator resolved to <div class=\"sf-testing\" data-testid=\"dev-route\">…</div> - unexpected value \"Open StudioYou can keep editing before you publish.\" yaml - button \"Open Studio\" - paragraph: You can keep editing before you publish."
     },
     {
       "case": "setup-form-the-grip-shows--dc897-ouch-target-and-by-keyboard",
@@ -573,7 +619,7 @@
     {
       "case": "setup-form-the-plan-step-s-b2f3a-never-claims-a-subscription",
       "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('plan-disclosure') Expected substring: \"provisional\" Received string: \"Choose the features that fit your business. Review your selected plan before continuing.\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('plan-disclosure') with timeout 5000ms - waiting for getByTestId('plan-disclosure') 13 \u00d7 locator resolved to <p class=\"plan-choice-notice\" data-testid=\"plan-disclosure\">\u2026</p> - unexpected value \"Choose the features that fit your business. Review your selected plan before continuing.\" yaml - paragraph: Choose the features that fit your business. Review your selected plan before continuing."
+      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('plan-disclosure') Expected substring: \"provisional\" Received string: \"Choose the features that fit your business. Review your selected plan before continuing.\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('plan-disclosure') with timeout 5000ms - waiting for getByTestId('plan-disclosure') 13 × locator resolved to <p class=\"plan-choice-notice\" data-testid=\"plan-disclosure\">…</p> - unexpected value \"Choose the features that fit your business. Review your selected plan before continuing.\" yaml - paragraph: Choose the features that fit your business. Review your selected plan before continuing."
     },
     {
       "case": "studio-home-copying-says-so-plainly-when-the-browser-refuses",
@@ -613,22 +659,22 @@
     {
       "case": "uk-examples-UK-examples-ke-9076c-and-valet-requests-distinct",
       "status": "requires_triage",
-      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('booking-flow').getByTestId('bk-done') Expected substring: \"not emailed or texted\" Received string: \"Booking confirmedConfirmed appointment. Your time is reserved.ServiceHaircutWhenThu 5 Nov 17:00 GMT+0Price\u00a322Appointment details saved. Customer notification not sent. Add to calendarCancel bookingBookings can be moved up to 24 hours before. Please contact the business.Done\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('booking-flow').getByTestId('bk-done') with timeout 5000ms - waiting for getByTestId('booking-flow').getByTestId('bk-done') 14 \u00d7 locator resolved to <section class=\"grid gap-4\" data-testid=\"bk-done\" aria-labelledby=\"bk-h\" data-status=\""
+      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('booking-flow').getByTestId('bk-done') Expected substring: \"not emailed or texted\" Received string: \"Booking confirmedConfirmed appointment. Your time is reserved.ServiceHaircutWhenThu 5 Nov 17:00 GMT+0Price£22Appointment details saved. Customer notification not sent. Add to calendarCancel bookingBookings can be moved up to 24 hours before. Please contact the business.Done\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('booking-flow').getByTestId('bk-done') with timeout 5000ms - waiting for getByTestId('booking-flow').getByTestId('bk-done') 14 × locator resolved to <section class=\"grid gap-4\" data-testid=\"bk-done\" aria-labelledby=\"bk-h\" data-status=\""
     },
     {
       "case": "uk-six-1440px-new-UK-examp-91e23-uiry-reserve-no-appointment",
       "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('enquiry-sent') Expected substring: \"saved in this browser\" Received string: \"Enquiry savedYour enquiry has been saved. No time was reserved.No. 6 Coffee was not emailed or texted.\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('enquiry-sent') with timeout 5000ms - waiting for getByTestId('enquiry-sent') 14 \u00d7 locator resolved to <div role=\"status\" class=\"grid gap-3\" data-testid=\"enquiry-sent\">\u2026</div> - unexpected value \"Enquiry savedYour enquiry has been saved. No time was reserved.No. 6 Coffee was not emailed or texted.\" yaml - status: - heading \"Enquiry saved\" [level=3] - paragraph: Your enquiry has been saved. No time was reserved. - paragraph: No"
+      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('enquiry-sent') Expected substring: \"saved in this browser\" Received string: \"Enquiry savedYour enquiry has been saved. No time was reserved.No. 6 Coffee was not emailed or texted.\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('enquiry-sent') with timeout 5000ms - waiting for getByTestId('enquiry-sent') 14 × locator resolved to <div role=\"status\" class=\"grid gap-3\" data-testid=\"enquiry-sent\">…</div> - unexpected value \"Enquiry savedYour enquiry has been saved. No time was reserved.No. 6 Coffee was not emailed or texted.\" yaml - status: - heading \"Enquiry saved\" [level=3] - paragraph: Your enquiry has been saved. No time was reserved. - paragraph: No"
     },
     {
       "case": "uk-six-390px-new-UK-exampl-8bdcb-uiry-reserve-no-appointment",
       "status": "legacy_selector_or_wording_reconciliation_pending",
-      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('enquiry-sent') Expected substring: \"saved in this browser\" Received string: \"Enquiry savedYour enquiry has been saved. No time was reserved.No. 6 Coffee was not emailed or texted.\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('enquiry-sent') with timeout 5000ms - waiting for getByTestId('enquiry-sent') 14 \u00d7 locator resolved to <div role=\"status\" class=\"grid gap-3\" data-testid=\"enquiry-sent\">\u2026</div> - unexpected value \"Enquiry savedYour enquiry has been saved. No time was reserved.No. 6 Coffee was not emailed or texted.\" yaml - status: - heading \"Enquiry saved\" [level=3] - paragraph: Your enquiry has been saved. No time was reserved. - paragraph: No"
+      "observed_failure": "Error: expect(locator).toContainText(expected) failed Locator: getByTestId('enquiry-sent') Expected substring: \"saved in this browser\" Received string: \"Enquiry savedYour enquiry has been saved. No time was reserved.No. 6 Coffee was not emailed or texted.\" Timeout: 5000ms Call log: - Expect \"toContainText\" getByTestId('enquiry-sent') with timeout 5000ms - waiting for getByTestId('enquiry-sent') 14 × locator resolved to <div role=\"status\" class=\"grid gap-3\" data-testid=\"enquiry-sent\">…</div> - unexpected value \"Enquiry savedYour enquiry has been saved. No time was reserved.No. 6 Coffee was not emailed or texted.\" yaml - status: - heading \"Enquiry saved\" [level=3] - paragraph: Your enquiry has been saved. No time was reserved. - paragraph: No"
     },
     {
       "case": "workbench-Team-team--avatars--dark",
       "status": "targeted_case_passed_a99f3c5",
-      "observed_failure": "Error: expect(locator).toHaveAccessibleName(expected) failed Locator: locator('.tp-team-avatars button').first() Expected: \"Jay Brannigan. View profile\" Received: \"Jay Brannigan . View profile\" Timeout: 5000ms Call log: - Expect \"toHaveAccessibleName\" locator('.tp-team-avatars button').first() with timeout 5000ms - waiting for locator('.tp-team-avatars button').first() 14 \u00d7 locator resolved to <button type=\"button\">\u2026</button> - unexpected value \"Jay Brannigan . View profile\" yaml - button \"Jay Brannigan . View profile\"",
+      "observed_failure": "Error: expect(locator).toHaveAccessibleName(expected) failed Locator: locator('.tp-team-avatars button').first() Expected: \"Jay Brannigan. View profile\" Received: \"Jay Brannigan . View profile\" Timeout: 5000ms Call log: - Expect \"toHaveAccessibleName\" locator('.tp-team-avatars button').first() with timeout 5000ms - waiting for locator('.tp-team-avatars button').first() 14 × locator resolved to <button type=\"button\">…</button> - unexpected value \"Jay Brannigan . View profile\" yaml - button \"Jay Brannigan . View profile\"",
       "verification": {
         "run_id": 42057739576,
         "job_id": 127350640810,
@@ -638,7 +684,7 @@
     {
       "case": "workbench-Team-team--avatars--light",
       "status": "targeted_case_passed_a99f3c5",
-      "observed_failure": "Error: expect(locator).toHaveAccessibleName(expected) failed Locator: locator('.tp-team-avatars button').first() Expected: \"Jay Brannigan. View profile\" Received: \"Jay Brannigan . View profile\" Timeout: 5000ms Call log: - Expect \"toHaveAccessibleName\" locator('.tp-team-avatars button').first() with timeout 5000ms - waiting for locator('.tp-team-avatars button').first() 14 \u00d7 locator resolved to <button type=\"button\">\u2026</button> - unexpected value \"Jay Brannigan . View profile\" yaml - button \"Jay Brannigan . View profile\"",
+      "observed_failure": "Error: expect(locator).toHaveAccessibleName(expected) failed Locator: locator('.tp-team-avatars button').first() Expected: \"Jay Brannigan. View profile\" Received: \"Jay Brannigan . View profile\" Timeout: 5000ms Call log: - Expect \"toHaveAccessibleName\" locator('.tp-team-avatars button').first() with timeout 5000ms - waiting for locator('.tp-team-avatars button').first() 14 × locator resolved to <button type=\"button\">…</button> - unexpected value \"Jay Brannigan . View profile\" yaml - button \"Jay Brannigan . View profile\"",
       "verification": {
         "run_id": 42057739576,
         "job_id": 127350640810,

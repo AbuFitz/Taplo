@@ -60,3 +60,13 @@ Mobile chrome follow-through: the current phone editor had fixed light backgroun
 On commit 67a92e7, all 615 unit/database checks passed; 31 of 32 connected browser cases passed. The extra case identified the unselected phone navigation text in dark mode. The mobile-chrome follow-up addresses the fixed white surface responsible for it.
 
 The broad editor accessibility journey passed page-style and Profile, then identified the nested block Appearance tab's translucent foreground. Nested operational tab lists/triggers now use the same solid text and surface tokens as the surrounding Studio. The check remains enabled and must proceed through Details and Settings before it can be marked complete. The interrupted public/control group is not counted as passed.
+
+## Final targeted follow-up
+
+On 4c0d93c, 615 unit/database checks passed, as did typecheck, lint and the production build. Primary browser groups completed: connected journey 31/32; operational shell 3/3; design navigation/focus 5/5; mobile preview/validation 3/3; editor/discovery accessibility 6/6; owner/customisation 14/15; block ordering 7/7; public-theme/control 104/104. Total: 173 of 175 browser checks passed.
+
+Remaining defects from that run:
+1. The active phone Profile tab still inherited a fixed white selected background. Its operational selected state now explicitly sets both foreground and background.
+2. Google-review setup's test queried /^Google reviews/ against the entire content card. Real decorative preview content precedes that label. It now selects the explicit reviews choice ID while preserving the assertions for the real Google URL and unchanged testimonial records.
+
+These two follow-ups need their own committed CI result. Previously passing cases are recorded as targeted recovery only; the full browser regression and server-backed draft/claim/Studio integration remain open.

@@ -2,7 +2,7 @@ import { cont, openDetails, openMoreStyling } from './helpers';
 import { expect, test } from "@playwright/test"
 import AxeBuilder from "@axe-core/playwright"
 import path from "node:path"
-import { addWidget, openSampleBusiness } from "./helpers"
+import { openStructure, openSampleBusiness } from "./helpers"
 
 for (const width of [390, 1440]) test(`homepage shows the real rendered page in a handset without an embedded frame at ${width}`, async ({ page }) => {
   await page.setViewportSize({width,height:950});await page.goto('/')
@@ -23,7 +23,9 @@ test('Google review setup preserves old records but never publishes them as Goog
   await expect(page.getByRole('link', { name: 'Open on Google' })).toHaveAttribute('href', 'https://www.google.com/maps/place/Example')
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('taplo.demo.v2')!).content.testimonials)).toEqual(original)
   await page.goto('/dashboard/page')
-  await addWidget(page, /^Google reviews/)
+  await openStructure(page)
+  await page.getByTestId("add-widget").click()
+  await page.getByTestId("add-content").locator('[data-choice-id="reviews"]').click()
   await page.goto('/demo/preview')
   await expect(page.locator('[data-widget="reviews"]').getByRole('link')).toHaveAttribute('href', 'https://www.google.com/maps/place/Example')
   for (const review of original ?? []) await expect(page.getByText(review.quote, { exact: true })).toHaveCount(0)
