@@ -15,3 +15,14 @@ Vercel team access was approved. The project had no existing environment variabl
 The new private `GET /v1/health/database` requires its server-only header credential, checks that the actual login lacks owner/bypass/role-admin/database-admin power, and verifies real table grants through the existing transaction-local role boundary. It returns no customer rows or database identity. Four transport tests pass, and local checks report 443 unit tests passed, 61 database tests skipped, plus type checking, lint and build. Actual deployed connection verification remains pending at this source checkpoint.
 
 Anonymous-draft activation, claim activation, offer activation and live auth are not automatically enabled by adding a database connection. Existing cleanup/abuse/provider/readiness prerequisites remain. The frontend account adapter and first-offer/publish journey still need connecting; this is P01 infrastructure progress, not P03–P12 completion.
+
+
+## Deployed connection evidence · 5 November 2026
+
+Source `3508ea0c9e307666d2718acdbd063ce55b647c71`, Vercel deployment `dpl_2LCnUCSymvghqwVD7ZM1QJws8LWQ`, explicit non-Production target `staging`, reached READY. Exact host: `taplo-xgp7z837b-abufitz-49f3a2e4.vercel.app`. Vercel's documented API accepts `staging`; `preview` is not accepted as an explicit target. This resolves the earlier ambiguous-target blocker without changing Production's database configuration.
+
+A direct request to `/v1/health/database` returned 404 `{status:not_found}` without the application probe secret, then 200 `{status:ok}` with the private header. The secret was read from ignored local configuration, sent only to that owned deployment, and never included in a URL or output. Cross-origin redirects were forbidden. This proves deployed application → restricted runtime login → Neon access and the schema/grant checks performed by that route; it is not booking/auth/publication release evidence.
+
+Automatic review rejected creation of a temporary share URL. No share URL was created or used; the normal application-authenticated request worked. Do not retry the rejected sharing operation for this verification.
+
+Only migrations 0001–0003 are applied in the live development database at this point. New identity migration 0004 remains source/isolated-test work; no auth schema, email service or auth activation flags were provisioned live here.

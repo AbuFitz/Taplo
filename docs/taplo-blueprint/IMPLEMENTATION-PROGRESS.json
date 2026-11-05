@@ -35,6 +35,11 @@
           "commit": "9711e56be236e8794ad32b659c86d971353bfa59",
           "check": "Dedicated Neon development and isolated validation databases; migrations 0001\u20130003, restricted runtime role, rollback-only tenant/RLS checks",
           "result": "Passed on real Neon via connected SQL tools. Direct local Node connectivity blocked by DNS. Preview-only environment configured; deployed app connection probe remains unverified. Production database settings unchanged."
+        },
+        {
+          "commit": "3508ea0c9e307666d2718acdbd063ce55b647c71",
+          "check": "Vercel staging deployment private database readiness probe",
+          "result": "Deployment dpl_2LCnUCSymvghqwVD7ZM1QJws8LWQ READY; without app secret 404 not_found; with secret 200 ok. Restricted deployed connection to Neon verified. No share link used; Production database unchanged. Auth activation and new identity migration remain pending."
         }
       ]
     },
@@ -110,6 +115,16 @@
         {
           "check": "Canonical cookie-to-person bridge, provider-scoped policy migration and service edit preservation",
           "result": "Local checkpoint: 472 passed, 67 PostgreSQL cases skipped; typecheck, targeted lint and build passed. Four additional browser-adapter tests subsequently passed. New provider-binding PostgreSQL cases await CI. No new SQL applied to live Neon."
+        },
+        {
+          "commit": "afa8a84a89ce196af5b2de0c94e05b7f8b64c1a0",
+          "check": "Completed focused CI verification",
+          "result": "Run 41987976395 verify job 127113158306 passed 533 unit/PostgreSQL tests, typecheck/lint/build and 113 focused browser checks. Full browser-regression was cancelled by next source push, not claimed passed."
+        },
+        {
+          "commit": "3508ea0c9e307666d2718acdbd063ce55b647c71",
+          "check": "Current local source checks",
+          "result": "476 unit tests passed; 67 PostgreSQL cases skipped locally. Typecheck, targeted lint and production build passed. CI unit/PostgreSQL/build and 9 operational/appearance/setup browser checks passed; 104 public/control checks still running at this evidence checkpoint."
         }
       ],
       "implemented_commands": [
