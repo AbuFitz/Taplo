@@ -40,3 +40,21 @@ Public profile marks now require supplied imagery; no business initials are gene
 
 
 Live customer review confirmed that the team profile lost focus to the document after dismissal. The shared controlled Overlay now captures the initiating element before autofocus and restores it on close when no explicit trigger/callback owns restoration. A newly focused field in another overlay takes precedence. Added phone/desktop connected checks for both close-button and Escape dismissal, without fabricated team portraits.
+
+
+## Verified application checkpoint
+
+Application/test commit: `018d8f05f00742172a516d648b691a2877d43e08`, canonical branch `claude/modest-cerf-4tont1`.
+
+GitHub Actions run: https://github.com/AbuFitz/Taplo/actions/runs/42035008519
+
+The `verify` job completed successfully:
+
+- Type generation, TypeScript, repository lint and production build passed.
+- 609 unit/database tests passed in isolated CI PostgreSQL; no database skips in that run. The equivalent local suite recorded 542 passes and 67 unavailable-database skips, which were not counted as passes.
+- 19 connected onboarding/Studio/customer checks passed, including the public-hours round trip through Business details, conflict/save recovery and customer profile → booking → original opener focus.
+- 3 operational-shell, 3 starting-look/navigation and 3 targeted mobile preview/validation checks passed.
+- 104 public-theme contrast and design-control checks passed.
+- Total browser checks in the successful verify job: 132. The separate full browser-regression job was still running when this checkpoint was recorded; its outcome is not assumed.
+
+Manual deployed review confirmed the shared hours editor from Business details, its neutral floating surface and focus return, public team/name rendering without invented marks, and profile → booking → original person focus recovery. Code source is clean at the checkpoint. This evidence advances the stated Studio/identity slice only. It does not establish cloud draft claim completion, payments/commerce launch, the full customer app/Console, native/device behaviour, external provider readiness or professional legal/security approval.
