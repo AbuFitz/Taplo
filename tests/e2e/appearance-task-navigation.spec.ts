@@ -36,3 +36,20 @@ for (const width of [390, 1440]) {
     await page.screenshot({ path: `shots/p02-look-chooser-${width}.png` });
   });
 }
+
+test("mobile block selection stays on the selected block after preview reframing settles", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await openEditorWithSample(page, "Barber");
+  await page.getByTestId("tab-content").click();
+  await page.locator('[data-widget-row="faq"]').getByTestId("select-widget").click();
+  const selected = previewFrame(page).locator('[data-widget="faq"][data-tp-selected]');
+  await expect(selected).toBeAttached();
+  // Wait beyond the preview's deferred 120ms focus message so a later header jump cannot give a false pass.
+  await page.waitForTimeout(350);
+  await expect.poll(() => selected.evaluate(el => {
+    const rect = el.getBoundingClientRect();
+    return rect.top >= 0 && rect.top < window.innerHeight;
+  })).toBe(true);
+  await page.screenshot({ path: "shots/p02-mobile-selected-block.png" });
+});

@@ -203,23 +203,8 @@ export function MobileEditor({
           src={preview ? "/demo/preview" : "/demo/preview?edit=1"}
           title="Live preview of your page"
           testId="preview-frame"
-          focus={
-            section === "design" || section === "header"
-              ? "top"
-              : inspecting && widget
-                ? ((
-                    {
-                      priceMenu: "offer",
-                      serviceList: "offer",
-                      featuredService: "offer",
-                      booking: "booking",
-                      team: "team",
-                      gallery: "gallery",
-                      hours: "hours",
-                    } as Record<string, string>
-                  )[widget.type] ?? "identity")
-                : "identity"
-          }
+          // Exact block selection owns its own scrolling through EditBridge; a generic type target can reveal the wrong block.
+          focus={inspecting && widget ? undefined : "top"}
           edit={preview ? undefined : { selection, onSelect: select }}
           onOverlayOpen={() => setPreview(true)}
           focusKey={
