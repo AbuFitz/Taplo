@@ -5,7 +5,7 @@ const store = (page: import("@playwright/test").Page) => page.evaluate(() => JSO
 
 test.describe("Taplo page engine: select in preview, contextual controls", () => {
   test("clicking the preview selects, never follows links, and shows the widget's own controls", async ({ page }) => {
-    await openEditorWithSample(page, "Barber");
+    await openEditorWithSample(page, "Barber", { withLogo: true });
     const frame = previewFrame(page);
     const url = page.url();
 
@@ -33,7 +33,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
   });
 
   test("content, layout, colour and arrangement edits reach the preview; one undo per colour drag", async ({ page }) => {
-    await openEditorWithSample(page, "Barber");
+    await openEditorWithSample(page, "Barber", { withLogo: true });
     const frame = previewFrame(page);
 
     // header arrangement + logo shape + size
@@ -63,7 +63,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
   });
 
   test("per-widget overrides survive page colour changes and reset to the page style", async ({ page }) => {
-    await openEditorWithSample(page, "Barber");
+    await openEditorWithSample(page, "Barber", { withLogo: true });
     await openRow(page, "hours");
     await insp(page).getByRole("tab", { name: /Appearance/ }).click();
     await insp(page).getByLabel("Card colour hex value").fill("#1f2a44");
@@ -85,7 +85,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
   });
 
   test("draft and published stay separate; public output matches the preview; reload restores the draft", async ({ page }) => {
-    await openEditorWithSample(page, "Barber");
+    await openEditorWithSample(page, "Barber", { withLogo: true });
     await page.getByTestId("publish").click();
     await expect(page.getByTestId("save-state")).toContainText("Saved · live");
     const slug = (await store(page)).content.identity.slug as string;
@@ -140,7 +140,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
   });
 
   test("logo keeps its complete image and transparency; social links use real brand marks", async ({ page }) => {
-    await openEditorWithSample(page, "Barber");
+    await openEditorWithSample(page, "Barber", { withLogo: true });
     await selectPart(page, "header");
     await openSection(page, "Header");
     await insp(page).getByLabel("Logo or profile picture: upload a picture").setInputFiles(pngFile("logo.png"));
@@ -169,7 +169,7 @@ test.describe("Taplo page engine: select in preview, contextual controls", () =>
 test.describe("mobile editor", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
   test("the preview fills the screen; tapping it opens a sheet that leaves the selection visible; nothing overflows", async ({ page }) => {
-    await openEditorWithSample(page, "Barber");
+    await openEditorWithSample(page, "Barber", { withLogo: true });
     await expect(page.locator('[data-editor="compact"]')).toBeVisible();
     // the preview IS the screen: real device width, no handset frame, most of the height
     const box = (await page.getByTestId("preview-frame").boundingBox())!;

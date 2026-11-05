@@ -8,6 +8,7 @@ export const previewFrame = (page: Page): FrameLocator =>
 export async function openEditorWithSample(
   page: Page,
   sample: "Barber" | "Car dealer" | "Tutor" | "Mechanic" | "Café" | "Consultant" | "Unlisted" = "Barber",
+  options: { withLogo?: boolean } = {},
 ) {
   const fixture = FIXTURES.find((item) => item.label.startsWith(sample));
   if (!fixture) throw new Error(`Missing registered fixture: ${sample}`);
@@ -15,7 +16,7 @@ export async function openEditorWithSample(
   await page.evaluate((item) => {
     localStorage.clear();
     localStorage.setItem("taplo.demo.v2", JSON.stringify({ v: 2, step: "finish", onboarded: true, plan: item.plan, content: item.content, page: item.page, slugEdited: true, published: null }));
-  }, fixture);
+  }, options.withLogo ? { ...fixture, content: { ...fixture.content, identity: { ...fixture.content.identity, logo: fixture.content.identity.logo ?? { src: "/fixtures/img-7.svg", alt: "Synthetic business profile image", width: 1200, height: 900 } } } } : fixture);
   await page.goto("/dashboard/page", { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("my-page")).toBeVisible();
   await page.waitForLoadState("networkidle");

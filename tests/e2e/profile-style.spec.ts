@@ -5,7 +5,7 @@ import path from "node:path"
 for (const width of [390, 1440]) {
   test(`picture choices show the owner's image and preserve history at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 })
-    await openEditorWithSample(page, "Barber")
+    await openEditorWithSample(page, "Barber", { withLogo: true })
     await selectPart(page, "header")
     await page.getByRole("radiogroup", { name: "Header arrangement", exact: true }).locator('label[data-choice="bento"]').click() // an arrangement that shows the profile picture
     const choices = page.getByRole("radiogroup", { name: "Picture style", exact: true })

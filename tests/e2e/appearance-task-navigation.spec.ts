@@ -22,8 +22,9 @@ for (const width of [390, 1440]) {
     await expect(choice.locator('input[type="radio"]')).toBeChecked();
     await expect(previewFrame(page).locator("[data-taplo-page]")).toBeAttached();
     if (width === 390) {
-      // The complete profile mark remains in the short document viewport, rather than scrolling straight to the name.
-      await expect.poll(() => previewFrame(page).locator(".tp-avatar").evaluate(el => {
+      // Without a supplied logo, the real business name remains legible in the short preview.
+      await expect(previewFrame(page).locator(".tp-avatar")).toHaveCount(0);
+      await expect.poll(() => previewFrame(page).locator(".tp-name").evaluate(el => {
         const rect = el.getBoundingClientRect();
         return rect.top >= 0 && rect.bottom <= window.innerHeight;
       })).toBe(true);

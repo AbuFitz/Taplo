@@ -103,7 +103,7 @@ test.describe("design controls change the rendered page, undo, and persist", () 
   for (const c of C) {
     test(c.id, async ({ page }) => {
       test.setTimeout(150_000) // the shader wallpaper renders in software GL here and is slow when the suite runs in parallel
-      await openEditorWithSample(page, "Barber")
+      await openEditorWithSample(page, "Barber", { withLogo: true })
       await page.waitForTimeout(600)
       // Every control is exercised from the same known start. The sample barber opens in the Service design, whose values already equal several of the targets below (and whose light page rejects light text), so the Midnight look is chosen first through the Look control.
       if (c.id !== "look") { await selectPart(page, "page"); await radio("Look", "noir")(page); await page.waitForTimeout(400) }
