@@ -168,6 +168,21 @@ const DESIGN_TASKS = [
   },
 ] as const;
 
+/** Keep keyboard navigation anchored when a task replaces its overview. */
+function useTaskFocus(task: string | null, attribute: "data-design-task" | "data-profile-task") {
+  const root = React.useRef<HTMLDivElement>(null);
+  const previous = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    const from = previous.current;
+    previous.current = task;
+    if (from === task) return;
+    const target = task ? "[data-task-heading]" : `button[${attribute}="${from}"]`;
+    const frame = requestAnimationFrame(() => root.current?.querySelector<HTMLElement>(target)?.focus());
+    return () => cancelAnimationFrame(frame);
+  }, [task, attribute]);
+  return root;
+}
+
 /** One design decision at a time, using the same document/history model as the public renderer. */
 export function PageStylePanel({
   ed,
@@ -178,10 +193,12 @@ export function PageStylePanel({
 }) {
   const m = useEditorAppearance(ed, notify);
   const [task, setTask] = React.useState<DesignTask | null>(null);
+  const taskRoot = useTaskFocus(task, "data-design-task");
   const chosen = DESIGN_TASKS.find((t) => t.id === task);
   return (
     <div
       className="design-studio"
+      ref={taskRoot}
       data-testid="appearance-panel"
       data-design-task-active={task ?? "overview"}
     >
@@ -196,7 +213,7 @@ export function PageStylePanel({
               <ArrowLeft />
             </button>
             <div>
-              <h2>{chosen.name}</h2>
+              <h2 tabIndex={-1} data-task-heading>{chosen.name}</h2>
               <p>{chosen.line}</p>
             </div>
           </div>
@@ -336,6 +353,7 @@ export function HeaderPanel({
   const m = useEditorAppearance(ed, notify);
   const c = ed.state.content;
   const [area, setArea] = React.useState<string | null>(null);
+  const taskRoot = useTaskFocus(area, "data-profile-task");
   const areas = [
     {
       id: "identity",
@@ -366,6 +384,7 @@ export function HeaderPanel({
   return (
     <div
       className="design-studio"
+      ref={taskRoot}
       data-testid="header-panel"
       data-profile-task-active={area ?? "overview"}
     >
@@ -380,7 +399,7 @@ export function HeaderPanel({
               <ArrowLeft />
             </button>
             <div>
-              <h2>{current.name}</h2>
+              <h2 tabIndex={-1} data-task-heading>{current.name}</h2>
               <p>{current.line}</p>
             </div>
           </div>

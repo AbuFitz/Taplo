@@ -54,3 +54,24 @@ test("mobile block selection stays on the selected block after preview reframing
   })).toBe(true);
   await page.screenshot({ path: "shots/p02-mobile-selected-block.png" });
 });
+
+for (const width of [390, 1440]) {
+  test(`customisation task focus enters and returns at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await openEditorWithSample(page, "Barber");
+    for (const item of [
+      { part: "page", panel: "appearance-panel", attribute: "data-design-task", task: "type", heading: "Typography", back: "Back to design" },
+      { part: "header", panel: "header-panel", attribute: "data-profile-task", task: "identity", heading: "Your identity", back: "Back to profile" },
+    ] as const) {
+      await selectPart(page, item.part);
+      const panel = page.getByTestId(item.panel);
+      const choice = panel.locator(`button[${item.attribute}="${item.task}"]`);
+      await choice.focus();
+      await page.keyboard.press("Enter");
+      await expect(panel.getByRole("heading", { name: item.heading, exact: true })).toBeFocused();
+      await panel.getByRole("button", { name: item.back, exact: true }).click();
+      await expect(choice).toBeFocused();
+    }
+  });
+}

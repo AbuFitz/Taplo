@@ -2,7 +2,7 @@ import { cont, openDetails, openMoreStyling } from './helpers';
 import { expect, test } from "@playwright/test"
 import AxeBuilder from "@axe-core/playwright"
 import path from "node:path"
-import { addWidget } from "./helpers"
+import { addWidget, openSampleBusiness } from "./helpers"
 
 for (const width of [390, 1440]) test(`homepage shows the real rendered page in a handset without an embedded frame at ${width}`, async ({ page }) => {
   await page.setViewportSize({width,height:950});await page.goto('/')
@@ -12,9 +12,7 @@ for (const width of [390, 1440]) test(`homepage shows the real rendered page in 
 })
 
 test('Google review setup preserves old records but never publishes them as Google content', async ({ page }) => {
-  await page.goto('/dashboard')
-  await page.getByRole('button', { name: 'Try Jay’s Barbers', exact: true }).click()
-  await page.waitForURL('**/dashboard/page')
+  await openSampleBusiness(page, "Jay’s Barbers")
   const original = await page.evaluate(() => JSON.parse(localStorage.getItem('taplo.demo.v2')!).content.testimonials)
   await page.goto('/dashboard/reviews')
   await expect(page.getByRole('heading', { name: 'Reviews', exact: true })).toBeVisible()

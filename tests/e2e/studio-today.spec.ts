@@ -684,8 +684,9 @@ for (const width of [390, 1440])
       await page.goto("/dashboard/page");
       await selectPart(page, "header");
       await expect(page.getByTestId("header-panel")).toBeVisible();
+      await expect(page.locator(".operational-root")).toHaveAttribute("data-colour-scheme", scheme);
       const result = await new AxeBuilder({ page })
-        .include('[data-testid="header-panel"], [data-testid="editor-panel"] > [role="tablist"], .mobile-studio-tabs')
+        .include('[data-testid="header-panel"], [data-testid="editor-panel"] > [role="tablist"], .mobile-studio-tabs, .mobile-studio-header, .mobile-studio-footer')
         .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
         .analyze();
       expect(result.violations.filter(v => v.impact === "serious" || v.impact === "critical").map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) }))).toEqual([]);

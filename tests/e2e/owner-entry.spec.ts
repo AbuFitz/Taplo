@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 import path from "node:path"
-import { openStructure } from "./helpers"
+import { openStructure, openSampleBusiness } from "./helpers"
 
 for (const width of [390, 1440]) {
   test.describe(`${width}px owner entry`, () => {
@@ -8,13 +8,15 @@ for (const width of [390, 1440]) {
     for (const name of ["Jay’s Barbers", "Detail Dept.", "Harris Cars"]) {
       test(`opens ${name} as an editable draft and keeps it after a reload`, async ({ page }) => {
         await page.goto("/dashboard")
-        await expect(page.getByRole("heading", { name: "Set up your business page." })).toBeVisible()
-        const pictures = page.locator('button[aria-label^="Try "] img')
-        await expect(pictures).toHaveCount(6)
-        await expect.poll(() => pictures.evaluateAll((imgs) => imgs.filter((i) => i.getBoundingClientRect().top < innerHeight).every((i) => (i as HTMLImageElement).complete && (i as HTMLImageElement).naturalWidth > 0))).toBe(true)
+        const welcome = page.getByTestId("first-run")
+        await expect(welcome.getByRole("heading", { name: "Welcome to Studio.", exact: true })).toBeVisible()
+        const examples = welcome.locator(".studio-welcome-examples")
+        await expect(examples.getByRole("button").first()).toBeHidden()
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
         if (name === "Jay’s Barbers") await page.screenshot({ path: path.join(process.env.TAPLO_REVIEW_DIR ?? "test-results", `owner-welcome-${width}.png`), fullPage: true })
-        await page.getByRole("button", { name: `Try ${name}`, exact: true }).click()
+        await examples.locator("summary").click()
+        await expect(examples.getByRole("button")).toHaveCount(6)
+        await examples.getByRole("button").filter({ has: page.getByText(name, { exact: true }) }).click()
         await page.waitForURL("**/dashboard/page")
         await expect(page.getByTestId("my-page")).toBeVisible()
         const content = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!).content)
@@ -37,9 +39,7 @@ for (const width of [390, 1440]) {
 }
 
 test("dashboard shows current preview appointments rather than a fixed empty message", async ({ page }) => {
-  await page.goto("/dashboard")
-  await page.getByRole("button", { name: "Try Jay’s Barbers" }).click()
-  await page.waitForURL("**/dashboard/page")
+  await openSampleBusiness(page, "Jay’s Barbers")
   await page.evaluate(() => {
     const draft = JSON.parse(localStorage.getItem("taplo.demo.v2")!)
     const startsAt = Date.now() + 86400000
@@ -49,7 +49,8 @@ test("dashboard shows current preview appointments rather than a fixed empty mes
   await page.goto("/dashboard")
   const upcoming = page.getByTestId("upcoming-bookings")
   await expect(upcoming).toContainText("Haircut preview")
-  await expect(upcoming).toContainText("1 awaiting your reply")
+  await expect(upcoming).toContainText("Needs a reply")
+  await expect(page.getByRole("link", { name: "1 booking request", exact: true })).toHaveAttribute("href", "/dashboard/bookings")
   await expect(upcoming).not.toContainText("Cancelled appointment")
-  await expect(upcoming.getByRole("link", { name: "Open bookings" })).toHaveAttribute("href", "/dashboard/bookings")
+  await expect(upcoming.getByRole("link", { name: "Open calendar" })).toHaveAttribute("href", "/dashboard/bookings")
 })

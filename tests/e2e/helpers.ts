@@ -22,6 +22,18 @@ export async function openEditorWithSample(
   await page.waitForLoadState("networkidle");
 }
 
+/** Enter through the current welcome disclosure, as an owner exploring a sample would. */
+export async function openSampleBusiness(page: Page, name: string) {
+  await page.goto("/dashboard");
+  const welcome = page.getByTestId("first-run");
+  await expect(welcome.getByRole("heading", { name: "Welcome to Studio.", exact: true })).toBeVisible();
+  await welcome.locator(".studio-welcome-examples > summary").click();
+  await welcome.locator(".studio-welcome-examples button")
+    .filter({ has: page.getByText(name, { exact: true }) }).click();
+  await page.waitForURL("**/dashboard/page");
+  await expect(page.getByTestId("my-page")).toBeVisible();
+}
+
 export const rowOrder = (page: Page) =>
   page
     .locator("[data-widget-row]")

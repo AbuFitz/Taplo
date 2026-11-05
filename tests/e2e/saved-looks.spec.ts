@@ -6,7 +6,8 @@ import {
   look,
   openEditorWithSample,
   openRow,
-  openSection,
+  openDesignTask,
+  openSampleBusiness,
   selectPart,
 } from "./helpers";
 
@@ -24,15 +25,11 @@ for (const width of [390, 1440]) {
     test("visual snapshots preview the owner's page; applying, editing, deleting and undo preserve content", async ({
       page,
     }) => {
-      await page.goto("/dashboard");
-      await page
-        .getByRole("button", { name: "Try Jay’s Barbers" })
-        .click();
-      await page.waitForURL("**/dashboard/page");
+      await openSampleBusiness(page, "Jay’s Barbers");
       await expect(page.getByTestId("my-page")).toBeVisible();
       const original = await draft(page);
       await selectPart(page, "page");
-      await openSection(page, /^Look/);
+      await openDesignTask(page, "look");
       await look(page, "apex").click();
       const shelf = page.getByTestId("saved-looks");
       await shelf.getByLabel("Name this look").fill("Carbon shop");
@@ -75,7 +72,7 @@ for (const width of [390, 1440]) {
       await page.reload();
       await expect(page.getByTestId("my-page")).toBeVisible();
       await selectPart(page, "page");
-      await openSection(page, /^Look/);
+      await openDesignTask(page, "look");
       expect((await draft(page)).page.savedLooks[0]).toEqual(saved);
       await expect(
         shelf.getByRole("button", { name: "Apply Carbon shop" }),
@@ -89,7 +86,7 @@ for (const width of [390, 1440]) {
         ),
         fullPage: true,
       });
-      await openSection(page, /^Look/);
+      await openDesignTask(page, "look");
       await shelf.getByRole("button", { name: "Delete Carbon shop" }).click();
       expect((await draft(page)).page.savedLooks).toHaveLength(0);
       expect((await draft(page)).page.themeId).toBe("volt");
@@ -103,11 +100,7 @@ for (const width of [390, 1440]) {
     test("saved section cards show current content and apply independent copies", async ({
       page,
     }) => {
-      await page.goto("/dashboard");
-      await page
-        .getByRole("button", { name: "Try Jay’s Barbers" })
-        .click();
-      await page.waitForURL("**/dashboard/page");
+      await openSampleBusiness(page, "Jay’s Barbers");
       await expect(page.getByTestId("my-page")).toBeVisible();
       const before = await draft(page);
       await openRow(page, "priceMenu");
@@ -209,7 +202,7 @@ test("full shelves keep earlier looks and section styles rather than evicting th
   await expect(page.getByTestId("my-page")).toBeVisible();
   const before = await draft(page);
   await selectPart(page, "page");
-  await openSection(page, /^Look/);
+  await openDesignTask(page, "look");
   const shelf = page.getByTestId("saved-looks");
   await shelf.getByLabel("Name this look").fill("A new look");
   await expect(

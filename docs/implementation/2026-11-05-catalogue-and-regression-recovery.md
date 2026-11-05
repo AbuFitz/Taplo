@@ -41,3 +41,16 @@ Dealer guidance is keyed to actual vehicle records, so an existing viewing servi
 The next editor scan advanced past the Content menu and found low-contrast descriptions in the legacy Profile task menu. Menu descriptions, neutral task surfaces and guidance now use the operational palette with defined fallbacks. Merchant colour-preview figures retain their explicit preview colours. Legacy fixed-light tab backgrounds are overridden in the operational scope, and mobile navigation text uses the same palette. Added scoped Profile-menu and editor-tab contrast checks at phone/desktop widths in both appearances; this does not claim every untouched panel is visually final.
 
 The local execution workspace disconnected during this follow-through. These final text changes were reconstructed from the exact committed source through GitHub, with no changes to unrelated files, database settings or provider credentials. Validation proceeds against the actual committed source in CI; local or visual checks unavailable after the disconnection are not claimed.
+
+
+## Customisation continuity and keyboard navigation
+
+- Design and Profile drill-ins move focus to their task heading. Returning to the overview restores focus to the same choice, without taking focus during subsequent editing.
+- Added phone and desktop keyboard checks for both drill-ins.
+- Updated owner/sample entry coverage to use the current optional sample disclosure and text-led choices. It still checks persistence after reload, the contextual block library, and real pending appointments.
+- Migrated saved-look and cross-browser look navigation from retired Look disclosures to the current task menu. Existing assertions for independent snapshots, undo/redo, retained records, section styles and shelf limits remain.
+- Google review setup coverage now enters through the current sample path; review records must still remain unmodified and not be published as Google content.
+- The selected migration group is explicitly executed in primary CI with its own evidence directory. Other entries in the full-regression register remain open until actually executed.
+- These edits were prepared through repository access after the local workspace disconnected. Their result must be taken from the committed CI run, not inferred from source inspection.
+
+Mobile chrome follow-through: the current phone editor had fixed light backgrounds and foregrounds around otherwise themed task surfaces. The follow-up scopes operational colours to that chrome, including its active-tab indicator. The branded page remains isolated in its preview. Profile contrast checks now include the mobile header/footer and assert that the requested appearance is actually active.

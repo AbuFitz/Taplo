@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test"
-import { closeSheet, look, openSection, previewFrame, selectPart } from "./helpers"
+import { closeSheet, look, openDesignTask, openSampleBusiness, previewFrame, selectPart } from "./helpers"
 
 for (const width of [390, 1440]) {
   test.describe(`${width}px native engine`, () => {
@@ -24,12 +24,10 @@ for (const width of [390, 1440]) {
     })
 
     test("an owner changes a visual look, undoes it and keeps their records after reload", async ({ page }) => {
-      await page.goto("/dashboard")
-      await page.getByRole("button", { name: "Try Jay’s Barbers", exact: true }).click()
-      await page.waitForURL("**/dashboard/page")
+      await openSampleBusiness(page, "Jay’s Barbers")
       const initial = await page.evaluate(() => JSON.parse(localStorage.getItem("taplo.demo.v2")!))
       await selectPart(page, "page")
-      await openSection(page, /^Look/)
+      await openDesignTask(page, "look")
       await look(page, "apex").click()
       await closeSheet(page)
       await expect(previewFrame(page).locator("[data-taplo-page]")).toHaveAttribute("data-bg", "solid")
