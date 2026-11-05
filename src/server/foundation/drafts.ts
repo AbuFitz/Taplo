@@ -40,5 +40,9 @@ export async function upsertDraft(db: Pool, token: string, raw: unknown, key: st
     const value = project(row);
     await emit(c, { actorId, action: "upsert_onboarding_draft.v1", subjectId: value.id, version: value.version, requestId, fields: ["display_name", "category_query", "look_id", "introduction"] });
     return value;
+  }, async value => {
+    // A claim revokes anonymous access, including old successful save receipts.
+    const visible = await c.query("SELECT id FROM taplo.onboarding_draft WHERE id=$1", [value.id]);
+    if (!visible.rows[0]) throw hidden();
   }));
 }

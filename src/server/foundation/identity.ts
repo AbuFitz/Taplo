@@ -2,14 +2,14 @@ import { createClient } from "@supabase/supabase-js";
 import type { Pool } from "pg";
 import { CommandError, hidden, unavailable } from "./errors";
 import type { Principal } from "./policy";
-import { newId } from "./commands";
+import { emit, newId } from "./commands";
 /** Pin issuer/audience; verify with the maintained provider SDK before reading claims. No email-based account linking. */
 export async function verifyPrincipal(db: Pool, token: string, options: { provision?: boolean } = {}): Promise<Principal> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL, key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !key) throw unavailable();
   const auth = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
   const { data, error } = await auth.auth.getUser(token);
-  if (error || !data.user) throw new CommandError("VERIFICATION_REQUIRED", 401, "Sign in to continue.");
+  if (error || !data.user || data.user.is_anonymous) throw new CommandError("VERIFICATION_REQUIRED", 401, "Sign in to continue.");
   let claims: { iss?: string; sub?: string; aud?: string | string[]; aal?: string; amr?: { method: string; timestamp: number }[] };
   try { claims = JSON.parse(Buffer.from(token.split(".")[1], "base64url").toString("utf8")); } catch { throw hidden(); }
   const expectedIssuer = `${url.replace(/\/$/, "")}/auth/v1`;
@@ -30,6 +30,8 @@ export async function verifyPrincipal(db: Pool, token: string, options: { provis
       const displayName = typeof data.user.user_metadata?.display_name === "string" ? data.user.user_metadata.display_name.trim().slice(0,160) : "";
       await c.query("INSERT INTO taplo.\"user\"(id,display_name,status) VALUES($1,$2,'active')", [userId, displayName || "Business owner"]);
       await c.query("INSERT INTO taplo.auth_identity(provider,subject,user_id) VALUES('supabase',$1,$2)", [data.user.id, userId]);
+      await c.query("SELECT set_config('app.actor_id',$1,true),set_config('app.business_id','',true)", [userId]);
+      await emit(c, { actorId: userId, action: "identity_bound.v1", subjectId: userId, version: 1, requestId: newId("req"), fields: ["provider_subject_binding", "display_name"] });
     }
     await c.query("COMMIT");
     const mfa = claims.amr?.filter((a) => ["totp"].includes(a.method)).map((a) => a.timestamp * 1000).sort((a,b) => b-a)[0];

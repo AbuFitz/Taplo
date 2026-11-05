@@ -38,11 +38,15 @@ describe.skipIf(!TEST_DB_URL)("onboarding claim on isolated PostgreSQL", () => {
     const other = await verifyPrincipal(db, jwt("provider-other"), { provision: true });
     expect(other.id).not.toBe(results[0].id);
     expect((await db.query("SELECT count(*) FROM taplo.auth_identity WHERE subject='provider-maker'")).rows[0].count).toBe("1");
+    expect((await db.query("SELECT count(*) FROM taplo.audit_event WHERE action='identity_bound.v1'")).rows[0].count).toBe("2");
+    expect((await db.query("SELECT count(*) FROM taplo.event_outbox WHERE event_type='identity_bound.v1'")).rows[0].count).toBe("2");
     await db.query("UPDATE taplo.\"user\" SET status='suspended' WHERE id=$1", [results[0].id]);
     await expect(verifyPrincipal(db, jwt("provider-maker"), { provision: true })).rejects.toMatchObject({ status: 404 });
     await expect(verifyPrincipal(db, jwt("provider-unregistered"))).rejects.toMatchObject({ status: 404 });
   });
   it("never provisions an identity when provider verification fails", async () => {
+    getUser.mockResolvedValueOnce({ data: { user: { id: "anonymous-provider-user", is_anonymous: true } }, error: null });
+    await expect(verifyPrincipal(db, "anonymous", { provision: true })).rejects.toMatchObject({ status: 401 });
     getUser.mockResolvedValueOnce({ data: { user: null }, error: new Error("invalid token") });
     await expect(verifyPrincipal(db, "invalid", { provision: true })).rejects.toMatchObject({ status: 401 });
     expect((await db.query("SELECT count(*) FROM taplo.auth_identity")).rows[0].count).toBe("2");
@@ -66,6 +70,7 @@ describe.skipIf(!TEST_DB_URL)("onboarding claim on isolated PostgreSQL", () => {
     expect((await db.query("SELECT count(*) FROM taplo.event_outbox WHERE event_type='claim_onboarding_draft.v1' AND business_id=$1", [business.id])).rows[0].count).toBe("1");
     expect((await db.query("SELECT count(*) FROM taplo.audit_event WHERE action='claim_onboarding_draft.v1' AND business_id=$1", [business.id])).rows[0].count).toBe("1");
     expect(await readDraft(db, token)).toBeNull();
+    await expect(upsertDraft(db, token, { expected_version: 0, display_name: "Form Workshop", category_query: "ceramics" }, "setup-claim-123", "req_oldsave123")).rejects.toMatchObject({ status: 404 });
   });
   it("does not let another principal claim, replay or duplicate a claimed draft", async () => {
     await expect(claimDraft(db, stranger, token, input(), "claim-once-123", "req_other123")).rejects.toMatchObject({ status: 404 });
@@ -106,6 +111,7 @@ describe.skipIf(!TEST_DB_URL)("onboarding claim on isolated PostgreSQL", () => {
     const draft = await createOfferDraft(db, owner, businessId, { kind: "goods", title: "Hand-thrown cup", price_mode: "fixed" }, "incomplete-offer123", "req_incomplete123");
     expect(draft.value).not.toHaveProperty("price");
     await expect(createOfferDraft(db, owner, businessId, { kind: "goods", title: "Cup", price_mode: "free", price: { minor: 100, currency: "GBP" } }, "invalid-price123", "req_invalid123")).rejects.toMatchObject({ status: 422 });
+    await expect(createOfferDraft(db, owner, businessId, { kind: "goods", title: "Cup", price_mode: "fixed", price: { minor: 100, currency: "USD" } }, "foreign-price123", "req_currency123")).rejects.toMatchObject({ status: 422 });
     await expect(transaction(db, { actorId: owner.id, businessId }, c => c.query("UPDATE taplo.offer SET visibility='published' WHERE id=$1", [draft.value.id]))).rejects.toThrow(/permission denied/);
   });
   it("hides expired credentials even when a matching claim receipt exists", async () => {

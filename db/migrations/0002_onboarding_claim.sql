@@ -15,6 +15,6 @@ CREATE POLICY provision_user ON taplo."user" FOR INSERT TO taplo_identity
  WITH CHECK(id=current_setting('app.provisioned_user_id',true) AND status='active' AND verified_contact_refs='[]'::jsonb);
 CREATE POLICY provision_binding ON taplo.auth_identity FOR INSERT TO taplo_identity
  WITH CHECK(provider='supabase' AND subject=current_setting('app.provider_subject',true) AND user_id=current_setting('app.provisioned_user_id',true));
-GRANT INSERT ON taplo."user",taplo.auth_identity TO taplo_identity;
+GRANT INSERT ON taplo."user",taplo.auth_identity,taplo.audit_event,taplo.event_outbox TO taplo_identity;
 INSERT INTO taplo.schema_migration(version) VALUES('0002_onboarding_claim');
 COMMIT;
