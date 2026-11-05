@@ -384,13 +384,16 @@ export function Onboarding() {
     if (valid[step]) return next();
     setShowErrors(true);
     // Errors are read out once and focus moves to the first field that needs attention.
-    requestAnimationFrame(() =>
-      shell.current
-        ?.querySelector<HTMLElement>(
-          "#setup-controls input:not([type=hidden]), #setup-controls [role=radio][aria-checked=true]",
-        )
-        ?.focus(),
-    );
+    requestAnimationFrame(() => {
+      const controls = shell.current?.querySelector("#setup-controls");
+      const target =
+        controls?.querySelector<HTMLElement>('[aria-invalid="true"]') ??
+        controls?.querySelector<HTMLElement>(
+          'input:not([type="hidden"]):not(:disabled), [role="radio"][aria-checked="true"]',
+        );
+      target?.focus({ preventScroll: true });
+      target?.scrollIntoView({ block: "nearest", behavior: "instant" });
+    });
   };
   const planName = PLANS[s.setupDrafts?.planIntent ?? "free"].name;
 

@@ -36,6 +36,9 @@ jobs:
       - name: Starting-look navigation on phone and desktop
         run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/appearance-task-navigation.spec.ts
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      - name: Mobile preview space and validation recovery
+        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/setup-form.spec.ts --grep "invalid page link|enlarging the live preview"
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         with:

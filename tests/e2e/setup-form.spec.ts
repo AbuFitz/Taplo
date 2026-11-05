@@ -269,3 +269,29 @@ test("on a very short screen the finish action is never covered", async ({ page 
     await page.evaluate(() => localStorage.clear())
   }
 })
+
+test("an invalid page link receives focus without sending the owner back to their valid name", async ({ page }) => {
+  await open(page)
+  await toName(page)
+  await page.getByLabel("Business name", { exact: true }).fill("Fade Street Barbers")
+  await page.getByRole("button", { name: "Change", exact: true }).click()
+  const link = page.getByLabel("Your Taplo link", { exact: true })
+  await link.fill("a")
+  await cont(page).click()
+  await expect(link).toBeFocused()
+  await expect(link).toHaveAttribute("aria-invalid", "true")
+  await expect(page.getByLabel("Business name", { exact: true })).toHaveValue("Fade Street Barbers")
+})
+
+test("enlarging the live preview preserves the setup task after a smaller viewport", async ({ page }) => {
+  await open(page)
+  const divider = page.getByRole("separator", { name: "Resize page preview" })
+  await divider.focus()
+  await divider.press("End")
+  await page.setViewportSize({ width: 390, height: 568 })
+  await expect.poll(async () => (await page.getByTestId("setup-stage").boundingBox())!.height).toBeLessThanOrEqual(208)
+  await expect(cont(page)).toBeInViewport()
+  const actual = Math.round((await page.getByTestId("setup-stage").boundingBox())!.height)
+  await expect(divider).toHaveAttribute("aria-valuenow", String(actual))
+  await expect(page.getByTestId("setup-sheet")).toBeVisible()
+})
