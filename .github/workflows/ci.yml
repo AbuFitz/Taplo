@@ -31,6 +31,9 @@ jobs:
         if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
       - run: npx playwright install --with-deps chromium
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      - name: Blueprint first journey, category search and in-place Studio setup
+        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/blueprint-first-journey.spec.ts
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/operational-shell.spec.ts
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - name: Starting-look navigation on phone and desktop

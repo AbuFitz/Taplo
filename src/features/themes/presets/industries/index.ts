@@ -1,3 +1,4 @@
+import { rankIndustries } from "./search";
 import { designsFor } from "@/features/page/themes/designs";
 import { industryPresetSchema, type IndustryPreset } from "../../contracts/industry";
 import type { WidgetType } from "@/features/page/contracts/widgets";
@@ -55,8 +56,8 @@ function preset(
 
 const RAW: IndustryPreset[] = [
   // Trades
-  preset("mechanic", "Mechanic / garage", "trades", "request", ["Full service", "MOT preparation", "Diagnostics", "Brake replacement", "Mobile repair visit"], ["car", "vehicle", "garage", "mot"], { booking: "Request a booking" }),
-  preset("detailer", "Car detailing", "trades", "request", ["Full valet", "Interior deep clean", "Paint correction", "Ceramic coating"], ["valet", "car wash", "ceramic"]),
+  preset("mechanic", "Mechanic / garage", "trades", "request", ["Full service", "MOT preparation", "Diagnostics", "Brake replacement", "Mobile repair visit"], ["car", "vehicle", "garage", "mot", "car repairs", "auto repair", "mobile mechanic"], { booking: "Request a booking" }),
+  preset("detailer", "Car detailing", "trades", "request", ["Full valet", "Interior deep clean", "Paint correction", "Ceramic coating"], ["valet", "valeting", "car wash", "car detailer", "auto detailing", "ceramic"]),
   preset("plumber", "Plumber / heating", "trades", "request", ["Emergency call-out", "Boiler service", "Leak repair", "Bathroom fitting"], ["gas", "boiler", "heating"], { booking: "Request a visit" }),
   preset("electrician", "Electrician", "trades", "request", ["Safety inspection", "Rewire", "Fuse board upgrade", "Lighting installation"], [], { booking: "Request a visit" }),
   preset("builder", "Builder / construction", "trades", "request", ["Extensions", "Loft conversion", "Renovation", "Repairs and maintenance"], ["construction", "roofing"], { booking: "Request a quote" }),
@@ -68,7 +69,7 @@ const RAW: IndustryPreset[] = [
   preset("pest-control", "Pest control", "trades", "request", ["Inspection", "Treatment", "Prevention plan"], []),
   // Beauty
   preset("barber", "Barber", "beauty", "instant", ["Haircut", "Skin fade", "Beard trim", "Hot towel shave"], ["hair", "fade"], { services: "Services", team: "Barbers" }),
-  preset("hairdresser", "Hair salon", "beauty", "instant", ["Cut and finish", "Colour", "Highlights", "Treatment"], ["salon", "stylist"]),
+  preset("hairdresser", "Hair salon", "beauty", "instant", ["Cut and finish", "Colour", "Highlights", "Treatment"], ["salon", "stylist", "hairdresser", "hairdressing"]),
   preset("nails", "Nail technician", "beauty", "instant", ["Gel manicure", "Acrylic set", "Pedicure", "Nail art"], ["manicure"]),
   preset("lashes-brows", "Lashes and brows", "beauty", "instant", ["Lash lift", "Lash extensions", "Brow lamination", "Brow tint"], []),
   preset("beauty-therapist", "Beauty therapist", "beauty", "instant", ["Facial", "Waxing", "Skin treatment"], ["spa", "facial"]),
@@ -102,7 +103,7 @@ const RAW: IndustryPreset[] = [
   // Fallback — always available, publishes immediately.
   preset("designer", "Designer / creative studio", "professional", "contact", ["Brand identity", "Website design", "Design consultation"], ["graphic", "branding", "design", "portfolio"], {services:"Projects",booking:"Discuss a project"}, {suggestedThemeId:"index",starterWidgets:["gallery","text","serviceList","enquiry","social"]}),
   preset("founder", "Founder / entrepreneur", "general", "contact", ["Working session", "Product feedback", "Collaboration"], ["startup", "entrepreneur", "creator", "independent"], {services:"Work together"}, {suggestedThemeId:"founder",starterWidgets:["text","gallery","enquiry","social"]}),
-  preset("maker", "Maker / independent shop", "general", "contact", [], ["ceramic", "pottery", "craft", "vintage", "retail", "shop"], {services:"Collection"}, {suggestedThemeId:"kiln",starterWidgets:["products","text","gallery","enquiry"]}),
+  preset("maker", "Maker / independent shop", "general", "contact", [], ["ceramic", "pottery", "craft", "vintage", "retail", "shop", "online store", "clothing", "jewellery", "candles", "handmade"], {services:"Collection"}, {suggestedThemeId:"kiln",starterWidgets:["products","text","gallery","enquiry"]}),
   preset("florist", "Florist / event stylist", "general", "contact", ["Seasonal bouquet", "Event flowers", "Flowers for a space"], ["floral", "flowers", "event styling"], {}, {suggestedThemeId:"petal",starterWidgets:["gallery","serviceList","enquiry","hours"]}),
   preset("filmmaker", "Filmmaker / videographer", "professional", "contact", ["Brand film", "A day of filming", "Editing"], ["film", "video", "production", "portfolio"], {services:"Work together"}, {suggestedThemeId:"frame",starterWidgets:["gallery","serviceList","text","enquiry"]}),
   preset("illustrator", "Illustrator / artist", "professional", "contact", ["Editorial illustration", "Personal commission"], ["art", "drawing", "lettering", "portfolio"], {services:"Commissions"}, {suggestedThemeId:"canvas",starterWidgets:["gallery","text","serviceList","enquiry"]}),
@@ -126,13 +127,5 @@ export function hasIndustryPreset(id: string): boolean {
 
 /** Searchable catalogue. Empty query returns everything; no match still offers Other. */
 export function searchIndustries(query: string): IndustryPreset[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return INDUSTRY_PRESETS;
-  const hits = INDUSTRY_PRESETS.filter(
-    (p) =>
-      p.id !== OTHER_INDUSTRY_ID &&
-      (p.label.toLowerCase().includes(q) || p.keywords.some((k) => k.includes(q) || q.includes(k))),
-  );
-  return [...hits, byId.get(OTHER_INDUSTRY_ID)!];
+  return rankIndustries(INDUSTRY_PRESETS, query);
 }
-

@@ -2,6 +2,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { workspaceModel } from "./dashboard/workspace-model";
 import { StudioIcons } from "@/features/platform/icons";
 const ArrowUpRight = StudioIcons.external;
 import { OperationalRoot, AppearanceSelect, OperationalLogo } from "@/features/platform/OperationalTheme";
@@ -33,6 +34,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const section = path.split("/")[2] || "overview";
   const editor = section === "page";
+  const terms = workspaceModel(state?.content.identity.industryKey, state?.content.identity.industryLabel).terms;
+  const title = section in terms ? terms[section as keyof typeof terms] : TITLES[section] || "Today";
   const empty =
     ready && (!state || (!state.onboarded && !state.content.identity.name));
   return (
@@ -46,7 +49,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <div className="ws-main">
         <div className="ws-topbar" role="group" aria-label="Page controls">
           <div>
-            <strong>{TITLES[section] || "Today"}</strong>
+            <strong>{title}</strong>
           </div>
           <div className="ws-topbar-actions">
             <span className="ws-save-dot">

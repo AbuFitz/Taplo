@@ -23,6 +23,8 @@ import { useDraft } from "../hooks";
 import { GettingStarted } from "@/features/experience/SectionSetup";
 import { StudioArt } from "./art/StudioArt";
 import { getIndustryPreset } from "@/features/themes/presets/industries";
+import { FirstOfferSetup } from "./FirstOfferSetup";
+import { workspaceModel } from "./workspace-model";
 import { UpcomingBookings } from "./UpcomingBookings";
 
 export function Studio() {
@@ -31,6 +33,7 @@ export function Studio() {
   const [now] = React.useState(() => Date.now());
   const [notice, setNotice] = React.useState("");
   if (!s) return <StudioSkeleton />;
+  const vocabulary = workspaceModel(s.content.identity.industryKey, s.content.identity.industryLabel);
   const missing = readiness(s).filter((c) => c.required && !c.done);
   const ready = canPublish(s);
   const changed = hasUnpublishedChanges(s);
@@ -54,6 +57,7 @@ export function Studio() {
           <p>Appointments, enquiries and your next steps.</p>
         </div>
       </div>
+      <FirstOfferSetup />
       <section
         className="ws-page-hub ws-page-hub-colour"
         aria-label="Your page"
@@ -177,7 +181,7 @@ export function Studio() {
               {
                 href: "team",
                 Icon: Users,
-                label: "Team",
+                label: vocabulary.terms.team,
                 line: "People, profiles and bookable services",
                 n: counts.team,
               },

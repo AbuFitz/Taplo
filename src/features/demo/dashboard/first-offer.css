@@ -1,0 +1,99 @@
+.workspace-v2 .ws-first-offer {
+  padding: 24px 0 30px;
+  border-bottom: 1px solid var(--ws-line);
+  margin-bottom: 28px;
+  max-width: 760px;
+}
+.workspace-v2 .ws-first-offer-kicker {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ws-muted);
+  font-weight: 650;
+}
+.workspace-v2 .ws-first-offer h2 {
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.2;
+  letter-spacing: -0.8px;
+  margin: 10px 0;
+}
+.workspace-v2 .ws-first-offer > p {
+  max-width: 550px;
+  color: var(--ws-muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 18px;
+}
+.workspace-v2 .ws-first-offer-form {
+  display: grid;
+  gap: 18px;
+  max-width: 580px;
+}
+.workspace-v2 .ws-first-offer-kind {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.workspace-v2 .ws-first-offer-kind legend {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0;
+  margin-bottom: 8px;
+}
+.workspace-v2 .ws-first-offer-kind label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.workspace-v2 .ws-first-offer-kind input {
+  accent-color: currentColor;
+  width: 16px;
+  height: 16px;
+}
+.workspace-v2 .ws-first-offer-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 16px;
+}
+.workspace-v2 .ws-first-offer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 22px;
+}
+.workspace-v2 .ws-first-offer-actions > button:not([data-slot]) {
+  min-height: 44px;
+  cursor: pointer;
+}
+.workspace-v2 .ws-first-offer-actions > a:not(.ws-action),
+.workspace-v2
+  .ws-first-offer-actions
+  > button:not(.ws-action):not([data-slot]) {
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.workspace-v2 .ws-first-offer-hint {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ws-muted);
+  margin: 0;
+}
+.workspace-v2 .ws-first-offer-actions > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ws-muted);
+  font-size: 12px;
+}
+.workspace-v2 .ws-first-offer-actions > span svg {
+  width: 16px;
+  height: 16px;
+}

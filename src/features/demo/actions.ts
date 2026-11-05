@@ -17,6 +17,8 @@ import { initialState, parseContent, type DemoState } from "./store";
 export function applyIndustry(s: DemoState, industryKey: string, label?: string): DemoState {
   const prev = getIndustryPreset(s.content.identity.industryKey);
   const next = getIndustryPreset(industryKey);
+  const mobileWork = ["plumber", "electrician", "detailer", "cleaner", "handyman", "builder", "landscaper", "removals", "pest-control"];
+  const untouchedLocation = !s.onboarded && !s.content.location.addressLine && !s.content.location.locality && s.content.location.mode !== "online";
   // A chosen design presents the starting sections its own way; "untouched" is judged with that presentation applied.
   const design = getDesign(s.page.themeId);
   const present = (widgets: ReturnType<typeof starterWidgets>) => {
@@ -36,6 +38,7 @@ export function applyIndustry(s: DemoState, industryKey: string, label?: string)
       ...s.content,
       identity: { ...s.content.identity, industryKey: next.id, industryLabel: label ?? next.label, ...(s.content.identity.alsoKeys ? { alsoKeys: s.content.identity.alsoKeys.filter((k) => k !== next.id) } : {}) },
       booking: { ...s.content.booking, mode: next.suggestedBookingMode },
+      location: untouchedLocation ? { ...s.content.location, mode: mobileWork.includes(next.id) ? "service_area" : "premises" } : s.content.location,
     },
     page: {
       ...s.page,

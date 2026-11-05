@@ -3,17 +3,36 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { StudioIcons } from "@/features/platform/icons";
-const { bookings: CalendarDays, next: ChevronRight, home: Home, help: CircleHelp, page: LayoutTemplate, menu: Menu, more: MoreHorizontal, settings: Settings } = StudioIcons;
+const {
+  next: ChevronRight,
+  home: Home,
+  help: CircleHelp,
+  page: LayoutTemplate,
+  menu: Menu,
+  more: MoreHorizontal,
+  settings: Settings,
+} = StudioIcons;
 import { Overlay } from "@/components/taplo/overlay";
 import { useStudioItems } from "./workspace-navigation";
 
 export function WorkspaceNav() {
-  const { primary, secondary, isActive } = useStudioItems();
+  const { primary, secondary, mobileWork, isActive } = useStudioItems();
   const path = usePathname();
   const [open, setOpen] = React.useState(false);
   const opener = React.useRef<HTMLButtonElement | null>(null);
-  const closeForNavigation = () => { opener.current = null; setOpen(false); };
-  const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => { opener.current = event.currentTarget; setOpen(true); };
+  const closeForNavigation = () => {
+    opener.current = null;
+    setOpen(false);
+  };
+  const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    opener.current = event.currentTarget;
+    setOpen(true);
+  };
+  const mobilePaths = [
+    "/dashboard",
+    "/dashboard/page",
+    ...(mobileWork ? [mobileWork.href] : []),
+  ];
   const groups = [
     { name: "Workspace", items: primary },
     {
@@ -51,8 +70,32 @@ export function WorkspaceNav() {
   return (
     <>
       <nav className="studio-desktop-nav" aria-label="Studio navigation">
-        {primary.map(({href,label,Icon,badge}) => <Link key={href} href={href} aria-current={isActive(href) ? "page" : undefined}><Icon aria-hidden="true" /><span>{label === "Home" ? "Today" : label === "Page" ? "Your page" : label}</span>{badge ? <b>{badge}</b> : null}</Link>)}
-        <button type="button" onClick={openMenu} aria-expanded={open} aria-haspopup="dialog"><MoreHorizontal aria-hidden="true" />More</button>
+        {primary.map(({ href, label, Icon, badge }) => (
+          <Link
+            key={href}
+            href={href}
+            aria-current={isActive(href) ? "page" : undefined}
+          >
+            <Icon aria-hidden="true" />
+            <span>
+              {label === "Home"
+                ? "Today"
+                : label === "Page"
+                  ? "Your page"
+                  : label}
+            </span>
+            {badge ? <b>{badge}</b> : null}
+          </Link>
+        ))}
+        <button
+          type="button"
+          onClick={openMenu}
+          aria-expanded={open}
+          aria-haspopup="dialog"
+        >
+          <MoreHorizontal aria-hidden="true" />
+          More
+        </button>
       </nav>
       <button
         className="ws-mobile-menu"
@@ -62,7 +105,13 @@ export function WorkspaceNav() {
       >
         <Menu aria-hidden="true" />
       </button>
-      <nav className="ws-mobile-nav" aria-label="Studio">
+      <nav
+        className="ws-mobile-nav"
+        aria-label="Studio"
+        style={{
+          gridTemplateColumns: `repeat(${mobilePaths.length + 1}, minmax(0, 1fr))`,
+        }}
+      >
         <Link
           href="/dashboard"
           aria-current={path === "/dashboard" ? "page" : undefined}
@@ -77,22 +126,24 @@ export function WorkspaceNav() {
           <LayoutTemplate />
           Build
         </Link>
-        <Link
-          href="/dashboard/bookings"
-          aria-current={
-            path.startsWith("/dashboard/bookings") ? "page" : undefined
-          }
-        >
-          <CalendarDays />
-          Bookings
-        </Link>
+        {mobileWork ? (
+          <Link
+            href={mobileWork.href}
+            aria-current={isActive(mobileWork.href) ? "page" : undefined}
+          >
+            <mobileWork.Icon aria-hidden="true" />
+            {mobileWork.label}
+          </Link>
+        ) : null}
         <button
           type="button"
           onClick={openMenu}
           aria-expanded={open}
           aria-current={
-            !["/dashboard", "/dashboard/page", "/dashboard/bookings"].includes(
-              path,
+            !mobilePaths.some((href) =>
+              href === "/dashboard"
+                ? path === href
+                : path === href || path.startsWith(href + "/"),
             )
               ? "page"
               : undefined
@@ -108,14 +159,26 @@ export function WorkspaceNav() {
         title="Your workspace"
         kind="dialog"
         onCloseAutoFocus={(event) => {
-          if (!opener.current) { event.preventDefault(); return; }
+          if (!opener.current) {
+            event.preventDefault();
+            return;
+          }
           const active = document.activeElement;
-          if (!active || active === document.body || active.closest('[role="dialog"]')) { event.preventDefault(); opener.current?.focus(); }
+          if (
+            !active ||
+            active === document.body ||
+            active.closest('[role="dialog"]')
+          ) {
+            event.preventDefault();
+            opener.current?.focus();
+          }
         }}
       >
         <nav className="ws-sheet-nav">
           {links}
-          <Link href="/" onClick={closeForNavigation}>Taplo website</Link>
+          <Link href="/" onClick={closeForNavigation}>
+            Taplo website
+          </Link>
           <Link href="/dashboard/help" onClick={closeForNavigation}>
             <CircleHelp />
             Help & feedback

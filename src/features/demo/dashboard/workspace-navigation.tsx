@@ -2,7 +2,7 @@
 import * as React from "react";
 import { usePathname } from "next/navigation";
 import { StudioIcons } from "@/features/platform/icons";
-import { getIndustryPreset } from "@/features/themes/presets/industries";
+import { workspaceModel } from "./workspace-model";
 import { useOwner } from "@/features/booking/ui/owner/useOwner";
 import { resolveEntitlements } from "@/features/subscriptions/entitlements";
 import { useDemo } from "../store";
@@ -20,47 +20,65 @@ export function useStudioItems() {
   const path = usePathname();
   const { state } = useDemo();
   const { state: bk } = useOwner();
-  const terms = getIndustryPreset(
-    state?.content.identity.industryKey ?? "other",
-  ).terminology;
-  const dealer = state?.content.identity.industryKey === "car-dealer";
+  const model = workspaceModel(
+    state?.content.identity.industryKey,
+    state?.content.identity.industryLabel,
+  );
+  const terms = model.terms;
   const ent = resolveEntitlements(state?.plan ?? "free", "active");
   const [now] = React.useState(() => Date.now());
   const attention =
     bk.bookings.filter((b) => b.status === "pending" && b.endsAt > now).length +
     bk.enquiries.filter((e) => e.status === "new").length;
-  const primary: Item[] = [
-    { href: "/dashboard", label: "Home", Icon: StudioIcons.home },
-    { href: "/dashboard/page", label: "Page", Icon: StudioIcons.page },
-    { href: "/dashboard/services", label: terms.services, Icon: StudioIcons.services },
+  const work: Item[] = [
+    {
+      href: "/dashboard/services",
+      label: terms.services,
+      Icon: StudioIcons.services,
+    },
     {
       href: "/dashboard/bookings",
       label: "Bookings",
       Icon: StudioIcons.bookings,
       badge: attention,
     },
-  ];
-  const secondary: Item[] = [
-    { href: "/dashboard/reviews", label: "Reviews", Icon: StudioIcons.reviews },
-    { href: "/dashboard/team", label: "Team", Icon: StudioIcons.team },
     {
       href: "/dashboard/products",
-      label: dealer ? "Vehicle stock" : "Products",
+      label: terms.products,
       Icon: StudioIcons.products,
     },
+  ];
+  const primary: Item[] = [
+    { href: "/dashboard", label: "Home", Icon: StudioIcons.home },
+    { href: "/dashboard/page", label: "Page", Icon: StudioIcons.page },
+    ...work.filter((item) =>
+      model.primaryWork.includes(item.href.split("/").pop()!),
+    ),
+  ];
+  const secondary: Item[] = [
+    ...work.filter((item) => !primary.some((p) => p.href === item.href)),
+    { href: "/dashboard/reviews", label: "Reviews", Icon: StudioIcons.reviews },
+    { href: "/dashboard/team", label: terms.team, Icon: StudioIcons.team },
     {
       href: "/dashboard/analytics",
       label: "Analytics",
       Icon: StudioIcons.analytics,
       note: ent.analytics ? undefined : "Not on your plan",
     },
-    { href: "/dashboard/settings", label: "Settings", Icon: StudioIcons.settings },
+    {
+      href: "/dashboard/settings",
+      label: "Settings",
+      Icon: StudioIcons.settings,
+    },
   ];
+  const mobileWork = work.find(
+    (item) => item.href === `/dashboard/${model.mobileWork}`,
+  );
   const isActive = (href: string) =>
     href === "/dashboard"
       ? path === href
       : path === href || path.startsWith(href + "/");
-  return { primary, secondary, isActive };
+  return { primary, secondary, mobileWork, isActive };
 }
 
 export function RouteSkeleton() {

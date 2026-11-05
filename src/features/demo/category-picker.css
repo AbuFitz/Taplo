@@ -1,0 +1,129 @@
+.sf-root .sf-category-picker {
+  gap: 12px;
+}
+.sf-root .sf-category-picker .sf-business-search-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+.sf-root .sf-category-picker .sf-help {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.sf-root .sf-category-caption {
+  margin: 2px 0 0;
+  color: #625a69;
+  font-size: 12px;
+  font-weight: 550;
+}
+.sf-root .sf-category-selection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.sf-root .sf-category-selection svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+.sf-root .sf-category-picker .sf-tiles {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.sf-root .sf-category-picker .sf-tile {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  min-height: 58px;
+  padding: 10px;
+  gap: 9px;
+  border-radius: 14px;
+}
+.sf-root .sf-category-picker .sf-tile-label {
+  text-align: left;
+  font-size: 12px;
+  padding-right: 10px;
+}
+.sf-root .sf-category-picker .sf-tile-icon {
+  background: transparent;
+  color: #63576e;
+  flex: none;
+  width: 26px;
+  height: 28px;
+  border-radius: 0;
+}
+.sf-root .sf-category-picker .sf-tile-check {
+  top: 4px;
+  right: 4px;
+  width: 15px;
+  height: 15px;
+}
+.sf-root .sf-category-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+.sf-root .sf-category-options .sf-link {
+  min-height: 44px;
+  font-size: 12px;
+}
+.sf-root .sf-search-clear {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  margin-right: -12px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #625a69;
+  cursor: pointer;
+}
+.sf-root .sf-category-custom {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  min-height: 66px;
+  padding: 12px;
+  border: 1px dashed #a7a0ad;
+  border-radius: 14px;
+  background: #faf9fc;
+  color: #222;
+  text-align: left;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.sf-root .sf-category-custom > span {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.sf-root .sf-category-custom small {
+  display: block;
+  margin-top: 3px;
+  color: #625a69;
+  font-size: 12px;
+}
+.sf-root .sf-category-custom > svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+.sf-root .sf-category-picker button:focus-visible {
+  outline: 2px solid #292330;
+  outline-offset: 3px;
+}
+@media (max-width: 360px) {
+  .sf-root .sf-category-picker .sf-tile {
+    padding: 8px;
+    gap: 5px;
+  }
+  .sf-root .sf-category-picker .sf-tile-label {
+    font-size: 11px;
+  }
+}

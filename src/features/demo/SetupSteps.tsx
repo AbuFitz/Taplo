@@ -6,7 +6,6 @@ import {
   ChevronRight,
   ImagePlus,
   Plus,
-  Search,
   Trash2,
 } from "lucide-react";
 import { TAPLO_DOMAINS } from "@/lib/domains";
@@ -17,11 +16,9 @@ import { SLUG_PROBLEM_MESSAGE } from "@/features/businesses/slug";
 import { ImageField } from "@/features/page/editor/controls";
 import {
   getIndustryPreset,
-  searchIndustries,
 } from "@/features/themes/presets/industries";
 import { normalizePhone } from "@/lib/validation";
 import { cn } from "@/lib/utils";
-import { BusinessIcon } from "./BusinessIcon";
 import { accountsConfigured, session } from "./account";
 import { EmailCodeAccount } from "./EmailCodeAccount";
 import { setupJourney } from "./setup-journey";
@@ -32,7 +29,6 @@ import {
   type SetupServiceRow as Row,
 } from "./setup-service";
 import {
-  applyIndustry,
   blankService,
   newId,
   normService,
@@ -42,212 +38,7 @@ import {
 } from "./actions";
 import { initialState, storageHasFailed, useDemo } from "./store";
 
-/* ------------------------------------------------------------------ Type */
-
-const TILES: { id: string; label: string }[] = [
-  { id: "barber", label: "Barber or salon" },
-  { id: "detailer", label: "Car detailing" },
-  { id: "plumber", label: "Trades" },
-  { id: "tutor", label: "Tutor or coach" },
-  { id: "personal-trainer", label: "Trainer" },
-  { id: "hospitality", label: "Cafe or restaurant" },
-  { id: "car-dealer", label: "Car dealer" },
-  { id: "cleaner", label: "Cleaner" },
-  { id: "other", label: "Something else" },
-];
-/** Work that happens at the customer's door rather than at a premises. Inferred, never asked. */
-const MOBILE_WORK = new Set([
-  "plumber",
-  "electrician",
-  "detailer",
-  "cleaner",
-  "handyman",
-  "builder",
-]);
-
-export function TypeStep() {
-  const { state, update } = useDemo();
-  const s = state ?? initialState();
-  const key = s.content.identity.industryKey;
-  const chosen =
-    state !== null && Boolean(s.content.identity.industryLabel.trim());
-  const [otherOpen, setOtherOpen] = React.useState(
-    () =>
-      chosen &&
-      !TILES.some((t) => t.id === key && t.id !== "other") &&
-      !["electrician"].includes(key),
-  );
-  const [query, setQuery] = React.useState(() =>
-    s.content.identity.industryKey === "other"
-      ? s.content.identity.industryLabel
-      : "",
-  );
-  const pick = (id: string, label?: string) =>
-    update((x) => {
-      const next = applyIndustry(x, id, label);
-      return {
-        ...next,
-        content: {
-          ...next.content,
-          location: {
-            ...next.content.location,
-            mode: MOBILE_WORK.has(id)
-              ? "service_area"
-              : next.content.location.mode,
-          },
-        },
-      };
-    });
-  const inTrades = key === "plumber" || key === "electrician";
-  return (
-    <div className="sf-stack" data-testid="type-step">
-      {!otherOpen ? (
-        <ul className="sf-tiles" aria-label="Kinds of business">
-          {TILES.map((t) => {
-            const selected =
-              (t.id === "other" && otherOpen) ||
-              (chosen &&
-                (t.id === "other"
-                  ? otherOpen ||
-                    key === "other" ||
-                    (!TILES.some((v) => v.id === key) && !inTrades)
-                  : t.id === "plumber"
-                    ? inTrades
-                    : key === t.id && !otherOpen));
-            return (
-              <li key={t.id}>
-                <button
-                  type="button"
-                  className="sf-tile"
-                  aria-pressed={selected}
-                  data-testid={`tile-${t.id}`}
-                  onClick={() => {
-                    if (t.id === "other") {
-                      setOtherOpen(true);
-                      setQuery(
-                        key === "other" ? s.content.identity.industryLabel : "",
-                      );
-                      pick(
-                        "other",
-                        key === "other" ? s.content.identity.industryLabel : "",
-                      );
-                    } else {
-                      setOtherOpen(false);
-                      pick(t.id);
-                    }
-                  }}
-                >
-                  <span className="sf-tile-icon" aria-hidden="true">
-                    <BusinessIcon id={t.id} />
-                  </span>
-                  <span className="sf-tile-label">{t.label}</span>
-                  {selected ? (
-                    <Check className="sf-tile-check" aria-hidden="true" />
-                  ) : null}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      ) : null}
-      {inTrades && !otherOpen ? (
-        <div className="sf-chips" role="group" aria-label="Which trade">
-          {(
-            [
-              ["plumber", "Plumber"],
-              ["electrician", "Electrician"],
-            ] as const
-          ).map(([id, label]) => (
-            <button
-              key={id}
-              type="button"
-              className="sf-chip"
-              aria-pressed={key === id}
-              onClick={() => pick(id)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      ) : null}
-      {chosen && !otherOpen && !TILES.some((t) => t.id === key) && !inTrades ? (
-        <p className="sf-help">
-          Selected: <strong>{s.content.identity.industryLabel}</strong>
-        </p>
-      ) : null}
-      {otherOpen ? (
-        <div className="sf-stack" data-testid="other-type">
-          <button
-            type="button"
-            className="sf-link"
-            onClick={() => setOtherOpen(false)}
-          >
-            Back to categories
-          </button>
-          <label
-            className="sf-business-search-label"
-            htmlFor="business-type-search"
-          >
-            Find your business type
-          </label>
-          <div className="sf-search">
-            <Search aria-hidden="true" />
-            <input
-              id="business-type-search"
-              autoFocus
-              aria-label="Search or enter your business type"
-              placeholder="Search or enter your business type"
-              value={query}
-              maxLength={80}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                update((x) => ({
-                  ...x,
-                  content: {
-                    ...x.content,
-                    identity: {
-                      ...x.content.identity,
-                      industryKey: "other",
-                      industryLabel: e.target.value,
-                    },
-                  },
-                }));
-              }}
-              autoComplete="off"
-            />
-          </div>
-          <p className="sf-help">
-            Choose a match below, or continue with your own wording.
-          </p>
-          {query.trim() ? (
-            <ul className="sf-results" aria-label="Matching kinds of business">
-              {searchIndustries(query)
-                .slice(0, 5)
-                .map((p) => (
-                  <li key={p.id}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setOtherOpen(false);
-                        setQuery("");
-                        pick(p.id);
-                      }}
-                    >
-                      <span className="sf-tile-icon">
-                        <BusinessIcon id={p.id} />
-                      </span>
-                      {p.label}
-                      <ChevronRight aria-hidden="true" />
-                    </button>
-                  </li>
-                ))}
-            </ul>
-          ) : null}
-        </div>
-      ) : null}
-    </div>
-  );
-}
+export { TypeStep } from "./TypeStep";
 
 /* ------------------------------------------------------------------ Name */
 
