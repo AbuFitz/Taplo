@@ -25,12 +25,17 @@
           "commit": "357c6aa1346e450f2ac26dcae20e085985f9b9ae",
           "check": "CI verify: 500 unit/PostgreSQL tests, type checking, lint, production build, 3 operational + 2 appearance navigation + 104 public profile/control browser checks",
           "result": "passed in run 41974661435 job 127070897803; full browser-regression was superseded, not claimed passed"
+        },
+        {
+          "commit": "cb3d19585d2e55e0bcaf04327f5d1dfc60ed7f77",
+          "check": "CI verify: 500 unit/PostgreSQL tests; type generation/checking, lint, build; 3 operational + 3 appearance + 104 public-profile/control browser checks",
+          "result": "passed in run 41977156083 job 127078898149. Actual phone captures inspected. Separate full browser-regression job 127082303349 still running; no overall regression pass claimed."
         }
       ]
     },
     {
       "id": "P02",
-      "state": "shared_shell_verified_remaining_screen_adoption_pending",
+      "state": "shared_shell_and_appearance_controls_verified_remaining_screen_adoption_pending",
       "evidence": "../operational-shell-implementation.md",
       "actual_checks": [
         {
@@ -50,12 +55,22 @@
           "commit": "357c6aa1346e450f2ac26dcae20e085985f9b9ae",
           "check": "CI verify: 500 unit/PostgreSQL tests, type checking, lint, production build, 3 operational + 2 appearance navigation + 104 public profile/control browser checks",
           "result": "passed in run 41974661435 job 127070897803; full browser-regression was superseded, not claimed passed"
+        },
+        {
+          "commit": "cb3d19585d2e55e0bcaf04327f5d1dfc60ed7f77",
+          "check": "3 operational + 3 appearance browser checks; actual 390px profile and selected-block captures",
+          "result": "passed in run 41977156083 job 127078898149 and captures inspected; broader 104-test step still running at this checkpoint"
+        },
+        {
+          "commit": "cb3d19585d2e55e0bcaf04327f5d1dfc60ed7f77",
+          "check": "CI verify: 500 unit/PostgreSQL tests; type generation/checking, lint, build; 3 operational + 3 appearance + 104 public-profile/control browser checks",
+          "result": "passed in run 41977156083 job 127078898149. Actual phone captures inspected. Separate full browser-regression job 127082303349 still running; no overall regression pass claimed."
         }
       ]
     },
     {
       "id": "P03",
-      "state": "claim_command_isolated_checks_passed_offer_draft_added_frontend_journey_pending",
+      "state": "claim_and_first_offer_commands_isolated_checks_passed_frontend_journey_pending",
       "evidence": "../onboarding-claim-implementation.md",
       "actual_checks": [
         {
@@ -71,6 +86,11 @@
           "commit": "357c6aa1346e450f2ac26dcae20e085985f9b9ae",
           "check": "CI verify: 500 unit/PostgreSQL tests, type checking, lint, production build, 3 operational + 2 appearance navigation + 104 public profile/control browser checks",
           "result": "passed in run 41974661435 job 127070897803; full browser-regression was superseded, not claimed passed"
+        },
+        {
+          "commit": "cb3d19585d2e55e0bcaf04327f5d1dfc60ed7f77",
+          "check": "CI verify: 500 unit/PostgreSQL tests; type generation/checking, lint, build; 3 operational + 3 appearance + 104 public-profile/control browser checks",
+          "result": "passed in run 41977156083 job 127078898149. Actual phone captures inspected. Separate full browser-regression job 127082303349 still running; no overall regression pass claimed."
         }
       ],
       "implemented_commands": [
