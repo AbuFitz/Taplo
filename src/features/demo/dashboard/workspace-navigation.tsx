@@ -7,7 +7,7 @@ import { useOwner } from "@/features/booking/ui/owner/useOwner";
 import { resolveEntitlements } from "@/features/subscriptions/entitlements";
 import { useDemo } from "../store";
 
-type Item = {
+export type StudioItem = {
   href: string;
   label: string;
   Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -15,7 +15,7 @@ type Item = {
   note?: string;
 };
 
-/** The one list of Studio destinations, so every screen (dock, rail, More sheet, editor menu) names and orders them the same. */
+/** One destination model shared by the desktop index, mobile directory and editor exit. */
 export function useStudioItems() {
   const path = usePathname();
   const { state } = useDemo();
@@ -30,7 +30,7 @@ export function useStudioItems() {
   const attention =
     bk.bookings.filter((b) => b.status === "pending" && b.endsAt > now).length +
     bk.enquiries.filter((e) => e.status === "new").length;
-  const work: Item[] = [
+  const work: StudioItem[] = [
     {
       href: "/dashboard/services",
       label: terms.services,
@@ -48,14 +48,14 @@ export function useStudioItems() {
       Icon: StudioIcons.products,
     },
   ];
-  const primary: Item[] = [
+  const primary: StudioItem[] = [
     { href: "/dashboard", label: "Home", Icon: StudioIcons.home },
     { href: "/dashboard/page", label: "Page", Icon: StudioIcons.page },
     ...work.filter((item) =>
       model.primaryWork.includes(item.href.split("/").pop()!),
     ),
   ];
-  const secondary: Item[] = [
+  const secondary: StudioItem[] = [
     ...work.filter((item) => !primary.some((p) => p.href === item.href)),
     { href: "/dashboard/reviews", label: "Reviews", Icon: StudioIcons.reviews },
     { href: "/dashboard/team", label: terms.team, Icon: StudioIcons.team },
@@ -78,7 +78,19 @@ export function useStudioItems() {
     href === "/dashboard"
       ? path === href
       : path === href || path.startsWith(href + "/");
-  return { primary, secondary, mobileWork, isActive };
+  const byPath = (href: string) => [...primary, ...secondary].find((item) => item.href === href)!;
+  const sections = [
+    { title: "Start", items: [byPath("/dashboard")] },
+    {
+      title: "Create",
+      items: [byPath("/dashboard/page"), ...(model.mobileWork === "products"
+        ? [byPath("/dashboard/products"), byPath("/dashboard/services")]
+        : [byPath("/dashboard/services"), byPath("/dashboard/products")])],
+    },
+    { title: "Run", items: [byPath("/dashboard/bookings"), byPath("/dashboard/team"), byPath("/dashboard/reviews")] },
+    { title: "Understand", items: [byPath("/dashboard/analytics")] },
+  ];
+  return { primary, secondary, mobileWork, sections, isActive };
 }
 
 export function RouteSkeleton() {

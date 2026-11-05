@@ -20,6 +20,7 @@ import "./dashboard/workspace-tools.css";
 import "./dashboard/workspace.css";
 import "./dashboard/workspace-polish.css";
 import "./dashboard/workspace-foundation.css";
+import "./dashboard/studio-shell.css";
 
 const TITLES: Record<string, string> = {
   services: "Services",
@@ -53,18 +54,22 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <a className="studio-skip" href="#studio-content">
         Skip to content
       </a>
-      <header className="studio-header">
-        <Link
-          href="/dashboard"
-          className="studio-brand"
-          aria-label="Taplo home"
-        >
-          <OperationalLogo />
-        </Link>
-        <WorkspaceNav />
-        <AppearanceSelect />
-      </header>
-      <div className="ws-main">
+      <div className="studio-layout">
+        <aside className="studio-rail" aria-label="Studio sections">
+          <div className="studio-rail-brand">
+            <Link href="/dashboard" className="studio-brand" aria-label="Taplo Studio home"><OperationalLogo /></Link>
+            <span>Studio</span>
+          </div>
+          <WorkspaceNav variant="rail" />
+          <div className="studio-rail-preferences"><AppearanceSelect /></div>
+        </aside>
+        <div className="studio-workspace-column">
+          <header className="studio-header">
+            <Link href="/dashboard" className="studio-brand" aria-label="Taplo Studio home"><OperationalLogo /></Link>
+            <span>Studio</span>
+          </header>
+          <WorkspaceNav variant="mobile" />
+          <div className="ws-main">
         {section !== "overview" ? (
           <div className="ws-topbar" role="group" aria-label="Page controls">
             <div>
@@ -109,6 +114,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             </span>
           </footer>
         ) : null}
+          </div>
+        </div>
       </div>
     </OperationalRoot>
   );
