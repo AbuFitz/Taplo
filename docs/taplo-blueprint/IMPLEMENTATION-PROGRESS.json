@@ -125,6 +125,11 @@
           "commit": "3508ea0c9e307666d2718acdbd063ce55b647c71",
           "check": "Current local source checks",
           "result": "476 unit tests passed; 67 PostgreSQL cases skipped locally. Typecheck, targeted lint and production build passed. CI unit/PostgreSQL/build and 9 operational/appearance/setup browser checks passed; 104 public/control checks still running at this evidence checkpoint."
+        },
+        {
+          "commit": "3508ea0c9e307666d2718acdbd063ce55b647c71",
+          "check": "Completed canonical cookie/identity verification checkpoint",
+          "result": "CI run 41989035052 verify job 127116741991 passed 543 unit/PostgreSQL tests, type generation/checking, lint, build and 113 focused browser checks (3 operational, 3 appearance, 3 setup recovery, 104 public/control). Separate full browser-regression is running; no overall pass claimed. Live account/email activation and frontend claim/first-offer journey remain incomplete."
         }
       ],
       "implemented_commands": [
