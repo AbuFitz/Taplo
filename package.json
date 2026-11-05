@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "format": "prettier --write .",
-    "db:migrate:foundation": "node scripts/migrate-foundation.mjs"
+    "db:migrate:foundation": "node scripts/migrate-foundation.mjs",
+    "db:provision:runtime": "node scripts/provision-runtime.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.9.0",
