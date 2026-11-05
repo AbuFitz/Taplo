@@ -388,11 +388,9 @@ function FaqWidget({ w, vm }: P) {
 }
 
 /* ------------------------------------------------------------------ info */
-const DAY_ORDER = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
-
 function HoursWidget({ w, vm }: P) {
   const s = w.settings as S
-  const hours = <Hours hours={DAY_ORDER.map((d) => vm.business.hours.find((h) => h.day === d) ?? { day: d as "mon" })} tz={vm.business.location.timezone || "Europe/London"} variant={s.variant === "compact" ? "compact" : s.variant === "status" ? "status" : "list"} />
+  const hours = <Hours hours={vm.business.hours} tz={vm.business.location.timezone || "Europe/London"} variant={s.variant === "compact" ? "compact" : s.variant === "status" ? "status" : "list"} />
   return s.variant === "status" ? hours : <Card title={s.title || "Opening hours"}>{hours}</Card>
 }
 

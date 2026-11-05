@@ -22,3 +22,10 @@ Advances P02 and the usable P03 Studio journey, with studio.today and the quick-
 Local typecheck, changed-file lint, production build and unit checks are performed against the changed source. Before the final routing additions, the local complete unit suite recorded 522 passed and 67 database-dependent skips; skips do not count as success. Actual CI runs include isolated PostgreSQL.
 
 Added connected browser coverage for 320/390/1440 light/dark composition and contact editing, validation/focus, persistence after reload, dirty dismissal, cross-tab conflict, split hours, preserving the old appointment pattern, public block projection, enquiry routing and appointment deep-link recovery. Existing first-offer and operational-shell cases remain part of verification. Screenshot/a11y results are recorded from the run, not inferred from test authorship. Final rendered composition still receives inspection after the deployed build is ready.
+
+
+### Rendered review and connected correction
+
+The first CI run passed isolated database/unit checks, build, operational-shell, appearance navigation and targeted setup regression. Its new focused journey checks caught two distinct issues: geometry was sampled while the entry animation was still running, and the public hours renderer discarded all but the first period. Bounds assertions now wait for the actual entry animation to finish without relaxing viewport limits. The public renderer retains every period, orders and merges legacy overlapping intervals for truthful status, reports same-day reopening after breaks, and safely handles invalid legacy hours/timezones. These changes have dedicated status tests. Final CI results remain evidence to record after the correction run.
+
+Reviewed actual 320/390/1440 captures and the deployed Studio, including neutral rounded contact editor, split-hours scrolling, light/dark typography, dirty dismissal and return focus. No final-design claim is made for untouched Studio routes or the full ecosystem.

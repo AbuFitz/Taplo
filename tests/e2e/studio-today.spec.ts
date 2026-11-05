@@ -57,6 +57,9 @@ for (const width of [320, 390, 1440])
         name: "How can customers reach you?",
       });
       await expect(dialog).toBeVisible();
+      await dialog.evaluate(async (element) => {
+        await Promise.all(element.getAnimations().map((animation) => animation.finished));
+      });
       const bounds = await dialog.boundingBox();
       expect(bounds!.x).toBeGreaterThanOrEqual(0);
       expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width + 1);
