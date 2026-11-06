@@ -88,7 +88,7 @@ export function readiness(s: DemoState): Check[] {
     has("contact", "call") ? { id: "goal-call", label: "You want to be contacted: add a phone number or email", done: Boolean(c.contacts.phone || c.contacts.email), required: false, href: "/dashboard/page" } : null,
     has("message") ? { id: "goal-message", label: "You want messages: add WhatsApp or email", done: Boolean(c.contacts.whatsapp || c.contacts.email), required: false, href: "/dashboard/page" } : null,
     has("services", "browse") ? { id: "goal-services", label: "You want people to explore your services: add your first service", done: activeServices.length > 0, required: false, href: "/dashboard/services" } : null,
-    has("products", "buy") ? { id: "goal-buy", label: "You want people to browse products: add your first product", done: (c.products ?? []).some((x) => !x.archived), required: false, href: "/dashboard/services" } : null,
+    has("products", "buy") ? { id: "goal-buy", label: "You want people to browse products: add your first product", done: (c.products ?? []).some((x) => !x.archived), required: false, href: "/dashboard/products" } : null,
     has("work") ? { id: "goal-work", label: "You want to show your work: add photos", done: (c.gallery ?? []).length > 0, required: false, href: "/dashboard/page" } : null,
   ].filter((x): x is Check => x !== null);
   const exampleLeft = [...(c.services ?? []), ...(c.products ?? [])].some((x) => (x as { example?: boolean }).example && !x.archived);

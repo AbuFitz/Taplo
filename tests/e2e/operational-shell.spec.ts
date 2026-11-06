@@ -17,7 +17,9 @@ test("operational appearance survives navigation and reload without changing the
   const before = await page.evaluate(() => localStorage.getItem("taplo.demo.v2"));
   await page.getByRole("combobox", { name: "Colour mode" }).selectOption("dark");
   await expect(page.locator("[data-operational]")).toHaveAttribute("data-colour-scheme", "dark");
-  await page.getByRole("navigation", { name: "Studio navigation", exact: true }).locator('a[href="/dashboard/services"]').click();
+  await page.getByRole("navigation", { name: "Studio navigation", exact: true }).locator('a[href="/dashboard/offers"]').click();
+  await expect(page.getByRole("heading", { name: "What you offer" })).toBeVisible();
+  await page.getByRole("link", { name: /Manage services/i }).click();
   await page.waitForURL("**/dashboard/services");
   await page.reload();
   await expect(page.locator("[data-operational]")).toHaveAttribute("data-colour-scheme", "dark");
@@ -58,7 +60,7 @@ test("mobile navigation and dialogs remain reachable in both colour schemes", as
     await page.screenshot({ path: `shots/p02-mobile-${theme}.png`, fullPage: true });
     await dock.getByRole("button", { name: "Tools", exact: true }).click();
     await expect(dialog).toBeVisible();
-    for (const section of ["page", "services", "products", "bookings", "team", "reviews", "analytics", "help", "settings"]) {
+    for (const section of ["page", "offers", "bookings", "team", "reviews", "analytics", "help", "settings"]) {
       await expect(dialog.locator(`a[href="/dashboard/${section}"]`)).toBeVisible();
     }
     await dialog.screenshot({ path: `shots/p02-mobile-menu-${theme}.png` });
@@ -77,7 +79,7 @@ test("Studio sections stay reachable and category shortcuts adapt on a narrow ph
   await page.evaluate((state) => localStorage.setItem("taplo.demo.v2", JSON.stringify(state)), draft);
   await page.reload();
   const dock = page.getByRole("navigation", { name: "Studio", exact: true });
-  await expect(dock.getByRole("link", { name: "Products", exact: true })).toBeVisible();
+  await expect(dock.getByRole("link", { name: "What you offer", exact: true })).toBeVisible();
   await dock.getByRole("button", { name: "Tools" }).click();
   const directory = page.getByRole("dialog", { name: "Studio sections" });
   await expect(directory.getByRole("heading", { name: "Create" })).toBeVisible();
@@ -86,6 +88,35 @@ test("Studio sections stay reachable and category shortcuts adapt on a narrow ph
   await expect(page).toHaveURL(/\/dashboard\/team$/);
   await expect(directory).toBeHidden();
   await expect(dock.getByRole("button", { name: "Tools" })).toHaveAttribute("aria-current", "page");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test("offer inventory connects search, add, and record editing on a phone", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openSample(page);
+  await page.goto("/dashboard/offers");
+  await expect(page.getByRole("heading", { name: "What you offer" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Add a service" })).toBeVisible();
+  await page.getByRole("link", { name: "Add a service" }).first().click();
+  await expect(page.getByRole("dialog", { name: "Add a service" })).toBeVisible();
+  await page.getByRole("dialog", { name: "Add a service" }).getByRole("textbox", { name: "Service name" }).fill("Skin consultation");
+  await page.getByRole("dialog", { name: "Add a service" }).getByRole("button", { name: "Save service" }).click();
+  await page.goto("/dashboard/offers");
+  await expect(page.getByRole("link", { name: /Skin consultation/ })).toBeVisible();
+  await page.getByRole("link", { name: /Skin consultation/ }).click();
+  await expect(page.getByRole("dialog", { name: "Edit service" })).toBeVisible();
+  await page.getByRole("dialog", { name: "Edit service" }).getByRole("button", { name: "Cancel" }).click();
+  await page.goto("/dashboard/offers");
+  await page.getByRole("link", { name: "Add a product" }).first().click();
+  const productEditor = page.getByRole("dialog", { name: "Add a product" });
+  await expect(productEditor).toBeVisible();
+  await productEditor.getByRole("textbox", { name: "Name", exact: true }).fill("Beard oil");
+  await productEditor.getByRole("button", { name: "Save product" }).click();
+  await page.goto("/dashboard/offers");
+  await expect(page.getByRole("link", { name: /Beard oil/ })).toBeVisible();
+  await page.screenshot({ path: "shots/p03-offers-mobile.png", fullPage: true });
+  await page.getByRole("searchbox", { name: "Search what you offer" }).fill("impossible search phrase");
+  await expect(page.getByText(/Nothing matches/)).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 

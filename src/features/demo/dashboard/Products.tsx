@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useSetupIntent } from "@/features/experience/useSetupIntent";
 import {
   Archive,
@@ -49,10 +51,12 @@ export const blankProduct = (
 /** Products are business records. Product widgets reference them; nothing is copied onto the page. */
 export function Products() {
   const { c, setContent } = useDraft();
+  const searchParams = useSearchParams();
   const [editing, setEditing] = React.useState<{
     p: ProductContent;
     isNew: boolean;
   } | null>(null);
+  const [editorOpen, setEditorOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
   const [before, setBefore] = React.useState("");
   const [showErr, setShowErr] = React.useState(false);
@@ -78,9 +82,23 @@ export function Products() {
       setSaveProblem("");
       setConflict(false);
       setEditing({ p, isNew: true });
+      setEditorOpen(true);
     },
     Boolean(c),
   );
+  useSetupIntent("edit", () => {
+    const item = (c?.products ?? []).map(normProduct).find((product) => product.id === searchParams.get("edit"));
+    if (item && c) {
+      setOpenedFromLink(true);
+      setEditingBusiness(c.identity.slug);
+      setBefore(JSON.stringify(item));
+      setShowErr(false);
+      setSaveProblem("");
+      setConflict(false);
+      setEditing({ p: item, isNew: false });
+      setEditorOpen(true);
+    }
+  }, Boolean(c));
   if (!c) return null;
   const all = (c.products ?? []).map(normProduct);
   const active = all.filter((p) => !p.archived);
@@ -95,6 +113,7 @@ export function Products() {
     setSaveProblem("");
     setConflict(false);
     setEditing({ p, isNew });
+    setEditorOpen(true);
   };
   const save = () => {
     if (!editing) return;
@@ -137,7 +156,7 @@ export function Products() {
       );
       return;
     }
-    setEditing(null);
+    setEditorOpen(false);
   };
   return (
     <>
@@ -165,6 +184,7 @@ export function Products() {
           </Button>
         }
       />
+      <Link href="/dashboard/offers" className="ws-offers-back">← All offerings</Link>
       <div className="ws-record-toolbar" data-empty={!all.length}>
         <label>
           <Search aria-hidden="true" />
@@ -295,8 +315,8 @@ export function Products() {
         ) : null}
       </div>
       <Overlay
-        open={editing !== null}
-        onOpenChange={(open) => !open && setEditing(null)}
+        open={editorOpen}
+        onOpenChange={setEditorOpen}
         kind="detail"
         onCloseAutoFocus={(event) => {
           if (openedFromLink && addButton.current?.isConnected) {
@@ -314,7 +334,7 @@ export function Products() {
         dirty={Boolean(editing && JSON.stringify(editing.p) !== before)}
         footer={
           <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={() => setEditing(null)}>
+            <Button variant="outline" onClick={() => setEditorOpen(false)}>
               Cancel
             </Button>
             <Button onClick={save}>Save product</Button>

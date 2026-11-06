@@ -31,6 +31,7 @@ export function useStudioItems() {
     bk.bookings.filter((b) => b.status === "pending" && b.endsAt > now).length +
     bk.enquiries.filter((e) => e.status === "new").length;
   const work: StudioItem[] = [
+    { href: "/dashboard/offers", label: "What you offer", Icon: StudioIcons.products },
     {
       href: "/dashboard/services",
       label: terms.services,
@@ -72,20 +73,19 @@ export function useStudioItems() {
     },
   ];
   const mobileWork = work.find(
-    (item) => item.href === `/dashboard/${model.mobileWork}`,
+    (item) => item.href === `/dashboard/${model.mobileWork === "products" ? "offers" : model.mobileWork}`,
   );
   const isActive = (href: string) =>
     href === "/dashboard"
       ? path === href
-      : path === href || path.startsWith(href + "/");
+      : path === href || path.startsWith(href + "/") ||
+        (href === "/dashboard/offers" && (path === "/dashboard/services" || path === "/dashboard/products"));
   const byPath = (href: string) => [...primary, ...secondary].find((item) => item.href === href)!;
   const sections = [
     { title: "Start", items: [byPath("/dashboard")] },
     {
       title: "Create",
-      items: [byPath("/dashboard/page"), ...(model.mobileWork === "products"
-        ? [byPath("/dashboard/products"), byPath("/dashboard/services")]
-        : [byPath("/dashboard/services"), byPath("/dashboard/products")])],
+      items: [byPath("/dashboard/page"), byPath("/dashboard/offers")],
     },
     { title: "Run", items: [byPath("/dashboard/bookings"), byPath("/dashboard/team"), byPath("/dashboard/reviews")] },
     { title: "Understand", items: [byPath("/dashboard/analytics")] },

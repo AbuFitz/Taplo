@@ -104,7 +104,7 @@ for (const scheme of ["light", "dark"] as const) {
     }
     const dock = page.getByRole("navigation", { name: "Studio", exact: true });
     await expect(
-      dock.getByRole("link", { name: "Products", exact: true }),
+      dock.getByRole("link", { name: "What you offer", exact: true }),
     ).toBeVisible();
     await page
       .getByRole("button", { name: "Add your first product", exact: true })

@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useSetupIntent } from "@/features/experience/useSetupIntent";
 import {
   ArrowDown,
@@ -26,6 +28,7 @@ import { PageHeader } from "./Panel";
 
 export function Services() {
   const { c, ent, setContent } = useDraft();
+  const searchParams = useSearchParams();
   const [editing, setEditing] = React.useState<{
     svc: ServiceContent;
     isNew: boolean;
@@ -41,6 +44,10 @@ export function Services() {
   };
   const [showErrors, setShowErrors] = React.useState(false);
   useSetupIntent("new", () => begin(blankService(c?.services?.length ?? 0), true), Boolean(c));
+  useSetupIntent("edit", () => {
+    const item = (c?.services ?? []).map(normService).find((service) => service.id === searchParams.get("edit"));
+    if (item) begin(item, false);
+  }, Boolean(c));
   if (!c || !ent) return null;
 
   const all = (c.services ?? [])
@@ -94,6 +101,7 @@ export function Services() {
           </Button>
         }
       />
+      <Link href="/dashboard/offers" className="ws-offers-back">← All offerings</Link>
       {hidden > 0 ? (
         <p
           role="status"
