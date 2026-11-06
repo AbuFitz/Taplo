@@ -24,7 +24,7 @@ export function OffersHome() {
     {
       key: "services",
       title: terms.services,
-      description: "Prices, durations and how people request a time.",
+      description: "Prices, durations and booking.",
       href: "/dashboard/services",
       Icon: Scissors,
       items: services.map((s) => ({
@@ -39,7 +39,7 @@ export function OffersHome() {
     {
       key: "products",
       title: terms.products,
-      description: "Items, stock details and ways to enquire or follow a link.",
+      description: "Items, stock and enquiries.",
       href: "/dashboard/products",
       Icon: Package,
       items: products.map((p) => ({
@@ -57,7 +57,7 @@ export function OffersHome() {
 
   return (
     <div className="ws-offers-home">
-      <PageHeader title="What you offer" description="A clear view of your services and items. Add something here, then decide how it appears on your page." />
+      <PageHeader title="What you offer" description="Services and products in one place. Add one, then show it on your page." />
       <div className="ws-offers-actions" aria-label="Add an offering">
         {sections.map(({ key, href, description, Icon, add }) => (
           <Link key={key} href={`${href}?new=1`} className="ws-offers-action">

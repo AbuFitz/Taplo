@@ -139,4 +139,5 @@
 .ws-offers-empty a {margin-top:8px;}
 .ws-offers-back {display:inline-flex;align-items:center;min-height:44px;margin:-12px 0 16px;color:var(--op-muted);font-size:13px;font-weight:600;}
 @media(max-width:640px){.ws-offers-actions{grid-template-columns:1fr;gap:9px;margin-bottom:24px}.ws-offers-action{min-height:82px;padding:14px 16px;border-radius:16px}.ws-offers-action-icon{width:42px;height:42px;border-radius:13px}.ws-offers-section{border-radius:16px}.ws-offers-section>header{padding:16px;align-items:flex-start}.ws-offers-section li>a{padding:13px 16px;gap:10px}.ws-offers-record-status{max-width:105px;text-align:center}.ws-offers-empty{padding:18px 16px}}
+@media(max-width:359px){.ws-offers-section>header{flex-direction:column;gap:2px}.ws-offers-section header a{min-height:34px}.ws-offers-section header p{white-space:nowrap}}
 @media(prefers-reduced-motion:reduce){.ws-offers-action{transition:none}.ws-offers-action:hover{transform:none}}
