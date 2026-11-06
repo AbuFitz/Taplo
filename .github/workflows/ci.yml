@@ -55,6 +55,7 @@ jobs:
           name: browser-evidence
           path: |
             shots/p02-*.png
+            shots/p03-offers-*.png
             test-results/
           if-no-files-found: ignore
           retention-days: 7

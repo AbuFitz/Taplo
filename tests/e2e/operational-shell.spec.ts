@@ -120,6 +120,10 @@ test("offer inventory connects search, add, and record editing on a phone", asyn
   await page.getByRole("searchbox", { name: "Search what you offer" }).fill("impossible search phrase");
   await expect(page.getByText(/Nothing matches/)).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.getByRole("searchbox", { name: "Search what you offer" }).clear();
+  await page.setViewportSize({ width: 320, height: 700 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: "shots/p03-offers-narrow.png", fullPage: true });
 });
 
 test("device theme follows preference changes and keyboard users can skip navigation", async ({ page }) => {
