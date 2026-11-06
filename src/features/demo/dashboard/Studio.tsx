@@ -11,6 +11,7 @@ import { nowMs } from "@/features/booking/clock";
 import { TAPLO_DOMAINS } from "@/lib/domains";
 import { hasUnpublishedChanges, readiness, normProduct } from "../actions";
 import { useDraft } from "../hooks";
+import { resolveStyle } from "@/features/page/themes/resolve";
 import { FirstOfferSetup } from "./FirstOfferSetup";
 import { QuickBusinessEditor, type BusinessEdit } from "./QuickBusinessEditor";
 import { todayWork, pageTasks } from "./today-model";
@@ -80,6 +81,10 @@ export function Studio() {
       : "Check time zone";
   const next = work.today.length ? work.today : work.upcoming.slice(0, 3);
 
+  const palette = resolveStyle(s.page.themeId, s.page.appearance).spec.colors;
+  const snapshotStyle = Object.fromEntries(
+    Object.entries(palette).map(([key, value]) => [`--snapshot-${key}`, value]),
+  ) as React.CSSProperties;
   const setupView = (
     <aside
       className="ts-home-side studio-today-secondary"
@@ -95,6 +100,7 @@ export function Studio() {
         <Link
           href="/dashboard/page"
           className="ts-mini-page"
+          style={snapshotStyle}
           aria-label="Edit your business page"
         >
           <div className="ts-mini-page-content">

@@ -29,10 +29,18 @@ jobs:
       - run: npm run build
         id: build
         if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
-      - run: npx playwright install --with-deps chromium
+      - name: Select browser for visual review
+        timeout-minutes: 8
+        run: |
+          if command -v google-chrome >/dev/null 2>&1; then
+            echo "PW_CHROMIUM=$(command -v google-chrome)" >> "$GITHUB_ENV"
+          else
+            npx playwright install --with-deps chromium
+            node -e 'console.log("PW_CHROMIUM=" + require("@playwright/test").chromium.executablePath())' >> "$GITHUB_ENV"
+          fi
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - name: Rebuilt Studio design and connected guidance
-        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/operational-shell.spec.ts --output=test-results/studio-rebuild
+        run: npm run test:e2e -- tests/e2e/operational-shell.spec.ts --output=test-results/studio-rebuild
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
@@ -42,7 +50,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
       - name: Blueprint first journey, category search and in-place Studio setup
-        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/blueprint-first-journey.spec.ts tests/e2e/studio-today.spec.ts
+        run: npm run test:e2e -- tests/e2e/blueprint-first-journey.spec.ts tests/e2e/studio-today.spec.ts
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
@@ -52,10 +60,10 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
       - name: Starting-look navigation on phone and desktop
-        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/appearance-task-navigation.spec.ts
+        run: npm run test:e2e -- tests/e2e/appearance-task-navigation.spec.ts
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - name: Mobile preview space and validation recovery
-        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/setup-form.spec.ts --grep "invalid page link|enlarging the live preview|service duration errors"
+        run: npm run test:e2e -- tests/e2e/setup-form.spec.ts --grep "invalid page link|enlarging the live preview|service duration errors"
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
@@ -69,13 +77,13 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
       - name: Editor and discovery accessibility recovery
-        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/a11y.spec.ts tests/e2e/design-a11y.spec.ts tests/e2e/workbench.spec.ts --grep "editor:|onboarding and|design discovery|Team.*avatars" --output=test-results/accessibility-recovery
+        run: npm run test:e2e -- tests/e2e/a11y.spec.ts tests/e2e/design-a11y.spec.ts tests/e2e/workbench.spec.ts --grep "editor:|onboarding and|design discovery|Team.*avatars" --output=test-results/accessibility-recovery
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - name: Owner entry and saved customisation recovery
-        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/owner-entry.spec.ts tests/e2e/saved-looks.spec.ts tests/e2e/cross-browser.spec.ts tests/e2e/modern-setup.spec.ts --grep "editable draft|current preview appointments|saved looks|full shelves|owner changes|Google review" --output=test-results/customisation-recovery
+        run: npm run test:e2e -- tests/e2e/owner-entry.spec.ts tests/e2e/saved-looks.spec.ts tests/e2e/cross-browser.spec.ts tests/e2e/modern-setup.spec.ts --grep "editable draft|current preview appointments|saved looks|full shelves|owner changes|Google review" --output=test-results/customisation-recovery
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - name: Vertical block ordering recovery
-        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/content.spec.ts --grep "ordering|touch drag" --output=test-results/ordering-recovery
+        run: npm run test:e2e -- tests/e2e/content.spec.ts --grep "ordering|touch drag" --output=test-results/ordering-recovery
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
@@ -85,7 +93,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
       - name: Public theme contrast and design-control regression
-        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/controls.spec.ts tests/e2e/a11y.spec.ts --grep "public profile|design controls" --max-failures=5
+        run: npm run test:e2e -- tests/e2e/controls.spec.ts tests/e2e/a11y.spec.ts --grep "public profile|design controls" --max-failures=5
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
@@ -146,8 +154,16 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run build
-      - run: npx playwright install --with-deps chromium
-      - run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e
+      - name: Select browser for visual review
+        timeout-minutes: 8
+        run: |
+          if command -v google-chrome >/dev/null 2>&1; then
+            echo "PW_CHROMIUM=$(command -v google-chrome)" >> "$GITHUB_ENV"
+          else
+            npx playwright install --with-deps chromium
+            node -e 'console.log("PW_CHROMIUM=" + require("@playwright/test").chromium.executablePath())' >> "$GITHUB_ENV"
+          fi
+      - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

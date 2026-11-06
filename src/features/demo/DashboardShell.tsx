@@ -71,6 +71,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <div className="ts-workspace-main">
           <header className="ts-topbar">
             <div className="ts-location">
+              <Link
+                href="/dashboard"
+                className="ts-mobile-brand"
+                aria-label="Taplo Studio home"
+              >
+                <OperationalLogo />
+              </Link>
               <span className="ts-location-studio">Studio</span>
               <span aria-hidden="true">/</span>
               <strong>{ROUTES[section] || "Workspace"}</strong>

@@ -199,3 +199,29 @@ test("mobile menu and page editor keep Studio destinations reachable", async ({
     "dark",
   );
 });
+
+test("search quick edits stay on the current task and restore focus", async ({
+  page,
+}) => {
+  await prepare(page);
+  await page.goto("/dashboard/offers");
+  const trigger = page.getByRole("button", {
+    name: "Search Studio",
+    exact: true,
+  });
+  await trigger.click();
+  const search = page.getByRole("dialog", {
+    name: "Search Studio",
+    exact: true,
+  });
+  await search.getByRole("searchbox").fill("Opening hours");
+  await search.getByRole("button", { name: /Opening hours/ }).click();
+  const hours = page.getByRole("dialog", {
+    name: "Your opening hours",
+    exact: true,
+  });
+  await expect(hours).toBeVisible();
+  await hours.getByRole("button", { name: "Close", exact: true }).click();
+  await expect(page).toHaveURL(/\/dashboard\/offers$/);
+  await expect(trigger).toBeFocused();
+});

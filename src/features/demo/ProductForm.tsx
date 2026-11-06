@@ -136,6 +136,26 @@ export function ProductForm({
         onChange={(v) => set({ image: v ?? undefined })}
       />
 
+      <div className="grid gap-2">
+        <span className="text-sm font-medium">Availability</span>
+        <Segment
+          label="Availability"
+          value={product.availability}
+          options={(
+            Object.keys(AVAILABILITY_LABEL) as ProductContent["availability"][]
+          ).map((v) => ({ value: v, label: AVAILABILITY_LABEL[v] }))}
+          onChange={(v) => set({ availability: v })}
+        />
+        <p className="text-xs text-muted-foreground">
+          {product.availability === "sold"
+            ? `Marked sold: the ${kindLabel} stays on your page with a Sold label and no enquiry button. Nothing is deleted.`
+            : product.availability === "reserved"
+              ? `Reserved: shown with a Reserved label. Visitors can still ask about it.`
+              : product.availability === "unavailable"
+                ? `Not available: shown without a buy or enquiry button until you change it.`
+                : "Available: visitors can ask about it or follow its link."}
+        </p>
+      </div>
       <section className="ts-form-section">
         <div className="ts-form-section-heading">
           <span>02</span>
@@ -201,10 +221,7 @@ export function ProductForm({
           )}
         </fieldset>
       </section>
-      <details
-        open={errors.link ? true : undefined}
-        className="product-extra-details ts-form-disclosure"
-      >
+      <details className="product-extra-details ts-form-disclosure">
         <summary className="setup-secondary">
           More {vehicle ? "vehicle" : "item"} details
         </summary>
@@ -295,28 +312,6 @@ export function ProductForm({
             ) : null}
           </div>
 
-          <div className="grid gap-2">
-            <span className="text-sm font-medium">Availability</span>
-            <Segment
-              label="Availability"
-              value={product.availability}
-              options={(
-                Object.keys(
-                  AVAILABILITY_LABEL,
-                ) as ProductContent["availability"][]
-              ).map((v) => ({ value: v, label: AVAILABILITY_LABEL[v] }))}
-              onChange={(v) => set({ availability: v })}
-            />
-            <p className="text-xs text-muted-foreground">
-              {product.availability === "sold"
-                ? `Marked sold: the ${kindLabel} stays on your page with a Sold label and no enquiry button. Nothing is deleted.`
-                : product.availability === "reserved"
-                  ? `Reserved: shown with a Reserved label. Visitors can still ask about it.`
-                  : product.availability === "unavailable"
-                    ? `Not available: shown without a buy or enquiry button until you change it.`
-                    : "Available: visitors can ask about it or follow its link."}
-            </p>
-          </div>
           <TaploInput
             label="Badge (optional)"
             value={product.badge ?? ""}

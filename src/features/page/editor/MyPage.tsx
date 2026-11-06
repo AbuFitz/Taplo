@@ -24,7 +24,7 @@ import { useEditor } from "./useEditor";
 /** Select the composition from the available canvas, including the persistent Studio frame. */
 function useEditorWidth(ready: boolean) {
   const host = React.useRef<HTMLDivElement>(null);
-  const [wide, setWide] = React.useState(false);
+  const [wide, setWide] = React.useState<boolean | null>(null);
   React.useEffect(() => {
     if (!ready || !host.current) return;
     const observer = new ResizeObserver(([entry]) =>
@@ -52,7 +52,7 @@ export function MyPage() {
             : CONTENT,
       );
     },
-    wide && Boolean(ed),
+    wide === true && Boolean(ed),
   );
   const [note, setNote] = React.useState<{
     msg: string;
@@ -268,6 +268,19 @@ export function MyPage() {
       onSelect={select}
     />
   );
+
+  if (wide === null)
+    return (
+      <div
+        ref={host}
+        className="ts-editor-host ts-editor-measuring"
+        aria-busy="true"
+        aria-label="Preparing your page editor"
+      >
+        <span />
+        <span />
+      </div>
+    );
 
   if (!wide)
     return (

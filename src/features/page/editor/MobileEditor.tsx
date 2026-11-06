@@ -13,7 +13,6 @@ import {
 } from "@/features/demo/actions";
 import { PreviewResizeHandle } from "@/features/preview/PreviewResizeHandle";
 import { PagePreview } from "@/features/preview/PagePreview";
-import { WorkspaceMenu } from "@/features/demo/dashboard/WorkspaceNav";
 import { getWidget } from "../widgets/registry";
 import { EditorDrawer, DEFAULT_SNAP, type DrawerSnap } from "./EditorDrawer";
 import { ContextHelp } from "./ContextHelp";
@@ -163,9 +162,7 @@ export function MobileEditor({
           >
             <ArrowLeft />
           </button>
-        ) : (
-          <WorkspaceMenu />
-        )}
+        ) : null}
         <div className="mobile-studio-identity">
           <strong>{s.content.identity.name || "Your page"}</strong>
           <span role={ed.storageFailed ? "alert" : undefined}>
@@ -191,7 +188,11 @@ export function MobileEditor({
       <div
         id="studio-preview-stage"
         className="mobile-studio-live"
-        style={!preview && previewHeight ? { flexBasis: previewHeight, height: previewHeight } : undefined}
+        style={
+          !preview && previewHeight
+            ? { flexBasis: previewHeight, height: previewHeight }
+            : undefined
+        }
         data-expanded={preview}
         data-section={section}
       >
@@ -218,7 +219,10 @@ export function MobileEditor({
 
       {!preview ? (
         <>
-          <PreviewResizeHandle stageId="studio-preview-stage" onResize={setPreviewHeight} />
+          <PreviewResizeHandle
+            stageId="studio-preview-stage"
+            onResize={setPreviewHeight}
+          />
           <nav className="mobile-studio-tabs" aria-label="Editor sections">
             {SECTIONS.map((t) => (
               <button
@@ -304,9 +308,7 @@ export function MobileEditor({
               disabled={!canPublish(s)}
               onClick={() => {
                 ed.update(publish);
-                notify(
-                  "Page version saved.",
-                );
+                notify("Page version saved.");
               }}
               data-testid="publish"
             >
