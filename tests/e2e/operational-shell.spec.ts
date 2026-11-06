@@ -57,11 +57,13 @@ for (const [width, scheme] of [
         await expect(page.getByTestId("my-page")).toBeVisible();
       else await expect(page.locator("#studio-content h1")).toHaveCount(1);
       await settled(page);
-      expect(
-        await page.evaluate(
-          () => document.documentElement.scrollWidth <= innerWidth,
-        ),
-      ).toBe(true);
+      expect
+        .soft(
+          await page.evaluate(
+            () => document.documentElement.scrollWidth <= innerWidth,
+          ),
+        )
+        .toBe(true);
       await page.screenshot({
         path: info.outputPath(`${route.slice(1) || "today"}.png`),
         fullPage: route !== "/page",
@@ -70,7 +72,12 @@ for (const [width, scheme] of [
         const audit = await new AxeBuilder({ page })
           .include(route === "" ? ".ts-workspace" : "#studio-content")
           .analyze();
-        expect(audit.violations).toEqual([]);
+        if (audit.violations.length)
+          await info.attach(`accessibility-${route.slice(1) || "today"}`, {
+            body: JSON.stringify(audit.violations, null, 2),
+            contentType: "application/json",
+          });
+        expect.soft(audit.violations).toEqual([]);
       }
       if (width < 900)
         await expect(
