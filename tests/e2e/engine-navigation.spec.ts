@@ -23,14 +23,14 @@ for (const width of [320, 768, 1440])
       ).toBe(width);
     }
     await page.goto("/dashboard/products");
-    await page.getByRole("button", { name: "Add item", exact: true }).click();
+    await page.getByRole("button", { name: "Add vehicle", exact: true }).click();
     const dialog = page.getByRole("dialog");
     await expect(
       dialog.getByRole("radio", { name: "Vehicle", exact: true }),
     ).toBeChecked();
     await dialog.getByLabel("Name", { exact: true }).fill("Volvo XC40 test");
     await dialog
-      .getByRole("button", { name: "Save product", exact: true })
+      .getByRole("button", { name: "Save vehicle", exact: true })
       .click();
     await page.reload();
     await expect(

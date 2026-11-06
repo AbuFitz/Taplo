@@ -531,20 +531,20 @@ for (const width of [390, 1440])
       });
       await expect(dialog).toBeVisible();
       await dialog
-        .getByRole("button", { name: "Save product", exact: true })
+        .getByRole("button", { name: category === "car-dealer" ? "Save vehicle" : "Save product", exact: true })
         .click();
       await expect(dialog.getByLabel("Name", { exact: true })).toBeFocused();
       await dialog.getByRole("button", { name: "Close", exact: true }).click();
       await expect(dialog).not.toBeVisible();
       await expect(
-        page.getByRole("button", { name: "Add item", exact: true }),
+        page.getByRole("button", { name: category === "car-dealer" ? "Add vehicle" : "Add product", exact: true }),
       ).toBeFocused();
-      await page.getByRole("button", { name: "Add item", exact: true }).click();
+      await page.getByRole("button", { name: category === "car-dealer" ? "Add vehicle" : "Add product", exact: true }).click();
       await dialog
         .getByLabel("Name", { exact: true })
         .fill("Second owner item");
       await dialog
-        .getByRole("button", { name: "Save product", exact: true })
+        .getByRole("button", { name: category === "car-dealer" ? "Save vehicle" : "Save product", exact: true })
         .click();
       await expect(dialog).not.toBeVisible();
       await page.goto("/dashboard");

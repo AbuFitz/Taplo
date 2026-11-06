@@ -90,7 +90,7 @@ export function Services() {
     <>
       <PageHeader scene="services"
         title={workspaceModel(c.identity.industryKey, c.identity.industryLabel).terms.services}
-        description="Manage your prices, durations and bookable services."
+        description="Manage your services, prices and how people get in touch or request a time."
         actions={
           <Button
             onClick={() => {

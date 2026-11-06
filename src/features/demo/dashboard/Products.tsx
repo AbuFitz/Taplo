@@ -165,7 +165,7 @@ export function Products() {
         title={
           c.identity.industryKey === "car-dealer" ? "Vehicle stock" : "Products"
         }
-        description="Manage the items you sell, recommend or have in stock."
+        description={c.identity.industryKey === "car-dealer" ? "Manage the vehicles you have in stock and how people enquire." : "Manage the items you sell, recommend or have in stock."}
         actions={
           <Button
             ref={addButton}
@@ -180,7 +180,7 @@ export function Products() {
               )
             }
           >
-            <Plus /> Add item
+            <Plus /> {c.identity.industryKey === "car-dealer" ? "Add vehicle" : "Add product"}
           </Button>
         }
       />
@@ -329,7 +329,7 @@ export function Products() {
             ? editing.p.kind === "vehicle"
               ? "Add a vehicle"
               : "Add a product"
-            : "Edit product"
+            : editing?.p.kind === "vehicle" ? "Edit vehicle" : "Edit product"
         }
         dirty={Boolean(editing && JSON.stringify(editing.p) !== before)}
         footer={
@@ -337,7 +337,7 @@ export function Products() {
             <Button variant="outline" onClick={() => setEditorOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={save}>Save product</Button>
+            <Button onClick={save}>Save {editing?.p.kind === "vehicle" ? "vehicle" : "product"}</Button>
           </div>
         }
       >

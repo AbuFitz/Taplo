@@ -77,7 +77,7 @@ test.describe("records flow into blocks (nothing is copied)", () => {
     await openEditorWithSample(page, "Unlisted");
     await page.goto("/dashboard/products");
     await expect(page.getByText("No products yet")).toBeVisible();
-    await page.getByRole("button", { name: "Add item" }).click();
+    await page.getByRole("button", { name: "Add product" }).click();
     await page.getByLabel("Name").first().fill("Oatmeal dog shampoo");
     await page.getByLabel("Price (£, optional)").fill("8.50");
     await page.getByRole("button", { name: "Save product" }).click();
