@@ -126,6 +126,26 @@ test("offer inventory connects search, add, and record editing on a phone", asyn
   await page.screenshot({ path: "shots/p03-offers-narrow.png", fullPage: true });
 });
 
+test("page editing keeps an obvious path through Studio at each width", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await openSample(page);
+  await expect(page.getByRole("navigation", { name: "Studio navigation" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Studio navigation" }).getByRole("link", { name: "Your page" })).toHaveAttribute("aria-current", "page");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: "shots/p03-editor-desktop.png", fullPage: true });
+  await page.setViewportSize({ width: 1180, height: 900 });
+  await expect(page.getByRole("link", { name: "Back to Studio" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Studio navigation" })).toBeHidden();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.getByRole("button", { name: "Open Studio sections" })).toContainText("Studio");
+  await page.getByRole("button", { name: "Open Studio sections" }).click();
+  const directory = page.getByRole("dialog", { name: "Studio sections" });
+  await expect(directory.getByRole("link", { name: "What you offer" })).toBeVisible();
+  await directory.getByRole("link", { name: "What you offer" }).click();
+  await expect(page).toHaveURL(/\/dashboard\/offers$/);
+  await expect(page.getByRole("heading", { name: "What you offer" })).toBeVisible();
+});
+
 test("device theme follows preference changes and keyboard users can skip navigation", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ colorScheme: "dark" });

@@ -56,6 +56,7 @@ jobs:
           path: |
             shots/p02-*.png
             shots/p03-offers-*.png
+            shots/p03-editor-*.png
             test-results/
           if-no-files-found: ignore
           retention-days: 7

@@ -121,6 +121,7 @@ export function WorkspaceMenu() {
     <>
       <button type="button" className="ws-editor-menu" aria-label="Open Studio sections" aria-expanded={open} onClick={() => setOpen(true)}>
         <Menu aria-hidden="true" />
+        <span>Studio</span>
       </button>
       <Overlay open={open} onOpenChange={setOpen} title="Studio sections">
         <nav className="studio-directory" aria-label="All Studio sections">

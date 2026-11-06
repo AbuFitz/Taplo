@@ -171,3 +171,29 @@
   .workspace-v2.operational-root .studio-directory .studio-section { margin-bottom: 0; }
   .workspace-v2.operational-root .studio-directory .studio-section > a { min-height: 46px; }
 }
+
+/* The page editor is part of Studio. Keep the work index at wide widths and a visible way back at intermediate widths. */
+@media (min-width: 1380px) {
+  .workspace-v2.operational-root[data-workspace-section="editor"] .studio-layout { display: grid; }
+  .workspace-v2.operational-root[data-workspace-section="editor"] .studio-rail { display: flex; }
+  .workspace-v2.operational-root[data-workspace-section="editor"] .ws-editor-content { padding-inline: 24px; }
+}
+@media (min-width: 900px) and (max-width: 1379px) {
+  .workspace-v2.operational-root[data-workspace-section="editor"] .studio-header {
+    display: flex;
+    min-height: 64px;
+    padding: 8px 28px;
+    background: var(--op-surface);
+    border-bottom: 1px solid var(--op-line);
+  }
+  .workspace-v2.operational-root[data-workspace-section="editor"] .studio-header > span {
+    padding-left: 12px;
+    border-left: 1px solid var(--op-line);
+    color: var(--op-muted);
+    font-size: 12px;
+    font-weight: 650;
+  }
+}
+.workspace-v2.operational-root .studio-editor-return { margin-left: auto; color: var(--op-text); font-size: 13px; font-weight: 650; text-decoration: none; }
+.workspace-v2.operational-root .ws-editor-menu { display: inline-flex; align-items: center; gap: 7px; width: auto; padding: 0 8px; color: var(--op-text); font-size: 13px; font-weight: 700; }
+.workspace-v2.operational-root .ws-editor-menu svg { width: 18px; height: 18px; }

@@ -44,6 +44,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           <header className="studio-header">
             <Link href="/dashboard" className="studio-brand" aria-label="Taplo Studio home"><OperationalLogo /></Link>
             <span>Studio</span>
+            {editor ? <Link href="/dashboard" className="studio-editor-return">← Back to Studio</Link> : null}
           </header>
           <WorkspaceNav variant="mobile" />
           <div className="ws-main">
