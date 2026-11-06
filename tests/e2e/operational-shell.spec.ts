@@ -114,6 +114,9 @@ test("offer inventory connects search, add, and record editing on a phone", asyn
   await productEditor.getByRole("button", { name: "Save product" }).click();
   await page.goto("/dashboard/offers");
   await expect(page.getByRole("link", { name: /Beard oil/ })).toBeVisible();
+  await page.locator(".ws-offers-home").evaluate(async (element) => {
+    await Promise.all(element.getAnimations().map((animation) => animation.finished));
+  });
   const offerAudit = await new AxeBuilder({ page }).include(".ws-offers-home").analyze();
   expect(offerAudit.violations).toEqual([]);
   await page.screenshot({ path: "shots/p03-offers-mobile.png", fullPage: true });
