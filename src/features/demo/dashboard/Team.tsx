@@ -17,6 +17,7 @@ import {
 } from "@/features/businesses/content";
 import { useDraft } from "../hooks";
 import { StudioArt } from "./art/StudioArt";
+import { StudioIcons } from "@/features/platform/icons";
 import { PageHeader } from "./Panel";
 
 type Person = NonNullable<BusinessContentInput["staff"]>[number];
@@ -32,7 +33,16 @@ export function Team() {
   const [removing, setRemoving] = React.useState<Person | null>(null);
   const [removed, setRemoved] = React.useState<Person | null>(null);
   const trigger = React.useRef<HTMLButtonElement | null>(null);
-  useSetupIntent("new", () => { if(!c)return;const draft=blankFor("staff", c) as Person;setShowErrors(false);setEditing({draft,before:JSON.stringify(draft),isNew:true}); }, Boolean(c));
+  useSetupIntent(
+    "new",
+    () => {
+      if (!c) return;
+      const draft = blankFor("staff", c) as Person;
+      setShowErrors(false);
+      setEditing({ draft, before: JSON.stringify(draft), isNew: true });
+    },
+    Boolean(c),
+  );
   if (!c || !ent) return null;
   const staff = c.staff ?? [];
   const filtered = staff.filter((p) =>
@@ -179,11 +189,7 @@ export function Team() {
                   <img src={p.photo.src} alt="" />
                 ) : (
                   <span aria-hidden="true">
-                    {p.name
-                      .split(/\s+/)
-                      .slice(0, 2)
-                      .map((w) => w[0])
-                      .join("")}
+                    <StudioIcons.team />
                   </span>
                 )}
                 <div>
@@ -239,8 +245,8 @@ export function Team() {
         </p>
       ) : null}
       <p className="workspace-footnote">
-        Profiles and schedules are managed here. Team sign-in invitations and
-        account permissions need the connected account service.
+        Keep a person’s public profile and working hours up to date.
+        Profile-only people stay visible without taking appointments.
       </p>
       <Overlay
         open={editing !== null}

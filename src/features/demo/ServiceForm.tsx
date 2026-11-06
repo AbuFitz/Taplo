@@ -85,141 +85,156 @@ export function ServiceForm({
   const id = service.id;
 
   return (
-    <div className="grid gap-4">
-      <TaploInput
-        label="Service name"
-        placeholder="e.g. Initial consultation"
-        value={service.name}
-        maxLength={120}
-        error={errors.name}
-        onChange={(e) => set({ name: e.target.value })}
-      />
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="grid gap-1.5">
-          <Label htmlFor={`${id}-mode`}>Price</Label>
-          <Select
-            value={service.priceMode}
-            onValueChange={(v) => {
-              const m = v as ServiceContent["priceMode"];
-              if (m === "quote" || m === "free") setPrice("");
-              set({
-                priceMode: m,
-                priceMinor:
-                  m === "quote" || m === "free"
-                    ? undefined
-                    : service.priceMinor,
-              });
-            }}
-          >
-            <SelectTrigger id={`${id}-mode`} className="min-h-11 w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent position="popper">
-              {PRICE_MODES.map((m) => (
-                <SelectItem key={m} value={m}>
-                  {PRICE_LABEL[m]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+    <div className="grid gap-5 ts-record-form">
+      <section className="ts-form-section">
+        <div className="ts-form-section-heading">
+          <span>01</span>
+          <h3>The essentials</h3>
         </div>
-        {needsPrice ? (
-          <TaploInput
-            label="Amount (£)"
-            inputMode="decimal"
-            value={price}
-            error={errors.price}
-            onChange={(e) => {
-              const raw = e.target.value;
-              if (!/^\d{0,6}(\.\d{0,2})?$/.test(raw)) return;
-              setPrice(raw);
-              set({
-                priceMinor:
-                  raw === "" || raw === "."
-                    ? undefined
-                    : Math.round(parseFloat(raw) * 100),
-              });
-            }}
-          />
-        ) : null}
-      </div>
-      {!service.externalUrl ? (
-        <div className="grid gap-1.5">
-          <Label htmlFor={`${id}-book`}>How do customers book?</Label>
-          <Select
-            value={service.bookingMode}
-            onValueChange={(v) =>
-              set({ bookingMode: v as ServiceContent["bookingMode"] })
-            }
-          >
-            <SelectTrigger id={`${id}-book`} className="min-h-11 w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent position="popper">
-              {SERVICE_BOOKING_MODES.map((m) => (
-                <SelectItem key={m} value={m}>
-                  {BOOKING_LABEL[m]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <p className="text-sm text-muted-foreground">
-            {service.bookingMode === "contact"
-              ? "Customers send you an enquiry. Nothing is reserved."
-              : service.durationMinutes
-                ? "Customers pick a time from your working hours (Bookings, then Hours and rules). Online booking is part of the Pro plan."
-                : "Add a duration so customers have a length of time to book."}
-          </p>
-        </div>
-      ) : null}
-      <div className="grid gap-4 sm:grid-cols-2">
         <TaploInput
-          label={
-            service.bookingMode === "contact"
-              ? "Duration (minutes, optional)"
-              : "Duration (minutes)"
-          }
-          inputMode="numeric"
-          value={service.durationMinutes?.toString() ?? ""}
-          error={errors.duration}
-          onChange={(e) => {
-            const raw = e.target.value.replace(/\D/g, "").slice(0, 4);
-            const n = raw ? Math.min(parseInt(raw, 10), 1440) : undefined;
-            set({ durationMinutes: n && n > 0 ? n : undefined });
-          }}
+          label="Service name"
+          placeholder="e.g. Initial consultation"
+          value={service.name}
+          maxLength={120}
+          error={errors.name}
+          onChange={(e) => set({ name: e.target.value })}
         />
-      </div>
-      <details className="px-1 py-2">
-        <summary className="min-h-11 cursor-pointer py-3 text-sm font-medium">
-          Use an existing website or booking link
-        </summary>
-        <div className="grid gap-4 py-3">
-          <TaploInput
-            label="Service link"
-            error={errors.link}
-            type="url"
-            placeholder="https://your-website.com/service"
-            value={service.externalUrl ?? ""}
-            onChange={(event) =>
-              set({ externalUrl: event.target.value || undefined })
-            }
-            hint="Customers continue on this website instead of opening the Taplo form."
-          />
-          {service.externalUrl ? (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-1.5">
+            <Label htmlFor={`${id}-mode`}>Price</Label>
+            <Select
+              value={service.priceMode}
+              onValueChange={(v) => {
+                const m = v as ServiceContent["priceMode"];
+                if (m === "quote" || m === "free") setPrice("");
+                set({
+                  priceMode: m,
+                  priceMinor:
+                    m === "quote" || m === "free"
+                      ? undefined
+                      : service.priceMinor,
+                });
+              }}
+            >
+              <SelectTrigger id={`${id}-mode`} className="min-h-11 w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                {PRICE_MODES.map((m) => (
+                  <SelectItem key={m} value={m}>
+                    {PRICE_LABEL[m]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          {needsPrice ? (
             <TaploInput
-              label="Link text"
-              placeholder="e.g. Get a quote"
-              maxLength={60}
-              value={service.externalLabel ?? ""}
-              onChange={(event) =>
-                set({ externalLabel: event.target.value || undefined })
-              }
+              label="Amount (£)"
+              inputMode="decimal"
+              value={price}
+              error={errors.price}
+              onChange={(e) => {
+                const raw = e.target.value;
+                if (!/^\d{0,6}(\.\d{0,2})?$/.test(raw)) return;
+                setPrice(raw);
+                set({
+                  priceMinor:
+                    raw === "" || raw === "."
+                      ? undefined
+                      : Math.round(parseFloat(raw) * 100),
+                });
+              }}
             />
           ) : null}
         </div>
-      </details>
+      </section>
+      <section className="ts-form-section">
+        <div className="ts-form-section-heading">
+          <span>02</span>
+          <h3>The customer’s next step</h3>
+        </div>
+        {!service.externalUrl ? (
+          <div className="grid gap-1.5">
+            <Label htmlFor={`${id}-book`}>How do customers book?</Label>
+            <Select
+              value={service.bookingMode}
+              onValueChange={(v) =>
+                set({ bookingMode: v as ServiceContent["bookingMode"] })
+              }
+            >
+              <SelectTrigger id={`${id}-book`} className="min-h-11 w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                {SERVICE_BOOKING_MODES.map((m) => (
+                  <SelectItem key={m} value={m}>
+                    {BOOKING_LABEL[m]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">
+              {service.bookingMode === "contact"
+                ? "Customers send you an enquiry. Nothing is reserved."
+                : service.durationMinutes
+                  ? "Customers pick a time from your working hours (Bookings, then Hours and rules). Online booking is part of the Pro plan."
+                  : "Add a duration so customers have a length of time to book."}
+            </p>
+          </div>
+        ) : null}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <TaploInput
+            label={
+              service.bookingMode === "contact"
+                ? "Duration (minutes, optional)"
+                : "Duration (minutes)"
+            }
+            inputMode="numeric"
+            value={service.durationMinutes?.toString() ?? ""}
+            error={errors.duration}
+            onChange={(e) => {
+              const raw = e.target.value.replace(/\D/g, "").slice(0, 4);
+              const n = raw ? Math.min(parseInt(raw, 10), 1440) : undefined;
+              set({ durationMinutes: n && n > 0 ? n : undefined });
+            }}
+          />
+        </div>
+        <details
+          className="ts-form-disclosure"
+          open={errors.link || service.externalUrl ? true : undefined}
+        >
+          <summary className="min-h-11 cursor-pointer py-3 text-sm font-medium">
+            Use an existing website or booking link
+          </summary>
+          <div className="grid gap-4 py-3">
+            <TaploInput
+              label="Service link"
+              error={errors.link}
+              type="url"
+              placeholder="https://your-website.com/service"
+              value={service.externalUrl ?? ""}
+              onChange={(event) =>
+                set({ externalUrl: event.target.value || undefined })
+              }
+              hint="Customers continue on this website instead of opening the Taplo form."
+            />
+            {service.externalUrl ? (
+              <TaploInput
+                label="Link text"
+                placeholder="e.g. Get a quote"
+                maxLength={60}
+                value={service.externalLabel ?? ""}
+                onChange={(event) =>
+                  set({ externalLabel: event.target.value || undefined })
+                }
+              />
+            ) : null}
+          </div>
+        </details>
+      </section>
       <details
-        className="service-details-disclosure"
+        className="service-details-disclosure ts-form-disclosure"
         open={errors.inclusions ? true : undefined}
       >
         <summary>

@@ -1,6 +1,10 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { AppearanceSelect } from "@/features/platform/OperationalTheme";
+import { QuickBusinessEditor, type BusinessEdit } from "./QuickBusinessEditor";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -30,13 +34,18 @@ export function Settings() {
   const params = useSearchParams();
   const requested = params.get("section");
   const [chosenSection, setSection] = React.useState<
-    "plan" | "connections" | "data" | null
+    "general" | "plan" | "connections" | "data" | null
   >(null);
   const section =
-    requested === "connections" || requested === "data" || requested === "plan"
+    requested === "general" ||
+    requested === "connections" ||
+    requested === "data" ||
+    requested === "plan"
       ? requested
-      : (chosenSection ?? "plan");
+      : (chosenSection ?? "general");
   const [confirm, setConfirm] = React.useState(false);
+  const [editing, setEditing] = React.useState<BusinessEdit | null>(null);
+  const [notice, setNotice] = React.useState("");
   const plan = state?.plan ?? "business";
   const ent = resolveEntitlements(plan, "active");
   return (
@@ -44,12 +53,13 @@ export function Settings() {
       <PageHeader
         scene="settings"
         title="Settings"
-        description="Your plan, connections and workspace data."
+        description="A workspace that fits the way you work."
       />
       <div className="ws-settings">
         <nav className="ws-settings-nav" aria-label="Settings sections">
           {(
             [
+              ["general", "General"],
               ["plan", "Plan & features"],
               ["connections", "Connections"],
               ["data", "Workspace data"],
@@ -69,6 +79,69 @@ export function Settings() {
           ))}
         </nav>
         <div className="ws-settings-body">
+          {section === "general" ? (
+            <Panel
+              title="Your workspace"
+              description="The everyday details, all in their place."
+            >
+              <div className="ts-setting-row">
+                <div>
+                  <strong>Appearance</strong>
+                  <p>
+                    Light, dark, or follow your device. Your public page keeps
+                    its own look.
+                  </p>
+                </div>
+                <AppearanceSelect />
+              </div>
+              <div className="ts-setting-row">
+                <div>
+                  <strong>Business identity</strong>
+                  <p>
+                    {state?.content.identity.name ||
+                      "Your name, introduction and visual identity."}
+                  </p>
+                </div>
+                <Link href="/dashboard/page?task=profile">
+                  Edit identity
+                  <ArrowUpRight />
+                </Link>
+              </div>
+              <div className="ts-setting-row">
+                <div>
+                  <strong>Contact details</strong>
+                  <p>Give customers a clear way to reach you.</p>
+                </div>
+                <button onClick={() => setEditing("contact")}>
+                  Edit details
+                  <ArrowUpRight />
+                </button>
+              </div>
+              <div className="ts-setting-row">
+                <div>
+                  <strong>Public opening hours</strong>
+                  <p>
+                    Show when your business is open. Appointment availability
+                    has its own rules.
+                  </p>
+                </div>
+                <button onClick={() => setEditing("hours")}>
+                  Edit hours
+                  <ArrowUpRight />
+                </button>
+              </div>
+              <div className="ts-setting-row">
+                <div>
+                  <strong>Your people</strong>
+                  <p>Manage profiles, assigned services and working hours.</p>
+                </div>
+                <Link href="/dashboard/team">
+                  Manage team
+                  <ArrowUpRight />
+                </Link>
+              </div>
+            </Panel>
+          ) : null}
           {section === "connections" ? (
             <Panel
               title="Connections"
@@ -167,6 +240,30 @@ export function Settings() {
               title="Workspace data"
               description="Manage your workspace content."
             >
+              <div className="ts-setting-row">
+                <div>
+                  <strong>Download your workspace</strong>
+                  <p>Keep a copy of your page, offers and business details.</p>
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (!state) return;
+                    const url = URL.createObjectURL(
+                      new Blob([JSON.stringify(state, null, 2)], {
+                        type: "application/json",
+                      }),
+                    );
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `taplo-${state.content.identity.slug || "workspace"}.json`;
+                    a.click();
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                  }}
+                >
+                  Download data
+                </Button>
+              </div>
               {confirm ? (
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm">
@@ -194,6 +291,21 @@ export function Settings() {
           ) : null}
         </div>
       </div>
+      <p role="status">{notice}</p>
+      {editing && state ? (
+        <QuickBusinessEditor
+          mode={editing}
+          initial={state}
+          onClose={() => setEditing(null)}
+          onSaved={(mode) =>
+            setNotice(
+              mode === "hours"
+                ? "Opening hours updated."
+                : "Contact details updated.",
+            )
+          }
+        />
+      ) : null}
     </>
   );
 }

@@ -15,25 +15,32 @@ export function PageHeader({
   scene?: StudioScene;
 }) {
   return (
-    <>
-      <div className="portal-page-heading ws-page-heading" data-scene={scene}>
-        <div className="ws-page-intro">
-          <div>
-            <h1 className="portal-page-title">{title}</h1>
-            {description ? (
-              <p className="portal-page-description">{description}</p>
-            ) : null}
-          </div>
-        </div>
-        {actions ? <div className="ws-heading-actions">{actions}</div> : null}
+    <header
+      className="ts-page-header portal-page-heading ws-page-heading"
+      data-scene={scene}
+    >
+      <div className="ts-page-heading ws-page-intro">
+        <span className="ts-overline">
+          {scene === "settings"
+            ? "YOUR WORKSPACE"
+            : scene === "analytics"
+              ? "UNDERSTAND YOUR BUSINESS"
+              : "MADE FOR YOUR BUSINESS"}
+        </span>
+        <h1 className="portal-page-title">{title}</h1>
+        {description ? (
+          <p className="portal-page-description">{description}</p>
+        ) : null}
       </div>
-      {scene ? (
-        <SectionSetup topic={scene === "design" ? "page" : scene} />
-      ) : null}
-    </>
+      <div className="ts-page-actions ws-heading-actions">
+        {scene ? (
+          <SectionSetup topic={scene === "design" ? "page" : scene} compact />
+        ) : null}
+        {actions}
+      </div>
+    </header>
   );
 }
-
 export function Panel({
   title,
   description,
@@ -46,20 +53,17 @@ export function Panel({
   className?: string;
 }) {
   return (
-    <section className={cn("portal-panel", className)}>
-      <h2 className="font-semibold">{title}</h2>
-      {description ? (
-        <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-      ) : null}
-      <div className="mt-4">{children}</div>
+    <section className={cn("ts-panel portal-panel", className)}>
+      <header>
+        <h2>{title}</h2>
+        {description ? <p>{description}</p> : null}
+      </header>
+      <div className="ts-panel-body">{children}</div>
     </section>
   );
 }
-
-/** Honest "not built yet" state: names the phase and what is missing, offers no fake controls. */
 export function NotBuilt({
   title,
-  phase,
   children,
 }: {
   title: string;
@@ -67,14 +71,11 @@ export function NotBuilt({
   children: React.ReactNode;
 }) {
   return (
-    <div className="max-w-2xl rounded-xl border border-dashed p-6">
-      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-        Not built yet · {phase}
-      </p>
-      <h2 className="mt-1 text-lg font-semibold">{title}</h2>
-      <div className="mt-2 grid gap-2 text-sm text-muted-foreground">
-        {children}
-      </div>
-    </div>
+    <section className="ts-panel">
+      <header>
+        <h2>{title}</h2>
+      </header>
+      <div className="ts-panel-body">{children}</div>
+    </section>
   );
 }

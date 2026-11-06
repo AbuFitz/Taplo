@@ -20,6 +20,6 @@ export function AnalyticsPage() {
   return <>
     <PageHeader scene="analytics" title="Analytics" description="Understand how customers find and use your page." />
     <div className="ws-analytics-metrics">{[{Icon:BarChart3,label:"Page views"},{Icon:MousePointer2,label:"Button taps"},{Icon:QrCode,label:"QR scans"}].map(({Icon,label})=><section key={label}><Icon aria-hidden="true" /><span>{label}</span><strong>—</strong><small>No activity yet</small></section>)}</div>
-    <section className="ws-analytics-empty"><BarChart3 aria-hidden="true" /><h2>Your audience starts here.</h2><p>When tracking is connected, this is where you’ll see visits, scans and the actions customers take. We won’t show made-up numbers.</p><Link className="ws-action" href="/dashboard/page">Open your page<ArrowUpRight /></Link></section>
+    <section className="ws-analytics-empty"><BarChart3 aria-hidden="true" /><h2>Your audience starts here.</h2><p>See visits, scans and the actions customers take. As your page reaches people, your activity will appear here.</p><Link className="ws-action" href="/dashboard/page">Open your page<ArrowUpRight /></Link></section>
   </>
 }

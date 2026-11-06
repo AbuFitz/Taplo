@@ -15,7 +15,6 @@ import { FirstOfferSetup } from "./FirstOfferSetup";
 import { QuickBusinessEditor, type BusinessEdit } from "./QuickBusinessEditor";
 import { todayWork, pageTasks } from "./today-model";
 import { workspaceModel } from "./workspace-model";
-import "./studio-today.css";
 
 export function Studio() {
   const { state: s } = useDraft();
@@ -83,125 +82,118 @@ export function Studio() {
 
   const setupView = (
     <aside
-      className="studio-today-secondary"
+      className="ts-home-side studio-today-secondary"
       aria-label="Your business page and setup"
     >
-      <section
-        className="studio-page-status"
-        aria-labelledby="your-page-heading"
-      >
-        <div className="studio-section-heading">
-          <h2 id="your-page-heading">Your page</h2>
-          <span className="studio-page-state">
-            <i />
+      <section className="ts-page-preview-card">
+        <div className="ts-section-heading">
+          <h2>Your page</h2>
+          <span className="ts-status" data-status={publicStatus}>
             {publicStatus}
           </span>
         </div>
-        <div className="studio-business-identity">
-          {s.content.identity.logo ? (
-            <Image
-              src={s.content.identity.logo.src}
-              alt=""
-              width={40}
-              height={40}
-              unoptimized
-            />
-          ) : null}
-          <h3>{s.content.identity.name}</h3>
-        </div>
-        {s.content.identity.tagline ? (
-          <p className="studio-page-tagline">{s.content.identity.tagline}</p>
-        ) : null}
-        <p className="studio-page-address">
+        <Link
+          href="/dashboard/page"
+          className="ts-mini-page"
+          aria-label="Edit your business page"
+        >
+          <div className="ts-mini-page-content">
+            {s.content.identity.logo ? (
+              <Image
+                src={s.content.identity.logo.src}
+                alt=""
+                width={56}
+                height={40}
+                unoptimized
+              />
+            ) : null}
+            <h3>{s.content.identity.name}</h3>
+            <span>
+              {s.content.identity.tagline || "Your business, ready to share."}
+            </span>
+            <i>
+              Discover what we do <Icon.next />
+            </i>
+            {(s.content.services ?? [])
+              .filter((item) => !item.archived)
+              .slice(0, 2)
+              .map((item) => (
+                <div key={item.id}>
+                  {item.name}
+                  <Icon.next />
+                </div>
+              ))}
+          </div>
+        </Link>
+        <p className="ts-page-url">
           {TAPLO_DOMAINS.host}/{s.content.identity.slug}
         </p>
-        <p className="studio-page-note">
-          {missing.length
-            ? missing[0]?.id === "contact"
-              ? "Add a contact method before sharing your page."
-              : `${missing[0]?.label}.`
-            : changed && s.published
-              ? "Review your latest changes before publishing them."
-              : s.published
-                ? "Your published version is ready to share."
-                : "Your draft is ready for a final look. You choose when to publish."}
-        </p>
-        <div className="studio-page-tools">
-          <Link className="studio-button" href="/dashboard/page">
+        <div className="ts-page-card-actions">
+          <Link href="/dashboard/page">
             {s.published && !changed ? "Edit your page" : "Review your page"}
             <Icon.next />
           </Link>
-          <Link href="/demo/preview" target="_blank">
-            Preview
+          <Link
+            href="/demo/preview"
+            target="_blank"
+            aria-label="Preview your page"
+          >
             <Icon.external />
           </Link>
         </div>
+        {missing.length ? (
+          <p className="ts-page-readiness">
+            {missing[0]?.id === "contact"
+              ? "Add a contact method before sharing your page."
+              : missing[0]?.label}
+          </p>
+        ) : null}
       </section>
-      <section className="studio-setup" aria-labelledby="studio-setup-heading">
-        <div className="studio-section-heading">
-          <h2 id="studio-setup-heading">Quick edits</h2>
+      <section className="ts-quick-details">
+        <div className="ts-section-heading">
+          <h2>Quick changes</h2>
+          <span>Right here.</span>
         </div>
-        <p className="studio-section-note">The details customers rely on.</p>
-        <ul>
-          <li>
-            <button
-              type="button"
-              onClick={(event) => openEditor("contact", event)}
-            >
-              <span className="studio-task-indicator" data-done={facts.contact}>
-                {facts.contact ? <Icon.check /> : <span />}
-              </span>
-              <span>
-                <strong>Contact details</strong>
-                <small>
-                  {facts.contact
-                    ? "Review how customers reach you"
-                    : "Add a way to get in touch"}
-                </small>
-              </span>
-              <Icon.next />
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              onClick={(event) => openEditor("hours", event)}
-            >
-              <span
-                className="studio-task-indicator"
-                data-done={facts.hasHours}
-              >
-                {facts.hasHours ? <Icon.check /> : <span />}
-              </span>
-              <span>
-                <strong>Opening hours</strong>
-                <small>
-                  {facts.hasHours
-                    ? "Review your public opening times"
-                    : "Let people know when you’re open"}
-                </small>
-              </span>
-              <Icon.next />
-            </button>
-          </li>
-          {(!productsFirst || facts.services > 0) ? (
-            <li>
-              <Link href="/dashboard/bookings?section=availability">
-                <span className="studio-task-indicator"><Icon.clock /></span>
-                <span>
-                  <strong>Booking availability</strong>
-                  <small>Working times, breaks and booking rules</small>
-                </span>
-                <Icon.next />
-              </Link>
-            </li>
-          ) : null}
-        </ul>
+        <button onClick={(event) => openEditor("contact", event)}>
+          <Icon.external />
+          <span>
+            <strong>Contact details</strong>
+            <small>
+              {facts.contact
+                ? "Keep your details up to date"
+                : "Add a way to reach you"}
+            </small>
+          </span>
+          <Icon.next />
+        </button>
+        <button onClick={(event) => openEditor("hours", event)}>
+          <Icon.clock />
+          <span>
+            <strong>Opening hours</strong>
+            <small>
+              {facts.hasHours
+                ? "Review your public opening times"
+                : "Let people know when you’re open"}
+            </small>
+          </span>
+          <Icon.next />
+        </button>
+        {!productsFirst || facts.services > 0 ? (
+          <Link href="/dashboard/bookings?section=availability">
+            <Icon.bookings />
+            <span>
+              <strong>Booking availability</strong>
+              <small>Working time, breaks and days off</small>
+            </span>
+            <Icon.next />
+          </Link>
+        ) : null}
       </section>
-      <Link className="studio-help-link" href="/dashboard/help">
+      <Link className="ts-home-help" href="/dashboard/help">
         <Icon.help />
         <span>
-          Need a hand?<small>Find a guide or get in touch.</small>
+          Something on your mind?
+          <strong>We’ll help you find the answer.</strong>
         </span>
         <Icon.next />
       </Link>
@@ -280,7 +272,7 @@ export function Studio() {
               <h3>
                 {productsFirst
                   ? "Make room for the work you do."
-                  : "Space for your next appointment."}
+                  : "Your diary is clear."}
               </h3>
               <p>
                 {productsFirst
@@ -306,12 +298,50 @@ export function Studio() {
 
   return (
     <div className="studio-today" data-testid="studio">
-      <header className="studio-today-heading">
+      <header className="ts-home-heading">
         <div>
-          <p className="studio-eyebrow">{work.dateLabel}</p>
-          <h1>Today</h1>
+          <p className="ts-overline">{work.dateLabel}</p>
+          <h1>Make today a good one.</h1>
+          <p>Your work, your page, your next move.</p>
         </div>
+        <Link
+          className="ts-outline-action"
+          href={productsFirst ? "/dashboard/offers" : "/dashboard/bookings"}
+        >
+          {productsFirst ? "Your offers" : "Open calendar"}
+          <Icon.external />
+        </Link>
       </header>
+      <div className="ts-home-pulse" aria-label="Business at a glance">
+        <Link href="/dashboard/bookings">
+          <span>On the day</span>
+          <strong>
+            {work.today.length}
+            <small>
+              {work.today.length === 1 ? "appointment" : "appointments"}
+            </small>
+          </strong>
+          <Icon.next />
+        </Link>
+        <Link href="/dashboard/bookings?section=enquiries">
+          <span>Needs your reply</span>
+          <strong>
+            {work.awaiting.length + enquiries}
+            <small>
+              {work.awaiting.length + enquiries === 1 ? "request" : "requests"}
+            </small>
+          </strong>
+          <Icon.next />
+        </Link>
+        <Link href="/dashboard/offers">
+          <span>What you offer</span>
+          <strong>
+            {facts.services + actualProducts.length}
+            <small>services & items</small>
+          </strong>
+          <Icon.next />
+        </Link>
+      </div>
 
       {work.awaiting.length || enquiries ? (
         <section className="studio-attention" aria-labelledby="attention-title">
@@ -341,8 +371,8 @@ export function Studio() {
         </section>
       ) : null}
 
-      <div className="studio-today-columns">
-        <div className="studio-today-start">
+      <div className="ts-home-grid studio-today-columns">
+        <div className="ts-home-first-offer studio-today-start">
           <FirstOfferSetup />
         </div>
 

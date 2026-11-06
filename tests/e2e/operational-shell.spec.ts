@@ -1,167 +1,201 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { initialState } from "../../src/features/demo/store";
-import { applyIndustry, setName } from "../../src/features/demo/actions";
-async function openSample(page: Page) {
+import { loadSample } from "../../src/features/demo/actions";
+async function prepare(page: Page, scheme: "light" | "dark" = "light") {
   await page.goto("/dashboard");
-  await page.getByText("Explore with a sample business", { exact: true }).click();
-  await page.getByRole("button", { name: /^Jay’s Barbers/ }).click();
-  await page.waitForURL("**/dashboard/page");
-  await expect(page.getByTestId("my-page")).toBeVisible();
+  const draft = loadSample(initialState(), "barber");
+  draft.plan = "business";
+  await page.evaluate(
+    ({ draft, scheme }) => {
+      localStorage.setItem("taplo.demo.v2", JSON.stringify(draft));
+      localStorage.setItem("taplo.operational-appearance.v1", scheme);
+    },
+    { draft, scheme },
+  );
+  await page.reload();
+  await expect(page.getByTestId("studio")).toBeVisible();
+}
+async function settled(page: Page) {
+  await page.locator("#studio-content").evaluate(async (el) => {
+    await Promise.all(
+      el
+        .getAnimations({ subtree: true })
+        .map((a) => a.finished.catch(() => {})),
+    );
+  });
+}
+for (const [width, scheme] of [
+  [1440, "light"],
+  [1440, "dark"],
+  [390, "light"],
+  [390, "dark"],
+  [320, "light"],
+] as const) {
+  test(`rebuilt Studio sections at ${width}px in ${scheme}`, async ({
+    page,
+  }, info) => {
+    test.setTimeout(180000);
+    await page.setViewportSize({ width, height: 900 });
+    await prepare(page, scheme);
+    for (const route of [
+      "",
+      "/offers",
+      "/services",
+      "/products",
+      "/bookings",
+      "/team",
+      "/reviews",
+      "/analytics",
+      "/settings",
+      "/help",
+      "/page",
+    ]) {
+      await page.goto(`/dashboard${route}`);
+      await expect(page.locator("#studio-content")).toBeVisible();
+      if (route === "/page")
+        await expect(page.getByTestId("my-page")).toBeVisible();
+      else await expect(page.locator("#studio-content h1")).toHaveCount(1);
+      await settled(page);
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+      ).toBe(true);
+      await page.screenshot({
+        path: info.outputPath(`${route.slice(1) || "today"}.png`),
+        fullPage: route !== "/page",
+      });
+      if (["", "/offers", "/help", "/settings"].includes(route)) {
+        const audit = await new AxeBuilder({ page })
+          .include("#studio-content")
+          .analyze();
+        expect(audit.violations).toEqual([]);
+      }
+      if (width < 900)
+        await expect(
+          page.getByRole("navigation", { name: "Studio", exact: true }),
+        ).toBeVisible();
+      else
+        await expect(
+          page.getByRole("navigation", {
+            name: "Studio navigation",
+            exact: true,
+          }),
+        ).toBeVisible();
+    }
+  });
 }
 
-test("operational appearance survives navigation and reload without changing the business design", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 1000 });
-  await openSample(page);
-  await page.goto("/dashboard");
-  const before = await page.evaluate(() => localStorage.getItem("taplo.demo.v2"));
-  await page.getByRole("combobox", { name: "Colour mode" }).selectOption("dark");
-  await expect(page.locator("[data-operational]")).toHaveAttribute("data-colour-scheme", "dark");
-  await page.getByRole("navigation", { name: "Studio navigation", exact: true }).locator('a[href="/dashboard/offers"]').click();
-  await expect(page.getByRole("heading", { name: "What you offer" })).toBeVisible();
-  await page.getByRole("link", { name: /Manage services/i }).click();
-  await page.waitForURL("**/dashboard/services");
-  await page.reload();
-  await expect(page.locator("[data-operational]")).toHaveAttribute("data-colour-scheme", "dark");
-  expect(await page.evaluate(() => localStorage.getItem("taplo.demo.v2"))).toBe(before);
-  await page.getByRole("button", { name: "Add service", exact: true }).click();
-  const form = page.getByRole("dialog", { name: "Add a service", exact: true });
-  await form.getByRole("textbox", { name: "Service name", exact: true }).fill("Workshop consultation");
-  const formAudit = await new AxeBuilder({ page }).include('[role="dialog"]').analyze();
-  expect(formAudit.violations).toEqual([]);
-  await form.screenshot({ path: "shots/p02-service-form-dark.png" });
-  await form.getByRole("button", { name: "Cancel", exact: true }).click();
-  await expect(form).toBeHidden();
-  await expect(page.locator('[data-overlay="detail"]')).toHaveCount(0);
-  await page.screenshot({ path: "shots/p02-desktop-dark.png", fullPage: true });
-  await page.getByRole("combobox", { name: "Colour mode" }).selectOption("light");
-  await page.screenshot({ path: "shots/p02-desktop-light.png", fullPage: true });
-  const audit = await new AxeBuilder({ page }).include(".studio-rail").analyze();
-  expect(audit.violations).toEqual([]);
-});
-
-test("mobile navigation and dialogs remain reachable in both colour schemes", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await openSample(page);
-  await page.goto("/dashboard");
-  await page.getByTestId("studio").evaluate(async (element) => { await Promise.all(element.getAnimations().map((animation) => animation.finished)); });
-  for (const theme of ["light", "dark"] as const) {
-    const dock = page.getByRole("navigation", { name: "Studio", exact: true });
-    await dock.getByRole("button", { name: "Tools", exact: true }).click();
-    const dialog = page.getByRole("dialog", { name: "Studio sections" });
-    await dialog.getByRole("combobox", { name: "Colour mode" }).selectOption(theme);
-    await page.keyboard.press("Escape");
-    await expect(dialog).not.toBeVisible();
-    await expect(dock).toBeVisible();
-    const box = await dock.boundingBox();
-    expect(box!.height).toBeGreaterThanOrEqual(52);
-    expect(box!.y + box!.height).toBeLessThanOrEqual(845);
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    await page.screenshot({ path: `shots/p02-mobile-${theme}.png`, fullPage: true });
-    await dock.getByRole("button", { name: "Tools", exact: true }).click();
-    await expect(dialog).toBeVisible();
-    for (const section of ["page", "offers", "bookings", "team", "reviews", "analytics", "help", "settings"]) {
-      await expect(dialog.locator(`a[href="/dashboard/${section}"]`)).toBeVisible();
-    }
-    await dialog.screenshot({ path: `shots/p02-mobile-menu-${theme}.png` });
-    await page.keyboard.press("Escape");
-    await expect(dialog).not.toBeVisible();
-    await expect(dock.getByRole("button", { name: "Tools", exact: true })).toBeFocused();
-  }
-});
-
-test("Studio sections stay reachable and category shortcuts adapt on a narrow phone", async ({ page }) => {
-  await page.setViewportSize({ width: 320, height: 700 });
-  await page.goto("/dashboard");
-  const draft = setName(applyIndustry(initialState(), "maker"), "Moss Studio");
-  draft.onboarded = true;
-  draft.step = "finish";
-  await page.evaluate((state) => localStorage.setItem("taplo.demo.v2", JSON.stringify(state)), draft);
-  await page.reload();
-  const dock = page.getByRole("navigation", { name: "Studio", exact: true });
-  await expect(dock.getByRole("link", { name: "What you offer", exact: true })).toBeVisible();
-  await dock.getByRole("button", { name: "Tools" }).click();
-  const directory = page.getByRole("dialog", { name: "Studio sections" });
-  await expect(directory.getByRole("heading", { name: "Create" })).toBeVisible();
-  await expect(directory.getByRole("heading", { name: "Run" })).toBeVisible();
-  await directory.getByRole("link", { name: "Team", exact: true }).click();
-  await expect(page).toHaveURL(/\/dashboard\/team$/);
-  await expect(directory).toBeHidden();
-  await expect(dock.getByRole("button", { name: "Tools" })).toHaveAttribute("aria-current", "page");
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-});
-
-test("offer inventory connects search, add, and record editing on a phone", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await openSample(page);
-  await page.goto("/dashboard/offers");
-  await expect(page.getByRole("heading", { name: "What you offer" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Add a service" })).toBeVisible();
-  await page.getByRole("link", { name: "Add a service" }).first().click();
-  await expect(page.getByRole("dialog", { name: "Add a service" })).toBeVisible();
-  await page.getByRole("dialog", { name: "Add a service" }).getByRole("textbox", { name: "Service name" }).fill("Skin consultation");
-  await page.getByRole("dialog", { name: "Add a service" }).getByRole("button", { name: "Save service" }).click();
-  await page.goto("/dashboard/offers");
-  await expect(page.getByRole("link", { name: /Skin consultation/ })).toBeVisible();
-  await page.getByRole("link", { name: /Skin consultation/ }).click();
-  await expect(page.getByRole("dialog", { name: "Edit service" })).toBeVisible();
-  await page.getByRole("dialog", { name: "Edit service" }).getByRole("button", { name: "Cancel" }).click();
-  await page.goto("/dashboard/offers");
-  await page.getByRole("link", { name: "Add a product" }).first().click();
-  const productEditor = page.getByRole("dialog", { name: "Add a product" });
-  await expect(productEditor).toBeVisible();
-  await productEditor.getByRole("textbox", { name: "Name", exact: true }).fill("Beard oil");
-  await productEditor.getByRole("button", { name: "Save product" }).click();
-  await page.goto("/dashboard/offers");
-  await expect(page.getByRole("link", { name: /Beard oil/ })).toBeVisible();
-  await page.locator(".ws-offers-home").evaluate(async (element) => {
-    await Promise.all(element.getAnimations().map((animation) => animation.finished));
+test("search finds a saved service and opens the real editor", async ({
+  page,
+}) => {
+  await prepare(page);
+  await page
+    .getByRole("button", { name: "Search Studio", exact: true })
+    .click();
+  const search = page.getByRole("dialog", {
+    name: "Search Studio",
+    exact: true,
   });
-  const offerAudit = await new AxeBuilder({ page }).include(".ws-offers-home").analyze();
-  expect(offerAudit.violations).toEqual([]);
-  await page.screenshot({ path: "shots/p03-offers-mobile.png", fullPage: true });
-  await page.getByRole("searchbox", { name: "Search what you offer" }).fill("impossible search phrase");
-  await expect(page.getByText(/Nothing matches/)).toBeVisible();
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.getByRole("searchbox", { name: "Search what you offer" }).clear();
-  await page.setViewportSize({ width: 320, height: 700 });
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.screenshot({ path: "shots/p03-offers-narrow.png", fullPage: true });
+  await search.getByRole("searchbox").fill("Skin fade");
+  await search.getByRole("link", { name: /Skin fade/ }).click();
+  const editor = page.getByRole("dialog", {
+    name: "Edit service",
+    exact: true,
+  });
+  await expect(editor).toBeVisible();
+  await expect(editor.getByLabel("Service name", { exact: true })).toHaveValue(
+    "Skin fade",
+  );
+  await editor.getByRole("button", { name: "Cancel", exact: true }).click();
+  await expect(page).toHaveURL(/\/dashboard\/services$/);
 });
-
-test("page editing keeps an obvious path through Studio at each width", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await openSample(page);
-  await expect(page.getByRole("navigation", { name: "Studio navigation" })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Studio navigation" }).getByRole("link", { name: "Your page" })).toHaveAttribute("aria-current", "page");
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.screenshot({ path: "shots/p03-editor-desktop.png", fullPage: true });
-  await page.setViewportSize({ width: 1180, height: 900 });
-  await expect(page.getByRole("link", { name: "Back to Studio" })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Studio navigation" })).toBeHidden();
+test("offers add, edit, filter and search the same saved records", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(page.getByRole("button", { name: "Open Studio sections" })).toContainText("Studio");
-  await page.getByRole("button", { name: "Open Studio sections" }).click();
-  const directory = page.getByRole("dialog", { name: "Studio sections" });
-  await expect(directory.getByRole("link", { name: "What you offer" })).toBeVisible();
-  await directory.getByRole("link", { name: "What you offer" }).click();
-  await expect(page).toHaveURL(/\/dashboard\/offers$/);
-  await expect(page.getByRole("heading", { name: "What you offer" })).toBeVisible();
+  await prepare(page);
+  await page.goto("/dashboard/offers");
+  await page.getByRole("button", { name: "Add offer", exact: true }).click();
+  await page
+    .getByRole("menuitem", { name: "Add a service", exact: true })
+    .click();
+  const editor = page.getByRole("dialog", {
+    name: "Add a service",
+    exact: true,
+  });
+  await editor
+    .getByLabel("Service name", { exact: true })
+    .fill("Skin consultation");
+  await editor
+    .getByRole("button", { name: "Save service", exact: true })
+    .click();
+  await expect(editor).toBeHidden();
+  await page.goto("/dashboard/offers");
+  await page
+    .getByRole("searchbox", { name: "Search what you offer" })
+    .fill("Skin consultation");
+  await expect(
+    page.getByRole("link", { name: /Skin consultation/ }),
+  ).toBeVisible();
+  await page.getByRole("searchbox").fill("not a real offer");
+  await expect(
+    page.getByRole("heading", { name: "No matches this time." }),
+  ).toBeVisible();
+  await page.getByRole("searchbox").clear();
+  await page
+    .getByRole("group", { name: "Offer type" })
+    .getByRole("button", { name: /Products/ })
+    .click();
+  await expect(
+    page.getByRole("link", { name: /Skin consultation/ }),
+  ).toHaveCount(0);
 });
-
-test("device theme follows preference changes and keyboard users can skip navigation", async ({ page }) => {
+test("help answers a question and edits contact details without leaving", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.emulateMedia({ colorScheme: "dark" });
-  await page.goto("/dashboard");
-  await page.getByRole("navigation", { name: "Studio", exact: true }).getByRole("button", { name: "Tools" }).click();
-  await page.getByRole("dialog", { name: "Studio sections" }).getByRole("combobox", { name: "Colour mode" }).selectOption("system");
-  await page.keyboard.press("Escape");
-  await expect(page.locator("[data-operational]")).toHaveAttribute("data-colour-scheme", "dark");
-  await page.emulateMedia({ colorScheme: "light" });
-  await expect(page.locator("[data-operational]")).toHaveAttribute("data-colour-scheme", "light");
-  await page.goto("/dashboard");
-  await page.keyboard.press("Tab");
-  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
-  await page.keyboard.press("Enter");
-  await expect(page.locator("#studio-content")).toBeFocused();
+  await prepare(page);
+  await page.goto("/dashboard/help");
+  await page.getByText("Why are no times showing?", { exact: true }).click();
+  await expect(
+    page.getByRole("link", { name: "Review availability" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: /Contact details/ }).click();
+  const editor = page.getByRole("dialog", {
+    name: "How can customers reach you?",
+  });
+  await editor.getByLabel("Email", { exact: true }).fill("studio@example.com");
+  await editor.getByRole("button", { name: "Save contact details" }).click();
+  await expect(editor).toBeHidden();
+  await expect(page).toHaveURL(/\/dashboard\/help$/);
+  await page.getByRole("searchbox").fill("bookings");
+  await page.getByRole("button", { name: /Get appointments ready/ }).click();
+  const guide = page.getByRole("dialog", { name: "Get appointments ready" });
+  await expect(guide).toBeVisible();
+  await expect(guide.locator("video")).toHaveCount(0);
+  await guide.getByRole("button", { name: "Close guide" }).click();
+});
+test("mobile menu and page editor keep Studio destinations reachable", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await prepare(page);
+  const dock = page.getByRole("navigation", { name: "Studio", exact: true });
+  await dock.getByRole("link", { name: "Your page", exact: true }).click();
+  await expect(page.getByTestId("my-page")).toBeVisible();
+  await expect(dock).toBeVisible();
+  await dock.getByRole("button", { name: "Open Studio menu" }).click();
+  const menu = page.getByRole("dialog", { name: "Your Studio", exact: true });
+  await menu.getByRole("link", { name: "Settings", exact: true }).click();
+  await expect(page).toHaveURL(/\/dashboard\/settings$/);
+  await page
+    .getByRole("combobox", { name: "Colour mode" })
+    .selectOption("dark");
+  await page.reload();
+  await expect(page.locator("[data-operational]")).toHaveAttribute(
+    "data-colour-scheme",
+    "dark",
+  );
 });

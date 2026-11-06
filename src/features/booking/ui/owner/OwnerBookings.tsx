@@ -266,7 +266,7 @@ export function OwnerBookings({
       <PageHeader
         scene="bookings"
         title="Bookings"
-        description="Appointments and availability."
+        description="Every appointment, request and working hour, in one clear view."
       />
       {requestedBooking && !selectedBooking ? (
         <p role="alert" className="mb-4 text-sm text-muted-foreground">
@@ -274,7 +274,7 @@ export function OwnerBookings({
           latest details.
         </p>
       ) : null}
-      <div className="grid max-w-6xl gap-4">
+      <div className="grid max-w-6xl gap-4 ts-calendar-layout">
         <div
           role="tablist"
           aria-label="Bookings sections"
@@ -288,7 +288,7 @@ export function OwnerBookings({
                 "Enquiries",
                 state.enquiries.filter((e) => e.status === "new").length,
               ],
-              ["availability", "Hours", 0],
+              ["availability", "Availability", 0],
             ] as const
           ).map(([id, label, n]) => (
             <button

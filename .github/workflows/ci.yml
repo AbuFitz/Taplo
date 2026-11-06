@@ -31,6 +31,16 @@ jobs:
         if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
       - run: npx playwright install --with-deps chromium
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      - name: Rebuilt Studio design and connected guidance
+        run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/operational-shell.spec.ts --output=test-results/studio-rebuild
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        with:
+          name: studio-rebuild-evidence
+          path: test-results/studio-rebuild/
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Blueprint first journey, category search and in-place Studio setup
         run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/blueprint-first-journey.spec.ts tests/e2e/studio-today.spec.ts
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
@@ -41,8 +51,6 @@ jobs:
           path: test-results/
           if-no-files-found: ignore
           retention-days: 7
-      - run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/operational-shell.spec.ts
-        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       - name: Starting-look navigation on phone and desktop
         run: PW_CHROMIUM="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" npm run test:e2e -- tests/e2e/appearance-task-navigation.spec.ts
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
