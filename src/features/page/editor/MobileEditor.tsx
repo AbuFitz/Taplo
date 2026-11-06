@@ -144,6 +144,7 @@ export function MobileEditor({
   return (
     <div
       ref={root}
+      id="studio-editor-shell"
       className="mobile-studio"
       data-testid="my-page"
       data-editor="compact"
@@ -221,6 +222,7 @@ export function MobileEditor({
         <>
           <PreviewResizeHandle
             stageId="studio-preview-stage"
+            containerId="studio-editor-shell"
             onResize={setPreviewHeight}
           />
           <nav className="mobile-studio-tabs" aria-label="Editor sections">
@@ -304,6 +306,16 @@ export function MobileEditor({
                 <Redo2 />
               </Button>
             </div>
+            {!canPublish(s) ? (
+              <button
+                type="button"
+                className="mobile-studio-requirements"
+                aria-expanded={showRequirements}
+                onClick={() => setShowRequirements(!showRequirements)}
+              >
+                {showRequirements ? "Hide requirements" : "What’s left?"}
+              </button>
+            ) : null}
             <Button
               disabled={!canPublish(s)}
               onClick={() => {
@@ -318,16 +330,6 @@ export function MobileEditor({
                   : "Published"
                 : "Publish"}
             </Button>
-            {!canPublish(s) ? (
-              <button
-                type="button"
-                className="mobile-studio-requirements"
-                aria-expanded={showRequirements}
-                onClick={() => setShowRequirements(!showRequirements)}
-              >
-                {showRequirements ? "Hide requirements" : "What’s left?"}
-              </button>
-            ) : null}
             {showRequirements && !canPublish(s) ? (
               <p>
                 {readiness(s)

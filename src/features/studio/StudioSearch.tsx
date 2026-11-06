@@ -133,8 +133,8 @@ export function StudioSearch() {
         aria-label="Search Studio"
       >
         <Search aria-hidden="true" />
-        <span>Search anything</span>
-        <kbd>⌘ K</kbd>
+        <span>Search Studio</span>
+        <kbd aria-hidden="true">⌘ K</kbd>
       </button>
       <Overlay
         open={open}

@@ -79,6 +79,17 @@ for (const [width, scheme] of [
           });
         expect.soft(audit.violations).toEqual([]);
       }
+      if (route === "/page" && width < 900) {
+        const audit = await new AxeBuilder({ page })
+          .include(".mobile-studio-header")
+          .include(".mobile-studio-tabs")
+          .analyze();
+        expect.soft(audit.violations).toEqual([]);
+        const divider = page.getByRole("separator", { name: "Resize page preview" });
+        await divider.focus();
+        await divider.press("End");
+        expect(await page.locator(".mobile-studio-body").evaluate((el) => el.getBoundingClientRect().height)).toBeGreaterThanOrEqual(140);
+      }
       if (width < 900)
         await expect(
           page.getByRole("navigation", { name: "Studio", exact: true }),
@@ -232,4 +243,16 @@ test("search quick edits stay on the current task and restore focus", async ({
   await hours.getByRole("button", { name: "Close", exact: true }).click();
   await expect(page).toHaveURL(/\/dashboard\/offers$/);
   await expect(trigger).toBeFocused();
+});
+
+test("an empty workspace can open a sample without losing Studio navigation", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/dashboard");
+  await page.evaluate(() => localStorage.removeItem("taplo.demo.v2"));
+  await page.reload();
+  await expect(page.getByTestId("first-run")).toBeVisible();
+  await page.getByText("Explore with a sample business", { exact: true }).click();
+  await page.getByRole("button", { name: /Jay’s Barbers/ }).click();
+  await expect(page.getByTestId("my-page")).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Studio", exact: true })).toBeVisible();
 });

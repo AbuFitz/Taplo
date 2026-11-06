@@ -80,7 +80,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 <OperationalLogo />
               </Link>
               <span className="ts-location-studio">Studio</span>
-              <span aria-hidden="true">/</span>
+              <span className="ts-location-divider" aria-hidden="true">/</span>
               <strong>{ROUTES[section] || "Workspace"}</strong>
             </div>
             <StudioSearch />

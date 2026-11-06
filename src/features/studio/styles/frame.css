@@ -205,8 +205,7 @@
   z-index: 30;
   min-height: 72px;
   padding: 12px 36px;
-  background: color-mix(in srgb, var(--ts-ground) 94%, transparent);
-  backdrop-filter: blur(20px);
+  background: var(--ts-ground);
   border-bottom: 1px solid color-mix(in srgb, var(--ts-line) 60%, transparent);
 }
 .ts-location {
@@ -223,7 +222,7 @@
   font-weight: 550;
   white-space: nowrap;
 }
-.ts-location > span:nth-child(2) {
+.ts-location-divider {
   opacity: 0.45;
 }
 .ts-search-trigger {

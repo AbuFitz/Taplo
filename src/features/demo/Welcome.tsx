@@ -11,7 +11,6 @@ import {
   toPage,
 } from "@/features/showcase/lab-state";
 import type { Scenario } from "@/features/showcase/content";
-import "./dashboard/studio-today.css";
 import { initialState, useDemo } from "./store";
 
 const SAMPLES: {
@@ -105,7 +104,7 @@ export function Welcome() {
     router.push("/dashboard/page");
   };
   return (
-    <div className="studio-welcome" data-testid="first-run">
+    <div className="studio-welcome ts-welcome" data-testid="first-run">
       <p className="studio-eyebrow">Your workspace</p>
       <h1>Welcome to Studio.</h1>
       <p className="studio-welcome-intro">

@@ -7,9 +7,11 @@ import "./preview-resize.css";
 export function PreviewResizeHandle({
   onResize,
   stageId,
+  containerId,
 }: {
   onResize: (height: number) => void;
   stageId: string;
+  containerId?: string;
 }) {
   const drag = React.useRef<{ id: number; y: number; height: number } | null>(
     null,
@@ -20,7 +22,13 @@ export function PreviewResizeHandle({
     max: 140,
   });
   const callback = React.useEffectEvent(onResize);
-  const viewport = () => window.visualViewport?.height ?? window.innerHeight;
+  const viewport = React.useCallback(() => {
+    const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+    const container = containerId ? document.getElementById(containerId) : null;
+    return container
+      ? Math.min(viewportHeight, container.getBoundingClientRect().height)
+      : viewportHeight;
+  }, [containerId]);
   const current = () =>
     document.getElementById(stageId)?.getBoundingClientRect().height ??
     measurement.height;
@@ -51,7 +59,7 @@ export function PreviewResizeHandle({
       window.visualViewport?.removeEventListener("resize", sync);
       window.removeEventListener("resize", sync);
     };
-  }, [stageId]);
+  }, [stageId, viewport]);
 
   return (
     <div
