@@ -24,6 +24,7 @@ export function Studio() {
   const [editing, setEditing] = React.useState<BusinessEdit | null>(null);
   const opener = React.useRef<HTMLElement | null>(null);
   const [notice, setNotice] = React.useState("");
+  const [snapshotOpen, setSnapshotOpen] = React.useState(false);
   React.useEffect(() => {
     const refresh = () => setNow(nowMs());
     const timer = setInterval(refresh, 30000);
@@ -85,23 +86,68 @@ export function Studio() {
   const snapshotStyle = Object.fromEntries(
     Object.entries(palette).map(([key, value]) => [`--snapshot-${key}`, value]),
   ) as React.CSSProperties;
+  const quickView = (
+    <section className="ts-quick-details">
+      <div className="ts-section-heading">
+        <h2>Quick changes</h2>
+        <span>Right here.</span>
+      </div>
+      <button onClick={(event) => openEditor("contact", event)}>
+        <Icon.external />
+        <span>
+          <strong>Contact details</strong>
+          <small>
+            {facts.contact
+              ? "Keep your details up to date"
+              : "Add a way to reach you"}
+          </small>
+        </span>
+        <Icon.next />
+      </button>
+      <button onClick={(event) => openEditor("hours", event)}>
+        <Icon.clock />
+        <span>
+          <strong>Opening hours</strong>
+          <small>
+            {facts.hasHours
+              ? "Review your public opening times"
+              : "Let people know when you’re open"}
+          </small>
+        </span>
+        <Icon.next />
+      </button>
+      {!productsFirst || facts.services > 0 ? (
+        <Link href="/dashboard/bookings?section=availability">
+          <Icon.bookings />
+          <span>
+            <strong>Booking availability</strong>
+            <small>Working time, breaks and days off</small>
+          </span>
+          <Icon.next />
+        </Link>
+      ) : null}
+    </section>
+  );
   const setupView = (
     <aside
       className="ts-home-side studio-today-secondary"
       aria-label="Your business page and setup"
     >
-      <section className="ts-page-preview-card">
+      <section
+        className="ts-page-preview-card"
+        data-snapshot-open={snapshotOpen}
+      >
         <div className="ts-section-heading">
           <h2>Your page</h2>
           <span className="ts-status" data-status={publicStatus}>
             {publicStatus}
           </span>
         </div>
-        <Link
-          href="/dashboard/page"
+        <h3 className="ts-page-card-name">{s.content.identity.name}</h3>
+        <div
+          id="studio-page-snapshot"
           className="ts-mini-page"
           style={snapshotStyle}
-          aria-label="Edit your business page"
         >
           <div className="ts-mini-page-content">
             {s.content.identity.logo ? (
@@ -113,7 +159,7 @@ export function Studio() {
                 unoptimized
               />
             ) : null}
-            <h3>{s.content.identity.name}</h3>
+            <strong>{s.content.identity.name}</strong>
             <span>
               {s.content.identity.tagline || "Your business, ready to share."}
             </span>
@@ -130,7 +176,7 @@ export function Studio() {
                 </div>
               ))}
           </div>
-        </Link>
+        </div>
         <p className="ts-page-url">
           {TAPLO_DOMAINS.host}/{s.content.identity.slug}
         </p>
@@ -147,6 +193,16 @@ export function Studio() {
             <Icon.external />
           </Link>
         </div>
+        <button
+          type="button"
+          className="ts-preview-toggle"
+          aria-expanded={snapshotOpen}
+          aria-controls="studio-page-snapshot"
+          onClick={() => setSnapshotOpen((value) => !value)}
+        >
+          {snapshotOpen ? "Hide design" : "Show design"}
+          <Icon.next />
+        </button>
         {missing.length ? (
           <p className="ts-page-readiness">
             {missing[0]?.id === "contact"
@@ -155,46 +211,7 @@ export function Studio() {
           </p>
         ) : null}
       </section>
-      <section className="ts-quick-details">
-        <div className="ts-section-heading">
-          <h2>Quick changes</h2>
-          <span>Right here.</span>
-        </div>
-        <button onClick={(event) => openEditor("contact", event)}>
-          <Icon.external />
-          <span>
-            <strong>Contact details</strong>
-            <small>
-              {facts.contact
-                ? "Keep your details up to date"
-                : "Add a way to reach you"}
-            </small>
-          </span>
-          <Icon.next />
-        </button>
-        <button onClick={(event) => openEditor("hours", event)}>
-          <Icon.clock />
-          <span>
-            <strong>Opening hours</strong>
-            <small>
-              {facts.hasHours
-                ? "Review your public opening times"
-                : "Let people know when you’re open"}
-            </small>
-          </span>
-          <Icon.next />
-        </button>
-        {!productsFirst || facts.services > 0 ? (
-          <Link href="/dashboard/bookings?section=availability">
-            <Icon.bookings />
-            <span>
-              <strong>Booking availability</strong>
-              <small>Working time, breaks and days off</small>
-            </span>
-            <Icon.next />
-          </Link>
-        ) : null}
-      </section>
+
       <Link className="ts-home-help" href="/dashboard/help">
         <Icon.help />
         <span>
@@ -307,47 +324,52 @@ export function Studio() {
       <header className="ts-home-heading">
         <div>
           <p className="ts-overline">{work.dateLabel}</p>
-          <h1>Make today a good one.</h1>
+          <h1>Today, in one place.</h1>
           <p>Your work, your page, your next move.</p>
         </div>
-        <Link
-          className="ts-outline-action"
-          href={productsFirst ? "/dashboard/offers" : "/dashboard/bookings"}
-        >
-          {productsFirst ? "Your offers" : "Open calendar"}
-          <Icon.external />
-        </Link>
       </header>
-      <div className="ts-home-pulse" aria-label="Business at a glance">
-        <Link href="/dashboard/bookings">
-          <span>On the day</span>
-          <strong>
-            {work.today.length}
-            <small>
-              {work.today.length === 1 ? "appointment" : "appointments"}
-            </small>
-          </strong>
-          <Icon.next />
-        </Link>
-        <Link href="/dashboard/bookings?section=enquiries">
-          <span>Needs your reply</span>
-          <strong>
-            {work.awaiting.length + enquiries}
-            <small>
-              {work.awaiting.length + enquiries === 1 ? "request" : "requests"}
-            </small>
-          </strong>
-          <Icon.next />
-        </Link>
-        <Link href="/dashboard/offers">
-          <span>What you offer</span>
-          <strong>
-            {facts.services + actualProducts.length}
-            <small>services & items</small>
-          </strong>
-          <Icon.next />
-        </Link>
-      </div>
+      {work.today.length || work.awaiting.length || enquiries ? (
+        <div className="ts-home-pulse" aria-label="Business at a glance">
+          <Link href="/dashboard/bookings">
+            <span>On the day</span>
+            <strong>
+              {work.today.length}
+              <small>
+                {work.today.length === 1 ? "appointment" : "appointments"}
+              </small>
+            </strong>
+            <Icon.next />
+          </Link>
+          <Link href="/dashboard/bookings?section=enquiries">
+            <span>Needs your reply</span>
+            <strong>
+              {work.awaiting.length + enquiries}
+              <small>
+                {work.awaiting.length + enquiries === 1
+                  ? "request"
+                  : "requests"}
+              </small>
+            </strong>
+            <Icon.next />
+          </Link>
+          <Link href="/dashboard/offers">
+            <span>What you offer</span>
+            <strong>
+              {facts.services + actualProducts.length}
+              <small>services & items</small>
+            </strong>
+            <Icon.next />
+          </Link>
+        </div>
+      ) : (
+        <div className="ts-home-status-line">
+          <span>Nothing waiting for a reply.</span>
+          <Link href="/dashboard/offers">
+            {facts.services + actualProducts.length} offers
+            <Icon.next />
+          </Link>
+        </div>
+      )}
 
       {work.awaiting.length || enquiries ? (
         <section className="studio-attention" aria-labelledby="attention-title">
@@ -383,6 +405,7 @@ export function Studio() {
         </div>
 
         {workView}
+        {quickView}
         {setupView}
       </div>
       <p className="studio-save-notice" role="status">

@@ -39,7 +39,13 @@ for (const width of [320, 390, 1440])
       await page.emulateMedia({ colorScheme: scheme });
       await prepare(page);
       await expect(
-        page.getByRole("heading", { name: "Moss Studio", exact: true }),
+        page
+          .locator(
+            width >= 900
+              ? ".ts-mini-page-content > strong"
+              : ".ts-page-card-name",
+          )
+          .filter({ hasText: "Moss Studio" }),
       ).toHaveCount(1);
       await expect(page.locator(".studio-business-identity img")).toHaveCount(
         0,
@@ -531,20 +537,34 @@ for (const width of [390, 1440])
       });
       await expect(dialog).toBeVisible();
       await dialog
-        .getByRole("button", { name: category === "car-dealer" ? "Save vehicle" : "Save product", exact: true })
+        .getByRole("button", {
+          name: category === "car-dealer" ? "Save vehicle" : "Save product",
+          exact: true,
+        })
         .click();
       await expect(dialog.getByLabel("Name", { exact: true })).toBeFocused();
       await dialog.getByRole("button", { name: "Close", exact: true }).click();
       await expect(dialog).not.toBeVisible();
       await expect(
-        page.getByRole("button", { name: category === "car-dealer" ? "Add vehicle" : "Add product", exact: true }),
+        page.getByRole("button", {
+          name: category === "car-dealer" ? "Add vehicle" : "Add product",
+          exact: true,
+        }),
       ).toBeFocused();
-      await page.getByRole("button", { name: category === "car-dealer" ? "Add vehicle" : "Add product", exact: true }).click();
+      await page
+        .getByRole("button", {
+          name: category === "car-dealer" ? "Add vehicle" : "Add product",
+          exact: true,
+        })
+        .click();
       await dialog
         .getByLabel("Name", { exact: true })
         .fill("Second owner item");
       await dialog
-        .getByRole("button", { name: category === "car-dealer" ? "Save vehicle" : "Save product", exact: true })
+        .getByRole("button", {
+          name: category === "car-dealer" ? "Save vehicle" : "Save product",
+          exact: true,
+        })
         .click();
       await expect(dialog).not.toBeVisible();
       await page.goto("/dashboard");
@@ -677,19 +697,37 @@ for (const width of [390, 1440])
 
 for (const width of [390, 1440])
   for (const scheme of ["light", "dark"] as const) {
-    test("profile task menu is readable at " + width + " in " + scheme, async ({ page }, info) => {
-      await page.setViewportSize({ width, height: 900 });
-      await page.emulateMedia({ colorScheme: scheme, reducedMotion: "reduce" });
-      await prepare(page, "barber");
-      await page.goto("/dashboard/page");
-      await selectPart(page, "header");
-      await expect(page.getByTestId("header-panel")).toBeVisible();
-      await expect(page.locator(".operational-root")).toHaveAttribute("data-colour-scheme", scheme);
-      const result = await new AxeBuilder({ page })
-        .include('[data-testid="header-panel"], [data-testid="editor-panel"] > [role="tablist"], .mobile-studio-tabs, .mobile-studio-header, .mobile-studio-footer')
-        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
-        .analyze();
-      expect(result.violations.filter(v => v.impact === "serious" || v.impact === "critical").map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) }))).toEqual([]);
-      await page.screenshot({ path: info.outputPath("profile-menu.png"), fullPage: true });
-    });
+    test(
+      "profile task menu is readable at " + width + " in " + scheme,
+      async ({ page }, info) => {
+        await page.setViewportSize({ width, height: 900 });
+        await page.emulateMedia({
+          colorScheme: scheme,
+          reducedMotion: "reduce",
+        });
+        await prepare(page, "barber");
+        await page.goto("/dashboard/page");
+        await selectPart(page, "header");
+        await expect(page.getByTestId("header-panel")).toBeVisible();
+        await expect(page.locator(".operational-root")).toHaveAttribute(
+          "data-colour-scheme",
+          scheme,
+        );
+        const result = await new AxeBuilder({ page })
+          .include(
+            '[data-testid="header-panel"], [data-testid="editor-panel"] > [role="tablist"], .mobile-studio-tabs, .mobile-studio-header, .mobile-studio-footer',
+          )
+          .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+          .analyze();
+        expect(
+          result.violations
+            .filter((v) => v.impact === "serious" || v.impact === "critical")
+            .map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.target) })),
+        ).toEqual([]);
+        await page.screenshot({
+          path: info.outputPath("profile-menu.png"),
+          fullPage: true,
+        });
+      },
+    );
   }

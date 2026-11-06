@@ -4,7 +4,7 @@
 
 Founder explicitly rejected the existing Studio as a design reference and authorised rebuilding its architecture, layout, section pages, guidance and support on `claude/modest-cerf-4tont1`. This supersedes assumptions that the previous navigation or page compositions were final. P02 is the principal packet; P03/P07 task projections are used where actual records already exist. This document records design construction and runtime evidence; it does not establish production payment, team authentication, communications or support delivery readiness.
 
-The rebuilt shell no longer imports `workspace.css`, `workspace-polish.css`, `workspace-foundation.css`, `workspace-tools.css` `studio-shell.css` or the accumulated `portal-workspace.css`. Those historical files remain for reference and other consumers, but do not define this Studio. `studio-design.css` is the new scoped composition layer. Canonical records, validation, conflict handling, publication gates and saved-design adapters remain functional dependencies. A form field is retained because the task requires it, not because its previous presentation is protected.
+The rebuilt shell no longer imports `workspace.css`, `workspace-polish.css`, `workspace-foundation.css`, `workspace-tools.css` `studio-shell.css` or the accumulated `portal-workspace.css`. Those historical files remain for reference and other consumers, but do not define this Studio. `studio-design.css` loads the new scoped modules under `src/features/studio/styles/` in explicit cascade order. `operational.css` now contains only theme/form/accessibility primitives, with the old composition rules removed. Canonical records, validation, conflict handling, publication gates and saved-design adapters remain functional dependencies. A form field is retained because the task requires it, not because its previous presentation is protected.
 
 ## Current research and interpretation
 
@@ -24,7 +24,7 @@ These are design inputs. Taplo's precise composition and density are implementat
 | Layer | Purpose | Behaviour |
 | --- | --- | --- |
 | Workspace frame | Business identity and stable destinations | Desktop sidebar; phone task dock and labelled directory; remains present while editing a page. No invented initials. |
-| Location bar | Where am I, find something, get help | Current section, search, contextual Help. Search opens a focus-managed dialog; results navigate to real records/editors. |
+| Location bar | Where am I, find something, get help | Current section, search, contextual Help. Search opens a focus-managed dialog; results navigate to real records/editors or open contact/hours quick edits in place. |
 | Page heading | What can I do here | One title, short purpose, one principal action, optional compact guide. No duplicated promotional artwork or setup banner. |
 | Work canvas | Complete the task | Four compositions: daily work; searchable/filterable records; measured form; focused settings/detail. Preview exists where it helps authoring. |
 | Guidance | Understand the next useful step | Saved-record completion; choose a step; act or close. Watching help never marks work complete. |
@@ -44,12 +44,12 @@ These are design inputs. Taplo's precise composition and density are implementat
 | Analytics | Clear empty measures and customer-action explanation | No fabricated chart or revenue. Plan access stays enforced. Collection/reporting pipeline remains separate work. |
 | `studio.settings` | General, plan, connections, data | Appearance; in-place contact/hours; identity/team links; plan intent; actual JSON download; guarded reset. Connections never pretend to connect. |
 | `studio.help` | Question-led answers, quick changes, searchable guide library, human route | Relevant guide deep link, step selection, real task destination, retained report form failure/recovery. |
-| `studio.page_editor` | Authoring inside the shared frame | Composition follows actual available width using ResizeObserver. Existing content/appearance controls and customer preview stay connected. Phone dock remains available; keyboard state protects editing space. |
+| `studio.page_editor` | Authoring inside the shared frame | Composition follows actual available width using ResizeObserver. Existing content/appearance controls and customer preview stay connected. The initial composition is measured before an editor mounts, preserving task deep links across hydration. Phone dock remains available; keyboard state protects editing space. |
 
 ## Visual construction
 
 - Warm neutral workspace, white/light or dark surfaces, ink-first actions, restrained cobalt orientation. Customer chosen themes are separate.
-- Inter operational text; Manrope hierarchy. Existing semantic Phosphor Studio adapter and established Lucide form/search glyphs; no new icon dependency.
+- Inter operational text; Manrope section hierarchy; Bricolage Grotesque display titles connect Studio to the marketing identity. The founder’s new rebuild instruction supersedes treating the earlier title-font recommendation as visually final. Existing semantic Phosphor Studio adapter and established Lucide form/search glyphs; no new icon dependency.
 - Page titles have clear hierarchy, record rows have deliberate density, borders separate relationships rather than wrap every sentence.
 - Real product imagery uses a restrained thumbnail; absent images use a neutral content-type glyph. No inferred logo or initials.
 - Phone composition is authored separately: stacked offer metadata, scrollable type tabs, compact context bar, persistent dock, readable form inputs, safe-area-aware actions. Desktop does not dictate a shrunk phone layout.
@@ -61,3 +61,9 @@ These are design inputs. Taplo's precise composition and density are implementat
 Required for this pass: build, typecheck, targeted lint, connected offer/search/help/settings actions, screenshots of every existing Studio route at 1440 and 390 in light/dark plus 320 light, overflow checks and meaningful axe audits. Evidence is recorded after actual execution, not inferred from authored CSS.
 
 Remaining product work is not hidden by the design: canonical remote writes for all records, payment/checkout, scoped team logins, integrated messaging/Wallet/domains, full analytics, Console workflows and provider delivery. Existing package code also differs from the saved 3.0 commercial defaults; this visual rebuild does not silently select a new pricing contract. Complete that reconciliation in the commercial packet.
+
+### First rendered review
+
+The first CI captures exposed an excessively tall zero-work Today state and a label/content accessible-name mismatch on the miniature preview. Today now omits zero-work metrics, puts quick changes in the work column, and offers an expandable design snapshot on phones. The miniature is a static snapshot with explicit actions beneath it. A mobile navigation assertion also needed to wait for the closing dialog before choosing the new page’s appearance control. These were addressed from the actual capture/error evidence. The initial captures did not complete the whole route matrix because the first accessibility assertion stopped each matrix case.
+
+Local build/typecheck and 41 focused record/quick-edit model tests passed before the visual run. Final route/appearance/accessibility results will be recorded after the corrected run. No production deployment, provider configuration or end-user research occurred in this design pass.

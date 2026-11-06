@@ -1,0 +1,195 @@
+/* Guidance is selected in context; it never starts playing by itself. */
+.ts-guide-launcher {
+  min-width: 0;
+}
+.ts-guide-button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--op-muted);
+  border-radius: 9px;
+  border: 1px solid var(--op-line);
+}
+.ts-guide-button svg {
+  width: 14px;
+  height: 14px;
+}
+.ts-guide-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+  min-height: 100px;
+  padding: 20px;
+  border: 1px solid var(--op-line);
+  border-radius: 13px;
+  background: var(--op-surface);
+  color: var(--op-text);
+}
+.ts-guide-card > svg:first-child {
+  width: 20px;
+  height: 20px;
+  color: var(--op-muted);
+  align-self: flex-start;
+  margin-top: 3px;
+}
+.ts-guide-card > svg:last-child {
+  width: 14px;
+  height: 14px;
+  margin-left: auto;
+  color: var(--op-muted);
+}
+.ts-guide-card > span {
+  min-width: 0;
+  flex: 1;
+}
+.ts-guide-card strong {
+  font-size: 12px;
+  font-weight: 650;
+  display: block;
+  line-height: 1.4;
+}
+.ts-guide-card small {
+  display: block;
+  font-size: 10px;
+  color: var(--op-muted);
+  margin-top: 7px;
+  line-height: 1.7;
+}
+.ts-guide-progress {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 11px;
+  color: var(--op-muted);
+  margin-bottom: 22px;
+}
+.ts-guide-progress > div {
+  height: 4px;
+  background: var(--secondary);
+  border-radius: 4px;
+  flex: 1;
+  overflow: hidden;
+}
+.ts-guide-progress i {
+  display: block;
+  background: var(--op-accent);
+  height: 100%;
+  border-radius: 4px;
+}
+.ts-guide-steps {
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.ts-guide-steps button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--op-muted);
+  font-size: 12px;
+}
+.ts-guide-steps button[aria-pressed="true"] {
+  background: var(--secondary);
+  color: var(--op-text);
+  border-color: var(--op-line);
+}
+.ts-guide-steps button > span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--op-line);
+  border-radius: 8px;
+  font-size: 10px;
+}
+.ts-guide-steps button strong {
+  font-weight: 550;
+  flex: 1;
+}
+.ts-guide-steps svg {
+  width: 14px;
+  height: 14px;
+}
+.ts-guide-detail {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--op-line);
+}
+.ts-guide-detail h3 {
+  font-family: "Manrope Variable", sans-serif;
+  font-size: 24px;
+  letter-spacing: -0.8px;
+  font-weight: 600;
+  margin-top: 9px;
+}
+.ts-guide-detail > p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--op-muted);
+  margin-top: 12px;
+}
+.ts-guide-outcome {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--secondary);
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 20px;
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--op-text);
+}
+.ts-guide-outcome svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  margin-top: 2px;
+}
+.ts-guide-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ts-guide-footer button {
+  font-size: 12px;
+  min-height: 44px;
+  color: var(--op-muted);
+}
+.ts-guide-footer a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  background: var(--op-text);
+  color: var(--op-surface);
+  padding: 10px 16px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.ts-guide-footer svg {
+  width: 15px;
+  height: 15px;
+}
+.ts-guide-blocked {
+  color: var(--op-text) !important;
+}
+.ts-getting-started > div {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}

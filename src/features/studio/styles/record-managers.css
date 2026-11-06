@@ -1,0 +1,241 @@
+/* Record managers and focused forms share one material and spacing scale. */
+.ts-workspace .ws-record-list {
+  display: grid;
+  gap: 0;
+  max-width: none;
+}
+.ts-workspace .ws-record-list > li {
+  border: 0 !important;
+  border-bottom: 1px solid var(--ts-line) !important;
+  border-radius: 0 !important;
+  padding: 22px 0;
+  background: transparent;
+  box-shadow: none;
+}
+.ts-workspace .ws-record-list .font-semibold {
+  font-size: 14px;
+  font-weight: 600;
+}
+.ts-workspace .ws-record-list .text-sm {
+  font-size: 11px;
+  line-height: 1.7;
+  margin-top: 4px;
+}
+.ts-workspace .ws-record-list button {
+  font-size: 11px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 9px;
+}
+.ts-workspace .ws-record-list button svg {
+  width: 14px;
+  height: 14px;
+}
+.ws-offers-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 11px;
+  color: var(--ts-muted);
+  margin: -14px 0 20px;
+}
+.ws-secondary-task {
+  margin-top: 30px;
+  border-top: 1px solid var(--ts-line);
+  padding-top: 12px;
+}
+.ws-secondary-task > summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.ws-secondary-task > summary:after {
+  content: "+";
+  margin-left: auto;
+  font-size: 18px;
+}
+.ws-secondary-task[open] > summary:after {
+  content: "−";
+}
+.ws-product-record {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  flex: 1;
+}
+.ws-product-picture {
+  width: 70px;
+  height: 74px;
+  border: 1px solid var(--ts-line);
+  background: var(--ts-paper);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.ws-product-picture > svg {
+  width: 24px;
+  color: var(--ts-muted);
+}
+.ws-product-copy {
+  min-width: 0;
+}
+.ws-product-copy > p:first-child {
+  font-size: 14px;
+  font-weight: 600;
+}
+.ws-product-badges {
+  display: flex;
+  gap: 6px;
+  margin-top: 7px;
+}
+.ws-product-badges > span {
+  font-size: 9px;
+  color: var(--ts-muted);
+  background: var(--ts-paper);
+  padding: 3px 6px;
+  border-radius: 5px;
+}
+.workspace-notice,
+.workspace-toast {
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: var(--ts-tint);
+  font-size: 12px;
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+.workspace-toast {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.workspace-footnote {
+  font-size: 10px;
+  color: var(--ts-muted);
+  margin-top: 22px !important;
+  max-width: 64ch;
+  line-height: 1.7;
+}
+.workspace-empty {
+  padding: 40px 24px;
+  border-top: 1px solid var(--ts-line);
+  text-align: center;
+  max-width: 700px;
+}
+.workspace-empty h2 {
+  font-size: 25px;
+  letter-spacing: -0.8px;
+}
+.workspace-empty p {
+  font-size: 12px;
+  color: var(--ts-muted);
+  max-width: 40ch;
+  margin: 12px auto 20px;
+  line-height: 1.7;
+}
+.workspace-empty .ws-empty-art {
+  width: 120px;
+  height: 90px;
+  margin: 0 auto 20px;
+}
+.team-person-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.team-person {
+  padding: 22px;
+  background: var(--ts-paper);
+  border: 1px solid var(--ts-line);
+  border-radius: 16px;
+  min-width: 0;
+}
+.team-person-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.team-person-top > img,
+.team-person-top > span {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--secondary);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.team-person-top > span > svg {
+  width: 22px;
+  height: 22px;
+  color: var(--ts-muted);
+}
+.team-person-top > div {
+  min-width: 0;
+  flex: 1;
+}
+.team-person h2 {
+  font-size: 15px;
+  font-weight: 650;
+}
+.team-person-top p {
+  font-size: 10px;
+  color: var(--ts-muted);
+  margin-top: 4px;
+}
+.team-person-top > button {
+  margin-left: auto;
+  min-width: 36px;
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+}
+.team-person-bio {
+  font-size: 11px;
+  line-height: 1.65;
+  color: var(--ts-muted);
+  margin-top: 18px !important;
+}
+.team-person-services {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 10px;
+  color: var(--ts-muted);
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ts-line);
+}
+.team-person-services span {
+  color: var(--ts-ink);
+}
+.team-person-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+}
+.team-person-footer a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  min-height: 44px;
+}
+.team-person-footer button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  min-height: 44px;
+  color: var(--ts-muted);
+}

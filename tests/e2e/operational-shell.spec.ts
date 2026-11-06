@@ -68,7 +68,7 @@ for (const [width, scheme] of [
       });
       if (["", "/offers", "/help", "/settings"].includes(route)) {
         const audit = await new AxeBuilder({ page })
-          .include("#studio-content")
+          .include(route === "" ? ".ts-workspace" : "#studio-content")
           .analyze();
         expect(audit.violations).toEqual([]);
       }
@@ -190,6 +190,7 @@ test("mobile menu and page editor keep Studio destinations reachable", async ({
   const menu = page.getByRole("dialog", { name: "Your Studio", exact: true });
   await menu.getByRole("link", { name: "Settings", exact: true }).click();
   await expect(page).toHaveURL(/\/dashboard\/settings$/);
+  await expect(menu).toBeHidden();
   await page
     .getByRole("combobox", { name: "Colour mode" })
     .selectOption("dark");

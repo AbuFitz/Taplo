@@ -1,0 +1,486 @@
+/* Taplo Studio, rebuilt around a stable frame and four task compositions.
+   Scope stops at merchant preview roots. See docs/implementation/STUDIO-DESIGN-2026.md. */
+.ts-workspace {
+  --ts-ink: var(--op-text);
+  --ts-muted: var(--op-muted);
+  --ts-paper: var(--op-surface);
+  --ts-ground: var(--op-background);
+  --ts-line: var(--op-line);
+  --ts-blue: var(--op-accent);
+  --ts-tint: color-mix(in srgb, var(--op-accent) 7%, var(--op-surface));
+  --ws-line: var(--op-line);
+  --ws-muted: var(--op-muted);
+  --ws-ink: var(--op-text);
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  width: 100%;
+  min-height: 100dvh;
+  background: var(--ts-ground);
+  color: var(--ts-ink);
+  font-family: "Inter Variable", sans-serif;
+}
+.ts-workspace :where(h1, h2, h3, p, ul, ol) {
+  margin: 0;
+}
+.ts-workspace :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+.ts-workspace :where(button, a, input) {
+  -webkit-tap-highlight-color: transparent;
+}
+.ts-workspace :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+.ts-workspace
+  :where(button, a, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--ts-blue);
+  outline-offset: 3px;
+}
+.ts-workspace :where(svg) {
+  flex-shrink: 0;
+}
+.ts-workspace :where(h1, h2, h3) {
+  font-family: "Manrope Variable", sans-serif;
+  text-wrap: balance;
+}
+.ts-workspace button {
+  cursor: pointer;
+}
+.ts-workspace button:disabled {
+  cursor: default;
+}
+.ts-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 16px 18px;
+  background: var(--ts-paper);
+  border-right: 1px solid color-mix(in srgb, var(--ts-line) 65%, transparent);
+}
+.ts-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 14px;
+}
+.ts-brand > span {
+  font-size: 12px;
+  letter-spacing: -0.02em;
+  padding-top: 3px;
+  color: var(--ts-muted);
+}
+.ts-brand > svg {
+  width: 74px;
+  height: 25px;
+}
+.ts-business {
+  margin: 30px 14px 26px;
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+.ts-workspace-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ts-muted);
+}
+.ts-business strong {
+  font-size: 14px;
+  font-weight: 650;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ts-business small {
+  font-size: 11px;
+  color: var(--ts-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ts-navigation {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+.ts-nav-group {
+  margin-bottom: 22px;
+}
+.ts-nav-group h2 {
+  margin: 0 14px 6px;
+  font:
+    600 10px/1.4 "Inter Variable",
+    sans-serif;
+  color: var(--ts-muted);
+  letter-spacing: 0.04em;
+}
+.ts-navigation a,
+.ts-directory nav a {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 44px;
+  margin: 2px 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: var(--ts-muted);
+  font-size: 12px;
+  font-weight: 550;
+}
+.ts-navigation a svg,
+.ts-directory a svg {
+  width: 18px;
+  height: 18px;
+}
+.ts-navigation a:hover,
+.ts-directory a:hover {
+  background: var(--secondary);
+  color: var(--ts-ink);
+}
+.ts-navigation a[aria-current="page"],
+.ts-directory a[aria-current="page"] {
+  background: var(--ts-tint);
+  color: var(--ts-blue);
+  font-weight: 650;
+}
+.ts-navigation a b,
+.ts-directory a b {
+  display: grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding-inline: 4px;
+  border-radius: 6px;
+  font-size: 10px;
+  margin-left: auto;
+  background: var(--ts-ink);
+  color: var(--ts-paper);
+}
+.ts-nav-utilities {
+  margin-top: auto;
+  padding-top: 20px;
+}
+.ts-sidebar-bottom {
+  padding: 18px 14px 0;
+}
+.ts-sidebar-bottom .studio-appearance {
+  margin: 0;
+  display: block;
+}
+.ts-sidebar-bottom .studio-appearance select {
+  width: 100%;
+  max-width: 100%;
+  font-size: 11px;
+  padding: 9px 10px;
+  border-color: var(--ts-line);
+  min-height: 44px !important;
+  border-radius: 9px;
+}
+.ts-sidebar-bottom p {
+  font-size: 9px;
+  color: var(--ts-muted);
+  margin-top: 14px;
+}
+.ts-workspace-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.ts-topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  min-height: 72px;
+  padding: 12px 36px;
+  background: color-mix(in srgb, var(--ts-ground) 94%, transparent);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid color-mix(in srgb, var(--ts-line) 60%, transparent);
+}
+.ts-location {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  color: var(--ts-muted);
+}
+.ts-location > strong {
+  color: var(--ts-ink);
+  font-weight: 550;
+  white-space: nowrap;
+}
+.ts-location > span:nth-child(2) {
+  opacity: 0.45;
+}
+.ts-search-trigger {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px !important;
+  font-size: 11px;
+  color: var(--ts-muted);
+  border: 1px solid var(--ts-line);
+  border-radius: 9px;
+  padding: 8px 10px;
+  background: var(--ts-paper);
+  width: 220px;
+}
+.ts-search-trigger svg {
+  width: 15px;
+  height: 15px;
+}
+.ts-search-trigger kbd {
+  margin-left: auto;
+  font-size: 9px;
+  background: var(--ts-ground);
+  padding: 1px 4px;
+  border: 1px solid var(--ts-line);
+  border-radius: 4px;
+}
+.ts-help-button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 40px;
+  color: var(--ts-muted);
+}
+.ts-help-button svg {
+  width: 20px;
+  height: 20px;
+}
+.ts-workspace .ts-canvas {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 38px clamp(24px, 3vw, 48px) 30px;
+  min-width: 0;
+  flex: 1;
+  outline: 0;
+}
+.ts-workspace .ts-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px clamp(24px, 3vw, 48px);
+  font-size: 10px;
+  color: var(--ts-muted);
+  margin-top: auto;
+}
+.ts-footer > a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ts-footer svg {
+  width: 13px;
+  height: 13px;
+}
+.ts-footer > span:before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ts-muted);
+  margin-right: 7px;
+}
+.ts-workspace .ts-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: nowrap;
+  margin: 0 0 34px;
+}
+.ts-page-heading {
+  display: block !important;
+  min-width: 0;
+}
+.ts-overline {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ts-muted);
+  text-transform: uppercase;
+}
+.ts-workspace .ts-page-heading h1 {
+  font-size: clamp(30px, 3.1vw, 45px);
+  font-weight: 650;
+  letter-spacing: -1.8px;
+  line-height: 1.14;
+  margin-top: 10px;
+  color: var(--ts-ink);
+}
+.ts-workspace .ts-page-heading .portal-page-description {
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--ts-muted);
+  margin-top: 12px;
+  max-width: 54ch;
+}
+.ts-page-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.ts-workspace .ts-page-actions [data-slot="button"] {
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.ts-workspace .ts-page-actions [data-slot="button"] svg {
+  width: 15px;
+  height: 15px;
+}
+.ts-workspace .ts-page-actions [data-variant="default"] {
+  background: var(--ts-ink);
+  color: var(--ts-paper);
+}
+.ts-mobile-dock {
+  display: none;
+}
+.ts-directory nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.ts-directory .ts-nav-group {
+  margin: 0;
+}
+.ts-directory .ts-nav-group h2 {
+  font-size: 11px;
+}
+.ts-directory nav a {
+  color: var(--ts-ink);
+  min-height: 48px;
+  font-size: 13px;
+}
+.ts-directory .ts-nav-utilities {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--ts-line);
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.ts-directory-appearance {
+  grid-column: 1/-1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--ts-muted);
+  border-top: 1px solid var(--ts-line);
+  padding-top: 12px;
+}
+.ts-directory .studio-appearance {
+  margin: 0;
+}
+.ts-editor-sections {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--ts-muted);
+  padding: 4px;
+}
+.ts-editor-sections svg {
+  width: 18px;
+  height: 18px;
+}
+.ts-search-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--op-line);
+  padding-bottom: 16px;
+}
+.ts-search-field > svg {
+  width: 20px;
+  height: 20px;
+  color: var(--op-muted);
+}
+.ts-search-field input {
+  min-width: 0;
+  width: 100%;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  font-size: 16px;
+}
+.ts-result-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-weight: 650;
+  color: var(--op-muted);
+  margin: 20px 0 8px;
+}
+.ts-search-results {
+  display: grid;
+  gap: 3px;
+}
+.ts-search-results > a {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 10px;
+  color: var(--op-text);
+  text-decoration: none;
+}
+.ts-search-results > a:hover {
+  background: var(--secondary);
+}
+.ts-search-results strong,
+.ts-search-results small {
+  display: block;
+}
+.ts-search-results strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.ts-search-results small {
+  font-size: 11px;
+  color: var(--op-muted);
+  margin-top: 3px;
+}
+.ts-search-results svg {
+  width: 15px;
+  height: 15px;
+  color: var(--op-muted);
+}
+.ts-search-empty {
+  padding: 24px 0;
+  color: var(--op-muted);
+  font-size: 13px;
+}
+
+.ts-workspace .ts-home-heading h1,
+.ts-workspace .ts-page-heading h1 {
+  font-family: "Bricolage Grotesque Variable", "Manrope Variable", sans-serif;
+  font-weight: 600;
+}

@@ -25,8 +25,11 @@ export function SectionSetup({
   );
   const [open, setOpen] = React.useState(defaultOpen);
   const [chosen, setChosen] = React.useState<string | null>(null);
-  if (!state) return null;
-  const journey = journeyFor(topic, state);
+  const journey = React.useMemo(
+    () => (state ? journeyFor(topic, state) : null),
+    [state, topic],
+  );
+  if (!state || !journey) return null;
   const completed = journey.steps.filter((step) => step.done).length;
   const step =
     journey.steps.find((item) => item.id === chosen) ??

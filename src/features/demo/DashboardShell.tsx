@@ -14,10 +14,11 @@ import { WorkspaceNav } from "./dashboard/WorkspaceNav";
 import { StudioSearch } from "@/features/studio/StudioSearch";
 import { Welcome } from "./Welcome";
 import { useDemo } from "./store";
+import "@fontsource-variable/bricolage-grotesque/wght.css";
 import "@/features/studio/studio-design.css";
 
 const ROUTES: Record<string, string> = {
-  overview: "Overview",
+  overview: "Today",
   page: "Your page",
   offers: "What you offer",
   services: "Services",

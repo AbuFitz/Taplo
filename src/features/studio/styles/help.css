@@ -1,0 +1,175 @@
+/* Help is an answer surface, a quick action surface, and a human route. */
+.ts-help-page {
+  max-width: 1100px;
+}
+.ts-help-page .ts-page-heading h1 {
+  max-width: 16ch;
+}
+.ts-help-search {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--ts-paper);
+  border: 1px solid var(--ts-line);
+  border-radius: 13px;
+  max-width: 700px;
+  padding: 8px 18px;
+  margin-bottom: 40px;
+}
+.ts-help-search svg {
+  width: 20px;
+  height: 20px;
+  color: var(--ts-muted);
+}
+.ts-workspace .ts-help-search input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 13px;
+}
+.ts-help-search kbd {
+  font-size: 9px;
+  color: var(--ts-muted);
+  white-space: nowrap;
+}
+.ts-section-title {
+  margin-bottom: 20px;
+}
+.ts-section-title h2 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.7px;
+  margin-top: 9px;
+}
+.ts-help-fixes > div:last-child {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 36px;
+}
+.ts-help-fixes details {
+  border-top: 1px solid var(--ts-line);
+  padding: 8px 0;
+}
+.ts-help-fixes summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  list-style: none;
+  min-height: 58px;
+  cursor: pointer;
+}
+.ts-help-fixes summary svg {
+  width: 15px;
+  height: 15px;
+  color: var(--ts-muted);
+  transition: transform 0.15s;
+}
+.ts-help-fixes details[open] summary svg {
+  transform: rotate(90deg);
+}
+.ts-help-fixes details p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--ts-muted);
+  padding-bottom: 12px;
+}
+.ts-help-fixes details a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 650;
+  min-height: 44px;
+  margin-bottom: 8px;
+}
+.ts-help-fixes details a svg {
+  width: 14px;
+  height: 14px;
+}
+.ts-help-quick {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  background: var(--ts-tint);
+  border-radius: 14px;
+  margin: 32px 0 42px;
+}
+.ts-help-quick > div {
+  flex: 1;
+}
+.ts-help-quick h2 {
+  font-size: 15px;
+  letter-spacing: -0.4px;
+}
+.ts-help-quick p {
+  font-size: 11px;
+  color: var(--ts-muted);
+  margin-top: 6px;
+}
+.ts-help-quick button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.ts-help-quick svg {
+  width: 15px;
+  height: 15px;
+}
+.ts-help-guides > div:nth-child(2) {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.ts-support-contact {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 42px;
+  padding: 26px 0;
+  border-top: 1px solid var(--ts-line);
+}
+.ts-support-contact > svg {
+  width: 32px;
+  height: 32px;
+  stroke-width: 1.3;
+  color: var(--ts-muted);
+}
+.ts-support-contact > div {
+  flex: 1;
+}
+.ts-support-contact h2 {
+  font-size: 20px;
+  letter-spacing: -0.6px;
+}
+.ts-support-contact p {
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--ts-muted);
+  margin-top: 7px;
+}
+.ts-support-contact .support-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  border-radius: 9px;
+  background: var(--ts-ink);
+  color: var(--ts-paper);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 10px 16px;
+  border: 0;
+}
+.ts-support-contact .support-trigger svg {
+  width: 16px;
+  height: 16px;
+}

@@ -1,0 +1,80 @@
+/* A common frame surrounds page authoring too. */
+.ts-workspace .ts-editor-canvas {
+  padding: 20px 24px;
+  max-width: none;
+}
+.ts-workspace .editor-workspace-toolbar {
+  position: static;
+  background: transparent;
+  padding: 0 0 18px;
+  margin-bottom: 0;
+  backdrop-filter: none;
+}
+.ts-workspace .editor-workspace-grid {
+  grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+  gap: 32px;
+}
+.ts-workspace .editor-workspace-grid > div:last-child {
+  top: 96px;
+}
+.ts-workspace .mobile-studio {
+  height: calc(100dvh - 112px);
+  min-height: 420px;
+  background: var(--ts-ground);
+  border: 1px solid var(--ts-line);
+  border-radius: 16px;
+  overflow: hidden;
+  max-width: none;
+}
+.ts-workspace .mobile-studio-header {
+  background: var(--ts-paper);
+  border-bottom: 1px solid var(--ts-line);
+  min-height: 58px;
+  padding-inline: 16px;
+}
+.ts-workspace .mobile-studio-live:not([data-expanded="true"]) {
+  flex-basis: clamp(120px, 24dvh, 220px);
+  height: clamp(120px, 24dvh, 220px);
+  border-radius: 14px;
+  background: var(--secondary);
+  margin: 12px;
+  padding: 8px;
+}
+.ts-workspace .mobile-studio-tabs {
+  border-bottom: 1px solid var(--ts-line);
+  background: var(--ts-paper);
+}
+.ts-workspace .mobile-studio-body {
+  background: var(--ts-ground);
+  padding: 20px;
+}
+.ts-workspace .mobile-studio-footer {
+  background: var(--ts-paper);
+  border-top: 1px solid var(--ts-line);
+}
+.ts-workspace [data-widget-row] {
+  box-shadow: none;
+  background: var(--ts-paper);
+  border: 1px solid var(--ts-line) !important;
+  border-radius: 12px;
+}
+.ts-workspace [data-testid="editor-panel"] > [role="tablist"] {
+  border-radius: 10px;
+  background: transparent !important;
+  border-bottom: 1px solid var(--ts-line);
+  padding: 0 0 10px;
+  gap: 4px;
+}
+.ts-workspace [data-testid="editor-panel"] > [role="tablist"] > button {
+  min-height: 44px;
+  padding: 8px 10px;
+  font-size: 11px;
+}
+.ts-workspace
+  [data-testid="editor-panel"]
+  > [role="tablist"]
+  > button[aria-selected="true"] {
+  background: var(--ts-paper) !important;
+  box-shadow: none;
+  color: var(--ts-ink);
+}
