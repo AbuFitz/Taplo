@@ -160,6 +160,7 @@ export function AvailabilityEditor({
   setOnline,
   entitled,
   initialStaffId,
+  check,
 }: {
   ctx: BookingContext;
   config: SchedulingConfig;
@@ -168,6 +169,7 @@ export function AvailabilityEditor({
   setOnline: (v: boolean) => void;
   entitled: boolean;
   initialStaffId?: string;
+  check: React.ReactNode;
 }) {
   const people = ctx.staff.length
     ? ctx.staff.map((p) => ({ id: p.id, name: p.name }))
@@ -319,6 +321,7 @@ export function AvailabilityEditor({
           onCheckedChange={setOnline}
         />
       </section>
+      {check}
       <div className="schedule-context">
         {people.length > 1 ? (
           <Field label="Whose hours">

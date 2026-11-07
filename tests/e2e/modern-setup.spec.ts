@@ -28,7 +28,7 @@ test('Google review setup preserves old records but never publishes them as Goog
     return draft.content.testimonials
   })
   await page.goto('/dashboard/reviews')
-  await expect(page.getByRole('heading', { name: 'Reviews', exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Good work. Real feedback.', exact: true })).toBeVisible()
   await expect(page.getByLabel('Customer name')).toHaveCount(0)
   await expect(page.getByLabel('What they said')).toHaveCount(0)
   await page.getByLabel('Google Maps or review link', { exact: true }).fill('https://www.google.com/maps/place/Example')

@@ -7,7 +7,7 @@ for (const width of [390, 1440]) {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await openEditorWithSample(page, "Barber");
     await selectPart(page, "page");
-    await expect(page.getByRole("button", { name: "Page walkthrough", exact: true })).toHaveCount(1);
+    await expect(page.locator('[data-topic="design"]').getByRole("button", { name: /^Page walkthrough/ })).toHaveCount(1);
     await openDesignTask(page, "look");
     const choice = page.getByRole("radiogroup", { name: "Look", exact: true }).locator('label[data-choice="paper"]');
     await choice.scrollIntoViewIfNeeded();

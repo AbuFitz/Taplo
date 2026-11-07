@@ -103,8 +103,8 @@ function Profile({ m, ctx, canBook }: { m: TeamMemberData; ctx?: BookingContext;
     if (!ctx || !canBook) return null
     const svc = ctx.services.find((s) => m.services.some((x) => x.id === s.id) && isOnlineBookable(s))
     if (!svc) return null
-    return nextAvailableDate({ now, config, service: { id: svc.id, durationMinutes: svc.durationMinutes! }, eligible: eligibleStaff(ctx, svc), staffPreference: m.id, bookings: state.bookings, holds: [], fromDate: localParts(now, config.timezone).date })
-  }, [ctx, canBook, m, now, config, state.bookings])
+    return nextAvailableDate({ now, config, service: { id: svc.id, durationMinutes: svc.durationMinutes! }, eligible: eligibleStaff(ctx, svc), staffPreference: m.id, bookings: state.bookings, holds: state.holds, fromDate: localParts(now, config.timezone).date })
+  }, [ctx, canBook, m, now, config, state.bookings, state.holds])
   return (
     <div className={m.photo ? "grid gap-5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-6" : "grid gap-5"}>
       {/* A large grey silhouette says nothing, so the portrait is shown only when there is one. */}

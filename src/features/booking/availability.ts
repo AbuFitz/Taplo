@@ -8,6 +8,10 @@ import { HOLDING, type Booking, type Hold, type SchedulingConfig, type TimeWindo
  * which asserts that the two agree).
  */
 
+/** Bound the public calendar query so opening the picker stays responsive. */
+export const customerAvailabilityDays = (config: SchedulingConfig) =>
+  Math.min(config.rules.maxAdvanceDays + 1, 120)
+
 export interface ServiceTiming { id: string; durationMinutes: number }
 
 export interface SlotQuery {
@@ -29,7 +33,13 @@ export interface SlotQuery {
 
 export interface Slot { startsAt: number; endsAt: number; staffIds: string[] }
 export type DayReason = "closed" | "past" | "too_soon" | "too_far" | "full"
-export interface DayAvailability { date: string; slots: Slot[]; reason?: DayReason }
+export type SlotConstraint = "unassigned" | "duration" | "notice" | "blocked" | "booked" | "held"
+export interface DayAvailability {
+  date: string
+  slots: Slot[]
+  reason?: DayReason
+  constraints?: SlotConstraint[]
+}
 
 /** A wall-clock window as instants. A start inside a skipped hour moves to the first real time after it. */
 export function windowInstants(date: string, w: TimeWindow, tz: string): [number, number] | null {
@@ -93,20 +103,23 @@ export function getAvailability(q: SlotQuery): DayAvailability[] {
 
     const byStart = new Map<number, Slot>()
     let anyWindow = false
-    let sawTooSoon = false
+    const constraints = new Set<SlotConstraint>()
+    if (!staff.length) constraints.add("unassigned")
     for (const sid of staff) {
       const wins = windowsFor(config, sid, date).map((w) => windowInstants(date, w, tz)).filter((x): x is [number, number] => x !== null)
       if (wins.length) anyWindow = true
       // Blocked time removes parts of windows.
       const blocks = config.blocks.filter((b) => b.staffId === null || b.staffId === sid)
+      const mine = live.filter((b) => b.staffId === sid)
+      const staffHolds = holds.filter((h) => h.staffId === sid)
       for (const [w0, w1] of wins) {
+        if (w0 + dur > w1) constraints.add("duration")
         for (let s = w0; s + dur <= w1; s += interval) {
-          if (s < earliest) { sawTooSoon = true; continue }
+          if (s < earliest) { constraints.add("notice"); continue }
           const e = s + dur
-          if (blocks.some((b) => overlaps(s, e, b.startsAt, b.endsAt))) continue
+          if (blocks.some((b) => overlaps(s, e, b.startsAt, b.endsAt))) { constraints.add("blocked"); continue }
           const occ0 = s - bufBefore
           const occ1 = e + bufAfter
-          const mine = live.filter((b) => b.staffId === sid)
           let free: boolean
           if (capacity > 1) {
             const same = mine.filter((b) => b.serviceId === service.id && b.startsAt === s)
@@ -115,8 +128,8 @@ export function getAvailability(q: SlotQuery): DayAvailability[] {
           } else {
             free = !mine.some((b) => overlaps(occ0, occ1, b.blockStart, b.blockEnd))
           }
-          if (!free) continue
-          if (holds.some((h) => h.staffId === sid && overlaps(occ0, occ1, h.blockStart, h.blockEnd))) continue
+          if (!free) { constraints.add("booked"); continue }
+          if (staffHolds.some((h) => overlaps(occ0, occ1, h.blockStart, h.blockEnd))) { constraints.add("held"); continue }
           const slot = byStart.get(s)
           if (slot) slot.staffIds.push(sid)
           else byStart.set(s, { startsAt: s, endsAt: e, staffIds: [sid] })
@@ -124,7 +137,12 @@ export function getAvailability(q: SlotQuery): DayAvailability[] {
       }
     }
     const slots = [...byStart.values()].sort((a, b) => a.startsAt - b.startsAt)
-    out.push(slots.length ? { date, slots } : { date, slots: [], reason: !anyWindow ? "closed" : sawTooSoon ? "too_soon" : "full" })
+    out.push(slots.length ? { date, slots } : {
+      date,
+      slots,
+      reason: !anyWindow ? "closed" : constraints.has("notice") ? "too_soon" : "full",
+      constraints: [...constraints],
+    })
   }
   return out
 }

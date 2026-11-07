@@ -4,7 +4,7 @@ export function previewLimits(viewportHeight: number) {
     96,
     Math.min(
       600,
-      Math.floor(viewportHeight - 360),
+      Math.floor(viewportHeight - 380),
       Math.floor(viewportHeight * 0.58),
     ),
   );

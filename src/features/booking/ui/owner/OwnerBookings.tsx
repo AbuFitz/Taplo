@@ -20,6 +20,7 @@ import { nowMs } from "../../clock";
 import { newId, newKey, newToken } from "../../demo-adapter";
 import { placeBooking, setStatus } from "../../engine";
 import {
+  buildPlanContext,
   eligibleStaff,
   isOnlineBookable,
   modeOf,
@@ -27,6 +28,7 @@ import {
 } from "../../model";
 import { addDays, formatSlot, localParts, localToInstant } from "../../time";
 import type { Booking } from "../../types";
+import { AvailabilityCheck } from "./AvailabilityCheck";
 import { AvailabilityEditor } from "./AvailabilityEditor";
 import { BookingDetail } from "./BookingDetail";
 import {
@@ -131,7 +133,8 @@ export function OwnerBookings({
       (!b.expiresAt || b.expiresAt > now),
   ).length;
   const online = o.records.booking.onlineBookingReady;
-  const entitled = o.ed?.vm?.ent.onlineBooking ?? true;
+  const entitlements = o.ed?.vm?.ent;
+  const entitled = entitlements?.onlineBooking ?? true;
   const bookable = ctx.services.filter(isOnlineBookable);
 
   const step = (n: number) =>
@@ -626,6 +629,19 @@ export function OwnerBookings({
         {tab === "availability" ? (
           <AvailabilityEditor
             initialStaffId={params.get("staff") ?? undefined}
+            check={
+              <AvailabilityCheck
+                context={{
+                  ...(entitlements
+                    ? buildPlanContext(o.records, entitlements)
+                    : ctx),
+                  config,
+                }}
+                state={state}
+                online={online}
+                entitled={entitled}
+              />
+            }
             ctx={ctx}
             config={config}
             setConfig={o.setConfig}

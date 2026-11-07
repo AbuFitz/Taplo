@@ -10,12 +10,12 @@ import { Calendar } from "@/components/ui/calendar"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
-import { getAvailability, nextAvailableDate } from "../availability"
+import { customerAvailabilityDays, getAvailability } from "../availability"
 import { canCancel, canReschedule, holdSlot, placeBooking, setStatus } from "../engine"
 import { OUTCOME, eligibleStaff, icsFor, isOnlineBookable, modeOf, priceWording, type BookableService, type BookableStaff, type BookingContext } from "../model"
 import { newId, newKey, newToken, useBookingState, useSchedulingConfig } from "../demo-adapter"
 import { nowMs } from "../clock"
-import { addDays, daysBetween, formatClock, formatDay, formatSlot, localParts, zonesDiffer } from "../time"
+import { daysBetween, formatClock, formatDay, formatSlot, localParts, zonesDiffer } from "../time"
 import { customerDetails, type Booking } from "../types"
 import { EnquiryForm } from "./EnquiryForm"
 
@@ -77,11 +77,12 @@ function FlowBody({ ctx, preService, preStaff, preSlot, onClose }: { ctx: Bookin
   // Availability for the whole booking window, recomputed from the live state (so a time someone else just took disappears).
   const avail = React.useMemo(() => {
     if (!service || !online) return []
-    return getAvailability({ now, config, service: { id: service.id, durationMinutes: service.durationMinutes! }, eligible, staffPreference: staff, bookings: state.bookings, holds: state.holds.filter((h) => h.key !== key), fromDate: localParts(now, tz).date, days: Math.min(config.rules.maxAdvanceDays + 1, 120) })
+    return getAvailability({ now, config, service: { id: service.id, durationMinutes: service.durationMinutes! }, eligible, staffPreference: staff, bookings: state.bookings, holds: state.holds.filter((h) => h.key !== key), fromDate: localParts(now, tz).date, days: customerAvailabilityDays(config) })
   }, [service, online, now, config, eligibleKey, staff, state, tz, key])  // eslint-disable-line react-hooks/exhaustive-deps
   const withSlots = avail.filter((d) => d.slots.length)
   const activeDate = date ?? withSlots[0]?.date ?? null
   const day = avail.find((d) => d.date === activeDate)
+  const nextDate = activeDate ? withSlots.find((d) => d.date > activeDate)?.date : undefined
 
   const go = (s: Step) => { setBanner(null); setStep(s) }
   const back = () => {
@@ -215,7 +216,7 @@ function FlowBody({ ctx, preService, preStaff, preSlot, onClose }: { ctx: Bookin
               {day && day.slots.length ? <SlotGrid slots={day.slots} tz={tz} viewerTz={viewerTz} pick={pick?.startsAt ?? null} onPick={choosePick} date={day.date} /> : (
                 <div className="rounded-2xl border border-tp-border p-4 text-sm" data-testid="bk-day-empty">
                   <p className="font-semibold">{activeDate ? `No times on ${formatDay(activeDate)}.` : "Pick a day."}</p>
-                  {(() => { const next = activeDate ? nextAvailableDate({ now, config, service: { id: service.id, durationMinutes: service.durationMinutes! }, eligible, staffPreference: staff, bookings: state.bookings, holds: [], fromDate: addDays(activeDate, 1) }) : null; return next ? <button type="button" className="mt-1 font-medium underline underline-offset-4" onClick={() => setDate(next)}>Next available: {formatDay(next)}</button> : null })()}
+                  {nextDate ? <button type="button" className="mt-1 font-medium underline underline-offset-4" onClick={() => { setDate(nextDate); setPick(null) }}>Next available: {formatDay(nextDate)}</button> : null}
                 </div>
               )}
               <p className="text-xs text-tp-muted">Times are in {tzName(tz)}{zonesDiffer(tz, viewerTz, now) ? `. Your device is on ${tzName(viewerTz)}, so we show your local time under each time.` : "."}</p>

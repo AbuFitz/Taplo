@@ -256,3 +256,54 @@ test("an empty workspace can open a sample without losing Studio navigation", as
   await expect(page.getByTestId("my-page")).toBeVisible();
   await expect(page.getByRole("navigation", { name: "Studio", exact: true })).toBeVisible();
 });
+
+test("Studio availability explains why a service has no customer times", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.clock.setFixedTime(new Date("2026-11-02T08:00:00Z"));
+  await page.goto("/dashboard");
+  const draft = loadSample(initialState(), "barber");
+  draft.plan = "business";
+  draft.content.staff = [];
+  const sampleService = draft.content.services?.[0];
+  if (!sampleService) throw new Error("Barber fixture requires a service.");
+  draft.content.services = [{
+    ...sampleService,
+    id: "test-cut",
+    name: "Test cut",
+    bookingMode: "instant",
+    durationMinutes: 60,
+  }];
+  await page.evaluate((value) => {
+    localStorage.setItem("taplo.demo.v2", JSON.stringify(value));
+    localStorage.setItem(
+      `taplo.demo.scheduling.v1:${value.content.identity.slug}`,
+      JSON.stringify({
+        timezone: "Europe/London",
+        staff: [{ staffId: "", hours: {
+          tue: [{ start: "09:00", end: "11:00" }],
+          wed: [{ start: "09:00", end: "11:00" }],
+        } }],
+        rules: { minNoticeMinutes: 0, slotIntervalMinutes: 60 },
+        blocks: [{
+          id: "training",
+          staffId: null,
+          startsAt: Date.parse("2026-11-04T09:00:00Z"),
+          endsAt: Date.parse("2026-11-04T11:00:00Z"),
+          reason: "Training",
+        }],
+      }),
+    );
+  }, draft);
+  await page.goto("/dashboard/bookings?section=availability");
+  await page.getByText("Check customer availability", { exact: true }).click();
+  const date = page.getByLabel("Date to check", { exact: true });
+  await date.fill("2026-11-03");
+  const times = page.getByRole("list", { name: "Available times", exact: true });
+  await expect(times.getByRole("listitem")).toHaveText(["09:00", "10:00"]);
+  await date.fill("2026-11-04");
+  await expect(times).toHaveCount(0);
+  await expect(page.getByRole("list", { name: "Why times are unavailable" }))
+    .toHaveText("Blocked time on the calendar removes these times.");
+});

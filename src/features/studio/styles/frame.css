@@ -250,6 +250,9 @@
   border: 1px solid var(--ts-line);
   border-radius: 4px;
 }
+.ts-search-trigger kbd::before {
+  content: "⌘ K";
+}
 .ts-help-button {
   display: grid;
   place-items: center;

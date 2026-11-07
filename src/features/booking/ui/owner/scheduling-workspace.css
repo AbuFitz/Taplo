@@ -282,3 +282,54 @@
   place-items: center;
   color: #687076;
 }
+
+.schedule-check {
+  min-width: 0;
+  border-block: 1px solid var(--op-line);
+}
+.schedule-check > summary {
+  min-height: 44px;
+  align-content: center;
+  cursor: pointer;
+  color: var(--op-text);
+  font-size: 14px;
+  font-weight: 600;
+}
+.schedule-check-body {
+  display: grid;
+  gap: 12px;
+  padding-block: 0 16px;
+}
+.schedule-check-body p {
+  color: var(--op-muted);
+}
+.schedule-check-body a {
+  text-decoration: underline;
+}
+.schedule-check-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+  gap: 12px;
+}
+.schedule-check-fields input[type="date"] {
+  max-width: 100%;
+}
+.schedule-check-times {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.schedule-check-times > li {
+  padding: 6px 10px;
+  border: 1px solid var(--op-line);
+  border-radius: 8px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.schedule-check-reasons {
+  padding-inline-start: 18px !important;
+  list-style: disc !important;
+  color: var(--op-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}

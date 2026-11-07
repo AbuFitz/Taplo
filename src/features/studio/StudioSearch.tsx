@@ -131,10 +131,11 @@ export function StudioSearch() {
           setOpen(true);
         }}
         aria-label="Search Studio"
+        aria-keyshortcuts="Meta+K Control+K"
       >
         <Search aria-hidden="true" />
         <span>Search Studio</span>
-        <kbd aria-hidden="true">⌘ K</kbd>
+        <kbd aria-hidden="true" />
       </button>
       <Overlay
         open={open}

@@ -202,10 +202,10 @@ function WidgetInspector({
       ) : null}
       <Tabs defaultValue="content" key={stored.id}>
         <TabsList className="mb-3 grid w-full grid-cols-2 p-1 group-data-horizontal/tabs:h-auto">
-          <TabsTrigger value="content" className="min-h-11">
+          <TabsTrigger value="content" className="min-h-11 text-muted-foreground">
             Content
           </TabsTrigger>
-          <TabsTrigger value="look" className="min-h-11">
+          <TabsTrigger value="look" className="min-h-11 text-muted-foreground">
             Appearance{custom ? ` · ${custom}` : ""}
           </TabsTrigger>
         </TabsList>

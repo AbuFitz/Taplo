@@ -149,9 +149,9 @@ export function MobileEditor({
       data-testid="my-page"
       data-editor="compact"
     >
-      <header
+      <div
         className="mobile-studio-header"
-        role="toolbar"
+        role="group"
         aria-label="Page actions"
       >
         {preview ? (
@@ -185,7 +185,7 @@ export function MobileEditor({
             <span className="sr-only">Expand preview</span>
           </button>
         ) : null}
-      </header>
+      </div>
       <div
         id="studio-preview-stage"
         className="mobile-studio-live"
